@@ -1,0 +1,27 @@
+<div class="homeworld-tiles-container" *ngIf="showTiles">
+  <ng-container *ngFor="let planetColor of planetColors">
+    <div class="homeworld-tile">
+      <div class="title-container">homeworld</div>
+      <div class="rewards-container">
+        <ng-container *ngFor="let upgrade of upgrades">
+          <div class="reward-container">
+            <img class="reward" [src]="getRewardTypePath(upgrade.rewardType)" />
+            <div>:</div>
+            <div>{{ upgrade.initialAmount }}</div>
+            <ng-container *ngFor="let upgradeCount of getArrayFromNumber(upgrade.upgradeCount); let i = index">
+              <div>+</div>
+              <div class="upgrade-marker"></div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <div class="planet-container">
+        <img
+          class="planet"
+          [src]="'/assets/images/homeworld-planet.png'"
+          [style.filter]="'hue-rotate(' + planetColor + 'deg)'"
+        />
+      </div>
+    </div>
+  </ng-container>
+</div>

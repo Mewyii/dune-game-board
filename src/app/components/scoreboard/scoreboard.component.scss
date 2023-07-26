@@ -1,0 +1,97 @@
+.scoreboard-tile {
+    position: absolute;
+    bottom: 0;
+    left: 00px;
+    width: 2120px;
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.score-element {
+    flex: 1 1;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    background: #0000000a;
+}
+
+.score-element.light {
+    background:#ffd5620a;
+}
+
+.score-element.finale-four-players {
+    background:#ffd88e61;
+}
+
+.score-element.finale-three-players {
+    background:#ffd88e75;
+}
+
+.score {
+    // font-size: larger;
+}
+
+.divider {
+    width: 1px;
+    background-color: #c5ad8d;
+    box-shadow: 0px 0px 6px 0px #ffefc3;
+}
+
+.divider.light {
+    background-color: #c5ad8d;
+    box-shadow: 0px 0px 6px 0px #ffefc3;
+}
+
+.divider.finale-four-players {
+    background: #ffd489de;
+    width: 10px;
+    box-shadow: 0px 0px 6px 0px #ffdf89;
+}
+
+.divider.finale-three-players {
+    background: #ffd489;
+    width: 10px;
+    box-shadow: 0px 0px 6px 0px #ffdf89;
+}
+
+
+.scoreboard-tile.top {
+    top: 0;
+    color: #e5e5e5
+}
+
+.score-marker {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    z-index: 2;
+    border-radius: 50%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+}
+
+.reward-container {
+    position: absolute;
+    bottom: 0;
+    right: 16px;
+    width: min-content;
+}
+
+.reward {
+    height: 30px;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+.reward-amount {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    width: 100%;
+    color: white;
+    font-size: large;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+    text-align: center;
+}

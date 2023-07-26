@@ -1,0 +1,40 @@
+<div class="scoreboard-tile top">
+  <ng-container *ngFor="let score of scoreArray; let i = index; let last = last">
+    <div
+      class="score-element light"
+      [class.finale-four-players]="i > finaleTrigger - 1"
+      [class.finale-three-players]="i > finaleTrigger"
+    >
+      <div class="score">{{ i }}</div>
+      <ng-container
+        *ngIf="settingsService.board.content === 'custom-advanced' || settingsService.board.content === 'custom-expert'"
+        ><ng-container *ngIf="scoreHasReward(i)">
+          <div class="reward-container">
+            <img class="reward" [src]="getRewardTypePath(i)" />
+            <ng-container *ngIf="getRewardAmount(i)">
+              <div class="reward-amount">
+                {{ getRewardAmount(i) }}
+              </div>
+            </ng-container>
+          </div>
+        </ng-container></ng-container
+      >
+    </div>
+    <div
+      *ngIf="!last"
+      class="divider light"
+      [class.finale-four-players]="i === finaleTrigger - 1"
+      [class.finale-three-players]="i === finaleTrigger"
+    ></div>
+  </ng-container>
+  <ng-container *ngIf="settingsService.board.mode === 'game'">
+    <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index">
+      <div
+        class="score-marker"
+        [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 152 + 'px'"
+        [style.top]="10 + (i % 2 === 0 ? 0 : 40) + 'px'"
+        [style.background-color]="getPlayerColor(playerScore.playerId)"
+      ></div>
+    </ng-container>
+  </ng-container>
+</div>

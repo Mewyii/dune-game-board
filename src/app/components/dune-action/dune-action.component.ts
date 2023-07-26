@@ -1,0 +1,78 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActionField, FactionType, RewardType } from 'src/app/models';
+import { getActionTypePath } from 'src/app/helpers/action-types';
+import { boardSettings } from 'src/app/constants/board-settings';
+import { getFactionTypePath } from 'src/app/helpers/faction-types';
+import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { GameManager } from 'src/app/services/game-manager.service';
+import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { TranslateService } from 'src/app/services/translate-service';
+
+@Component({
+  selector: 'app-dune-action',
+  templateUrl: './dune-action.component.html',
+  styleUrls: ['./dune-action.component.scss'],
+})
+export class DuneActionComponent implements OnInit {
+  @Input() action: ActionField = {
+    title: { de: 'abgehärtete Krieger', en: 'hardy warriors' },
+    actionType: 'fremen',
+    costs: [{ type: 'water', amount: 1 }],
+    rewards: [{ type: 'troops', amount: 2 }],
+    pathToImage: 'assets/images/fremen_warriors.jpeg',
+    isBattlefield: true,
+  };
+
+  @Input() backgroundColor: string = '';
+
+  @Output() actionFieldClick = new EventEmitter<{ playerId: number }>();
+
+  public transparentBackgroundColor: string = '';
+  public pathToActionType = '';
+  public boardSettings = boardSettings;
+
+  public playerOnField: Player | undefined;
+
+  public accumulatedSpice = 3;
+
+  constructor(public gameManager: GameManager, public playerManager: PlayerManager, public ts: TranslateService) {}
+
+  ngOnInit(): void {
+    this.pathToActionType = getActionTypePath(this.action.actionType);
+    this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
+
+    this.gameManager.agentsOnFields$.subscribe((agentsOnFields) => {
+      const playerId = agentsOnFields.find((x) => x.fieldId === this.action.title.en)?.playerId;
+      if (playerId) {
+        this.playerOnField = this.playerManager.players.find((x) => x.id === playerId);
+      } else {
+        this.playerOnField = undefined;
+      }
+    });
+
+    this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {
+      const spiceOnField = accumulatedSpice.find((x) => x.fieldId === this.action.title.en);
+      this.accumulatedSpice = spiceOnField?.amount ?? 0;
+    });
+  }
+
+  public onActionFieldClicked() {
+    const currentPlayerId = this.gameManager.activePlayer?.id;
+    this.gameManager.addAgentToField(this.action);
+    if (currentPlayerId) {
+      this.actionFieldClick.emit({ playerId: currentPlayerId });
+    }
+  }
+
+  public getArrayFromNumber(length: number) {
+    return new Array(length);
+  }
+
+  public getRewardTypePath(rewardType: RewardType) {
+    return getRewardTypePath(rewardType);
+  }
+
+  public getFactionTypePath(rewardType: FactionType) {
+    return getFactionTypePath(rewardType);
+  }
+}

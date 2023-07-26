@@ -1,0 +1,132 @@
+.player-board-container {
+    width: 350px;
+    height: calc(100% - 32px);
+    padding: 16px;
+    background: #0000007d;
+    color:white;
+    font-size: large;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 70px;
+}
+
+.player-area {
+    margin-bottom: 48px;
+}
+
+.player-container {
+    margin-bottom: 70px;
+}
+
+.player-heading {
+    display:flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.player-name {
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+}
+
+.agent-marker {
+    width: 15px;
+    height: 15px;
+    z-index: 2;
+    border-radius: 50%;
+    border: 3px solid #2f2112;
+}
+
+.agent-marker.greyed-out {
+    background: gray !important;
+}
+
+.council-seat-marker{
+    width: 15px;
+    height: 15px;
+    z-index: 2;
+    transform: rotate(45deg);
+    border: 3px solid #d2d2d2;
+    margin-right:8px;
+}
+
+.starting-player-marker{
+    background-color: #d1a267;
+    width: 15px;
+    height: 15px;
+    z-index: 2;
+    transform: rotate3d(1, 0, 0, 69deg);
+    border-radius: 5px;
+    margin-right: 8px;
+}
+
+.player-name.highlighted {
+    filter: drop-shadow(0px 0px 5px black);
+    border-top: 3px solid;
+    border-bottom: 3px solid;
+}
+
+.resource-area {
+    display:flex;
+    flex-wrap: wrap;
+    gap: 16px 48px;
+    align-items: center;
+}
+
+.resource-container {
+    display:flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.resource-display {
+    max-height: 55px;
+    position: relative;
+    color: white;
+}
+
+.resource {
+    height: 55px;
+    width: 55px;
+    object-fit: scale-down;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+.resource-amount {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+}
+
+.turn-area {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.ai-container {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.mat-slide-toggle{
+    padding: 6px;
+    background: #555555;
+    border-radius: 5px;
+    border: 1px solid green;
+}

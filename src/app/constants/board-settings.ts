@@ -1,0 +1,13 @@
+import { LanguageType } from '../models';
+
+interface Settings {
+  mode: 'board' | 'game';
+  language: LanguageType;
+  content: 'original' | 'custom-beginner' | 'custom-advanced' | 'custom-expert';
+}
+
+export const boardSettings: Settings = {
+  mode: 'game',
+  language: 'en',
+  content: 'custom-advanced',
+};

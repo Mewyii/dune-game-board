@@ -1,0 +1,136 @@
+<div class="event-board" *ngIf="currentPlayer">
+  <h2>
+    ai <span *ngIf="showDetails">({{ currentAIPlayer?.name }})</span>
+    <mat-slide-toggle [color]="'accent'" [checked]="showDetails" (change)="showDetails = !showDetails"
+      >Details</mat-slide-toggle
+    >
+  </h2>
+
+  <div class="game-state-container">
+    <div class="info-container">
+      <div class="game-state-name">difficulty</div>
+      <mat-checkbox [checked]="aiDifficulty === 'easy'" (change)="setAIDifficulty('easy')">easy</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'medium'" (change)="setAIDifficulty('medium')">medium</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">hard</mat-checkbox>
+    </div>
+    <div class="info-container">
+      <div class="game-state-name">imperium row</div>
+      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'good'" (change)="setAIVariable('imperiumRow', 'good')"
+        >Good</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'okay'" (change)="setAIVariable('imperiumRow', 'okay')"
+        >Okay</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'bad'" (change)="setAIVariable('imperiumRow', 'bad')"
+        >Bad</mat-checkbox
+      >
+    </div>
+    <div class="info-container">
+      <div class="game-state-name">ix tech tiles</div>
+      <mat-checkbox [checked]="getAIVariable('techTiles') === 'good'" (change)="setAIVariable('techTiles', 'good')"
+        >Good</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('techTiles') === 'okay'" (change)="setAIVariable('techTiles', 'okay')"
+        >Okay</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('techTiles') === 'bad'" (change)="setAIVariable('techTiles', 'bad')"
+        >Bad</mat-checkbox
+      >
+    </div>
+    <div class="info-container">
+      <div class="game-state-name">dune combat</div>
+      <mat-checkbox [checked]="getAIVariable('combat') === 'good'" (change)="setAIVariable('combat', 'good')"
+        >Good</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('combat') === 'okay'" (change)="setAIVariable('combat', 'okay')"
+        >Okay</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('combat') === 'bad'" (change)="setAIVariable('combat', 'bad')"
+        >Bad</mat-checkbox
+      >
+    </div>
+  </div>
+  <div class="heading-container" *ngIf="currentAIPlayer && showDetails">
+    <div class="info-container">
+      <div>personality</div>
+      <div class="ai-name">{{ currentAIPlayer.name }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onSetPreviousAIPersonalityClicked()">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onSetNextAIPersonalityClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
+      <mat-slide-toggle
+        [color]="'accent'"
+        [checked]="currentAIPlayer.canAccessBlockedFields"
+        (change)="onChangeFieldAccessClicked(!currentAIPlayer.canAccessBlockedFields)"
+        >can access blocked fields</mat-slide-toggle
+      >
+    </div>
+  </div>
+  <div class="heading-container">
+    <div class="info-container" [style.width]="'300px'">
+      <div>deck size</div>
+      <div class="value">{{ currentPlayer.cardsInDeck }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveCardFromDeckClicked(currentPlayer.id)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddCardToDeckClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
+      <div>cards bought</div>
+      <div class="value">{{ currentPlayer.cardsBought }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onBoughtCardClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
+      <div>cards trimmed</div>
+      <div class="value">{{ currentPlayer.cardsTrimmed }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onTrimCardClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
+      <div>intrigues</div>
+      <div class="value">{{ currentPlayer.intrigueCount }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveIntrigueClicked(currentPlayer.id)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
+      <div>tech agents</div>
+      <div class="value">{{ currentPlayer.techAgents }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="field-decision-container" *ngIf="currentAIPlayer">
+    <div class="preferred-fields-container">
+      <div class="field-container" *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first">
+        <div [class]="i < 4 ? 'good' : i < 8 ? 'medium' : 'bad'" [style.color]="isFirst ? '#ffaa49' : ''">
+          {{ field.fieldId }}
+        </div>
+        <div *ngIf="showDetails">
+          {{ field.value }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="decision-container" *ngIf="currentAIPlayer">
+    <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of currentAIPlayer.decisions">
+      {{ decision }}
+    </div>
+  </div>
+</div>

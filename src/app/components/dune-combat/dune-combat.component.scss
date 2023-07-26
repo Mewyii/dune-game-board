@@ -1,0 +1,178 @@
+.combat-tile {
+    position: absolute;
+    right: 425px;
+    bottom: 16px;
+    width: 1100px;
+    height: 545px;
+    display: flex;
+    border-radius: 50%;
+}
+
+.units-area {
+    flex: 1 1;
+    display:flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-right: 32px;
+    position:relative;
+}
+
+.units-area .upper-row {
+    display: flex;
+    justify-content: center;
+    gap: 130px;
+    align-items: center;
+}
+
+.units-area .mid-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.units-gathering-area {
+    width: 225px;
+    height: 150px;
+    background: #c19e7d30;
+    border-radius: 48%;
+    box-sizing: border-box;
+    box-shadow: inset 0px 0px 20px 2px #e7dbbb;
+    backdrop-filter: blur(2px);
+}
+
+.battlefield-background {
+    position: absolute;
+    top: 75px;
+    left: calc(50% - 190px);
+    width: 380px;
+    transform: rotate3d(1, 0, 0, 67deg);
+    opacity: 0.2;
+    filter: invert(1) blur(8px);
+}
+
+.units-area .lower-row {
+    display: flex;
+    gap: 3px;
+    font-size: large;
+    flex: 1 1;
+    align-items: flex-end;
+}
+
+.combat-score-board {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    width: calc(100% - 103px);
+}
+
+.score-legend {
+    position: absolute;
+    top: 335px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    color: #e5e5e5;
+}
+
+.legend-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.2em;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+}
+
+.legend-icon{
+    height:1.5em;
+}
+
+.score-element {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-content: flex-end;
+    flex-wrap: wrap;
+    background: #0000001c;
+    box-shadow: inset 0px 0px 5px 0px #7e00003b;
+    border-radius: 5px;
+    position:relative;
+}
+
+.score-element.first {
+    width: 163px;
+    height: 163px;
+    background: #c0a17fa6;
+}
+
+.score {
+    flex: 1 1;
+    text-align: center;
+    color: #910000;
+}
+
+
+.score-marker {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    left: calc(50% - 13px);
+    cursor:pointer;
+}
+
+.units-control-bar-container {
+    position: absolute;
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2;
+}
+
+.units-control-bar {
+    display:flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.units-in-combat-container, .units-in-garrison-container, .units-in-timeout-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 175px;
+}
+
+.troop-marker {
+    width: 25px;
+    height: 25px;
+    border-radius: 25%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    left: calc(50% - 13px);
+}
+
+.ship-marker {
+    width: 25px;
+    height: 25px;
+    border-radius: 25%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    left: calc(50% - 13px);
+    transform: rotateX(45deg) rotateZ(45deg);
+}
+
+.troop-marker.combat-insert,
+.ship-marker.combat-insert {
+    background-color: darkred;
+    background-image: url(/assets/images/reward-markers/marker_sword.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.ship-marker.timeout {
+    opacity: 0.66;
+    background-color: gray;
+}
+

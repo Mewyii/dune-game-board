@@ -1,0 +1,100 @@
+.event-board {
+    background: #484242;
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fffcfa;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+.game-state-container {
+    width: calc(100% - 64px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.heading-container {
+    width: calc(100% - 64px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    justify-content: center;
+    margin-bottom: 64px;
+}
+
+.info-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.field-decision-container {
+    width: calc(100% - 64px);
+    margin-bottom: 64px;
+}
+
+.decision-container {
+    width: calc(100% - 64px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    justify-content: center;
+}
+
+.preferred-fields-container {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap:32px;
+    max-height:250px;
+    overflow:auto;
+}
+
+.field-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+mat-slide-toggle {
+    margin-left: 8px;
+}
+
+.ai-name {
+    width: 150px;
+    text-align: center;
+    color: #ffaa49;
+}
+
+.value {
+    width: 25px;
+    text-align: center;
+    color: #ffaa49;
+}
+
+.good {
+    color: #99e399;
+}
+
+.medium {
+    color: #e8d3ab;
+}
+
+.bad {
+    color: #e4a7a7;
+}
+
+.game-state-name {
+    width: 160px;
+}
+
+.mat-checkbox {
+    width: 80px;
+}

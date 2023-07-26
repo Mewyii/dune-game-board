@@ -1,0 +1,38 @@
+.cards-area {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.cards-area.one {
+    right: 16px;
+    bottom: 16px;
+    width: 352px;
+}
+
+.cards-area.two {
+    right: 16px;
+    bottom: 620px;
+}
+
+.cards-area.three {
+    right: 16px;
+    bottom: 975px;
+}
+
+.card-area {
+    border-radius: 15px;
+    background: #0000001c;
+    box-shadow: inset 0px 0px 2px 0px #00000040;
+}
+
+.card-area.small {
+    width: 160px;
+    height: 250px;
+}
+
+.card-area.large {
+    width: 230px;
+    height: 325px;
+}

@@ -1,0 +1,59 @@
+<div class="action-field" (click)="onActionFieldClicked()">
+  <div class="heading" [style.background-color]="backgroundColor">
+    <span class="title">{{ ts.translate(action.title) }}</span>
+    <div class="border-remover" [style.background-color]="backgroundColor"></div>
+  </div>
+  <div class="actionTypeIcon" [style.background-image]="'url(' + pathToActionType + ')'"></div>
+  <div class="action-area" [style.background-color]="backgroundColor">
+    <div class="agent-area" [style.background-image]="'url(' + action.pathToImage + ')'">
+      <div class="costs-area">
+        <ng-container *ngIf="action.requiresInfluence">
+          <div class="costs-container">
+            <img class="costs faction" [src]="getFactionTypePath(action.requiresInfluence.type)" />
+            <div *ngIf="action.requiresInfluence.amount" class="costs-amount faction">
+              <span>{{ action.requiresInfluence.amount }}</span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="action.costs">
+          <ng-container *ngFor="let costType of action.costs">
+            <ng-container *ngIf="!costType.amount">
+              <img class="costs" [src]="getRewardTypePath(costType.type)" />
+            </ng-container>
+            <ng-container *ngIf="costType.amount">
+              <div class="costs-container">
+                <img class="costs" [src]="getRewardTypePath(costType.type)" />
+                <div class="costs-amount">{{ costType.amount }}</div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <div class="reward-area" [style.max-width]="action.customWidth" [style.row-gap]="action.customWidth ? '0px' : '8px'">
+      <ng-container *ngFor="let rewardType of action.rewards">
+        <div class="reward-container" [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''">
+          <img
+            class="reward"
+            [src]="getRewardTypePath(rewardType.type)"
+            [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+            [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
+          />
+          <div *ngIf="rewardType.amount" class="reward-amount">
+            <span>{{ rewardType.amount }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div
+    *ngIf="boardSettings.mode === 'game' && playerOnField"
+    [style.background-color]="playerOnField.color"
+    class="player-marker"
+  ></div>
+  <div class="spice-accumulation-area">
+    <ng-container *ngFor="let spice of getArrayFromNumber(accumulatedSpice)">
+      <div class="spice-accumulation-marker"></div>
+    </ng-container>
+  </div>
+</div>

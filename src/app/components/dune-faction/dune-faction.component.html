@@ -1,0 +1,73 @@
+<div
+  class="faction-tile"
+  [style.bottom]="faction.position.marginBottom + 'px'"
+  [style.left]="faction.position.marginLeft + 'px'"
+  [style.backgroundColor]="faction.secondaryColor"
+>
+  <div class="title-container" [style.color]="getTitleColor(faction.primaryColor)">
+    <span class="title">{{ translateService.translate(faction.title) }} </span>
+  </div>
+  <div class="content">
+    <div *ngIf="faction.hasScoreBoard" class="scoreboard">
+      <ng-container *ngFor="let score of favorScoreArray; let i = index; let last = last">
+        <div
+          class="score-element"
+          [class.first]="i === 0"
+          [class.finale]="i > favorScoreArray.length - 4"
+          [class.last]="last"
+          [style.backgroundColor]="i > favorScoreArray.length - 4 ? faction.primaryColor : ''"
+        ></div>
+        <div *ngIf="!last" class="divider" [class.first]="i === 0" [class.finale]="i === favorScoreArray.length - 4"></div>
+      </ng-container>
+      <ng-container *ngIf="faction.levelTwoReward">
+        <div class="reward-area two">
+          <ng-container *ngFor="let reward of faction.levelTwoReward">
+            <div class="reward-container">
+              <img class="reward" [src]="getRewardTypePath(reward.type)" />
+              <ng-container *ngIf="reward.amount">
+                <div class="reward-amount">
+                  {{ reward.amount }}
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="faction.levelFourReward">
+        <div class="reward-area four">
+          <ng-container *ngFor="let reward of faction.levelFourReward">
+            <div class="reward-container">
+              <img class="reward" [src]="getRewardTypePath(reward.type)" />
+              <ng-container *ngIf="reward.amount">
+                <div class="reward-amount">
+                  {{ reward.amount }}
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <div class="alliance-element" [style.background-image]="'url(' + faction.pathToSymbol + ')'"></div>
+      <ng-container *ngIf="settingsService.board.mode === 'game'">
+        <ng-container *ngFor="let playerScore of playerScores; let i = index">
+          <div
+            class="score-marker"
+            [style.bottom]="15 + playerScore.score * 50 + 'px'"
+            [style.left]="15 + i * 35 + 'px'"
+            [style.background-color]="getPlayerColor(playerScore.playerId)"
+          ></div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div
+      class="action-area"
+      [style.max-width]="faction.position.width + 'px'"
+      [style.max-height]="faction.position.height + 'px'"
+    >
+      <ng-container *ngFor="let actionField of faction.actionFields">
+        <app-dune-action [action]="actionField" [backgroundColor]="faction.primaryColor"></app-dune-action>
+      </ng-container>
+    </div>
+  </div>
+  <div class="background-symbol" [style.background-image]="'url(' + faction.pathToSymbol + ')'"></div>
+</div>

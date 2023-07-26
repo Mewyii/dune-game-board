@@ -1,0 +1,21 @@
+<div
+  *ngIf="settingsService.board.content === 'custom-advanced' || settingsService.board.content === 'custom-expert'"
+  class="faction-tile"
+>
+  <div class="title-container">
+    <span class="title">ix </span>
+  </div>
+  <div class="content">
+    <app-dune-action [action]="techActionField" [backgroundColor]="'rgb(115, 98, 46)'"></app-dune-action>
+    <div class="card-area" [style]="'margin-top: 25px'"></div>
+    <div class="card-area"></div>
+    <div class="card-area"></div>
+    <div class="agent-area">
+      <div class="agent-container"></div>
+      <div class="logo-container">
+        <div class="logo" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
+      </div>
+    </div>
+  </div>
+  <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
+</div>

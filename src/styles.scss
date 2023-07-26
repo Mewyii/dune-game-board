@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'Sci-Fi';
+    src: url('assets/fonts/Arkitech Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Medieval';
+    src: url('assets/fonts/Malatestian.ttf');
+}
+
+@font-face {
+    font-family: 'Mixed';
+    src: url('assets/fonts/Obelisk-MMXV.ttf');
+}
+
+body {
+    font-family: "Medieval";
+    font-weight:bold;
+    width: 98vw;
+    display: flex;
+    justify-content: center;
+}
+html, body { 
+    // height: 100%; 
+    background-color: #171410;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 32px;
+}
+
+.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent,
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #e49a44;
+}

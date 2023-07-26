@@ -1,0 +1,148 @@
+<div class="combat-tile">
+  <div class="units-area">
+    <div class="upper-row">
+      <div class="units-gathering-area"></div>
+      <div class="units-gathering-area"></div>
+    </div>
+    <div class="mid-row">
+      <div class="units-gathering-area"></div>
+      <div class="units-gathering-area"></div>
+    </div>
+    <ng-container *ngIf="settingsService.board.mode === 'game'">
+      <ng-container *ngFor="let player of players; let i = index">
+        <div
+          class="units-control-bar-container"
+          [style.top]="175 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
+          [style.left]="-90 + (i > 0 ? 210 : 0) + (i > 1 ? 710 : 0) + (i > 2 ? 240 : 0) + 'px'"
+        >
+          <div class="units-control-bar">
+            <div class="troop-marker" [style.background-color]="getPlayerColor(player.id)"></div>
+            <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromGarrisonClicked(player.id)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onAddTroopToGarrisonClicked(player.id)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="units-control-bar">
+            <div class="ship-marker" [style.background-color]="getPlayerColor(player.id)"></div>
+            <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromGarrisonClicked(player.id)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onAddShipToGarrisonClicked(player.id)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="units-control-bar">
+            <div class="troop-marker combat-insert"></div>
+            <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromCombatClicked(player.id)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onAddTroopToCombatClicked(player.id)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="units-control-bar">
+            <div class="ship-marker combat-insert"></div>
+            <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromCombatClicked(player.id)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onAddShipToCombatClicked(player.id)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngFor="let combatUnits of playerCombatUnits; let i = index">
+        <div
+          class="units-in-timeout-container"
+          [style.top]="190 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
+          [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
+        >
+          <ng-container *ngFor="let ship of getArrayFromNumber(combatUnits.shipsInTimeout); let is = index">
+            <div class="ship-marker timeout"></div>
+          </ng-container>
+        </div>
+        <div
+          class="units-in-garrison-container"
+          [style.top]="240 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
+          [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
+        >
+          <ng-container *ngFor="let ship of getArrayFromNumber(combatUnits.shipsInGarrison); let is = index">
+            <div class="ship-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+          </ng-container>
+          <ng-container *ngFor="let troop of getArrayFromNumber(combatUnits.troopsInGarrison); let it = index">
+            <div class="troop-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+          </ng-container>
+        </div>
+        <div
+          class="units-in-combat-container"
+          [style.top]="290 - (i > 0 && i < 3 ? 90 : 0) + 'px'"
+          [style.left]="330 - (i > 0 && i < 3 ? 35 : 0) + (i > 1 ? 250 : 0) + 'px'"
+        >
+          <ng-container *ngFor="let ship of getArrayFromNumber(combatUnits.shipsInCombat); let is = index">
+            <div class="ship-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+          </ng-container>
+          <ng-container *ngFor="let troop of getArrayFromNumber(combatUnits.troopsInCombat); let it = index">
+            <div class="troop-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div class="lower-row" cdkDropListGroup>
+      <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
+        <div class="score">0</div>
+        <ng-container *ngIf="settingsService.board.mode === 'game'">
+          <ng-container *ngFor="let playerScore of getPlayersOnScore(0); let i = index"
+            ><div
+              class="score-marker"
+              [style.background-color]="getPlayerColor(playerScore.playerId)"
+              [style.top]="25 + i * 25 + 'px'"
+              cdkDrag
+              [cdkDragData]="playerScore.playerId"
+            ></div>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="combat-score-board">
+        <ng-container *ngFor="let score of combatScoreArray; let i = index; let last = last">
+          <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, i + 1)">
+            <div class="score">{{ i + 1 }}</div>
+            <ng-container *ngIf="settingsService.board.mode === 'game'">
+              <ng-container *ngFor="let playerScore of getPlayersOnScore(i + 1); let i = index"
+                ><div
+                  class="score-marker"
+                  [style.background-color]="getPlayerColor(playerScore.playerId)"
+                  [style.top]="5 + i * 25 + 'px'"
+                  cdkDrag
+                  [cdkDragData]="playerScore.playerId"
+                ></div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <img class="battlefield-background" [src]="'assets/images/battefield_background.png'" />
+    <div class="score-legend">
+      <div class="legend-container">
+        <img class="legend-icon" [src]="getRewardTypePath('attack-value')" />
+        <span>=</span>
+        <div class="legend-description">1</div>
+      </div>
+      <div class="legend-container">
+        <img class="legend-icon" [src]="getRewardTypePath('troops')" />
+        <span>=</span>
+        <div class="legend-description">2</div>
+      </div>
+      <div
+        class="legend-container"
+        *ngIf="boardSettings.content === 'custom-advanced' || boardSettings.content === 'custom-expert'"
+      >
+        <img class="legend-icon" [src]="getRewardTypePath('ship')" />
+        <span>=</span>
+        <div class="legend-description">3</div>
+      </div>
+    </div>
+  </div>
+</div>
