@@ -28,7 +28,7 @@
     ></div>
   </ng-container>
   <ng-container *ngIf="settingsService.board.mode === 'game'">
-    <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index">
+    <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index; trackBy: trackPlayerScore">
       <div
         class="score-marker"
         [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 152 + 'px'"

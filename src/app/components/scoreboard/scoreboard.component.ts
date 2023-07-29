@@ -80,4 +80,8 @@ export class ScoreboardComponent implements OnInit {
     const reward = this.scoreRewards.find((x) => x.score === score);
     return reward ? getRewardTypePath(reward.reward.type) : '';
   }
+
+  public trackPlayerScore(index: number, playerScore: { playerId: number; amount: number }) {
+    return playerScore.playerId * 100 + playerScore.amount;
+  }
 }
