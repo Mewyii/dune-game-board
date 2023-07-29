@@ -9,7 +9,7 @@
       <div class="units-gathering-area"></div>
     </div>
     <ng-container *ngIf="settingsService.board.mode === 'game'">
-      <ng-container *ngFor="let player of players; let i = index">
+      <ng-container *ngFor="let player of players; let i = index; trackBy: trackPlayer">
         <div
           class="units-control-bar-container"
           [style.top]="175 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
@@ -53,7 +53,7 @@
           </div>
         </div>
       </ng-container>
-      <ng-container *ngFor="let combatUnits of playerCombatUnits; let i = index">
+      <ng-container *ngFor="let combatUnits of playerCombatUnits; let i = index; trackBy: trackCombatUnits">
         <div
           class="units-in-timeout-container"
           [style.top]="190 - (i > 0 && i < 3 ? 190 : 0) + 'px'"

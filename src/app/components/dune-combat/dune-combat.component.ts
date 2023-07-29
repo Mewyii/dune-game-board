@@ -104,4 +104,12 @@ export class DuneCombatComponent implements OnInit {
   public getArrayFromNumber(length: number) {
     return new Array(length);
   }
+
+  public trackCombatUnits(index: number, combatUnits: PlayerCombatUnits) {
+    return combatUnits.playerId;
+  }
+
+  public trackPlayer(index: number, player: Player) {
+    return player.id;
+  }
 }

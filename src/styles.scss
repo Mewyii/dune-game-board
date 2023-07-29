@@ -37,3 +37,7 @@ h2 {
 .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
     background-color: #e49a44;
 }
+
+.mdc-form-field, .mdc-form-field>label {
+    color:white !important;
+}

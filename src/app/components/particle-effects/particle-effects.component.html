@@ -1,6 +1,31 @@
-<ng-particles
-  [id]="id"
-  [options]="particlesOptions"
-  [particlesInit]="particlesInit"
-  (particlesLoaded)="particlesLoaded($event)"
-></ng-particles>
+<div
+  class="combat-animation"
+  [style.animation-duration]="combatAnimation.duration + 's'"
+  *ngIf="combatAnimation && combatAnimation.show"
+>
+  <ng-particles
+    class="combat-particles"
+    [id]="combatAnimation.id"
+    [options]="combatAnimation.effect"
+    [particlesInit]="combatInit"
+    (particlesLoaded)="particlesLoaded($event)"
+  >
+  </ng-particles>
+  <div class="effect-title">{{ combatAnimation.title }}</div>
+</div>
+
+<div
+  class="spice-animation"
+  [style.animation-duration]="spiceAnimation.duration + 's'"
+  *ngIf="spiceAnimation && spiceAnimation.show"
+>
+  <ng-particles
+    class="spice-particles"
+    [id]="spiceAnimation.id"
+    [options]="spiceAnimation.effect"
+    [particlesInit]="spiceInit"
+    (particlesLoaded)="particlesLoaded($event)"
+  >
+  </ng-particles>
+  <div class="effect-title">{{ spiceAnimation.title }}</div>
+</div>

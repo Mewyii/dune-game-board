@@ -1,0 +1,30 @@
+.combat-animation {
+    animation-name: combat-anim;
+    animation-timing-function: ease-in-out;
+    opacity: 0.0;
+    position: fixed;
+    z-index: 2;
+}
+
+.combat-particles {
+}
+
+.spice-animation {
+    animation-name: combat-anim;
+    animation-timing-function: ease-in-out;
+    opacity: 0.0;
+    position: fixed;
+    z-index: 2;
+}
+
+.effect-title {
+    position: fixed;
+    font-size: 66px;
+    left: calc(50% - 33px);
+    top: calc(50% - 33px);
+    color: white;
+}
+
+@keyframes combat-anim {
+    33%  {opacity: 0.85;}
+  }

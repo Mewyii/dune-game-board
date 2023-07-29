@@ -151,6 +151,9 @@
     border: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
 }
 
 .ship-marker {
@@ -161,6 +164,9 @@
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
     transform: rotateX(45deg) rotateZ(45deg);
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
 }
 
 .troop-marker.combat-insert,
@@ -176,3 +182,9 @@
     background-color: gray;
 }
 
+
+@keyframes unit-marker-anim {
+    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
+    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.75)}
+    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
+  }
