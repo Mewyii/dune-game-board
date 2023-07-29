@@ -196,4 +196,13 @@
     border-radius: 25%;
     border: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
+    animation-name: marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
 }
+
+@keyframes marker-anim {
+    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
+    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.75)}
+    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
+  }

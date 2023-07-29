@@ -108,4 +108,8 @@ export class DuneFactionComponent implements OnInit {
     result = result + ')';
     return result;
   }
+
+  public trackPlayerScore(index: number, playerScore: { playerId: number; score: number }) {
+    return playerScore.playerId * 100 + playerScore.score;
+  }
 }
