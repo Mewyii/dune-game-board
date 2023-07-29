@@ -146,15 +146,15 @@ export class GameManager {
 
       this.setPreferredFieldsForAIPlayer(activeAgentPlacementPlayerId);
 
-      setTimeout(() => {
-        if (this.currentTurnState !== 'combat') {
-          const preferredField = this.aIManager.getPreferredFieldForPlayer(activeAgentPlacementPlayerId);
-          if (preferredField) {
-            this.addAgentToField(preferredField);
-            this.setNextPlayerActive('agent-placement');
-          }
-        }
-      }, 750);
+      // setTimeout(() => {
+      //   if (this.currentTurnState !== 'combat') {
+      //     const preferredField = this.aIManager.getPreferredFieldForPlayer(activeAgentPlacementPlayerId);
+      //     if (preferredField) {
+      //       this.addAgentToField(preferredField);
+      //       this.setNextPlayerActive('agent-placement');
+      //     }
+      //   }
+      // }, 750);
     });
 
     this.isFinale$.subscribe((isFinale) => {
@@ -218,6 +218,7 @@ export class GameManager {
     this.startingPlayerIdSubject.next(1);
     this.activeAgentPlacementPlayerIdSubject.next(1);
     this.activeCombatPlayerId = 1;
+    this.playerManager.allPlayersDrawInitialCards();
   }
 
   public setNextTurn() {
@@ -241,6 +242,8 @@ export class GameManager {
 
     this.activeAgentPlacementPlayerIdSubject.next(this.startingPlayerId);
     this.activeCombatPlayerId = this.startingPlayerId;
+
+    this.playerManager.allPlayersDrawInitialCards();
   }
 
   public finishGame() {
@@ -298,7 +301,7 @@ export class GameManager {
 
     let unitsGainedThisTurn = 0;
     let canEnterCombat = false;
-    let canDestroyCard = false;
+    let canDestroyOrDrawCard = false;
 
     for (let reward of field.rewards) {
       if (!field.hasRewardOptions) {
@@ -343,11 +346,14 @@ export class GameManager {
         if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
           this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
         }
+        if (reward.type === 'card-draw') {
+          this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+        }
         if (reward.type === 'card-destroy') {
           this.playerManager.trimCardsFromPlayerDeck(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
         }
         if (reward.type == 'card-draw-or-destroy') {
-          canDestroyCard = true;
+          canDestroyOrDrawCard = true;
         }
       }
       if (reward.type === 'troop-insert') {
@@ -358,10 +364,12 @@ export class GameManager {
     if (this.activePlayer.isAI) {
       const aiPlayer = this.aIManager.getAIPlayer(this.activePlayer.id);
       if (aiPlayer) {
-        if (canDestroyCard) {
+        if (canDestroyOrDrawCard) {
           const drawOrTrim = this.aIManager.getFieldDrawOrTrimDecision(this.activePlayer.id, field.title.en);
 
-          if (drawOrTrim === 'trim') {
+          if (drawOrTrim === 'draw') {
+            this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, 1);
+          } else {
             this.playerManager.trimCardsFromPlayerDeck(this.activeAgentPlacementPlayerId, 1);
           }
         }
@@ -470,7 +478,7 @@ export class GameManager {
 
           if (cardDrawDecision) {
             if (cardDrawDecision.includes('build deck')) {
-              this.playerManager.boughtCardsFromImperiumRow(aiPlayer.playerId, 1);
+              // this.playerManager.boughtCardsFromImperiumRow(aiPlayer.playerId, 1);
             } else if (cardDrawDecision.includes('spice must flows')) {
             }
           }
@@ -574,9 +582,9 @@ export class GameManager {
   private shouldTriggerFinale() {
     const playerScores = this.playerScoreManager.playersScores;
     if (playerScores.length < 4) {
-      return playerScores.some((x) => x.victoryPoints > 7);
+      return playerScores.some((x) => x.victoryPoints > 8);
     } else {
-      return playerScores.some((x) => x.victoryPoints > 6);
+      return playerScores.some((x) => x.victoryPoints > 7);
     }
   }
 }

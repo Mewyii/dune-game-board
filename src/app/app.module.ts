@@ -21,6 +21,10 @@ import { HomeworldTileComponent } from './components/homeworld-tile/homeworld-ti
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AITileComponent } from './components/ai-tile/ai-tile.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ParticleEffectsComponent } from './components/particle-effects/particle-effects.component';
+
+import { NgParticlesModule } from 'ng-particles';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +39,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     EventsComponent,
     HomeworldTileComponent,
     AITileComponent,
+    ParticleEffectsComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +51,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     DragDropModule,
     MatSlideToggleModule,
     MatCheckboxModule,
+    NgParticlesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

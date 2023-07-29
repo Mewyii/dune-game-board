@@ -39,7 +39,7 @@ export class ScoreboardComponent implements OnInit {
     });
 
     if (this.settingsService.board.content === 'custom-advanced') {
-      this.finaleTrigger = 7;
+      this.finaleTrigger = 8;
 
       this.scoreRewards[1].reward = { type: 'conviction', amount: 1 };
       this.scoreRewards[3].reward = { type: 'conviction', amount: 1 };
@@ -49,7 +49,7 @@ export class ScoreboardComponent implements OnInit {
       this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
     }
     if (this.settingsService.board.content === 'custom-expert') {
-      this.finaleTrigger = 7;
+      this.finaleTrigger = 8;
 
       this.scoreRewards[1].reward = { type: 'conviction', amount: 1 };
       this.scoreRewards[3].reward = { type: 'card-round-start', amount: 1 };

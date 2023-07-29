@@ -14,6 +14,7 @@ export interface Player {
   cardsInDeck: number;
   cardsBought: number;
   cardsTrimmed: number;
+  cardsDrawnThisRound: number;
   techAgents: number;
   isAI?: boolean;
 }
@@ -68,6 +69,7 @@ export class PlayerManager {
         cardsBought: 0,
         cardsTrimmed: 0,
         intrigueCount: 0,
+        cardsDrawnThisRound: 0,
         techAgents: 0,
         isAI: true,
       });
@@ -97,6 +99,7 @@ export class PlayerManager {
       cardsBought: 0,
       cardsTrimmed: 0,
       intrigueCount: 0,
+      cardsDrawnThisRound: 0,
       techAgents: 0,
       hasCouncilSeat: false,
       hasSwordmaster: false,
@@ -232,6 +235,27 @@ export class PlayerManager {
     if (player) {
       player.cardsTrimmed = player.cardsTrimmed + amount;
       player.cardsInDeck = player.cardsInDeck - amount;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public allPlayersDrawInitialCards() {
+    const players = this.players;
+
+    for (const player of players) {
+      player.cardsDrawnThisRound = 5;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public playerDrawsCards(id: number, amount: number) {
+    const players = this.players;
+
+    const player = players.find((x) => x.id === id);
+    if (player) {
+      player.cardsDrawnThisRound = player.cardsDrawnThisRound + amount;
     }
 
     this.playersSubject.next(players);

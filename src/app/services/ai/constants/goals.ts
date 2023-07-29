@@ -11,7 +11,7 @@ export const aiGoals: FieldsForGoals = {
     desireModifier: (player, gameState) =>
       0.0125 * getResourceAmount(player, 'currency') - 0.025 * (gameState.currentTurn - 1),
     goalIsReachable: (player) => getResourceAmount(player, 'currency') > 4,
-    reachedGoal: (player) => player.hasCouncilSeat === true,
+    reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
     desiredFields: {
       'high council': () => 1,
     },
@@ -228,8 +228,8 @@ export const aiGoals: FieldsForGoals = {
           ? clamp(0.1 + (player.hasCouncilSeat ? 0.1 : 0) + 0.05 * player.cardsBought + 0.05 * player.cardsTrimmed, 0, 0.6)
           : 0;
 
-      console.log('deckbuilding: ' + deckBuildingDesire);
-      console.log('spice must flows: ' + getSpiceMustFlowsDesire);
+      // console.log('deckbuilding: ' + deckBuildingDesire);
+      // console.log('spice must flows: ' + getSpiceMustFlowsDesire);
 
       const modifier = deckBuildingDesire > getSpiceMustFlowsDesire ? deckBuildingDesire : getSpiceMustFlowsDesire;
       const name = deckBuildingDesire > getSpiceMustFlowsDesire ? 'card-draw: build deck' : 'card-draw: spice must flows';
@@ -240,13 +240,16 @@ export const aiGoals: FieldsForGoals = {
       };
     },
     goalIsReachable: (player) => getResourceAmount(player, 'water') > 1 || getResourceAmount(player, 'spice') > 1,
-    reachedGoal: () => false,
+    reachedGoal: (player) => !playerCanDrawCards(player, 1),
     viableFields: {
       'relations (draw)': () => 0.3,
       mentat: (player) => getCostAdjustedDesire(player, 'currency', 3, 0.3),
       arrakeen: () => 0.3,
       'research station (draw)': (player) =>
-        getCostAdjustedDesire(player, 'water', 2, clamp(0.6 + 0.075 * player.cardsBought, 0, 0.9)),
+        // if we cant buy 3 cards, we always trim
+        playerCanDrawCards(player, 3)
+          ? getCostAdjustedDesire(player, 'water', 2, clamp(0.6 + 0.075 * player.cardsBought, 0, 0.9))
+          : 0,
       'research station (trim)': (player) =>
         getCostAdjustedDesire(player, 'water', 2, clamp(0.5 + 0.075 * player.cardsBought, 0, 0.7)),
       'secret agreement': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.15 : 0.0),
@@ -272,7 +275,7 @@ export const aiGoals: FieldsForGoals = {
         0.4
       ),
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState) => player.cardsInDeck < 6 || gameState.isFinale,
+    reachedGoal: (player, gameState) => player.cardsInDeck < 7 || gameState.isFinale,
     viableFields: {
       'relations (trim)': () => 0.5,
       'secret agreement': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.75 : 0.5),
@@ -402,7 +405,6 @@ export const aiGoals: FieldsForGoals = {
         }
       }
       if (
-        !gameState.isFinale &&
         !goals['high-council'].reachedGoal(player, gameState, goals) &&
         !goals['high-council'].goalIsReachable(player, gameState, goals)
       ) {
@@ -723,4 +725,8 @@ function getCostAdjustedDesire(player: Player, resourceType: ResourceType, costs
   const desireAdjustment = 1.0 - 0.125 * costs + 0.1 * (playerResourceAmount - costs);
 
   return clamp(desire * desireAdjustment, 0, 1);
+}
+
+function playerCanDrawCards(player: Player, amount: number) {
+  return player.cardsInDeck >= player.cardsDrawnThisRound + amount;
 }
