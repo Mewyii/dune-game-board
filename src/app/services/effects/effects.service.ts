@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { fire, spice } from '../components/particle-effects/effects';
+import { fire, spice } from './constants';
 import { IParticlesProps } from 'ng-particles';
-import { GameManager } from './game-manager.service';
+import { GameManager } from '../game-manager.service';
+import { welcome } from './constants/welcome';
 
 export interface Effect {
   id: string;
@@ -17,6 +18,15 @@ export interface Effect {
   providedIn: 'root',
 })
 export class EffectsService {
+  private welcomeAnimationSubject = new BehaviorSubject<Effect>({
+    id: 'welcomeEffect',
+    title: 'dune: imperium',
+    effect: welcome,
+    duration: 5,
+    show: false,
+  });
+  public welcomeAnimation$ = this.welcomeAnimationSubject.asObservable();
+
   private combatAnimationSubject = new BehaviorSubject<Effect>({
     id: 'combatEffect',
     title: 'combat',
@@ -49,6 +59,17 @@ export class EffectsService {
       if (state === 'agent-placement') {
         this.showSpiceAnimation('runde ' + this.currentTurn);
       }
+      if (state === 'none') {
+        this.showWelcomeAnimation();
+      }
+    });
+
+    this.welcomeAnimation$.subscribe((x) => {
+      if (x.show === true) {
+        setTimeout(() => {
+          this.welcomeAnimationSubject.next({ ...this.welcomeAnimation, show: false });
+        }, x.duration * 1000);
+      }
     });
 
     this.combatAnimation$.subscribe((x) => {
@@ -68,12 +89,19 @@ export class EffectsService {
     });
   }
 
+  public get welcomeAnimation() {
+    return cloneDeep(this.welcomeAnimationSubject.value);
+  }
   public get combatAnimation() {
     return cloneDeep(this.combatAnimationSubject.value);
   }
 
   public get spiceAnimation() {
     return cloneDeep(this.spiceAnimationSubject.value);
+  }
+
+  public showWelcomeAnimation() {
+    this.welcomeAnimationSubject.next({ ...this.welcomeAnimation, show: true });
   }
 
   public showCombatAnimation(title?: string) {

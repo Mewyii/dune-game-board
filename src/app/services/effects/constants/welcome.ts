@@ -1,13 +1,13 @@
 import { IParticlesProps } from 'ng-particles';
 
-export const spice: IParticlesProps = {
+export const welcome: IParticlesProps = {
   autoPlay: true,
   duration: 10,
   fpsLimit: 40,
   style: {},
   particles: {
     number: {
-      value: 200,
+      value: 25,
       density: {
         enable: true,
       },
@@ -16,10 +16,10 @@ export const spice: IParticlesProps = {
       value: ['#d17c1a', '#e97c00', '#e0a25c', '#ebd8c2', '#94632b'],
     },
     opacity: {
-      value: { min: 0.1, max: 0.5 },
+      value: { min: 0.01, max: 0.1 },
     },
     size: {
-      value: { min: 5, max: 10 },
+      value: { min: 1, max: 250 },
     },
     move: {
       enable: true,
@@ -28,6 +28,6 @@ export const spice: IParticlesProps = {
     },
   },
   background: {
-    image: 'radial-gradient(#d17c1a, #000)',
+    image: 'radial-gradient(#784000, #000)',
   },
 };

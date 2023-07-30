@@ -29,3 +29,19 @@
   </ng-particles>
   <div class="effect-title">{{ spiceAnimation.title }}</div>
 </div>
+
+<div
+  class="spice-animation"
+  [style.animation-duration]="welcomeAnimation.duration + 's'"
+  *ngIf="welcomeAnimation && welcomeAnimation.show"
+>
+  <ng-particles
+    class="spice-particles"
+    [id]="welcomeAnimation.id"
+    [options]="welcomeAnimation.effect"
+    [particlesInit]="spiceInit"
+    (particlesLoaded)="particlesLoaded($event)"
+  >
+  </ng-particles>
+  <div class="effect-title">{{ welcomeAnimation.title }}</div>
+</div>

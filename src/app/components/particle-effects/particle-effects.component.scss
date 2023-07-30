@@ -20,7 +20,9 @@
 .effect-title {
     position: fixed;
     font-size: 66px;
-    left: calc(50% - 33px);
+    width: 100%;
+    text-align: center;
+    left: 0;
     top: calc(50% - 33px);
     color: white;
 }
