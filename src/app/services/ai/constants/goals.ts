@@ -124,8 +124,9 @@ export const aiGoals: FieldsForGoals = {
   'enter-combat': {
     baseDesire: 0.0,
     desireModifier: (player, gameState) => {
+      const alwaysTryToWinCombat = gameState.isFinale || getPlayerGarrisonStrength(gameState.playerCombatUnits) > 12;
       const winCombatDesire = 0.33 * getWinCombatDesireModifier(gameState);
-      const participateInCombatDesire = getParticipateInCombatDesireModifier(gameState);
+      const participateInCombatDesire = !alwaysTryToWinCombat ? getParticipateInCombatDesireModifier(gameState) : 0;
 
       const modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
       const name = winCombatDesire * 3 > participateInCombatDesire ? 'combat: win' : 'combat: participate';
@@ -213,15 +214,17 @@ export const aiGoals: FieldsForGoals = {
   'draw-cards': {
     baseDesire: 0.0,
     desireModifier: (player, gameState) => {
-      const deckBuildingDesire = clamp(
-        0.4 +
-          (player.hasCouncilSeat ? 0.1 : 0) -
-          0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn +
-          0.033 * player.cardsBought +
-          0.025 * player.cardsTrimmed,
-        0,
-        0.6
-      );
+      const deckBuildingDesire = !gameState.isFinale
+        ? clamp(
+            0.4 +
+              (player.hasCouncilSeat ? 0.1 : 0) -
+              0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn +
+              0.033 * player.cardsBought +
+              0.025 * player.cardsTrimmed,
+            0,
+            0.6
+          )
+        : 0;
 
       const getSpiceMustFlowsDesire =
         player.cardsInDeck > 7
@@ -565,7 +568,7 @@ function enemyCanContestPlayer(
   const playerCombatPower = getPlayerCombatPower(player);
 
   const enemyCombatPower = getPlayerCombatPower(enemy);
-  const enemyAgentCount = gameState.availablePlayerAgents.find((x) => x.playerId === enemy.playerId)?.agentAmount;
+  const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount;
 
   if (enemyAgentCount !== undefined && enemyAgentCount < 1 && playerCombatPower > enemyCombatPower) {
     if (countEnemiesNotInCombat) {
@@ -605,12 +608,12 @@ function playerLikelyWinsCombat(gameState: GameState) {
 }
 
 function getWinCombatDesireModifier(gameState: GameState) {
-  let desire = 0.7 + 0.025 * (gameState.currentTurn - 1);
+  let desire = 0.4 + 0.025 * (gameState.currentTurn - 1) + 0.1 * gameState.playerAgentCount;
 
   const playerStrength =
     getPlayerCombatPower(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);
 
-  desire = desire + 0.05 * playerStrength;
+  desire = desire + 0.075 * playerStrength;
 
   let strengthOfStrongestEnemy = 0;
   let garrisonStrengthOfEnemiesNotInCombat = 0;
@@ -651,7 +654,7 @@ function getWinCombatDesireModifier(gameState: GameState) {
 }
 
 function getParticipateInCombatDesireModifier(gameState: GameState) {
-  let desire = 0.0 + 0.0125 * (gameState.currentTurn - 1);
+  let desire = 0.1 + 0.0125 * (gameState.currentTurn - 1);
 
   let enemiesInCombat = 0;
   let garrisonStrengthOfEnemiesNotInCombat = 0;
@@ -668,8 +671,8 @@ function getParticipateInCombatDesireModifier(gameState: GameState) {
   const garrisonStrength = getPlayerGarrisonStrength(gameState.playerCombatUnits);
 
   if (garrisonStrength > 0 && enemiesInCombat < 3) {
-    desire = desire + 0.05 * getInactivePlayerCount(gameState);
-    desire = desire + 0.075 * garrisonStrength;
+    desire = desire + 0.05 * getInactiveEnemyCount(gameState);
+    desire = desire + 0.05 * garrisonStrength;
     desire = desire - 0.0025 * garrisonStrengthOfEnemiesNotInCombat;
 
     return clamp(desire, 0.0, 0.75);
@@ -687,8 +690,8 @@ export function getDesire(goal: AIGoal, player: Player, gameState: GameState) {
   }
 }
 
-function getInactivePlayerCount(gamestate: GameState) {
-  return gamestate.availablePlayerAgents.filter((x) => x.agentAmount < 1).length;
+function getInactiveEnemyCount(gamestate: GameState) {
+  return gamestate.enemyAgentCount.filter((x) => x.agentAmount < 1).length;
 }
 
 function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: keyof PlayerScore) {

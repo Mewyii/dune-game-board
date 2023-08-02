@@ -501,12 +501,13 @@ export class GameManager {
       this.aIManager.setPreferredFieldsForAIPlayer(player, {
         currentTurn: this.currentTurn,
         accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
+        playerAgentCount: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
+        enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
         playerScore: this.playerScoreManager.getPlayerScore(player.id)!,
         enemyScore: this.playerScoreManager.getEnemyScore(player.id)!,
         playerCombatUnits: this.combatManager.getPlayerCombatUnits(player.id)!,
         enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
         agentsOnFields: this.agentsOnFields,
-        availablePlayerAgents: this.availablePlayerAgents,
         isOpeningTurn: this.isOpeningTurn(playerId),
         isFinale: this.isFinale,
       });

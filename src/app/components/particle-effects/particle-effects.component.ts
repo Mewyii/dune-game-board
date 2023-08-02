@@ -28,7 +28,7 @@ export class ParticleEffectsComponent implements OnInit {
   }
 
   particlesLoaded(container: Container): void {
-    console.log(container);
+    // console.log(container);
   }
 
   async combatInit(engine: Engine): Promise<void> {
