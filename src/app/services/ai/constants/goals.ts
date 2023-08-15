@@ -18,7 +18,7 @@ export const aiGoals: FieldsForGoals = {
     viableFields: {},
   },
   swordmaster: {
-    baseDesire: 0.75,
+    baseDesire: 0.8,
     desireModifier: (player, gameState) =>
       0.0125 * getResourceAmount(player, 'currency') - 0.05 * (gameState.currentTurn - 1),
     goalIsReachable: (player) => getResourceAmount(player, 'currency') > 9,
@@ -268,7 +268,7 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'trim-deck': {
-    baseDesire: 0.3,
+    baseDesire: 0.35,
     desireModifier: (player, gameState) =>
       clamp(
         -(0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn) +

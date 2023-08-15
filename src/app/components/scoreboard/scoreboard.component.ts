@@ -41,11 +41,9 @@ export class ScoreboardComponent implements OnInit {
     if (this.settingsService.board.content === 'custom-advanced') {
       this.finaleTrigger = 8;
 
-      this.scoreRewards[1].reward = { type: 'conviction', amount: 1 };
-      this.scoreRewards[3].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[2].reward = { type: 'conviction', amount: 1 };
       this.scoreRewards[5].reward = { type: 'card-round-start', amount: 1 };
-      this.scoreRewards[7].reward = { type: 'conviction', amount: 1 };
-      this.scoreRewards[9].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[8].reward = { type: 'conviction', amount: 1 };
       this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
     }
     if (this.settingsService.board.content === 'custom-expert') {

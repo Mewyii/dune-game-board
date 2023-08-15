@@ -196,10 +196,16 @@ export const factionsCustomAdvanced: Faction[] = [
         title: { de: 'mentat', en: 'mentat' },
         actionType: 'diplomacy',
         costs: [{ type: 'currency', amount: 3 }],
-        rewards: [{ type: 'card-draw' }, { type: 'mentat', iconHeight: 95 }],
+        rewards: [
+          { type: 'card-draw' },
+          { type: 'separator', width: 10, iconHeight: 50 },
+          { type: 'troops', amount: 2 },
+          { type: 'mentat', iconHeight: 50 },
+        ],
         pathToImage: 'assets/images/action-backgrounds/mentat_4.png',
         isBattlefield: false,
-        customWidth: 'fit-content',
+        hasRewardOptions: true,
+        customWidth: '125px',
       },
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },

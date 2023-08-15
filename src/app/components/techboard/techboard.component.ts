@@ -16,7 +16,7 @@ export class TechboardComponent implements OnInit {
     costs: [{ type: 'currency', amount: 4 }],
     rewards: [
       { type: 'ship' },
-      { type: 'separator', width: 10, iconHeight: 55 },
+      { type: 'separator', width: 10, iconHeight: 50 },
       { type: 'tech-reduced-three' },
       { type: 'troop-insert' },
     ],

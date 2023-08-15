@@ -337,15 +337,6 @@ export class GameManager {
           this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
           unitsGainedThisTurn += reward.amount ?? 1;
         }
-        if (reward.type === 'mentat' || reward.type === 'sword-master') {
-          this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
-        }
-        if (reward.type === 'sword-master') {
-          this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
-        }
-        if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
-          this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
-        }
         if (reward.type === 'card-draw') {
           this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
         }
@@ -355,6 +346,15 @@ export class GameManager {
         if (reward.type == 'card-draw-or-destroy') {
           canDestroyOrDrawCard = true;
         }
+      }
+      if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
+        this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
+      }
+      if (reward.type === 'sword-master') {
+        this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
+      }
+      if (reward.type === 'mentat' || reward.type === 'sword-master') {
+        this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
       }
       if (reward.type === 'troop-insert') {
         canEnterCombat = true;

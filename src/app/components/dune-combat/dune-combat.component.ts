@@ -41,7 +41,7 @@ export class DuneCombatComponent implements OnInit {
     });
 
     this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
-      this.playerCombatUnits = playerCombatUnits;
+      this.playerCombatUnits = playerCombatUnits.sort((a, b) => a.playerId - b.playerId);
     });
 
     this.playerManager.players$.subscribe((players) => {
