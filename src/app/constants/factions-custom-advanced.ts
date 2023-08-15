@@ -20,7 +20,7 @@ export const factionsCustomAdvanced: Faction[] = [
       {
         title: { de: 'destillanzüge', en: 'stillsuits' },
         actionType: 'fremen',
-        rewards: [{ type: 'water' }, { type: 'troop-insert' }],
+        rewards: [{ type: 'water' }],
         pathToImage: 'assets/images/action-backgrounds/stillsuits.png',
         isBattlefield: true,
       },

@@ -14,7 +14,7 @@
   <app-playerboard *ngIf="settingsService.board.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">
     <dune-events *ngIf="settingsService.board.mode === 'game'"></dune-events>
-    <dune-ai-tile></dune-ai-tile>
+    <dune-ai-tile *ngIf="settingsService.board.mode === 'game'"></dune-ai-tile>
     <dune-homeworld-tile></dune-homeworld-tile>
   </div>
 </div>

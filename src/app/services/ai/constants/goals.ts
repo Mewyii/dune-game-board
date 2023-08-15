@@ -150,7 +150,6 @@ export const aiGoals: FieldsForGoals = {
       'imperial favor': (player, gameState) => (gameState.playerScore.imperium === 1 ? 0.5 : 0),
       conspiracy: (player, gameState) =>
         getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.imperium === 1 ? 0.5 : 0),
-      stillsuits: () => 0.5,
       'imperial basin': () => 0.5,
       'hagga basin': (player) => getCostAdjustedDesire(player, 'water', 1, 0.5),
       'the great flat': (player) => getCostAdjustedDesire(player, 'water', 2, 0.5),
