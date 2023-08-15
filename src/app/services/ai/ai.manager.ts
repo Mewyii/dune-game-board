@@ -7,6 +7,7 @@ import { GameState, AIGoals, AIPersonality, FieldsForGoals, AIGoal } from './mod
 import { aiPersonalities } from './constants';
 import { aiGoals, getDesire } from './constants/goals';
 import { SettingsService } from '../settings.service';
+import { PlayerCombatUnits } from '../combat-manager.service';
 
 export interface AIPlayer {
   playerId: number;
@@ -313,6 +314,40 @@ export class AIManager {
     return playerSpiceAmount;
   }
 
+  public getAddAdditionalUnitsToCombatDecision(
+    playerCombatUnits?: PlayerCombatUnits,
+    enemyCombatUnits?: PlayerCombatUnits[]
+  ) {
+    if (!playerCombatUnits || !enemyCombatUnits) {
+      return 'none';
+    }
+
+    const playerCombatPower = getPlayerCombatPower(playerCombatUnits);
+
+    const enemyCombatPowers = enemyCombatUnits.map((x) => getPlayerCombatPower(x));
+    const highestEnemyCombatPower = Math.max(...enemyCombatPowers);
+
+    if (playerCombatPower < highestEnemyCombatPower) {
+      return 'all';
+    } else {
+      const maxCombatPowerDifference = 10;
+      const combatPowerDifference = playerCombatPower - highestEnemyCombatPower;
+
+      if (combatPowerDifference > maxCombatPowerDifference) {
+        return 'none';
+      }
+
+      const randomNumber = getRandomInt(maxCombatPowerDifference);
+      if (randomNumber - combatPowerDifference <= 0) {
+        return 'minimum';
+      } else if (randomNumber - combatPowerDifference <= 5) {
+        return 'all';
+      }
+    }
+
+    return 'none';
+  }
+
   private getGameStateModifier(goal: AIGoals) {
     const aiVariables = this.aiVariables;
 
@@ -348,4 +383,12 @@ export class AIManager {
     const randomIndex = Math.floor(Math.random() * Object.keys(aiPersonalities).length);
     return Object.keys(aiPersonalities)[randomIndex];
   }
+}
+
+function getPlayerCombatPower(player: PlayerCombatUnits) {
+  return player.troopsInCombat * 2 + player.shipsInCombat * 3;
+}
+
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+import { add, cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { isResource } from '../helpers/resources';
 import { CombatManager } from './combat-manager.service';
@@ -154,7 +154,7 @@ export class GameManager {
       //       this.setNextPlayerActive('agent-placement');
       //     }
       //   }
-      // }, 750);
+      // }, 250);
     });
 
     this.isFinale$.subscribe((isFinale) => {
@@ -388,7 +388,16 @@ export class GameManager {
 
           if (combatDecision) {
             if (combatDecision.includes('win')) {
-              this.combatManager.addAllPossibleUnitsToCombat(this.activePlayer.id, unitsGainedThisTurn);
+              const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
+                this.combatManager.getPlayerCombatUnits(this.activePlayer.id),
+                this.combatManager.getEnemyCombatUnits(this.activePlayer.id)
+              );
+
+              if (addUnitsDecision === 'all') {
+                this.combatManager.addAllPossibleUnitsToCombat(this.activePlayer.id, unitsGainedThisTurn);
+              } else if (addUnitsDecision === 'minimum') {
+                this.combatManager.addMinimumUnitsToCombat(this.activePlayer.id);
+              }
             } else if (combatDecision.includes('participate')) {
               this.combatManager.addMinimumUnitsToCombat(this.activePlayer.id);
             }
