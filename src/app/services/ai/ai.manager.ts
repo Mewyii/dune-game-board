@@ -327,7 +327,7 @@ export class AIManager {
     const enemyCombatPowers = enemyCombatUnits.map((x) => getPlayerCombatPower(x));
     const highestEnemyCombatPower = Math.max(...enemyCombatPowers);
 
-    if (playerCombatPower < highestEnemyCombatPower) {
+    if (playerCombatPower <= highestEnemyCombatPower) {
       return 'all';
     } else {
       const maxCombatPowerDifference = 10;
