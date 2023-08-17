@@ -387,7 +387,9 @@ export class GameManager {
           const combatDecision = aiPlayer.decisions.find((x) => x.includes('combat'));
 
           if (combatDecision) {
-            if (combatDecision.includes('win')) {
+            if (this.isFinale) {
+              this.combatManager.addAllPossibleUnitsToCombat(this.activePlayer.id, unitsGainedThisTurn);
+            } else if (combatDecision.includes('win')) {
               const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
                 this.combatManager.getPlayerCombatUnits(this.activePlayer.id),
                 this.combatManager.getEnemyCombatUnits(this.activePlayer.id)

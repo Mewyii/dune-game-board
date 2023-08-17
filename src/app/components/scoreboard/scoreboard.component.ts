@@ -11,11 +11,6 @@ import { SettingsService } from 'src/app/services/settings.service';
   styleUrls: ['./scoreboard.component.scss'],
 })
 export class ScoreboardComponent implements OnInit {
-  public maxScore = 14;
-  public finaleTrigger = 9;
-
-  public scoreRewards: { score: number; reward: Reward }[] = [];
-
   public scoreArray: number[] = [];
 
   public playerVictoryPoints: { playerId: number; amount: number }[] = [];
@@ -27,9 +22,7 @@ export class ScoreboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.scoreArray = new Array(this.maxScore);
-    this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troops' } }));
-    this.scoreRewards.shift();
+    this.scoreArray = new Array(this.playerScoreManager.maxScore);
 
     this.playerScoreManager.playersScores$.subscribe((playerScores) => {
       this.playerVictoryPoints = playerScores.map((x) => ({
@@ -37,25 +30,6 @@ export class ScoreboardComponent implements OnInit {
         amount: x.victoryPoints,
       }));
     });
-
-    if (this.settingsService.board.content === 'custom-advanced') {
-      this.finaleTrigger = 8;
-
-      this.scoreRewards[2].reward = { type: 'conviction', amount: 1 };
-      this.scoreRewards[5].reward = { type: 'card-round-start', amount: 1 };
-      this.scoreRewards[8].reward = { type: 'conviction', amount: 1 };
-      this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
-    }
-    if (this.settingsService.board.content === 'custom-expert') {
-      this.finaleTrigger = 8;
-
-      this.scoreRewards[1].reward = { type: 'conviction', amount: 1 };
-      this.scoreRewards[3].reward = { type: 'card-round-start', amount: 1 };
-      this.scoreRewards[5].reward = { type: 'buildup' };
-      this.scoreRewards[7].reward = { type: 'conviction', amount: 1 };
-      this.scoreRewards[9].reward = { type: 'card-round-start', amount: 1 };
-      this.scoreRewards[11].reward = { type: 'buildup' };
-    }
   }
 
   public getPlayerColor(playerId: number) {
@@ -67,15 +41,15 @@ export class ScoreboardComponent implements OnInit {
   }
 
   public scoreHasReward(score: number) {
-    return this.scoreRewards.some((x) => x.score === score);
+    return this.playerScoreManager.scoreRewards.some((x) => x.score === score);
   }
 
   public getRewardAmount(score: number) {
-    return this.scoreRewards.find((x) => x.score === score)?.reward.amount;
+    return this.playerScoreManager.scoreRewards.find((x) => x.score === score)?.reward.amount;
   }
 
   public getRewardTypePath(score: number) {
-    const reward = this.scoreRewards.find((x) => x.score === score);
+    const reward = this.playerScoreManager.scoreRewards.find((x) => x.score === score);
     return reward ? getRewardTypePath(reward.reward.type) : '';
   }
 

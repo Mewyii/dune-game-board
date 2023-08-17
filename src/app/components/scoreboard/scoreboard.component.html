@@ -2,8 +2,8 @@
   <ng-container *ngFor="let score of scoreArray; let i = index; let last = last">
     <div
       class="score-element light"
-      [class.finale-four-players]="i > finaleTrigger - 1"
-      [class.finale-three-players]="i > finaleTrigger"
+      [class.finale-four-players]="i > playerScoreManager.finaleTrigger - 1"
+      [class.finale-three-players]="i > playerScoreManager.finaleTrigger"
     >
       <div class="score">{{ i }}</div>
       <ng-container
@@ -23,8 +23,8 @@
     <div
       *ngIf="!last"
       class="divider light"
-      [class.finale-four-players]="i === finaleTrigger - 1"
-      [class.finale-three-players]="i === finaleTrigger"
+      [class.finale-four-players]="i === playerScoreManager.finaleTrigger - 1"
+      [class.finale-three-players]="i === playerScoreManager.finaleTrigger"
     ></div>
   </ng-container>
   <ng-container *ngIf="settingsService.board.mode === 'game'">

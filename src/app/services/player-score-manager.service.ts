@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player, PlayerManager } from './player-manager.service';
 import { SettingsService } from './settings.service';
-import { ActionType } from '../models';
+import { ActionType, Reward } from '../models';
 import { CombatManager } from './combat-manager.service';
 
 export interface PlayerScore {
@@ -21,6 +21,11 @@ export type PlayerScoreType = keyof Omit<PlayerScore, 'playerId'>;
   providedIn: 'root',
 })
 export class PlayerScoreManager {
+  public maxScore = 14;
+  public finaleTrigger = 9;
+
+  public scoreRewards: { score: number; reward: Reward }[] = [];
+
   public factionConnectionTreshold = 2;
   public factionAllianceTreshold = 4;
 
@@ -41,6 +46,28 @@ export class PlayerScoreManager {
     this.playersScores$.subscribe((playersScores) => {
       localStorage.setItem('playersScores', JSON.stringify(playersScores));
     });
+
+    this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troops' } }));
+    this.scoreRewards.shift();
+
+    if (this.settingsService.board.content === 'custom-advanced') {
+      this.finaleTrigger = 8;
+
+      this.scoreRewards[2].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[5].reward = { type: 'card-round-start', amount: 1 };
+      this.scoreRewards[8].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
+    }
+    if (this.settingsService.board.content === 'custom-expert') {
+      this.finaleTrigger = 8;
+
+      this.scoreRewards[1].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[3].reward = { type: 'card-round-start', amount: 1 };
+      this.scoreRewards[5].reward = { type: 'buildup' };
+      this.scoreRewards[7].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[9].reward = { type: 'card-round-start', amount: 1 };
+      this.scoreRewards[11].reward = { type: 'buildup' };
+    }
   }
 
   public get playersScores() {
@@ -124,11 +151,25 @@ export class PlayerScoreManager {
     const playerScores = this.playersScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
+    const newPlayerScore = playerScore[scoreType] + amount;
     if (playerScore) {
       playerScores[playerScoreIndex] = {
         ...playerScore,
-        [scoreType]: playerScore[scoreType] + amount,
+        [scoreType]: newPlayerScore,
       };
+
+      if (scoreType === 'victoryPoints') {
+        const vpReward = this.scoreRewards.find((x) => x.score === newPlayerScore)?.reward;
+
+        if (vpReward) {
+          if (vpReward.type === 'currency' || vpReward.type === 'spice' || vpReward.type === 'water') {
+            this.playerManager.addResourceToPlayer(playerId, vpReward.type, vpReward.amount ?? 1);
+          }
+          if (vpReward.type === 'troops') {
+            this.combatManager.addPlayerTroopsToGarrison(playerId, vpReward.amount ?? 1);
+          }
+        }
+      }
 
       this.playersScoresSubject.next(playerScores);
     }
