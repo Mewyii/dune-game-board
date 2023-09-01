@@ -24,6 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ParticleEffectsComponent } from './components/particle-effects/particle-effects.component';
 
 import { NgParticlesModule } from 'ng-particles';
+import { LeadersComponent } from './components/leaders/leaders.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { NgParticlesModule } from 'ng-particles';
     HomeworldTileComponent,
     AITileComponent,
     ParticleEffectsComponent,
+    LeadersComponent,
   ],
   imports: [
     BrowserModule,

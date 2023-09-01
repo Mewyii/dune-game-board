@@ -8,6 +8,6 @@ interface Settings {
 
 export const boardSettings: Settings = {
   mode: 'game',
-  language: 'en',
+  language: 'de',
   content: 'custom-advanced',
 };

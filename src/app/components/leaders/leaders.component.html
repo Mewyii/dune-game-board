@@ -1,0 +1,31 @@
+<div class="leader-list">
+  <ng-container *ngFor="let leader of leaders">
+    <div class="leader-card" [style.background-image]="'url(' + leader.imageUrl + ')'">
+      <div class="leader-header">
+        <div class="leader-title">
+          {{ leader.name }}
+        </div>
+        <div class="leader-house">{{ leader.house }}</div>
+      </div>
+
+      <div class="leader-passive-container">
+        <div class="leader-passive-name">
+          {{ leader.passiveName }}
+        </div>
+        <div class="leader-passive-description">
+          {{ leader.passiveDescription }}
+        </div>
+      </div>
+      <div class="leader-signet-container">
+        <div class="leader-signet-name">
+          {{ leader.signetName }}
+        </div>
+        <div class="leader-signet-description">
+          {{ leader.signetDescription }}
+        </div>
+      </div>
+      <div class="deck-indicator">deck</div>
+      <div class="discard-indicator">discard</div>
+    </div>
+  </ng-container>
+</div>
