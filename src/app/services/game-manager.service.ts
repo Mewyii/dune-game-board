@@ -10,6 +10,7 @@ import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
 import { ActionField, ResourceType, Reward } from '../models';
 import { AIManager } from './ai/ai.manager';
+import { LeadersService } from './leaders.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -65,7 +66,8 @@ export class GameManager {
     public locationManager: LocationManager,
     public loggingService: LoggingService,
     public duneEventsManager: DuneEventsManager,
-    public aIManager: AIManager
+    public aIManager: AIManager,
+    public leadersService: LeadersService
   ) {
     const currentTurnString = localStorage.getItem('currentTurn');
     if (currentTurnString) {
@@ -212,6 +214,7 @@ export class GameManager {
     this.resetAccumulatedSpiceOnFields();
 
     this.aIManager.assignPersonalitiesToAIPlayers(this.playerManager.players);
+    this.leadersService.assignLeadersToPlayers(this.playerManager.players);
 
     this.currentTurnSubject.next(1);
     this.currentTurnStateSubject.next('agent-placement');
@@ -256,6 +259,7 @@ export class GameManager {
     this.activeAgentPlacementPlayerIdSubject.next(0);
     this.activeCombatPlayerId = 0;
     this.duneEventsManager.resetDuneEvents();
+    this.leadersService.resetLeaders();
 
     this.isFinaleSubject.next(false);
   }

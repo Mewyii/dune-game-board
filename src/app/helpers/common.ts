@@ -1,6 +1,6 @@
 import { cloneDeep, result } from 'lodash';
 
-export function shuffle(a: Array<any>) {
+export function shuffle<T>(a: Array<T>) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Army, Resource, ResourceType } from '../models';
+import { Resource, ResourceType } from '../models';
 
 export interface Player {
   id: number;

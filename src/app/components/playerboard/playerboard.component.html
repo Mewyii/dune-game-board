@@ -1,5 +1,4 @@
 <div class="player-board-container">
-  <div style="margin-bottom: 48px">spielübersicht</div>
   <div class="heading">
     <div>spieler</div>
     <div>
@@ -31,8 +30,17 @@
           class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
           [style.color]="player.color"
         >
-          sp. {{ player.id }}
+          {{ getPlayerLeaderName(player.id) }}
         </div>
+        <mat-slide-toggle
+          [color]="'accent'"
+          [checked]="player.isAI"
+          (change)="onSetAIActiveClicked(player.id, $event)"
+          [disabled]="currentTurn > 0"
+          >AI</mat-slide-toggle
+        >
+      </div>
+      <div class="player-heading">
         <ng-container *ngFor="let object of getArrayFromNumber(player.agents + 1); let i = index">
           <div
             class="agent-marker"
@@ -58,16 +66,9 @@
         </button>
       </div>
 
-      <div class="ai-container">
-        <mat-slide-toggle
-          [color]="'accent'"
-          [checked]="player.isAI"
-          (change)="onSetAIActiveClicked(player.id, $event)"
-          [disabled]="currentTurn > 0"
-          >AI</mat-slide-toggle
-        >
+      <!-- <div class="ai-container">
         <button mat-raised-button color="accent" (click)="onSetCurrentAIPlayerClicked(player.id)">show</button>
-      </div>
+      </div> -->
 
       <div class="resource-area">
         <div class="resource-container" *ngFor="let resource of player.resources">

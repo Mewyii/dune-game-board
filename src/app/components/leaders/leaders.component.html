@@ -1,4 +1,35 @@
-<div class="leader-list">
+<div class="leader-board" *ngIf="activeLeader">
+  <div class="control-button" (click)="setPreviousLeader()"><</div>
+  <div class="leader-card" [style.background-image]="'url(' + activeLeader.imageUrl + ')'">
+    <div class="leader-header">
+      <div class="leader-title">
+        {{ activeLeader.name }}
+      </div>
+      <div class="leader-house">{{ activeLeader.house }}</div>
+    </div>
+
+    <div class="leader-passive-container">
+      <div class="leader-passive-name">
+        {{ activeLeader.passiveName }}
+      </div>
+      <div class="leader-passive-description">
+        {{ activeLeader.passiveDescription }}
+      </div>
+    </div>
+    <div class="leader-signet-container">
+      <div class="leader-signet-name">
+        {{ activeLeader.signetName }}
+      </div>
+      <div class="leader-signet-description">
+        {{ activeLeader.signetDescription }}
+      </div>
+    </div>
+    <div class="deck-indicator">deck</div>
+    <div class="discard-indicator">discard</div>
+  </div>
+  <div class="control-button" (click)="setNextLeader()">></div>
+</div>
+<!-- <div class="leader-list">
   <ng-container *ngFor="let leader of leaders">
     <div class="leader-card" [style.background-image]="'url(' + leader.imageUrl + ')'">
       <div class="leader-header">
@@ -28,4 +59,4 @@
       <div class="discard-indicator">discard</div>
     </div>
   </ng-container>
-</div>
+</div> -->

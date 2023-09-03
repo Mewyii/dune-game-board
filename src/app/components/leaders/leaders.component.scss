@@ -1,7 +1,7 @@
 .leader-board {
     background: #484242;
     display: flex;
-    flex-direction: column;
+    gap: 6px;
     justify-content: center;
     align-items: center;
     color: #fffcfa;
@@ -13,8 +13,8 @@
     background: #484242;
     display: grid;
     grid-gap: 16px;
-    grid-area: 2 2;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-area: 3 3;
+    grid-template-columns: 1fr 1fr 1fr;
     padding: 16px;
 }
 
@@ -109,4 +109,21 @@
     font-weight: initial;
     font-size: small;
     color: #e1e1e1;
+}
+
+.control-button {
+    height: 160px;
+    width: 40px;
+    vertical-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #00000075;
+    transition:0.3s;
+}
+
+.control-button:hover {
+    background: #2c2c2c73;
 }

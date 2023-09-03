@@ -7,6 +7,7 @@ import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 
 @Component({
   selector: 'app-playerboard',
@@ -24,7 +25,8 @@ export class PlayerboardComponent implements OnInit {
   constructor(
     public gameManager: GameManager,
     public playerManager: PlayerManager,
-    public playerScoreManager: PlayerScoreManager
+    public playerScoreManager: PlayerScoreManager,
+    public leadersService: LeadersService
   ) {}
 
   ngOnInit(): void {
@@ -118,6 +120,15 @@ export class PlayerboardComponent implements OnInit {
       return playerScore[scoreType];
     } else {
       return 0;
+    }
+  }
+
+  getPlayerLeaderName(playerId: number) {
+    const playerLeader = this.leadersService.playersLeaders.find((x) => x.playerId === playerId);
+    if (playerLeader) {
+      return playerLeader.leaderName;
+    } else {
+      return 'p. ' + playerId;
     }
   }
 

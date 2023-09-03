@@ -1,4 +1,4 @@
-<div [style]="'display:flex; margin-top: calc((100vh - 2120px) / 2 );'">
+<div [style]="'display:flex; margin-top: 64px;'">
   <div class="board">
     <ng-container *ngFor="let faction of settingsService.factions">
       <app-dune-faction [faction]="faction"></app-dune-faction>
@@ -14,9 +14,9 @@
   <app-playerboard *ngIf="settingsService.board.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">
     <dune-events *ngIf="settingsService.board.mode === 'game'"></dune-events>
+    <dune-leaders></dune-leaders>
     <dune-ai-tile *ngIf="settingsService.board.mode === 'game'"></dune-ai-tile>
     <dune-homeworld-tile></dune-homeworld-tile>
-    <dune-leaders></dune-leaders>
   </div>
 </div>
 <dune-particle-effects></dune-particle-effects>
