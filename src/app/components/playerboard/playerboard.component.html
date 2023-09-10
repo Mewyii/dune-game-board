@@ -177,24 +177,31 @@
     /
     <div>{{ turnState }}</div>
   </div>
-  <button
-    *ngIf="currentTurn && turnState === 'agent-placement'"
-    mat-raised-button
-    color="accent"
-    (click)="onNextPlayerClicked()"
-  >
-    Zug beenden
-  </button>
-  <button
-    *ngIf="currentTurn"
-    mat-raised-button
-    color="accent"
-    (click)="onNextTurnClicked()"
-    [disabled]="turnState === 'agent-placement'"
-  >
-    nächste runde
-  </button>
-  <button *ngIf="currentTurn" mat-raised-button color="accent" [style.margin-left]="'16px'" (click)="onFinishGameClicked()">
-    Ende
-  </button>
+  <div class="action-container">
+    <button
+      *ngIf="currentTurn && turnState === 'agent-placement'"
+      mat-raised-button
+      color="accent"
+      (click)="onNextPlayerClicked()"
+    >
+      Zug beenden
+    </button>
+    <button
+      *ngIf="currentTurn && turnState === 'agent-placement'"
+      mat-raised-button
+      color="accent"
+      (click)="onBeginCombatClicked()"
+    >
+      Kampf
+    </button>
+    <button
+      *ngIf="currentTurn && turnState !== 'agent-placement'"
+      mat-raised-button
+      color="accent"
+      (click)="onNextTurnClicked()"
+    >
+      nächste runde
+    </button>
+    <button *ngIf="currentTurn" mat-raised-button color="accent" (click)="onFinishGameClicked()">Ende</button>
+  </div>
 </div>

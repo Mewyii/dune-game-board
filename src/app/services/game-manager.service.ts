@@ -475,35 +475,22 @@ export class GameManager {
 
   public setNextPlayerActive(turnPhase: TurnPhaseType) {
     if (turnPhase === 'agent-placement') {
-      const playersWithAgents = this.availablePlayerAgents.filter((x) => x.agentAmount > 0);
-      if (playersWithAgents.length > 0) {
-        const playerWithHigherId = playersWithAgents.find((x) => x.playerId > this.activeAgentPlacementPlayerId);
-        if (playerWithHigherId) {
-          this.activeAgentPlacementPlayerIdSubject.next(playerWithHigherId.playerId);
-        } else {
-          const firstPlayer = playersWithAgents[0];
-          this.activeAgentPlacementPlayerIdSubject.next(firstPlayer.playerId);
-        }
+      const playerWithHigherId = this.availablePlayerAgents.find((x) => x.playerId > this.activeAgentPlacementPlayerId);
+      if (playerWithHigherId) {
+        this.activeAgentPlacementPlayerIdSubject.next(playerWithHigherId.playerId);
       } else {
-        this.activeAgentPlacementPlayerIdSubject.next(this.startingPlayerId);
-        this.currentTurnStateSubject.next('combat');
-
-        for (const aiPlayer of this.aIManager.aiPlayers) {
-          const cardDrawDecision = aiPlayer.decisions.find((x) => x.includes('card-draw'));
-
-          if (cardDrawDecision) {
-            if (cardDrawDecision.includes('build deck')) {
-              // this.playerManager.boughtCardsFromImperiumRow(aiPlayer.playerId, 1);
-            } else if (cardDrawDecision.includes('spice must flows')) {
-            }
-          }
-        }
+        const firstPlayer = this.availablePlayerAgents[0];
+        this.activeAgentPlacementPlayerIdSubject.next(firstPlayer.playerId);
       }
     }
     if (turnPhase === 'combat') {
       const nextPlayerId = this.playerManager.getNextPlayerId(this.activeCombatPlayerId);
       this.activeCombatPlayerId = nextPlayerId;
     }
+  }
+
+  public setTurnState(turnPhase: TurnPhaseType) {
+    this.currentTurnStateSubject.next(turnPhase);
   }
 
   public setCurrentAIPlayer(playerId: number) {

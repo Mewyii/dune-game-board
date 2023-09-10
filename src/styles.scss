@@ -23,7 +23,7 @@ body {
 }
 html, body { 
     // height: 100%; 
-    background-color: #171410;
+    background-color: #0c0d0e;
 }
 
 h2 {
@@ -31,11 +31,9 @@ h2 {
     margin-bottom: 32px;
 }
 
-.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent,
-.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background,
-.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
-    background-color: #e49a44;
+.mat-mdc-mini-fab.mat-accent:not(:disabled), .mat-mdc-raised-button.mat-accent:not(:disabled),
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+    background-color: #e49a44 !important;
 }
 
 .mdc-form-field, .mdc-form-field>label {

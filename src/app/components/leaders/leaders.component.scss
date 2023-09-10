@@ -1,5 +1,5 @@
 .leader-board {
-    background: #484242;
+    background: #534235;
     display: flex;
     gap: 6px;
     justify-content: center;
@@ -7,10 +7,11 @@
     color: #fffcfa;
     padding: 32px;
     box-sizing: border-box;
+    border-radius: 5px;
 }
 
 .leader-list {
-    background: #484242;
+    background: #534235;
     display: grid;
     grid-gap: 16px;
     grid-area: 3 3;
@@ -27,6 +28,7 @@
     background-size: cover;
     color: #fffcfa;
     font-size: x-small;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
 .leader-title {
@@ -126,4 +128,13 @@
 
 .control-button:hover {
     background: #2c2c2c73;
+}
+
+.leader-card.full-picture {
+    border: none;
+    border-radius: 20px;
+    width: 532px;
+    height: 372px;
+    background-color: black;
+    background-position: center;
 }

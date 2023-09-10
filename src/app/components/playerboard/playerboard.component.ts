@@ -101,6 +101,10 @@ export class PlayerboardComponent implements OnInit {
     this.gameManager.setNextPlayerActive('agent-placement');
   }
 
+  onBeginCombatClicked() {
+    this.gameManager.setTurnState('combat');
+  }
+
   onNextTurnClicked() {
     this.gameManager.setNextTurn();
   }

@@ -1,5 +1,5 @@
 .event-board {
-    background: #484242;
+    background: #534235;
     width: 700px;
     display: flex;
     flex-direction: column;
@@ -8,6 +8,7 @@
     color: #fffcfa;
     padding: 32px;
     box-sizing: border-box;
+    border-radius: 5px;
 }
 
 .game-state-container {

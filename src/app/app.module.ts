@@ -25,6 +25,7 @@ import { ParticleEffectsComponent } from './components/particle-effects/particle
 
 import { NgParticlesModule } from 'ng-particles';
 import { LeadersComponent } from './components/leaders/leaders.component';
+import { ConflictsComponent } from './components/conflicts/conflicts.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { LeadersComponent } from './components/leaders/leaders.component';
     AITileComponent,
     ParticleEffectsComponent,
     LeadersComponent,
+    ConflictsComponent,
   ],
   imports: [
     BrowserModule,

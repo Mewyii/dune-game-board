@@ -2,9 +2,11 @@
     width: 350px;
     height: calc(100% - 32px);
     padding: 16px;
-    background: #0000007d;
+    background: rgb(34 27 22);
     color:white;
     font-size: large;
+    margin: 0px 8px;
+    border-radius: 5px;
 }
 
 .heading {
@@ -129,4 +131,10 @@
     background: #555555;
     border-radius: 5px;
     border: 1px solid green;
+}
+
+.action-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
