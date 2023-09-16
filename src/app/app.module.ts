@@ -26,6 +26,7 @@ import { ParticleEffectsComponent } from './components/particle-effects/particle
 import { NgParticlesModule } from 'ng-particles';
 import { LeadersComponent } from './components/leaders/leaders.component';
 import { ConflictsComponent } from './components/conflicts/conflicts.component';
+import { AllianceTokenComponent } from './components/_common/alliance-token/alliance-token.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ConflictsComponent } from './components/conflicts/conflicts.component';
     ParticleEffectsComponent,
     LeadersComponent,
     ConflictsComponent,
+    AllianceTokenComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,7 +7,7 @@ import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
+import { LeadersService } from 'src/app/services/leaders.service';
 
 @Component({
   selector: 'app-playerboard',
@@ -46,7 +46,7 @@ export class PlayerboardComponent implements OnInit {
       this.availablePlayerAgents = availablePlayerAgents;
     });
 
-    this.playerScoreManager.playersScores$.subscribe((playerScores) => {
+    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       this.playerScores = playerScores;
     });
   }

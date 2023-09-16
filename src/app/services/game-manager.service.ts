@@ -210,6 +210,7 @@ export class GameManager {
     this.locationManager.resetLocationOwners();
     this.duneEventsManager.shuffleDuneEvents();
     this.playerScoreManager.resetPlayersScores(this.playerManager.players);
+    this.playerScoreManager.resetPlayerAlliances();
     this.removePlayerAgentsFromBoard();
     this.resetAccumulatedSpiceOnFields();
 

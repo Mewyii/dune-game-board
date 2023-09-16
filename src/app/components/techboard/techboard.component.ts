@@ -26,6 +26,8 @@ export class TechboardComponent implements OnInit {
     customWidth: 'fit-content',
   };
 
+  public playerTechAgents: { playerId: number; techAgents: number }[] = [];
+
   constructor(
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
@@ -34,9 +36,17 @@ export class TechboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.techActionField = this.settingsService.ix;
+
+    this.playerManager.players$.subscribe((players) => {
+      this.playerTechAgents = players.map((x) => ({ playerId: x.id, techAgents: x.techAgents }));
+    });
   }
 
   public getPlayerColor(playerId: number) {
     return this.playerManager.getPlayerColor(playerId);
+  }
+
+  public getArrayFromNumber(length: number) {
+    return new Array(length);
   }
 }

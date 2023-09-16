@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player, PlayerManager } from './player-manager.service';
 import { SettingsService } from './settings.service';
-import { ActionType, Reward } from '../models';
+import { ActionType, FactionType, Reward } from '../models';
 import { CombatManager } from './combat-manager.service';
 
 export interface PlayerScore {
@@ -15,7 +15,14 @@ export interface PlayerScore {
   imperium: number;
 }
 
+export interface PlayerAlliances {
+  playerId: number;
+  alliances: FactionType[];
+}
+
 export type PlayerScoreType = keyof Omit<PlayerScore, 'playerId'>;
+
+export type PlayerFactionScoreType = keyof Omit<PlayerScore, 'playerId' | 'victoryPoints'>;
 
 @Injectable({
   providedIn: 'root',
@@ -26,11 +33,14 @@ export class PlayerScoreManager {
 
   public scoreRewards: { score: number; reward: Reward }[] = [];
 
-  public factionConnectionTreshold = 2;
+  public factionFriendshipTreshold = 2;
   public factionAllianceTreshold = 4;
 
-  private playersScoresSubject = new BehaviorSubject<PlayerScore[]>([]);
-  public playersScores$ = this.playersScoresSubject.asObservable();
+  private playerScoresSubject = new BehaviorSubject<PlayerScore[]>([]);
+  public playerScores$ = this.playerScoresSubject.asObservable();
+
+  private playerAlliancesSubject = new BehaviorSubject<PlayerAlliances[]>([]);
+  public playerAlliances$ = this.playerAlliancesSubject.asObservable();
 
   constructor(
     public playerManager: PlayerManager,
@@ -40,11 +50,21 @@ export class PlayerScoreManager {
     const playersScoresString = localStorage.getItem('playersScores');
     if (playersScoresString) {
       const playersScores = JSON.parse(playersScoresString) as PlayerScore[];
-      this.playersScoresSubject.next(playersScores);
+      this.playerScoresSubject.next(playersScores);
     }
 
-    this.playersScores$.subscribe((playersScores) => {
+    this.playerScores$.subscribe((playersScores) => {
       localStorage.setItem('playersScores', JSON.stringify(playersScores));
+    });
+
+    const playerAlliancesString = localStorage.getItem('playerAlliances');
+    if (playerAlliancesString) {
+      const playerAlliances = JSON.parse(playerAlliancesString) as PlayerAlliances[];
+      this.playerAlliancesSubject.next(playerAlliances);
+    }
+
+    this.playerAlliances$.subscribe((playerAlliances) => {
+      localStorage.setItem('playerAlliances', JSON.stringify(playerAlliances));
     });
 
     this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troops' } }));
@@ -71,7 +91,11 @@ export class PlayerScoreManager {
   }
 
   public get playersScores() {
-    return cloneDeep(this.playersScoresSubject.value);
+    return cloneDeep(this.playerScoresSubject.value);
+  }
+
+  public get playerAlliances() {
+    return cloneDeep(this.playerAlliancesSubject.value);
   }
 
   public getPlayerScore(playerId: number) {
@@ -95,7 +119,11 @@ export class PlayerScoreManager {
       });
     }
 
-    this.playersScoresSubject.next(playerScores);
+    this.playerScoresSubject.next(playerScores);
+  }
+
+  public resetPlayerAlliances() {
+    this.playerAlliancesSubject.next([]);
   }
 
   public addFactionScore(playerId: number, actionType: ActionType, score: number) {
@@ -111,9 +139,9 @@ export class PlayerScoreManager {
           [actionType]: newScore,
         };
 
-        this.playersScoresSubject.next(playerScores);
+        this.playerScoresSubject.next(playerScores);
 
-        if (newScore === this.factionConnectionTreshold) {
+        if (newScore === this.factionFriendshipTreshold) {
           const faction = this.settingsService.factions.find((x) => x.type === actionType);
           if (faction && faction.levelTwoReward) {
             for (let reward of faction.levelTwoReward) {
@@ -143,6 +171,10 @@ export class PlayerScoreManager {
             }
           }
         }
+
+        if (newScore >= this.factionAllianceTreshold) {
+          this.adjustAlliancesBasedOnFactionScore(playerId, actionType, newScore);
+        }
       }
     }
   }
@@ -171,7 +203,13 @@ export class PlayerScoreManager {
         }
       }
 
-      this.playersScoresSubject.next(playerScores);
+      this.playerScoresSubject.next(playerScores);
+
+      if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'imperium') {
+        if (newPlayerScore >= this.factionAllianceTreshold) {
+          this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
+        }
+      }
     }
   }
 
@@ -179,47 +217,73 @@ export class PlayerScoreManager {
     const playerScores = this.playersScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
+    const newPlayerScore = playerScore[scoreType] - amount;
+
     if (playerScore) {
       playerScores[playerScoreIndex] = {
         ...playerScore,
-        [scoreType]: playerScore[scoreType] - amount,
+        [scoreType]: newPlayerScore,
       };
 
-      this.playersScoresSubject.next(playerScores);
+      this.playerScoresSubject.next(playerScores);
+
+      if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'imperium') {
+        if (newPlayerScore >= this.factionAllianceTreshold) {
+          this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
+        }
+      }
     }
   }
 
-  public addFactionConnectionScore(playerId: number, faction: ActionType, score: number) {
-    const playerScores = this.playersScores;
-    const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
-    const playerScore = playerScores[playerScoreIndex];
-    if (playerScore) {
-      if (faction === 'fremen') {
-        playerScores[playerScoreIndex] = {
-          ...playerScore,
-          fremen: playerScore.fremen + score,
-        };
-      }
-      if (faction === 'bene') {
-        playerScores[playerScoreIndex] = {
-          ...playerScore,
-          bene: playerScore.bene + score,
-        };
-      }
-      if (faction === 'guild') {
-        playerScores[playerScoreIndex] = {
-          ...playerScore,
-          guild: playerScore.guild + score,
-        };
-      }
-      if (faction === 'imperium') {
-        playerScores[playerScoreIndex] = {
-          ...playerScore,
-          imperium: playerScore.imperium + score,
-        };
-      }
+  public addAllianceToPlayer(playerId: number, factionType: PlayerFactionScoreType) {
+    const playerAlliances = this.playerAlliances;
+    const playerIndex = this.playerAlliances.findIndex((x) => x.playerId === playerId);
+    if (playerIndex > -1) {
+      playerAlliances[playerIndex] = {
+        ...playerAlliances[playerIndex],
+        alliances: [...playerAlliances[playerIndex].alliances, factionType],
+      };
+    } else {
+      playerAlliances.push({ playerId, alliances: [factionType] });
+    }
 
-      this.playersScoresSubject.next(playerScores);
+    this.playerAlliancesSubject.next(playerAlliances);
+
+    this.addPlayerScore(playerId, 'victoryPoints', 1);
+  }
+
+  public removeAllianceFromPlayer(playerId: number, factionType: PlayerFactionScoreType) {
+    const playerAlliances = this.playerAlliances;
+    const playerIndex = this.playerAlliances.findIndex((x) => x.playerId === playerId);
+    if (playerIndex > -1) {
+      playerAlliances[playerIndex] = {
+        ...playerAlliances[playerIndex],
+        alliances: playerAlliances[playerIndex].alliances.filter((x) => x !== factionType),
+      };
+
+      this.playerAlliancesSubject.next(playerAlliances);
+
+      this.removePlayerScore(playerId, 'victoryPoints', 1);
+    }
+  }
+
+  public adjustAlliancesBasedOnFactionScore(playerId: number, factionType: PlayerFactionScoreType, score: number) {
+    const playerWithAlliance = this.playerAlliances.find((x) =>
+      x.alliances.some((allianceType) => allianceType === factionType)
+    );
+    if (playerWithAlliance) {
+      if (playerWithAlliance.playerId !== playerId) {
+        const enemyPlayerScores = this.playersScores.find((x) => x.playerId === playerWithAlliance.playerId);
+        if (enemyPlayerScores) {
+          const enemyFactionScore = enemyPlayerScores[factionType];
+          if (score > enemyFactionScore) {
+            this.removeAllianceFromPlayer(playerWithAlliance.playerId, factionType);
+            this.addAllianceToPlayer(playerId, factionType);
+          }
+        }
+      }
+    } else {
+      this.addAllianceToPlayer(playerId, factionType);
     }
   }
 }

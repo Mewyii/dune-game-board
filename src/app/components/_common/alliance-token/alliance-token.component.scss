@@ -1,0 +1,29 @@
+.alliance-token {
+    position: relative;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.4588235294);
+    border: 5px solid black;
+    border-radius: 50%;
+    box-sizing: border-box;
+    box-shadow: inset 0px 0px 25px 0px #00000079;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 1));
+}
+
+.faction-background {
+    width: 100%;
+    height: 100%;
+    opacity: 0.66;
+    background-position: center;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.33));
+}
+
+.victory-point {
+    position: absolute;
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+    filter: drop-shadow(0px 0px 5px #ffd4899b);
+}

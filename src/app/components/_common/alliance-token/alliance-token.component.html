@@ -1,0 +1,10 @@
+<div
+  class="alliance-token"
+  [style.width]="width + 'px'"
+  [style.height]="height + 'px'"
+  [style.background-color]="customColor ? customColor : faction.primaryColor"
+  [style.border-color]="faction.secondaryColor"
+>
+  <div class="faction-background" [style.background-image]="'url(' + faction.pathToSymbol + ')'"></div>
+  <img class="victory-point" [src]="'assets/images/reward-markers/marker_victory_point.png'" />
+</div>

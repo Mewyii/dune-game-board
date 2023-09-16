@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Faction, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -37,7 +37,7 @@ export class DuneFactionComponent implements OnInit {
         isBattlefield: true,
       },
     ],
-    pathToSymbol: 'assets/images/Fremen_Symbol.png',
+    pathToSymbol: 'assets/images/faction-symbols/Symbol_Fremen.png',
     primaryColor: '#63a8ff',
     secondaryColor: '#5b81df',
   };
@@ -50,6 +50,8 @@ export class DuneFactionComponent implements OnInit {
 
   public playerScores: { playerId: number; score: number }[] = [];
 
+  public allianceTakenByPlayerId = 0;
+
   constructor(
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
@@ -59,30 +61,26 @@ export class DuneFactionComponent implements OnInit {
 
   ngOnInit(): void {
     this.favorScoreArray = new Array(this.maxFavorScore);
-    this.playerScoreManager.playersScores$.subscribe((playerScores) => {
-      if (this.faction.type === 'fremen') {
+    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
+      const factionType = this.faction.type;
+      if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'imperium') {
         this.playerScores = playerScores.map((x) => ({
           playerId: x.playerId,
-          score: x.fremen,
+          score: x[factionType],
         }));
+
+        this.allianceTakenByPlayerId =
+          this.playerScoreManager.playerAlliances.find((x) =>
+            x.alliances.some((allianceType) => allianceType === factionType)
+          )?.playerId ?? 0;
       }
-      if (this.faction.type === 'bene') {
-        this.playerScores = playerScores.map((x) => ({
-          playerId: x.playerId,
-          score: x.bene,
-        }));
-      }
-      if (this.faction.type === 'guild') {
-        this.playerScores = playerScores.map((x) => ({
-          playerId: x.playerId,
-          score: x.guild,
-        }));
-      }
-      if (this.faction.type === 'imperium') {
-        this.playerScores = playerScores.map((x) => ({
-          playerId: x.playerId,
-          score: x.imperium,
-        }));
+    });
+
+    this.playerScoreManager.playerAlliances$.subscribe((playerAlliances) => {
+      const factionType = this.faction.type;
+      if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'imperium') {
+        this.allianceTakenByPlayerId =
+          playerAlliances.find((x) => x.alliances.some((allianceType) => allianceType === factionType))?.playerId ?? 0;
       }
     });
   }

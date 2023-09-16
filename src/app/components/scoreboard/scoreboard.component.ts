@@ -24,7 +24,7 @@ export class ScoreboardComponent implements OnInit {
   ngOnInit(): void {
     this.scoreArray = new Array(this.playerScoreManager.maxScore);
 
-    this.playerScoreManager.playersScores$.subscribe((playerScores) => {
+    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       this.playerVictoryPoints = playerScores.map((x) => ({
         playerId: x.playerId,
         amount: x.victoryPoints,

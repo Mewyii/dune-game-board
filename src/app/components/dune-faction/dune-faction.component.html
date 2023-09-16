@@ -49,6 +49,12 @@
       </ng-container>
       <div class="alliance-element" [style.background-image]="'url(' + faction.pathToSymbol + ')'"></div>
       <ng-container *ngIf="settingsService.board.mode === 'game'">
+        <div class="alliance-token-container">
+          <dune-alliance-token
+            [faction]="faction"
+            [customColor]="getPlayerColor(allianceTakenByPlayerId)"
+          ></dune-alliance-token>
+        </div>
         <ng-container *ngFor="let playerScore of playerScores; let i = index; trackBy: trackPlayerScore">
           <div
             class="score-marker"

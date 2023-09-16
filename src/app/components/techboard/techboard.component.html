@@ -18,4 +18,15 @@
     </div>
   </div>
   <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
+  <ng-container *ngFor="let techAgents of playerTechAgents; let i = index">
+    <div
+      class="tech-agent-container"
+      [style.bottom]="25 + (i > 0 && i < 3 ? 60 : 0) + 'px'"
+      [style.left]="65 + (i > 1 ? 95 : 0) + 'px'"
+    >
+      <ng-container *ngFor="let ship of getArrayFromNumber(techAgents.techAgents); let is = index">
+        <div class="tech-agent-marker" [style.background-color]="getPlayerColor(techAgents.playerId)"></div>
+      </ng-container>
+    </div>
+  </ng-container>
 </div>

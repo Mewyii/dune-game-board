@@ -119,3 +119,24 @@
     opacity: 0.66;
     filter: drop-shadow(0px 0px 8px #ffc60a);
 }
+
+.tech-agent-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100px;
+    z-index: 1;
+}
+
+.tech-agent-marker {
+    width: 25px;
+    height: 25px;
+    border-radius: 25%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    left: calc(50% - 13px);
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
+}

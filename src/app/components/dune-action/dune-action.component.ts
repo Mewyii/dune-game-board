@@ -58,9 +58,15 @@ export class DuneActionComponent implements OnInit {
 
   public onActionFieldClicked() {
     const currentPlayerId = this.gameManager.activePlayer?.id;
-    this.gameManager.addAgentToField(this.action);
+
     if (currentPlayerId) {
-      this.actionFieldClick.emit({ playerId: currentPlayerId });
+      const playerAgents =
+        this.gameManager.availablePlayerAgents.find((x) => x.playerId === currentPlayerId)?.agentAmount ?? 0;
+
+      if (playerAgents > 0) {
+        this.gameManager.addAgentToField(this.action);
+        this.actionFieldClick.emit({ playerId: currentPlayerId });
+      }
     }
   }
 
