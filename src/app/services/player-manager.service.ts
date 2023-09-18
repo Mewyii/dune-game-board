@@ -13,6 +13,7 @@ export interface Player {
   intrigueCount: number;
   cardsInDeck: number;
   cardsBought: number;
+  focusTokens: number;
   cardsTrimmed: number;
   cardsDrawnThisRound: number;
   techAgents: number;
@@ -67,6 +68,7 @@ export class PlayerManager {
         color: this.createPlayerColor(players.length + 1),
         cardsInDeck: 9,
         cardsBought: 0,
+        focusTokens: 0,
         cardsTrimmed: 0,
         intrigueCount: 0,
         cardsDrawnThisRound: 0,
@@ -97,6 +99,7 @@ export class PlayerManager {
       ] as Resource[],
       cardsInDeck: 9,
       cardsBought: 0,
+      focusTokens: 0,
       cardsTrimmed: 0,
       intrigueCount: 0,
       cardsDrawnThisRound: 0,
@@ -228,11 +231,34 @@ export class PlayerManager {
     this.playersSubject.next(players);
   }
 
-  public trimCardsFromPlayerDeck(id: number, amount: number) {
+  public addFocusTokens(id: number, amount: number) {
     const players = this.players;
 
     const player = players.find((x) => x.id === id);
     if (player) {
+      player.focusTokens = player.focusTokens + amount;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public removeFocusTokens(id: number, amount: number) {
+    const players = this.players;
+
+    const player = players.find((x) => x.id === id);
+    if (player && player.focusTokens >= amount) {
+      player.focusTokens = player.focusTokens - amount;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public trimCardsFromPlayerDeck(id: number, amount: number) {
+    const players = this.players;
+
+    const player = players.find((x) => x.id === id);
+    if (player && player.focusTokens >= amount) {
+      player.focusTokens = player.focusTokens - amount;
       player.cardsTrimmed = player.cardsTrimmed + amount;
       player.cardsInDeck = player.cardsInDeck - amount;
     }

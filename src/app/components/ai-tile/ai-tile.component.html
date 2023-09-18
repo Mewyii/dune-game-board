@@ -1,7 +1,11 @@
 <div class="event-board" *ngIf="currentPlayer">
   <h2>
     ai <span *ngIf="showDetails">({{ currentAIPlayer?.name }})</span>
-    <mat-slide-toggle [color]="'accent'" [checked]="showDetails" (change)="showDetails = !showDetails"
+    <mat-slide-toggle
+      *ngIf="currentAIPlayer"
+      [color]="'accent'"
+      [checked]="showDetails"
+      (change)="showDetails = !showDetails"
       >Details</mat-slide-toggle
     >
   </h2>
@@ -70,7 +74,7 @@
       >
     </div>
   </div>
-  <div class="heading-container">
+  <div class="heading-container" *ngIf="currentAIPlayer">
     <div class="info-container" [style.width]="'300px'">
       <div>deck size</div>
       <div class="value">{{ currentPlayer.cardsInDeck }}</div>
@@ -102,16 +106,6 @@
         <mat-icon>remove</mat-icon>
       </button>
       <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    <div class="info-container">
-      <div>tech agents</div>
-      <div class="value">{{ currentPlayer.techAgents }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
         <mat-icon>add</mat-icon>
       </button>
     </div>

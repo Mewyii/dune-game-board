@@ -346,7 +346,7 @@ export class GameManager {
           this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
         }
         if (reward.type === 'card-destroy') {
-          this.playerManager.trimCardsFromPlayerDeck(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+          this.playerManager.addFocusTokens(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
         }
         if (reward.type == 'card-draw-or-destroy') {
           canDestroyOrDrawCard = true;
@@ -375,7 +375,7 @@ export class GameManager {
           if (drawOrTrim === 'draw') {
             this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, 1);
           } else {
-            this.playerManager.trimCardsFromPlayerDeck(this.activeAgentPlacementPlayerId, 1);
+            this.playerManager.addFocusTokens(this.activeAgentPlacementPlayerId, 1);
           }
         }
 

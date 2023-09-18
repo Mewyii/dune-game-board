@@ -68,6 +68,18 @@ export class AITileComponent implements OnInit {
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
+  onAddFocusTokenClicked(id: number) {
+    this.playerManager.addFocusTokens(id, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
+  }
+
+  onRemoveFocusTokenClicked(id: number) {
+    this.playerManager.removeFocusTokens(id, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
+  }
+
   onTrimCardClicked(id: number) {
     this.playerManager.trimCardsFromPlayerDeck(id, 1);
 

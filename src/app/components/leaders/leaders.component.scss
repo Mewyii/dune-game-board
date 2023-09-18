@@ -1,13 +1,22 @@
 .leader-board {
     background: #534235;
     display: flex;
-    gap: 6px;
+    flex-wrap: wrap;
+    max-width: 700px;
+    gap: 32px;
     justify-content: center;
     align-items: center;
     color: #fffcfa;
     padding: 32px;
     box-sizing: border-box;
     border-radius: 5px;
+}
+
+.leader-viewer {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
 }
 
 .leader-list {
@@ -138,4 +147,44 @@
     height: 372px;
     background-color: black;
     background-position: center;
+}
+
+.control-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.info-container {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+.tech-agent-marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 25%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    left: calc(50% - 13px);
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
+}
+
+.focus-marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background-color: white;
+    filter: drop-shadow(0px 0px 5px white);
+    left: calc(50% - 13px);
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
 }

@@ -1,39 +1,68 @@
 <div class="leader-board" *ngIf="activeLeader">
-  <div class="control-button" (click)="setPreviousLeader()"><</div>
-  <div
-    *ngIf="activeLeader.type === 'new'"
-    class="leader-card"
-    [style.background-image]="'url(' + activeLeader.imageUrl + ')'"
-  >
-    <div class="leader-header">
-      <div class="leader-title">
-        {{ activeLeader.name }}
+  <div class="leader-viewer">
+    <div class="control-button" (click)="setPreviousLeader()"><</div>
+    <div
+      *ngIf="activeLeader.type === 'new'"
+      class="leader-card"
+      [style.background-image]="'url(' + activeLeader.imageUrl + ')'"
+    >
+      <div class="leader-header">
+        <div class="leader-title">
+          {{ activeLeader.name }}
+        </div>
+        <div class="leader-house">{{ activeLeader.house }}</div>
       </div>
-      <div class="leader-house">{{ activeLeader.house }}</div>
-    </div>
 
-    <div class="leader-passive-container">
-      <div class="leader-passive-name">
-        {{ activeLeader.passiveName }}
+      <div class="leader-passive-container">
+        <div class="leader-passive-name">
+          {{ activeLeader.passiveName }}
+        </div>
+        <div class="leader-passive-description" [innerHTML]="activeLeader.passiveDescription | duneSymbols"></div>
       </div>
-      <div class="leader-passive-description" [innerHTML]="activeLeader.passiveDescription | duneSymbols"></div>
-    </div>
-    <div class="leader-signet-container">
-      <div class="leader-signet-name">
-        {{ activeLeader.signetName }}
+      <div class="leader-signet-container">
+        <div class="leader-signet-name">
+          {{ activeLeader.signetName }}
+        </div>
+        <div class="leader-signet-description" [innerHTML]="activeLeader.signetDescription | duneSymbols"></div>
       </div>
-      <div class="leader-signet-description" [innerHTML]="activeLeader.signetDescription | duneSymbols"></div>
+      <div class="deck-indicator">deck</div>
+      <div class="discard-indicator">discard</div>
     </div>
-    <div class="deck-indicator">deck</div>
-    <div class="discard-indicator">discard</div>
+    <div
+      *ngIf="activeLeader.type === 'old'"
+      class="leader-card full-picture"
+      [style.background-image]="'url(' + activeLeader.imageUrl + ')'"
+    ></div>
+    <div class="control-button" (click)="setNextLeader()">></div>
   </div>
-  <div
-    *ngIf="activeLeader.type === 'old'"
-    class="leader-card full-picture"
-    [style.background-image]="'url(' + activeLeader.imageUrl + ')'"
-  ></div>
-  <div class="control-button" (click)="setNextLeader()">></div>
+  <div class="control-bar" *ngIf="currentPlayer">
+    <div class="info-container">
+      <div>tech agents</div>
+      <ng-container *ngFor="let object of getArrayFromNumber(currentPlayer.techAgents); let i = index">
+        <div class="tech-agent-marker" [style.background-color]="currentPlayer.color"></div>
+      </ng-container>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
+      <div>focus tokens</div>
+      <ng-container *ngFor="let object of getArrayFromNumber(currentPlayer.focusTokens); let i = index">
+        <div class="focus-marker"></div>
+      </ng-container>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveFocusTokenClicked(currentPlayer.id)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddFocusTokenClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
+
 <!-- <div class="leader-list">
   <ng-container *ngFor="let leader of leaders">
     <div class="leader-card" [style.background-image]="'url(' + leader.imageUrl + ')'">
