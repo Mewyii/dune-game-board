@@ -27,6 +27,7 @@ import { NgParticlesModule } from 'ng-particles';
 import { LeadersComponent } from './components/leaders/leaders.component';
 import { ConflictsComponent } from './components/conflicts/conflicts.component';
 import { AllianceTokenComponent } from './components/_common/alliance-token/alliance-token.component';
+import { DuneSymbolsPipe } from './pipes/dune-symbols';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { AllianceTokenComponent } from './components/_common/alliance-token/alli
     LeadersComponent,
     ConflictsComponent,
     AllianceTokenComponent,
+    DuneSymbolsPipe,
   ],
   imports: [
     BrowserModule,

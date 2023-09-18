@@ -16,17 +16,13 @@
       <div class="leader-passive-name">
         {{ activeLeader.passiveName }}
       </div>
-      <div class="leader-passive-description">
-        {{ activeLeader.passiveDescription }}
-      </div>
+      <div class="leader-passive-description" [innerHTML]="activeLeader.passiveDescription | duneSymbols"></div>
     </div>
     <div class="leader-signet-container">
       <div class="leader-signet-name">
         {{ activeLeader.signetName }}
       </div>
-      <div class="leader-signet-description">
-        {{ activeLeader.signetDescription }}
-      </div>
+      <div class="leader-signet-description" [innerHTML]="activeLeader.signetDescription | duneSymbols"></div>
     </div>
     <div class="deck-indicator">deck</div>
     <div class="discard-indicator">discard</div>
