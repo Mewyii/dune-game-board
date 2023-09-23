@@ -44,7 +44,7 @@ export class LeadersService {
     for (const player of players) {
       const leader = shuffledLeaders.pop();
       if (leader) {
-        playerLeaders.push({ playerId: player.id, leaderName: leader?.name });
+        playerLeaders.push({ playerId: player.id, leaderName: leader?.name.en });
       }
     }
 
@@ -54,12 +54,12 @@ export class LeadersService {
   assignLeaderToPlayer(playerId: number, leaderName: string) {
     const playerLeaders = this.playersLeaders;
 
-    const leader = this.leaders.find((x) => x.name === leaderName);
+    const leader = this.leaders.find((x) => x.name.en === leaderName);
 
     const playerLeaderIndex = playerLeaders.findIndex((x) => x.playerId === playerId);
 
     if (leader && playerLeaderIndex > -1) {
-      playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], leaderName: leader.name };
+      playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], leaderName: leader.name.en };
       this.playerLeadersSubject.next(playerLeaders);
     }
   }

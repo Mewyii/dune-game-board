@@ -8,25 +8,31 @@
     >
       <div class="leader-header">
         <div class="leader-title">
-          {{ activeLeader.name }}
+          {{ translateService.translate(activeLeader.name) }}
         </div>
-        <div class="leader-house">{{ activeLeader.house }}</div>
+        <div class="leader-house">{{ translateService.translate(activeLeader.house) }}</div>
       </div>
 
       <div class="leader-passive-container">
         <div class="leader-passive-name">
-          {{ activeLeader.passiveName }}
+          {{ translateService.translate(activeLeader.passiveName) }}
         </div>
-        <div class="leader-passive-description" [innerHTML]="activeLeader.passiveDescription | duneSymbols"></div>
+        <div
+          class="leader-passive-description"
+          [innerHTML]="translateService.translate(activeLeader.passiveDescription) | duneSymbols"
+        ></div>
       </div>
       <div class="leader-signet-container">
         <div class="leader-signet-name">
-          {{ activeLeader.signetName }}
+          {{ translateService.translate(activeLeader.signetName) }}
         </div>
-        <div class="leader-signet-description" [innerHTML]="activeLeader.signetDescription | duneSymbols"></div>
+        <div
+          class="leader-signet-description"
+          [innerHTML]="translateService.translate(activeLeader.signetDescription) | duneSymbols"
+        ></div>
       </div>
-      <div class="deck-indicator">deck</div>
-      <div class="discard-indicator">discard</div>
+      <div class="deck-indicator">{{ translateService.translate(deckName) }}</div>
+      <div class="discard-indicator">{{ translateService.translate(discardName) }}</div>
     </div>
     <div
       *ngIf="activeLeader.type === 'old'"
@@ -62,35 +68,37 @@
     </div>
   </div>
 </div>
-
-<!-- <div class="leader-list">
-  <ng-container *ngFor="let leader of leaders">
+<!-- 
+<div class="leader-list">
+  <ng-container *ngFor="let leader of newLeaders">
     <div class="leader-card" [style.background-image]="'url(' + leader.imageUrl + ')'">
       <div class="leader-header">
         <div class="leader-title">
-          {{ leader.name }}
+          {{ translateService.translate(leader.name) }}
         </div>
-        <div class="leader-house">{{ leader.house }}</div>
+        <div class="leader-house">{{ translateService.translate(leader.house) }}</div>
       </div>
 
       <div class="leader-passive-container">
         <div class="leader-passive-name">
-          {{ leader.passiveName }}
+          {{ translateService.translate(leader.passiveName) }}
         </div>
-        <div class="leader-passive-description">
-          {{ leader.passiveDescription }}
-        </div>
+        <div
+          class="leader-passive-description"
+          [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
+        ></div>
       </div>
       <div class="leader-signet-container">
         <div class="leader-signet-name">
-          {{ leader.signetName }}
+          {{ translateService.translate(leader.signetName) }}
         </div>
-        <div class="leader-signet-description">
-          {{ leader.signetDescription }}
-        </div>
+        <div
+          class="leader-signet-description"
+          [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"
+        ></div>
       </div>
-      <div class="deck-indicator">deck</div>
-      <div class="discard-indicator">discard</div>
+      <div class="deck-indicator">{{ translateService.translate(deckName) }}</div>
+      <div class="discard-indicator">{{ translateService.translate(discardName) }}</div>
     </div>
   </ng-container>
 </div> -->

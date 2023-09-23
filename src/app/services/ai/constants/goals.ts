@@ -271,8 +271,8 @@ export const aiGoals: FieldsForGoals = {
     desireModifier: (player, gameState) =>
       clamp(
         -(0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn) +
-          0.1 * player.cardsBought -
-          0.15 * player.cardsTrimmed,
+          0.125 * player.cardsBought -
+          0.175 * player.cardsTrimmed,
         -0.4,
         0.4
       ),
@@ -470,7 +470,7 @@ export const aiGoals: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState) =>
       getResourceAmount(player, 'currency') > 6 && !player.hasSwordmaster
-        ? 0.3 - 0.05 * (getResourceAmount(player, 'currency') - 7) - 0.025 * (gameState.currentTurn - 1)
+        ? 0.35 - 0.05 * (getResourceAmount(player, 'currency') - 7) - 0.025 * (gameState.currentTurn - 1)
         : 0,
     goalIsReachable: (player, gameState) => gameState.isFinale,
     reachedGoal: (player) => player.hasSwordmaster === true,
