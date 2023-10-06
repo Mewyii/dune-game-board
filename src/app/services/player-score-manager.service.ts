@@ -90,7 +90,7 @@ export class PlayerScoreManager {
     }
   }
 
-  public get playersScores() {
+  public get playerScores() {
     return cloneDeep(this.playerScoresSubject.value);
   }
 
@@ -99,11 +99,11 @@ export class PlayerScoreManager {
   }
 
   public getPlayerScore(playerId: number) {
-    return this.playersScores.find((x) => x.playerId === playerId);
+    return this.playerScores.find((x) => x.playerId === playerId);
   }
 
   public getEnemyScore(playerId: number) {
-    return this.playersScores.filter((x) => x.playerId !== playerId);
+    return this.playerScores.filter((x) => x.playerId !== playerId);
   }
 
   public resetPlayersScores(players: Player[]) {
@@ -127,7 +127,7 @@ export class PlayerScoreManager {
   }
 
   public addFactionScore(playerId: number, actionType: ActionType, score: number) {
-    const playerScores = this.playersScores;
+    const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
     if (playerScore) {
@@ -180,7 +180,7 @@ export class PlayerScoreManager {
   }
 
   public addPlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number) {
-    const playerScores = this.playersScores;
+    const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
     const newPlayerScore = playerScore[scoreType] + amount;
@@ -214,7 +214,7 @@ export class PlayerScoreManager {
   }
 
   public removePlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number) {
-    const playerScores = this.playersScores;
+    const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
     const newPlayerScore = playerScore[scoreType] - amount;
@@ -273,7 +273,7 @@ export class PlayerScoreManager {
     );
     if (playerWithAlliance) {
       if (playerWithAlliance.playerId !== playerId) {
-        const enemyPlayerScores = this.playersScores.find((x) => x.playerId === playerWithAlliance.playerId);
+        const enemyPlayerScores = this.playerScores.find((x) => x.playerId === playerWithAlliance.playerId);
         if (enemyPlayerScores) {
           const enemyFactionScore = enemyPlayerScores[factionType];
           if (score > enemyFactionScore) {

@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { random } from 'lodash';
-
-interface CardCoordinates {
-  x: number;
-  y: number;
-}
+import { CardCell, CardCoordinates, ConflictSet, ConflictsService } from 'src/app/services/conflicts.service';
 
 @Component({
   selector: 'dune-conflicts',
@@ -12,27 +8,19 @@ interface CardCoordinates {
   styleUrls: ['./conflicts.component.scss'],
 })
 export class ConflictsComponent implements OnInit {
+  constructor(public conflictsService: ConflictsService) {}
+
+  public currentConflictSet: ConflictSet | undefined;
+
   public currentCardCoordinates: CardCoordinates = { x: 0, y: 0 };
 
-  public exclusions: CardCoordinates[] = [{ x: 5, y: 1 }];
-
   ngOnInit(): void {
-    this.currentCardCoordinates = this.getRandomCardCoordinates();
-  }
+    this.conflictsService.currentConflictSet$.subscribe((currentConflictSet) => {
+      this.currentConflictSet = currentConflictSet;
+    });
 
-  getRandomCardCoordinates() {
-    let randomX = 0;
-    let randomY = 0;
-
-    for (let i = 0; i <= 20; i++) {
-      randomX = random(5);
-      randomY = random(1);
-
-      if (!this.exclusions.some((element) => element.x === randomX && element.y === randomY)) {
-        break;
-      }
-    }
-
-    return { x: randomX * -167, y: randomY * -255 };
+    this.conflictsService.currentCardCoordinates$.subscribe((currentCardCoordinates) => {
+      this.currentCardCoordinates = currentCardCoordinates;
+    });
   }
 }

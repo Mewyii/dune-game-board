@@ -86,6 +86,16 @@
       </button>
     </div>
     <div class="info-container">
+      <div>intrigues</div>
+      <div class="value">{{ currentPlayer.intrigueCount }}</div>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveIntrigueClicked(currentPlayer.id)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="info-container">
       <div>cards bought</div>
       <div class="value">{{ currentPlayer.cardsBought }}</div>
       <button mat-mini-fab [color]="'accent'" (click)="onBoughtCardClicked(currentPlayer.id)">
@@ -99,18 +109,8 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
-    <div class="info-container">
-      <div>intrigues</div>
-      <div class="value">{{ currentPlayer.intrigueCount }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveIntrigueClicked(currentPlayer.id)">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
   </div>
-  <div class="field-decision-container" *ngIf="currentAIPlayer">
+  <div class="decision-container" *ngIf="currentAIPlayer">
     <div class="preferred-fields-container">
       <div class="field-container" *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first">
         <div [class]="i < 4 ? 'good' : i < 8 ? 'medium' : 'bad'" [style.color]="isFirst ? '#ffaa49' : ''">
@@ -121,10 +121,10 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="decision-container" *ngIf="currentAIPlayer">
-    <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of currentAIPlayer.decisions">
-      {{ decision }}
+    <div>
+      <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of currentAIPlayer.decisions">
+        {{ decision }}
+      </div>
     </div>
   </div>
 </div>

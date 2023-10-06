@@ -2,11 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { RewardType } from 'src/app/models';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { CombatManager, CombatScore, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
+import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SettingsService } from 'src/app/services/settings.service';
+
+export interface CombatScore {
+  playerId: number;
+  score: number;
+}
 
 @Component({
   selector: 'app-dune-combat',
@@ -36,25 +41,17 @@ export class DuneCombatComponent implements OnInit {
   ngOnInit(): void {
     this.combatScoreArray = new Array(this.maxCombatScore);
 
-    this.combatManager.playerCombatScores$.subscribe((combatScores) => {
-      this.combatScores = combatScores;
-    });
-
     this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
       this.playerCombatUnits = playerCombatUnits.sort((a, b) => a.playerId - b.playerId);
+      this.combatScores = this.playerCombatUnits.map((x) => ({
+        playerId: x.playerId,
+        score: this.combatManager.getPlayerCombatScore(x),
+      }));
     });
 
     this.playerManager.players$.subscribe((players) => {
       this.players = players;
     });
-  }
-
-  public onAddTroopToGarrisonClicked(playerId: number) {
-    this.combatManager.addPlayerTroopsToGarrison(playerId, 1);
-  }
-
-  public onRemoveTroopFromGarrisonClicked(playerId: number) {
-    this.combatManager.removePlayerTroopsFromGarrison(playerId, 1);
   }
 
   public onAddTroopToCombatClicked(playerId: number) {
@@ -65,14 +62,6 @@ export class DuneCombatComponent implements OnInit {
     this.combatManager.removePlayerTroopsFromCombat(playerId, 1);
   }
 
-  public onAddShipToGarrisonClicked(playerId: number) {
-    this.combatManager.addPlayerShipsToGarrison(playerId, 1);
-  }
-
-  public onRemoveShipFromGarrisonClicked(playerId: number) {
-    this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
-  }
-
   public onAddShipToCombatClicked(playerId: number) {
     this.combatManager.addPlayerShipsToCombat(playerId, 1);
   }
@@ -81,16 +70,28 @@ export class DuneCombatComponent implements OnInit {
     this.combatManager.removePlayerShipsFromCombat(playerId, 1);
   }
 
+  public onAddAdditionalCombatPowerToPlayer(playerId: number) {
+    this.combatManager.addAdditionalCombatPowerToPlayer(playerId, 1);
+  }
+
+  public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
+    this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
+  }
+
   public getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
   }
 
   public onCombatScoreMarkerDrop(event: CdkDragDrop<number[]>, score: number) {
-    this.gameManager.setPlayerCombatScore(event.item.data, score);
-  }
-
-  public setCombatScore(score: number) {
-    this.gameManager.setActivePlayerCombatScore(score);
+    const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === event.item.data);
+    if (playerCombatUnits) {
+      const currentScore = this.combatManager.getPlayerCombatScore(playerCombatUnits);
+      if (currentScore < score) {
+        this.combatManager.addAdditionalCombatPowerToPlayer(event.item.data, score - currentScore);
+      } else if (currentScore > score) {
+        this.combatManager.removeAdditionalCombatPowerFromPlayer(event.item.data, currentScore - score);
+      }
+    }
   }
 
   public getPlayersOnScore(score: number) {

@@ -549,7 +549,7 @@ function playerHasUnitsInCombat(gameState: GameState) {
 }
 
 function getPlayerCombatPower(player: PlayerCombatUnits) {
-  return player.troopsInCombat * 2 + player.shipsInCombat * 3;
+  return player.troopsInCombat * 2 + player.shipsInCombat * 3 + player.additionalCombatPower;
 }
 
 function getPlayerGarrisonStrength(player: PlayerCombatUnits) {

@@ -1,7 +1,7 @@
 <div class="player-board-container">
   <div class="heading">
-    <div>spieler</div>
-    <div>
+    <div *ngIf="gameManager.currentTurn == 0">spieler</div>
+    <div *ngIf="gameManager.currentTurn == 0">
       <button
         mat-mini-fab
         [color]="'accent'"
@@ -20,166 +20,66 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
+    <div *ngIf="currentTurn" class="turn-area">
+      <div *ngIf="currentTurn">runde {{ currentTurn }}</div>
+      <div>{{ turnState }}</div>
+    </div>
   </div>
-  <div class="player-area">
-    <div class="player-container" *ngFor="let player of players">
-      <div class="player-heading">
-        <div *ngIf="gameManager.startingPlayerId === player.id" class="starting-player-marker"></div>
-        <div *ngIf="player.hasCouncilSeat" class="council-seat-marker" [style.background-color]="player.color"></div>
+  <div class="player-container" *ngFor="let player of players">
+    <div class="player-heading">
+      <div *ngIf="gameManager.startingPlayerId === player.id" class="starting-player-marker"></div>
+      <div *ngIf="player.hasCouncilSeat" class="council-seat-marker" [style.background-color]="player.color"></div>
+      <div
+        class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
+        [style.color]="player.color"
+      >
+        {{ getPlayerLeaderName(player.id) }}
+      </div>
+    </div>
+    <div class="player-heading">
+      <ng-container *ngFor="let object of getArrayFromNumber(player.agents + 1); let i = index">
         <div
-          class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
-          [style.color]="player.color"
-        >
-          {{ getPlayerLeaderName(player.id) }}
-        </div>
-        <mat-slide-toggle
-          [color]="'accent'"
-          [checked]="player.isAI"
-          (change)="onSetAIActiveClicked(player.id, $event)"
-          [disabled]="currentTurn > 0"
-          >AI</mat-slide-toggle
-        >
-      </div>
-      <div class="player-heading">
-        <ng-container *ngFor="let object of getArrayFromNumber(player.agents + 1); let i = index">
-          <div
-            class="agent-marker"
-            [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
-            [style.background-color]="player.color"
-          ></div>
-        </ng-container>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onRemovePlayerAgentClicked(player.id)"
-          [disabled]="gameManager.currentTurnState === 'combat'"
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onAddPlayerAgentClicked(player.id)"
-          [disabled]="gameManager.currentTurnState === 'combat'"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
+          class="agent-marker"
+          [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
+          [style.background-color]="player.color"
+        ></div>
+      </ng-container>
+      <mat-slide-toggle
+        [color]="'accent'"
+        [checked]="player.isAI"
+        (change)="onSetAIActiveClicked(player.id, $event)"
+        [disabled]="currentTurn > 0"
+        >AI</mat-slide-toggle
+      >
+    </div>
 
-      <!-- <div class="ai-container">
+    <!-- <div class="ai-container">
         <button mat-raised-button color="accent" (click)="onSetCurrentAIPlayerClicked(player.id)">show</button>
       </div> -->
 
-      <div class="resource-area">
-        <div class="resource-container" *ngFor="let resource of player.resources">
-          <div class="resource-display">
-            <img class="resource" [src]="getRewardTypePath(resource.type)" />
-            <div class="resource-amount">
-              <span>{{ resource.amount }}</span>
-            </div>
+    <div class="resource-area">
+      <div class="resource-container" *ngFor="let resource of player.resources">
+        <div class="resource-display">
+          <img class="resource" [src]="getRewardTypePath(resource.type)" />
+          <div class="resource-amount">
+            <span>{{ resource.amount }}</span>
           </div>
-          <button
-            mat-mini-fab
-            [color]="'accent'"
-            (click)="onRemoveResourceClicked(player.id, resource.type)"
-            [disabled]="resource.amount === 0"
-          >
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onAddResourceClicked(player.id, resource.type)">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <div class="resource-container">
-          <div class="resource-display">
-            <img class="resource" [src]="getRewardTypePath('victory-point')" />
-            <div class="resource-amount">
-              <span>{{ getPlayerScore(player.id, 'victoryPoints') }}</span>
-            </div>
-          </div>
-          <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(player.id, 'victoryPoints')">
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(player.id, 'victoryPoints')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <div class="resource-container">
-          <div class="resource-display">
-            <img class="resource" [src]="getFactionTypePath('fremen')" />
-            <div class="resource-amount">
-              <span>{{ getPlayerScore(player.id, 'fremen') }}</span>
-            </div>
-          </div>
-          <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(player.id, 'fremen')">
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(player.id, 'fremen')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <div class="resource-container">
-          <div class="resource-display">
-            <img class="resource" [src]="getFactionTypePath('bene')" />
-            <div class="resource-amount">
-              <span>{{ getPlayerScore(player.id, 'bene') }}</span>
-            </div>
-          </div>
-          <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(player.id, 'bene')">
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(player.id, 'bene')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <div class="resource-container">
-          <div class="resource-display">
-            <img class="resource" [src]="getFactionTypePath('guild')" />
-            <div class="resource-amount">
-              <span>{{ getPlayerScore(player.id, 'guild') }}</span>
-            </div>
-          </div>
-          <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(player.id, 'guild')">
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(player.id, 'guild')">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <div class="resource-container">
-          <div class="resource-display">
-            <img class="resource" [src]="getFactionTypePath('imperium')" />
-            <div class="resource-amount">
-              <span>{{ getPlayerScore(player.id, 'imperium') }}</span>
-            </div>
-          </div>
-          <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(player.id, 'imperium')">
-            <mat-icon>remove</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(player.id, 'imperium')">
-            <mat-icon>add</mat-icon>
-          </button>
         </div>
       </div>
     </div>
   </div>
-  <button
-    *ngIf="!currentTurn"
-    mat-raised-button
-    color="accent"
-    (click)="onStartGameClicked()"
-    [disabled]="players.length < 2"
-  >
-    spiel beginnen
-  </button>
-  <div *ngIf="currentTurn" class="turn-area">
-    <div>runde {{ currentTurn }}</div>
-    /
-    <div>{{ turnState }}</div>
-  </div>
   <div class="action-container">
     <button
-      *ngIf="currentTurn && turnState === 'agent-placement'"
+      *ngIf="!currentTurn"
+      mat-raised-button
+      color="accent"
+      (click)="onStartGameClicked()"
+      [disabled]="players.length < 2"
+    >
+      spiel beginnen
+    </button>
+    <button
+      *ngIf="(currentTurn && turnState === 'agent-placement') || turnState === 'combat'"
       mat-raised-button
       color="accent"
       (click)="onNextPlayerClicked()"

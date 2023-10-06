@@ -144,11 +144,10 @@
     width: 175px;
 }
 
-.troop-marker {
-    width: 25px;
-    height: 25px;
+.swords-marker {
+    width: 30px;
+    height: 30px;
     border-radius: 25%;
-    border: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
     animation-name: unit-marker-anim;
@@ -156,9 +155,22 @@
     animation-duration: 1.5s;
 }
 
+.troop-marker {
+    width: 30px;
+    height: 30px;
+    border-radius: 25%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    left: calc(50% - 13px);
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
+    box-sizing: border-box;
+}
+
 .ship-marker {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     border-radius: 25%;
     border: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
@@ -167,11 +179,18 @@
     animation-name: unit-marker-anim;
     animation-timing-function: ease-in-out;
     animation-duration: 1.5s;
+    box-sizing: border-box;
 }
 
 .troop-marker.combat-insert,
 .ship-marker.combat-insert {
     background-color: darkred;
+    background-image: url(/assets/images/reward-markers/marker_sword.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.swords-marker.combat-insert {
     background-image: url(/assets/images/reward-markers/marker_sword.png);
     background-size: cover;
     background-position: center;

@@ -1,4 +1,4 @@
-<div [style]="'display:flex; margin-top: 64px;'">
+<div [style]="'display:flex'">
   <div class="board">
     <ng-container *ngFor="let faction of settingsService.factions">
       <app-dune-faction [faction]="faction"></app-dune-faction>
@@ -10,7 +10,7 @@
     <app-scoreboard></app-scoreboard>
     <app-techboard></app-techboard>
     <app-card-areas></app-card-areas>
-    <!-- <dune-conflicts></dune-conflicts> -->
+    <dune-conflicts></dune-conflicts>
   </div>
   <app-playerboard *ngIf="settingsService.board.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">

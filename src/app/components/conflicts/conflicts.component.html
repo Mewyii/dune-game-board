@@ -1,7 +1,13 @@
 <div
+  *ngIf="currentConflictSet"
   class="conflict-card"
-  [style.background-image]="'url(/assets/images/conflicts/lvl2.jpg)'"
+  [style.background-image]="'url(' + currentConflictSet.imagePath + ')'"
+  [style.background-size]="currentConflictSet.imageSize + 'px'"
   [style.background-position-x]="currentCardCoordinates.x + 'px'"
   [style.background-position-y]="currentCardCoordinates.y + 'px'"
 ></div>
-<div class="conflict-card background" [style.background-image]="'url(/assets/images/conflicts/lvl2.jpg)'"></div>
+<div
+  class="conflict-card background"
+  [style.background-image]="'url(' + currentConflictSet?.imagePath + ')'"
+  [style.background-size]="currentConflictSet?.imageSize + 'px'"
+></div>

@@ -42,29 +42,165 @@
     <div class="control-button" (click)="setNextLeader()">></div>
   </div>
   <div class="control-bar" *ngIf="currentPlayer">
-    <div class="info-container">
-      <div>tech agents</div>
-      <ng-container *ngFor="let object of getArrayFromNumber(currentPlayer.techAgents); let i = index">
-        <div class="tech-agent-marker" [style.background-color]="currentPlayer.color"></div>
-      </ng-container>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
+    <div class="info-container vertical">
+      <div>agents</div>
+      <div class="resource-container">
+        <div class="agent-marker" [style.background-color]="currentPlayer.color"></div>
+        <div>{{ currentPlayerAvailableAgents?.agentAmount }}</div>
+        <button
+          mat-mini-fab
+          [color]="'accent'"
+          (click)="onRemovePlayerAgentClicked(currentPlayer.id)"
+          [disabled]="gameManager.currentTurnState === 'combat'"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button
+          mat-mini-fab
+          [color]="'accent'"
+          (click)="onAddPlayerAgentClicked(currentPlayer.id)"
+          [disabled]="gameManager.currentTurnState === 'combat'"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </div>
-    <div class="info-container">
+    <div class="info-container vertical">
+      <div>tech agents</div>
+      <div class="resource-container">
+        <div class="tech-agent-marker" [style.background-color]="currentPlayer.color"></div>
+        <div>{{ currentPlayer.techAgents }}</div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="info-container vertical">
       <div>focus tokens</div>
-      <ng-container *ngFor="let object of getArrayFromNumber(currentPlayer.focusTokens); let i = index">
+      <div class="resource-container">
         <div class="focus-marker"></div>
-      </ng-container>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveFocusTokenClicked(currentPlayer.id)">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddFocusTokenClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
+        <div>{{ currentPlayer.focusTokens }}</div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveFocusTokenClicked(currentPlayer.id)">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddFocusTokenClicked(currentPlayer.id)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="info-container vertical">
+      <div>vps</div>
+      <div class="resource-container">
+        <img class="resource" [src]="getRewardTypePath('victory-point')" />
+        <div class="resource-amount">
+          <span>{{ getPlayerScore('victoryPoints') }}</span>
+        </div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'victoryPoints')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="info-container vertical">
+      <div>units</div>
+      <div class="units-control-bar">
+        <div class="troop-marker" [style.background-color]="currentPlayer.color"></div>
+        <div>{{ currentPlayerCombatUnits?.troopsInGarrison }}</div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromGarrisonClicked(currentPlayer.id)">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddTroopToGarrisonClicked(currentPlayer.id)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="units-control-bar">
+        <div class="ship-marker" [style.background-color]="currentPlayer.color"></div>
+        <div>{{ currentPlayerCombatUnits?.shipsInGarrison }}</div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromGarrisonClicked(currentPlayer.id)">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddShipToGarrisonClicked(currentPlayer.id)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="info-container vertical">
+      <div>resources</div>
+      <div class="resource-container" *ngFor="let resource of currentPlayer.resources">
+        <div class="resource-display">
+          <img class="resource" [src]="getRewardTypePath(resource.type)" />
+          <div class="resource-amount on-background">
+            <span>{{ resource.amount }}</span>
+          </div>
+        </div>
+        <button
+          mat-mini-fab
+          [color]="'accent'"
+          (click)="onRemoveResourceClicked(currentPlayer.id, resource.type)"
+          [disabled]="resource.amount === 0"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddResourceClicked(currentPlayer.id, resource.type)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="info-container vertical">
+      <div>factions</div>
+      <div class="resource-container">
+        <img class="resource" [src]="getFactionTypePath('fremen')" />
+        <div class="resource-amount">
+          <span>{{ getPlayerScore('fremen') }}</span>
+        </div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'fremen')">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'fremen')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="resource-container">
+        <img class="resource" [src]="getFactionTypePath('bene')" />
+        <div class="resource-amount">
+          <span>{{ getPlayerScore('bene') }}</span>
+        </div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'bene')">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'bene')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="resource-container">
+        <img class="resource" [src]="getFactionTypePath('guild')" />
+        <div class="resource-amount">
+          <span>{{ getPlayerScore('guild') }}</span>
+        </div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'guild')">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'guild')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="resource-container">
+        <img class="resource" [src]="getFactionTypePath('imperium')" />
+        <div class="resource-amount">
+          <span>{{ getPlayerScore('imperium') }}</span>
+        </div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'imperium')">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'imperium')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 </div>

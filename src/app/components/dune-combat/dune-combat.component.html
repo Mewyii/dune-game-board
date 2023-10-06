@@ -12,27 +12,9 @@
       <ng-container *ngFor="let player of players; let i = index; trackBy: trackPlayer">
         <div
           class="units-control-bar-container"
-          [style.top]="175 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
-          [style.left]="-90 + (i > 0 ? 210 : 0) + (i > 1 ? 710 : 0) + (i > 2 ? 240 : 0) + 'px'"
+          [style.top]="195 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
+          [style.left]="-90 + (i > 0 ? 225 : 0) + (i > 1 ? 680 : 0) + (i > 2 ? 225 : 0) + 'px'"
         >
-          <div class="units-control-bar">
-            <div class="troop-marker" [style.background-color]="getPlayerColor(player.id)"></div>
-            <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromGarrisonClicked(player.id)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onAddTroopToGarrisonClicked(player.id)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <div class="units-control-bar">
-            <div class="ship-marker" [style.background-color]="getPlayerColor(player.id)"></div>
-            <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromGarrisonClicked(player.id)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onAddShipToGarrisonClicked(player.id)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
           <div class="units-control-bar">
             <div class="troop-marker combat-insert"></div>
             <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromCombatClicked(player.id)">
@@ -48,6 +30,15 @@
               <mat-icon>remove</mat-icon>
             </button>
             <button mat-mini-fab [color]="'accent'" (click)="onAddShipToCombatClicked(player.id)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="units-control-bar">
+            <div class="swords-marker combat-insert"></div>
+            <button mat-mini-fab [color]="'accent'" (click)="onRemoveAdditionalCombatPowerFromPlayer(player.id)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onAddAdditionalCombatPowerToPlayer(player.id)">
               <mat-icon>add</mat-icon>
             </button>
           </div>

@@ -11,6 +11,7 @@ import { DuneEventsManager } from './dune-events.service';
 import { ActionField, ResourceType, Reward } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
+import { ConflictsService } from './conflicts.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -67,7 +68,8 @@ export class GameManager {
     public loggingService: LoggingService,
     public duneEventsManager: DuneEventsManager,
     public aIManager: AIManager,
-    public leadersService: LeadersService
+    public leadersService: LeadersService,
+    public conflictsService: ConflictsService
   ) {
     const currentTurnString = localStorage.getItem('currentTurn');
     if (currentTurnString) {
@@ -203,7 +205,7 @@ export class GameManager {
   public startGame() {
     this.loggingService.clearLog();
     this.playerManager.resetPlayers();
-    this.combatManager.resetPlayerCombatScores();
+    this.combatManager.resetAdditionalCombatPower();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.resetAllPlayerShips();
     this.combatManager.setInitialPlayerCombatUnits(this.playerManager.players);
@@ -216,6 +218,7 @@ export class GameManager {
 
     this.aIManager.assignPersonalitiesToAIPlayers(this.playerManager.players);
     this.leadersService.assignLeadersToPlayers(this.playerManager.players);
+    this.conflictsService.setInitialConflict();
 
     this.currentTurnSubject.next(1);
     this.currentTurnStateSubject.next('agent-placement');
@@ -228,10 +231,12 @@ export class GameManager {
   public setNextTurn() {
     this.accumulateSpiceOnFields();
     this.removePlayerAgentsFromBoard();
-    this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
     this.combatManager.setAllPlayerShipsFromCombatToGarrisonOrTimeout();
-    this.combatManager.resetPlayerCombatScores();
+    this.combatManager.deleteAllPlayerTroopsFromCombat();
+    this.combatManager.resetAdditionalCombatPower();
+
+    this.conflictsService.setNextConflict();
 
     if (this.shouldTriggerFinale()) {
       this.isFinaleSubject.next(true);
@@ -252,7 +257,7 @@ export class GameManager {
 
   public finishGame() {
     this.removePlayerAgentsFromBoard();
-    this.combatManager.resetPlayerCombatScores();
+    this.combatManager.resetAdditionalCombatPower();
     this.loggingService.printLog();
     this.currentTurnSubject.next(0);
     this.currentTurnStateSubject.next('none');
@@ -261,6 +266,7 @@ export class GameManager {
     this.activeCombatPlayerId = 0;
     this.duneEventsManager.resetDuneEvents();
     this.leadersService.resetLeaders();
+    this.conflictsService.resetConflicts();
 
     this.isFinaleSubject.next(false);
   }
@@ -440,16 +446,6 @@ export class GameManager {
     ]);
   }
 
-  public setActivePlayerCombatScore(score: number) {
-    this.combatManager.setPlayerCombatScore(this.activeCombatPlayerId, score);
-    this.setNextPlayerActive('combat');
-  }
-
-  public setPlayerCombatScore(playerId: number, score: number) {
-    this.combatManager.setPlayerCombatScore(playerId, score);
-    this.setNextPlayerActive('combat');
-  }
-
   public addAgentToPlayer(playerId: number) {
     const availablePlayerAgents = this.availablePlayerAgents;
     const playerAgentsIndex = availablePlayerAgents.findIndex((x) => x.playerId === playerId);
@@ -584,7 +580,7 @@ export class GameManager {
   }
 
   private shouldTriggerFinale() {
-    const playerScores = this.playerScoreManager.playersScores;
+    const playerScores = this.playerScoreManager.playerScores;
     if (playerScores.length < 4) {
       return playerScores.some((x) => x.victoryPoints > 8);
     } else {

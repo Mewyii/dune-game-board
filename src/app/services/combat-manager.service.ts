@@ -3,11 +3,6 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player, PlayerManager } from './player-manager.service';
 
-export interface CombatScore {
-  playerId: number;
-  score: number;
-}
-
 export interface PlayerCombatUnits {
   playerId: number;
   troopsInGarrison: number;
@@ -15,6 +10,7 @@ export interface PlayerCombatUnits {
   shipsInTimeout: number;
   shipsInGarrison: number;
   shipsInCombat: number;
+  additionalCombatPower: number;
 }
 
 @Injectable({
@@ -23,9 +19,6 @@ export interface PlayerCombatUnits {
 export class CombatManager {
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
   public playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
-
-  private playerCombatScoresSubject = new BehaviorSubject<CombatScore[]>([]);
-  public playerCombatScores$ = this.playerCombatScoresSubject.asObservable();
 
   constructor(public playerManager: PlayerManager) {
     const playerCombatUnitsString = localStorage.getItem('playerCombatUnits');
@@ -37,24 +30,10 @@ export class CombatManager {
     this.playerCombatUnits$.subscribe((playerCombatUnits) => {
       localStorage.setItem('playerCombatUnits', JSON.stringify(playerCombatUnits));
     });
-
-    const playerCombatScoresString = localStorage.getItem('playerCombatScores');
-    if (playerCombatScoresString) {
-      const playerCombatScores = JSON.parse(playerCombatScoresString) as CombatScore[];
-      this.playerCombatScoresSubject.next(playerCombatScores);
-    }
-
-    this.playerCombatScores$.subscribe((playerCombatScores) => {
-      localStorage.setItem('playerCombatScores', JSON.stringify(playerCombatScores));
-    });
   }
 
   public get playerCombatUnits() {
     return cloneDeep(this.playerCombatUnitsSubject.value);
-  }
-
-  public get playerCombatScores() {
-    return cloneDeep(this.playerCombatScoresSubject.value);
   }
 
   public getPlayerCombatUnits(playerId: number) {
@@ -86,6 +65,7 @@ export class CombatManager {
         shipsInTimeout: 0,
         shipsInGarrison: 0,
         shipsInCombat: 0,
+        additionalCombatPower: 0,
       });
     }
 
@@ -126,6 +106,7 @@ export class CombatManager {
         shipsInTimeout: 0,
         shipsInGarrison: ships,
         shipsInCombat: 0,
+        additionalCombatPower: 0,
       });
     }
 
@@ -165,8 +146,6 @@ export class CombatManager {
           troopsInCombat: troops,
           troopsInGarrison: combatScore.troopsInGarrison - changeOfTroopsInCombat,
         };
-
-        this.setPlayerCombatScore(playerId, troops * 2 + combatScore.shipsInCombat * 3);
       }
     } else {
       playerCombatUnits.push({
@@ -176,9 +155,8 @@ export class CombatManager {
         shipsInTimeout: 0,
         shipsInGarrison: 0,
         shipsInCombat: 0,
+        additionalCombatPower: 0,
       });
-
-      this.setPlayerCombatScore(playerId, troops * 2);
     }
 
     this.playerCombatUnitsSubject.next(playerCombatUnits);
@@ -248,8 +226,6 @@ export class CombatManager {
           shipsInCombat: ships,
           shipsInGarrison: combatScore.shipsInGarrison - changeOfShipsInCombat,
         };
-
-        this.setPlayerCombatScore(playerId, combatScore.troopsInCombat * 2 + ships * 3);
       }
     } else {
       playerCombatUnits.push({
@@ -259,9 +235,8 @@ export class CombatManager {
         shipsInTimeout: 0,
         shipsInGarrison: 0,
         shipsInCombat: 0,
+        additionalCombatPower: 0,
       });
-
-      this.setPlayerCombatScore(playerId, ships * 3);
     }
 
     this.playerCombatUnitsSubject.next(playerCombatUnits);
@@ -288,30 +263,23 @@ export class CombatManager {
   }
 
   public setAllPlayerShipsFromCombatToGarrisonOrTimeout() {
-    const playerCombatScores = this.playerCombatScores;
+    const playerCombatUnits = this.playerCombatUnits;
+    const winningPlayer = playerCombatUnits.sort((a, b) => this.getPlayerCombatScore(b) - this.getPlayerCombatScore(a))[0];
 
-    playerCombatScores.sort((a, b) => b.score - a.score);
-
-    if (playerCombatScores[0]) {
-      const winningPlayerId = playerCombatScores[0].playerId;
-
-      const playerCombatUnits = this.playerCombatUnits;
-
-      for (const combatUnits of playerCombatUnits) {
-        if (combatUnits.playerId === winningPlayerId) {
-          if (combatUnits.shipsInCombat > 0) {
-            combatUnits.shipsInTimeout = 1;
-            combatUnits.shipsInGarrison = combatUnits.shipsInGarrison + combatUnits.shipsInCombat - 1;
-            combatUnits.shipsInCombat = 0;
-          }
-        } else {
-          combatUnits.shipsInGarrison = combatUnits.shipsInGarrison + combatUnits.shipsInCombat;
+    for (const combatUnits of playerCombatUnits) {
+      if (combatUnits.playerId === winningPlayer.playerId) {
+        if (combatUnits.shipsInCombat > 0) {
+          combatUnits.shipsInTimeout = 1;
+          combatUnits.shipsInGarrison = combatUnits.shipsInGarrison + combatUnits.shipsInCombat - 1;
           combatUnits.shipsInCombat = 0;
         }
+      } else {
+        combatUnits.shipsInGarrison = combatUnits.shipsInGarrison + combatUnits.shipsInCombat;
+        combatUnits.shipsInCombat = 0;
       }
-
-      this.playerCombatUnitsSubject.next(playerCombatUnits);
     }
+
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
   public setAllPlayerShipsFromTimeoutToGarrison() {
@@ -357,24 +325,43 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public setPlayerCombatScore(playerId: number, score: number) {
-    const combatScores = this.playerCombatScores;
-    const combatScoreIndex = combatScores.findIndex((x) => x.playerId === playerId);
-    if (combatScoreIndex > -1) {
-      const combatScore = combatScores[combatScoreIndex];
-      combatScores[combatScoreIndex] = { ...combatScore, score };
-    } else {
-      combatScores.push({ playerId, score });
+  public resetAdditionalCombatPower() {
+    const playerCombatUnits = this.playerCombatUnits;
+
+    for (const combatUnits of playerCombatUnits) {
+      combatUnits.additionalCombatPower = 0;
     }
 
-    this.playerCombatScoresSubject.next(combatScores);
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public resetPlayerCombatScores() {
-    const combatScores: CombatScore[] = [];
-    for (const player of this.playerManager.players) {
-      combatScores.push({ playerId: player.id, score: 0 });
-    }
-    this.playerCombatScoresSubject.next(combatScores);
+  public addAdditionalCombatPowerToPlayer(playerId: number, amount: number) {
+    const playerCombatUnits = this.playerCombatUnits;
+    const combatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
+    const combatunits = playerCombatUnits[combatUnitsIndex];
+    playerCombatUnits[combatUnitsIndex] = {
+      ...combatunits,
+      additionalCombatPower: combatunits.additionalCombatPower + 1,
+    };
+
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
+  }
+
+  public removeAdditionalCombatPowerFromPlayer(playerId: number, amount: number) {
+    const playerCombatUnits = this.playerCombatUnits;
+    const combatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
+    const combatUnits = playerCombatUnits[combatUnitsIndex];
+    playerCombatUnits[combatUnitsIndex] = {
+      ...combatUnits,
+      additionalCombatPower: combatUnits.additionalCombatPower > 0 ? combatUnits.additionalCombatPower - 1 : 0,
+    };
+
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
+  }
+
+  public getPlayerCombatScore(playerCombatUnits: PlayerCombatUnits) {
+    return (
+      playerCombatUnits.troopsInCombat * 2 + playerCombatUnits.shipsInCombat * 3 + playerCombatUnits.additionalCombatPower
+    );
   }
 }
