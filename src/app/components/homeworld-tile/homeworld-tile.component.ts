@@ -23,7 +23,7 @@ export class HomeworldTileComponent implements OnInit {
 
   public planetColors = [this.getRandomDegree(), this.getRandomDegree(), this.getRandomDegree(), this.getRandomDegree()];
 
-  public showTiles = false;
+  public showTiles = true;
 
   constructor() {}
 

@@ -18,6 +18,7 @@ export type AIGoals =
   | 'draw-cards'
   | 'trim-deck'
   | 'intrigues'
+  | 'intrigue-steal'
   | 'fold-space'
   | 'collect-water'
   | 'collect-spice'
@@ -39,6 +40,7 @@ export interface GameState {
   enemyAgentCount: PlayerAgents[];
   isOpeningTurn: boolean;
   isFinale: boolean;
+  enemyPlayers: Player[];
 }
 
 export interface AIGoal {

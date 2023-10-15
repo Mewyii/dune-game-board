@@ -150,6 +150,25 @@
           <mat-icon>add</mat-icon>
         </button>
       </div>
+      <div class="resource-container">
+        <div class="resource-display">
+          <img class="resource intrigue" [src]="getRewardTypePath('intrigue')" />
+          <div class="resource-amount on-background">
+            <span>{{ currentPlayer.intrigueCount }}</span>
+          </div>
+        </div>
+        <button
+          mat-mini-fab
+          [color]="'accent'"
+          (click)="onRemoveIntrigueClicked(currentPlayer.id)"
+          [disabled]="currentPlayer.intrigueCount === 0"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </div>
     <div class="info-container vertical">
       <div>factions</div>
@@ -202,6 +221,36 @@
         </button>
       </div>
     </div>
+  </div>
+  <div class="control-bar">
+    <ng-container *ngFor="let house of houses">
+      <div class="house-card-container">
+        <dune-minor-house-card [house]="house"></dune-minor-house-card>
+        <button class="house-level-up-button" mat-mini-fab [color]="'accent'" (click)="onHouseLevelUpClicked(house.name.en)">
+          <mat-icon>expand_less</mat-icon>
+        </button>
+        <button
+          class="house-level-down-button"
+          mat-mini-fab
+          [color]="'accent'"
+          (click)="onHouseLevelDownClicked(house.name.en)"
+        >
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <div
+          class="house-marker"
+          *ngIf="getPlayerHouseLevel(house.name.en) === 2"
+          [style.background-color]="currentPlayer?.color"
+          [style.bottom]="'174px'"
+        ></div>
+        <div
+          class="house-marker"
+          *ngIf="getPlayerHouseLevel(house.name.en) === 1"
+          [style.background-color]="currentPlayer?.color"
+          [style.bottom]="'56px'"
+        ></div>
+      </div>
+    </ng-container>
   </div>
 </div>
 <!-- 

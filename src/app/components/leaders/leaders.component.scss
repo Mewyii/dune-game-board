@@ -2,7 +2,7 @@
     background: #534235;
     display: flex;
     flex-wrap: wrap;
-    max-width: 800px;
+    max-width: 900px;
     gap: 32px;
     justify-content: center;
     align-items: center;
@@ -221,9 +221,6 @@
     border: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
 }
 
 .ship-marker {
@@ -234,9 +231,6 @@
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
     transform: rotateX(45deg) rotateZ(45deg);
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
 }
 
 
@@ -259,6 +253,10 @@
     filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
+.resource.intrigue {
+    filter: brightness(0.5);
+}
+
 .resource-amount {
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
     width: 100%;
@@ -274,3 +272,40 @@
     top: -2px;
     left: 0;
 }
+
+.house-card-container {
+    position: relative;
+}
+
+.house-level-up-button {
+    position: absolute;
+    bottom: calc(50% + 26px);
+    right: -14px;
+}
+
+.house-level-down-button {
+    position: absolute;
+    bottom: calc(50% - 26px);
+    right: -14px;
+}
+
+.house-marker {
+    position: absolute;
+    bottom: 0px;
+    right: 44px;
+    width: 30px;
+    height: 30px;
+    border-radius: 25%;
+    border: 3px solid #2f2112;
+    filter: drop-shadow(0px 0px 5px black);
+    box-sizing: border-box;
+    animation-name: unit-marker-anim;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1.5s;
+}
+
+@keyframes unit-marker-anim {
+    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
+    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.75)}
+    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
+  }

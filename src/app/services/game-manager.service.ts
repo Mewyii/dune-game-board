@@ -12,6 +12,7 @@ import { ActionField, ResourceType, Reward } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
+import { MinorHousesService } from './minor-houses.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -69,7 +70,8 @@ export class GameManager {
     public duneEventsManager: DuneEventsManager,
     public aIManager: AIManager,
     public leadersService: LeadersService,
-    public conflictsService: ConflictsService
+    public conflictsService: ConflictsService,
+    public minorHousesService: MinorHousesService
   ) {
     const currentTurnString = localStorage.getItem('currentTurn');
     if (currentTurnString) {
@@ -219,6 +221,7 @@ export class GameManager {
     this.aIManager.assignPersonalitiesToAIPlayers(this.playerManager.players);
     this.leadersService.assignLeadersToPlayers(this.playerManager.players);
     this.conflictsService.setInitialConflict();
+    this.minorHousesService.setInitialAvailableHouses();
 
     this.currentTurnSubject.next(1);
     this.currentTurnStateSubject.next('agent-placement');
@@ -509,6 +512,7 @@ export class GameManager {
         agentsOnFields: this.agentsOnFields,
         isOpeningTurn: this.isOpeningTurn(playerId),
         isFinale: this.isFinale,
+        enemyPlayers: this.playerManager.players.filter((x) => x.id !== player.id),
       });
     }
   }

@@ -1,0 +1,49 @@
+.house-board {
+    background: #534235;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 900px;
+    gap: 32px;
+    justify-content: center;
+    align-items: center;
+    color: #fffcfa;
+    padding: 32px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.house-viewer {
+    height:415px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+}
+
+.available-houses {
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
+    background: #534235;
+    padding: 16px;
+    box-sizing: border-box;
+}
+.house-list {
+    background: #534235;
+    display: grid;
+    grid-gap: 16px;
+    grid-area: 3 3;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 16px;
+}
+
+.house-card-container {
+    // height: 400px;
+    position: relative;
+}
+
+.house-buy-button {
+    position: absolute;
+    bottom: -20px;
+    left: calc(50% - 28px);
+}

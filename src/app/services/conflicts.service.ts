@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { leaders } from '../constants/leaders';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from './player-manager.service';
 import { cloneDeep, random } from 'lodash';
-import { shuffle } from '../helpers/common';
 
 export interface ConflictSet {
   id: number;
@@ -48,8 +45,6 @@ const conflictSets: ConflictSet[] = [
   providedIn: 'root',
 })
 export class ConflictsService {
-  public leaders = leaders;
-
   private currentConflictSetSubject = new BehaviorSubject<ConflictSet>({
     id: 0,
     columns: 0,

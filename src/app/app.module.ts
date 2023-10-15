@@ -28,6 +28,8 @@ import { LeadersComponent } from './components/leaders/leaders.component';
 import { ConflictsComponent } from './components/conflicts/conflicts.component';
 import { AllianceTokenComponent } from './components/_common/alliance-token/alliance-token.component';
 import { DuneSymbolsPipe } from './pipes/dune-symbols';
+import { MinorHousesComponent } from './components/minor-houses/minor-houses.component';
+import { MinorHouseCardComponent } from './components/_common/minor-house-card/minor-house-card.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { DuneSymbolsPipe } from './pipes/dune-symbols';
     ConflictsComponent,
     AllianceTokenComponent,
     DuneSymbolsPipe,
+    MinorHousesComponent,
+    MinorHouseCardComponent,
   ],
   imports: [
     BrowserModule,

@@ -86,16 +86,6 @@
       </button>
     </div>
     <div class="info-container">
-      <div>intrigues</div>
-      <div class="value">{{ currentPlayer.intrigueCount }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveIntrigueClicked(currentPlayer.id)">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    <div class="info-container">
       <div>cards bought</div>
       <div class="value">{{ currentPlayer.cardsBought }}</div>
       <button mat-mini-fab [color]="'accent'" (click)="onBoughtCardClicked(currentPlayer.id)">

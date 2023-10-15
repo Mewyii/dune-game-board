@@ -1,0 +1,50 @@
+<div class="available-houses">
+  <ng-container *ngFor="let house of activeMinorHouses">
+    <div class="house-card-container">
+      <dune-minor-house-card [house]="house"></dune-minor-house-card>
+      <button class="house-buy-button" mat-fab [color]="'accent'" (click)="onTakeCardClicked(house.name.en)">
+        <mat-icon>check</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+</div>
+<!-- 
+<div class="house-list">
+  <ng-container *ngFor="let house of minorHouses">
+    <div class="house-card">
+      <div class="house-header" [style.color]="house.colorPrimary">
+        {{ translateService.translate(title) }}
+        <div class="house-title">
+          {{ translateService.translate(house.name) }}
+        </div>
+      </div>
+      <div
+        class="house-alliance-container"
+        [style.backgroundColor]="getTransparentColor(house.colorPrimary, 0.33)"
+        [style.borderColor]="getTransparentColor(house.colorSecondary, 0.75)"
+      >
+        <div
+          class="house-alliance-name"
+          [innerHTML]="translateService.translate(house.allianceRequirement) | duneSymbols"
+        ></div>
+        <div
+          class="house-alliance-description"
+          [innerHTML]="translateService.translate(house.allianceReward) | duneSymbols"
+        ></div>
+      </div>
+      <div class="house-friendship-container" [style.borderColor]="getTransparentColor(house.colorSecondary, 0.75)">
+        <div
+          class="house-friendship-name"
+          [innerHTML]="translateService.translate(house.friendshipRequirement) | duneSymbols"
+        ></div>
+        <div
+          class="house-friendship-description"
+          [innerHTML]="translateService.translate(house.friendshipReward) | duneSymbols"
+        ></div>
+      </div>
+      <div class="house-aquire-costs-container">
+        <div class="house-aquire-costs">{{ house.persuasion }}</div>
+      </div>
+    </div>
+  </ng-container>
+</div> -->

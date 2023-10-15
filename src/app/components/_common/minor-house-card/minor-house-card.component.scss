@@ -1,0 +1,106 @@
+
+.house-card {
+    height: 335px;
+    width: 235px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    border: 16px solid #151515;;
+    border-radius: 6px;
+    position: relative;
+    background-size: cover;
+    background-image: url(/assets/images/homeworld-background.png);
+    color: #fffcfa;
+    font-size: x-small;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+}
+
+.house-header {
+    flex: 1 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.house-title {
+    padding: 4px;
+    font-size: large;
+    text-align: center;
+}
+
+.house-friendship {
+    position: absolute;
+    bottom: 48px;
+    padding: 16px;
+    background: #00000080;
+    width: calc(100% - 32px);
+    text-align: center;
+}
+
+.house-friendship-container {
+    display: flex;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+    height: 100px;
+    padding: 6px;
+    background-color: #00000096;
+    border-top: 3px solid white;
+    border-bottom: 3px solid white;
+}
+
+.house-alliance-container {
+    display: flex;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+    height: 100px;
+    padding: 6px;
+    background-color: rgb(44 32 10 / 59%);
+    border-top: 3px solid white;
+}
+
+.house-friendship-name,
+.house-alliance-name {
+    padding: 6px;
+    flex: 1 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #ffffff3e;
+}
+
+.house-friendship-description,
+.house-alliance-description {
+    width: 65px;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+}
+
+.house-aquire-costs-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url(/assets/images/reward-markers/marker_conviction.png);
+    width: 38px;
+    height: 50px;
+    background-size: cover;
+}
+
+.house-aquire-costs {
+    font-size: x-large;
+    padding-top: 5px;
+    padding-left: 16px;
+}

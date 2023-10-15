@@ -83,8 +83,8 @@ export const leaders: Leader[] = [
     },
     signetName: { de: 'anklagender prophet', en: 'accusing prophet' },
     signetDescription: {
-      de: 'Jeder Gegner {resource:card-discard}.',
-      en: 'Every enemy {resource:card-discard}.',
+      de: 'Jeder Spieler {resource:card-discard}.',
+      en: 'Every player {resource:card-discard}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/preacher.png',

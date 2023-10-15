@@ -1,0 +1,32 @@
+<div class="house-card" *ngIf="house">
+  <div class="house-header" [style.color]="house.colorPrimary">
+    {{ translateService.translate(title) }}
+    <div class="house-title">
+      {{ translateService.translate(house.name) }}
+    </div>
+  </div>
+  <div
+    class="house-alliance-container"
+    [style.backgroundColor]="getTransparentColor(house.colorPrimary, 0.33)"
+    [style.borderColor]="getTransparentColor(house.colorSecondary, 0.75)"
+  >
+    <div class="house-alliance-name" [innerHTML]="translateService.translate(house.allianceRequirement) | duneSymbols"></div>
+    <div
+      class="house-alliance-description"
+      [innerHTML]="translateService.translate(house.allianceReward) | duneSymbols"
+    ></div>
+  </div>
+  <div class="house-friendship-container" [style.borderColor]="getTransparentColor(house.colorSecondary, 0.75)">
+    <div
+      class="house-friendship-name"
+      [innerHTML]="translateService.translate(house.friendshipRequirement) | duneSymbols"
+    ></div>
+    <div
+      class="house-friendship-description"
+      [innerHTML]="translateService.translate(house.friendshipReward) | duneSymbols"
+    ></div>
+  </div>
+  <div class="house-aquire-costs-container">
+    <div class="house-aquire-costs">{{ house.persuasion }}</div>
+  </div>
+</div>

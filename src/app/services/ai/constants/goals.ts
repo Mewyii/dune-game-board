@@ -175,7 +175,7 @@ export const aiGoals: FieldsForGoals = {
       'sietch tabr': (player, gameState) => (gameState.playerScore.fremen > 1 ? 0.3 : 0),
       'hardy warriors': (player, gameState) =>
         getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 1.0 : 0.6),
-      heighliner: (player) => getCostAdjustedDesire(player, 'spice', 6, 1.0),
+      heighliner: (player) => getCostAdjustedDesire(player, 'spice', 5, 1.0),
       conspiracy: (player, gameState) =>
         getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.imperium === 1 ? 0.8 : 0.6),
     },
@@ -189,6 +189,15 @@ export const aiGoals: FieldsForGoals = {
       carthag: () => 0.5,
       conspiracy: (player) => getCostAdjustedDesire(player, 'spice', 4, 1.0),
       'secret agreement': () => 0.5,
+    },
+  },
+  'intrigue-steal': {
+    baseDesire: 0.0,
+    desireModifier: (player, gameState) => (gameState.enemyPlayers.some((x) => x.intrigueCount > 3) ? 0.1 : 0),
+    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 1,
+    reachedGoal: () => false,
+    viableFields: {
+      'hidden knowledge': () => 1.0,
     },
   },
   'fold-space': {
@@ -338,7 +347,7 @@ export const aiGoals: FieldsForGoals = {
     viableFields: {
       stillsuits: () => 0.5,
       'sietch tabr': (player, gameState) => (gameState.playerScore.fremen > 1 ? 0.5 : 0),
-      heighliner: (player) => getCostAdjustedDesire(player, 'spice', 6, 1.0),
+      heighliner: (player) => getCostAdjustedDesire(player, 'spice', 5, 1.0),
     },
   },
   'collect-spice': {
@@ -724,7 +733,7 @@ function getCostAdjustedDesire(player: Player, resourceType: ResourceType, costs
     return 0;
   }
 
-  const desireAdjustment = 1.0 - 0.125 * costs + 0.1 * (playerResourceAmount - costs);
+  const desireAdjustment = 1.0 - 0.1 * costs + 0.1 * (playerResourceAmount - costs);
 
   return clamp(desire * desireAdjustment, 0, 1);
 }
