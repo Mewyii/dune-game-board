@@ -225,7 +225,9 @@ export class AIManager {
       }
     }
 
-    const blockedFields = gameState.agentsOnFields.map((x) => x.fieldId);
+    const blockedFields = gameState.agentsOnFields
+      .map((x) => x.fieldId)
+      .filter((fieldId) => !this.settingsService.unblockableFields.some((field) => field.title.en === fieldId));
 
     const possibleFields = aiPlayer.canAccessBlockedFields
       ? viableFields
@@ -259,7 +261,7 @@ export class AIManager {
       return undefined;
     }
 
-    const fields = this.settingsService.getAllFields();
+    const fields = this.settingsService.fields;
     return fields.find((x) => preferredField.fieldId.includes(x.title.en));
   }
 
@@ -306,7 +308,10 @@ export class AIManager {
     const playerCurrencyAmount = player.resources.find((x) => x.type === 'currency')?.amount ?? 0;
 
     for (let spiceCount = 1; spiceCount <= playerSpiceAmount; spiceCount++) {
-      if (playerCurrencyAmount + spiceToCurrencyFunction(spiceCount) > desiredCurrencyAmount) {
+      if (
+        playerCurrencyAmount + spiceToCurrencyFunction(spiceCount) > desiredCurrencyAmount ||
+        spiceCount >= this.settingsService.maxSellableSpice
+      ) {
         return spiceCount;
       }
     }

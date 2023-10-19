@@ -32,6 +32,7 @@ export class DuneActionComponent implements OnInit {
   public boardSettings = boardSettings;
 
   public playerOnField: Player | undefined;
+  public additionalPlayersOnField: Player[] = [];
 
   public accumulatedSpice = 3;
 
@@ -42,10 +43,20 @@ export class DuneActionComponent implements OnInit {
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
 
     this.gameManager.agentsOnFields$.subscribe((agentsOnFields) => {
-      const playerId = agentsOnFields.find((x) => x.fieldId === this.action.title.en)?.playerId;
-      if (playerId) {
-        this.playerOnField = this.playerManager.players.find((x) => x.id === playerId);
+      const playerIds = agentsOnFields.filter((x) => x.fieldId === this.action.title.en).map((x) => x.playerId);
+      if (playerIds.length > 0) {
+        const firstPlayerId = playerIds.shift()!;
+        this.playerOnField = this.playerManager.players.find((x) => x.id === firstPlayerId);
+
+        this.additionalPlayersOnField = [];
+        for (const playerId of playerIds) {
+          const playerOnField = this.playerManager.players.find((x) => x.id === playerId);
+          if (playerOnField) {
+            this.additionalPlayersOnField.push(playerOnField);
+          }
+        }
       } else {
+        this.additionalPlayersOnField = [];
         this.playerOnField = undefined;
       }
     });
@@ -80,5 +91,9 @@ export class DuneActionComponent implements OnInit {
 
   public getFactionTypePath(rewardType: FactionType) {
     return getFactionTypePath(rewardType);
+  }
+
+  public trackPlayersOnField(index: number, playerOnField: Player) {
+    return playerOnField.id;
   }
 }

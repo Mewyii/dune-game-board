@@ -19,6 +19,10 @@ export class SettingsService {
   public locations = locationsOriginal;
   public ix = ix;
 
+  public maxSellableSpice = 3;
+  public fields: ActionField[] = [];
+  public unblockableFields: ActionField[] = [];
+
   constructor() {
     if (boardSettings.content === 'custom-beginner') {
       this.factions = factionsCustomBeginner;
@@ -30,9 +34,11 @@ export class SettingsService {
       this.factions = factionsCustomExpert;
       this.locations = locationsCustom;
     }
+
+    this.setFields();
   }
 
-  public getAllFields() {
+  public setFields() {
     const result: ActionField[] = [];
     for (const faction of this.factions) {
       for (const field of faction.actionFields) {
@@ -45,6 +51,7 @@ export class SettingsService {
 
     result.push(ix);
 
-    return result;
+    this.fields = result;
+    this.unblockableFields = this.fields.filter((x) => x.isNonBlockingField);
   }
 }

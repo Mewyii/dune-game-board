@@ -17,6 +17,7 @@ export interface ActionField {
   rewards: Reward[];
   pathToImage: string;
   isBattlefield?: boolean;
+  isNonBlockingField?: boolean;
   hasRewardOptions?: boolean;
   requiresInfluence?: FactionInfluence;
   customWidth?: string;
