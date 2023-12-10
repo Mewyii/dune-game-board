@@ -35,10 +35,15 @@ export class LeadersService {
     return cloneDeep(this.playerLeadersSubject.value);
   }
 
+  public getLeader(playerId: number) {
+    const playerLeader = this.playersLeaders.find((x) => x.playerId === playerId);
+    return this.leaders.find((x) => x.name.en === playerLeader?.leaderName);
+  }
+
   assignLeadersToPlayers(players: Player[]) {
     const playerLeaders: PlayerLeader[] = [];
 
-    const leaders = cloneDeep(this.leaders);
+    const leaders = cloneDeep(this.leaders.filter((x) => x.playableByAI));
     const shuffledLeaders = shuffle(leaders);
 
     for (const player of players) {

@@ -290,10 +290,6 @@ export class GameManager {
       return;
     }
 
-    if (field.rewards.some((x) => x.type === 'sword-master') && this.activePlayer.hasSwordmaster) {
-      return;
-    }
-
     if (
       field.rewards.some((x) => x.type === 'council-seat-small' || x.type === 'council-seat-large') &&
       this.activePlayer.hasCouncilSeat
@@ -365,9 +361,19 @@ export class GameManager {
         this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
       }
       if (reward.type === 'sword-master') {
-        this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
+        if (
+          !this.activePlayer.hasSwordmaster &&
+          this.playerCanPayCosts(this.activeAgentPlacementPlayerId, [{ type: 'currency', amount: 10 }])
+        ) {
+          this.playerManager.removeResourceFromPlayer(this.activeAgentPlacementPlayerId, 'currency', 10);
+          this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
+          this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
+        } else {
+          this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, 2);
+          unitsGainedThisTurn += 2;
+        }
       }
-      if (reward.type === 'mentat' || reward.type === 'sword-master') {
+      if (reward.type === 'mentat') {
         this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
       }
       if (reward.type === 'troop-insert') {
@@ -513,6 +519,7 @@ export class GameManager {
         isOpeningTurn: this.isOpeningTurn(playerId),
         isFinale: this.isFinale,
         enemyPlayers: this.playerManager.players.filter((x) => x.id !== player.id),
+        playerLeader: this.leadersService.getLeader(player.id)!,
       });
     }
   }

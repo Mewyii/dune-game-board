@@ -54,6 +54,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_ship.png';
     case 'helper-arrow-down':
       return 'assets/images/reward-markers/marker_helper_arrow_down.png';
+    case 'helper-arrow-right':
+      return 'assets/images/reward-markers/marker_helper_arrow_right.png';
     case 'placeholder':
       return 'assets/images/reward-markers/marker_placeholder.png';
     case 'separator':
@@ -68,6 +70,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_shipping.png';
     case 'buildup':
       return 'assets/images/reward-markers/marker_planet.png';
+    case 'faction-influence-choice':
+      return 'assets/images/reward-markers/marker_faction_influence_choice.png';
     default:
       return '';
   }

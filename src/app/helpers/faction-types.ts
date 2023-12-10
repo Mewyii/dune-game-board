@@ -1,4 +1,4 @@
-import { ActionType, FactionType } from '../models';
+import { FactionType } from '../models';
 
 export function getFactionTypePath(actionType: FactionType) {
   switch (actionType) {

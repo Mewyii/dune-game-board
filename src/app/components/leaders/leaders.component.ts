@@ -73,6 +73,8 @@ export class LeadersComponent implements OnInit {
 
       this.currentPlayerCombatUnits = this.combatManager.playerCombatUnits.find((x) => x.playerId === this.activePlayerId);
 
+      this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
+
       this.currentPlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
         (x) => x.playerId === this.activePlayerId
       );

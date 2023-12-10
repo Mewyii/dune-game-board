@@ -1,7 +1,9 @@
+import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { Player } from '../../player-manager.service';
 import { PlayerScore } from '../../player-score-manager.service';
+import { Resource } from 'src/app/models';
 
 export type AIGoals =
   | 'high-council'
@@ -41,19 +43,25 @@ export interface GameState {
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];
+  playerLeader: Leader;
 }
 
 export interface AIGoal {
   baseDesire: number;
-  desireModifier: (player: Player, gameState: GameState, goals: FieldsForGoals) => number | DesireModifierDecisions;
+  desireModifier: (
+    player: Player,
+    gameState: GameState,
+    goals: FieldsForGoals,
+    virtualResources: Resource[]
+  ) => number | DesireModifierDecisions;
   maxDesire?: number;
-  goalIsReachable: (player: Player, gameState: GameState, goals: FieldsForGoals) => boolean;
-  reachedGoal: (player: Player, gameState: GameState, goals: FieldsForGoals) => boolean;
+  goalIsReachable: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => boolean;
+  reachedGoal: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => boolean;
   desiredFields?: {
-    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
+    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
   };
   viableFields: {
-    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
+    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
   };
 }
 

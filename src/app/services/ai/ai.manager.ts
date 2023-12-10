@@ -8,6 +8,7 @@ import { aiPersonalities } from './constants';
 import { aiGoals, getDesire } from './constants/goals';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
+import { ActiveFactionType, FactionType } from 'src/app/models';
 
 export interface AIPlayer {
   playerId: number;
@@ -30,6 +31,16 @@ export interface AIVariables {
 interface ViableField {
   fieldId: string;
   value: number;
+}
+
+interface FieldLock {
+  fieldId: string;
+  lock: FactionInfluenceLock;
+}
+
+interface FactionInfluenceLock {
+  type: ActiveFactionType;
+  amount: number;
 }
 
 @Injectable({
@@ -178,22 +189,26 @@ export class AIManager {
     const viableFields: ViableField[] = [];
     const decisions: string[] = [];
 
+    const virtualResources = gameState.playerLeader.aiFieldAccessModifier?.resources ?? [];
+
     for (let [goalId, goal] of Object.entries(aiGoals)) {
-      if (!goal.reachedGoal(player, gameState, aiGoals)) {
+      if (!goal.reachedGoal(player, gameState, aiGoals, virtualResources)) {
         const aiGoalId = goalId as AIGoals;
 
-        const desireModifier = goal.desireModifier(player, gameState, aiGoals);
+        const desireModifier = goal.desireModifier(player, gameState, aiGoals, virtualResources);
         if (typeof desireModifier !== 'number') {
           decisions.push(desireModifier.name);
         }
 
         const goalDesire =
-          getDesire(goal, player, gameState) * (aiPlayer.personality[aiGoalId] ?? 1.0) * this.getGameStateModifier(aiGoalId);
+          getDesire(goal, player, gameState, virtualResources) *
+          (aiPlayer.personality[aiGoalId] ?? 1.0) *
+          this.getGameStateModifier(aiGoalId);
         let desireCanBeFullfilled = false;
 
-        if (goal.goalIsReachable(player, gameState, aiGoals) && goal.desiredFields) {
+        if (goal.goalIsReachable(player, gameState, aiGoals, virtualResources) && goal.desiredFields) {
           for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields)) {
-            const fieldValue = getFieldValue(player, gameState, aiGoals) * goalDesire;
+            const fieldValue = getFieldValue(player, gameState, aiGoals, virtualResources) * goalDesire;
 
             if (fieldValue > 0) {
               const index = viableFields.findIndex((x) => x.fieldId === fieldId);
@@ -210,7 +225,7 @@ export class AIManager {
 
         if (!desireCanBeFullfilled) {
           for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields)) {
-            const fieldValue = getFieldValue(player, gameState, aiGoals) * goalDesire;
+            const fieldValue = getFieldValue(player, gameState, aiGoals, virtualResources) * goalDesire;
 
             if (fieldValue > 0) {
               const index = viableFields.findIndex((x) => x.fieldId === fieldId);
@@ -229,25 +244,52 @@ export class AIManager {
       .map((x) => x.fieldId)
       .filter((fieldId) => !this.settingsService.unblockableFields.some((field) => field.title.en === fieldId));
 
+    const conditionalFields: FieldLock[] = [
+      {
+        fieldId: 'sietch tabr',
+        lock: {
+          type: 'fremen',
+          amount: 2,
+        },
+      },
+    ];
+
+    const lockedFields = this.getLockedFields(player, gameState, conditionalFields);
+
     const possibleFields = aiPlayer.canAccessBlockedFields
       ? viableFields
-      : viableFields.filter((viableField) => !blockedFields.some((fieldId) => viableField.fieldId.includes(fieldId)));
+      : viableFields.filter(
+          (viableField) =>
+            !lockedFields.includes(viableField.fieldId) &&
+            !blockedFields.some((fieldId) => viableField.fieldId.includes(fieldId))
+        );
 
     possibleFields.sort((a, b) => b.value - a.value);
 
     const randomFactor = gameState.isOpeningTurn
-      ? 0.33
+      ? 0.75
       : this.aiDifficulty === 'hard'
-      ? 0.05
-      : this.aiDifficulty === 'medium'
       ? 0.1
-      : 0.15;
+      : this.aiDifficulty === 'medium'
+      ? 0.15
+      : 0.25;
     const slightlyRandomizedFields = randomizeArray(possibleFields, randomFactor);
 
     aiPlayer.preferredFields = slightlyRandomizedFields;
     aiPlayer.decisions = decisions;
 
     this.aiPlayersSubject.next(aiPlayers);
+  }
+
+  getLockedFields(player: Player, gameState: GameState, conditionalFields: FieldLock[]) {
+    const unlockedFields = gameState.playerLeader.aiFieldAccessModifier?.directFieldAccess ?? [];
+    return conditionalFields
+      .filter((x) => !unlockedFields.includes(x.fieldId) && !this.hasFieldAccess(player, gameState, x.lock))
+      .map((x) => x.fieldId);
+  }
+
+  private hasFieldAccess(player: Player, gameState: GameState, lock: FactionInfluenceLock) {
+    return gameState.playerScore[lock.type] >= lock.amount;
   }
 
   public getPreferredFieldForPlayer(playerId: number) {

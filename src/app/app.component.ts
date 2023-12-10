@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SettingsService } from './services/settings.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,9 @@ import { SettingsService } from './services/settings.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'dune-game-board';
+  constructor(private title: Title, public settingsService: SettingsService) {}
 
-  constructor(public settingsService: SettingsService) {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.title.setTitle('Dune Imperium: Alliances');
+  }
 }

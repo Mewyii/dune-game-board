@@ -20,6 +20,7 @@ export type RewardType =
   | 'troop-insert'
   | 'intrigue-draw'
   | 'helper-arrow-down'
+  | 'helper-arrow-right'
   | 'placeholder'
   | 'separator'
   | 'separator-horizontal'
@@ -30,6 +31,7 @@ export type RewardType =
   | 'control-spice'
   | 'card-round-start'
   | 'shipping'
+  | 'faction-influence-choice'
   | 'buildup';
 
 export interface Reward {

@@ -1,8 +1,12 @@
 import { ActionField, LanguageString, Reward } from '.';
 
-export const factionTypes = ['imperium', 'landsraad', 'guild', 'bene', 'fremen', 'choam'] as const;
+export const passiveFactionTypes = ['landsraad', 'choam'] as const;
 
-export type FactionType = (typeof factionTypes)[number];
+export const activeFactionTypes = ['imperium', 'guild', 'bene', 'fremen'] as const;
+
+export type PassiveFactionType = (typeof passiveFactionTypes)[number];
+export type ActiveFactionType = (typeof activeFactionTypes)[number];
+export type FactionType = PassiveFactionType | ActiveFactionType;
 
 export interface Faction {
   title: LanguageString;

@@ -25,7 +25,7 @@ export const locationsCustom: DuneLocation[] = [
     actionField: {
       title: { de: 'carthag', en: 'carthag' },
       actionType: 'town',
-      rewards: [{ type: 'intrigue' }, { type: 'troops' }, { type: 'troop-insert' }],
+      rewards: [{ type: 'foldspace' }, { type: 'troops' }, { type: 'troop-insert' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
       isBattlefield: true,
     },

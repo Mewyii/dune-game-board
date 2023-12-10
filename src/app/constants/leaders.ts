@@ -1,4 +1,4 @@
-import { LanguageString } from '../models';
+import { LanguageString, Resource } from '../models';
 
 export interface Leader {
   name: LanguageString;
@@ -9,6 +9,13 @@ export interface Leader {
   signetName: LanguageString;
   signetDescription: LanguageString;
   imageUrl: string;
+  playableByAI?: boolean;
+  aiFieldAccessModifier?: AiFieldAccessModifier;
+}
+
+interface AiFieldAccessModifier {
+  resources?: Resource[];
+  directFieldAccess?: string[];
 }
 
 export const leaders: Leader[] = [
@@ -19,43 +26,52 @@ export const leaders: Leader[] = [
     passiveDescription: { de: 'Du hast Zugang zu Sietch Tabr.', en: 'You can access sietch tabr.' },
     signetName: { de: 'die wege der fremen', en: 'the fremen ways' },
     signetDescription: {
-      de: 'Ziehe eine verdeckte Intrige. Du kannst sie jederzeit entsorgen um {resource:troops} und sie in den Kampf zu schicken.',
-      en: 'Draw an intrigue face down. You may trash it at any time to {resource:troops} and put it into combat.',
+      de: 'Erhalte einen Siegel-Spielstein. Du kannst ihn jederzeit entsorgen um {resource:troops} und sie in den Konflikt zu senden.',
+      en: 'Obtain a signet-token. You may trash it at any time to {resource:troops} and put it into the conflict.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
+    playableByAI: true,
+    aiFieldAccessModifier: {
+      directFieldAccess: ['sietch tabr'],
+    },
   },
   {
     name: { de: 'liet lynes', en: 'liet lynes' },
     house: { de: 'fremen', en: 'fremen' },
     passiveName: { de: 'anführer der fremen', en: 'leader of the fremen' },
     passiveDescription: {
-      de: 'Du beginnst das Spiel mit dem maximalen Einfluss bei den Fremen. Jedes Mal, wenn ein Gegner Fremen-Einfluss gewinnt, verlierst du 1.',
-      en: 'You start with the maximum fremen influence. Every time an opponent gains fremen influence, you lose 1.',
+      de: 'Du beginnst mit maximalem Einfluss bei den Fremen. Immer wenn ein Gegner einen Agenten zu einem <br>{faction:fremen}-Feld entsendet, verlierst du 1.',
+      en: 'You start with maximum fremen influence. Whenever an opponent sends an agent to a {faction:fremen} board space, you lose 1.',
     },
     signetName: { de: 'pflanzen des paradieses', en: 'planting the paradise' },
     signetDescription: {
-      de: '{resource:water}{resource:water}{resource:water} -> {resource:victory-point}',
-      en: '{resource:water}{resource:water}{resource:water} -> {resource:victory-point}',
+      de: '{resource:currency} {resource:helper-arrow-right} {resource:water}{resource:separator}{resource:water}{resource:water}{resource:water} {resource:helper-arrow-right} {resource:victory-point}',
+      en: '{resource:currency} {resource:helper-arrow-right} {resource:water}{resource:separator}{resource:water}{resource:water}{resource:water} {resource:helper-arrow-right} {resource:victory-point}',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/liet.png',
+    playableByAI: true,
   },
   {
     name: { de: 'chani kynes', en: 'chani kynes' },
     house: { de: 'fremen', en: 'fremen' },
     passiveName: { de: 'sayyadina', en: 'sayyadina' },
     passiveDescription: {
-      de: 'Du kannst Fremen-Karten für 1 Überzeugung weniger kaufen.',
-      en: 'Fremen cards cost 1 less persuasion to buy.',
+      de: '<b>Aufdeckzug</b>: Du kannst Fremen-Karten für {resource:conviction} weniger erwerben.',
+      en: '<b>Reveal turn</b>: Fremen cards cost {resource:conviction} less to acquire .',
     },
     signetName: { de: 'kind der wüste', en: 'child of the desert' },
     signetDescription: {
-      de: 'Der Zugang zu einem Agentenfeld kostet {resource:water} weniger.',
-      en: 'Accessing an agent space costs {resource:water} less.',
+      de: 'Der Zugang zu jedem Feld kostet {resource:water} weniger.',
+      en: 'Accessing any board spaces costs {resource:water} less.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/chani.png',
+    playableByAI: true,
+    aiFieldAccessModifier: {
+      resources: [{ type: 'water', amount: 1 }],
+    },
   },
   {
     name: { de: 'alia atreides', en: 'alia atreides' },
@@ -94,32 +110,34 @@ export const leaders: Leader[] = [
     house: { de: 'haus corrino', en: 'house corrino' },
     passiveName: { de: 'tochter des imperators', en: 'daughter of the emperor' },
     passiveDescription: {
-      de: 'Entferne deinen Marker von Imperator-Einflussleiste. Jedes Mal, wenn du Imperator-Einfluss erhalten würdest, erhältst du {resource:currency}.',
-      en: 'Remove your marker from the emperor track. Every time you would gain emperor influence, get {resource:currency}.',
+      de: 'Entferne deinen Marker von der Imperator-Einflussleiste. Jedes Mal, wenn du Imperator-Einfluss erhalten würdest, erhältst du {resource:currency}.',
+      en: 'Remove your marker from the emperor influence track. Every time you would gain emperor influence, get {resource:currency}.',
     },
     signetName: { de: 'chronistin', en: 'chronicler' },
     signetDescription: {
-      de: 'Ziehe eine verdeckte Intrige. Du kannst sie jederzeit entsorgen um {resource:card-draw}{resource:card-draw}.',
-      en: 'Draw an intrigue face down. You may trash it at any time to {resource:card-draw}{resource:card-draw}.',
+      de: 'Erhalte einen Siegel-Spielstein. Du kannst ihn jederzeit entsorgen um: <br/>Runde 1-4 {resource:card-draw}{resource:separator}R 5+ {resource:card-draw}{resource:card-draw}.',
+      en: 'Obtain a signet-token. You may trash it at any time to: <br/>round 1-4 {resource:card-draw}{resource:separator}r 5+ {resource:card-draw}{resource:card-draw}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
+    playableByAI: true,
   },
   {
     name: { de: 'feyd-rautha harkonnen', en: 'feyd-rautha harkonnen' },
     house: { de: 'haus harkonnen', en: 'house harkonnen' },
     passiveName: { de: 'rücksichtsloser ehrgeiz', en: 'ruthless ambition' },
     passiveDescription: {
-      de: 'Spiele mit allen deinen Intrigen aufgedeckt. Jedes Mal, wenn du eine Intrige ziehst, ziehe stattdessen 2 und entsorge dann eine davon weg.',
+      de: 'Spiele mit allen deinen Intrigen aufgedeckt. Jedes Mal, wenn du eine Intrige ziehst, ziehe stattdessen 2 und entsorge dann eine davon.',
       en: 'Play with all your intrigues revealed. Every time you would draw an intrigue, draw 2 instead, then trash one of them.',
     },
     signetName: { de: 'verstecktes gift', en: 'hidden poison' },
     signetDescription: {
-      de: 'Ziehe eine verdeckte Intrige. Du kannst sie jederzeit entsorgen, um 1 gegnerische Truppe im Kampf zu vernichten.',
-      en: 'Draw an intrigue face down. You may trash it at any time to destroy 1 enemy troop in combat.',
+      de: 'Erhalte einen Siegel-Spielstein. Du kannst ihn jederzeit entsorgen, um 1 gegnerische Truppe im Kampf zu vernichten.',
+      en: 'Obtain a signet-token. You may trash it at any time to destroy 1 enemy troop in combat.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/feyd.png',
+    playableByAI: true,
   },
   {
     name: { de: 'graf hasimir fenring', en: 'count hasimir fenring' },
@@ -131,27 +149,46 @@ export const leaders: Leader[] = [
     },
     signetName: { de: 'vorgetäuschte schwäche', en: 'feigned weakness' },
     signetDescription: {
-      de: 'Du kannst {resource:card-discard}. Wenn du das tust, füge du an deinem Aufdeckzug entweder 3 Kampfstärke hinzu oder {resource:card-draw}{resource:card-destroy}.',
-      en: 'You may {resource:card-discard}. If you do, at your reveal turn, either add 3 combat power or {resource:card-draw}{resource:card-destroy}.',
+      de: 'Du kannst {resource:card-discard} um einen Siegel-Spielstein zu erhalten. Entsorge ihn an deinem Aufdeckzug um {resource:attack-value}{resource:attack-value}{resource:separator}{resource:intrigue}.',
+      en: 'You may {resource:card-discard} to obtain a signet-token. Trash it at your reveal turn to {resource:attack-value}{resource:attack-value}{resource:separator}{resource:intrigue}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/hasimir.png',
+    playableByAI: true,
   },
   {
     name: { de: 'lady margot fenring', en: 'lady margot fenring' },
     house: { de: 'haus fenring', en: 'house fenring' },
     passiveName: { de: 'bene gesserit training', en: 'bene gesserit training' },
     passiveDescription: {
-      de: 'Einmal pro Runde kannst du einen Spieler dazu zwingen, eine Intrige aufzudecken (nicht auszuspielen).',
-      en: 'Once every round, you may force a player to reveal (not play) an intrigue.',
+      de: 'Du kannst deinen 1. Zug passen. Tust du das, {resource:card-draw}.',
+      en: 'You may pass your 1. turn. If you do, {resource:card-draw}.',
     },
     signetName: { de: 'hypnotische verführung', en: 'hypnotic seduction' },
     signetDescription: {
-      de: 'Entferne eine Karte aus der Imperiumsreihe. In dieser Runde kannst du diese Karte für 2 weniger Überzeugung erwerben.',
-      en: 'Remove a card from the imperium row. This round, you can buy this card for 2 less persuasion.',
+      de: 'Lege einen Siegel-Spielstein auf eine Karte in der Imperium-Reihe. Sie kostet dich {resource:conviction} weniger, Gegner {resource:conviction} mehr.',
+      en: 'Place a signet-token on a card in the imperium row. It costs you {resource:conviction} less and enemies {resource:conviction} more.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/margot.png',
+    playableByAI: true,
+  },
+  {
+    name: { de: 'ehrwürdige mutter mohiam', en: 'reverend mother mohiam' },
+    house: { de: 'bene gesserit', en: 'bene gesserit' },
+    passiveName: { de: 'ehrwürdige mutter', en: 'reverend mother' },
+    passiveDescription: {
+      de: 'Du beginnst mit maximalem Einfluss bei den Bene Gesserit. Immer wenn ein Gegner einen Agenten zu einem <br>{faction:bene}-Feld entsendet, verlierst du 1.',
+      en: 'You start with maximum bene gesserit influence. Whenever an opponent sends an agent to a {faction:bene} board space, you lose 1.',
+    },
+    signetName: { de: 'wahrsagerin', en: 'truthsayer' },
+    signetDescription: {
+      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels ansehen.</br>{resource:intrigue}{resource:separator}{resource:spice}',
+      en: 'You may look at the top card of the intrigue deck.</br>{resource:intrigue}{resource:separator}{resource:spice}',
+    },
+    type: 'new',
+    imageUrl: '/assets/images/leaders/mohiam.png',
+    playableByAI: true,
   },
   {
     name: { de: 'paul atreides', en: 'paul atreides' },
@@ -162,6 +199,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/paul.jpg',
+    playableByAI: true,
   },
   {
     name: { de: 'herzog leto atreides', en: 'duke leto atreides' },
@@ -172,6 +210,10 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/leto.jpg',
+    playableByAI: true,
+    aiFieldAccessModifier: {
+      resources: [{ type: 'currency', amount: 1 }],
+    },
   },
   {
     name: { de: 'graf ilban richese', en: 'count ilban richese' },
@@ -182,6 +224,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/ilban.jpg',
+    playableByAI: true,
   },
   {
     name: { de: 'helena richese', en: 'helena richese' },
@@ -202,6 +245,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/vlad.jpg',
+    playableByAI: true,
   },
   {
     name: { de: 'glossu "die bestie" rabban', en: 'glossu "the beast" rabban' },
@@ -212,6 +256,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/rabban.jpg',
+    playableByAI: true,
   },
   {
     name: { de: 'gräfin ariana thorvald', en: 'countess ariana thorvald' },
@@ -222,6 +267,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/ariana.jpg',
+    playableByAI: true,
   },
   {
     name: { de: 'graf memnon thorvald', en: 'count memnon thorvald' },
@@ -232,6 +278,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/memnon.jpg',
+    playableByAI: true,
   },
   // {
   //   name: 'count hundro moritani',
@@ -252,6 +299,7 @@ export const leaders: Leader[] = [
     signetName: { de: '', en: '' },
     signetDescription: { de: '', en: '' },
     imageUrl: '/assets/images/leaders/old/yuna.jpg',
+    playableByAI: true,
   },
   {
     name: { de: 'erzherzog  armand ecaz', en: 'archduke armand ecaz' },
@@ -279,13 +327,13 @@ export const leaders: Leader[] = [
     house: { de: 'haus vernius', en: 'house vernius' },
     passiveName: { de: 'ixianische geschenke', en: 'ixian gifts' },
     passiveDescription: {
-      de: 'An deinem Aufdeckzug kannst du 2 tech-plättchen entsorgen, um {resource:victory-point} zu erhalten.',
-      en: 'At your reveal turn, you may trash 2 tech tiles to get {resource:victory-point}.',
+      de: '<b>Aufdeckzug</b>: Du kannst 1 Tech-Plättchen entsorgen, um {resource:faction-influence-choice}.',
+      en: '<b>Reveal turn</b>: You may trash 1 tech tiles to {resource:faction-influence-choice}.',
     },
     signetName: { de: 'inspirierende präsenz', en: 'inspiring presence' },
     signetDescription: {
-      de: 'Du kannst den Effekt der im nächsten Zug von dir ausgespielten Karte doppelt aktivieren.',
-      en: 'You can activate the effect of the card you played next turn twice.',
+      de: 'Du kannst den Agenten-Effekt der im nächsten Zug von dir ausgespielten Karte doppelt aktivieren.',
+      en: 'You can activate the agent effect of the card you play next turn twice.',
     },
     imageUrl: '/assets/images/leaders/tessia.png',
   },
@@ -295,8 +343,8 @@ export const leaders: Leader[] = [
     house: { de: 'haus vernius', en: 'house vernius' },
     passiveName: { de: 'graf von ix', en: 'earl of ix' },
     passiveDescription: {
-      de: 'An deinem Aufdeckzug kannst du {resource:tech}.',
-      en: 'At your reveal turn, you may {resource:tech}.',
+      de: '<b>Aufdeckzug</b>: {resource:tech}',
+      en: '<b>Reveal turn</b>: {resource:tech}',
     },
     signetName: { de: 'kybernetische erweiterungen', en: 'enhanced cybernetics' },
     signetDescription: {
@@ -304,6 +352,7 @@ export const leaders: Leader[] = [
       en: '{resource:card-discard} then {resource:card-draw}.',
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
+    playableByAI: true,
   },
   {
     name: { de: 'graf august metulli', en: 'count august metulli' },
@@ -311,8 +360,8 @@ export const leaders: Leader[] = [
     house: { de: 'haus metulli', en: 'house metulli' },
     passiveName: { de: 'isolationist', en: 'isolationist' },
     passiveDescription: {
-      de: 'An deinem Aufdeckzug kannst du keine Karten erwerben. Du kannst stattdessen {resource:conviction}{resource:conviction} -> {resource:currency}.',
-      en: 'You cannot purchase cards on your reveal turn. You can instead {resource:conviction}{resource:conviction} -> {resource:currency}.',
+      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:conviction}{resource:conviction} {resource:helper-arrow-right} {resource:currency}.',
+      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:conviction}{resource:conviction} {resource:helper-arrow-right} {resource:currency}.',
     },
     signetName: { de: 'ansprache an das volk', en: 'address to the people' },
     signetDescription: {
@@ -320,6 +369,7 @@ export const leaders: Leader[] = [
       en: '{resource:conviction} and {resource:troops}.',
     },
     imageUrl: '/assets/images/leaders/august.png',
+    playableByAI: true,
   },
   {
     name: { de: 'lunara metulli', en: 'lunara metulli' },
@@ -327,13 +377,13 @@ export const leaders: Leader[] = [
     house: { de: 'haus metulli', en: 'house metulli' },
     passiveName: { de: 'untergehendes haus', en: 'declining house' },
     passiveDescription: {
-      de: 'An deinem Aufdeckzug erhältst du nur die Hälfte deiner eigentlichen Überzeugung.',
-      en: 'On your reveal turn, you only get half of your actual persuasion.',
+      de: 'Du beginnst das Spiel ohne überzeugendes Argument in deinem Deck.',
+      en: 'You start the game without a convincing argument in your deck.',
     },
     signetName: { de: 'sorgfältiges vorgehen', en: 'thorough approach' },
     signetDescription: {
-      de: 'Wenn du in diesem Zug {resource:currency}, {resource:spice} oder {resource:water} erhältst, erhältst von einer deiner Wahl 1 mehr.',
-      en: 'If you get {resource:currency}, {resource:spice} or {resource:water} this turn, get 1 more of one of your choice.',
+      de: 'Wenn du in diesem Zug {resource:currency}, {resource:spice} oder {resource:water} erhältst, erhältst du davon 1 mehr.',
+      en: 'If you get {resource:currency}, {resource:spice} or {resource:water} this turn, you get 1 more.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
   },
