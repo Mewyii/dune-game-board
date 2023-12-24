@@ -26,7 +26,7 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_victory_point.png';
     case 'attack-value':
       return 'assets/images/reward-markers/marker_sword.png';
-    case 'conviction':
+    case 'persuasion':
       return 'assets/images/reward-markers/marker_conviction.png';
     case 'extra-spice':
       return 'assets/images/reward-markers/marker_spice_extra.png';
@@ -34,7 +34,7 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_high_council_2.png';
     case 'council-seat-large':
       return 'assets/images/reward-markers/marker_high_council.png';
-    case 'troop-insert':
+    case 'battle-insert':
       return 'assets/images/reward-markers/marker_battle_2.png';
     case 'mentat':
       return 'assets/images/reward-markers/marker_mentat_2.png';

@@ -30,7 +30,7 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 2,
     faction: 'imperium',
     fieldAccess: ['landsraad', 'town'],
-    revealEffects: [{ type: 'conviction', amount: 2 }],
+    revealEffects: [{ type: 'persuasion', amount: 2 }],
     imageUrl: '/assets/images/action-backgrounds/soldiers.png',
   },
   {
@@ -38,7 +38,7 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 2,
     faction: 'bene',
     fieldAccess: ['landsraad', 'town'],
-    revealEffects: [{ type: 'conviction', amount: 2 }],
+    revealEffects: [{ type: 'persuasion', amount: 2 }],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
   },
   {
@@ -50,7 +50,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner zieht ein Schlachtschiff zurück oder verliert einen Trupp.',
       en: 'Each opponent retreats a battleship or loses one troop.',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }, { type: 'attack-value' }, { type: 'attack-value' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'attack-value' }, { type: 'attack-value' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_6.png',
   },
   {
@@ -62,7 +62,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner {resource:card-discard}.',
       en: 'Each opponent {resource:card-discard}.',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }, { type: 'attack-value' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'attack-value' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_4.png',
   },
   {
@@ -74,7 +74,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '{resource:card-destroy}. Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:card-draw}',
       en: '{resource:card-destroy}. If you have another emperor card in play: {resource:card-draw}',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }, { type: 'attack-value' }, { type: 'card-destroy' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'attack-value' }, { type: 'card-destroy' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_2.png',
   },
   {
@@ -87,8 +87,8 @@ export const imperiumCards: ImperiumCard[] = [
       en: '{resource:troops}. If you have another emperor card in play: {resource:troops}',
     },
     customRevealEffect: {
-      de: '{resource:conviction}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Imperator-Karten davon erwerben.',
-      en: '{resource:conviction}. Reveal the top 5 cards of the imperium deck. You may acquire emperor cards from them.',
+      de: '{resource:persuasion}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Imperator-Karten davon erwerben.',
+      en: '{resource:persuasion}. Reveal the top 5 cards of the imperium deck. You may acquire emperor cards from them.',
     },
     imageUrl: '/assets/images/action-backgrounds/sardaukar_5.png',
   },
@@ -98,7 +98,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'imperium',
     agentEffects: [{ type: 'card-draw' }],
     fieldAccess: ['imperium', 'guild', 'bene', 'landsraad', 'town'],
-    revealEffects: [{ type: 'conviction', amount: 2 }, { type: 'attack-value' }, { type: 'attack-value' }],
+    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'attack-value' }, { type: 'attack-value' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_3.png',
   },
   {
@@ -110,7 +110,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:intrigue}',
       en: 'If you have another emperor card in play: {resource:intrigue}',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }, { type: 'currency' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'currency' }],
     imageUrl: '/assets/images/action-backgrounds/empire_ambassador_2.png',
   },
   {
@@ -134,7 +134,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '{resource:spice}. Wenn du eine weitere Fremen-Karte im Spiel hast: {resource:spice}',
       en: '{resource:spice}. If you have another fremen card in play: {resource:spice}',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }],
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors_2.png',
   },
   {
@@ -164,9 +164,9 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 5,
     faction: 'fremen',
     fieldAccess: ['fremen', 'town', 'spice'],
-    agentEffects: [{ type: 'troops' }, { type: 'troop-insert' }],
+    agentEffects: [{ type: 'troops' }, { type: 'battle-insert' }],
     revealEffects: [
-      { type: 'conviction', amount: 1 },
+      { type: 'persuasion', amount: 1 },
       { type: 'troops' },
       { type: 'attack-value' },
       { type: 'attack-value' },
@@ -179,7 +179,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'fremen',
     fieldAccess: ['fremen', 'town', 'spice'],
     agentEffects: [{ type: 'water' }],
-    revealEffects: [{ type: 'conviction', amount: 2 }, { type: 'water' }, { type: 'spice' }, { type: 'troops' }],
+    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'water' }, { type: 'spice' }, { type: 'troops' }],
     imageUrl: '/assets/images/action-backgrounds/desert_2.png',
   },
   {
@@ -191,7 +191,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Wenn du eine Bene-Gesserit-Karte im Spiel hast: {resource:card-draw}',
       en: 'If you have a bene gesserit card in play: {resource:card-draw}',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }, { type: 'currency' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'currency' }],
     imageUrl: '/assets/images/action-backgrounds/faithful.png',
   },
   {
@@ -201,8 +201,8 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'landsraad'],
     agentEffects: [{ type: 'card-draw-or-destroy' }],
     customRevealEffect: {
-      de: '{resource:conviction}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Bene-Gesserit-Karten davon erwerben.',
-      en: '{resource:conviction}. Reveal the top 5 cards of the imperium deck. You may acquire bene gesserit cards from them.',
+      de: '{resource:persuasion}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Bene-Gesserit-Karten davon erwerben.',
+      en: '{resource:persuasion}. Reveal the top 5 cards of the imperium deck. You may acquire bene gesserit cards from them.',
     },
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
   },
@@ -215,7 +215,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Wenn du eine Fremen-Karte im Spiel hast: {resource:card-draw}',
       en: 'If you have a fremen card in play: {resource:card-draw}',
     },
-    revealEffects: [{ type: 'conviction', amount: 1 }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }],
     imageUrl: '/assets/images/action-backgrounds/book.png',
   },
   {
@@ -227,7 +227,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Place {resource:troops} on this board space. It can not be used. Remove {resource:troops} after the next round.',
     },
     revealEffects: [
-      { type: 'conviction', amount: 2 },
+      { type: 'persuasion', amount: 2 },
       { type: 'separator' },
       { type: 'attack-value' },
       { type: 'attack-value' },

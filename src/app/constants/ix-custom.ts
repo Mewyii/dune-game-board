@@ -8,7 +8,7 @@ export const ix: ActionField = {
     { type: 'ship' },
     { type: 'separator', width: 10, iconHeight: 55 },
     { type: 'tech-reduced-three' },
-    { type: 'troop-insert' },
+    { type: 'battle-insert' },
   ],
   pathToImage: 'assets/images/action-backgrounds/industry_2.png',
   isBattlefield: false,

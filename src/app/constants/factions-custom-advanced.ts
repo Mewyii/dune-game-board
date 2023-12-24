@@ -13,7 +13,7 @@ export const factionsCustomAdvanced: Faction[] = [
         title: { de: 'fremenkrieger', en: 'fremen warriors' },
         actionType: 'fremen',
         costs: [{ type: 'water' }],
-        rewards: [{ type: 'troops', amount: 2 }, { type: 'troop-insert' }],
+        rewards: [{ type: 'troops', amount: 2 }, { type: 'battle-insert' }],
         pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
         isBattlefield: true,
       },
@@ -92,7 +92,7 @@ export const factionsCustomAdvanced: Faction[] = [
         title: { de: 'heighliner', en: 'heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'card-draw' }, { type: 'troops', amount: 4 }, { type: 'troop-insert' }],
+        rewards: [{ type: 'card-draw' }, { type: 'troops', amount: 4 }, { type: 'battle-insert' }],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
         isBattlefield: true,
       },
@@ -158,7 +158,7 @@ export const factionsCustomAdvanced: Faction[] = [
         type: 'troops',
       },
       {
-        type: 'troop-insert',
+        type: 'battle-insert',
       },
     ],
     levelFourReward: [
@@ -188,7 +188,7 @@ export const factionsCustomAdvanced: Faction[] = [
       {
         title: { de: 'beziehungen', en: 'relations' },
         actionType: 'landsraad',
-        rewards: [{ type: 'card-draw-or-destroy' }, { type: 'conviction', amount: 1 }],
+        rewards: [{ type: 'card-draw-or-destroy' }, { type: 'persuasion', amount: 1 }],
         pathToImage: 'assets/images/action-backgrounds/wealth_2.png',
         isBattlefield: false,
       },
@@ -261,7 +261,7 @@ export const factionsCustomAdvanced: Faction[] = [
       {
         title: { de: 'handelsrechte', en: 'trade rights' },
         actionType: 'spice',
-        rewards: [{ type: 'conviction', amount: 1 }, { type: 'currency', amount: 2 }, { type: 'tech' }],
+        rewards: [{ type: 'persuasion', amount: 1 }, { type: 'currency', amount: 2 }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/spice_port.png',
         isBattlefield: false,
       },

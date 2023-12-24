@@ -33,7 +33,7 @@ export const minorHouses: House[] = [
     persuasion: 4,
     customFriendshipRequirement: { de: 'Habe einen Sitz im hohen Rat.', en: 'Have a high council seat.' },
     friendshipReward: [{ type: 'card-round-start' }],
-    allianceRequirement: [{ type: 'conviction', amount: 6 }],
+    allianceRequirement: [{ type: 'persuasion', amount: 6 }],
     allianceReward: [{ type: 'victory-point' }],
   },
   {

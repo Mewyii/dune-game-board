@@ -58,8 +58,8 @@ export const leaders: Leader[] = [
     house: { de: 'fremen', en: 'fremen' },
     passiveName: { de: 'fremenbande', en: 'fremen bonds' },
     passiveDescription: {
-      de: '<b>Aufdeckzug</b>: Du kannst Fremen-Karten für {resource:conviction} weniger erwerben.',
-      en: '<b>Reveal turn</b>: Fremen cards cost {resource:conviction} less to acquire .',
+      de: '<b>Aufdeckzug</b>: Du kannst Fremen-Karten für {resource:persuasion} weniger erwerben.',
+      en: '<b>Reveal turn</b>: Fremen cards cost {resource:persuasion} less to acquire .',
     },
     signetName: { de: 'kind der wüste', en: 'child of the desert' },
     signetDescription: {
@@ -166,8 +166,8 @@ export const leaders: Leader[] = [
     },
     signetName: { de: 'hypnotische verführung', en: 'hypnotic seduction' },
     signetDescription: {
-      de: 'Lege einen Siegel-Spielstein auf eine Karte in der Imperium-Reihe. Sie kostet dich {resource:conviction} weniger, Gegner {resource:conviction} mehr.',
-      en: 'Place a signet-token on a card in the imperium row. It costs you {resource:conviction} less and enemies {resource:conviction} more.',
+      de: 'Lege einen Siegel-Spielstein auf eine Karte in der Imperium-Reihe. Sie kostet dich {resource:persuasion} weniger, Gegner {resource:persuasion} mehr.',
+      en: 'Place a signet-token on a card in the imperium row. It costs you {resource:persuasion} less and enemies {resource:persuasion} more.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/margot.png',
@@ -360,13 +360,13 @@ export const leaders: Leader[] = [
     house: { de: 'haus metulli', en: 'house metulli' },
     passiveName: { de: 'isolationist', en: 'isolationist' },
     passiveDescription: {
-      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:conviction}{resource:conviction} {resource:helper-arrow-right} {resource:currency}.',
-      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:conviction}{resource:conviction} {resource:helper-arrow-right} {resource:currency}.',
+      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:persuasion}{resource:persuasion} {resource:helper-arrow-right} {resource:currency}.',
+      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:persuasion}{resource:persuasion} {resource:helper-arrow-right} {resource:currency}.',
     },
     signetName: { de: 'ansprache an das volk', en: 'address to the people' },
     signetDescription: {
-      de: '{resource:troops} <br>Du erhälst {resource:conviction} an deinem Aufdeckzug.',
-      en: '{resource:troops} <br>You gain {resource:conviction} at your reveal turn.',
+      de: '{resource:troops} <br>Du erhälst {resource:persuasion} an deinem Aufdeckzug.',
+      en: '{resource:troops} <br>You gain {resource:persuasion} at your reveal turn.',
     },
     imageUrl: '/assets/images/leaders/august.png',
     playableByAI: true,

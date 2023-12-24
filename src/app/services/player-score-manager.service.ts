@@ -74,11 +74,11 @@ export class PlayerScoreManager {
       this.finaleTrigger = 8;
 
       this.scoreRewards[0].reward = { type: 'currency' };
-      this.scoreRewards[2].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[2].reward = { type: 'persuasion', amount: 1 };
       this.scoreRewards[3].reward = { type: 'currency' };
       this.scoreRewards[5].reward = { type: 'card-round-start', amount: 1 };
       this.scoreRewards[6].reward = { type: 'currency' };
-      this.scoreRewards[8].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[8].reward = { type: 'persuasion', amount: 1 };
       this.scoreRewards[9].reward = { type: 'currency' };
       this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
       this.scoreRewards[12].reward = { type: 'currency' };
@@ -87,11 +87,11 @@ export class PlayerScoreManager {
       this.finaleTrigger = 8;
 
       this.scoreRewards[0].reward = { type: 'currency' };
-      this.scoreRewards[2].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[2].reward = { type: 'persuasion', amount: 1 };
       this.scoreRewards[3].reward = { type: 'currency' };
       this.scoreRewards[5].reward = { type: 'card-round-start', amount: 1 };
       this.scoreRewards[6].reward = { type: 'currency' };
-      this.scoreRewards[8].reward = { type: 'conviction', amount: 1 };
+      this.scoreRewards[8].reward = { type: 'persuasion', amount: 1 };
       this.scoreRewards[9].reward = { type: 'currency' };
       this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
       this.scoreRewards[12].reward = { type: 'currency' };
