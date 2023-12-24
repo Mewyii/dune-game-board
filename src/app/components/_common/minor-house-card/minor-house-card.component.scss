@@ -1,15 +1,14 @@
 
 .house-card {
     height: 335px;
-    width: 235px;
+    width: 230px;
     display: flex;
     flex-direction: column;
     justify-content: end;
-    border: 16px solid #151515;;
+    border: 12px solid #151515;;
     border-radius: 6px;
     position: relative;
-    background-size: cover;
-    background-image: url(/assets/images/homeworld-background.png);
+    background-color: #151515;
     color: #fffcfa;
     font-size: x-small;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
@@ -19,8 +18,13 @@
     flex: 1 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    background-image: url(/assets/images/card-backgrounds/house-background.png);
+    background-size: 392%;
+    border-radius: 4px;
+    gap: 10px;
+    background-position-y: -8px;
 }
 
 .house-title {
@@ -48,8 +52,13 @@
     height: 100px;
     padding: 6px;
     background-color: #00000096;
-    border-top: 3px solid white;
-    border-bottom: 3px solid white;
+    border: 1px solid white;
+    border-radius: 2px 2px 4px 4px;
+    box-shadow: inset 0px 0px 20px #00000073;
+    width: 195px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 .house-alliance-container {
@@ -62,17 +71,39 @@
     height: 100px;
     padding: 6px;
     background-color: rgb(44 32 10 / 59%);
-    border-top: 3px solid white;
+    border: 1px solid white;
+    border-radius: 4px 4px 2px 2px;
+    box-shadow: inset 0px 0px 20px #00000073;
+    margin-bottom: 2px;
+    width: 195px;
+    position: absolute;
+    left: 10px;
+    bottom: 122px;
 }
 
-.house-friendship-name,
-.house-alliance-name {
+.card-effect {
     padding: 6px;
-    flex: 1 1;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-effect-custom {
+    padding: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
+}
+
+.requirement {
+    flex: 1 1;
     border-right: 1px solid #ffffff3e;
+}
+
+.price {
+    width: 60px;
 }
 
 .house-friendship-description,
@@ -87,6 +118,7 @@
     font-size: small;
     color: #e1e1e1;
     white-space: pre-wrap;
+    text-align: center;
 }
 
 .house-aquire-costs-container {
@@ -94,13 +126,35 @@
     top: 0;
     right: 0;
     background: url(/assets/images/reward-markers/marker_conviction.png);
-    width: 38px;
+    width: 45px;
     height: 50px;
-    background-size: cover;
+    background-size: 55px;
+    background-position-y: bottom;
 }
 
 .house-aquire-costs {
     font-size: x-large;
-    padding-top: 5px;
-    padding-left: 16px;
+    padding-top: 3px;
+    padding-left: 19px;
+}
+
+.reward-container {
+    position: relative;
+    width: min-content;
+}
+
+.reward {
+    height: 30px;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+.reward-amount {
+    position: absolute;
+    top: 4px;
+    right: 0px;
+    width: 100%;
+    color: white;
+    font-size: large;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+    text-align: center;
 }

@@ -170,7 +170,7 @@ export const factionsOriginal: Faction[] = [
     actionFields: [
       {
         title: { de: 'hoher rat', en: 'high council' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [{ type: 'currency', amount: 5 }],
         rewards: [{ type: 'council-seat-large', amount: 2, iconHeight: 55 }],
         customWidth: 'fit-content',
@@ -179,14 +179,14 @@ export const factionsOriginal: Faction[] = [
       },
       {
         title: { de: 'rednersaal', en: 'hall of oratory' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         rewards: [{ type: 'troops' }, { type: 'conviction', amount: 1 }],
         pathToImage: 'assets/images/action-backgrounds/spaceship_landing.png',
         isBattlefield: false,
       },
       {
         title: { de: 'mentat', en: 'mentat' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [{ type: 'currency', amount: 2 }],
         rewards: [{ type: 'card-draw' }, { type: 'mentat', iconHeight: 50 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_4.png',
@@ -194,7 +194,7 @@ export const factionsOriginal: Faction[] = [
       },
       {
         title: { de: 'truppen sammeln', en: 'rally troops' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [{ type: 'currency', amount: 4 }],
         rewards: [{ type: 'troops', amount: 4 }],
         pathToImage: 'assets/images/action-backgrounds/troops_3.png',
@@ -204,7 +204,7 @@ export const factionsOriginal: Faction[] = [
       },
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [{ type: 'currency', amount: 8 }],
         rewards: [{ type: 'sword-master', iconHeight: 50 }],
         pathToImage: 'assets/images/action-backgrounds/swordmaster_2.png',

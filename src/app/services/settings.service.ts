@@ -7,7 +7,7 @@ import { locationsCustom } from '../constants/locations-custom';
 import { locationsOriginal } from '../constants/locations-original';
 import { locationsOriginalBalanced } from '../constants/locations-original-balanced';
 import { factionsCustomExpert } from '../constants/factions-custom-expert';
-import { ActionField } from '../models';
+import { ActionField, FactionType } from '../models';
 import { ix } from '../constants/ix-custom';
 
 @Injectable({
@@ -53,5 +53,13 @@ export class SettingsService {
 
     this.fields = result;
     this.unblockableFields = this.fields.filter((x) => x.isNonBlockingField);
+  }
+
+  getFactionName(factionType: FactionType) {
+    return this.factions.find((x) => x.type === factionType)?.title;
+  }
+
+  getFactionColor(factionType: FactionType) {
+    return this.factions.find((x) => x.type === factionType)?.primaryColor;
   }
 }

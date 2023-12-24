@@ -151,7 +151,7 @@ export const locationsCustom: DuneLocation[] = [
   //   },
   //   actionField: {
   //     title: 'bashar',
-  //     actionType: 'diplomacy',
+  //     actionType: 'landsraad',
   //     rewards: [{ type: 'troops', amount: 3 }],
   //     pathToImage: 'assets/images/action-backgrounds/sardaukar.png',
   //     isBattlefield: true,
@@ -165,7 +165,7 @@ export const locationsCustom: DuneLocation[] = [
   //   },
   //   actionField: {
   //     title: 'twisted mentat',
-  //     actionType: 'diplomacy',
+  //     actionType: 'landsraad',
   //     costs: [{ type: 'currency', amount: 2 }],
   //     rewards: [{ type: 'card-destroy' }, { type: 'mentat', iconHeight: 95 }],
   //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',

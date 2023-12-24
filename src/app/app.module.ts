@@ -30,6 +30,7 @@ import { AllianceTokenComponent } from './components/_common/alliance-token/alli
 import { DuneSymbolsPipe } from './pipes/dune-symbols';
 import { MinorHousesComponent } from './components/minor-houses/minor-houses.component';
 import { MinorHouseCardComponent } from './components/_common/minor-house-card/minor-house-card.component';
+import { ImperiumRowCardComponent } from './components/_common/imperium-row-card/imperium-row-card.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { MinorHouseCardComponent } from './components/_common/minor-house-card/m
     DuneSymbolsPipe,
     MinorHousesComponent,
     MinorHouseCardComponent,
+    ImperiumRowCardComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,7 @@ import { ActionField } from '../models';
 
 export const ix: ActionField = {
   title: { de: 'aufrüstung', en: 'upgrade' },
-  actionType: 'diplomacy',
+  actionType: 'landsraad',
   costs: [{ type: 'currency', amount: 4 }],
   rewards: [
     { type: 'ship' },

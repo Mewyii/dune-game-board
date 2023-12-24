@@ -12,7 +12,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 export class TechboardComponent implements OnInit {
   public techActionField: ActionField = {
     title: { de: 'aufrüstung', en: 'upgrade' },
-    actionType: 'diplomacy',
+    actionType: 'landsraad',
     costs: [{ type: 'currency', amount: 4 }],
     rewards: [
       { type: 'ship' },

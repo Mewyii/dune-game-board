@@ -32,6 +32,9 @@ export type RewardType =
   | 'card-round-start'
   | 'shipping'
   | 'faction-influence-choice'
+  | 'faction-influence-choice-twice'
+  | 'faction-influence-choice-down'
+  | 'agent'
   | 'buildup';
 
 export interface Reward {

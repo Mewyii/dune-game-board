@@ -92,9 +92,9 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: (player, gameState) =>
       gameState.playerScore.fremen > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'fremen'),
     viableFields: {
-      'hardy warriors': (player, gameState, goals, virtualResources) =>
+      'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
-      stillsuits: () => 0.5,
+      'desert equipment': () => 0.5,
     },
   },
   'bg-alliance': {
@@ -166,7 +166,7 @@ export const aiGoals: FieldsForGoals = {
       arrakeen: () => 0.6,
       carthag: () => 0.6,
       'sietch tabr': (player, gameState) => 0.6,
-      'hardy warriors': (player, gameState, goals, virtualResources) =>
+      'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.7, virtualResources),
       'imperial favor': (player, gameState) => (gameState.playerScore.imperium === 1 ? 0.5 : 0),
       conspiracy: (player, gameState, goals, virtualResources) =>
@@ -199,7 +199,7 @@ export const aiGoals: FieldsForGoals = {
       carthag: () => 0.3,
       swordmaster: () => 0.6,
       'sietch tabr': (player, gameState) => 0.3,
-      'hardy warriors': (player, gameState, goals, virtualResources) =>
+      'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 1.0 : 0.6, virtualResources),
       heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
@@ -389,7 +389,7 @@ export const aiGoals: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'water', virtualResources) > 3,
     viableFields: {
-      stillsuits: () => 0.5,
+      'desert equipment': () => 0.5,
       'sietch tabr': (player, gameState) => 0.5,
     },
   },

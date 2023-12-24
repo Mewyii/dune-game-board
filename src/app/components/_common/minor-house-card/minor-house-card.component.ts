@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { House } from 'src/app/constants/minor-houses';
-import { LanguageString } from 'src/app/models';
+import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { LanguageString, RewardType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -14,6 +15,10 @@ export class MinorHouseCardComponent {
   public title: LanguageString = { de: 'haus', en: 'house' };
 
   constructor(public translateService: TranslateService) {}
+
+  public getRewardTypePath(rewardType: RewardType) {
+    return getRewardTypePath(rewardType);
+  }
 
   getTransparentColor(color: string, opacity: number) {
     var _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);

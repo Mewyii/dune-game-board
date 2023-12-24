@@ -23,4 +23,4 @@ export interface ActionField {
   customWidth?: string;
 }
 
-export type ActionType = FactionType | 'town' | 'spice' | 'diplomacy';
+export type ActionType = FactionType | 'town' | 'spice';

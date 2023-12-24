@@ -22,7 +22,7 @@ export class DuneFactionComponent implements OnInit {
     },
     actionFields: [
       {
-        title: { de: 'abgehärtete Krieger', en: 'hardy warriors' },
+        title: { de: 'fremenKrieger', en: 'fremen warriors' },
         actionType: 'fremen',
         costs: [{ type: 'water', amount: 1 }],
         rewards: [{ type: 'troops', amount: 2 }],
@@ -30,7 +30,7 @@ export class DuneFactionComponent implements OnInit {
         isBattlefield: true,
       },
       {
-        title: { de: 'destillanzüge', en: 'stillsuits' },
+        title: { de: 'wüstenausrüstung', en: 'desert equipment' },
         actionType: 'fremen',
         rewards: [{ type: 'water', amount: 1 }],
         pathToImage: '',

@@ -1,0 +1,64 @@
+<div class="imperium-card">
+  <div class="card-header">
+    {{ translateService.translate(card.name).toLocaleLowerCase() }}
+  </div>
+  <div class="card-img" [style.background-image]="'url(' + card.imageUrl + ')'">
+    <div
+      class="faction-container"
+      *ngIf="card.faction"
+      [style.background]="'linear-gradient(90deg, ' + getFactionColor(card.faction) + ', rgb(90 90 90 / 50%))'"
+    >
+      {{ getFactionName(card.faction) }}
+    </div>
+    <div class="field-access-container">
+      <ng-container *ngFor="let access of card.fieldAccess">
+        <div class="field-access">
+          <img class="field-access-image" [src]="getActionTypePath(access)" />
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="card-agent-effect-container">
+    <div class="card-agent-effect-custom" *ngIf="card.customAgentEffect">
+      <div
+        class="card-agent-effect-custom-text"
+        [innerHTML]="translateService.translate(card.customAgentEffect) | duneSymbols"
+      ></div>
+    </div>
+    <div class="card-agent-effect" *ngIf="card.agentEffects">
+      <ng-container *ngFor="let reward of card.agentEffects">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="card-reveal-effect-container">
+    <div class="card-reveal-effect-custom" *ngIf="card.customRevealEffect">
+      <div
+        class="card-reveal-effect-custom-text"
+        [innerHTML]="translateService.translate(card.customRevealEffect) | duneSymbols"
+      ></div>
+    </div>
+    <div class="card-reveal-effect" *ngIf="card.revealEffects">
+      <ng-container *ngFor="let reward of card.revealEffects">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="card-aquire-costs-container" *ngIf="card.persuasionCosts">
+    <div class="card-aquire-costs">{{ card.persuasionCosts }}</div>
+  </div>
+</div>

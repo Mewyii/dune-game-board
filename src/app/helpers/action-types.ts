@@ -14,7 +14,7 @@ export function getActionTypePath(actionType: ActionType) {
       return 'assets/images/action-types/action_type_town.png';
     case 'spice':
       return 'assets/images/action-types/action_type_spice.png';
-    case 'diplomacy':
+    case 'landsraad':
       return 'assets/images/action-types/action_type_diplomacy.png';
     default:
       return '';

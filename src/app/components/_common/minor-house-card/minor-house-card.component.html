@@ -1,6 +1,8 @@
 <div class="house-card" *ngIf="house">
   <div class="house-header" [style.color]="house.colorPrimary">
-    {{ translateService.translate(title) }}
+    <div [style]="'padding-top: 15px'">
+      {{ translateService.translate(title) }}
+    </div>
     <div class="house-title">
       {{ translateService.translate(house.name) }}
     </div>
@@ -8,23 +10,82 @@
   <div
     class="house-alliance-container"
     [style.backgroundColor]="getTransparentColor(house.colorPrimary, 0.33)"
-    [style.borderColor]="getTransparentColor(house.colorSecondary, 0.75)"
+    [style.borderColor]="getTransparentColor(house.colorSecondary, 0.5)"
   >
-    <div class="house-alliance-name" [innerHTML]="translateService.translate(house.allianceRequirement) | duneSymbols"></div>
-    <div
-      class="house-alliance-description"
-      [innerHTML]="translateService.translate(house.allianceReward) | duneSymbols"
-    ></div>
+    <div class="card-effect-custom requirement" *ngIf="house.customAllianceRequirement">
+      <div
+        class="card-effect-custom-text"
+        [innerHTML]="translateService.translate(house.customAllianceRequirement) | duneSymbols"
+      ></div>
+    </div>
+    <div class="card-effect requirement" *ngIf="house.allianceRequirement">
+      <ng-container *ngFor="let reward of house.allianceRequirement">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="card-effect-custom price" *ngIf="house.customAllianceReward">
+      <div
+        class="card-effect-custom-text"
+        [innerHTML]="translateService.translate(house.customAllianceReward) | duneSymbols"
+      ></div>
+    </div>
+    <div class="card-effect price" *ngIf="house.allianceReward">
+      <ng-container *ngFor="let reward of house.allianceReward">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
   </div>
-  <div class="house-friendship-container" [style.borderColor]="getTransparentColor(house.colorSecondary, 0.75)">
-    <div
-      class="house-friendship-name"
-      [innerHTML]="translateService.translate(house.friendshipRequirement) | duneSymbols"
-    ></div>
-    <div
-      class="house-friendship-description"
-      [innerHTML]="translateService.translate(house.friendshipReward) | duneSymbols"
-    ></div>
+  <div class="house-friendship-container" [style.borderColor]="getTransparentColor(house.colorSecondary, 0.5)">
+    <div class="card-effect-custom requirement" *ngIf="house.customFriendshipRequirement">
+      <div
+        class="card-effect-custom-text"
+        [innerHTML]="translateService.translate(house.customFriendshipRequirement) | duneSymbols"
+      ></div>
+    </div>
+    <div class="card-effect requirement" *ngIf="house.friendshipRequirement">
+      <ng-container *ngFor="let reward of house.friendshipRequirement">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="card-effect-custom price" *ngIf="house.customFriendshipReward">
+      <div
+        class="card-effect-custom-text"
+        [innerHTML]="translateService.translate(house.customFriendshipReward) | duneSymbols"
+      ></div>
+    </div>
+    <div class="card-effect price" *ngIf="house.friendshipReward">
+      <ng-container *ngFor="let reward of house.friendshipReward">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
   </div>
   <div class="house-aquire-costs-container">
     <div class="house-aquire-costs">{{ house.persuasion }}</div>

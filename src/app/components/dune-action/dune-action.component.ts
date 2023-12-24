@@ -15,7 +15,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 })
 export class DuneActionComponent implements OnInit {
   @Input() action: ActionField = {
-    title: { de: 'abgehärtete Krieger', en: 'hardy warriors' },
+    title: { de: 'fremenkrieger', en: 'fremen warriors' },
     actionType: 'fremen',
     costs: [{ type: 'water', amount: 1 }],
     rewards: [{ type: 'troops', amount: 2 }],

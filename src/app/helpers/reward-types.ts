@@ -72,6 +72,12 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_planet.png';
     case 'faction-influence-choice':
       return 'assets/images/reward-markers/marker_faction_influence_choice.png';
+    case 'faction-influence-choice-twice':
+      return 'assets/images/reward-markers/marker_faction_influence_choice_twice.png';
+    case 'faction-influence-choice-down':
+      return 'assets/images/reward-markers/marker_faction_influence_down.png';
+    case 'agent':
+      return 'assets/images/reward-markers/marker_agent.png';
     default:
       return '';
   }

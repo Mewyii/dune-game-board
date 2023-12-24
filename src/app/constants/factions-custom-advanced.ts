@@ -10,7 +10,7 @@ export const factionsCustomAdvanced: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'wüstenkämpfer', en: 'hardy warriors' },
+        title: { de: 'fremenkrieger', en: 'fremen warriors' },
         actionType: 'fremen',
         costs: [{ type: 'water' }],
         rewards: [{ type: 'troops', amount: 2 }, { type: 'troop-insert' }],
@@ -18,7 +18,7 @@ export const factionsCustomAdvanced: Faction[] = [
         isBattlefield: true,
       },
       {
-        title: { de: 'destillanzüge', en: 'stillsuits' },
+        title: { de: 'wüstenausrüstung', en: 'desert equipment' },
         actionType: 'fremen',
         rewards: [{ type: 'water' }],
         pathToImage: 'assets/images/action-backgrounds/stillsuits.png',
@@ -178,7 +178,7 @@ export const factionsCustomAdvanced: Faction[] = [
     actionFields: [
       {
         title: { de: 'hoher rat', en: 'high council' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [{ type: 'currency', amount: 5 }],
         rewards: [{ type: 'council-seat-small', amount: 2, iconHeight: 110 }],
         customWidth: 'fit-content',
@@ -187,14 +187,14 @@ export const factionsCustomAdvanced: Faction[] = [
       },
       {
         title: { de: 'beziehungen', en: 'relations' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         rewards: [{ type: 'card-draw-or-destroy' }, { type: 'conviction', amount: 1 }],
         pathToImage: 'assets/images/action-backgrounds/wealth_2.png',
         isBattlefield: false,
       },
       {
         title: { de: 'mentat', en: 'mentat' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [{ type: 'currency', amount: 3 }],
         rewards: [
           { type: 'card-draw' },
@@ -210,7 +210,7 @@ export const factionsCustomAdvanced: Faction[] = [
       },
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
-        actionType: 'diplomacy',
+        actionType: 'landsraad',
         costs: [],
         rewards: [
           { type: 'placeholder', width: 45 },

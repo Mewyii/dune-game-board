@@ -1,0 +1,164 @@
+
+.imperium-card {
+    height: 335px;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    border: 12px solid #151515;;
+    border-radius: 8px;
+    position: relative;
+    color: #fffcfa;
+    font-size: x-small;
+    background-color: #151515;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+}
+
+.card-header {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    background-image: url(/assets/images/card-backgrounds/heading.png);
+    background-size: cover;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.card-img {
+    flex: 1 1;
+    background-size: cover;
+    border-top: 2px solid rgba(192, 192, 192, 0.243);
+    position: relative;
+    background-position: center;
+}
+
+.card-title {
+    padding: 4px;
+    font-size: large;
+    text-align: center;
+}
+
+.card-reveal-effect-container {
+    display: flex;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+    height: 53px;
+    padding: 4px;
+    background-image: url(/assets/images/card-backgrounds/reveal-effect.png);
+    background-size: cover;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.card-agent-effect-container {
+    display: flex;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+    height: 53px;
+    background-image: url(/assets/images/card-backgrounds/agent-effect.png);
+    background-size: cover;
+}
+
+.card-reveal-effect-custom,
+.card-agent-effect-custom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+}
+
+.card-agent-effect-custom {
+    color: black;
+}
+
+.card-reveal-effect-custom-text,
+.card-agent-effect-custom-text {
+    padding: 6px;
+    text-align: center;
+}
+
+.card-reveal-effect,
+.card-agent-effect {
+    width: 100%;
+    padding: 6px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-aquire-costs-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url(/assets/images/reward-markers/marker_conviction.png);
+    width: 45px;
+    height: 50px;
+    background-size: 55px;
+    background-position-y: bottom;
+}
+
+.card-aquire-costs {
+    font-size: x-large;
+    padding-top: 3px;
+    padding-left: 19px;
+}
+
+.reward-container {
+    position: relative;
+    width: min-content;
+}
+
+.reward {
+    height: 30px;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+.reward-amount {
+    position: absolute;
+    top: 4px;
+    right: 0px;
+    width: 100%;
+    color: white;
+    font-size: large;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+    text-align: center;
+}
+
+.field-access-container {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.field-access {
+    height: 25px;
+    width: 35px;
+    background-image: url(/assets/images/card-backgrounds/field-access.png);
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.field-access-image {
+    max-width: 26px;
+    height: 20px;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.759));
+}
+
+.faction-container {
+    width: -webkit-fill-available;
+    padding: 1px 32px 2px 4px;
+    font-size: xx-small;
+    text-wrap: nowrap;
+    clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
+}
