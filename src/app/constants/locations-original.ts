@@ -10,7 +10,7 @@ export const locationsOriginal: DuneLocation[] = [
     actionField: {
       title: { de: 'arrakeen', en: 'arrakeen' },
       actionType: 'town',
-      rewards: [{ type: 'card-draw' }, { type: 'troops' }, { type: 'battle-insert' }],
+      rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'battle-insert' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
       isBattlefield: true,
     },
@@ -25,7 +25,7 @@ export const locationsOriginal: DuneLocation[] = [
     actionField: {
       title: { de: 'carthag', en: 'carthag' },
       actionType: 'town',
-      rewards: [{ type: 'intrigue' }, { type: 'troops' }, { type: 'battle-insert' }],
+      rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'battle-insert' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
       isBattlefield: true,
     },
@@ -62,7 +62,7 @@ export const locationsOriginal: DuneLocation[] = [
     actionField: {
       title: { de: 'sietch tabr', en: 'sietch tabr' },
       actionType: 'town',
-      rewards: [{ type: 'water' }, { type: 'troops' }, { type: 'battle-insert' }],
+      rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'battle-insert' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       isBattlefield: true,
       requiresInfluence: { type: 'fremen', amount: 2 },

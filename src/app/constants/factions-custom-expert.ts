@@ -13,7 +13,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'fremenkrieger', en: 'fremen warriors' },
         actionType: 'fremen',
         costs: [{ type: 'water' }],
-        rewards: [{ type: 'troops', amount: 2 }, { type: 'battle-insert' }],
+        rewards: [{ type: 'troop', amount: 2 }, { type: 'battle-insert' }],
         pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
         isBattlefield: true,
       },
@@ -31,7 +31,7 @@ export const factionsCustomExpert: Faction[] = [
     hasScoreBoard: true,
     levelTwoReward: [
       {
-        type: 'troops',
+        type: 'troop',
         amount: 2,
       },
     ],
@@ -132,12 +132,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'verschwörung', en: 'conspiracy' },
         actionType: 'imperium',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [
-          { type: 'intrigue' },
-          { type: 'intrigue' },
-          { type: 'currency', amount: 3 },
-          { type: 'troops', amount: 2 },
-        ],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'currency', amount: 3 }, { type: 'troop', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
         isBattlefield: false,
       },
@@ -155,7 +150,7 @@ export const factionsCustomExpert: Faction[] = [
     hasScoreBoard: true,
     levelTwoReward: [
       {
-        type: 'troops',
+        type: 'troop',
       },
       {
         type: 'battle-insert',

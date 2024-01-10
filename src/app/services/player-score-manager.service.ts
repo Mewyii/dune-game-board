@@ -67,7 +67,7 @@ export class PlayerScoreManager {
       localStorage.setItem('playerAlliances', JSON.stringify(playerAlliances));
     });
 
-    this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troops' } }));
+    this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troop' } }));
     this.scoreRewards.shift();
 
     if (this.settingsService.board.content === 'custom-advanced') {
@@ -156,7 +156,7 @@ export class PlayerScoreManager {
               if (reward.type === 'currency' || reward.type === 'spice' || reward.type === 'water') {
                 this.playerManager.addResourceToPlayer(playerId, reward.type, reward.amount ?? 1);
               }
-              if (reward.type === 'troops') {
+              if (reward.type === 'troop') {
                 this.combatManager.addPlayerTroopsToGarrison(playerId, reward.amount ?? 1);
               }
               if (reward.type === 'victory-point') {
@@ -205,7 +205,7 @@ export class PlayerScoreManager {
           if (vpReward.type === 'currency' || vpReward.type === 'spice' || vpReward.type === 'water') {
             this.playerManager.addResourceToPlayer(playerId, vpReward.type, vpReward.amount ?? 1);
           }
-          if (vpReward.type === 'troops') {
+          if (vpReward.type === 'troop') {
             this.combatManager.addPlayerTroopsToGarrison(playerId, vpReward.amount ?? 1);
           }
         }

@@ -30,7 +30,12 @@
         </ng-container>
       </div>
     </div>
-    <div class="reward-area" [style.max-width]="action.customWidth" [style.row-gap]="action.customWidth ? '0px' : '8px'">
+    <div
+      class="reward-area"
+      [style.width]="action.customWidth"
+      [style.max-width]="action.customWidth"
+      [style.row-gap]="action.customWidth ? '0px' : '8px'"
+    >
       <ng-container *ngFor="let rewardType of action.rewards">
         <div class="reward-container" [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''">
           <img

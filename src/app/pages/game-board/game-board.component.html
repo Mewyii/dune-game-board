@@ -1,0 +1,23 @@
+<div [style]="'display:flex'">
+  <div class="board">
+    <ng-container *ngFor="let faction of settingsService.factions">
+      <app-dune-faction [faction]="faction"></app-dune-faction>
+    </ng-container>
+    <ng-container *ngFor="let location of settingsService.locations">
+      <app-dune-location [location]="location"></app-dune-location>
+    </ng-container>
+    <app-dune-combat></app-dune-combat>
+    <app-scoreboard></app-scoreboard>
+    <app-techboard></app-techboard>
+    <app-card-areas></app-card-areas>
+    <dune-conflicts></dune-conflicts>
+  </div>
+  <app-playerboard *ngIf="settingsService.board.mode === 'game'"></app-playerboard>
+  <div class="sideboard-container">
+    <!-- <dune-events *ngIf="settingsService.board.mode === 'game'"></dune-events> -->
+    <dune-minor-houses *ngIf="settingsService.board.mode === 'game'"></dune-minor-houses>
+    <dune-leaders></dune-leaders>
+    <dune-ai-tile *ngIf="settingsService.board.mode === 'game'"></dune-ai-tile>
+    <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
+  </div>
+</div>

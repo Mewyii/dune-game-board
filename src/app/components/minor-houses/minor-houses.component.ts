@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { shuffle } from 'lodash';
+import { imperiumCards } from 'src/app/constants/imperium-cards';
 import { House, minorHouses } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';

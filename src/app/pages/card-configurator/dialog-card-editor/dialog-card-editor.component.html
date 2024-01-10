@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+<div mat-dialog-content>
+  <dune-card-editor [imperiumCard]="imperiumCard"></dune-card-editor>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onSave()">Save</button>
+</div>

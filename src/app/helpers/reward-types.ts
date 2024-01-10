@@ -16,7 +16,7 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_card_delete.png';
     case 'card-draw-or-destroy':
       return 'assets/images/reward-markers/marker_card_draw_or_delete.png';
-    case 'troops':
+    case 'troop':
       return 'assets/images/reward-markers/marker_troop.png';
     case 'intrigue':
       return 'assets/images/reward-markers/marker_intrigue.png';
@@ -39,7 +39,7 @@ export function getRewardTypePath(rewardType: RewardType) {
     case 'mentat':
       return 'assets/images/reward-markers/marker_mentat_2.png';
     case 'sword-master':
-      return 'assets/images/reward-markers/marker_swordmaster.png';
+      return 'assets/images/reward-markers/marker_agent.png';
     case 'intrigue-draw':
       return 'assets/images/reward-markers/marker_intrigue_draw.png';
     case 'tech':
@@ -78,6 +78,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_faction_influence_down.png';
     case 'agent':
       return 'assets/images/reward-markers/marker_agent.png';
+    case 'signet-token':
+      return 'assets/images/reward-markers/marker_signet_token.png';
     default:
       return '';
   }

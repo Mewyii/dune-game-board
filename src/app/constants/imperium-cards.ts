@@ -16,7 +16,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Aufmarsch', en: 'Deployment' },
     fieldAccess: ['landsraad'],
-    revealEffects: [{ type: 'troops' }],
+    revealEffects: [{ type: 'troop' }],
     imageUrl: '/assets/images/action-backgrounds/troops_3.png',
   },
   {
@@ -84,7 +84,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['imperium', 'landsraad', 'town'],
     customAgentEffect: {
       de: '',
-      en: '{resource:troops}. If you have another emperor card in play: {resource:troops}',
+      en: '{resource:troop}. If you have another emperor card in play: {resource:troop}',
     },
     customRevealEffect: {
       de: '{resource:persuasion}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Imperator-Karten davon erwerben.',
@@ -164,10 +164,10 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 5,
     faction: 'fremen',
     fieldAccess: ['fremen', 'town', 'spice'],
-    agentEffects: [{ type: 'troops' }, { type: 'battle-insert' }],
+    agentEffects: [{ type: 'troop' }, { type: 'battle-insert' }],
     revealEffects: [
       { type: 'persuasion', amount: 1 },
-      { type: 'troops' },
+      { type: 'troop' },
       { type: 'attack-value' },
       { type: 'attack-value' },
     ],
@@ -179,7 +179,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'fremen',
     fieldAccess: ['fremen', 'town', 'spice'],
     agentEffects: [{ type: 'water' }],
-    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'water' }, { type: 'spice' }, { type: 'troops' }],
+    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'water' }, { type: 'spice' }, { type: 'troop' }],
     imageUrl: '/assets/images/action-backgrounds/desert_2.png',
   },
   {
@@ -223,8 +223,8 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 6,
     fieldAccess: ['imperium', 'guild', 'bene', 'fremen', 'landsraad', 'town'],
     customAgentEffect: {
-      de: 'Lege {resource:troops} auf dieses Feld. Es kann nicht verwendet werden. Entferne {resource:troops} nach der nächsten Runde.',
-      en: 'Place {resource:troops} on this board space. It can not be used. Remove {resource:troops} after the next round.',
+      de: 'Lege {resource:troop} auf dieses Feld. Es kann nicht verwendet werden. Entferne {resource:troop} nach der nächsten Runde.',
+      en: 'Place {resource:troop} on this board space. It can not be used. Remove {resource:troop} after the next round.',
     },
     revealEffects: [
       { type: 'persuasion', amount: 2 },

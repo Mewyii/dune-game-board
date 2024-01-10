@@ -25,7 +25,7 @@ export class DuneFactionComponent implements OnInit {
         title: { de: 'fremenKrieger', en: 'fremen warriors' },
         actionType: 'fremen',
         costs: [{ type: 'water', amount: 1 }],
-        rewards: [{ type: 'troops', amount: 2 }],
+        rewards: [{ type: 'troop', amount: 2 }],
         pathToImage: 'assets/images/fremen_warriors.jpeg',
         isBattlefield: true,
       },

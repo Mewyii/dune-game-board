@@ -1,0 +1,23 @@
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.medium-text-field {
+    width: 250px;
+}
+
+.large-text-field {
+    width: 800px;
+}
+
+.card-effect-container {
+    width: 100%;
+}

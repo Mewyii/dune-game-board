@@ -22,7 +22,7 @@ export class DuneLocationComponent implements OnInit {
       title: { de: 'arrakeen', en: 'arrakeen' },
       actionType: 'town',
       rewards: [
-        { type: 'troops', amount: 1 },
+        { type: 'troop', amount: 1 },
         { type: 'card-draw', amount: 1 },
       ],
       pathToImage: '',

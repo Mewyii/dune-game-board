@@ -1,12 +1,8 @@
-export type ResourceType = 'water' | 'spice' | 'currency';
-export type ArmyType = 'troops' | 'ship';
+export const resourceTypes = ['water', 'spice', 'currency'] as const;
+
+export type ResourceType = (typeof resourceTypes)[number];
 
 export interface Resource {
   type: ResourceType;
-  amount?: number;
-}
-
-export interface Army {
-  type: ArmyType;
   amount?: number;
 }

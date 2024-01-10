@@ -290,6 +290,10 @@ export class GameManager {
       return;
     }
 
+    if (field.rewards.some((x) => x.type === 'sword-master') && this.activePlayer.hasSwordmaster) {
+      return;
+    }
+
     if (
       field.rewards.some((x) => x.type === 'council-seat-small' || x.type === 'council-seat-large') &&
       this.activePlayer.hasCouncilSeat
@@ -343,7 +347,7 @@ export class GameManager {
         if (reward.type === 'intrigue') {
           this.playerManager.addIntriguesToPlayer(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
         }
-        if (reward.type === 'troops') {
+        if (reward.type === 'troop') {
           this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
           unitsGainedThisTurn += reward.amount ?? 1;
         }
@@ -361,17 +365,8 @@ export class GameManager {
         this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
       }
       if (reward.type === 'sword-master') {
-        if (
-          !this.activePlayer.hasSwordmaster &&
-          this.playerCanPayCosts(this.activeAgentPlacementPlayerId, [{ type: 'currency', amount: 10 }])
-        ) {
-          this.playerManager.removeResourceFromPlayer(this.activeAgentPlacementPlayerId, 'currency', 10);
-          this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
-          this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
-        } else {
-          this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, 2);
-          unitsGainedThisTurn += 2;
-        }
+        this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
+        this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
       }
       if (reward.type === 'mentat') {
         this.addAgentToPlayer(this.activeAgentPlacementPlayerId);

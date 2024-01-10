@@ -109,7 +109,7 @@ export const aiGoals: FieldsForGoals = {
     viableFields: {
       'hidden knowledge': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 2, 0.5, virtualResources),
-      'secret agreement': () => 0.5,
+      'mind training': () => 0.5,
     },
   },
   'guild-alliance': {
@@ -197,10 +197,10 @@ export const aiGoals: FieldsForGoals = {
     viableFields: {
       arrakeen: () => 0.3,
       carthag: () => 0.3,
-      swordmaster: () => 0.6,
       'sietch tabr': (player, gameState) => 0.3,
       'fremen warriors': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 1.0 : 0.6, virtualResources),
+        getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 0.9 : 0.6, virtualResources),
+      'desert equipment': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
       heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
       conspiracy: (player, gameState, goals, virtualResources) =>
@@ -213,9 +213,12 @@ export const aiGoals: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: {
+      relations: () => 0.5,
       conspiracy: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
-      'secret agreement': () => 0.5,
+      'mind training': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.5 : 0.0),
+      'hidden knowledge': (player, gameState, goals, virtualResources) =>
+        getCostAdjustedDesire(player, 'spice', 2, gameState.playerScore.bene === 1 ? 0.5 : 0.0, virtualResources),
     },
   },
   'intrigue-steal': {
@@ -226,7 +229,7 @@ export const aiGoals: FieldsForGoals = {
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: () => false,
     viableFields: {
-      'hidden knowledge': () => 1.0,
+      'imperial favor': () => 1.0,
     },
   },
   'fold-space': {
@@ -245,8 +248,7 @@ export const aiGoals: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: {
-      'relations (draw)': () => 1.0,
-      'relations (trim)': () => 1.0,
+      relations: () => 1.0,
       'trade rights': () => 0.5,
     },
   },
@@ -292,7 +294,6 @@ export const aiGoals: FieldsForGoals = {
       getResourceAmount(player, 'water', virtualResources) > 1 || getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(player, 1),
     viableFields: {
-      'relations (draw)': () => 0.3,
       mentat: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'currency', 3, 0.3, virtualResources),
       arrakeen: () => 0.3,
@@ -303,17 +304,9 @@ export const aiGoals: FieldsForGoals = {
           : 0,
       'research station (trim)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, clamp(0.5 + 0.075 * player.cardsBought, 0, 0.7), virtualResources),
-      'secret agreement': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.15 : 0.0),
+      'mind training': (player, gameState) => 0.3,
       'hidden knowledge': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(
-          player,
-          'spice',
-          2,
-          gameState.playerScore.bene === 1
-            ? 0.65 + 0.075 * player.cardsBought
-            : clamp(0.6 + 0.075 * player.cardsBought, 0, 0.8),
-          virtualResources
-        ),
+        getCostAdjustedDesire(player, 'spice', 2, clamp(0.6 + 0.075 * player.cardsBought, 0, 0.5), virtualResources),
       heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 0.3, virtualResources),
     },
@@ -331,12 +324,12 @@ export const aiGoals: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => player.cardsInDeck < 7 || gameState.isFinale,
     viableFields: {
-      'relations (trim)': () => 0.5,
-      'secret agreement': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.75 : 0.5),
-      'hidden knowledge': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 2, gameState.playerScore.bene === 1 ? 0.25 : 0.0, virtualResources),
+      'mind training': (player, gameState) => 0.5,
       'research station (trim)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
+      'fremen warriors': (player, gameState, goals, virtualResources) =>
+        getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 0.5 : 0.0, virtualResources),
+      'desert equipment': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.5 : 0.0),
     },
   },
   'collect-water': {

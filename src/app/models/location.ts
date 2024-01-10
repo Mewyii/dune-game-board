@@ -23,4 +23,6 @@ export interface ActionField {
   customWidth?: string;
 }
 
-export type ActionType = FactionType | 'town' | 'spice';
+export const nonFactionActionTypes = ['town', 'spice'] as const;
+
+export type ActionType = FactionType | (typeof nonFactionActionTypes)[number];

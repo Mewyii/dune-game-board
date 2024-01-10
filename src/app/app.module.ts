@@ -22,6 +22,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AITileComponent } from './components/ai-tile/ai-tile.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ParticleEffectsComponent } from './components/particle-effects/particle-effects.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 import { NgParticlesModule } from 'ng-particles';
 import { LeadersComponent } from './components/leaders/leaders.component';
@@ -31,6 +36,12 @@ import { DuneSymbolsPipe } from './pipes/dune-symbols';
 import { MinorHousesComponent } from './components/minor-houses/minor-houses.component';
 import { MinorHouseCardComponent } from './components/_common/minor-house-card/minor-house-card.component';
 import { ImperiumRowCardComponent } from './components/_common/imperium-row-card/imperium-row-card.component';
+import { GameBoardComponent } from './pages/game-board/game-board.component';
+import { LeaderConfiguratorComponent } from './pages/leader-configurator/leader-configurator.component';
+import { CardConfiguratorComponent } from './pages/card-configurator/card-configurator.component';
+import { CardEditorComponent } from './pages/card-configurator/card-editor/card-editor.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DialogCardEditorComponent } from './pages/card-configurator/dialog-card-editor/dialog-card-editor.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +65,11 @@ import { ImperiumRowCardComponent } from './components/_common/imperium-row-card
     MinorHousesComponent,
     MinorHouseCardComponent,
     ImperiumRowCardComponent,
+    GameBoardComponent,
+    LeaderConfiguratorComponent,
+    CardConfiguratorComponent,
+    CardEditorComponent,
+    DialogCardEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +81,13 @@ import { ImperiumRowCardComponent } from './components/_common/imperium-row-card
     DragDropModule,
     MatSlideToggleModule,
     MatCheckboxModule,
+    MatDialogModule,
     NgParticlesModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

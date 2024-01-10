@@ -1,18 +1,28 @@
-.board {
-    width: 2120px;
-    height: 2120px;
-    background-image: url("/assets/images/dune\ board_background.png");
-    position:relative;
-    font-size: x-large;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.navigation-container {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    background: #362b23;
+    z-index: 3;
+    word-break: break-word;
+    text-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    writing-mode: vertical-lr;
+    font-size: small;
+    gap: 6px;
+    padding: 6px;
+    filter: drop-shadow(0px 0px 12px black);
 }
 
+.navigation-element {
+    background-color: #72543d;
+    padding: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-.sideboard-container {
-    width: 900px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.navigation-element:hover {
+    background-color: #966f52;
+    color: rgb(46, 25, 0);
 }

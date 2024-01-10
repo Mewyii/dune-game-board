@@ -1,0 +1,31 @@
+<div class="cards-configurator">
+  <div class="cards-manager">
+    <div class="action-bar">
+      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()">
+        <mat-icon>download</mat-icon>
+      </button>
+      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
+      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()">
+        <mat-icon>upload</mat-icon>
+      </button>
+    </div>
+    <div class="cards-preview-container">
+      <ng-container *ngFor="let card of imperiumCards">
+        <div class="card-container">
+          <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+          <div class="card-action-bar">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

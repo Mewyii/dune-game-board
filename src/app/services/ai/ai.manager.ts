@@ -402,19 +402,19 @@ export class AIManager {
 
     if (goal === 'enter-combat' || goal === 'get-troops' || goal === 'warship') {
       if (aiVariables.combat === 'good') {
-        modifier = 1.15;
+        modifier = 1.2;
       }
       if (aiVariables.combat === 'bad') {
-        modifier = 0.85;
+        modifier = 0.8;
       }
     } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin') {
       if (aiVariables.techTiles === 'good') {
-        modifier = 1.25;
+        modifier = 1.2;
       }
       if (aiVariables.techTiles === 'bad') {
-        modifier = 0.75;
+        modifier = 0.8;
       }
-    } else if (goal === 'draw-cards' || goal === 'high-council') {
+    } else if (goal === 'draw-cards' || goal === 'get-persuasion' || goal === 'high-council') {
       if (aiVariables.imperiumRow === 'good') {
         modifier = 1.2;
       }
