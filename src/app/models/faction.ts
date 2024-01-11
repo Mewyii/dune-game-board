@@ -2,7 +2,7 @@ import { ActionField, LanguageString, Reward } from '.';
 
 export const passiveFactionTypes = ['landsraad', 'choam'] as const;
 
-export const activeFactionTypes = ['imperium', 'guild', 'bene', 'fremen'] as const;
+export const activeFactionTypes = ['emperor', 'guild', 'bene', 'fremen'] as const;
 
 export type PassiveFactionType = (typeof passiveFactionTypes)[number];
 export type ActiveFactionType = (typeof activeFactionTypes)[number];

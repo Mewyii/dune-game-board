@@ -209,14 +209,14 @@
         </button>
       </div>
       <div class="resource-container">
-        <img class="resource" [src]="getFactionTypePath('imperium')" />
+        <img class="resource" [src]="getFactionTypePath('emperor')" />
         <div class="resource-amount">
-          <span>{{ getPlayerScore('imperium') }}</span>
+          <span>{{ getPlayerScore('emperor') }}</span>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'imperium')">
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'emperor')">
           <mat-icon>remove</mat-icon>
         </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'imperium')">
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'emperor')">
           <mat-icon>add</mat-icon>
         </button>
       </div>

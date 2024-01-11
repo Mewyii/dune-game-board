@@ -9,7 +9,7 @@ export class TranslateService {
   public language: LanguageType = 'de';
 
   constructor(public settingsService: SettingsService) {
-    this.language = this.settingsService.board.language;
+    this.language = this.settingsService.settings.language;
   }
 
   public translate(string: LanguageString) {

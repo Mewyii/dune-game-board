@@ -28,7 +28,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Imperialer Agent', en: 'Imperial Agent' },
     persuasionCosts: 2,
-    faction: 'imperium',
+    faction: 'emperor',
     fieldAccess: ['landsraad', 'town'],
     revealEffects: [{ type: 'persuasion', amount: 2 }],
     imageUrl: '/assets/images/action-backgrounds/soldiers.png',
@@ -44,7 +44,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Sardaukar Lasgun-Team', en: 'Sardaukar Lasgun Team' },
     persuasionCosts: 3,
-    faction: 'imperium',
+    faction: 'emperor',
     fieldAccess: ['town'],
     customAgentEffect: {
       de: 'Jeder Gegner zieht ein Schlachtschiff zurück oder verliert einen Trupp.',
@@ -56,7 +56,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Sardaukar Infiltratoren', en: 'Sardaukar Infiltrators' },
     persuasionCosts: 2,
-    faction: 'imperium',
+    faction: 'emperor',
     fieldAccess: ['town', 'spice'],
     customAgentEffect: {
       de: 'Jeder Gegner {resource:card-discard}.',
@@ -68,8 +68,8 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Sardaukar Kampfriten', en: 'Sardaukar Battle Rites' },
     persuasionCosts: 4,
-    faction: 'imperium',
-    fieldAccess: ['imperium', 'town'],
+    faction: 'emperor',
+    fieldAccess: ['emperor', 'town'],
     customAgentEffect: {
       de: '{resource:card-destroy}. Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:card-draw}',
       en: '{resource:card-destroy}. If you have another emperor card in play: {resource:card-draw}',
@@ -80,8 +80,8 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Imperialer Caid', en: 'Imperial Caid' },
     persuasionCosts: 3,
-    faction: 'imperium',
-    fieldAccess: ['imperium', 'landsraad', 'town'],
+    faction: 'emperor',
+    fieldAccess: ['emperor', 'landsraad', 'town'],
     customAgentEffect: {
       de: '',
       en: '{resource:troop}. If you have another emperor card in play: {resource:troop}',
@@ -95,17 +95,17 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Imperialer Burseg', en: 'Imperial Burseg' },
     persuasionCosts: 6,
-    faction: 'imperium',
+    faction: 'emperor',
     agentEffects: [{ type: 'card-draw' }],
-    fieldAccess: ['imperium', 'guild', 'bene', 'landsraad', 'town'],
+    fieldAccess: ['emperor', 'guild', 'bene', 'landsraad', 'town'],
     revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'attack-value' }, { type: 'attack-value' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_3.png',
   },
   {
     name: { de: 'Loyalitätsbekundung', en: 'Pledge of Loyalty' },
     persuasionCosts: 2,
-    faction: 'imperium',
-    fieldAccess: ['imperium'],
+    faction: 'emperor',
+    fieldAccess: ['emperor'],
     customAgentEffect: {
       de: 'Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:intrigue}',
       en: 'If you have another emperor card in play: {resource:intrigue}',
@@ -116,7 +116,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Imperiale Bestechung', en: 'Imperial Bribe' },
     persuasionCosts: 1,
-    faction: 'imperium',
+    faction: 'emperor',
     fieldAccess: ['bene', 'guild', 'landsraad'],
     customAgentEffect: {
       de: 'Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:currency}',
@@ -210,7 +210,7 @@ export const imperiumCards: ImperiumCard[] = [
     name: { de: 'Den Glauben Verbreiten', en: 'Spreading the Faith' },
     persuasionCosts: 2,
     faction: 'bene',
-    fieldAccess: ['imperium', 'fremen', 'landsraad', 'town'],
+    fieldAccess: ['emperor', 'fremen', 'landsraad', 'town'],
     customAgentEffect: {
       de: 'Wenn du eine Fremen-Karte im Spiel hast: {resource:card-draw}',
       en: 'If you have a fremen card in play: {resource:card-draw}',
@@ -221,7 +221,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: { de: 'Flächen Bombardierung', en: 'Area Bombardment' },
     persuasionCosts: 6,
-    fieldAccess: ['imperium', 'guild', 'bene', 'fremen', 'landsraad', 'town'],
+    fieldAccess: ['emperor', 'guild', 'bene', 'fremen', 'landsraad', 'town'],
     customAgentEffect: {
       de: 'Lege {resource:troop} auf dieses Feld. Es kann nicht verwendet werden. Entferne {resource:troop} nach der nächsten Runde.',
       en: 'Place {resource:troop} on this board space. It can not be used. Remove {resource:troop} after the next round.',

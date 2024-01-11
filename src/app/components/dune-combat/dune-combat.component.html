@@ -8,7 +8,7 @@
       <div class="units-gathering-area"></div>
       <div class="units-gathering-area"></div>
     </div>
-    <ng-container *ngIf="settingsService.board.mode === 'game'">
+    <ng-container *ngIf="settingsService.settings.mode === 'game'">
       <ng-container *ngFor="let player of players; let i = index; trackBy: trackPlayer">
         <div
           class="units-control-bar-container"
@@ -83,7 +83,7 @@
     <div class="lower-row" cdkDropListGroup>
       <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
         <div class="score">0</div>
-        <ng-container *ngIf="settingsService.board.mode === 'game'">
+        <ng-container *ngIf="settingsService.settings.mode === 'game'">
           <ng-container *ngFor="let playerScore of getPlayersOnScore(0); let i = index"
             ><div
               class="score-marker"
@@ -99,7 +99,7 @@
         <ng-container *ngFor="let score of combatScoreArray; let i = index; let last = last">
           <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, i + 1)">
             <div class="score">{{ i + 1 }}</div>
-            <ng-container *ngIf="settingsService.board.mode === 'game'">
+            <ng-container *ngIf="settingsService.settings.mode === 'game'">
               <ng-container *ngFor="let playerScore of getPlayersOnScore(i + 1); let i = index"
                 ><div
                   class="score-marker"

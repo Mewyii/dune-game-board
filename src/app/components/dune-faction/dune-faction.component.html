@@ -48,7 +48,7 @@
         </div>
       </ng-container>
       <div class="alliance-element" [style.background-image]="'url(' + faction.pathToSymbol + ')'"></div>
-      <ng-container *ngIf="settingsService.board.mode === 'game'">
+      <ng-container *ngIf="settingsService.settings.mode === 'game'">
         <div class="alliance-token-container">
           <dune-alliance-token
             [faction]="faction"

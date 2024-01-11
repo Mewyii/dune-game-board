@@ -131,11 +131,11 @@ export const aiGoals: FieldsForGoals = {
     baseDesire: 0.2,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.05 * gameState.playerScore.fremen +
-      (playerCanGetAllianceThisTurn(player, gameState, 'imperium') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'imperium') ? 0.0125 * gameState.currentTurn : 0),
+      (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
+      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.0125 * gameState.currentTurn : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
-      gameState.playerScore.imperium > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'imperium'),
+      gameState.playerScore.emperor > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'emperor'),
     viableFields: {
       conspiracy: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 0.5, virtualResources),
@@ -168,9 +168,9 @@ export const aiGoals: FieldsForGoals = {
       'sietch tabr': (player, gameState) => 0.6,
       'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.7, virtualResources),
-      'imperial favor': (player, gameState) => (gameState.playerScore.imperium === 1 ? 0.5 : 0),
+      'imperial favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.5 : 0),
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.imperium === 1 ? 0.7 : 0, virtualResources),
+        getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.emperor === 1 ? 0.7 : 0, virtualResources),
       'imperial basin': () => 0.5,
       'hagga basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
@@ -204,7 +204,7 @@ export const aiGoals: FieldsForGoals = {
       heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.imperium === 1 ? 0.8 : 0.6, virtualResources),
+        getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.emperor === 1 ? 0.8 : 0.6, virtualResources),
     },
   },
   intrigues: {

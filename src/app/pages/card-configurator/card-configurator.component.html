@@ -11,12 +11,15 @@
       <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()">
         <mat-icon>upload</mat-icon>
       </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
+        <mat-icon>hide_source</mat-icon>
+      </button>
     </div>
     <div class="cards-preview-container">
       <ng-container *ngFor="let card of imperiumCards">
         <div class="card-container">
           <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
-          <div class="card-action-bar">
+          <div class="card-action-bar" *ngIf="showControls">
             <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)">
               <mat-icon>settings</mat-icon>
             </button>

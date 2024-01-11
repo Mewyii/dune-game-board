@@ -27,7 +27,7 @@
 
   <!-- Field Access -->
   <mat-form-field>
-    <mat-label>Field Access</mat-label>
+    <mat-label>Board Space Access</mat-label>
     <mat-select formControlName="fieldAccess" multiple>
       <mat-option *ngFor="let actionType of actionTypes; let i = index" [value]="actionType">
         {{ actionType }}
@@ -36,23 +36,30 @@
   </mat-form-field>
   <!-- Agent Effects -->
   <div class="card-effect-container">
-    Agent Effect
-    <mat-checkbox
-      [(ngModel)]="hasCustomAgentEffect"
-      [ngModelOptions]="{ standalone: true }"
-      (ngModelChange)="updateAgentEffects()"
-      >Custom</mat-checkbox
-    >
+    <div class="title-container">
+      <span class="card-effect-title"> Agent Effects </span>
+      <mat-checkbox
+        [(ngModel)]="hasCustomAgentEffect"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="updateAgentEffects()"
+      ></mat-checkbox
+      >Custom Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
     <div *ngIf="!hasCustomAgentEffect" formArrayName="agentEffects">
       <div class="form-group" *ngFor="let agentEffect of agentEffects.controls; let i = index">
         <mat-form-field>
-          <mat-label>Agent Effect Type</mat-label>
+          <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getAgentEffectTypeControl(i)">
             <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Agent Effect Amount</mat-label>
+          <mat-label>Amount</mat-label>
           <input matInput [formControl]="getAgentEffectAmountControl(i)" type="number" />
         </mat-form-field>
         <button mat-mini-fab [color]="'accent'" (click)="onRemoveAgentEffectClicked(i)">
@@ -65,17 +72,65 @@
     </div>
     <div *ngIf="hasCustomAgentEffect" class="form-group" formGroupName="customAgentEffect">
       <mat-form-field class="large-text-field">
-        <mat-label>Custom Agent Effect (English)</mat-label>
+        <mat-label>English</mat-label>
         <input matInput formControlName="en" />
       </mat-form-field>
       <mat-form-field class="large-text-field">
-        <mat-label>Custom Agent Effect (German)</mat-label>
+        <mat-label>German</mat-label>
         <input matInput formControlName="de" />
       </mat-form-field>
     </div>
   </div>
 
-  <mat-form-field class="large-text-field">
+  <!-- Reveal Effects -->
+  <div class="card-effect-container">
+    <div class="title-container">
+      <span class="card-effect-title"> Reveal Effects </span>
+      <mat-checkbox
+        [(ngModel)]="hasCustomRevealEffect"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="updateRevealEffects()"
+      ></mat-checkbox
+      >Custom Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <div *ngIf="!hasCustomRevealEffect" formArrayName="revealEffects">
+      <div class="form-group" *ngFor="let revealEffect of revealEffects.controls; let i = index">
+        <mat-form-field>
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getRevealEffectTypeControl(i)">
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getRevealEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveRevealEffectClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddRevealEffectClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="hasCustomRevealEffect" class="form-group" formGroupName="customRevealEffect">
+      <mat-form-field class="large-text-field">
+        <mat-label>English</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="large-text-field">
+        <mat-label>German</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <mat-form-field class="large-text-field margin-top">
     <mat-label>Image URL</mat-label>
     <input matInput formControlName="imageUrl" />
   </mat-form-field>

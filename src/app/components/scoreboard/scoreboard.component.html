@@ -7,7 +7,9 @@
     >
       <div class="score">{{ i }}</div>
       <ng-container
-        *ngIf="settingsService.board.content === 'custom-advanced' || settingsService.board.content === 'custom-expert'"
+        *ngIf="
+          settingsService.settings.content === 'custom-advanced' || settingsService.settings.content === 'custom-expert'
+        "
         ><ng-container *ngIf="scoreHasReward(i)">
           <div class="reward-container">
             <img class="reward" [src]="getRewardTypePath(i)" />
@@ -27,7 +29,7 @@
       [class.finale-three-players]="i === playerScoreManager.finaleTrigger"
     ></div>
   </ng-container>
-  <ng-container *ngIf="settingsService.board.mode === 'game'">
+  <ng-container *ngIf="settingsService.settings.mode === 'game'">
     <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index; trackBy: trackPlayerScore">
       <div
         class="score-marker"

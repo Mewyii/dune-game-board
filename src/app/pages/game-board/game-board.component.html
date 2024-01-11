@@ -1,4 +1,4 @@
-<div [style]="'display:flex'">
+<div [style]="'display:flex; padding-left: 32px, padding-top: 16px'">
   <div class="board">
     <ng-container *ngFor="let faction of settingsService.factions">
       <app-dune-faction [faction]="faction"></app-dune-faction>
@@ -12,12 +12,13 @@
     <app-card-areas></app-card-areas>
     <dune-conflicts></dune-conflicts>
   </div>
-  <app-playerboard *ngIf="settingsService.board.mode === 'game'"></app-playerboard>
+  <app-playerboard *ngIf="settingsService.settings.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">
-    <!-- <dune-events *ngIf="settingsService.board.mode === 'game'"></dune-events> -->
-    <dune-minor-houses *ngIf="settingsService.board.mode === 'game'"></dune-minor-houses>
+    <!-- <dune-events *ngIf="settingsService.settings.mode === 'game'"></dune-events> -->
+    <dune-minor-houses *ngIf="settingsService.settings.mode === 'game'"></dune-minor-houses>
     <dune-leaders></dune-leaders>
-    <dune-ai-tile *ngIf="settingsService.board.mode === 'game'"></dune-ai-tile>
+    <dune-ai-tile *ngIf="settingsService.settings.mode === 'game'"></dune-ai-tile>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
 </div>
+<dune-particle-effects></dune-particle-effects>

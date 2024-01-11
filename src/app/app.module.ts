@@ -27,6 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { NgParticlesModule } from 'ng-particles';
 import { LeadersComponent } from './components/leaders/leaders.component';
@@ -88,6 +89,7 @@ import { DialogCardEditorComponent } from './pages/card-configurator/dialog-card
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

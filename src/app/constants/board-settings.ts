@@ -1,6 +1,6 @@
 import { LanguageType } from '../models';
 
-interface Settings {
+export interface Settings {
   mode: 'board' | 'game';
   language: LanguageType;
   content: 'original' | 'custom-beginner' | 'custom-advanced' | 'custom-expert';

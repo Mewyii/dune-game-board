@@ -17,9 +17,6 @@
 body {
     font-family: "Medieval";
     font-weight:bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 html, body { 
     // height: 100%; 
@@ -39,3 +36,7 @@ h2 {
 .mdc-form-field, .mdc-form-field>label {
     color:white !important;
 }
+
+.mdc-dialog__surface {
+    background-color: #e3dcd6 !important;
+ }

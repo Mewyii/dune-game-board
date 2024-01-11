@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class CardConfiguratorComponent implements OnInit {
   public imperiumCards: ImperiumCard[] = [];
+  public showControls = true;
 
   constructor(
     public translateService: TranslateService,
@@ -96,6 +97,10 @@ export class CardConfiguratorComponent implements OnInit {
         this.cardConfiguratorService.editCard(result);
       }
     });
+  }
+
+  onToggleControlsClicked() {
+    this.showControls = !this.showControls;
   }
 
   private createEmptyImperiumCard(): ImperiumCard {

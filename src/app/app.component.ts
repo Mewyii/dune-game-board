@@ -13,4 +13,12 @@ export class AppComponent {
   ngOnInit(): void {
     this.title.setTitle('Dune Imperium: Alliances');
   }
+
+  switchLanguage() {
+    if (this.settingsService.settings.language === 'de') {
+      this.settingsService.changeLanguage('en');
+    } else {
+      this.settingsService.changeLanguage('de');
+    }
+  }
 }

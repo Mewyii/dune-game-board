@@ -12,7 +12,7 @@ export interface PlayerScore {
   fremen: number;
   bene: number;
   guild: number;
-  imperium: number;
+  emperor: number;
 }
 
 export interface PlayerAlliances {
@@ -70,7 +70,7 @@ export class PlayerScoreManager {
     this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troop' } }));
     this.scoreRewards.shift();
 
-    if (this.settingsService.board.content === 'custom-advanced') {
+    if (this.settingsService.settings.content === 'custom-advanced') {
       this.finaleTrigger = 8;
 
       this.scoreRewards[0].reward = { type: 'currency' };
@@ -83,7 +83,7 @@ export class PlayerScoreManager {
       this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
       this.scoreRewards[12].reward = { type: 'currency' };
     }
-    if (this.settingsService.board.content === 'custom-expert') {
+    if (this.settingsService.settings.content === 'custom-expert') {
       this.finaleTrigger = 8;
 
       this.scoreRewards[0].reward = { type: 'currency' };
@@ -123,7 +123,7 @@ export class PlayerScoreManager {
         fremen: 0,
         bene: 0,
         guild: 0,
-        imperium: 0,
+        emperor: 0,
       });
     }
 
@@ -139,7 +139,7 @@ export class PlayerScoreManager {
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
     if (playerScore) {
-      if (actionType === 'fremen' || actionType === 'bene' || actionType === 'guild' || actionType === 'imperium') {
+      if (actionType === 'fremen' || actionType === 'bene' || actionType === 'guild' || actionType === 'emperor') {
         const newScore = playerScore[actionType] + score;
 
         playerScores[playerScoreIndex] = {
@@ -213,7 +213,7 @@ export class PlayerScoreManager {
 
       this.playerScoresSubject.next(playerScores);
 
-      if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'imperium') {
+      if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
         if (newPlayerScore >= this.factionAllianceTreshold) {
           this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
         }
@@ -235,7 +235,7 @@ export class PlayerScoreManager {
 
       this.playerScoresSubject.next(playerScores);
 
-      if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'imperium') {
+      if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
         if (newPlayerScore >= this.factionAllianceTreshold) {
           this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
         }

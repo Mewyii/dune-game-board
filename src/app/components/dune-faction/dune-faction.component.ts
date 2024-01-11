@@ -63,7 +63,7 @@ export class DuneFactionComponent implements OnInit {
     this.favorScoreArray = new Array(this.maxFavorScore);
     this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       const factionType = this.faction.type;
-      if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'imperium') {
+      if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'emperor') {
         this.playerScores = playerScores.map((x) => ({
           playerId: x.playerId,
           score: x[factionType],
@@ -78,7 +78,7 @@ export class DuneFactionComponent implements OnInit {
 
     this.playerScoreManager.playerAlliances$.subscribe((playerAlliances) => {
       const factionType = this.faction.type;
-      if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'imperium') {
+      if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'emperor') {
         this.allianceTakenByPlayerId =
           playerAlliances.find((x) => x.alliances.some((allianceType) => allianceType === factionType))?.playerId ?? 0;
       }

@@ -8,7 +8,7 @@ export function getFactionTypePath(actionType: FactionType) {
       return 'assets/images/action-types/action_type_guild.png';
     case 'bene':
       return 'assets/images/action-types/action_type_bene.png';
-    case 'imperium':
+    case 'emperor':
       return 'assets/images/action-types/action_type_emperor.png';
     case 'landsraad':
       return 'assets/images/action-types/action_type_diplomacy.png';

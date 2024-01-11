@@ -20,7 +20,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   imperiumCardForm!: FormGroup;
 
-  factions = [...activeFactionTypes, ...passiveFactionTypes];
+  factions = [...activeFactionTypes, ...passiveFactionTypes, ''];
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes];
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes]; // Add other reward types
 
@@ -41,6 +41,14 @@ export class CardEditorComponent implements OnInit, OnChanges {
         this.hasCustomAgentEffect = true;
 
         this.addCustomAgentEffectControl();
+        this.imperiumCardForm.removeControl('agentEffects');
+      }
+
+      if (newImperiumCard.customRevealEffect) {
+        this.hasCustomRevealEffect = true;
+
+        this.addCustomRevealEffectControl();
+        this.imperiumCardForm.removeControl('revealEffects');
       }
 
       this.imperiumCardForm.patchValue(newImperiumCard);
@@ -52,6 +60,21 @@ export class CardEditorComponent implements OnInit, OnChanges {
         agentEffectsArray.clear();
         newImperiumCard.agentEffects.forEach((field) => {
           agentEffectsArray.push(
+            this.fb.group({
+              type: field.type,
+              amount: field.amount,
+            })
+          );
+        });
+      }
+
+      if (newImperiumCard.revealEffects) {
+        this.hasCustomRevealEffect = false;
+        const revealEffectsArray = this.revealEffects;
+
+        revealEffectsArray.clear();
+        newImperiumCard.revealEffects.forEach((field) => {
+          revealEffectsArray.push(
             this.fb.group({
               type: field.type,
               amount: field.amount,
@@ -71,14 +94,19 @@ export class CardEditorComponent implements OnInit, OnChanges {
       faction: '',
       persuasionCosts: null,
       fieldAccess: new FormControl([]),
-      agentEffects: new FormArray([]),
-      revealEffects: new FormArray([]),
       imageUrl: '',
     });
+
+    this.addAgentEffectControl();
+    this.addRevealEffectControl();
 
     if (this.imperiumCard) {
       this.imperiumCardForm.patchValue(this.imperiumCard);
     }
+  }
+
+  getFormData(): any {
+    return this.imperiumCardForm.value;
   }
 
   get fieldAccess() {
@@ -123,8 +151,17 @@ export class CardEditorComponent implements OnInit, OnChanges {
     );
   }
 
-  getFormData(): any {
-    return this.imperiumCardForm.value;
+  onAddAgentEffectClicked() {
+    this.agentEffects.push(
+      this.fb.group({
+        type: '',
+        amount: undefined,
+      })
+    );
+  }
+
+  onRemoveAgentEffectClicked(index: number) {
+    this.agentEffects.removeAt(index);
   }
 
   updateAgentEffects() {
@@ -139,8 +176,46 @@ export class CardEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  onAddAgentEffectClicked() {
-    this.agentEffects.push(
+  get revealEffects() {
+    return this.imperiumCardForm.get('revealEffects') as FormArray;
+  }
+
+  get customRevealEffect() {
+    return this.imperiumCardForm.get('customRevealEffect') as FormGroup;
+  }
+
+  getRevealEffectTypeControl(index: number): FormControl {
+    return this.revealEffects.at(index).get('type') as FormControl;
+  }
+
+  getRevealEffectAmountControl(index: number): FormControl {
+    return this.revealEffects.at(index).get('amount') as FormControl;
+  }
+
+  addRevealEffectControl() {
+    this.imperiumCardForm.addControl(
+      'revealEffects',
+      new FormArray([
+        this.fb.group({
+          type: '',
+          amount: undefined,
+        }),
+      ])
+    );
+  }
+
+  addCustomRevealEffectControl() {
+    this.imperiumCardForm.addControl(
+      'customRevealEffect',
+      this.fb.group({
+        en: '',
+        de: '',
+      })
+    );
+  }
+
+  onAddRevealEffectClicked() {
+    this.revealEffects.push(
       this.fb.group({
         type: '',
         amount: undefined,
@@ -148,7 +223,19 @@ export class CardEditorComponent implements OnInit, OnChanges {
     );
   }
 
-  onRemoveAgentEffectClicked(index: number) {
-    this.agentEffects.removeAt(index);
+  onRemoveRevealEffectClicked(index: number) {
+    this.revealEffects.removeAt(index);
+  }
+
+  updateRevealEffects() {
+    if (this.hasCustomRevealEffect) {
+      this.imperiumCardForm.removeControl('revealEffects');
+
+      this.addCustomRevealEffectControl();
+    } else {
+      this.addRevealEffectControl();
+
+      this.imperiumCardForm.removeControl('customRevealEffect');
+    }
   }
 }

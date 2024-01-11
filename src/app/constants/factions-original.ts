@@ -121,7 +121,7 @@ export const factionsOriginal: Faction[] = [
   },
   {
     title: { de: 'imperator', en: 'emperor' },
-    type: 'imperium',
+    type: 'emperor',
     position: {
       marginBottom: 1515,
       marginLeft: 16,
@@ -129,7 +129,7 @@ export const factionsOriginal: Faction[] = [
     actionFields: [
       {
         title: { de: 'verschwörung', en: 'conspire' },
-        actionType: 'imperium',
+        actionType: 'emperor',
         costs: [{ type: 'spice', amount: 4 }],
         rewards: [{ type: 'intrigue' }, { type: 'troop', amount: 2 }, { type: 'currency', amount: 5 }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
@@ -137,7 +137,7 @@ export const factionsOriginal: Faction[] = [
       },
       {
         title: { de: 'wohlstand', en: 'wealth' },
-        actionType: 'imperium',
+        actionType: 'emperor',
         rewards: [{ type: 'currency', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
         isBattlefield: false,
