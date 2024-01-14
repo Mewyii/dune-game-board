@@ -43,6 +43,10 @@ import { CardConfiguratorComponent } from './pages/card-configurator/card-config
 import { CardEditorComponent } from './pages/card-configurator/card-editor/card-editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogCardEditorComponent } from './pages/card-configurator/dialog-card-editor/dialog-card-editor.component';
+import { NotificationComponent } from './components/notification/notification.component';
+import { LeaderCardComponent } from './components/_common/leader-card/leader-card.component';
+import { DialogLeaderEditorComponent } from './pages/leader-configurator/dialog-leader-editor/dialog-leader-editor.component';
+import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor/leader-editor.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +75,10 @@ import { DialogCardEditorComponent } from './pages/card-configurator/dialog-card
     CardConfiguratorComponent,
     CardEditorComponent,
     DialogCardEditorComponent,
+    NotificationComponent,
+    LeaderCardComponent,
+    DialogLeaderEditorComponent,
+    LeaderEditorComponent,
   ],
   imports: [
     BrowserModule,

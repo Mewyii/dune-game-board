@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Leader } from 'src/app/constants/leaders';
+import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { House } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
@@ -18,13 +19,13 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./leaders.component.scss'],
 })
 export class LeadersComponent implements OnInit {
-  public leaders: Leader[] = [];
+  public leaders: (Leader | LeaderImageOnly)[] = [];
   public newLeaders: Leader[] = [];
 
   public playerLeaders: PlayerLeader[] = [];
   public activePlayerId: number = 0;
 
-  public activeLeader: Leader | undefined;
+  public activeLeader: Leader | LeaderImageOnly | undefined;
 
   public currentPlayer: Player | undefined;
 
@@ -33,9 +34,6 @@ export class LeadersComponent implements OnInit {
   public currentPlayerCombatUnits: PlayerCombatUnits | undefined;
 
   public currentPlayerAvailableAgents: PlayerAgents | undefined;
-
-  public deckName: LanguageString = { de: 'deck', en: 'deck' };
-  public discardName: LanguageString = { de: 'ablage', en: 'discard' };
 
   public houses: House[] = [];
   public playerHouses: PlayerHouse[] = [];
@@ -53,7 +51,7 @@ export class LeadersComponent implements OnInit {
 
   ngOnInit(): void {
     this.leaders = this.leadersService.leaders;
-    this.newLeaders = this.leaders.filter((x) => x.type === 'new');
+    this.newLeaders = this.leaders.filter((x) => x.type === 'new') as Leader[];
 
     this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
       this.playerLeaders = playerLeaders;

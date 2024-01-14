@@ -4,6 +4,7 @@ import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manage
 import { Player } from '../../player-manager.service';
 import { PlayerScore } from '../../player-score-manager.service';
 import { Resource } from 'src/app/models';
+import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 
 export type AIGoals =
   | 'high-council'
@@ -43,7 +44,7 @@ export interface GameState {
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];
-  playerLeader: Leader;
+  playerLeader: Leader | LeaderImageOnly;
 }
 
 export interface AIGoal {

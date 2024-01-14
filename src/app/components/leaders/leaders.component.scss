@@ -41,91 +41,13 @@
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
-.leader-title {
-    padding: 6px 12px;
-    font-size: large;
-}
-
-.leader-house {
-    padding: 0px 42px;
-    color: #e1e1e1;
-}
-
-.leader-passive {
-    position: absolute;
-    bottom: 48px;
-    padding: 16px;
-    background: #00000080;
-    width: calc(100% - 32px);
-    text-align: center;
-}
-
-.deck-indicator {
-    position: absolute;
-    top: calc(50% - 50px + 32px);
-    left: -51px;
-    width: 100px;
-    text-align: center;
-    transform: rotateZ(90deg);
-    padding: 8px 16px;
-    border-radius: 8px 8px 0px 0px;
-    color: #c7c7c7;
-    background-color: #272727;
-    filter: drop-shadow(0px 0px 3px #0000003b);
-}
-
-.discard-indicator {
-    position: absolute;
-    top: calc(50% - 50px + 32px);
-    right: -51px;
-    width: 100px;
-    text-align: center;
-    transform: rotateZ(270deg);
-    padding: 8px 16px;
-    border-radius: 8px 8px 0px 0px;
-    color: #c7c7c7;
-    background-color: #272727;
-    filter: drop-shadow(0px 0px 3px #0000003b);
-}
-
-.leader-passive-container {
-    position: absolute;
-    border-radius: 0px 6px 0px 0px;
-    left: 0;
-    bottom: 0;
-    height: 80px;
-    padding: 6px;
-    width: 45%;
-    background-color: #00000096;
-    border-top: 1px solid rgb(127 127 127 / 33%);
-    border-right: 1px solid rgb(64 64 64 / 25%);
-}
-
-.leader-signet-container {
-    position: absolute;
-    border-radius: 6px 0px 0px 0px;
-    right: 0;
-    bottom: 0;
-    height: 80px;
-    padding: 6px;
-    width: 45%;
-    background-color: rgb(44 32 10 / 59%);
-    border-top: 1px solid rgb(255 165 0 / 33%);
-    border-left: 1px solid rgb(127 82 0 / 25%);
-}
-
-.leader-passive-name,
-.leader-signet-name {
-    margin-bottom: 8px;
-}
-
-.leader-passive-description,
-.leader-signet-description {
-    font-family: "Roboto", "Verdana";
-    font-weight: initial;
-    font-size: small;
-    color: #e1e1e1;
-    white-space: pre-wrap;
+.leader-card.full-picture {
+    border: none;
+    border-radius: 20px;
+    width: 532px;
+    height: 372px;
+    background-color: black;
+    background-position: center;
 }
 
 .control-button {
@@ -145,14 +67,7 @@
     background: #2c2c2c73;
 }
 
-.leader-card.full-picture {
-    border: none;
-    border-radius: 20px;
-    width: 532px;
-    height: 372px;
-    background-color: black;
-    background-position: center;
-}
+
 
 .control-bar {
     width: 100%;

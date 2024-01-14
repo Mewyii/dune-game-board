@@ -20,6 +20,8 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   imperiumCardForm!: FormGroup;
 
+  editMode = false;
+
   factions = [...activeFactionTypes, ...passiveFactionTypes, ''];
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes];
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes]; // Add other reward types
@@ -81,6 +83,10 @@ export class CardEditorComponent implements OnInit, OnChanges {
             })
           );
         });
+      }
+
+      if (newImperiumCard.name.en !== '') {
+        this.editMode = true;
       }
     }
   }

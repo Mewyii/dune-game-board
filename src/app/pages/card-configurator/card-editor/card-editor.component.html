@@ -1,13 +1,12 @@
-<!-- imperium-card-form.component.html -->
 <form [formGroup]="imperiumCardForm">
-  <div class="form-group" formGroupName="name">
-    <mat-form-field class="medium-text-field">
+  <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
+    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (English)</mat-label>
-      <input matInput formControlName="en" />
+      <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (German)</mat-label>
-      <input matInput formControlName="de" />
+      <input matInput formControlName="de" [readonly]="editMode" />
     </mat-form-field>
   </div>
 

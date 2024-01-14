@@ -1,0 +1,29 @@
+<div class="leader-card" [style.background-image]="'url(' + leader.imageUrl + ')'">
+  <div class="leader-header">
+    <div class="leader-title">
+      {{ translateService.translate(leader.name).toLocaleLowerCase() }}
+    </div>
+    <div class="leader-house">{{ translateService.translate(leader.house).toLocaleLowerCase() }}</div>
+  </div>
+
+  <div class="leader-passive-container">
+    <div class="leader-passive-name">
+      {{ translateService.translate(leader.passiveName).toLocaleLowerCase() }}
+    </div>
+    <div
+      class="leader-passive-description"
+      [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
+    ></div>
+  </div>
+  <div class="leader-signet-container">
+    <div class="leader-signet-name">
+      {{ translateService.translate(leader.signetName).toLocaleLowerCase() }}
+    </div>
+    <div
+      class="leader-signet-description"
+      [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"
+    ></div>
+  </div>
+  <div class="deck-indicator">{{ translateService.translate(deckName) }}</div>
+  <div class="discard-indicator">{{ translateService.translate(discardName) }}</div>
+</div>

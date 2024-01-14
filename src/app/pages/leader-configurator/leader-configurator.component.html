@@ -1,1 +1,34 @@
-<p>leader-configurator works!</p>
+<div class="cards-configurator">
+  <div class="cards-manager">
+    <div class="action-bar">
+      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()">
+        <mat-icon>download</mat-icon>
+      </button>
+      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
+      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()">
+        <mat-icon>upload</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
+        <mat-icon>hide_source</mat-icon>
+      </button>
+    </div>
+    <div class="cards-preview-container">
+      <ng-container *ngFor="let leader of leaders">
+        <div class="card-container">
+          <dune-leader-card [leader]="leader"></dune-leader-card>
+          <div class="card-action-bar" *ngIf="showControls">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(leader)">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(leader.name.en)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
