@@ -50,7 +50,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner zieht ein Schlachtschiff zurück oder verliert einen Trupp.',
       en: 'Each opponent retreats a battleship or loses one troop.',
     },
-    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'attack-value' }, { type: 'attack-value' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'sword' }, { type: 'sword' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_6.png',
   },
   {
@@ -62,7 +62,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner {resource:card-discard}.',
       en: 'Each opponent {resource:card-discard}.',
     },
-    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'attack-value' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'sword' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_4.png',
   },
   {
@@ -74,7 +74,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '{resource:card-destroy}. Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:card-draw}',
       en: '{resource:card-destroy}. If you have another emperor card in play: {resource:card-draw}',
     },
-    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'attack-value' }, { type: 'card-destroy' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'sword' }, { type: 'card-destroy' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_2.png',
   },
   {
@@ -98,7 +98,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'emperor',
     agentEffects: [{ type: 'card-draw' }],
     fieldAccess: ['emperor', 'guild', 'bene', 'landsraad', 'town'],
-    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'attack-value' }, { type: 'attack-value' }],
+    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'sword' }, { type: 'sword' }],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_3.png',
   },
   {
@@ -154,8 +154,8 @@ export const imperiumCards: ImperiumCard[] = [
       en: '{resource:card-draw}. If you have another fremen card in play: {resource:card-draw}',
     },
     customRevealEffect: {
-      de: '{resource:attack-value}{resource:attack-value}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Fremen-Karten davon erwerben.',
-      en: '{resource:attack-value}{resource:attack-value}. Reveal the top 5 cards of the imperium deck. You may acquire fremen cards from them.',
+      de: '{resource:sword}{resource:sword}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Fremen-Karten davon erwerben.',
+      en: '{resource:sword}{resource:sword}. Reveal the top 5 cards of the imperium deck. You may acquire fremen cards from them.',
     },
     imageUrl: '/assets/images/action-backgrounds/sandworm.png',
   },
@@ -164,13 +164,8 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 5,
     faction: 'fremen',
     fieldAccess: ['fremen', 'town', 'spice'],
-    agentEffects: [{ type: 'troop' }, { type: 'battle-insert' }],
-    revealEffects: [
-      { type: 'persuasion', amount: 1 },
-      { type: 'troop' },
-      { type: 'attack-value' },
-      { type: 'attack-value' },
-    ],
+    agentEffects: [{ type: 'troop' }, { type: 'combat' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'troop' }, { type: 'sword' }, { type: 'sword' }],
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors.png',
   },
   {
@@ -229,9 +224,9 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       { type: 'persuasion', amount: 2 },
       { type: 'separator' },
-      { type: 'attack-value' },
-      { type: 'attack-value' },
-      { type: 'attack-value' },
+      { type: 'sword' },
+      { type: 'sword' },
+      { type: 'sword' },
     ],
     imageUrl: '/assets/images/action-backgrounds/assault.png',
   },

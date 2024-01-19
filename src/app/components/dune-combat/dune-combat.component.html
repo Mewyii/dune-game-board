@@ -117,7 +117,7 @@
     <img class="battlefield-background" [src]="'assets/images/battefield_background.png'" />
     <div class="score-legend">
       <div class="legend-container">
-        <img class="legend-icon" [src]="getRewardTypePath('attack-value')" />
+        <img class="legend-icon" [src]="getRewardTypePath('sword')" />
         <span>=</span>
         <div class="legend-description">1</div>
       </div>
@@ -130,7 +130,7 @@
         class="legend-container"
         *ngIf="boardSettings.content === 'custom-advanced' || boardSettings.content === 'custom-expert'"
       >
-        <img class="legend-icon" [src]="getRewardTypePath('ship')" />
+        <img class="legend-icon" [src]="getRewardTypePath('dreadnought')" />
         <span>=</span>
         <div class="legend-description">3</div>
       </div>

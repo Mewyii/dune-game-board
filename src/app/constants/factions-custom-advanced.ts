@@ -13,7 +13,7 @@ export const factionsCustomAdvanced: Faction[] = [
         title: { de: 'fremenkrieger', en: 'fremen warriors' },
         actionType: 'fremen',
         costs: [{ type: 'water' }],
-        rewards: [{ type: 'troop', amount: 2 }, { type: 'battle-insert' }],
+        rewards: [{ type: 'troop', amount: 2 }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
         isBattlefield: true,
       },
@@ -94,7 +94,7 @@ export const factionsCustomAdvanced: Faction[] = [
         title: { de: 'heighliner', en: 'heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 4 }, { type: 'battle-insert' }],
+        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 4 }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
         isBattlefield: true,
       },
@@ -155,7 +155,7 @@ export const factionsCustomAdvanced: Faction[] = [
         type: 'troop',
       },
       {
-        type: 'battle-insert',
+        type: 'combat',
       },
     ],
     levelFourReward: [

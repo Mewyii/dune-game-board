@@ -1,4 +1,4 @@
-export const combatUnitTypes = ['troop', 'ship'] as const;
+export const combatUnitTypes = ['troop', 'dreadnought'] as const;
 
 export type CombatUnitType = (typeof combatUnitTypes)[number];
 

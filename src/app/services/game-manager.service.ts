@@ -371,7 +371,7 @@ export class GameManager {
       if (reward.type === 'mentat') {
         this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
       }
-      if (reward.type === 'battle-insert') {
+      if (reward.type === 'combat') {
         canEnterCombat = true;
       }
     }

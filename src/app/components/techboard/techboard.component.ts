@@ -15,10 +15,10 @@ export class TechboardComponent implements OnInit {
     actionType: 'landsraad',
     costs: [{ type: 'currency', amount: 4 }],
     rewards: [
-      { type: 'ship' },
+      { type: 'dreadnought' },
       { type: 'separator', width: 10, iconHeight: 50 },
       { type: 'tech-reduced-three' },
-      { type: 'battle-insert' },
+      { type: 'combat' },
     ],
     pathToImage: 'assets/images/action-backgrounds/industry_2.png',
     isBattlefield: false,

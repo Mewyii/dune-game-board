@@ -132,8 +132,8 @@ export const leaders: Leader[] = [
     },
     signetName: { de: 'verstecktes gift', en: 'hidden poison' },
     signetDescription: {
-      de: '{resource:signet-token}. Du kannst ihn während des Kampfes entsorgen, um {resource:attack-value} zu erhalten.',
-      en: '{resource:signet-token}. You may trash it during combat to get {resource:attack-value}.',
+      de: '{resource:signet-token}. Du kannst ihn während des Kampfes entsorgen, um {resource:sword} zu erhalten.',
+      en: '{resource:signet-token}. You may trash it during combat to get {resource:sword}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/feyd.png',
@@ -149,8 +149,8 @@ export const leaders: Leader[] = [
     },
     signetName: { de: 'vorgetäuschte schwäche', en: 'feigned weakness' },
     signetDescription: {
-      de: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:attack-value}{resource:attack-value}{resource:separator}{resource:intrigue} zu erhalten.',
-      en: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Trash it at your reveal turn to get {resource:attack-value}{resource:attack-value}{resource:separator}{resource:intrigue}.',
+      de: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:separator}{resource:intrigue} zu erhalten.',
+      en: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:separator}{resource:intrigue}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/hasimir.png',

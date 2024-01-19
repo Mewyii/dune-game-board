@@ -5,10 +5,10 @@ export const ix: ActionField = {
   actionType: 'landsraad',
   costs: [{ type: 'currency', amount: 4 }],
   rewards: [
-    { type: 'ship' },
+    { type: 'dreadnought' },
     { type: 'separator', width: 10, iconHeight: 55 },
     { type: 'tech-reduced-three' },
-    { type: 'battle-insert' },
+    { type: 'combat' },
   ],
   pathToImage: 'assets/images/action-backgrounds/industry_2.png',
   isBattlefield: false,
