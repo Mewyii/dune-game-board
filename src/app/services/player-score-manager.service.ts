@@ -71,7 +71,7 @@ export class PlayerScoreManager {
     this.scoreRewards.shift();
 
     if (this.settingsService.settings.content === 'custom-advanced') {
-      this.finaleTrigger = 8;
+      this.finaleTrigger = 9;
 
       this.scoreRewards[0].reward = { type: 'currency' };
       this.scoreRewards[2].reward = { type: 'persuasion', amount: 1 };
@@ -84,7 +84,7 @@ export class PlayerScoreManager {
       this.scoreRewards[12].reward = { type: 'currency' };
     }
     if (this.settingsService.settings.content === 'custom-expert') {
-      this.finaleTrigger = 8;
+      this.finaleTrigger = 9;
 
       this.scoreRewards[0].reward = { type: 'currency' };
       this.scoreRewards[2].reward = { type: 'persuasion', amount: 1 };
@@ -135,9 +135,11 @@ export class PlayerScoreManager {
   }
 
   public addFactionScore(playerId: number, actionType: ActionType, score: number) {
+    let factionRewards: Reward[] = [];
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
+
     if (playerScore) {
       if (actionType === 'fremen' || actionType === 'bene' || actionType === 'guild' || actionType === 'emperor') {
         const newScore = playerScore[actionType] + score;
@@ -152,31 +154,14 @@ export class PlayerScoreManager {
         if (newScore === this.factionFriendshipTreshold) {
           const faction = this.settingsService.factions.find((x) => x.type === actionType);
           if (faction && faction.levelTwoReward) {
-            for (let reward of faction.levelTwoReward) {
-              if (reward.type === 'currency' || reward.type === 'spice' || reward.type === 'water') {
-                this.playerManager.addResourceToPlayer(playerId, reward.type, reward.amount ?? 1);
-              }
-              if (reward.type === 'troop') {
-                this.combatManager.addPlayerTroopsToGarrison(playerId, reward.amount ?? 1);
-              }
-              if (reward.type === 'victory-point') {
-                this.addPlayerScore(playerId, 'victoryPoints', reward.amount ?? 1);
-              }
-            }
+            factionRewards = faction.levelTwoReward;
           }
         }
 
         if (newScore === this.factionAllianceTreshold) {
           const faction = this.settingsService.factions.find((x) => x.type === actionType);
           if (faction && faction.levelFourReward) {
-            for (let reward of faction.levelFourReward) {
-              if (reward.type === 'currency' || reward.type === 'spice' || reward.type === 'water') {
-                this.playerManager.addResourceToPlayer(playerId, reward.type, reward.amount ?? 1);
-              }
-              if (reward.type === 'victory-point') {
-                this.addPlayerScore(playerId, 'victoryPoints', reward.amount ?? 1);
-              }
-            }
+            factionRewards = faction.levelFourReward;
           }
         }
 
@@ -185,6 +170,8 @@ export class PlayerScoreManager {
         }
       }
     }
+
+    return factionRewards;
   }
 
   public addPlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number) {

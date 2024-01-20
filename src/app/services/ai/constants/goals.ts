@@ -69,10 +69,10 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   warship: {
-    baseDesire: 0.5,
+    baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'currency', virtualResources) -
-      0.0125 * (gameState.currentTurn - 1) -
+      0.01 * getResourceAmount(player, 'currency', virtualResources) -
+      0.01 * (gameState.currentTurn - 1) -
       0.1 * getPlayerWarshipCount(gameState),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'currency', virtualResources) > 3,

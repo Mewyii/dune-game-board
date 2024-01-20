@@ -313,64 +313,38 @@ export class GameManager {
       }
     }
 
+    this.setPlayerOnField(field.title.en);
+
     let unitsGainedThisTurn = 0;
     let canEnterCombat = false;
     let canDestroyOrDrawCard = false;
 
     for (let reward of field.rewards) {
       if (!field.hasRewardOptions) {
-        if (isResource(reward)) {
-          this.playerManager.addResourceToPlayer(this.activeAgentPlacementPlayerId, reward.type, reward.amount ?? 1);
-          if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
-            const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
-            this.playerManager.addResourceToPlayer(this.activeAgentPlacementPlayerId, reward.type, accumulatedSpice);
-          }
+        const aiInfo = this.addRewardToPlayer(reward);
+        unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+        canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+
+        if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
+          const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
+          this.playerManager.addResourceToPlayer(this.activeAgentPlacementPlayerId, reward.type, accumulatedSpice);
         }
-        if (
-          reward.type === 'tech' ||
-          reward.type === 'tech-reduced' ||
-          reward.type === 'tech-reduced-two' ||
-          reward.type === 'tech-reduced-three'
-        ) {
-          const agents =
-            reward.type === 'tech'
-              ? 1
-              : reward.type === 'tech-reduced'
-              ? 2
-              : reward.type === 'tech-reduced-two'
-              ? 3
-              : reward.type === 'tech-reduced-three'
-              ? 4
-              : 0;
-          this.playerManager.addTechAgentsToPlayer(this.activeAgentPlacementPlayerId, agents);
-        }
-        if (reward.type === 'intrigue') {
-          this.playerManager.addIntriguesToPlayer(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
-        }
-        if (reward.type === 'troop') {
-          this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
-          unitsGainedThisTurn += reward.amount ?? 1;
-        }
-        if (reward.type === 'card-draw') {
-          this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
-        }
-        if (reward.type === 'card-destroy') {
-          this.playerManager.addFocusTokens(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
-        }
-        if (reward.type == 'card-draw-or-destroy') {
-          canDestroyOrDrawCard = true;
-        }
-      }
-      if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
-        this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
-      }
-      if (reward.type === 'sword-master') {
-        this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
-        this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
       }
       if (reward.type === 'mentat') {
         this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
       }
+      if (reward.type === 'combat') {
+        canEnterCombat = true;
+      }
+    }
+
+    const factionRewards = this.playerScoreManager.addFactionScore(this.activeAgentPlacementPlayerId, field.actionType, 1);
+
+    for (let reward of factionRewards) {
+      const aiInfo = this.addRewardToPlayer(reward);
+      unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+      canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+
       if (reward.type === 'combat') {
         canEnterCombat = true;
       }
@@ -432,8 +406,6 @@ export class GameManager {
       }
     }
 
-    this.setPlayerOnField(field.title.en);
-    this.playerScoreManager.addFactionScore(this.activeAgentPlacementPlayerId, field.actionType, 1);
     this.removeAgentFromPlayer(this.activeAgentPlacementPlayerId);
 
     this.loggingService.logAgentAction(field);
@@ -592,5 +564,61 @@ export class GameManager {
     } else {
       return playerScores.some((x) => x.victoryPoints > 7);
     }
+  }
+
+  private addRewardToPlayer(reward: Reward) {
+    const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false };
+    if (isResource(reward)) {
+      this.playerManager.addResourceToPlayer(this.activeAgentPlacementPlayerId, reward.type, reward.amount ?? 1);
+    }
+    if (
+      reward.type === 'tech' ||
+      reward.type === 'tech-reduced' ||
+      reward.type === 'tech-reduced-two' ||
+      reward.type === 'tech-reduced-three'
+    ) {
+      const agents =
+        reward.type === 'tech'
+          ? 1
+          : reward.type === 'tech-reduced'
+          ? 2
+          : reward.type === 'tech-reduced-two'
+          ? 3
+          : reward.type === 'tech-reduced-three'
+          ? 4
+          : 0;
+      this.playerManager.addTechAgentsToPlayer(this.activeAgentPlacementPlayerId, agents);
+    }
+    if (reward.type === 'intrigue') {
+      this.playerManager.addIntriguesToPlayer(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+    }
+    if (reward.type === 'troop') {
+      this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
+    }
+    if (reward.type === 'card-draw') {
+      this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+    }
+    if (reward.type === 'card-destroy') {
+      this.playerManager.addFocusTokens(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+    }
+    if (reward.type == 'card-draw-or-destroy') {
+      aiInfo.canDestroyOrDrawCard = true;
+    }
+    if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
+      this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
+    }
+    if (reward.type === 'sword-master') {
+      this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
+      this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
+    }
+    if (reward.type === 'mentat') {
+      this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
+    }
+    if (reward.type === 'victory-point') {
+      this.playerScoreManager.addPlayerScore(this.activeAgentPlacementPlayerId, 'victoryPoints', reward.amount ?? 1);
+    }
+
+    return aiInfo;
   }
 }
