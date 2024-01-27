@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { GameBoardComponent } from './pages/game-board/game-board.component';
 import { CardConfiguratorComponent } from './pages/card-configurator/card-configurator.component';
 import { LeaderConfiguratorComponent } from './pages/leader-configurator/leader-configurator.component';
+import { AboutComponent } from './pages/about/about.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,12 @@ const routes: Routes = [
     title: 'Dune Leader-Configurator',
     path: 'leader-configurator',
     component: LeaderConfiguratorComponent,
+    pathMatch: 'full',
+  },
+  {
+    title: 'About',
+    path: 'about',
+    component: AboutComponent,
     pathMatch: 'full',
   },
 ];

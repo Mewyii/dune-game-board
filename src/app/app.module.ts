@@ -47,6 +47,7 @@ import { NotificationComponent } from './components/notification/notification.co
 import { LeaderCardComponent } from './components/_common/leader-card/leader-card.component';
 import { DialogLeaderEditorComponent } from './pages/leader-configurator/dialog-leader-editor/dialog-leader-editor.component';
 import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor/leader-editor.component';
+import { AboutComponent } from './pages/about/about.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor
     LeaderCardComponent,
     DialogLeaderEditorComponent,
     LeaderEditorComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

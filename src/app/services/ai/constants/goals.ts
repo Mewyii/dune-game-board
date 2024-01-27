@@ -233,7 +233,7 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'fold-space': {
-    baseDesire: 0.2,
+    baseDesire: 0.25,
     desireModifier: () => 0,
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
@@ -312,12 +312,12 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'trim-deck': {
-    baseDesire: 0.35,
+    baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
         -(0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn) +
-          0.125 * player.cardsBought -
-          0.175 * (player.cardsTrimmed + player.focusTokens),
+          0.1 * player.cardsBought -
+          0.15 * (player.cardsTrimmed + player.focusTokens),
         -0.4,
         0.4
       ),
@@ -431,7 +431,7 @@ export const aiGoals: FieldsForGoals = {
       getResourceAmount(player, 'water', virtualResources) > 1,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'spice', virtualResources) > 7,
     viableFields: {
-      'imperial basin': (player, gameState) => 0.2 + 0.4 * getAccumulatedSpice(gameState, 'imperial basin'),
+      'imperial basin': (player, gameState) => 0.25 + 0.4 * getAccumulatedSpice(gameState, 'imperial basin'),
       'hagga basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
@@ -445,7 +445,7 @@ export const aiGoals: FieldsForGoals = {
           player,
           'water',
           2,
-          0.8 + 0.1 * getAccumulatedSpice(gameState, 'hagga basin'),
+          0.75 + 0.1 * getAccumulatedSpice(gameState, 'hagga basin'),
           virtualResources
         ),
     },
