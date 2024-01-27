@@ -8,7 +8,9 @@ import { getFactionTypePath } from '../helpers/faction-types';
 export class DuneSymbolsPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: string): SafeHtml {
+  transform(value: string, iconSize?: string): SafeHtml {
+    const iconWidth = iconSize ?? '16px';
+    const iconHeight = iconSize ?? '16px';
     let returnValue = value;
 
     const resourceRegExp = /{resource:.*?}/g;
@@ -19,7 +21,13 @@ export class DuneSymbolsPipe implements PipeTransform {
       const resouceImgPath = getRewardTypePath(resource);
       returnValue = returnValue.replace(
         resourceString[0],
-        '<img style="min-width: 16px;height: 16px;object-fit:scale-down; margin-bottom:-3px" src="' + resouceImgPath + '"/>'
+        '<img style="min-width: ' +
+          iconWidth +
+          ';height: ' +
+          iconHeight +
+          ';object-fit:scale-down; margin-bottom:-3px" src="' +
+          resouceImgPath +
+          '"/>'
       );
     }
 

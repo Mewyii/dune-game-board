@@ -1,0 +1,15 @@
+.page-container {
+    display: flex;
+    gap: 1vh;
+    flex-direction: column;
+    font-family: "Roboto", "Verdana";
+    font-size: x-large;
+    font-weight: normal;
+    color: white;
+}
+
+.credits-container, .about-container {
+    background: #534235;
+    padding: 16px;
+    border-radius: 5px;
+}

@@ -14,8 +14,9 @@
   </div>
   <app-playerboard *ngIf="settingsService.settings.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">
+    <dune-game-manual *ngIf="settingsService.settings.mode === 'game' && gameManager.currentTurn === 0"></dune-game-manual>
     <!-- <dune-events *ngIf="settingsService.settings.mode === 'game'"></dune-events> -->
-    <dune-minor-houses *ngIf="settingsService.settings.mode === 'game'"></dune-minor-houses>
+    <!-- <dune-minor-houses *ngIf="settingsService.settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders></dune-leaders>
     <dune-ai-tile *ngIf="settingsService.settings.mode === 'game'"></dune-ai-tile>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->

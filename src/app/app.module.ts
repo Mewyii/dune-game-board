@@ -48,6 +48,7 @@ import { LeaderCardComponent } from './components/_common/leader-card/leader-car
 import { DialogLeaderEditorComponent } from './pages/leader-configurator/dialog-leader-editor/dialog-leader-editor.component';
 import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor/leader-editor.component';
 import { AboutComponent } from './pages/about/about.component';
+import { GameManualComponent } from './pages/game-board/game-manual/game-manual.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { AboutComponent } from './pages/about/about.component';
     DialogLeaderEditorComponent,
     LeaderEditorComponent,
     AboutComponent,
+    GameManualComponent,
   ],
   imports: [
     BrowserModule,
