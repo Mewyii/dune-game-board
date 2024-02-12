@@ -18,13 +18,18 @@
     <div class="cards-preview-container">
       <ng-container *ngFor="let leader of leaders">
         <div class="card-container">
-          <dune-leader-card [leader]="leader"></dune-leader-card>
+          <div #cardimg>
+            <dune-leader-card [leader]="leader"></dune-leader-card>
+          </div>
           <div class="card-action-bar" *ngIf="showControls">
             <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(leader)">
               <mat-icon>settings</mat-icon>
             </button>
             <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(leader.name.en)">
               <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, leader.name.en)">
+              <mat-icon>download</mat-icon>
             </button>
           </div>
         </div>

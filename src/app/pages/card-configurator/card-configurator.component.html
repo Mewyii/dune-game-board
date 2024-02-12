@@ -18,13 +18,18 @@
     <div class="cards-preview-container">
       <ng-container *ngFor="let card of imperiumCards">
         <div class="card-container">
-          <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+          <div #cardimg>
+            <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+          </div>
           <div class="card-action-bar" *ngIf="showControls">
             <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)">
               <mat-icon>settings</mat-icon>
             </button>
             <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)">
               <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)">
+              <mat-icon>download</mat-icon>
             </button>
           </div>
         </div>

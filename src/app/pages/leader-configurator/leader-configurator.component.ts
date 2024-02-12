@@ -4,6 +4,7 @@ import { Leader } from 'src/app/constants/leaders';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leader-editor.component';
+import * as htmlToImage from 'html-to-image';
 
 @Component({
   selector: 'dune-leader-configurator',
@@ -91,6 +92,22 @@ export class LeaderConfiguratorComponent {
         this.leadersService.editLeader(result);
       }
     });
+  }
+
+  onSaveCardClicked(el: HTMLDivElement, name: string) {
+    if (el) {
+      htmlToImage
+        .toPng(el)
+        .then(function (dataUrl) {
+          var link = document.createElement('a');
+          link.download = name + '.png';
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    }
   }
 
   onToggleControlsClicked() {

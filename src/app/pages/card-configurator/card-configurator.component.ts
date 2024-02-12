@@ -4,6 +4,7 @@ import { CardConfiguratorService } from 'src/app/services/configurators/card-con
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
 import { MatDialog } from '@angular/material/dialog';
+import * as htmlToImage from 'html-to-image';
 
 @Component({
   selector: 'dune-card-configurator',
@@ -29,11 +30,9 @@ export class CardConfiguratorComponent implements OnInit {
   onExportCardsClicked() {
     const jsonContent = JSON.stringify(this.imperiumCards, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
-
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = 'imperium_cards.json';
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -97,6 +96,22 @@ export class CardConfiguratorComponent implements OnInit {
         this.cardConfiguratorService.editCard(result);
       }
     });
+  }
+
+  onSaveCardClicked(el: HTMLDivElement, name: string) {
+    if (el) {
+      htmlToImage
+        .toPng(el)
+        .then(function (dataUrl) {
+          var link = document.createElement('a');
+          link.download = name + '.png';
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    }
   }
 
   onToggleControlsClicked() {
