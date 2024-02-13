@@ -14,6 +14,7 @@ import * as htmlToImage from 'html-to-image';
 export class CardConfiguratorComponent implements OnInit {
   public imperiumCards: ImperiumCard[] = [];
   public showControls = true;
+  public imagePadding = 0;
 
   constructor(
     public translateService: TranslateService,

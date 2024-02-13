@@ -15,10 +15,16 @@
         <mat-icon>hide_source</mat-icon>
       </button>
     </div>
+    <div class="action-bar">
+      <mat-form-field>
+        <mat-label>Card Export Border Size</mat-label>
+        <input matInput type="number" [(ngModel)]="imagePadding" />
+      </mat-form-field>
+    </div>
     <div class="cards-preview-container">
       <ng-container *ngFor="let leader of leaders">
         <div class="card-container">
-          <div #cardimg>
+          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
             <dune-leader-card [leader]="leader"></dune-leader-card>
           </div>
           <div class="card-action-bar" *ngIf="showControls">

@@ -14,6 +14,7 @@ import * as htmlToImage from 'html-to-image';
 export class LeaderConfiguratorComponent {
   public leaders: Leader[] = [];
   public showControls = true;
+  public imagePadding = 0;
 
   constructor(public translateService: TranslateService, public leadersService: LeadersService, public dialog: MatDialog) {}
 
