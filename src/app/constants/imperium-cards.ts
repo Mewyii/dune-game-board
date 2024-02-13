@@ -14,34 +14,6 @@ export interface ImperiumCard {
 
 export const imperiumCards: ImperiumCard[] = [
   {
-    name: { de: 'Aufmarsch', en: 'Deployment' },
-    fieldAccess: ['landsraad'],
-    revealEffects: [{ type: 'troop' }],
-    imageUrl: '/assets/images/action-backgrounds/troops_3.png',
-  },
-  {
-    name: { de: 'Forschung', en: 'Research' },
-    fieldAccess: ['landsraad'],
-    revealEffects: [{ type: 'tech' }],
-    imageUrl: '/assets/images/action-backgrounds/industry.png',
-  },
-  {
-    name: { de: 'Imperialer Agent', en: 'Imperial Agent' },
-    persuasionCosts: 2,
-    faction: 'emperor',
-    fieldAccess: ['landsraad', 'town'],
-    revealEffects: [{ type: 'persuasion', amount: 2 }],
-    imageUrl: '/assets/images/action-backgrounds/soldiers.png',
-  },
-  {
-    name: { de: 'Bene Gesserit Kontakt', en: 'Bene Gesserit Kontakt' },
-    persuasionCosts: 2,
-    faction: 'bene',
-    fieldAccess: ['landsraad', 'town'],
-    revealEffects: [{ type: 'persuasion', amount: 2 }],
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
-  },
-  {
     name: { de: 'Sardaukar Lasgun-Team', en: 'Sardaukar Lasgun Team' },
     persuasionCosts: 3,
     faction: 'emperor',
@@ -66,42 +38,6 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/sardaukar_4.png',
   },
   {
-    name: { de: 'Sardaukar Kampfriten', en: 'Sardaukar Battle Rites' },
-    persuasionCosts: 4,
-    faction: 'emperor',
-    fieldAccess: ['emperor', 'town'],
-    customAgentEffect: {
-      de: '{resource:card-destroy}. Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:card-draw}',
-      en: '{resource:card-destroy}. If you have another emperor card in play: {resource:card-draw}',
-    },
-    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'sword' }, { type: 'card-destroy' }],
-    imageUrl: '/assets/images/action-backgrounds/sardaukar_2.png',
-  },
-  {
-    name: { de: 'Imperialer Caid', en: 'Imperial Caid' },
-    persuasionCosts: 3,
-    faction: 'emperor',
-    fieldAccess: ['emperor', 'landsraad', 'town'],
-    customAgentEffect: {
-      de: '',
-      en: '{resource:troop}. If you have another emperor card in play: {resource:troop}',
-    },
-    customRevealEffect: {
-      de: '{resource:persuasion}. Decke 5 Karten des Imperium-Stapels auf. Du kannst Imperator-Karten davon erwerben.',
-      en: '{resource:persuasion}. Reveal the top 5 cards of the imperium deck. You may acquire emperor cards from them.',
-    },
-    imageUrl: '/assets/images/action-backgrounds/sardaukar_5.png',
-  },
-  {
-    name: { de: 'Imperialer Burseg', en: 'Imperial Burseg' },
-    persuasionCosts: 6,
-    faction: 'emperor',
-    agentEffects: [{ type: 'card-draw' }],
-    fieldAccess: ['emperor', 'guild', 'bene', 'landsraad', 'town'],
-    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'sword' }, { type: 'sword' }],
-    imageUrl: '/assets/images/action-backgrounds/sardaukar_3.png',
-  },
-  {
     name: { de: 'Loyalitätsbekundung', en: 'Pledge of Loyalty' },
     persuasionCosts: 2,
     faction: 'emperor',
@@ -112,37 +48,6 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'currency' }],
     imageUrl: '/assets/images/action-backgrounds/empire_ambassador_2.png',
-  },
-  {
-    name: { de: 'Imperiale Bestechung', en: 'Imperial Bribe' },
-    persuasionCosts: 1,
-    faction: 'emperor',
-    fieldAccess: ['bene', 'guild', 'landsraad'],
-    customAgentEffect: {
-      de: 'Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:currency}',
-      en: 'If you have another emperor card in play: {resource:currency}',
-    },
-    revealEffects: [{ type: 'currency', amount: 2 }, { type: 'helper-arrow-right' }, { type: 'faction-influence-choice' }],
-    imageUrl: '/assets/images/action-backgrounds/wealth_2.png',
-  },
-  {
-    name: { de: 'Wüsten-Führer', en: 'Desert Guide' },
-    persuasionCosts: 1,
-    faction: 'fremen',
-    fieldAccess: ['spice'],
-    customAgentEffect: {
-      de: '{resource:spice}. Wenn du eine weitere Fremen-Karte im Spiel hast: {resource:spice}',
-      en: '{resource:spice}. If you have another fremen card in play: {resource:spice}',
-    },
-    revealEffects: [{ type: 'persuasion', amount: 1 }],
-    imageUrl: '/assets/images/action-backgrounds/fremen_warriors_2.png',
-  },
-  {
-    name: { de: 'Fangbecken', en: 'Catchbasin' },
-    persuasionCosts: 2,
-    faction: 'fremen',
-    revealEffects: [{ type: 'water' }, { type: 'water' }],
-    imageUrl: '/assets/images/action-backgrounds/research_station.png',
   },
   {
     name: { de: 'Wüsten-Fortbewegung', en: 'Desert Travel' },
@@ -169,27 +74,6 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors.png',
   },
   {
-    name: { de: 'Fremen Sietch', en: 'Fremen Sietch' },
-    persuasionCosts: 7,
-    faction: 'fremen',
-    fieldAccess: ['fremen', 'town', 'spice'],
-    agentEffects: [{ type: 'water' }],
-    revealEffects: [{ type: 'persuasion', amount: 2 }, { type: 'water' }, { type: 'spice' }, { type: 'troop' }],
-    imageUrl: '/assets/images/action-backgrounds/desert_2.png',
-  },
-  {
-    name: { de: 'Gläubige', en: 'Faithful' },
-    persuasionCosts: 1,
-    faction: 'fremen',
-    fieldAccess: ['town'],
-    customAgentEffect: {
-      de: 'Wenn du eine Bene-Gesserit-Karte im Spiel hast: {resource:card-draw}',
-      en: 'If you have a bene gesserit card in play: {resource:card-draw}',
-    },
-    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'currency' }],
-    imageUrl: '/assets/images/action-backgrounds/faithful.png',
-  },
-  {
     name: { de: 'Ehrwürdige Mutter', en: 'Reverend Mother' },
     persuasionCosts: 4,
     faction: 'bene',
@@ -200,43 +84,5 @@ export const imperiumCards: ImperiumCard[] = [
       en: '{resource:persuasion}. Reveal the top 5 cards of the imperium deck. You may acquire bene gesserit cards from them.',
     },
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
-  },
-  {
-    name: { de: 'Den Glauben Verbreiten', en: 'Spreading the Faith' },
-    persuasionCosts: 2,
-    faction: 'bene',
-    fieldAccess: ['emperor', 'fremen', 'landsraad', 'town'],
-    customAgentEffect: {
-      de: 'Wenn du eine Fremen-Karte im Spiel hast: {resource:card-draw}',
-      en: 'If you have a fremen card in play: {resource:card-draw}',
-    },
-    revealEffects: [{ type: 'persuasion', amount: 1 }],
-    imageUrl: '/assets/images/action-backgrounds/book.png',
-  },
-  {
-    name: { de: 'Flächen Bombardierung', en: 'Area Bombardment' },
-    persuasionCosts: 6,
-    fieldAccess: ['emperor', 'guild', 'bene', 'fremen', 'landsraad', 'town'],
-    customAgentEffect: {
-      de: 'Lege {resource:troop} auf dieses Feld. Es kann nicht verwendet werden. Entferne {resource:troop} nach der nächsten Runde.',
-      en: 'Place {resource:troop} on this board space. It can not be used. Remove {resource:troop} after the next round.',
-    },
-    revealEffects: [
-      { type: 'persuasion', amount: 2 },
-      { type: 'separator' },
-      { type: 'sword' },
-      { type: 'sword' },
-      { type: 'sword' },
-    ],
-    imageUrl: '/assets/images/action-backgrounds/assault.png',
-  },
-  {
-    name: { de: 'Yueh, Verräter', en: 'Yueh, Traitor' },
-    persuasionCosts: 6,
-    customRevealEffect: {
-      de: 'Jeder Gegner verliert alle Truppen aus seiner Garnison. Entsorge diese Karte.',
-      en: 'Each opponent loses all garrisoned troops. Trash this card.',
-    },
-    imageUrl: '/assets/images/action-backgrounds/yueh.png',
   },
 ];
