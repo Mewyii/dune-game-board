@@ -52,6 +52,16 @@
     box-shadow: inset 0px 0px 50px #0000002b;
 }
 
+.location-owner-name {
+    position: absolute;
+    font-size: xx-small;
+    text-align: center;
+    bottom: 15px;
+    left: -30px;
+    width: 60px;
+    color: silver;
+}
+
 .border-remover {
     position: absolute;
     top: -1px;

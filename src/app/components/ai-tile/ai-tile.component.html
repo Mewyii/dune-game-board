@@ -41,18 +41,6 @@
         >Bad</mat-checkbox
       >
     </div>
-    <div class="info-container">
-      <div class="game-state-name">dune combat</div>
-      <mat-checkbox [checked]="getAIVariable('combat') === 'good'" (change)="setAIVariable('combat', 'good')"
-        >Good</mat-checkbox
-      >
-      <mat-checkbox [checked]="getAIVariable('combat') === 'okay'" (change)="setAIVariable('combat', 'okay')"
-        >Okay</mat-checkbox
-      >
-      <mat-checkbox [checked]="getAIVariable('combat') === 'bad'" (change)="setAIVariable('combat', 'bad')"
-        >Bad</mat-checkbox
-      >
-    </div>
   </div>
   <div class="heading-container" *ngIf="currentAIPlayer && showDetails">
     <div class="info-container">

@@ -2,6 +2,7 @@ import { LanguageString, Resource } from '../models';
 
 export interface LeaderImageOnly {
   name: LanguageString;
+  house?: LanguageString;
   type: 'old';
   imageUrl: string;
   playableByAI?: boolean;

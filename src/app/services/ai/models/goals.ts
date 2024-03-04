@@ -5,6 +5,7 @@ import { Player } from '../../player-manager.service';
 import { PlayerScore } from '../../player-score-manager.service';
 import { Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
+import { Conflict } from 'src/app/constants/conflicts';
 
 export type AIGoals =
   | 'high-council'
@@ -45,6 +46,7 @@ export interface GameState {
   isFinale: boolean;
   enemyPlayers: Player[];
   playerLeader: Leader | LeaderImageOnly;
+  conflict: Conflict;
 }
 
 export interface AIGoal {

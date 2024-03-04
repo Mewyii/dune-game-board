@@ -21,7 +21,7 @@ export const aiGoals: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.05 * (gameState.currentTurn - 1),
+      0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.033 * (gameState.currentTurn - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'currency', virtualResources) > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster === true || gameState.isFinale,

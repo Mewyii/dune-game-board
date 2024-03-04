@@ -31,30 +31,33 @@
 
 .deck-indicator {
     position: absolute;
-    top: calc(50% - 50px + 32px);
-    left: -51px;
-    width: 100px;
+    top: calc(50% - 66px);
+    left: 0px;
+    width: auto;
+    height: 100px;
     text-align: center;
-    transform: rotateZ(90deg);
-    padding: 8px 16px;
-    border-radius: 8px 8px 0px 0px;
+    padding: 16px 8px;
+    border-radius: 0px 8px 8px 0px;
     color: #c7c7c7;
     background-color: #272727;
-    filter: drop-shadow(0px 0px 3px #0000003b);
+    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.231372549));
+    writing-mode: vertical-lr;
 }
 
 .discard-indicator {
     position: absolute;
-    top: calc(50% - 50px + 32px);
-    right: -51px;
-    width: 100px;
+    top: calc(50% - 66px);
+    right: 0px;
+    width: auto;
+    height: 100px;
     text-align: center;
-    transform: rotateZ(270deg);
-    padding: 8px 16px;
-    border-radius: 8px 8px 0px 0px;
+    padding: 16px 8px;
+    border-radius: 0px 8px 8px 0px;
     color: #c7c7c7;
     background-color: #272727;
-    filter: drop-shadow(0px 0px 3px #0000003b);
+    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.231372549));
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
 }
 
 .leader-passive-container {

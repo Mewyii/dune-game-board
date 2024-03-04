@@ -25,7 +25,6 @@ export type AIDIfficultyTypes = 'easy' | 'medium' | 'hard';
 export interface AIVariables {
   imperiumRow: AIVariableValues;
   techTiles: AIVariableValues;
-  combat: AIVariableValues;
 }
 
 interface ViableField {
@@ -47,7 +46,7 @@ interface FactionInfluenceLock {
   providedIn: 'root',
 })
 export class AIManager {
-  private aiVariablesSubject = new BehaviorSubject<AIVariables>({ combat: 'okay', techTiles: 'good', imperiumRow: 'okay' });
+  private aiVariablesSubject = new BehaviorSubject<AIVariables>({ techTiles: 'good', imperiumRow: 'okay' });
   public aiVariables$ = this.aiVariablesSubject.asObservable();
 
   private aiPlayersSubject = new BehaviorSubject<AIPlayer[]>([]);
@@ -203,7 +202,7 @@ export class AIManager {
         const goalDesire =
           getDesire(goal, player, gameState, virtualResources) *
           (aiPlayer.personality[aiGoalId] ?? 1.0) *
-          this.getGameStateModifier(aiGoalId);
+          this.getGameStateModifier(aiGoalId, gameState.conflict.aiEvaluation);
         let desireCanBeFullfilled = false;
 
         if (goal.goalIsReachable(player, gameState, aiGoals, virtualResources) && goal.desiredFields) {
@@ -395,16 +394,16 @@ export class AIManager {
     return 'none';
   }
 
-  private getGameStateModifier(goal: AIGoals) {
+  private getGameStateModifier(goal: AIGoals, conflictEvaluation: AIVariableValues) {
     const aiVariables = this.aiVariables;
 
     let modifier = 1.0;
 
     if (goal === 'enter-combat' || goal === 'get-troops' || goal === 'warship') {
-      if (aiVariables.combat === 'good') {
+      if (conflictEvaluation === 'good') {
         modifier = 1.2;
       }
-      if (aiVariables.combat === 'bad') {
+      if (conflictEvaluation === 'bad') {
         modifier = 0.8;
       }
     } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin') {

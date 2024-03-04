@@ -140,8 +140,25 @@
     position: absolute;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     width: 175px;
+    gap: 2px;
+}
+
+.units-in-combat-container {
+    width: 275px;
+    min-height: 80px;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.units-in-combat-container.top {
+    align-items: flex-end;
+}
+
+.units-in-combat-container.right {
+    justify-content: flex-start;
 }
 
 .swords-marker {
@@ -156,36 +173,51 @@
 }
 
 .troop-marker {
-    width: 30px;
+    width: 40px;
     height: 30px;
-    border-radius: 25%;
-    border: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
+    animation-name: _ngcontent-ng-c2685453882_unit-marker-anim;
     animation-timing-function: ease-in-out;
     animation-duration: 1.5s;
     box-sizing: border-box;
+    mask-image: url(/assets/images/reward-markers/marker_troops_colored.png);
+    mask-size: contain;
+    mask-position: bottom;
+    mask-repeat: no-repeat;
+    mask-mode: luminance;
+    z-index: 1;
+    filter: saturate(1.5) brightness(0.75);
 }
 
+.troop-marker.combat {
+    width: 50px;
+    height: 35px;
+}
+
+
 .ship-marker {
-    width: 30px;
-    height: 30px;
-    border-radius: 25%;
-    border: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
-    transform: rotateX(45deg) rotateZ(45deg);
-    animation-name: unit-marker-anim;
+    width: 55px;
+    height: 40px;
+    animation-name: _ngcontent-ng-c2685453882_unit-marker-anim;
     animation-timing-function: ease-in-out;
     animation-duration: 1.5s;
     box-sizing: border-box;
+    mask-image: url(/assets/images/reward-markers/marker_ship_colored.png);
+    mask-size: contain;
+    mask-position: bottom;
+    mask-repeat: no-repeat;
+    mask-mode: luminance;
+    z-index: 1;
+    filter: saturate(1.5) brightness(0.75);
+}
+
+.ship-marker.combat {
+    width: 70px;
+    height: 45px;
 }
 
 .troop-marker.combat-insert,
 .ship-marker.combat-insert {
-    background-color: darkred;
-    background-image: url(/assets/images/reward-markers/marker_sword.png);
+    background-color: #4e0000;
     background-size: cover;
     background-position: center;
 }

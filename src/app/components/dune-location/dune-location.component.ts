@@ -5,6 +5,7 @@ import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { LeadersService } from 'src/app/services/leaders.service';
 
 @Component({
   selector: 'app-dune-location',
@@ -31,15 +32,24 @@ export class DuneLocationComponent implements OnInit {
   };
 
   public owner: Player | undefined;
+  public leaderInitials = '';
 
-  constructor(private locationManager: LocationManager, private playerManager: PlayerManager) {}
+  constructor(
+    private locationManager: LocationManager,
+    private playerManager: PlayerManager,
+    private leaderService: LeadersService
+  ) {}
 
   ngOnInit(): void {
     this.locationManager.locationOwnerId$(this.location.actionField.title.en).subscribe((ownerId) => {
       if (ownerId) {
         this.owner = this.playerManager.getPlayer(ownerId);
+        if (this.owner) {
+          this.leaderInitials = this.leaderService.getLeader(this.owner.id)?.house?.en ?? '';
+        }
       } else {
         this.owner = undefined;
+        this.leaderInitials = '';
       }
     });
   }

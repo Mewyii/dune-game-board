@@ -79,8 +79,12 @@
     <div class="info-container vertical">
       <div>units</div>
       <div class="units-control-bar">
-        <div class="troop-marker" [style.background-color]="currentPlayer.color"></div>
-        <div>{{ currentPlayerCombatUnits?.troopsInGarrison }}</div>
+        <div class="resource-display">
+          <img class="resource" [src]="getRewardTypePath('troop')" />
+          <div class="resource-amount on-background">
+            <span>{{ currentPlayerCombatUnits?.troopsInGarrison }}</span>
+          </div>
+        </div>
         <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromGarrisonClicked(currentPlayer.id)">
           <mat-icon>remove</mat-icon>
         </button>
@@ -89,8 +93,12 @@
         </button>
       </div>
       <div class="units-control-bar">
-        <div class="ship-marker" [style.background-color]="currentPlayer.color"></div>
-        <div>{{ currentPlayerCombatUnits?.shipsInGarrison }}</div>
+        <div class="resource-display">
+          <img class="resource" [src]="getRewardTypePath('dreadnought')" />
+          <div class="resource-amount on-background">
+            <span>{{ currentPlayerCombatUnits?.shipsInGarrison }}</span>
+          </div>
+        </div>
         <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromGarrisonClicked(currentPlayer.id)">
           <mat-icon>remove</mat-icon>
         </button>

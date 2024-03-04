@@ -487,6 +487,7 @@ export class GameManager {
         isFinale: this.isFinale,
         enemyPlayers: this.playerManager.players.filter((x) => x.id !== player.id),
         playerLeader: this.leadersService.getLeader(player.id)!,
+        conflict: this.conflictsService.currentConflict,
       });
     }
   }

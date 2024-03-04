@@ -14,29 +14,19 @@
         class="location-owner-indicator"
         [style.border-color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
-      ></div>
-      <div
-        class="location-owner-reward-area"
-        [style.background-color]="location.color"
       >
-        <img
-          class="location-owner-defenders-advantage"
-          [src]="'assets/images/reward-markers/marker_shield_2.png'"
-        />
+        <span class="location-owner-name">{{ leaderInitials }}</span>
+      </div>
+      <div class="location-owner-reward-area" [style.background-color]="location.color">
+        <img class="location-owner-defenders-advantage" [src]="'assets/images/reward-markers/marker_shield_2.png'" />
         <div class="connector"></div>
         <div class="location-owner-visitor-reward-container">
-          <img
-            class="location-owner-visitor-reward"
-            [src]="getRewardTypePath(location.ownerReward.type)"
-          />
+          <img class="location-owner-visitor-reward" [src]="getRewardTypePath(location.ownerReward.type)" />
           <div class="location-owner-visitor-reward-amount">
             {{ location.ownerReward.amount }}
           </div>
         </div>
-        <div
-          class="border-remover"
-          [style.background-color]="location.color"
-        ></div>
+        <div class="border-remover" [style.background-color]="location.color"></div>
       </div>
     </div>
   </ng-container>

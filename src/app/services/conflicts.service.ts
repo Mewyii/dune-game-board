@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, first } from 'rxjs';
 import { cloneDeep, random } from 'lodash';
+import { Conflict, conflicts } from '../constants/conflicts';
+import { shuffle } from '../helpers/common';
 
 export interface ConflictSet {
   id: number;
   columns: number;
   rows: number;
-  rounds: number;
+  roundTreshold: number;
   imageSize: number;
   imagePath: string;
 }
@@ -27,7 +29,7 @@ const conflictSets: ConflictSet[] = [
     id: 2,
     columns: 6,
     rows: 2,
-    rounds: 5,
+    roundTreshold: 5,
     imageSize: 1000,
     imagePath: 'assets/images/conflicts/lvl2.jpg',
   },
@@ -35,7 +37,7 @@ const conflictSets: ConflictSet[] = [
     id: 3,
     columns: 3,
     rows: 2,
-    rounds: 5,
+    roundTreshold: 10,
     imageSize: 500,
     imagePath: 'assets/images/conflicts/lvl3.jpg',
   },
@@ -45,11 +47,12 @@ const conflictSets: ConflictSet[] = [
   providedIn: 'root',
 })
 export class ConflictsService {
+  private conflicts = conflicts;
   private currentConflictSetSubject = new BehaviorSubject<ConflictSet>({
     id: 0,
     columns: 0,
     rows: 0,
-    rounds: 0,
+    roundTreshold: 0,
     imageSize: 0,
     imagePath: '',
   });
@@ -58,8 +61,17 @@ export class ConflictsService {
   private currentCardCoordinatesSubject = new BehaviorSubject<CardCoordinates>({ x: 0, y: 0 });
   public currentCardCoordinates$ = this.currentCardCoordinatesSubject.asObservable();
 
-  private cardCellExlusionsSubject = new BehaviorSubject<CardCell[]>([]);
-  public cardCellExlusions$ = this.cardCellExlusionsSubject.asObservable();
+  private playedConflictsSubject = new BehaviorSubject<string[]>([]);
+  public playedConflicts$ = this.playedConflictsSubject.asObservable();
+
+  private currentConflictSubject = new BehaviorSubject<Conflict>({
+    name: { de: 'Wüstenkraft', en: 'desert power' },
+    aiEvaluation: 'good',
+    lvl: 2,
+    row: 1,
+    column: 1,
+  });
+  public currentConflict$ = this.currentConflictSubject.asObservable();
 
   constructor() {
     const currentConflictSetString = localStorage.getItem('currentConflictSet');
@@ -72,24 +84,26 @@ export class ConflictsService {
       localStorage.setItem('currentConflictSet', JSON.stringify(currentConflictSet));
     });
 
-    const currentCardCoordinatesString = localStorage.getItem('currentCardCoordinates');
-    if (currentCardCoordinatesString) {
-      const currentCardCoordinates = JSON.parse(currentCardCoordinatesString) as CardCoordinates;
-      this.currentCardCoordinatesSubject.next(currentCardCoordinates);
+    const playedConflictsString = localStorage.getItem('playedConflicts');
+    if (playedConflictsString) {
+      const playedConflicts = JSON.parse(playedConflictsString) as string[];
+      this.playedConflictsSubject.next(playedConflicts);
     }
 
-    this.currentCardCoordinates$.subscribe((currentCardCoordinates) => {
-      localStorage.setItem('currentCardCoordinates', JSON.stringify(currentCardCoordinates));
+    this.playedConflicts$.subscribe((playedConflicts) => {
+      localStorage.setItem('playedConflicts', JSON.stringify(playedConflicts));
     });
 
-    const cardCellExlusionsString = localStorage.getItem('cardCellExlusions');
-    if (cardCellExlusionsString) {
-      const cardCellExlusions = JSON.parse(cardCellExlusionsString) as CardCell[];
-      this.cardCellExlusionsSubject.next(cardCellExlusions);
+    const currentConflictString = localStorage.getItem('currentConflict');
+    if (currentConflictString) {
+      const currentConflict = JSON.parse(currentConflictString) as Conflict;
+      this.currentConflictSubject.next(currentConflict);
+
+      this.currentCardCoordinatesSubject.next(this.getCardCoordinates(currentConflict.column, currentConflict.row));
     }
 
-    this.cardCellExlusions$.subscribe((cardCellExlusions) => {
-      localStorage.setItem('cardCellExlusions', JSON.stringify(cardCellExlusions));
+    this.currentConflict$.subscribe((currentConflict) => {
+      localStorage.setItem('currentConflict', JSON.stringify(currentConflict));
     });
   }
 
@@ -97,32 +111,40 @@ export class ConflictsService {
     return cloneDeep(this.currentConflictSetSubject.value);
   }
 
-  public get currentCardCoordinates() {
-    return cloneDeep(this.currentCardCoordinatesSubject.value);
+  public get currentConflict() {
+    return cloneDeep(this.currentConflictSubject.value);
   }
 
-  public get cardCellExlusions() {
-    return cloneDeep(this.cardCellExlusionsSubject.value);
+  public get playedConflicts() {
+    return cloneDeep(this.playedConflictsSubject.value);
   }
 
   setInitialConflict() {
     this.setNextConflictSet();
 
-    const cardCell = this.getRandomCardCell(this.currentConflictSet);
-    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(cardCell.column, cardCell.row));
-    this.cardCellExlusionsSubject.next([...this.cardCellExlusions, cardCell]);
+    const shuffledConflicts = shuffle(this.conflicts.filter((x) => x.lvl === this.currentConflictSet.id));
+    const firstConflict = shuffledConflicts[0];
+
+    this.currentConflictSubject.next(firstConflict);
+
+    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(firstConflict.column, firstConflict.row));
+    this.playedConflictsSubject.next([...this.playedConflicts, firstConflict.name.en]);
   }
 
   setNextConflict() {
-    const playedConflictsInThisSet =
-      this.cardCellExlusions.filter((x) => x.conflictSetId === this.currentConflictSet.id).length - 1;
-    if (playedConflictsInThisSet >= this.currentConflictSet.rounds) {
+    if (this.playedConflicts.length >= this.currentConflictSet.roundTreshold) {
       this.setNextConflictSet();
     }
 
-    const cardCell = this.getRandomCardCell(this.currentConflictSet);
-    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(cardCell.column, cardCell.row));
-    this.cardCellExlusionsSubject.next([...this.cardCellExlusions, cardCell]);
+    const shuffledConflicts = shuffle(
+      this.conflicts.filter((x) => x.lvl === this.currentConflictSet.id && !this.playedConflicts.includes(x.name.en))
+    );
+
+    const nextConflict = shuffledConflicts[0];
+
+    this.currentConflictSubject.next(nextConflict);
+    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(nextConflict.column, nextConflict.row));
+    this.playedConflictsSubject.next([...this.playedConflicts, nextConflict.name.en]);
   }
 
   setNextConflictSet() {
@@ -132,45 +154,15 @@ export class ConflictsService {
     } else {
       this.currentConflictSetSubject.next(conflictSets[0]);
     }
-
-    this.cardCellExlusionsSubject.next([
-      ...this.cardCellExlusions,
-      {
-        conflictSetId: this.currentConflictSet.id,
-        column: this.currentConflictSet.columns - 1,
-        row: this.currentConflictSet.rows - 1,
-      },
-    ]);
-  }
-
-  getRandomCardCell(conflictSet: ConflictSet): CardCell {
-    let randomColumn = 0;
-    let randomRow = 0;
-
-    for (let i = 0; i <= 20; i++) {
-      randomColumn = random(conflictSet.columns - 1);
-      randomRow = random(conflictSet.rows - 1);
-
-      if (
-        !this.cardCellExlusions.some(
-          (element) =>
-            element.conflictSetId === conflictSet.id && element.column === randomColumn && element.row === randomRow
-        )
-      ) {
-        break;
-      }
-    }
-
-    return { conflictSetId: conflictSet.id, column: randomColumn, row: randomRow };
   }
 
   getCardCoordinates(column: number, row: number) {
-    return { x: column * -167, y: row * -255 };
+    return { x: (column - 1) * -167, y: (row - 1) * -255 };
   }
 
   resetConflicts() {
-    this.currentConflictSetSubject.next({ id: 0, columns: 0, rows: 0, rounds: 0, imageSize: 0, imagePath: '' });
+    this.currentConflictSetSubject.next({ id: 0, columns: 0, rows: 0, roundTreshold: 0, imageSize: 0, imagePath: '' });
     this.currentCardCoordinatesSubject.next({ x: 0, y: 0 });
-    this.cardCellExlusionsSubject.next([]);
+    this.playedConflictsSubject.next([]);
   }
 }
