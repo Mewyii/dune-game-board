@@ -49,6 +49,7 @@ import { DialogLeaderEditorComponent } from './pages/leader-configurator/dialog-
 import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor/leader-editor.component';
 import { AboutComponent } from './pages/about/about.component';
 import { GameManualComponent } from './pages/game-board/game-manual/game-manual.component';
+import { TechTilesComponent } from './components/tech-tiles/tech-tiles.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { GameManualComponent } from './pages/game-board/game-manual/game-manual.
     LeaderEditorComponent,
     AboutComponent,
     GameManualComponent,
+    TechTilesComponent,
   ],
   imports: [
     BrowserModule,

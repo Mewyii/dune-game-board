@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Leader } from 'src/app/constants/leaders';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { House } from 'src/app/constants/minor-houses';
+import { TechTile } from 'src/app/constants/tech-tiles';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
@@ -11,6 +12,7 @@ import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
+import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -39,6 +41,9 @@ export class LeadersComponent implements OnInit {
   public playerHouses: PlayerHouse[] = [];
   public houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
+  public playerTechTiles: PlayerTechTile[] = [];
+  public techTiles: TechTile[] = [];
+
   constructor(
     public leadersService: LeadersService,
     public translateService: TranslateService,
@@ -46,7 +51,8 @@ export class LeadersComponent implements OnInit {
     public playerManager: PlayerManager,
     public combatManager: CombatManager,
     public playerScoreManager: PlayerScoreManager,
-    public minorHouseService: MinorHousesService
+    public minorHouseService: MinorHousesService,
+    public techTilesService: TechTilesService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +79,8 @@ export class LeadersComponent implements OnInit {
 
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
 
+      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
+
       this.currentPlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
         (x) => x.playerId === this.activePlayerId
       );
@@ -97,6 +105,11 @@ export class LeadersComponent implements OnInit {
     this.minorHouseService.playerHouses$.subscribe((playerHouses) => {
       this.playerHouses = playerHouses;
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
+    });
+
+    this.techTilesService.playerTechTiles$.subscribe((playerTechTiles) => {
+      this.playerTechTiles = playerTechTiles;
+      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
     });
   }
 

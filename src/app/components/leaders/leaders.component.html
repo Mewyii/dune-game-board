@@ -230,4 +230,11 @@
       </div>
     </ng-container>
   </div>
+  <div class="control-bar">
+    <ng-container *ngFor="let techTile of techTiles">
+      <div class="house-card-container">
+        <div class="tech-tile" [style.background-image]="'url(' + techTile.imageUrl + ')'"></div>
+      </div>
+    </ng-container>
+  </div>
 </div>

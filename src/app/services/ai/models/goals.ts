@@ -6,6 +6,7 @@ import { PlayerScore } from '../../player-score-manager.service';
 import { Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
+import { TechTile } from 'src/app/constants/tech-tiles';
 
 export type AIGoals =
   | 'high-council'
@@ -47,6 +48,7 @@ export interface GameState {
   enemyPlayers: Player[];
   playerLeader: Leader | LeaderImageOnly;
   conflict: Conflict;
+  availableTechTiles: TechTile[];
 }
 
 export interface AIGoal {

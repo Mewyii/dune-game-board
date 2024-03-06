@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isResource } from '../helpers/resources';
 import { CombatManager } from './combat-manager.service';
 import { LoggingService } from './log.service';
-import { PlayerManager } from './player-manager.service';
+import { Player, PlayerManager } from './player-manager.service';
 import { PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
@@ -13,6 +13,8 @@ import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
 import { MinorHousesService } from './minor-houses.service';
+import { TechTilesService } from './tech-tiles.service';
+import { TechTile } from '../constants/tech-tiles';
 
 export interface AgentOnField {
   fieldId: string;
@@ -71,7 +73,8 @@ export class GameManager {
     public aIManager: AIManager,
     public leadersService: LeadersService,
     public conflictsService: ConflictsService,
-    public minorHousesService: MinorHousesService
+    public minorHousesService: MinorHousesService,
+    public techTilesService: TechTilesService
   ) {
     const currentTurnString = localStorage.getItem('currentTurn');
     if (currentTurnString) {
@@ -222,6 +225,7 @@ export class GameManager {
     this.leadersService.assignLeadersToPlayers(this.playerManager.players);
     this.conflictsService.setInitialConflict();
     this.minorHousesService.setInitialAvailableHouses();
+    this.techTilesService.setInitialAvailableTechTiles();
 
     this.currentTurnSubject.next(1);
     this.currentTurnStateSubject.next('agent-placement');
@@ -352,7 +356,7 @@ export class GameManager {
 
     if (this.activePlayer.isAI) {
       const aiPlayer = this.aIManager.getAIPlayer(this.activePlayer.id);
-      if (aiPlayer) {
+      if (aiPlayer && this.activePlayer) {
         if (canDestroyOrDrawCard) {
           const drawOrTrim = this.aIManager.getFieldDrawOrTrimDecision(this.activePlayer.id, field.title.en);
 
@@ -370,6 +374,17 @@ export class GameManager {
             this.combatManager.addPlayerShipsToGarrison(this.activePlayer.id, 1);
             unitsGainedThisTurn += 1;
           }
+          if (warshipOrTech === 'tech') {
+            this.buyTechOrStackTechAgents(this.activePlayer, 3);
+          }
+        }
+        if (field.title.en === 'expedition') {
+          // Techagents are added previously
+          this.buyTechOrStackTechAgents(this.activePlayer, -1);
+        }
+        if (field.title.en === 'trade rights') {
+          // Techagents are added previously
+          this.buyTechOrStackTechAgents(this.activePlayer, -1);
         }
 
         if (canEnterCombat) {
@@ -473,23 +488,28 @@ export class GameManager {
   public setPreferredFieldsForAIPlayer(playerId: number) {
     const player = this.playerManager.getPlayer(playerId);
     if (player && player.isAI) {
-      this.aIManager.setPreferredFieldsForAIPlayer(player, {
-        currentTurn: this.currentTurn,
-        accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
-        playerAgentCount: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
-        enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
-        playerScore: this.playerScoreManager.getPlayerScore(player.id)!,
-        enemyScore: this.playerScoreManager.getEnemyScore(player.id)!,
-        playerCombatUnits: this.combatManager.getPlayerCombatUnits(player.id)!,
-        enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
-        agentsOnFields: this.agentsOnFields,
-        isOpeningTurn: this.isOpeningTurn(playerId),
-        isFinale: this.isFinale,
-        enemyPlayers: this.playerManager.players.filter((x) => x.id !== player.id),
-        playerLeader: this.leadersService.getLeader(player.id)!,
-        conflict: this.conflictsService.currentConflict,
-      });
+      this.aIManager.setPreferredFieldsForAIPlayer(player, this.getGameState(player));
     }
+  }
+
+  private getGameState(player: Player) {
+    return {
+      currentTurn: this.currentTurn,
+      accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
+      playerAgentCount: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
+      enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
+      playerScore: this.playerScoreManager.getPlayerScore(player.id)!,
+      enemyScore: this.playerScoreManager.getEnemyScore(player.id)!,
+      playerCombatUnits: this.combatManager.getPlayerCombatUnits(player.id)!,
+      enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
+      agentsOnFields: this.agentsOnFields,
+      isOpeningTurn: this.isOpeningTurn(player.id),
+      isFinale: this.isFinale,
+      enemyPlayers: this.playerManager.players.filter((x) => x.id !== player.id),
+      playerLeader: this.leadersService.getLeader(player.id)!,
+      conflict: this.conflictsService.currentConflict,
+      availableTechTiles: this.techTilesService.availableTechTiles,
+    };
   }
 
   private fieldHasAccumulatedSpice(fieldId: string) {
@@ -549,6 +569,58 @@ export class GameManager {
     }
 
     return true;
+  }
+
+  private buyTechOrStackTechAgents(player: Player, techDiscount?: number) {
+    const discount = techDiscount ?? 0;
+    const availableTechTiles = this.techTilesService.availableTechTiles;
+    const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
+    const availablePlayerTechAgents = player.techAgents;
+    const affordableTechTiles = availableTechTiles.filter(
+      (x) => x.costs - discount <= availablePlayerTechAgents + availablePlayerSpice
+    );
+
+    if (affordableTechTiles.length > 0) {
+      const gameState = this.getGameState(player);
+      const mostDesiredTechTile = availableTechTiles.sort(
+        (a, b) => b.aiEvaluation(player, gameState) - a.aiEvaluation(this.activePlayer!, gameState)
+      )[0];
+
+      const desire = mostDesiredTechTile.aiEvaluation(player, gameState);
+      const effectiveCosts = mostDesiredTechTile.costs - discount - availablePlayerTechAgents;
+
+      if (
+        affordableTechTiles.some((x) => x.name.en === mostDesiredTechTile.name.en) &&
+        (desire > 0.25 || effectiveCosts < 1)
+      ) {
+        this.buyTechTileForPlayer(player, mostDesiredTechTile, discount);
+      } else {
+        this.playerManager.addTechAgentsToPlayer(player.id, discount + 1);
+      }
+    } else {
+      this.playerManager.addTechAgentsToPlayer(player.id, discount + 1);
+    }
+  }
+
+  private buyTechTileForPlayer(player: Player, techTile: TechTile, discount: number) {
+    const availablePlayerTechAgents = player.techAgents;
+
+    const effectiveCosts = techTile.costs - discount;
+
+    if (effectiveCosts > 0) {
+      if (availablePlayerTechAgents) {
+        this.playerManager.removeTechAgentsFromPlayer(
+          player.id,
+          effectiveCosts > availablePlayerTechAgents ? availablePlayerTechAgents : effectiveCosts
+        );
+      }
+
+      if (effectiveCosts > availablePlayerTechAgents) {
+        this.playerManager.removeResourceFromPlayer(player.id, 'spice', effectiveCosts - availablePlayerTechAgents);
+      }
+    }
+
+    this.techTilesService.setPlayerTechTile(player.id, techTile.name.en);
   }
 
   private isOpeningTurn(playerId: number) {

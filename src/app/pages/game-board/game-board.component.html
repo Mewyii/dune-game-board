@@ -11,6 +11,7 @@
     <app-techboard></app-techboard>
     <app-card-areas></app-card-areas>
     <dune-conflicts></dune-conflicts>
+    <dune-tech-tiles *ngIf="settingsService.settings.mode === 'game'"></dune-tech-tiles>
   </div>
   <app-playerboard *ngIf="settingsService.settings.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">

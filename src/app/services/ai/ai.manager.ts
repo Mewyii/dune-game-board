@@ -24,7 +24,6 @@ export type AIVariableValues = 'good' | 'okay' | 'bad';
 export type AIDIfficultyTypes = 'easy' | 'medium' | 'hard';
 export interface AIVariables {
   imperiumRow: AIVariableValues;
-  techTiles: AIVariableValues;
 }
 
 interface ViableField {
@@ -46,7 +45,7 @@ interface FactionInfluenceLock {
   providedIn: 'root',
 })
 export class AIManager {
-  private aiVariablesSubject = new BehaviorSubject<AIVariables>({ techTiles: 'good', imperiumRow: 'okay' });
+  private aiVariablesSubject = new BehaviorSubject<AIVariables>({ imperiumRow: 'okay' });
   public aiVariables$ = this.aiVariablesSubject.asObservable();
 
   private aiPlayersSubject = new BehaviorSubject<AIPlayer[]>([]);
@@ -202,7 +201,7 @@ export class AIManager {
         const goalDesire =
           getDesire(goal, player, gameState, virtualResources) *
           (aiPlayer.personality[aiGoalId] ?? 1.0) *
-          this.getGameStateModifier(aiGoalId, gameState.conflict.aiEvaluation);
+          this.getGameStateModifier(aiGoalId, player, gameState);
         let desireCanBeFullfilled = false;
 
         if (goal.goalIsReachable(player, gameState, aiGoals, virtualResources) && goal.desiredFields) {
@@ -394,8 +393,10 @@ export class AIManager {
     return 'none';
   }
 
-  private getGameStateModifier(goal: AIGoals, conflictEvaluation: AIVariableValues) {
+  private getGameStateModifier(goal: AIGoals, player: Player, gameState: GameState) {
     const aiVariables = this.aiVariables;
+    const conflictEvaluation = gameState.conflict.aiEvaluation;
+    const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
 
     let modifier = 1.0;
 
@@ -407,12 +408,7 @@ export class AIManager {
         modifier = 0.8;
       }
     } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin') {
-      if (aiVariables.techTiles === 'good') {
-        modifier = 1.2;
-      }
-      if (aiVariables.techTiles === 'bad') {
-        modifier = 0.8;
-      }
+      modifier = 0.4 + techEvaluation;
     } else if (goal === 'draw-cards' || goal === 'get-persuasion' || goal === 'high-council') {
       if (aiVariables.imperiumRow === 'good') {
         modifier = 1.2;
