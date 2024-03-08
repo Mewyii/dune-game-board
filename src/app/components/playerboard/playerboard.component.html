@@ -33,7 +33,7 @@
         class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
         [style.color]="player.color"
       >
-        {{ getPlayerLeaderName(player.id) }}
+        {{ getPlayerLeaderName(player.id).toLocaleLowerCase() }}
       </div>
     </div>
     <div class="player-heading">

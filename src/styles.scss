@@ -31,6 +31,12 @@ h2 {
 .mat-mdc-fab.mat-accent:not(:disabled), .mat-mdc-mini-fab.mat-accent:not(:disabled), .mat-mdc-raised-button.mat-accent:not(:disabled),
 .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
     background-color: #e49944be !important;
+    transition: .3s;
+}
+
+.mat-mdc-fab.mat-accent:not(:disabled):hover, .mat-mdc-mini-fab.mat-accent:not(:disabled):hover, .mat-mdc-raised-button.mat-accent:not(:disabled):hover,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background:hover{
+    background-color: rgba(255, 136, 0, 0.847) !important;
 }
 
 .mdc-form-field, .mdc-form-field>label {

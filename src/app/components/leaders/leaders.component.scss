@@ -1,5 +1,5 @@
 .leader-board {
-    background: #534235;
+    background: #544132;
     display: flex;
     flex-wrap: wrap;
     max-width: 900px;
@@ -21,7 +21,7 @@
 }
 
 .leader-list {
-    background: #534235;
+    background: #544132;
     display: grid;
     grid-gap: 16px;
     grid-area: 3 3;
@@ -75,6 +75,10 @@
     justify-content: space-between;
     gap: 32px;
     flex-wrap: wrap;
+}
+
+.control-bar.center {
+    justify-content: center;
 }
 
 .info-container {
@@ -137,7 +141,9 @@
     width: 25px;
     height: 25px;
     border-radius: 25%;
-    border: 3px solid #2f2112;
+    border: 1px solid #2f2112;
+    border-right: 4px solid #2f2112;
+    border-top: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
 }
@@ -146,7 +152,9 @@
     width: 25px;
     height: 25px;
     border-radius: 25%;
-    border: 3px solid #2f2112;
+    border: 1px solid #2f2112;
+    border-right: 4px solid #2f2112;
+    border-top: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
     transform: rotateX(45deg) rotateZ(45deg);
@@ -215,7 +223,9 @@
     width: 30px;
     height: 30px;
     border-radius: 25%;
-    border: 3px solid #2f2112;
+    border: 1px solid #2f2112;
+    border-right: 4px solid #2f2112;
+    border-top: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     box-sizing: border-box;
     animation-name: unit-marker-anim;
@@ -223,12 +233,37 @@
     animation-duration: 1.5s;
 }
 
+.tech-tile-container {
+    position: relative;
+}
+
+
 .tech-tile {
     border-radius: 10px;
     height: 160px;
     width: 245px;
     background-size: cover;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+    border: 0px solid #2d2405;
+    border-right: 3px solid #2d2405;
+    border-top: 2px solid #2d2405;
+    transition: 0.3s;
+}
+
+.tech-tile:hover {
+    box-shadow: inset 0px 0px 25px -3px rgb(255, 123, 0);
+}
+
+.tech-flip-button {
+    position: absolute;
+    top: 25px;
+    right: -20px;
+}
+
+.tech-trash-button {
+    position: absolute;
+    top: 85px;
+    right: -20px;
 }
 
 @keyframes unit-marker-anim {

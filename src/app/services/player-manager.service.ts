@@ -333,19 +333,18 @@ export class PlayerManager {
 
   private createPlayerColor(id: number) {
     if (id === 1) {
-      return 'rgb(25 73 255)';
+      return 'rgb(255 202 75)';
     } else if (id === 2) {
-      return 'rgb(200 140 0)';
+      return 'rgb(65 79 98)';
     } else if (id === 3) {
-      return 'rgb(0 151 32)';
+      return 'rgb(36 203 71)';
     } else {
-      return 'rgb(160 0 0)';
+      return 'rgb(103 0 0)';
     }
-    // const randomBetween = (min: number, max: number) =>
-    //   min + Math.floor(Math.random() * (max - min + 1));
-    // const r = randomBetween(125, 255);
-    // const g = randomBetween(125, 255);
-    // const b = randomBetween(125, 255);
+    // const randomBetween = (min: number, max: number) => min + Math.floor(Math.random() * (max - min + 1));
+    // const r = randomBetween(0, 255);
+    // const g = randomBetween(0, 255);
+    // const b = randomBetween(0, 255);
     // return `rgb(${r},${g},${b})`;
   }
 }

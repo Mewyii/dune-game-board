@@ -1,5 +1,23 @@
 <div [style]="'display:flex; padding-left: 32px, padding-top: 16px'">
   <div class="board">
+    <ng-particles
+      *ngIf="settingsService.settings.mode === 'game'"
+      [id]="'stars'"
+      [options]="stars"
+      [particlesInit]="initStars"
+    ></ng-particles>
+    <ng-particles
+      *ngIf="settingsService.settings.mode === 'game'"
+      [id]="'dust'"
+      [options]="dust"
+      [particlesInit]="initDust"
+    ></ng-particles>
+    <ng-particles
+      *ngIf="settingsService.settings.mode === 'game'"
+      [id]="'sand'"
+      [options]="sand"
+      [particlesInit]="initSand"
+    ></ng-particles>
     <ng-container *ngFor="let faction of settingsService.factions">
       <app-dune-faction [faction]="faction"></app-dune-faction>
     </ng-container>

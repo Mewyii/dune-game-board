@@ -56,13 +56,13 @@ export const aiGoals: FieldsForGoals = {
       'trade rights': (player, gameState, goals, virtualResources) =>
         getResourceDesire(player, virtualResources, 0.2, [
           { resource: 'spice', amount: 0.025 },
-          { resource: 'tech-agents', amount: 0.05 },
+          { resource: 'tech-agents', amount: 0.025 },
           { resource: 'currency', amount: 0.0125, negative: true },
         ]),
       expedition: (player, gameState, goals, virtualResources) =>
         getResourceDesire(player, virtualResources, 0.5, [
           { resource: 'spice', amount: 0.025 },
-          { resource: 'tech-agents', amount: 0.05 },
+          { resource: 'tech-agents', amount: 0.025 },
         ]),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'currency', virtualResources) > 3 ? 1 : 0,

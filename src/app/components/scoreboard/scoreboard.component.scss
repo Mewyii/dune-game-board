@@ -18,10 +18,6 @@
     background: #0000000a;
 }
 
-.score-element.light {
-    background:#ffd5620a;
-}
-
 .score-element.finale-four-players {
     background:#ffd88e61;
 }
@@ -69,7 +65,9 @@
     height: 35px;
     z-index: 2;
     border-radius: 50%;
-    border: 3px solid #2f2112;
+    border: 1px solid #2f2112;
+    border-right: 4px solid #2f2112;
+    border-top: 3px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);
     animation-name: marker-anim;
     animation-timing-function: ease-in-out;

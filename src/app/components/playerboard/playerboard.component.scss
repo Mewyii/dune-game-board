@@ -42,7 +42,9 @@
     height: 15px;
     z-index: 2;
     border-radius: 50%;
-    border: 3px solid #2f2112;
+    border: 1px solid #2f2112;
+    border-right: 4px solid #2f2112;
+    border-top: 3px solid #2f2112;
 }
 
 .agent-marker.greyed-out {

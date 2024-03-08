@@ -7,6 +7,7 @@ import { TechTile, techTiles } from '../constants/tech-tiles';
 export interface PlayerTechTile {
   playerId: number;
   techTileId: string;
+  isFlipped: boolean;
 }
 
 @Injectable({
@@ -58,11 +59,13 @@ export class TechTilesService {
   }
 
   setInitialAvailableTechTiles() {
+    this.techTiles = techTiles;
     this.playerTechTilesSubject.next([]);
     this.availableTechTilesSubject.next(shuffle(this.techTiles).slice(0, 3));
   }
 
   resetAvailableTechTiles() {
+    this.techTiles = techTiles;
     this.playerTechTilesSubject.next([]);
     this.availableTechTilesSubject.next([]);
   }
@@ -77,7 +80,7 @@ export class TechTilesService {
     const filteredAvailableTechTiles = this.availableTechTiles.filter((x) => x.name.en !== techTileId);
     const filteredAvailableTechTileIds = filteredAvailableTechTiles.map((y) => y.name.en);
 
-    const newTakenTechTiles = [...this.playerTechTiles, { playerId, techTileId: techTileId }];
+    const newTakenTechTiles = [...this.playerTechTiles, { playerId, techTileId: techTileId, isFlipped: false }];
 
     const availableTechTiles = this.techTiles.filter(
       (x) => !newTakenTechTiles.some((y) => y.techTileId === x.name.en) && !filteredAvailableTechTileIds.includes(x.name.en)
@@ -95,5 +98,23 @@ export class TechTilesService {
       this.playerTechTilesSubject.next(newTakenTechTiles);
       this.availableTechTilesSubject.next([...filteredAvailableTechTiles]);
     }
+  }
+
+  flipTechTile(techTileId: string) {
+    const playerTechTiles = this.playerTechTiles;
+    const techTileIndex = playerTechTiles.findIndex((x) => x.techTileId === techTileId);
+    if (techTileIndex > -1) {
+      playerTechTiles[techTileIndex] = {
+        ...playerTechTiles[techTileIndex],
+        isFlipped: !playerTechTiles[techTileIndex].isFlipped,
+      };
+
+      this.playerTechTilesSubject.next(playerTechTiles);
+    }
+  }
+
+  trashTechTile(techTileId: string) {
+    this.techTiles = this.techTiles.filter((x) => x.name.en !== techTileId);
+    this.playerTechTilesSubject.next(this.playerTechTiles.filter((x) => x.techTileId !== techTileId));
   }
 }

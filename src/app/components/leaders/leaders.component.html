@@ -200,7 +200,7 @@
       </div>
     </div>
   </div>
-  <div class="control-bar">
+  <div class="control-bar center">
     <ng-container *ngFor="let house of houses">
       <div class="house-card-container">
         <dune-minor-house-card [house]="house"></dune-minor-house-card>
@@ -230,10 +230,25 @@
       </div>
     </ng-container>
   </div>
-  <div class="control-bar">
+  <div class="control-bar center">
     <ng-container *ngFor="let techTile of techTiles">
-      <div class="house-card-container">
-        <div class="tech-tile" [style.background-image]="'url(' + techTile.imageUrl + ')'"></div>
+      <div class="tech-tile-container">
+        <div
+          *ngIf="getIsTechTileFlipped(techTile.name.en)"
+          class="tech-tile"
+          [style.background-image]="'url(/assets/images/tech-tiles/_backside.jpg)'"
+        ></div>
+        <div
+          *ngIf="!getIsTechTileFlipped(techTile.name.en)"
+          class="tech-tile"
+          [style.background-image]="'url(' + techTile.imageUrl + ')'"
+        ></div>
+        <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.name.en)">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.name.en)">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     </ng-container>
   </div>

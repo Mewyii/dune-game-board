@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { House } from 'src/app/constants/minor-houses';
@@ -14,6 +15,7 @@ import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-leaders',
@@ -52,7 +54,8 @@ export class LeadersComponent implements OnInit {
     public combatManager: CombatManager,
     public playerScoreManager: PlayerScoreManager,
     public minorHouseService: MinorHousesService,
-    public techTilesService: TechTilesService
+    public techTilesService: TechTilesService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -217,6 +220,28 @@ export class LeadersComponent implements OnInit {
 
   onHouseLevelDownClicked(houseId: string) {
     this.minorHouseService.removePlayerHouseLevel(this.activePlayerId, houseId);
+  }
+
+  onFlipTechClicked(techTileId: string) {
+    this.techTilesService.flipTechTile(techTileId);
+  }
+
+  onTrashTechClicked(techTileId: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Are you sure you want to trash this tech tile?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.techTilesService.trashTechTile(techTileId);
+      }
+    });
+  }
+
+  public getIsTechTileFlipped(techTileId: string) {
+    return this.playerTechTiles.find((x) => x.techTileId === techTileId)?.isFlipped;
   }
 
   public getPlayerScore(scoreType: PlayerScoreType) {

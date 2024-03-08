@@ -50,6 +50,8 @@ import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor
 import { AboutComponent } from './pages/about/about.component';
 import { GameManualComponent } from './pages/game-board/game-manual/game-manual.component';
 import { TechTilesComponent } from './components/tech-tiles/tech-tiles.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +87,8 @@ import { TechTilesComponent } from './components/tech-tiles/tech-tiles.component
     AboutComponent,
     GameManualComponent,
     TechTilesComponent,
+    ConfirmDialogComponent,
+    AudioPlayerComponent,
   ],
   imports: [
     BrowserModule,
