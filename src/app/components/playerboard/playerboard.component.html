@@ -1,6 +1,6 @@
 <div class="player-board-container">
   <div class="heading">
-    <div *ngIf="gameManager.currentTurn == 0">spieler</div>
+    <div *ngIf="gameManager.currentTurn == 0">{{ translateService.translate(playersString).toLocaleLowerCase() }}</div>
     <div *ngIf="gameManager.currentTurn == 0">
       <button
         mat-mini-fab
@@ -21,42 +21,44 @@
       </button>
     </div>
     <div *ngIf="currentTurn" class="turn-area">
-      <div *ngIf="currentTurn">runde {{ currentTurn }}</div>
-      <div>{{ turnState }}</div>
+      <div *ngIf="currentTurn">
+        {{ translateService.translate(roundString).toLocaleLowerCase() }} <span class="turn">{{ currentTurn }}</span>
+      </div>
+      <div class="turn-state">{{ turnState }}</div>
     </div>
   </div>
   <div class="player-container" *ngFor="let player of players">
     <div class="player-heading">
-      <div *ngIf="gameManager.startingPlayerId === player.id" class="starting-player-marker"></div>
-      <div *ngIf="player.hasCouncilSeat" class="council-seat-marker" [style.background-color]="player.color"></div>
       <div
         class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
         [style.color]="player.color"
       >
+        <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? 'I ' : '' }}</span>
         {{ getPlayerLeaderName(player.id).toLocaleLowerCase() }}
       </div>
     </div>
-    <div class="player-heading">
-      <ng-container *ngFor="let object of getArrayFromNumber(player.agents + 1); let i = index">
-        <div
-          class="agent-marker"
-          [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
-          [style.background-color]="player.color"
-        ></div>
-      </ng-container>
+    <div class="ai-area">
       <mat-slide-toggle
+        *ngIf="gameManager.currentTurn == 0"
         [color]="'accent'"
         [checked]="player.isAI"
         (change)="onSetAIActiveClicked(player.id, $event)"
         [disabled]="currentTurn > 0"
         >AI</mat-slide-toggle
       >
+      <div *ngIf="gameManager.currentTurn != 0 && player.isAI" class="ai-label">ai</div>
     </div>
-
-    <!-- <div class="ai-container">
-        <button mat-raised-button color="accent" (click)="onSetCurrentAIPlayerClicked(player.id)">show</button>
-      </div> -->
-
+    <div class="agent-area">
+      <ng-container *ngFor="let object of getArrayFromNumber(player.agents + 1); let i = index">
+        <div class="agents-icon-container">
+          <div
+            class="agents-icon"
+            [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
+            [style.background-color]="player.color"
+          ></div>
+        </div>
+      </ng-container>
+    </div>
     <div class="resource-area">
       <div class="resource-container" *ngFor="let resource of player.resources">
         <div class="resource-display">
@@ -64,6 +66,17 @@
           <div class="resource-amount">
             <span>{{ resource.amount }}</span>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="persuasion-area">
+      <div
+        class="resource-display"
+        [style]="player.persuasionThisRound + player.permanentPersuasion === 0 ? 'filter: saturate(0.25);' : ''"
+      >
+        <img class="resource" [src]="getRewardTypePath('persuasion')" />
+        <div class="resource-amount" *ngIf="player.persuasionThisRound > 0 || player.permanentPersuasion > 0">
+          <span>{{ player.persuasionThisRound + player.permanentPersuasion }}</span>
         </div>
       </div>
     </div>

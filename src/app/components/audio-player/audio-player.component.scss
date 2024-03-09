@@ -1,0 +1,17 @@
+.component-container {
+    background: #544132;
+    width: 900px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    color: #fffcfa;
+    padding: 32px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+iframe {
+    border-radius: 10px;
+    filter: saturate(0.5) brightness(0.75);
+}

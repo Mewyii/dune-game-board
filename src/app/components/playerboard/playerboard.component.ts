@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FactionType, ResourceType, RewardType } from 'src/app/models';
+import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
 import { cloneDeep } from 'lodash';
@@ -8,6 +8,7 @@ import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/servic
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LeadersService } from 'src/app/services/leaders.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'app-playerboard',
@@ -22,11 +23,15 @@ export class PlayerboardComponent implements OnInit {
 
   public playerScores: PlayerScore[] = [];
 
+  public playersString: LanguageString = { de: 'Spieler', en: 'Players' };
+  public roundString: LanguageString = { de: 'Runde', en: 'Round' };
+
   constructor(
     public gameManager: GameManager,
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
-    public leadersService: LeadersService
+    public leadersService: LeadersService,
+    public translateService: TranslateService
   ) {}
 
   ngOnInit(): void {

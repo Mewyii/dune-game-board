@@ -4,3 +4,4 @@ export * from './welcome';
 export * from './stars';
 export * from './dust';
 export * from './sand';
+export * from './ships';

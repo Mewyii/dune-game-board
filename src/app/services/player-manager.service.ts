@@ -17,6 +17,8 @@ export interface Player {
   cardsTrimmed: number;
   cardsDrawnThisRound: number;
   techAgents: number;
+  persuasionThisRound: number;
+  permanentPersuasion: number;
   isAI?: boolean;
 }
 
@@ -72,7 +74,9 @@ export class PlayerManager {
         cardsTrimmed: 0,
         intrigueCount: 0,
         cardsDrawnThisRound: 0,
+        persuasionThisRound: 0,
         techAgents: 0,
+        permanentPersuasion: 0,
         isAI: true,
       });
     }
@@ -104,6 +108,8 @@ export class PlayerManager {
       intrigueCount: 0,
       cardsDrawnThisRound: 0,
       techAgents: 0,
+      persuasionThisRound: 0,
+      permanentPersuasion: 0,
       hasCouncilSeat: false,
       hasSwordmaster: false,
     }));
@@ -302,7 +308,51 @@ export class PlayerManager {
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
-    players[playerIndex] = { ...player, hasCouncilSeat: true };
+    players[playerIndex] = { ...player, hasCouncilSeat: true, permanentPersuasion: player.permanentPersuasion + 2 };
+
+    this.playersSubject.next(players);
+  }
+
+  public addPersuasionToPlayer(playerId: number, amount: number) {
+    const players = this.players;
+
+    const playerIndex = players.findIndex((x) => x.id === playerId);
+    const player = players[playerIndex];
+    players[playerIndex] = { ...player, persuasionThisRound: player.persuasionThisRound + amount };
+
+    this.playersSubject.next(players);
+  }
+
+  public removePersuasionFromPlayer(playerId: number, amount: number) {
+    const players = this.players;
+
+    const playerIndex = players.findIndex((x) => x.id === playerId);
+    const player = players[playerIndex];
+    players[playerIndex] = { ...player, persuasionThisRound: player.persuasionThisRound - amount };
+
+    this.playersSubject.next(players);
+  }
+
+  public resetPersuasionForPlayers() {
+    this.playersSubject.next(this.players.map((x) => ({ ...x, persuasionThisRound: 0 })));
+  }
+
+  public addPermanentPersuasionToPlayer(playerId: number, amount: number) {
+    const players = this.players;
+
+    const playerIndex = players.findIndex((x) => x.id === playerId);
+    const player = players[playerIndex];
+    players[playerIndex] = { ...player, permanentPersuasion: player.permanentPersuasion + amount };
+
+    this.playersSubject.next(players);
+  }
+
+  public removePermanentPersuasionFromPlayer(playerId: number, amount: number) {
+    const players = this.players;
+
+    const playerIndex = players.findIndex((x) => x.id === playerId);
+    const player = players[playerIndex];
+    players[playerIndex] = { ...player, permanentPersuasion: player.permanentPersuasion - amount };
 
     this.playersSubject.next(players);
   }

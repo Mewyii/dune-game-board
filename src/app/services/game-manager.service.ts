@@ -242,6 +242,7 @@ export class GameManager {
     this.combatManager.setAllPlayerShipsFromCombatToGarrisonOrTimeout();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.resetAdditionalCombatPower();
+    this.playerManager.resetPersuasionForPlayers();
 
     this.conflictsService.setNextConflict();
 
@@ -677,6 +678,9 @@ export class GameManager {
     }
     if (reward.type == 'card-draw-or-destroy') {
       aiInfo.canDestroyOrDrawCard = true;
+    }
+    if (reward.type == 'persuasion') {
+      this.playerManager.addPersuasionToPlayer(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
     }
     if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
       this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);

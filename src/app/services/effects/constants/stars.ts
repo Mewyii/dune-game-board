@@ -3,11 +3,11 @@ import { IParticlesProps } from 'ng-particles';
 export const stars: IParticlesProps = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { width: '100%', height: '600px' },
+  style: { width: '100%', height: '625px' },
   fullScreen: false,
   particles: {
     number: {
-      value: 50,
+      value: 25,
       density: {
         enable: true,
         value_area: 500,
@@ -17,10 +17,11 @@ export const stars: IParticlesProps = {
       value: '#fff',
     },
     opacity: {
-      value: { min: 0, max: 1 },
+      value: 1,
       anim: {
         enable: true,
         speed: 2,
+        opacity_min: 0.1,
         sync: false,
       },
     },
@@ -28,7 +29,7 @@ export const stars: IParticlesProps = {
       type: 'circle',
     },
     size: {
-      value: { min: 0.25, max: 1.5 },
+      value: 1.5,
       random: true,
     },
     line_linked: {
@@ -36,7 +37,7 @@ export const stars: IParticlesProps = {
     },
     move: {
       enable: true,
-      speed: 0.1,
+      speed: 0.05,
       direction: 'top',
       straight: false,
     },

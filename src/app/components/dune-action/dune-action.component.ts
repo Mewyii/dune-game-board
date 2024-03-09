@@ -34,7 +34,9 @@ export class DuneActionComponent implements OnInit {
   public playerOnField: Player | undefined;
   public additionalPlayersOnField: Player[] = [];
 
-  public accumulatedSpice = 3;
+  public accumulatedSpice = 0;
+
+  public highCouncilSeats: string[] = [];
 
   constructor(public gameManager: GameManager, public playerManager: PlayerManager, public ts: TranslateService) {}
 
@@ -65,6 +67,12 @@ export class DuneActionComponent implements OnInit {
       const spiceOnField = accumulatedSpice.find((x) => x.fieldId === this.action.title.en);
       this.accumulatedSpice = spiceOnField?.amount ?? 0;
     });
+
+    if (this.action.title.en === 'high council') {
+      this.playerManager.players$.subscribe((players) => {
+        this.highCouncilSeats = players.filter((x) => x.hasCouncilSeat).map((x) => x.color);
+      });
+    }
   }
 
   public onActionFieldClicked() {
@@ -95,5 +103,9 @@ export class DuneActionComponent implements OnInit {
 
   public trackPlayersOnField(index: number, playerOnField: Player) {
     return playerOnField.id;
+  }
+
+  public trackSpiceOnField(index: number, spiceOnField: number) {
+    return spiceOnField;
   }
 }

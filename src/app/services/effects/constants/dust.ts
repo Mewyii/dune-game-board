@@ -7,7 +7,7 @@ export const dust: IParticlesProps = {
   fullScreen: false,
   particles: {
     number: {
-      value: 50,
+      value: 60,
       density: {
         enable: true,
         value_area: 500,
@@ -32,6 +32,12 @@ export const dust: IParticlesProps = {
     },
     size: {
       value: { min: 50, max: 200 },
+      anim: {
+        enable: true,
+        speed: { min: 0.25, max: 1 },
+        sync: false,
+        mode: 'random',
+      },
     },
     line_linked: {
       enable: false,

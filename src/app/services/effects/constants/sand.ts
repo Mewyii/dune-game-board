@@ -28,6 +28,12 @@ export const sand: IParticlesProps = {
     },
     size: {
       value: { min: 150, max: 300 },
+      anim: {
+        enable: true,
+        speed: { min: 0.5, max: 1 },
+        sync: false,
+        mode: 'random',
+      },
     },
     line_linked: {
       enable: false,

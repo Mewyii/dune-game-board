@@ -29,14 +29,18 @@ h2 {
 }
 
 .mat-mdc-fab.mat-accent:not(:disabled), .mat-mdc-mini-fab.mat-accent:not(:disabled), .mat-mdc-raised-button.mat-accent:not(:disabled),
-.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mat-mdc-slide-toggle .mdc-switch:enabled .mdc-switch__track::after {
     background-color: #e49944be !important;
     transition: .3s;
 }
 
-.mat-mdc-fab.mat-accent:not(:disabled):hover, .mat-mdc-mini-fab.mat-accent:not(:disabled):hover, .mat-mdc-raised-button.mat-accent:not(:disabled):hover,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+    border-color: rgba(255, 136, 0, 0.847) !important;
+}
+
+.mat-mdc-slide-toggle .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after, .mat-mdc-fab.mat-accent:not(:disabled):hover, .mat-mdc-mini-fab.mat-accent:not(:disabled):hover, .mat-mdc-raised-button.mat-accent:not(:disabled):hover,
 .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background:hover{
-    background-color: rgba(255, 136, 0, 0.847) !important;
+    background-color: rgba(255, 136, 0) !important;
 }
 
 .mdc-form-field, .mdc-form-field>label {

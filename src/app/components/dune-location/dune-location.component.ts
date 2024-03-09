@@ -55,9 +55,18 @@ export class DuneLocationComponent implements OnInit {
   }
 
   onOwnerIndicatorClicked() {
+    if (this.location.ownerReward?.type === 'persuasion') {
+      if (this.owner) {
+        this.playerManager.removePermanentPersuasionFromPlayer(this.owner.id, 1);
+      }
+    }
     if (!this.playerManager.isLastPlayer(this.owner?.id)) {
       const nextPlayerId = this.playerManager.getNextPlayerId(this.owner?.id);
       this.locationManager.changeLocationOwner(this.location.actionField.title.en, nextPlayerId);
+
+      if (this.location.ownerReward?.type === 'persuasion') {
+        this.playerManager.addPermanentPersuasionToPlayer(nextPlayerId, 1);
+      }
     } else {
       this.locationManager.resetLocationOwner(this.location.actionField.title.en);
     }

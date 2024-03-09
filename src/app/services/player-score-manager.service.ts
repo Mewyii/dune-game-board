@@ -195,6 +195,9 @@ export class PlayerScoreManager {
           if (vpReward.type === 'troop') {
             this.combatManager.addPlayerTroopsToGarrison(playerId, vpReward.amount ?? 1);
           }
+          if (vpReward.type === 'persuasion') {
+            this.playerManager.addPermanentPersuasionToPlayer(playerId, vpReward.amount ?? 1);
+          }
         }
       }
 
@@ -225,6 +228,16 @@ export class PlayerScoreManager {
       if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
         if (newPlayerScore >= this.factionAllianceTreshold) {
           this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
+        }
+      }
+
+      if (scoreType === 'victoryPoints') {
+        const vpReward = this.scoreRewards.find((x) => x.score === playerScore[scoreType])?.reward;
+
+        if (vpReward) {
+          if (vpReward.type === 'persuasion') {
+            this.playerManager.removePermanentPersuasionFromPlayer(playerId, vpReward.amount ?? 1);
+          }
         }
       }
     }

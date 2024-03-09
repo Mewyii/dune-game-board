@@ -23,41 +23,52 @@
 }
 
 .player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .player-heading {
-    display:flex;
-    gap: 6px;
-    align-items: center;
-    margin-bottom: 16px;
+    margin-top: 16px;
 }
 
 .player-name {
     border-top: 3px solid transparent;
     border-bottom: 3px solid transparent;
+    text-align: center;
 }
 
-.agent-marker {
-    width: 15px;
-    height: 15px;
-    z-index: 2;
-    border-radius: 50%;
-    border: 1px solid #2f2112;
-    border-right: 4px solid #2f2112;
-    border-top: 3px solid #2f2112;
+.ai-area {
+    margin-top: 3px;
 }
 
-.agent-marker.greyed-out {
-    background: gray !important;
+.ai-label {
+    font-size: small;
+    color: rgb(255, 170, 73);
 }
 
-.council-seat-marker{
-    width: 15px;
-    height: 15px;
-    z-index: 2;
-    transform: rotate(45deg);
-    border: 3px solid #d2d2d2;
-    margin-right:8px;
+.agent-area {
+    display:flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.agents-icon-container {
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+}
+
+.agents-icon {
+    height: 40px;
+    width: 25px;
+    mask-image: url(/assets/images/reward-markers/marker_agent.png);
+    mask-size: contain;
+    mask-mode: luminance;
+    background-color: #bebebe;
+}
+
+.agents-icon.greyed-out {
+    background: rgba(190, 190, 190, 0.706) !important;
 }
 
 .starting-player-marker{
@@ -79,8 +90,9 @@
 .resource-area {
     display:flex;
     flex-wrap: wrap;
-    gap: 16px 32px;
+    gap: 16px;
     align-items: center;
+    margin-top: 16px;
 }
 
 .resource-container {
@@ -115,11 +127,25 @@
     font-size: larger;
 }
 
+.persuasion-area {
+    margin-top: 16px;
+}
+
 .turn-area {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     align-items: center;
+    font-size: xx-large;
+    justify-content: center;
+}
+
+.turn {
+    color: rgb(255, 170, 73);
+}
+
+.turn-state {
+    font-size: medium;
 }
 
 .ai-container {
@@ -140,4 +166,5 @@
     flex-wrap: wrap;
     gap: 6px;
     min-height:150px;
+    justify-content: center;
 }

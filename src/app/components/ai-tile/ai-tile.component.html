@@ -78,13 +78,11 @@
   </div>
   <div class="decision-container" *ngIf="currentAIPlayer">
     <div class="preferred-fields-container">
-      <div class="field-container" *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first">
-        <div [class]="i < 4 ? 'good' : i < 8 ? 'medium' : 'bad'" [style.color]="isFirst ? '#ffaa49' : ''">
-          {{ field.fieldId }}
-        </div>
-        <div *ngIf="showDetails">
-          {{ field.value }}
-        </div>
+      <div
+        *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first"
+        [class]="'field ' + (i < 3 ? 'good ' : i < 6 ? 'medium ' : 'bad ') + (isFirst ? 'first' : '')"
+      >
+        {{ field.fieldId }} <span *ngIf="showDetails"> {{ field.value }}</span>
       </div>
     </div>
     <div>

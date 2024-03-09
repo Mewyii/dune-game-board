@@ -8,6 +8,12 @@
     ></ng-particles>
     <ng-particles
       *ngIf="settingsService.settings.mode === 'game'"
+      [id]="'ships'"
+      [options]="ships"
+      [particlesInit]="initShips"
+    ></ng-particles>
+    <ng-particles
+      *ngIf="settingsService.settings.mode === 'game'"
       [id]="'dust'"
       [options]="dust"
       [particlesInit]="initDust"
@@ -32,12 +38,13 @@
     <dune-tech-tiles *ngIf="settingsService.settings.mode === 'game'"></dune-tech-tiles>
   </div>
   <app-playerboard *ngIf="settingsService.settings.mode === 'game'"></app-playerboard>
-  <div class="sideboard-container">
-    <dune-game-manual *ngIf="settingsService.settings.mode === 'game' && gameManager.currentTurn === 0"></dune-game-manual>
+  <div *ngIf="settingsService.settings.mode === 'game'" class="sideboard-container">
+    <dune-audio-player></dune-audio-player>
+    <dune-game-manual *ngIf="gameManager.currentTurn === 0"></dune-game-manual>
     <!-- <dune-events *ngIf="settingsService.settings.mode === 'game'"></dune-events> -->
     <!-- <dune-minor-houses *ngIf="settingsService.settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders></dune-leaders>
-    <dune-ai-tile *ngIf="settingsService.settings.mode === 'game'"></dune-ai-tile>
+    <dune-ai-tile></dune-ai-tile>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
 </div>
