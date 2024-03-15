@@ -6,10 +6,7 @@
       [class.finale-three-players]="i > playerScoreManager.finaleTrigger"
     >
       <div class="score">{{ i }}</div>
-      <ng-container
-        *ngIf="
-          settingsService.settings.content === 'custom-advanced' || settingsService.settings.content === 'custom-expert'
-        "
+      <ng-container *ngIf="settingsService.settings.factions !== 'original'"
         ><ng-container *ngIf="scoreHasReward(i)">
           <div class="reward-container">
             <img class="reward" [src]="getRewardTypePath(i)" />

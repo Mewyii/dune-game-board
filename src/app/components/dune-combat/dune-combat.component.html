@@ -126,10 +126,7 @@
         <span>=</span>
         <div class="legend-description">2</div>
       </div>
-      <div
-        class="legend-container"
-        *ngIf="boardSettings.content === 'custom-advanced' || boardSettings.content === 'custom-expert'"
-      >
+      <div class="legend-container" *ngIf="settingsService.settings.ix !== 'no'">
         <img class="legend-icon" [src]="getRewardTypePath('dreadnought')" />
         <span>=</span>
         <div class="legend-description">3</div>

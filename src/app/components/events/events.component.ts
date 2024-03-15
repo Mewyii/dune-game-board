@@ -30,7 +30,7 @@ export class EventsComponent implements OnInit {
       }
     });
 
-    this.duneEventsManager.duneEvents$.subscribe((x) => {
+    this.duneEventsManager.gameEvents$.subscribe((x) => {
       if (x.length > 0) {
         this.events = x;
       }

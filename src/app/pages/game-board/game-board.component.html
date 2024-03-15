@@ -35,17 +35,21 @@
     <app-techboard></app-techboard>
     <app-card-areas></app-card-areas>
     <dune-conflicts></dune-conflicts>
-    <dune-tech-tiles *ngIf="settingsService.settings.mode === 'game'"></dune-tech-tiles>
+    <dune-tech-tiles
+      *ngIf="settingsService.settings.mode === 'game' && settingsService.settings.techTiles === 'yes'"
+    ></dune-tech-tiles>
   </div>
   <app-playerboard *ngIf="settingsService.settings.mode === 'game'"></app-playerboard>
   <div *ngIf="settingsService.settings.mode === 'game'" class="sideboard-container">
-    <dune-audio-player></dune-audio-player>
     <dune-game-manual *ngIf="gameManager.currentTurn === 0"></dune-game-manual>
-    <!-- <dune-events *ngIf="settingsService.settings.mode === 'game'"></dune-events> -->
+    <dune-events *ngIf="settingsService.settings.mode === 'game'"></dune-events>
     <!-- <dune-minor-houses *ngIf="settingsService.settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders></dune-leaders>
     <dune-ai-tile></dune-ai-tile>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
+  </div>
+  <div *ngIf="settingsService.settings.mode === 'game'" class="sideboard-container" style="margin-left: 8px">
+    <dune-audio-player></dune-audio-player>
   </div>
 </div>
 <dune-particle-effects></dune-particle-effects>

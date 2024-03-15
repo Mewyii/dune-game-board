@@ -215,7 +215,7 @@ export class GameManager {
     this.combatManager.resetAllPlayerShips();
     this.combatManager.setInitialPlayerCombatUnits(this.playerManager.players);
     this.locationManager.resetLocationOwners();
-    this.duneEventsManager.shuffleDuneEvents();
+    this.duneEventsManager.setGameEvents();
     this.playerScoreManager.resetPlayersScores(this.playerManager.players);
     this.playerScoreManager.resetPlayerAlliances();
     this.removePlayerAgentsFromBoard();
@@ -272,7 +272,7 @@ export class GameManager {
     this.startingPlayerIdSubject.next(0);
     this.activeAgentPlacementPlayerIdSubject.next(0);
     this.activeCombatPlayerId = 0;
-    this.duneEventsManager.resetDuneEvents();
+    this.duneEventsManager.resetGameEvents();
     this.leadersService.resetLeaders();
     this.conflictsService.resetConflicts();
 
@@ -668,6 +668,10 @@ export class GameManager {
     }
     if (reward.type === 'troop') {
       this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
+    }
+    if (reward.type === 'dreadnought') {
+      this.combatManager.addPlayerShipsToGarrison(this.activeAgentPlacementPlayerId, 1);
       aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
     }
     if (reward.type === 'card-draw') {

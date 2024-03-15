@@ -1,0 +1,47 @@
+.cards-configurator {
+    width: 75vw;
+    margin: auto;
+    margin-top: 1vh;
+    display: flex;
+    gap: 1vh;
+    flex-direction: column;
+}
+
+.cards-manager {
+    width: 100%;
+    background: #544132;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 5px;
+    gap: 16px;
+}
+
+.action-bar {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    justify-content: center;
+}
+
+.cards-preview-container {
+    display: flex;
+    justify-content: space-around;
+    box-sizing: border-box;
+    gap: 32px;
+    flex-wrap: wrap;
+    border-radius: 5px;
+}
+
+.card-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.card-action-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}

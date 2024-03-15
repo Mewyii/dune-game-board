@@ -4,6 +4,7 @@ import { GameBoardComponent } from './pages/game-board/game-board.component';
 import { CardConfiguratorComponent } from './pages/card-configurator/card-configurator.component';
 import { LeaderConfiguratorComponent } from './pages/leader-configurator/leader-configurator.component';
 import { AboutComponent } from './pages/about/about.component';
+import { EventConfiguratorComponent } from './pages/event-configurator/event-configurator.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,12 @@ const routes: Routes = [
     title: 'Dune Leader-Configurator',
     path: 'leader-configurator',
     component: LeaderConfiguratorComponent,
+    pathMatch: 'full',
+  },
+  {
+    title: 'Dune Event-Configurator',
+    path: 'event-configurator',
+    component: EventConfiguratorComponent,
     pathMatch: 'full',
   },
   {

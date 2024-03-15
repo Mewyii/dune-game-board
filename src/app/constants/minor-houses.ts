@@ -153,7 +153,7 @@ export const minorHouses: House[] = [
     persuasion: 4,
     friendshipRequirement: [
       {
-        type: 'faction-influence-choice-down',
+        type: 'faction-influence-down-choice',
       },
     ],
     friendshipReward: [{ type: 'troop', amount: 2 }],

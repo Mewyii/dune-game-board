@@ -1,22 +1,3 @@
-<div class="event-board">
-  <div class="event-card" [style.background-image]="'url(' + events[currentEventIndex].imagePath + ')'">
-    <div class="event-title">
-      {{ translateService.translate(events[currentEventIndex].title) }}
-    </div>
-    <div class="event-description">
-      {{ translateService.translate(events[currentEventIndex].description) }}
-    </div>
-  </div>
+<div class="event-board" *ngIf="events.length > 0">
+  <dune-event-card [event]="events[currentEventIndex]"></dune-event-card>
 </div>
-<!-- <div class="event-list">
-  <ng-container *ngFor="let event of duneEvents">
-    <div class="event-card" [style.background-image]="'url(' + event.imagePath + ')'">
-      <div class="event-title">
-        {{ event.title }}
-      </div>
-      <div class="event-description">
-        {{ event.description }}
-      </div>
-    </div>
-  </ng-container>
-</div> -->

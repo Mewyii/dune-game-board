@@ -20,7 +20,6 @@ export class DuneActionComponent implements OnInit {
     costs: [{ type: 'water', amount: 1 }],
     rewards: [{ type: 'troop', amount: 2 }],
     pathToImage: 'assets/images/fremen_warriors.jpeg',
-    isBattlefield: true,
   };
 
   @Input() backgroundColor: string = '';

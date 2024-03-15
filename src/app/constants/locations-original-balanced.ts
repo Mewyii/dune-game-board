@@ -12,7 +12,6 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
-      isBattlefield: true,
     },
     ownerReward: { type: 'currency', amount: 2 },
   },
@@ -27,7 +26,6 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
-      isBattlefield: true,
     },
     ownerReward: { type: 'currency', amount: 2 },
   },
@@ -50,7 +48,6 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       ],
       rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
-      isBattlefield: true,
     },
   },
   {
@@ -64,7 +61,7 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-      isBattlefield: true,
+
       requiresInfluence: { type: 'fremen', amount: 2 },
     },
   },
@@ -79,7 +76,6 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       actionType: 'spice',
       rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
-      isBattlefield: true,
     },
     ownerReward: { type: 'spice' },
   },
@@ -95,7 +91,6 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       costs: [{ type: 'water' }],
       rewards: [{ type: 'spice', amount: 2 }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandworm.png',
-      isBattlefield: true,
     },
   },
   {
@@ -110,7 +105,6 @@ export const locationsOriginalBalanced: DuneLocation[] = [
       costs: [{ type: 'water' }, { type: 'water' }],
       rewards: [{ type: 'spice', amount: 3 }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert.png',
-      isBattlefield: true,
     },
   },
 ];

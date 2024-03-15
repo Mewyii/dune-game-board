@@ -18,8 +18,12 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_card_draw_or_delete.png';
     case 'troop':
       return 'assets/images/reward-markers/marker_troop.png';
+    case 'loose-troop':
+      return 'assets/images/reward-markers/marker_troop_delete.png';
     case 'intrigue':
       return 'assets/images/reward-markers/marker_intrigue.png';
+    case 'intrigue-trash':
+      return 'assets/images/reward-markers/marker_intrigue_delete.png';
     case 'foldspace':
       return 'assets/images/reward-markers/marker_foldspace.png';
     case 'victory-point':
@@ -70,12 +74,28 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_shipping.png';
     case 'buildup':
       return 'assets/images/reward-markers/marker_planet.png';
-    case 'faction-influence-choice':
+    case 'faction-influence-up-choice':
       return 'assets/images/reward-markers/marker_faction_influence_choice.png';
-    case 'faction-influence-choice-twice':
+    case 'faction-influence-up-emperor':
+      return 'assets/images/reward-markers/marker_faction_influence_emperor.png';
+    case 'faction-influence-up-guild':
+      return 'assets/images/reward-markers/marker_faction_influence_guild.png';
+    case 'faction-influence-up-bene':
+      return 'assets/images/reward-markers/marker_faction_influence_bene.png';
+    case 'faction-influence-up-fremen':
+      return 'assets/images/reward-markers/marker_faction_influence_fremen.png';
+    case 'faction-influence-up-twice-choice':
       return 'assets/images/reward-markers/marker_faction_influence_choice_twice.png';
-    case 'faction-influence-choice-down':
+    case 'faction-influence-down-choice':
       return 'assets/images/reward-markers/marker_faction_influence_down.png';
+    case 'faction-influence-down-emperor':
+      return 'assets/images/reward-markers/marker_faction_influence_down_emperor.png';
+    case 'faction-influence-down-guild':
+      return 'assets/images/reward-markers/marker_faction_influence_down_guild.png';
+    case 'faction-influence-down-bene':
+      return 'assets/images/reward-markers/marker_faction_influence_down_bene.png';
+    case 'faction-influence-down-fremen':
+      return 'assets/images/reward-markers/marker_faction_influence_down_fremen.png';
     case 'agent':
       return 'assets/images/reward-markers/marker_agent.png';
     case 'signet-token':

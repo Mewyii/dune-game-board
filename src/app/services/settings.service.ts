@@ -5,12 +5,12 @@ import { factionsOriginal } from '../constants/factions-original';
 import { factionsCustomBeginner } from '../constants/factions-custom-beginner';
 import { locationsCustom } from '../constants/locations-custom';
 import { locationsOriginal } from '../constants/locations-original';
-import { locationsOriginalBalanced } from '../constants/locations-original-balanced';
 import { factionsCustomExpert } from '../constants/factions-custom-expert';
 import { ActionField, FactionType, LanguageType } from '../models';
-import { ix } from '../constants/ix-custom';
+import { ixCustomAdvanced } from '../constants/ix-custom-advanced';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { ixCustomBeginner } from '../constants/ix-custom-beginner';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ import { BehaviorSubject } from 'rxjs';
 export class SettingsService {
   public factions = factionsOriginal;
   public locations = locationsOriginal;
-  public ix = ix;
+  public ix = ixCustomAdvanced;
 
   public maxSellableSpice = 3;
   public fields: ActionField[] = [];
@@ -38,15 +38,22 @@ export class SettingsService {
       localStorage.setItem('settings', JSON.stringify(settings));
     });
 
-    if (boardSettings.content === 'custom-beginner') {
+    if (boardSettings.factions === 'custom-beginner') {
       this.factions = factionsCustomBeginner;
-      this.locations = locationsOriginalBalanced;
-    } else if (boardSettings.content === 'custom-advanced') {
+    } else if (boardSettings.factions === 'custom-advanced') {
       this.factions = factionsCustomAdvanced;
-      this.locations = locationsCustom;
-    } else if (boardSettings.content === 'custom-expert') {
+    } else if (boardSettings.factions === 'custom-expert') {
       this.factions = factionsCustomExpert;
+    }
+
+    if (boardSettings.locations === 'custom') {
       this.locations = locationsCustom;
+    }
+
+    if (boardSettings.ix === 'custom-beginner') {
+      this.ix = ixCustomBeginner;
+    } else if (boardSettings.ix === 'custom-advanced') {
+      this.ix === ixCustomAdvanced;
     }
 
     this.setFields();
@@ -67,7 +74,7 @@ export class SettingsService {
       result.push(location.actionField);
     }
 
-    result.push(ix);
+    result.push(ixCustomAdvanced);
 
     this.fields = result;
     this.unblockableFields = this.fields.filter((x) => x.isNonBlockingField);

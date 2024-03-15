@@ -13,9 +13,9 @@ export const duneEvents: DuneEvent[] = [
       de: 'klarer himmel',
       en: 'clear sky',
     },
-    description: { de: 'kein effekt.', en: 'no effect.' },
+    description: { de: 'Kein Effekt.', en: 'No effect.' },
     imagePath: 'assets/images/action-backgrounds/sky.png',
-    cardAmount: 5,
+    cardAmount: 3,
   },
   {
     title: {
@@ -23,100 +23,152 @@ export const duneEvents: DuneEvent[] = [
       en: 'sandstorms',
     },
     description: {
-      de: 'die kampfstärke aller einheiten ist auf 1 reduziert.',
-      en: 'the combat strength of all units is reduced to 1.',
+      de: 'Es kann kein Spice gesammelt werden. <br>Die Kampfstärke aller Einheiten ist auf 1 reduziert.',
+      en: 'Spice can not be harvested. <br>The combat strength of all units is reduced to 1.',
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
-    cardAmount: 2,
+    cardAmount: 3,
   },
   {
     title: {
       de: 'spice-explosionen',
       en: 'spice explosions',
     },
-    description: { de: 'spice-felder bringen 1 spice mehr ein.', en: 'spice fields yield 1 spice more.' },
+    description: {
+      de: '<b>Rundenbeginn</b>: +1 Bonus-Spice auf Spice-Feldern.',
+      en: '<b>Round start</b>: +1 bonus spice on spice fields.',
+    },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
-    cardAmount: 3,
+    cardAmount: 6,
   },
   {
     title: {
       de: 'sandwürmer',
       en: 'sandworms',
     },
-    description: { de: 'spice-felder bringen 1 spice weniger ein.', en: 'spice fields yield 1 spice less.' },
+    description: { de: 'Spice zu sammeln bringt -1 Spice ein.', en: 'Spice fields yield -1 spice.' },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
-    cardAmount: 2,
+    cardAmount: 3,
   },
   {
     title: {
-      de: 'pilger',
-      en: 'pilgrims',
+      de: 'Imperiale Delegation',
+      en: 'Imperial Delegation',
     },
     description: {
-      de: 'am ende deines aufdeckzugs: erhalte 2 solari für jedes blaue feld, das von dir kontrolliert wird.',
-      en: 'at the end of your reveal turn: get 2 solari for each blue square you control.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:intrigue-trash} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-emperor}   {resource:separator}   {resource:faction-influence-down-emperor} {resource:currency} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:intrigue-trash} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-emperor}   {resource:separator}   {resource:faction-influence-down-emperor} {resource:currency} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
     },
-    imagePath: 'assets/images/action-backgrounds/spaceship.png',
+    imagePath: 'assets/images/action-backgrounds/empire_ambassador.png',
     cardAmount: 1,
   },
   {
     title: {
-      de: 'bettler',
-      en: 'beggars',
+      de: 'Gilden-Abgesandte',
+      en: 'Guild Ambassadors',
     },
     description: {
-      de: 'am ende deines aufdeckzugs: zahle 2 solari für jedes blaue feld, das von dir kontrolliert wird oder verliere einen siegpunkt.',
-      en: 'at the end of your reveal turn: pay 2 solari for each blue square you control or lose one victory point.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:spice} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-guild}   {resource:separator}   {resource:faction-influence-down-guild} {resource:spice} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:spice} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-guild}   {resource:separator}   {resource:faction-influence-down-guild} {resource:spice} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
     },
-    imagePath: 'assets/images/action-backgrounds/faithful.png',
+    imagePath: 'assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
   },
   {
     title: {
-      de: 'schmugglerbanden',
-      en: 'smuggling gangs',
+      de: 'Missionara Protectiva',
+      en: 'Missionara Protectiva',
     },
     description: {
-      de: 'am ende deines aufdeckzugs: du kannst 2 raumgilden einfluss verlieren oder 8 solari bezahlen um 1 spice und einen siegpunkt zu erhalten.',
-      en: 'at the end of your reveal turn: you can lose 2 spacing guild influence or pay 8 solari to gain 1 spice and one victory point.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:water} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-bene}   {resource:separator}   {resource:faction-influence-down-bene} {resource:persuasion;amount:3}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:water} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-bene}   {resource:separator}   {resource:faction-influence-down-bene} {resource:persuasion;amount:3}{resource:helper-arrow-right} {resource:victory-point}',
     },
-    imagePath: 'assets/images/action-backgrounds/smugglers.png',
+    imagePath: 'assets/images/action-backgrounds/bene_gesserit_3.png',
     cardAmount: 1,
   },
   {
     title: {
       de: 'abgefallene fremen',
-      en: 'renegade fremen',
+      en: 'Renegade Fremen',
     },
     description: {
-      de: 'am ende deines aufdeckzugs: du kannst 2 fremen einfluss verlieren oder 4 einheiten verlieren um 1 wasser und einen siegpunkt zu erhalten.',
-      en: 'at the end of your reveal turn: you can lose 2 fremen influence or lose 4 units to gain 1 water and one victory point.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:loose-troop}{resource:loose-troop}{resource:helper-arrow-right}{resource:faction-influence-up-fremen}   {resource:separator}   {resource:faction-influence-down-fremen} {resource:water} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:loose-troop}{resource:loose-troop}{resource:helper-arrow-right}{resource:faction-influence-up-fremen}   {resource:separator}   {resource:faction-influence-down-fremen} {resource:water} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/fremen_warriors.png',
     cardAmount: 1,
   },
   {
     title: {
-      de: 'gestaltwandler',
-      en: 'facedancers',
+      de: 'Pilger',
+      en: 'Pilgrims',
     },
     description: {
-      de: 'am ende deines aufdeckzugs: du kannst 2 bene gesserit einfluss verlieren oder 2 intrigen verlieren um 1 karte zu entsorgen und einen siegpunkt zu erhalten.',
-      en: 'at the end of your reveal turn: you can lose 2 bene gesserit influence or lose 2 intrigue to discard 1 card and gain one victory point.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Erhalte {resource:currency;amount:2} für jedes {faction:town}-Feld, auf dem sich einer deiner Agenten befindet.',
+      en: '<b>Reveal turn (each player)</b>: Gain {resource:currency;amount:2} for each {faction:town}-field with one of your agents on it.',
     },
-    imagePath: 'assets/images/action-backgrounds/soldiers.png',
+    imagePath: 'assets/images/action-backgrounds/faithful.png',
     cardAmount: 1,
   },
   {
     title: {
-      de: 'rivalen',
-      en: 'rivals',
+      de: 'Schmuggler',
+      en: 'Smugglers',
     },
     description: {
-      de: 'am ende deines aufdeckzugs: du kannst 2 imperator einfluss verlieren oder 5 spice bezahlen um eine intrige und einen siegpunkt zu erhalten.',
-      en: 'at the end of your reveal turn: you can lose 2 emperor influence or pay 5 spice to gain an intrigue and one victory point.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:spice}{resource:helper-arrow-right}{resource:currency;amount:4}   {resource:separator}   {resource:loose-troop} {resource:loose-troop}{resource:helper-arrow-right} {resource:spice;amount:2}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:loose-troop}{resource:loose-troop}{resource:helper-arrow-right}{resource:faction-influence-up-fremen}   {resource:separator}   {resource:faction-influence-down-fremen} {resource:water} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/smugglers.png',
     cardAmount: 1,
   },
+  {
+    title: {
+      de: 'Landraad-Abgeordnete',
+      en: 'Landsraad representatives',
+    },
+    description: {
+      de: 'Jedes mal, wenn du einen Agenten auf einem {faction:landsraad}-Feld <br>platzierst: {resource:card-draw}',
+      en: 'Every time you send an agent to a {faction:landsraad}-field: {resource:card-draw}',
+    },
+    imagePath: 'assets/images/action-backgrounds/empire_ambassador_2.png',
+    cardAmount: 1,
+  },
+  {
+    title: {
+      de: 'Ixianische Händler',
+      en: 'Ixian Merchants',
+    },
+    description: {
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:currency;amount:2}{resource:helper-arrow-right}{resource:tech-reduced-two}   {resource:separator}   <br>Entsorge 2 Techplättchen {resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:currency;amount:2}{resource:helper-arrow-right}{resource:tech-reduced-two}   {resource:separator}   <br>Trash 2 techtiles {resource:helper-arrow-right} {resource:victory-point}',
+    },
+    imagePath: 'assets/images/action-backgrounds/industry_2.png',
+    cardAmount: 1,
+  },
+  {
+    title: {
+      de: 'Verschwörer',
+      en: 'Conspirators',
+    },
+    description: {
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Verliere {resource:intrigue}{resource:intrigue}{resource:separator}{resource:victory-point}.',
+      en: '<b>Reveal turn (each player)</b>: Lose {resource:intrigue}{resource:intrigue}{resource:separator}{resource:victory-point}.',
+    },
+    imagePath: 'assets/images/action-backgrounds/conspiracy.png',
+    cardAmount: 1,
+  },
+  {
+    title: {
+      de: 'Assassinen',
+      en: 'Assassins',
+    },
+    description: {
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Verliere {resource:troop}{resource:troop}{resource:separator}{resource:victory-point}.',
+      en: '<b>Reveal turn (each player)</b>: Lose {resource:troop}{resource:troop}{resource:separator}{resource:victory-point}.',
+    },
+    imagePath: 'assets/images/action-backgrounds/bene_gesserit.png',
+    cardAmount: 1,
+  },
+  // 24 Cards
 ];

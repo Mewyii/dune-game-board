@@ -12,7 +12,6 @@ export const locationsCustom: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
-      isBattlefield: true,
     },
     ownerReward: { type: 'currency' },
   },
@@ -27,9 +26,8 @@ export const locationsCustom: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
-      isBattlefield: true,
     },
-    ownerReward: { type: 'currency' },
+    ownerReward: { type: 'card-round-start' },
   },
   {
     color: 'rgb(87, 71, 52)',
@@ -50,7 +48,6 @@ export const locationsCustom: DuneLocation[] = [
       ],
       rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
-      isBattlefield: true,
     },
   },
   {
@@ -64,7 +61,7 @@ export const locationsCustom: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-      isBattlefield: true,
+
       requiresInfluence: { type: 'fremen', amount: 2 },
     },
   },
@@ -79,7 +76,6 @@ export const locationsCustom: DuneLocation[] = [
       actionType: 'spice',
       rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
-      isBattlefield: true,
     },
     ownerReward: { type: 'persuasion', amount: 1 },
   },
@@ -95,7 +91,6 @@ export const locationsCustom: DuneLocation[] = [
       costs: [{ type: 'water' }],
       rewards: [{ type: 'spice', amount: 2 }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandworm.png',
-      isBattlefield: true,
     },
   },
   {
@@ -110,7 +105,6 @@ export const locationsCustom: DuneLocation[] = [
       costs: [{ type: 'water' }, { type: 'water' }],
       rewards: [{ type: 'spice', amount: 3 }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert.png',
-      isBattlefield: true,
     },
   },
   // 5-6Player Stuff
@@ -125,7 +119,7 @@ export const locationsCustom: DuneLocation[] = [
   //     actionType: 'town',
   //     rewards: [{ type: 'water' }, { type: 'currency', amount: 1 }, { type: 'combat' }],
   //     pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-  //     isBattlefield: true,
+  //
   //   },
   // },
   // {
@@ -140,7 +134,7 @@ export const locationsCustom: DuneLocation[] = [
   //     costs: [{ type: 'water' }],
   //     rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'card-destroy' }],
   //     pathToImage: 'assets/images/action-backgrounds/desert.png',
-  //     isBattlefield: true,
+  //
   //   },
   // },
   // {
@@ -154,7 +148,7 @@ export const locationsCustom: DuneLocation[] = [
   //     actionType: 'landsraad',
   //     rewards: [{ type: 'troop', amount: 3 }],
   //     pathToImage: 'assets/images/action-backgrounds/sardaukar.png',
-  //     isBattlefield: true,
+  //
   //   },
   // },
   // {
@@ -169,7 +163,7 @@ export const locationsCustom: DuneLocation[] = [
   //     costs: [{ type: 'currency', amount: 2 }],
   //     rewards: [{ type: 'card-destroy' }, { type: 'mentat', iconHeight: 95 }],
   //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',
-  //     isBattlefield: false,
+  //
   //     customWidth: 'fit-content',
   //   },
   // },

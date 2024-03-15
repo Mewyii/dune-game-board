@@ -1,35 +1,7 @@
-<div class="event-board" *ngIf="currentPlayer">
-  <h2>
-    ai <span *ngIf="showDetails">({{ currentAIPlayer?.name }})</span>
-    <mat-slide-toggle
-      *ngIf="currentAIPlayer"
-      [color]="'accent'"
-      [checked]="showDetails"
-      (change)="showDetails = !showDetails"
-      >Details</mat-slide-toggle
-    >
-  </h2>
-
-  <div class="game-state-container">
-    <div class="info-container">
-      <div class="game-state-name">difficulty</div>
-      <mat-checkbox [checked]="aiDifficulty === 'easy'" (change)="setAIDifficulty('easy')">easy</mat-checkbox>
-      <mat-checkbox [checked]="aiDifficulty === 'medium'" (change)="setAIDifficulty('medium')">medium</mat-checkbox>
-      <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">hard</mat-checkbox>
-    </div>
-    <div class="info-container">
-      <div class="game-state-name">imperium row</div>
-      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'good'" (change)="setAIVariable('imperiumRow', 'good')"
-        >Good</mat-checkbox
-      >
-      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'okay'" (change)="setAIVariable('imperiumRow', 'okay')"
-        >Okay</mat-checkbox
-      >
-      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'bad'" (change)="setAIVariable('imperiumRow', 'bad')"
-        >Bad</mat-checkbox
-      >
-    </div>
-  </div>
+<div class="event-board" *ngIf="currentPlayer && currentAIPlayer">
+  <mat-slide-toggle *ngIf="currentAIPlayer" [color]="'accent'" [checked]="showDetails" (change)="showDetails = !showDetails"
+    >Details</mat-slide-toggle
+  >
   <div class="heading-container" *ngIf="currentAIPlayer && showDetails">
     <div class="info-container">
       <div>personality</div>
@@ -50,9 +22,30 @@
       >
     </div>
   </div>
+  <div class="game-state-container">
+    <div class="info-container" *ngIf="showDetails">
+      <div class="game-state-name">difficulty</div>
+      <mat-checkbox [checked]="aiDifficulty === 'easy'" (change)="setAIDifficulty('easy')">easy</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'medium'" (change)="setAIDifficulty('medium')">medium</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">hard</mat-checkbox>
+    </div>
+    <div class="info-container">
+      <div class="game-state-name">imperium row</div>
+      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'good'" (change)="setAIVariable('imperiumRow', 'good')"
+        >Good</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'okay'" (change)="setAIVariable('imperiumRow', 'okay')"
+        >Okay</mat-checkbox
+      >
+      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'bad'" (change)="setAIVariable('imperiumRow', 'bad')"
+        >Bad</mat-checkbox
+      >
+    </div>
+  </div>
+  <h3>deck</h3>
   <div class="heading-container" *ngIf="currentAIPlayer">
-    <div class="info-container" [style.width]="'300px'">
-      <div>deck size</div>
+    <div class="info-container">
+      <div>size</div>
       <div class="value">{{ currentPlayer.cardsInDeck }}</div>
       <button mat-mini-fab [color]="'accent'" (click)="onRemoveCardFromDeckClicked(currentPlayer.id)">
         <mat-icon>remove</mat-icon>
@@ -62,14 +55,14 @@
       </button>
     </div>
     <div class="info-container">
-      <div>cards bought</div>
+      <div>bought</div>
       <div class="value">{{ currentPlayer.cardsBought }}</div>
       <button mat-mini-fab [color]="'accent'" (click)="onBoughtCardClicked(currentPlayer.id)">
         <mat-icon>add</mat-icon>
       </button>
     </div>
     <div class="info-container">
-      <div>cards trimmed</div>
+      <div>trimmed</div>
       <div class="value">{{ currentPlayer.cardsTrimmed }}</div>
       <button mat-mini-fab [color]="'accent'" (click)="onTrimCardClicked(currentPlayer.id)">
         <mat-icon>add</mat-icon>

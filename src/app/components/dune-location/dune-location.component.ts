@@ -27,7 +27,6 @@ export class DuneLocationComponent implements OnInit {
         { type: 'card-draw', amount: 1 },
       ],
       pathToImage: '',
-      isBattlefield: true,
     },
   };
 

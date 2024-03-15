@@ -1,6 +1,6 @@
 import { ActionField } from '../models';
 
-export const ix: ActionField = {
+export const ixCustomAdvanced: ActionField = {
   title: { de: 'aufrüstung', en: 'upgrade' },
   actionType: 'landsraad',
   costs: [{ type: 'currency', amount: 4 }],
@@ -11,7 +11,7 @@ export const ix: ActionField = {
     { type: 'combat' },
   ],
   pathToImage: 'assets/images/action-backgrounds/industry_2.png',
-  isBattlefield: false,
+
   hasRewardOptions: true,
   customWidth: 'fit-content',
 };

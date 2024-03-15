@@ -33,7 +33,7 @@
         class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
         [style.color]="player.color"
       >
-        <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? 'I ' : '' }}</span>
+        <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
         {{ getPlayerLeaderName(player.id).toLocaleLowerCase() }}
       </div>
     </div>

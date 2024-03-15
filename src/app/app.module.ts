@@ -52,6 +52,8 @@ import { GameManualComponent } from './pages/game-board/game-manual/game-manual.
 import { TechTilesComponent } from './components/tech-tiles/tech-tiles.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
+import { EventConfiguratorComponent } from './pages/event-configurator/event-configurator.component';
+import { EventCardComponent } from './components/_common/event-card/event-card.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +91,8 @@ import { AudioPlayerComponent } from './components/audio-player/audio-player.com
     TechTilesComponent,
     ConfirmDialogComponent,
     AudioPlayerComponent,
+    EventConfiguratorComponent,
+    EventCardComponent,
   ],
   imports: [
     BrowserModule,

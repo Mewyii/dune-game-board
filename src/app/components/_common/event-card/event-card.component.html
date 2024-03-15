@@ -1,0 +1,6 @@
+<div class="event-card" [style.background-image]="'url(' + event.imagePath + ')'">
+  <div class="event-title">
+    {{ translateService.translate(event.title).toLocaleLowerCase() }}
+  </div>
+  <div class="event-description" [innerHTML]="translateService.translate(event.description) | duneSymbols : '30px'"></div>
+</div>
