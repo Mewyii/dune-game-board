@@ -1,4 +1,4 @@
-import { Faction } from '../models';
+import { Faction } from '../../../models';
 
 export const factionsOriginal: Faction[] = [
   {

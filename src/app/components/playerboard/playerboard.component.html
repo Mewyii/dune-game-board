@@ -49,7 +49,7 @@
       <div *ngIf="gameManager.currentTurn != 0 && player.isAI" class="ai-label">ai</div>
     </div>
     <div class="agent-area">
-      <ng-container *ngFor="let object of getArrayFromNumber(player.agents + 1); let i = index">
+      <ng-container *ngFor="let object of player.agents + 1 | numberToArray; let i = index">
         <div class="agents-icon-container">
           <div
             class="agents-icon"

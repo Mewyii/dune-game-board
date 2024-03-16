@@ -13,8 +13,6 @@ export class EventsComponent implements OnInit {
   public events: Omit<DuneEvent, 'cardAmount'>[] = [];
   public currentEventIndex = 0;
 
-  public duneEvents = duneEvents;
-
   constructor(
     public translateService: TranslateService,
     public gameManager: GameManager,
@@ -31,9 +29,7 @@ export class EventsComponent implements OnInit {
     });
 
     this.duneEventsManager.gameEvents$.subscribe((x) => {
-      if (x.length > 0) {
-        this.events = x;
-      }
+      this.events = x;
     });
   }
 }

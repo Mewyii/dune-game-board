@@ -1,10 +1,10 @@
-<div *ngIf="settingsService.settings.ix !== 'no'" class="faction-tile">
+<div *ngIf="ix" class="faction-tile">
   <div class="title-container">
     <span class="title">ix </span>
   </div>
   <div class="content">
-    <app-dune-action [action]="techActionField" [backgroundColor]="'rgb(115, 98, 46)'"></app-dune-action>
-    <ng-container *ngIf="settingsService.settings.techTiles === 'yes'">
+    <app-dune-action [action]="ix" [backgroundColor]="'rgb(115, 98, 46)'"></app-dune-action>
+    <ng-container *ngIf="useTechTiles">
       <div class="card-area" [style]="'margin-top: 25px'"></div>
       <div class="card-area"></div>
       <div class="card-area"></div>
@@ -17,14 +17,14 @@
     </ng-container>
   </div>
   <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
-  <ng-container *ngIf="settingsService.settings.techTiles === 'yes'">
+  <ng-container *ngIf="useTechTiles">
     <ng-container *ngFor="let techAgents of playerTechAgents; let i = index">
       <div
         class="tech-agent-container"
         [style.bottom]="25 + (i > 0 && i < 3 ? 60 : 0) + 'px'"
         [style.left]="65 + (i > 1 ? 95 : 0) + 'px'"
       >
-        <ng-container *ngFor="let ship of getArrayFromNumber(techAgents.techAgents); let is = index">
+        <ng-container *ngFor="let ship of techAgents.techAgents | numberToArray; let is = index">
           <div class="tech-agent-marker" [style.background-color]="getPlayerColor(techAgents.playerId)"></div>
         </ng-container>
       </div>

@@ -33,10 +33,6 @@ export class HomeworldTileComponent implements OnInit {
     return getRewardTypePath(rewardType);
   }
 
-  public getArrayFromNumber(length: number) {
-    return new Array(length);
-  }
-
   public getRandomDegree() {
     return Math.floor(Math.random() * 360) + 1;
   }

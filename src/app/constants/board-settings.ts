@@ -1,19 +1,24 @@
-import { LanguageType } from '../models';
+import { ActionField, DuneLocation, Faction, LanguageType } from '../models';
+import { gameContentCustomAdvanced } from './game-content';
+
+export interface GameContent {
+  factions: Faction[];
+  locations: DuneLocation[];
+  ix?: ActionField;
+  useTechTiles: boolean;
+  useVictoryPointBoni?: boolean;
+}
+
+export type AppMode = 'board' | 'game';
 
 export interface Settings {
-  mode: 'board' | 'game';
+  mode: AppMode;
   language: LanguageType;
-  factions: 'original' | 'custom-beginner' | 'custom-advanced' | 'custom-expert';
-  locations: 'original' | 'custom';
-  ix: 'no' | 'original' | 'custom-beginner' | 'custom-advanced';
-  techTiles: 'no' | 'yes';
+  gameContent: GameContent;
 }
 
 export const boardSettings: Settings = {
   mode: 'game',
   language: 'de',
-  factions: 'custom-advanced',
-  locations: 'custom',
-  ix: 'custom-advanced',
-  techTiles: 'yes',
+  gameContent: gameContentCustomAdvanced,
 };

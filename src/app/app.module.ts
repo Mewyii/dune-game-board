@@ -54,6 +54,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { EventConfiguratorComponent } from './pages/event-configurator/event-configurator.component';
 import { EventCardComponent } from './components/_common/event-card/event-card.component';
+import { NumberToArrayPipe } from './pipes/number-to-array';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { EventCardComponent } from './components/_common/event-card/event-card.c
     ConflictsComponent,
     AllianceTokenComponent,
     DuneSymbolsPipe,
+    NumberToArrayPipe,
     MinorHousesComponent,
     MinorHouseCardComponent,
     ImperiumRowCardComponent,

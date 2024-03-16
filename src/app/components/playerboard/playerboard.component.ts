@@ -148,8 +148,4 @@ export class PlayerboardComponent implements OnInit {
   public getFactionTypePath(rewardType: FactionType) {
     return getFactionTypePath(rewardType);
   }
-
-  public getArrayFromNumber(length: number) {
-    return new Array(length);
-  }
 }

@@ -39,8 +39,4 @@ export class TechTilesComponent {
   getFactionTypePath(rewardType: FactionType) {
     return getFactionTypePath(rewardType);
   }
-
-  getArrayFromNumber(length: number) {
-    return new Array(length);
-  }
 }

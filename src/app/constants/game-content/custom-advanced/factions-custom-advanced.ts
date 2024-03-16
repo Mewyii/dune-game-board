@@ -1,6 +1,6 @@
-import { Faction } from '../models';
+import { Faction } from '../../../models';
 
-export const factionsCustomBeginner: Faction[] = [
+export const factionsCustomAdvanced: Faction[] = [
   {
     title: { de: 'fremen', en: 'fremen' },
     type: 'fremen',
@@ -96,7 +96,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'expedition', en: 'expedition' },
         actionType: 'guild',
-        rewards: [{ type: 'currency' }, { type: 'intrigue' }],
+        rewards: [{ type: 'currency' }, { type: 'tech-reduced' }],
         pathToImage: 'assets/images/action-backgrounds/foldspace.png',
       },
     ],
@@ -241,7 +241,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'handelsrechte', en: 'trade rights' },
         actionType: 'spice',
-        rewards: [{ type: 'persuasion', amount: 1 }, { type: 'currency', amount: 2 }, { type: 'troop' }],
+        rewards: [{ type: 'persuasion', amount: 1 }, { type: 'currency', amount: 2 }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/spice_port.png',
       },
     ],

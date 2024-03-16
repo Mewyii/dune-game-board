@@ -1,54 +1,42 @@
-<div [style]="'display:flex; padding-left: 32px, padding-top: 16px'">
+<div [style]="'display:flex; padding-left: 32px, padding-top: 16px'" *ngIf="settings && gameContent">
   <div class="board">
     <ng-particles
-      *ngIf="settingsService.settings.mode === 'game'"
+      *ngIf="settings.mode === 'game'"
       [id]="'stars'"
       [options]="stars"
       [particlesInit]="initStars"
     ></ng-particles>
     <ng-particles
-      *ngIf="settingsService.settings.mode === 'game'"
+      *ngIf="settings.mode === 'game'"
       [id]="'ships'"
       [options]="ships"
       [particlesInit]="initShips"
     ></ng-particles>
-    <ng-particles
-      *ngIf="settingsService.settings.mode === 'game'"
-      [id]="'dust'"
-      [options]="dust"
-      [particlesInit]="initDust"
-    ></ng-particles>
-    <ng-particles
-      *ngIf="settingsService.settings.mode === 'game'"
-      [id]="'sand'"
-      [options]="sand"
-      [particlesInit]="initSand"
-    ></ng-particles>
-    <ng-container *ngFor="let faction of settingsService.factions">
-      <app-dune-faction [faction]="faction"></app-dune-faction>
+    <ng-particles *ngIf="settings.mode === 'game'" [id]="'dust'" [options]="dust" [particlesInit]="initDust"></ng-particles>
+    <ng-particles *ngIf="settings.mode === 'game'" [id]="'sand'" [options]="sand" [particlesInit]="initSand"></ng-particles>
+    <ng-container *ngFor="let faction of gameContent.factions">
+      <app-dune-faction [faction]="faction" [mode]="settings.mode"></app-dune-faction>
     </ng-container>
-    <ng-container *ngFor="let location of settingsService.locations">
+    <ng-container *ngFor="let location of gameContent.locations">
       <app-dune-location [location]="location"></app-dune-location>
     </ng-container>
-    <app-dune-combat></app-dune-combat>
-    <app-scoreboard></app-scoreboard>
-    <app-techboard></app-techboard>
+    <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
+    <app-scoreboard [mode]="settings.mode" [useVictoryPointBoni]="gameContent.useVictoryPointBoni"></app-scoreboard>
+    <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
     <app-card-areas></app-card-areas>
     <dune-conflicts></dune-conflicts>
-    <dune-tech-tiles
-      *ngIf="settingsService.settings.mode === 'game' && settingsService.settings.techTiles === 'yes'"
-    ></dune-tech-tiles>
+    <dune-tech-tiles *ngIf="settings.mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
   </div>
-  <app-playerboard *ngIf="settingsService.settings.mode === 'game'"></app-playerboard>
-  <div *ngIf="settingsService.settings.mode === 'game'" class="sideboard-container">
+  <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>
+  <div *ngIf="settings.mode === 'game'" class="sideboard-container">
     <dune-game-manual *ngIf="gameManager.currentTurn === 0"></dune-game-manual>
-    <dune-events *ngIf="settingsService.settings.mode === 'game'"></dune-events>
-    <!-- <dune-minor-houses *ngIf="settingsService.settings.mode === 'game'"></dune-minor-houses> -->
+    <dune-events *ngIf="settings.mode === 'game'"></dune-events>
+    <!-- <dune-minor-houses *ngIf="settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders></dune-leaders>
     <dune-ai-tile></dune-ai-tile>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
-  <div *ngIf="settingsService.settings.mode === 'game'" class="sideboard-container" style="margin-left: 8px">
+  <div *ngIf="settings.mode === 'game'" class="sideboard-container" style="margin-left: 8px">
     <dune-audio-player></dune-audio-player>
   </div>
 </div>

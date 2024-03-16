@@ -8,7 +8,7 @@
             <img class="reward" [src]="getRewardTypePath(upgrade.rewardType)" />
             <div>:</div>
             <div>{{ upgrade.initialAmount }}</div>
-            <ng-container *ngFor="let upgradeCount of getArrayFromNumber(upgrade.upgradeCount); let i = index">
+            <ng-container *ngFor="let upgradeCount of upgrade.upgradeCount | numberToArray; let i = index">
               <div>+</div>
               <div class="upgrade-marker"></div>
             </ng-container>

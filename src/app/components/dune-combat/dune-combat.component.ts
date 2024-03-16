@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RewardType } from 'src/app/models';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
@@ -19,6 +19,8 @@ export interface CombatScore {
   styleUrls: ['./dune-combat.component.scss'],
 })
 export class DuneCombatComponent implements OnInit {
+  @Input() useDreadnoughts = false;
+
   public maxCombatScore = 22;
 
   public players: Player[] = [];
@@ -102,15 +104,15 @@ export class DuneCombatComponent implements OnInit {
     return this.playerManager.getPlayerColor(playerId);
   }
 
-  public getArrayFromNumber(length: number) {
-    return new Array(length);
-  }
-
   public trackCombatUnits(index: number, combatUnits: PlayerCombatUnits) {
     return combatUnits.playerId;
   }
 
   public trackPlayer(index: number, player: Player) {
     return player.id;
+  }
+
+  public trackCount(index: number, player: Player) {
+    return index;
   }
 }

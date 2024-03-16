@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Reward, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { AppMode } from 'src/app/constants/board-settings';
 
 @Component({
   selector: 'app-scoreboard',
@@ -11,15 +12,14 @@ import { SettingsService } from 'src/app/services/settings.service';
   styleUrls: ['./scoreboard.component.scss'],
 })
 export class ScoreboardComponent implements OnInit {
+  @Input() mode: AppMode = 'board';
+  @Input() useVictoryPointBoni? = false;
+
   public scoreArray: number[] = [];
 
   public playerVictoryPoints: { playerId: number; amount: number }[] = [];
 
-  constructor(
-    public playerManager: PlayerManager,
-    public playerScoreManager: PlayerScoreManager,
-    public settingsService: SettingsService
-  ) {}
+  constructor(public playerManager: PlayerManager, public playerScoreManager: PlayerScoreManager) {}
 
   ngOnInit(): void {
     this.scoreArray = new Array(this.playerScoreManager.maxScore);
@@ -34,10 +34,6 @@ export class ScoreboardComponent implements OnInit {
 
   public getPlayerColor(playerId: number) {
     return this.playerManager.getPlayerColor(playerId);
-  }
-
-  public getArrayFromNumber(length: number) {
-    return new Array(length);
   }
 
   public scoreHasReward(score: number) {

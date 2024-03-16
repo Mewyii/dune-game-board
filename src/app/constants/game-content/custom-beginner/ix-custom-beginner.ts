@@ -1,4 +1,4 @@
-import { ActionField } from '../models';
+import { ActionField } from '../../../models';
 
 export const ixCustomBeginner: ActionField = {
   title: { de: 'aufrüstung', en: 'upgrade' },

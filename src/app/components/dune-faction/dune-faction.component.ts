@@ -5,6 +5,7 @@ import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { AppMode } from 'src/app/constants/board-settings';
 
 @Component({
   selector: 'app-dune-faction',
@@ -42,6 +43,7 @@ export class DuneFactionComponent implements OnInit {
   @Input() actions: string = 'fremen';
   @Input() marginTop: number = 2000;
   @Input() marginLeft: number = 33;
+  @Input() mode: AppMode = 'board';
 
   maxFavorScore: number = 7;
   public favorScoreArray: number[] = [];
@@ -53,8 +55,7 @@ export class DuneFactionComponent implements OnInit {
   constructor(
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
-    public translateService: TranslateService,
-    public settingsService: SettingsService
+    public translateService: TranslateService
   ) {}
 
   ngOnInit(): void {

@@ -1,6 +1,6 @@
-import { DuneLocation } from '../models';
+import { DuneLocation } from '../../../models';
 
-export const locationsCustom: DuneLocation[] = [
+export const locationsOriginal: DuneLocation[] = [
   {
     color: 'rgb(87, 71, 52)',
     position: {
@@ -24,10 +24,10 @@ export const locationsCustom: DuneLocation[] = [
     actionField: {
       title: { de: 'carthag', en: 'carthag' },
       actionType: 'town',
-      rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
     },
-    ownerReward: { type: 'card-round-start' },
+    ownerReward: { type: 'currency' },
   },
   {
     color: 'rgb(87, 71, 52)',
@@ -46,7 +46,7 @@ export const locationsCustom: DuneLocation[] = [
           type: 'water',
         },
       ],
-      rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
+      rewards: [{ type: 'card-draw', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
     },
   },
@@ -77,7 +77,7 @@ export const locationsCustom: DuneLocation[] = [
       rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
+    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -107,64 +107,4 @@ export const locationsCustom: DuneLocation[] = [
       pathToImage: 'assets/images/action-backgrounds/desert.png',
     },
   },
-  // 5-6Player Stuff
-  // {
-  //   color: 'rgb(87, 71, 52)',
-  //   position: {
-  //     marginTop: 1000,
-  //     marginLeft: 1444,
-  //   },
-  //   actionField: {
-  //     title: "tuek's sietch",
-  //     actionType: 'town',
-  //     rewards: [{ type: 'water' }, { type: 'currency', amount: 1 }, { type: 'combat' }],
-  //     pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(196, 172, 139)',
-  //   position: {
-  //     marginTop: 1080,
-  //     marginLeft: 540,
-  //   },
-  //   actionField: {
-  //     title: 'ebene der toten',
-  //     actionType: 'spice',
-  //     costs: [{ type: 'water' }],
-  //     rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'card-destroy' }],
-  //     pathToImage: 'assets/images/action-backgrounds/desert.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(79, 94, 78)',
-  //   position: {
-  //     marginTop: 1170,
-  //     marginLeft: 1800,
-  //   },
-  //   actionField: {
-  //     title: 'bashar',
-  //     actionType: 'landsraad',
-  //     rewards: [{ type: 'troop', amount: 3 }],
-  //     pathToImage: 'assets/images/action-backgrounds/sardaukar.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(79, 94, 78)',
-  //   position: {
-  //     marginTop: 1370,
-  //     marginLeft: 1800,
-  //   },
-  //   actionField: {
-  //     title: 'twisted mentat',
-  //     actionType: 'landsraad',
-  //     costs: [{ type: 'currency', amount: 2 }],
-  //     rewards: [{ type: 'card-destroy' }, { type: 'mentat', iconHeight: 95 }],
-  //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',
-  //
-  //     customWidth: 'fit-content',
-  //   },
-  // },
 ];

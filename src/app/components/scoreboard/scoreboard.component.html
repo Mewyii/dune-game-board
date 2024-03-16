@@ -6,7 +6,7 @@
       [class.finale-three-players]="i > playerScoreManager.finaleTrigger"
     >
       <div class="score">{{ i }}</div>
-      <ng-container *ngIf="settingsService.settings.factions !== 'original'"
+      <ng-container *ngIf="useVictoryPointBoni"
         ><ng-container *ngIf="scoreHasReward(i)">
           <div class="reward-container">
             <img class="reward" [src]="getRewardTypePath(i)" />
@@ -26,7 +26,7 @@
       [class.finale-three-players]="i === playerScoreManager.finaleTrigger"
     ></div>
   </ng-container>
-  <ng-container *ngIf="settingsService.settings.mode === 'game'">
+  <ng-container *ngIf="mode === 'game'">
     <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index; trackBy: trackPlayerScore">
       <div
         class="score-marker"

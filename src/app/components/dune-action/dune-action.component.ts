@@ -88,10 +88,6 @@ export class DuneActionComponent implements OnInit {
     }
   }
 
-  public getArrayFromNumber(length: number) {
-    return new Array(length);
-  }
-
   public getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
   }

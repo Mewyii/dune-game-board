@@ -11,7 +11,7 @@ export class DuneEventsManager {
   private eventsSubject = new BehaviorSubject<DuneEvent[]>(duneEvents);
   public events$ = this.eventsSubject.asObservable();
 
-  private gameEventsSubject = new BehaviorSubject<Omit<DuneEvent, 'cardAmount'>[]>([this.getNewEvent()]);
+  private gameEventsSubject = new BehaviorSubject<Omit<DuneEvent, 'cardAmount'>[]>([]);
   public gameEvents$ = this.gameEventsSubject.asObservable();
 
   constructor() {

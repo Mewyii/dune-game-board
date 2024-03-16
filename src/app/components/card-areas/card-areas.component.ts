@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-card-areas',
@@ -7,7 +6,7 @@ import { SettingsService } from 'src/app/services/settings.service';
   styleUrls: ['./card-areas.component.scss'],
 })
 export class CardAreasComponent implements OnInit {
-  constructor(public settingsService: SettingsService) {}
+  constructor() {}
 
   ngOnInit(): void {}
 }

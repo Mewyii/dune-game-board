@@ -67,10 +67,10 @@ export class PlayerScoreManager {
       localStorage.setItem('playerAlliances', JSON.stringify(playerAlliances));
     });
 
-    this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troop' } }));
-    this.scoreRewards.shift();
+    if (this.settingsService.gameContent.useVictoryPointBoni) {
+      this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troop' } }));
+      this.scoreRewards.shift();
 
-    if (this.settingsService.settings.factions !== 'original') {
       this.finaleTrigger = 9;
 
       this.scoreRewards[0].reward = { type: 'currency' };
@@ -139,14 +139,14 @@ export class PlayerScoreManager {
         this.playerScoresSubject.next(playerScores);
 
         if (newScore === this.factionFriendshipTreshold) {
-          const faction = this.settingsService.factions.find((x) => x.type === actionType);
+          const faction = this.settingsService.gameContent.factions.find((x) => x.type === actionType);
           if (faction && faction.levelTwoReward) {
             factionRewards = faction.levelTwoReward;
           }
         }
 
         if (newScore === this.factionAllianceTreshold) {
-          const faction = this.settingsService.factions.find((x) => x.type === actionType);
+          const faction = this.settingsService.gameContent.factions.find((x) => x.type === actionType);
           if (faction && faction.levelFourReward) {
             factionRewards = faction.levelFourReward;
           }
