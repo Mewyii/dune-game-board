@@ -36,23 +36,13 @@ dune-leader-card {
     animation-iteration-count: infinite;
 }
 
-.leader-card {
-    width: 500px;
-    height: 375px;
-    border: 16px solid #151515;;
-    border-radius: 6px;
+.leader-card.full-picture {
+    width: 600px;
+    height: 410px;
     position: relative;
     background-size: cover;
-    color: #fffcfa;
-    font-size: x-small;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-}
-
-.leader-card.full-picture {
     border: none;
     border-radius: 20px;
-    width: 532px;
-    height: 372px;
     background-color: black;
     background-position: center;
     animation-name: leader-glow-anim-old;

@@ -45,7 +45,6 @@ export const leadersOld: LeaderImageOnly[] = [
     name: { de: 'baron vladimir harkonnen', en: 'baron vladimir harkonnen' },
     type: 'old',
     imageUrl: '/assets/images/leaders/old/vlad.jpg',
-    playableByAI: true,
   },
   {
     name: { de: 'glossu "die bestie" rabban', en: 'glossu "the beast" rabban' },
@@ -73,7 +72,6 @@ export const leadersOld: LeaderImageOnly[] = [
     name: { de: '"prinzessin" yuna moritani', en: '"princess" yuna moritani' },
     type: 'old',
     imageUrl: '/assets/images/leaders/old/yuna.jpg',
-    playableByAI: true,
   },
   {
     name: { de: 'erzherzog  armand ecaz', en: 'archduke armand ecaz' },

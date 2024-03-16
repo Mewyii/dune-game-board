@@ -1,23 +1,30 @@
 .leader-card {
-    width: 500px;
-    height: 375px;
-    border: 16px solid #151515;;
-    border-radius: 6px;
+    width: 600px;
+    height: 425px;
+    border-radius: 8px;
     position: relative;
     background-size: cover;
     color: #fffcfa;
-    font-size: x-small;
+    font-size: small;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
 .leader-title {
-    padding: 6px 12px;
-    font-size: large;
+    padding: 12px 12px 6px 16px;
+    font-size: x-large;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+}
+
+.underline {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(45deg, rgba(255, 165, 0, 0.5), rgba(255, 206, 115, 0.5) 25%,transparent 75%);
 }
 
 .leader-house {
-    padding: 0px 42px;
+    padding: 4px 42px;
     color: #e1e1e1;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
 .leader-passive {
@@ -62,12 +69,12 @@
 
 .leader-passive-container {
     position: absolute;
-    border-radius: 0px 6px 0px 0px;
+    border-radius: 0px 6px 0px 8px;
     left: 0;
     bottom: 0;
-    height: 80px;
-    padding: 6px;
-    width: 45%;
+    height: 100px;
+    padding: 10px;
+    width: 44%;
     background-color: #00000096;
     border-top: 1px solid rgb(127 127 127 / 33%);
     border-right: 1px solid rgb(64 64 64 / 25%);
@@ -75,12 +82,12 @@
 
 .leader-signet-container {
     position: absolute;
-    border-radius: 6px 0px 0px 0px;
+    border-radius: 6px 0px 8px 0px;
     right: 0;
     bottom: 0;
-    height: 80px;
-    padding: 6px;
-    width: 45%;
+    height: 100px;
+    padding: 10px;
+    width: 44%;
     background-color: rgb(44 32 10 / 59%);
     border-top: 1px solid rgb(255 165 0 / 33%);
     border-left: 1px solid rgb(127 82 0 / 25%);
@@ -88,14 +95,14 @@
 
 .leader-passive-name,
 .leader-signet-name {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .leader-passive-description,
 .leader-signet-description {
     font-family: "Roboto", "Verdana";
     font-weight: initial;
-    font-size: small;
+    font-size: medium;
     color: #e1e1e1;
     white-space: pre-wrap;
 }

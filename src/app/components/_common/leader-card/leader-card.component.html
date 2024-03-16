@@ -3,6 +3,7 @@
     <div class="leader-title">
       {{ translateService.translate(leader.name).toLocaleLowerCase() }}
     </div>
+    <div class="underline"></div>
     <div class="leader-house">{{ translateService.translate(leader.house).toLocaleLowerCase() }}</div>
   </div>
 
@@ -12,7 +13,7 @@
     </div>
     <div
       class="leader-passive-description"
-      [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
+      [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols : '20px'"
     ></div>
   </div>
   <div class="leader-signet-container">
@@ -21,7 +22,7 @@
     </div>
     <div
       class="leader-signet-description"
-      [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"
+      [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols : '20px'"
     ></div>
   </div>
   <div class="deck-indicator">{{ translateService.translate(deckName) }}</div>
