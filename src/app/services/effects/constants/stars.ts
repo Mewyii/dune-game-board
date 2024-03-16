@@ -29,7 +29,7 @@ export const stars: IParticlesProps = {
       type: 'circle',
     },
     size: {
-      value: 1.5,
+      value: 1.75,
       random: true,
     },
     line_linked: {

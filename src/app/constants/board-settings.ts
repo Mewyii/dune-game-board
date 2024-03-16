@@ -1,5 +1,5 @@
 import { ActionField, DuneLocation, Faction, LanguageType } from '../models';
-import { gameContentCustomAdvanced } from './game-content';
+import { gameContentCustomAdvanced, gameContentCustomBeginner, gameContentOriginal } from './game-content';
 
 export interface GameContent {
   factions: Faction[];

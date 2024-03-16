@@ -189,7 +189,6 @@ export const factionsOriginal: Faction[] = [
         pathToImage: 'assets/images/action-backgrounds/troops_3.png',
 
         hasRewardOptions: true,
-        customWidth: '200px',
       },
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
@@ -197,6 +196,7 @@ export const factionsOriginal: Faction[] = [
         costs: [{ type: 'currency', amount: 8 }],
         rewards: [{ type: 'sword-master', iconHeight: 50 }],
         pathToImage: 'assets/images/action-backgrounds/swordmaster_2.png',
+        customWidth: '135px',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',

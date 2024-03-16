@@ -3,7 +3,7 @@ import { AIPersonality } from '../models';
 const fighter: AIPersonality = {
   'get-troops': 1.1,
   'enter-combat': 1.05,
-  warship: 1.05,
+  dreadnought: 1.05,
   tech: 0.95,
   'fremen-alliance': 0.95,
   'bg-alliance': 0.95,
@@ -45,7 +45,7 @@ const techie: AIPersonality = {
 
 const commander: AIPersonality = {
   swordmaster: 1.1,
-  warship: 1.05,
+  dreadnought: 1.05,
   'high-council': 1.05,
   'draw-cards': 0.95,
   tech: 0.95,

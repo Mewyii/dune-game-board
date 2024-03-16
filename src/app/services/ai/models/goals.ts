@@ -12,7 +12,7 @@ export type AIGoals =
   | 'high-council'
   | 'swordmaster'
   | 'mentat'
-  | 'warship'
+  | 'dreadnought'
   | 'tech'
   | 'enter-combat'
   | 'get-troops'

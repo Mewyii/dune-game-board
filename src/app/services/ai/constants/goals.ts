@@ -68,17 +68,17 @@ export const aiGoals: FieldsForGoals = {
         getResourceAmount(player, 'currency', virtualResources) > 3 ? 1 : 0,
     },
   },
-  warship: {
+  dreadnought: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'currency', virtualResources) -
       0.01 * (gameState.currentTurn - 1) -
-      0.1 * getPlayerWarshipCount(gameState),
+      0.1 * getPlayerdreadnoughtCount(gameState),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'currency', virtualResources) > 3,
-    reachedGoal: (player, gameState) => getPlayerWarshipCount(gameState) > 1,
+    reachedGoal: (player, gameState) => getPlayerdreadnoughtCount(gameState) > 1,
     desiredFields: {
-      'upgrade (warship)': (player, gameState, goals, virtualResources) => 1,
+      'upgrade (dreadnought)': (player, gameState, goals, virtualResources) => 1,
     },
     viableFields: {},
   },
@@ -182,7 +182,7 @@ export const aiGoals: FieldsForGoals = {
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'currency', 4, 0.5, virtualResources),
-      'upgrade (warship)': (player, gameState, goals, virtualResources) =>
+      'upgrade (dreadnought)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'currency', 4, 0.6, virtualResources),
       heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 0.8, virtualResources),
@@ -476,10 +476,10 @@ export const aiGoals: FieldsForGoals = {
       }
       if (
         !gameState.isFinale &&
-        !goals.warship.reachedGoal(player, gameState, goals, virtualResources) &&
-        !goals.warship.goalIsReachable(player, gameState, goals, virtualResources)
+        !goals.dreadnought.reachedGoal(player, gameState, goals, virtualResources) &&
+        !goals.dreadnought.goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals.warship, player, gameState, virtualResources);
+        const goalDesire = getDesire(goals.dreadnought, player, gameState, virtualResources);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -604,7 +604,7 @@ function getResourceAmount(
   }
 }
 
-function getPlayerWarshipCount(gameState: GameState) {
+function getPlayerdreadnoughtCount(gameState: GameState) {
   return (
     gameState.playerCombatUnits.shipsInGarrison +
     gameState.playerCombatUnits.shipsInCombat +

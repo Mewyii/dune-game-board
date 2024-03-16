@@ -369,13 +369,13 @@ export class GameManager {
         }
 
         if (field.title.en === 'upgrade') {
-          const warshipOrTech = this.aIManager.getUpgradeWarshipOrTechDecision(this.activePlayer.id);
+          const dreadnoughtOrTech = this.aIManager.getUpgradedreadnoughtOrTechDecision(this.activePlayer.id);
 
-          if (warshipOrTech === 'warship') {
+          if (dreadnoughtOrTech === 'dreadnought') {
             this.combatManager.addPlayerShipsToGarrison(this.activePlayer.id, 1);
             unitsGainedThisTurn += 1;
           }
-          if (warshipOrTech === 'tech') {
+          if (dreadnoughtOrTech === 'tech') {
             this.buyTechOrStackTechAgents(this.activePlayer, 3);
           }
         }

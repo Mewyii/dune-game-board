@@ -319,15 +319,15 @@ export class AIManager {
     return 'draw';
   }
 
-  public getUpgradeWarshipOrTechDecision(playerId: number): 'warship' | 'tech' {
+  public getUpgradedreadnoughtOrTechDecision(playerId: number): 'dreadnought' | 'tech' {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === playerId);
     if (!aiPlayer) {
       return 'tech';
     }
 
     const targetFields = aiPlayer.preferredFields.filter((x) => x.fieldId.includes('upgrade'));
-    if (targetFields[0] && targetFields[0].fieldId.includes('warship')) {
-      return 'warship';
+    if (targetFields[0] && targetFields[0].fieldId.includes('dreadnought')) {
+      return 'dreadnought';
     }
 
     return 'tech';
@@ -400,7 +400,7 @@ export class AIManager {
 
     let modifier = 1.0;
 
-    if (goal === 'enter-combat' || goal === 'get-troops' || goal === 'warship') {
+    if (goal === 'enter-combat' || goal === 'get-troops' || goal === 'dreadnought') {
       if (conflictEvaluation === 'good') {
         modifier = 1.2;
       }
