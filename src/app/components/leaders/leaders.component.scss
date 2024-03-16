@@ -105,16 +105,17 @@ dune-leader-card {
     justify-content: flex-start;
 }
 
-.agent-marker {
+.agents-icon-container {
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+}
+
+.agents-icon {
+    height: 40px;
     width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    border: 2px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+    mask-image: url(/assets/images/reward-markers/marker_agent.png);
+    mask-size: contain;
+    mask-mode: luminance;
+    background-color: #bebebe;
 }
 
 .tech-agent-marker {

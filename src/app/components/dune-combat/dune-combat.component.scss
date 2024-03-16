@@ -174,6 +174,10 @@
     animation-duration: 1.5s;
 }
 
+.troop-marker-container, .ship-marker-container {
+    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 1));
+}
+
 .troop-marker {
     width: 40px;
     height: 30px;
@@ -187,7 +191,7 @@
     mask-repeat: no-repeat;
     mask-mode: luminance;
     z-index: 1;
-    filter: saturate(1.1) brightness(0.9);
+    filter: saturate(0.9);
 }
 
 .troop-marker.combat {
@@ -209,7 +213,7 @@
     mask-repeat: no-repeat;
     mask-mode: luminance;
     z-index: 1;
-    filter: saturate(1.5) brightness(0.75);
+    filter: saturate(0.9);
 }
 
 .ship-marker.combat {

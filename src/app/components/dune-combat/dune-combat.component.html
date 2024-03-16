@@ -62,12 +62,16 @@
           <ng-container
             *ngFor="let ship of combatUnits.shipsInGarrison | numberToArray; let is = index; trackBy: trackCount"
           >
-            <div class="ship-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            <div class="ship-marker-container">
+              <div class="ship-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            </div>
           </ng-container>
           <ng-container
             *ngFor="let troop of combatUnits.troopsInGarrison | numberToArray; let it = index; trackBy: trackCount"
           >
-            <div class="troop-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            <div class="troop-marker-container">
+              <div class="troop-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            </div>
           </ng-container>
         </div>
         <div
@@ -76,12 +80,16 @@
           [style.left]="310 - (i > 0 && i < 3 ? 35 : 0) + (i > 1 ? 290 : 0) + 'px'"
         >
           <ng-container *ngFor="let ship of combatUnits.shipsInCombat | numberToArray; let is = index; trackBy: trackCount">
-            <div class="ship-marker combat" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            <div class="ship-marker-container">
+              <div class="ship-marker combat" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            </div>
           </ng-container>
           <ng-container
             *ngFor="let troop of combatUnits.troopsInCombat | numberToArray; let it = index; trackBy: trackCount"
           >
-            <div class="troop-marker combat" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            <div class="troop-marker-container">
+              <div class="troop-marker combat" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
+            </div>
           </ng-container>
         </div>
       </ng-container>
