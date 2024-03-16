@@ -133,7 +133,7 @@ export class PlayerboardComponent implements OnInit {
   }
 
   getPlayerLeaderName(playerId: number) {
-    const playerLeader = this.leadersService.playersLeaders.find((x) => x.playerId === playerId);
+    const playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === playerId);
     if (playerLeader) {
       return playerLeader.leaderName;
     } else {

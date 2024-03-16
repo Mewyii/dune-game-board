@@ -19,6 +19,7 @@ export interface PlayerCombatUnits {
 export class CombatManager {
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
   public playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
+  public playerCombatUnits: PlayerCombatUnits[] = [];
 
   constructor(public playerManager: PlayerManager) {
     const playerCombatUnitsString = localStorage.getItem('playerCombatUnits');
@@ -28,12 +29,9 @@ export class CombatManager {
     }
 
     this.playerCombatUnits$.subscribe((playerCombatUnits) => {
+      this.playerCombatUnits = cloneDeep(playerCombatUnits);
       localStorage.setItem('playerCombatUnits', JSON.stringify(playerCombatUnits));
     });
-  }
-
-  public get playerCombatUnits() {
-    return cloneDeep(this.playerCombatUnitsSubject.value);
   }
 
   public getPlayerCombatUnits(playerId: number) {

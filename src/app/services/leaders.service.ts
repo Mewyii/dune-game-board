@@ -17,9 +17,11 @@ export interface PlayerLeader {
 export class LeadersService {
   private leadersSubject = new BehaviorSubject<(Leader | LeaderImageOnly)[]>([...leaders, ...leadersOld]);
   public leaders$ = this.leadersSubject.asObservable();
+  public leaders: (Leader | LeaderImageOnly)[] = [];
 
   private playerLeadersSubject = new BehaviorSubject<PlayerLeader[]>([]);
   public playerLeaders$ = this.playerLeadersSubject.asObservable();
+  public playerLeaders: PlayerLeader[] = [];
 
   constructor() {
     const leadersString = localStorage.getItem('leaders');
@@ -29,6 +31,7 @@ export class LeadersService {
     }
 
     this.leaders$.subscribe((leaders) => {
+      this.leaders = cloneDeep(leaders);
       localStorage.setItem('leaders', JSON.stringify(leaders));
     });
 
@@ -39,20 +42,13 @@ export class LeadersService {
     }
 
     this.playerLeaders$.subscribe((playerLeaders) => {
+      this.playerLeaders = cloneDeep(playerLeaders);
       localStorage.setItem('playerLeaders', JSON.stringify(playerLeaders));
     });
   }
 
-  public get leaders() {
-    return cloneDeep(this.leadersSubject.value);
-  }
-
-  public get playersLeaders() {
-    return cloneDeep(this.playerLeadersSubject.value);
-  }
-
   getLeader(playerId: number) {
-    const playerLeader = this.playersLeaders.find((x) => x.playerId === playerId);
+    const playerLeader = this.playerLeaders.find((x) => x.playerId === playerId);
     return this.leaders.find((x) => x.name.en === playerLeader?.leaderName);
   }
 
@@ -95,7 +91,7 @@ export class LeadersService {
   }
 
   assignLeaderToPlayer(playerId: number, leaderName: string) {
-    const playerLeaders = this.playersLeaders;
+    const playerLeaders = this.playerLeaders;
 
     const leader = this.leaders.find((x) => x.name.en === leaderName);
 

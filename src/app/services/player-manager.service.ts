@@ -29,6 +29,7 @@ export class PlayerManager {
   public maxPlayers = 4;
   private playersSubject = new BehaviorSubject<Player[]>([]);
   public players$ = this.playersSubject.asObservable();
+  public players: Player[] = [];
 
   constructor() {
     const playersString = localStorage.getItem('players');
@@ -38,12 +39,9 @@ export class PlayerManager {
     }
 
     this.players$.subscribe((players) => {
+      this.players = cloneDeep(players);
       localStorage.setItem('players', JSON.stringify(players));
     });
-  }
-
-  public get players() {
-    return cloneDeep(this.playersSubject.value);
   }
 
   public getPlayer(playerId: number) {
