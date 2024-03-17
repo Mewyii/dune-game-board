@@ -9,6 +9,8 @@ import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { TranslateService } from 'src/app/services/translate-service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-playerboard',
@@ -31,7 +33,8 @@ export class PlayerboardComponent implements OnInit {
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
     public leadersService: LeadersService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -115,7 +118,17 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onFinishGameClicked() {
-    this.gameManager.finishGame();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Are you sure you want to finish the game?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.gameManager.finishGame();
+      }
+    });
   }
 
   public getAvailablePlayerAgents(playerId: number) {

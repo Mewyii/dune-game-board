@@ -4,6 +4,7 @@ import { DuneEvent } from 'src/app/constants/events';
 import { DuneEventsManager } from 'src/app/services/dune-events.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import * as htmlToImage from 'html-to-image';
+import { DialogEventEditorComponent } from './dialog-event-editor/dialog-event-editor.component';
 
 @Component({
   selector: 'dune-event-configurator',
@@ -65,18 +66,18 @@ export class EventConfiguratorComponent {
   }
 
   onAddCardClicked() {
-    // const dialogRef = this.dialog.open(DialogLeaderEditorComponent, {
-    //   width: '900px',
-    //   data: {
-    //     title: 'Create New Leader',
-    //     leader: this.eventsService.createNewEvent(),
-    //   },
-    // });
-    // dialogRef.afterClosed().subscribe((result: DuneEvent | undefined) => {
-    //   if (result) {
-    //     this.eventsService.addLeader(result);
-    //   }
-    // });
+    const dialogRef = this.dialog.open(DialogEventEditorComponent, {
+      width: '900px',
+      data: {
+        title: 'Create New Event',
+        leader: this.eventsService.getNewEvent(),
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: DuneEvent | undefined) => {
+      if (result) {
+        this.eventsService.addEvent(result);
+      }
+    });
   }
 
   onDeleteCardClicked(id: string) {
@@ -84,18 +85,18 @@ export class EventConfiguratorComponent {
   }
 
   onEditCardClicked(event: DuneEvent) {
-    // const dialogRef = this.dialog.open(DialogLeaderEditorComponent, {
-    //   width: '900px',
-    //   data: {
-    //     title: 'Edit Leader',
-    //     leader: leader,
-    //   },
-    // });
-    // dialogRef.afterClosed().subscribe((result: Leader | undefined) => {
-    //   if (result) {
-    //     this.eventsService.editLeader(result);
-    //   }
-    // });
+    const dialogRef = this.dialog.open(DialogEventEditorComponent, {
+      width: '900px',
+      data: {
+        title: 'Edit Event',
+        event: event,
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: DuneEvent | undefined) => {
+      if (result) {
+        this.eventsService.editEvent(result);
+      }
+    });
   }
 
   onSaveCardClicked(el: HTMLDivElement, name: string) {

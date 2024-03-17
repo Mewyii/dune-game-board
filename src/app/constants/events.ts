@@ -10,12 +10,15 @@ export interface DuneEvent {
 export const duneEvents: DuneEvent[] = [
   {
     title: {
-      de: 'klarer himmel',
       en: 'clear sky',
+      de: 'klarer himmel',
     },
-    description: { de: 'Kein Effekt.', en: 'No effect.' },
+    description: {
+      en: 'No effect.',
+      de: 'Kein Effekt.',
+    },
     imagePath: 'assets/images/action-backgrounds/sky.png',
-    cardAmount: 3,
+    cardAmount: 2,
   },
   {
     title: {
@@ -46,7 +49,10 @@ export const duneEvents: DuneEvent[] = [
       de: 'sandwürmer',
       en: 'sandworms',
     },
-    description: { de: 'Spice zu sammeln bringt -1 Spice ein.', en: 'Spice fields yield -1 spice.' },
+    description: {
+      de: 'Spice zu sammeln bringt -1 Spice ein.',
+      en: 'Spice fields yield -1 spice.',
+    },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
     cardAmount: 3,
   },
@@ -170,5 +176,4 @@ export const duneEvents: DuneEvent[] = [
     imagePath: 'assets/images/action-backgrounds/bene_gesserit.png',
     cardAmount: 1,
   },
-  // 24 Cards
 ];

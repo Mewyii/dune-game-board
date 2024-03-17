@@ -55,6 +55,9 @@ import { AudioPlayerComponent } from './components/audio-player/audio-player.com
 import { EventConfiguratorComponent } from './pages/event-configurator/event-configurator.component';
 import { EventCardComponent } from './components/_common/event-card/event-card.component';
 import { NumberToArrayPipe } from './pipes/number-to-array';
+import { EventEditorComponent } from './pages/event-configurator/event-editor/event-editor.component';
+import { DialogEventEditorComponent } from './pages/event-configurator/dialog-event-editor/dialog-event-editor.component';
+import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +98,9 @@ import { NumberToArrayPipe } from './pipes/number-to-array';
     AudioPlayerComponent,
     EventConfiguratorComponent,
     EventCardComponent,
+    EventEditorComponent,
+    DialogEventEditorComponent,
+    DialogSettingsComponent,
   ],
   imports: [
     BrowserModule,

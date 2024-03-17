@@ -2,6 +2,7 @@ import { ActionField, DuneLocation, Faction, LanguageType } from '../models';
 import { gameContentCustomAdvanced, gameContentCustomBeginner, gameContentOriginal } from './game-content';
 
 export interface GameContent {
+  name: string;
   factions: Faction[];
   locations: DuneLocation[];
   ix?: ActionField;

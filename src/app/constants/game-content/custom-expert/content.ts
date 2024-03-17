@@ -4,6 +4,7 @@ import { locationsCustom } from '../custom-beginner/locations-custom';
 import { factionsCustomExpert } from './factions-custom-expert';
 
 export const gameContentCustomExpert: GameContent = {
+  name: 'custom-expert',
   factions: factionsCustomExpert,
   locations: locationsCustom,
   ix: ixCustomAdvanced,

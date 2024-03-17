@@ -24,7 +24,7 @@
     <app-scoreboard [mode]="settings.mode" [useVictoryPointBoni]="gameContent.useVictoryPointBoni"></app-scoreboard>
     <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
     <app-card-areas></app-card-areas>
-    <dune-conflicts></dune-conflicts>
+    <dune-conflicts *ngIf="settings.mode === 'game'"></dune-conflicts>
     <dune-tech-tiles *ngIf="settings.mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
   </div>
   <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>

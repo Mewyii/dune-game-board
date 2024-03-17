@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+<div mat-dialog-content>
+  <div class="setting-container">
+    <div>Game Content</div>
+    <div class="options-container">
+      <mat-checkbox [checked]="gameContentName === 'original'" (change)="setGameContent('original')">Original</mat-checkbox>
+      <mat-checkbox [checked]="gameContentName === 'custom-beginner'" (change)="setGameContent('custom-beginner')"
+        >Beginner</mat-checkbox
+      >
+      <mat-checkbox [checked]="gameContentName === 'custom-advanced'" (change)="setGameContent('custom-advanced')"
+        >Advanced</mat-checkbox
+      >
+    </div>
+  </div>
+  <div class="setting-container">
+    <div>App Mode</div>
+    <div class="options-container">
+      <mat-checkbox [checked]="appMode === 'board'" (change)="setGameMode('board')">Board</mat-checkbox>
+      <mat-checkbox [checked]="appMode === 'game'" (change)="setGameMode('game')">Game</mat-checkbox>
+    </div>
+  </div>
+  <div class="setting-container">
+    <div>AI Difficulty</div>
+    <div class="options-container">
+      <mat-checkbox [checked]="aiDifficulty === 'easy'" (change)="setAIDifficulty('easy')">Easy</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'medium'" (change)="setAIDifficulty('medium')">Medium</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">Hard</mat-checkbox>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Close</button>
+</div>

@@ -1,0 +1,16 @@
+
+.setting-container {
+    margin-top: 32px;
+}
+
+.options-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+mat-checkbox {
+    ::ng-deep .mdc-form-field>label {
+        color: black !important;
+    } 
+}

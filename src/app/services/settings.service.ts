@@ -1,14 +1,26 @@
 import { Injectable } from '@angular/core';
-import { GameContent, Settings, boardSettings } from '../constants/board-settings';
+import { AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
 import { ActionField, FactionType, LanguageType } from '../models';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { gameContentOriginal } from '../constants/game-content';
+import {
+  gameContentCustomAdvanced,
+  gameContentCustomBeginner,
+  gameContentCustomExpert,
+  gameContentOriginal,
+} from '../constants/game-content';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
+  private gameContents: GameContent[] = [
+    gameContentOriginal,
+    gameContentCustomAdvanced,
+    gameContentCustomBeginner,
+    gameContentCustomExpert,
+  ];
+
   public maxSellableSpice = 3;
   public fields: ActionField[] = [];
   public unblockableFields: ActionField[] = [];
@@ -64,5 +76,16 @@ export class SettingsService {
 
   changeLanguage(lang: LanguageType) {
     this.settingsSubject.next({ ...this.settings, language: lang });
+  }
+
+  setGameContent(name: string) {
+    const gameContent = this.gameContents.find((x) => x.name === name);
+    if (gameContent) {
+      this.settingsSubject.next({ ...this.settings, gameContent });
+    }
+  }
+
+  setMode(mode: AppMode) {
+    this.settingsSubject.next({ ...this.settings, mode });
   }
 }

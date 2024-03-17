@@ -23,12 +23,6 @@
     </div>
   </div>
   <div class="game-state-container">
-    <div class="info-container" *ngIf="showDetails">
-      <div class="game-state-name">difficulty</div>
-      <mat-checkbox [checked]="aiDifficulty === 'easy'" (change)="setAIDifficulty('easy')">easy</mat-checkbox>
-      <mat-checkbox [checked]="aiDifficulty === 'medium'" (change)="setAIDifficulty('medium')">medium</mat-checkbox>
-      <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">hard</mat-checkbox>
-    </div>
     <div class="info-container">
       <div class="game-state-name">imperium row</div>
       <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'good'" (change)="setAIVariable('imperiumRow', 'good')"

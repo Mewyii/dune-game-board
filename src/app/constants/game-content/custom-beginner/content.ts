@@ -4,6 +4,7 @@ import { factionsCustomBeginner } from './factions-custom-beginner';
 import { ixCustomBeginner } from './ix-custom-beginner';
 
 export const gameContentCustomBeginner: GameContent = {
+  name: 'custom-beginner',
   factions: factionsCustomBeginner,
   locations: locationsCustom,
   ix: ixCustomBeginner,

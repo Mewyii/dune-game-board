@@ -81,40 +81,47 @@
       </div>
     </div>
   </div>
-  <div class="action-container">
-    <button
-      *ngIf="!currentTurn"
-      mat-raised-button
-      color="accent"
-      (click)="onStartGameClicked()"
-      [disabled]="players.length < 2"
-    >
-      spiel beginnen
-    </button>
+  <div class="action-container" [style]="'padding-bottom: 48px'">
     <button
       *ngIf="(currentTurn && turnState === 'agent-placement') || turnState === 'combat'"
-      mat-raised-button
+      mat-fab
       color="accent"
       (click)="onNextPlayerClicked()"
+      matTooltip="End Turn"
     >
-      Zug beenden
+      <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
     <button
+      mat-fab
       *ngIf="currentTurn && turnState === 'agent-placement'"
-      mat-raised-button
       color="accent"
       (click)="onBeginCombatClicked()"
+      matTooltip="Combat"
     >
-      Kampf
+      <mat-icon>flash_on</mat-icon>
     </button>
     <button
       *ngIf="currentTurn && turnState !== 'agent-placement'"
-      mat-raised-button
+      mat-fab
       color="accent"
       (click)="onNextTurnClicked()"
+      matTooltip="Next Round"
     >
-      nächste runde
+      <mat-icon>start</mat-icon>
     </button>
-    <button *ngIf="currentTurn" mat-raised-button color="accent" (click)="onFinishGameClicked()">Ende</button>
+    <button
+      *ngIf="!currentTurn"
+      mat-fab
+      color="accent"
+      (click)="onStartGameClicked()"
+      [disabled]="players.length < 2"
+      matTooltip="Begin"
+    >
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+
+    <button *ngIf="currentTurn" mat-fab color="accent" (click)="onFinishGameClicked()" matTooltip="Finish">
+      <mat-icon>power_settings_new</mat-icon>
+    </button>
   </div>
 </div>

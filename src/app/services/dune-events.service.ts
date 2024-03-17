@@ -69,6 +69,20 @@ export class DuneEventsManager {
     this.eventsSubject.next(events);
   }
 
+  public addEvent(card: DuneEvent) {
+    this.eventsSubject.next([...this.events, card]);
+  }
+
+  public editEvent(card: DuneEvent) {
+    const cardId = card.title.en;
+
+    const events = this.events;
+    const cardIndex = events.findIndex((x) => x.title.en === cardId);
+    events[cardIndex] = card;
+
+    this.eventsSubject.next(events);
+  }
+
   public deleteEvent(id: string) {
     this.eventsSubject.next(this.events.filter((x) => x.title.en !== id));
   }

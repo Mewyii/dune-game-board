@@ -15,7 +15,7 @@ export class AITileComponent implements OnInit {
   public currentPlayer: Player | undefined;
   public currentAIPlayer: AIPlayer | undefined;
   public aiVariables: AIVariables | undefined;
-  public aiDifficulty: AIDIfficultyTypes | undefined;
+
   public showDetails = false;
 
   constructor(
@@ -39,10 +39,6 @@ export class AITileComponent implements OnInit {
 
     this.aiManager.aiVariables$.subscribe((aiVariables) => {
       this.aiVariables = aiVariables;
-    });
-
-    this.aiManager.aiDifficulty$.subscribe((aiDifficulty) => {
-      this.aiDifficulty = aiDifficulty;
     });
 
     this.playerManager.players$.subscribe((players) => {
@@ -118,10 +114,6 @@ export class AITileComponent implements OnInit {
     this.aiManager.setAIVariable(variableType, value);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.currentAIPlayerId);
-  }
-
-  setAIDifficulty(aiDifficulty: AIDIfficultyTypes) {
-    this.aiManager.setAIDifficulty(aiDifficulty);
   }
 
   onChangeFieldAccessClicked(canAccessBlockedFields: boolean) {

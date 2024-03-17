@@ -162,9 +162,10 @@
 }
 
 .action-container {
+    width: 100%;
+    min-height:75px;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    min-height:150px;
+    gap: 16px;
     justify-content: center;
 }

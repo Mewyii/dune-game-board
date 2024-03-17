@@ -4,6 +4,7 @@ import { factionsCustomAdvanced } from './factions-custom-advanced';
 import { ixCustomAdvanced } from './ix-custom-advanced';
 
 export const gameContentCustomAdvanced: GameContent = {
+  name: 'custom-advanced',
   factions: factionsCustomAdvanced,
   locations: locationsCustom,
   ix: ixCustomAdvanced,

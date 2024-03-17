@@ -3,6 +3,7 @@ import { SettingsService } from './services/settings.service';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationComponent } from './components/notification/notification.component';
+import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
 
 @Component({
   selector: 'app-root',
@@ -30,5 +31,15 @@ export class AppComponent {
         data: { title: 'Sprache geändert', text: 'Bitte laden Sie diese Seite neu, um die Änderungen zu übernehmen...' },
       });
     }
+  }
+
+  showSettingsDialog() {
+    const dialogRef = this.dialog.open(DialogSettingsComponent, {
+      width: '500px',
+      data: {
+        title: 'Settings',
+      },
+    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 }
