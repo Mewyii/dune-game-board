@@ -28,11 +28,6 @@ export type PlayerFactionScoreType = keyof Omit<PlayerScore, 'playerId' | 'victo
   providedIn: 'root',
 })
 export class PlayerScoreManager {
-  public maxScore = 14;
-  public finaleTrigger = 9;
-
-  public scoreRewards: { score: number; reward: Reward }[] = [];
-
   public factionFriendshipTreshold = 2;
   public factionAllianceTreshold = 4;
 
@@ -66,23 +61,6 @@ export class PlayerScoreManager {
     this.playerAlliances$.subscribe((playerAlliances) => {
       localStorage.setItem('playerAlliances', JSON.stringify(playerAlliances));
     });
-
-    if (this.settingsService.gameContent.useVictoryPointBoni) {
-      this.scoreRewards = [...new Array(this.maxScore)].map((x, i) => ({ score: i, reward: { type: 'troop' } }));
-      this.scoreRewards.shift();
-
-      this.finaleTrigger = 9;
-
-      this.scoreRewards[0].reward = { type: 'currency' };
-      this.scoreRewards[2].reward = { type: 'persuasion', amount: 1 };
-      this.scoreRewards[3].reward = { type: 'currency' };
-      this.scoreRewards[5].reward = { type: 'card-round-start', amount: 1 };
-      this.scoreRewards[6].reward = { type: 'currency' };
-      this.scoreRewards[8].reward = { type: 'persuasion', amount: 1 };
-      this.scoreRewards[9].reward = { type: 'currency' };
-      this.scoreRewards[11].reward = { type: 'card-round-start', amount: 1 };
-      this.scoreRewards[12].reward = { type: 'currency' };
-    }
   }
 
   public get playerScores() {
@@ -173,7 +151,7 @@ export class PlayerScoreManager {
       };
 
       if (scoreType === 'victoryPoints') {
-        const vpReward = this.scoreRewards.find((x) => x.score === newPlayerScore)?.reward;
+        const vpReward = this.settingsService.gameContent.victoryPointBoni?.find((x) => x.score === newPlayerScore)?.reward;
 
         if (vpReward) {
           if (vpReward.type === 'currency' || vpReward.type === 'spice' || vpReward.type === 'water') {
@@ -219,7 +197,9 @@ export class PlayerScoreManager {
       }
 
       if (scoreType === 'victoryPoints') {
-        const vpReward = this.scoreRewards.find((x) => x.score === playerScore[scoreType])?.reward;
+        const vpReward = this.settingsService.gameContent.victoryPointBoni?.find(
+          (x) => x.score === playerScore[scoreType]
+        )?.reward;
 
         if (vpReward) {
           if (vpReward.type === 'persuasion') {

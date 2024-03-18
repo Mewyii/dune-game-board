@@ -21,7 +21,7 @@
       <app-dune-location [location]="location"></app-dune-location>
     </ng-container>
     <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
-    <app-scoreboard [mode]="settings.mode" [useVictoryPointBoni]="gameContent.useVictoryPointBoni"></app-scoreboard>
+    <app-scoreboard [mode]="settings.mode"></app-scoreboard>
     <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
     <app-card-areas></app-card-areas>
     <dune-conflicts *ngIf="settings.mode === 'game'"></dune-conflicts>

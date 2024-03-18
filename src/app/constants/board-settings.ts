@@ -1,5 +1,10 @@
-import { ActionField, DuneLocation, Faction, LanguageType } from '../models';
+import { ActionField, DuneLocation, Faction, LanguageType, Reward } from '../models';
 import { gameContentCustomAdvanced, gameContentCustomBeginner, gameContentOriginal } from './game-content';
+
+export interface VictoryPointReward {
+  score: number;
+  reward: Reward;
+}
 
 export interface GameContent {
   name: string;
@@ -7,7 +12,9 @@ export interface GameContent {
   locations: DuneLocation[];
   ix?: ActionField;
   useTechTiles: boolean;
-  useVictoryPointBoni?: boolean;
+  victoryPointBoni?: VictoryPointReward[];
+  maxVictoryPoints?: number;
+  finaleTrigger?: number;
 }
 
 export type AppMode = 'board' | 'game';

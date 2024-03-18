@@ -38,6 +38,10 @@
     position: relative;
 }
 
+.location-owning-area:hover {
+    cursor: pointer;
+}
+
 .location-owner-reward-area {
     position: absolute;
     display: flex;

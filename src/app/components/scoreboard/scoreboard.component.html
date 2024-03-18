@@ -2,11 +2,11 @@
   <ng-container *ngFor="let score of scoreArray; let i = index; let last = last">
     <div
       class="score-element light"
-      [class.finale-four-players]="i > playerScoreManager.finaleTrigger - 1"
-      [class.finale-three-players]="i > playerScoreManager.finaleTrigger"
+      [class.finale-four-players]="i > finaleTrigger - 1"
+      [class.finale-three-players]="i > finaleTrigger"
     >
       <div class="score">{{ i }}</div>
-      <ng-container *ngIf="useVictoryPointBoni"
+      <ng-container *ngIf="victoryPointBoni"
         ><ng-container *ngIf="scoreHasReward(i)">
           <div class="reward-container">
             <img class="reward" [src]="getRewardTypePath(i)" />
@@ -22,8 +22,8 @@
     <div
       *ngIf="!last"
       class="divider light"
-      [class.finale-four-players]="i === playerScoreManager.finaleTrigger - 1"
-      [class.finale-three-players]="i === playerScoreManager.finaleTrigger"
+      [class.finale-four-players]="i === finaleTrigger - 1"
+      [class.finale-three-players]="i === finaleTrigger"
     ></div>
   </ng-container>
   <ng-container *ngIf="mode === 'game'">
