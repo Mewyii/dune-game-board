@@ -7,11 +7,11 @@ import { PlayerScore } from '../../player-score-manager.service';
 
 export const aiGoals: FieldsForGoals = {
   'high-council': {
-    baseDesire: 0.55,
+    baseDesire: 0.6,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.025 * (gameState.currentTurn - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 4,
+      getResourceAmount(player, 'currency', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
     desiredFields: {
       'high council': () => 1,
