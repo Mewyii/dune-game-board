@@ -88,6 +88,24 @@ export class DuneActionComponent implements OnInit {
     }
   }
 
+  onPlayerMarkerRightClicked(playerId: number, fieldId: string) {
+    this.gameManager.removePlayerAgentFromField(playerId, fieldId);
+    return false;
+  }
+
+  onRewardClicked(fieldId: string, rewardType: RewardType) {
+    if (rewardType === 'extra-spice') {
+      this.gameManager.increaseAccumulatedSpiceOnField(fieldId);
+    }
+  }
+
+  onRewardRightClicked(fieldId: string, rewardType: RewardType) {
+    if (rewardType === 'extra-spice') {
+      this.gameManager.decreaseAccumulatedSpiceOnField(fieldId);
+    }
+    return false;
+  }
+
   public getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
   }

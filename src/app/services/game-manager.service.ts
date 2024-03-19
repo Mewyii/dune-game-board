@@ -431,6 +431,12 @@ export class GameManager {
     return this.agentsOnFieldsSubject.value.find((x) => x.fieldId === fieldId);
   }
 
+  public removePlayerAgentFromField(playerId: number, fieldId: string) {
+    this.agentsOnFieldsSubject.next(this.agentsOnFields.filter((x) => !(x.fieldId === fieldId && x.playerId === playerId)));
+
+    this.addAgentToPlayer(playerId);
+  }
+
   private setPlayerOnField(fieldId: string) {
     this.agentsOnFieldsSubject.next([
       ...this.agentsOnFieldsSubject.value,
@@ -519,6 +525,38 @@ export class GameManager {
 
   private getAccumulatedSpiceForField(fieldId: string) {
     return this.accumulatedSpiceOnFields.find((x) => x.fieldId === fieldId)?.amount ?? 0;
+  }
+
+  public increaseAccumulatedSpiceOnField(fieldId: string) {
+    const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
+
+    const index = accumulatedSpiceOnFields.findIndex((x) => x.fieldId === fieldId);
+    if (index > -1) {
+      const element = accumulatedSpiceOnFields[index];
+      accumulatedSpiceOnFields[index] = {
+        ...element,
+        amount: element.amount + 1,
+      };
+    } else {
+      accumulatedSpiceOnFields.push({ fieldId, amount: 1 });
+    }
+
+    this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
+  }
+
+  public decreaseAccumulatedSpiceOnField(fieldId: string) {
+    const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
+
+    const index = accumulatedSpiceOnFields.findIndex((x) => x.fieldId === fieldId && x.amount > 0);
+    if (index > -1) {
+      const element = accumulatedSpiceOnFields[index];
+      accumulatedSpiceOnFields[index] = {
+        ...element,
+        amount: element.amount - 1,
+      };
+    }
+
+    this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
   }
 
   private accumulateSpiceOnFields() {
