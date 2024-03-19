@@ -44,6 +44,7 @@ export const rewardTypes = [
   'agent',
   'buildup',
   'signet-token',
+  'signet-ring',
   'loose-troop',
 ] as const;
 

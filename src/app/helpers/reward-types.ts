@@ -98,6 +98,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_faction_influence_down_fremen.png';
     case 'agent':
       return 'assets/images/reward-markers/marker_agent.png';
+    case 'signet-ring':
+      return 'assets/images/reward-markers/marker_signet_ring.png';
     case 'signet-token':
       return 'assets/images/reward-markers/marker_signet_token.png';
     default:

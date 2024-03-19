@@ -72,9 +72,9 @@
     border-radius: 0px 6px 0px 8px;
     left: 0;
     bottom: 0;
-    height: 100px;
-    padding: 10px;
-    width: 44%;
+    height: 104px;
+    padding: 8px;
+    width: 45%;
     background-color: #00000096;
     border-top: 1px solid rgb(127 127 127 / 33%);
     border-right: 1px solid rgb(64 64 64 / 25%);
@@ -85,9 +85,9 @@
     border-radius: 6px 0px 8px 0px;
     right: 0;
     bottom: 0;
-    height: 100px;
-    padding: 10px;
-    width: 44%;
+    height: 104px;
+    padding: 8px;
+    width: 45%;
     background-color: rgb(44 32 10 / 59%);
     border-top: 1px solid rgb(255 165 0 / 33%);
     border-left: 1px solid rgb(127 82 0 / 25%);
@@ -95,7 +95,8 @@
 
 .leader-passive-name,
 .leader-signet-name {
-    margin-bottom: 10px;
+    font-size: 12px;
+    margin-bottom: 12px;
 }
 
 .leader-passive-description,
@@ -105,4 +106,16 @@
     font-size: medium;
     color: #e1e1e1;
     white-space: pre-wrap;
+}
+
+.leader-signet-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.signet-ring {
+    height: 15px;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+    margin-top: 1px;
 }

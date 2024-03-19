@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { getRewardTypePath } from '../helpers/reward-types';
-import { ActionType, FactionType, RewardType } from '../models';
+import { ActionType, RewardType } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { getFactionTypePath } from '../helpers/faction-types';
 import { getActionTypePath } from '../helpers/action-types';
 
 @Pipe({ name: 'duneSymbols' })
@@ -29,7 +28,7 @@ export class DuneSymbolsPipe implements PipeTransform {
             iconSize +
             ';height: ' +
             iconSize +
-            ';object-fit:scale-down; margin-bottom:-3px" src="' +
+            ';object-fit:scale-down; margin-bottom:-4px" src="' +
             resourceImgPath +
             '"/>'
         );
@@ -48,7 +47,7 @@ export class DuneSymbolsPipe implements PipeTransform {
             iconSize +
             ';height: ' +
             iconSize +
-            ';object-fit:scale-down; margin-bottom:-3px" src="' +
+            ';object-fit:scale-down; margin-bottom:-4px" src="' +
             resourceImgPath +
             '"/><div style="position:absolute;top:0px;left:0px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
             (iconSizeNumber - ratioFix) +
