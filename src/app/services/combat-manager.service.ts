@@ -17,6 +17,9 @@ export interface PlayerCombatUnits {
   providedIn: 'root',
 })
 export class CombatManager {
+  public troopCombatStrength = 2;
+  public dreadnoughtCombatStrength = 4;
+
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
   public playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
   public playerCombatUnits: PlayerCombatUnits[] = [];
@@ -198,16 +201,19 @@ export class CombatManager {
 
   public addMinimumUnitsToCombat(playerId: number) {
     const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
-    if (!combatUnits || combatUnits.troopsInCombat > 0 || combatUnits.shipsInCombat > 0) {
+    if (!combatUnits) {
       return;
     }
-    if (combatUnits.shipsInGarrison > 0) {
-      this.addPlayerShipsToCombat(playerId, 1);
-    } else {
-      const troopsToAdd =
-        combatUnits.troopsInGarrison > 0 ? (combatUnits.troopsInGarrison > 1 ? Math.round(Math.random()) + 1 : 1) : 0;
 
-      this.addPlayerTroopsToCombat(playerId, troopsToAdd);
+    const troopsToAdd =
+      combatUnits.troopsInGarrison > 0 ? (combatUnits.troopsInGarrison > 1 ? Math.round(Math.random()) + 1 : 1) : 0;
+
+    this.addPlayerTroopsToCombat(playerId, troopsToAdd);
+
+    if (troopsToAdd === 0 && combatUnits.shipsInGarrison > 0) {
+      if (combatUnits.shipsInGarrison > 1 || Math.random() > 0.66) {
+        this.addPlayerShipsToCombat(playerId, 1);
+      }
     }
   }
 
@@ -260,19 +266,12 @@ export class CombatManager {
     }
   }
 
-  public setAllPlayerShipsFromCombatToGarrisonOrTimeout() {
+  public setAllPlayerShipsFromCombatToTimeout() {
     const playerCombatUnits = this.playerCombatUnits;
-    const winningPlayer = playerCombatUnits.sort((a, b) => this.getPlayerCombatScore(b) - this.getPlayerCombatScore(a))[0];
 
     for (const combatUnits of playerCombatUnits) {
-      if (combatUnits.playerId === winningPlayer.playerId) {
-        if (combatUnits.shipsInCombat > 0) {
-          combatUnits.shipsInTimeout = 1;
-          combatUnits.shipsInGarrison = combatUnits.shipsInGarrison + combatUnits.shipsInCombat - 1;
-          combatUnits.shipsInCombat = 0;
-        }
-      } else {
-        combatUnits.shipsInGarrison = combatUnits.shipsInGarrison + combatUnits.shipsInCombat;
+      if (combatUnits.shipsInCombat > 0) {
+        combatUnits.shipsInTimeout = combatUnits.shipsInCombat;
         combatUnits.shipsInCombat = 0;
       }
     }
@@ -359,7 +358,9 @@ export class CombatManager {
 
   public getPlayerCombatScore(playerCombatUnits: PlayerCombatUnits) {
     return (
-      playerCombatUnits.troopsInCombat * 2 + playerCombatUnits.shipsInCombat * 3 + playerCombatUnits.additionalCombatPower
+      playerCombatUnits.troopsInCombat * this.troopCombatStrength +
+      playerCombatUnits.shipsInCombat * this.dreadnoughtCombatStrength +
+      playerCombatUnits.additionalCombatPower
     );
   }
 }

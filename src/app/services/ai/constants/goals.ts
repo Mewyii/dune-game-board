@@ -183,9 +183,9 @@ export const aiGoals: FieldsForGoals = {
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'currency', 4, 0.5, virtualResources),
       'upgrade (dreadnought)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'currency', 4, 0.6, virtualResources),
+        getCostAdjustedDesire(player, 'currency', 4, 0.7, virtualResources),
       heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 0.8, virtualResources),
+        getCostAdjustedDesire(player, 'spice', 4, 0.9, virtualResources),
     },
   },
   'get-troops': {
@@ -612,20 +612,12 @@ function getPlayerdreadnoughtCount(gameState: GameState) {
   );
 }
 
-function playerHasUnitsInGarrison(gameState: GameState) {
-  return gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.troopsInGarrison > 0;
-}
-
-function playerHasUnitsInCombat(gameState: GameState) {
-  return gameState.playerCombatUnits.troopsInCombat + gameState.playerCombatUnits.shipsInCombat > 0;
-}
-
-function getPlayerCombatPower(player: PlayerCombatUnits) {
-  return player.troopsInCombat * 2 + player.shipsInCombat * 3 + player.additionalCombatPower;
+function getPlayerCombatStrength(player: PlayerCombatUnits) {
+  return player.troopsInCombat * 2 + player.shipsInCombat * 4 + player.additionalCombatPower;
 }
 
 function getPlayerGarrisonStrength(player: PlayerCombatUnits) {
-  return player.troopsInGarrison * 2 + player.shipsInGarrison * 3;
+  return player.troopsInGarrison * 2 + player.shipsInGarrison * 4;
 }
 
 function enemyCanContestPlayer(
@@ -636,9 +628,9 @@ function enemyCanContestPlayer(
 ) {
   const combatPowerTreshold = 3 + Math.random() * 2 + (gameState.currentTurn - 1) * 0.5;
 
-  const playerCombatPower = getPlayerCombatPower(player);
+  const playerCombatPower = getPlayerCombatStrength(player);
 
-  const enemyCombatPower = getPlayerCombatPower(enemy);
+  const enemyCombatPower = getPlayerCombatStrength(enemy);
   const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount;
 
   if (enemyAgentCount !== undefined && enemyAgentCount < 1 && playerCombatPower > enemyCombatPower) {
@@ -682,14 +674,14 @@ function getWinCombatDesireModifier(gameState: GameState) {
   let desire = 0.4 + 0.025 * (gameState.currentTurn - 1) + 0.1 * gameState.playerAgentCount;
 
   const playerStrength =
-    getPlayerCombatPower(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);
+    getPlayerCombatStrength(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);
 
   desire = desire + 0.075 * playerStrength;
 
   let strengthOfStrongestEnemy = 0;
   let garrisonStrengthOfEnemiesNotInCombat = 0;
   for (const enemy of gameState.enemyCombatUnits) {
-    const enemyCombatPower = getPlayerCombatPower(enemy);
+    const enemyCombatPower = getPlayerCombatStrength(enemy);
 
     if (enemyCombatPower > 0) {
       if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState)) {

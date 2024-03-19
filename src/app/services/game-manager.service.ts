@@ -239,7 +239,7 @@ export class GameManager {
     this.accumulateSpiceOnFields();
     this.removePlayerAgentsFromBoard();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
-    this.combatManager.setAllPlayerShipsFromCombatToGarrisonOrTimeout();
+    this.combatManager.setAllPlayerShipsFromCombatToTimeout();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.resetAdditionalCombatPower();
     this.playerManager.resetPersuasionForPlayers();
