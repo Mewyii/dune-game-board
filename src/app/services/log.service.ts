@@ -16,7 +16,7 @@ export class LoggingService {
   private logSubject = new BehaviorSubject<Log[]>([]);
   public log$ = this.logSubject.asObservable();
 
-  constructor(public translateService: TranslateService) {
+  constructor() {
     const logString = localStorage.getItem('log');
     if (logString) {
       const log = JSON.parse(logString) as Log[];

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player, PlayerManager } from './player-manager.service';
+import { SettingsService } from './settings.service';
 
 export interface PlayerCombatUnits {
   playerId: number;
@@ -17,14 +18,11 @@ export interface PlayerCombatUnits {
   providedIn: 'root',
 })
 export class CombatManager {
-  public troopCombatStrength = 2;
-  public dreadnoughtCombatStrength = 4;
-
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
   public playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
   public playerCombatUnits: PlayerCombatUnits[] = [];
 
-  constructor(public playerManager: PlayerManager) {
+  constructor(private settingsService: SettingsService) {
     const playerCombatUnitsString = localStorage.getItem('playerCombatUnits');
     if (playerCombatUnitsString) {
       const playerCombatUnits = JSON.parse(playerCombatUnitsString) as PlayerCombatUnits[];
@@ -358,8 +356,8 @@ export class CombatManager {
 
   public getPlayerCombatScore(playerCombatUnits: PlayerCombatUnits) {
     return (
-      playerCombatUnits.troopsInCombat * this.troopCombatStrength +
-      playerCombatUnits.shipsInCombat * this.dreadnoughtCombatStrength +
+      playerCombatUnits.troopsInCombat * this.settingsService.gameContent.troopCombatStrength +
+      playerCombatUnits.shipsInCombat * this.settingsService.gameContent.dreadnoughtCombatStrength +
       playerCombatUnits.additionalCombatPower
     );
   }

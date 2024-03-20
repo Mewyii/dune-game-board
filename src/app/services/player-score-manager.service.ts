@@ -38,9 +38,9 @@ export class PlayerScoreManager {
   public playerAlliances$ = this.playerAlliancesSubject.asObservable();
 
   constructor(
-    public playerManager: PlayerManager,
-    public combatManager: CombatManager,
-    public settingsService: SettingsService
+    private playerManager: PlayerManager,
+    private combatManager: CombatManager,
+    private settingsService: SettingsService
   ) {
     const playersScoresString = localStorage.getItem('playersScores');
     if (playersScoresString) {

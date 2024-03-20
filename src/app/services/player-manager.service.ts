@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Resource, ResourceType } from '../models';
+import { SettingsService } from './settings.service';
 
 export interface Player {
   id: number;
@@ -30,7 +31,7 @@ export class PlayerManager {
   private playersSubject = new BehaviorSubject<Player[]>([]);
   public players$ = this.playersSubject.asObservable();
 
-  constructor() {
+  constructor(private settingsService: SettingsService) {
     const playersString = localStorage.getItem('players');
     if (playersString) {
       const players = JSON.parse(playersString) as Player[];
@@ -319,7 +320,11 @@ export class PlayerManager {
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
-    players[playerIndex] = { ...player, hasCouncilSeat: true, permanentPersuasion: player.permanentPersuasion + 3 };
+    players[playerIndex] = {
+      ...player,
+      hasCouncilSeat: true,
+      permanentPersuasion: player.permanentPersuasion + this.settingsService.gameContent.highCouncilPersuasion,
+    };
 
     this.playersSubject.next(players);
   }

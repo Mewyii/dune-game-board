@@ -1,5 +1,5 @@
 import { ActionField, DuneLocation, Faction, LanguageType, Reward } from '../models';
-import { gameContentCustomAdvanced, gameContentCustomBeginner, gameContentOriginal } from './game-content';
+import { gameContentCustomAdvanced } from './game-content';
 
 export interface VictoryPointReward {
   score: number;
@@ -15,6 +15,9 @@ export interface GameContent {
   victoryPointBoni?: VictoryPointReward[];
   maxVictoryPoints?: number;
   finaleTrigger?: number;
+  troopCombatStrength: number;
+  dreadnoughtCombatStrength: number;
+  highCouncilPersuasion: number;
 }
 
 export type AppMode = 'board' | 'game';

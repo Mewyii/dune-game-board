@@ -25,4 +25,7 @@ export const gameContentCustomAdvanced: GameContent = {
     { score: 12, reward: { type: 'card-round-start', amount: 1 } },
     { score: 13, reward: { type: 'currency' } },
   ],
+  troopCombatStrength: 2,
+  dreadnoughtCombatStrength: 4,
+  highCouncilPersuasion: 3,
 };

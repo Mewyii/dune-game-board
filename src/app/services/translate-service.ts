@@ -8,7 +8,7 @@ import { LanguageString, LanguageType } from '../models';
 export class TranslateService {
   public language: LanguageType = 'de';
 
-  constructor(public settingsService: SettingsService) {
+  constructor(private settingsService: SettingsService) {
     this.language = this.settingsService.settings.language;
   }
 

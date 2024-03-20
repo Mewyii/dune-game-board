@@ -66,17 +66,17 @@ export class GameManager {
   public isFinale$ = this.isFinaleSubject.asObservable();
 
   constructor(
-    public playerScoreManager: PlayerScoreManager,
-    public playerManager: PlayerManager,
-    public combatManager: CombatManager,
-    public locationManager: LocationManager,
-    public loggingService: LoggingService,
-    public duneEventsManager: DuneEventsManager,
-    public aIManager: AIManager,
-    public leadersService: LeadersService,
-    public conflictsService: ConflictsService,
-    public minorHousesService: MinorHousesService,
-    public techTilesService: TechTilesService
+    private playerScoreManager: PlayerScoreManager,
+    private playerManager: PlayerManager,
+    private combatManager: CombatManager,
+    private locationManager: LocationManager,
+    private loggingService: LoggingService,
+    private duneEventsManager: DuneEventsManager,
+    private aIManager: AIManager,
+    private leadersService: LeadersService,
+    private conflictsService: ConflictsService,
+    private minorHousesService: MinorHousesService,
+    private techTilesService: TechTilesService
   ) {
     const currentTurnString = localStorage.getItem('currentTurn');
     if (currentTurnString) {
