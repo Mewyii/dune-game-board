@@ -29,7 +29,7 @@ export class TechTilesComponent {
   }
 
   onTakeCardClicked(techTileId: string) {
-    this.techTilesService.setPlayerTechTile(this.gameManager.activeAgentPlacementPlayerId, techTileId);
+    this.techTilesService.setPlayerTechTile(this.gameManager.activePlayerId, techTileId);
   }
 
   getRewardTypePath(rewardType: RewardType) {

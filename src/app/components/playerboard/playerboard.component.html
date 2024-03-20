@@ -6,7 +6,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onRemovePlayerClicked()"
-        [disabled]="playerManager.players.length === 0 || gameManager.currentTurn !== 0"
+        [disabled]="players.length === 0 || gameManager.currentTurn !== 0"
         [style]="'margin-right: 6px'"
       >
         <mat-icon>remove</mat-icon>
@@ -15,7 +15,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onAddPlayerClicked()"
-        [disabled]="playerManager.players.length === playerManager.maxPlayers || gameManager.currentTurn !== 0"
+        [disabled]="players.length === playerManager.maxPlayers || gameManager.currentTurn !== 0"
       >
         <mat-icon>add</mat-icon>
       </button>
@@ -30,7 +30,7 @@
   <div class="player-container" *ngFor="let player of players">
     <div class="player-heading">
       <div
-        class="player-name {{ player.id === gameManager.activeAgentPlacementPlayerId ? 'highlighted' : '' }}"
+        class="player-name {{ player.id === gameManager.activePlayerId ? 'highlighted' : '' }}"
         [style.color]="player.color"
       >
         <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>

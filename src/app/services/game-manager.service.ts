@@ -46,8 +46,8 @@ export class GameManager {
   private startingPlayerIdSubject = new BehaviorSubject<number>(0);
   public startingPlayerId$ = this.startingPlayerIdSubject.asObservable();
 
-  private activeAgentPlacementPlayerIdSubject = new BehaviorSubject<number>(0);
-  public activeAgentPlacementPlayerId$ = this.activeAgentPlacementPlayerIdSubject.asObservable();
+  private activePlayerIdSubject = new BehaviorSubject<number>(0);
+  public activePlayerId$ = this.activePlayerIdSubject.asObservable();
 
   public activeCombatPlayerId: number = 0;
 
@@ -112,10 +112,10 @@ export class GameManager {
       this.agentsOnFieldsSubject.next(agentsOnFields);
     }
 
-    const activeAgentPlacementPlayerIdString = localStorage.getItem('activeAgentPlacementPlayerId');
-    if (activeAgentPlacementPlayerIdString) {
-      const activeAgentPlacementPlayerId = JSON.parse(activeAgentPlacementPlayerIdString) as number;
-      this.activeAgentPlacementPlayerIdSubject.next(activeAgentPlacementPlayerId);
+    const activePlayerIdString = localStorage.getItem('activeAgentPlacementPlayerId');
+    if (activePlayerIdString) {
+      const activePlayerId = JSON.parse(activePlayerIdString) as number;
+      this.activePlayerIdSubject.next(activePlayerId);
     }
 
     const isFinaleString = localStorage.getItem('isFinale');
@@ -148,7 +148,7 @@ export class GameManager {
       localStorage.setItem('agentsOnFields', JSON.stringify(agentsOnFields));
     });
 
-    this.activeAgentPlacementPlayerId$.subscribe((activeAgentPlacementPlayerId) => {
+    this.activePlayerId$.subscribe((activeAgentPlacementPlayerId) => {
       localStorage.setItem('activeAgentPlacementPlayerId', JSON.stringify(activeAgentPlacementPlayerId));
 
       this.setCurrentAIPlayer(activeAgentPlacementPlayerId);
@@ -179,8 +179,8 @@ export class GameManager {
     return cloneDeep(this.startingPlayerIdSubject.value);
   }
 
-  public get activeAgentPlacementPlayerId() {
-    return cloneDeep(this.activeAgentPlacementPlayerIdSubject.value);
+  public get activePlayerId() {
+    return cloneDeep(this.activePlayerIdSubject.value);
   }
 
   public get availablePlayerAgents() {
@@ -199,8 +199,8 @@ export class GameManager {
     return cloneDeep(this.currentTurnStateSubject.value);
   }
 
-  public get activePlayer() {
-    return cloneDeep(this.playerManager.players.find((x) => x.id === this.activeAgentPlacementPlayerId));
+  public getActivePlayer() {
+    return this.playerManager.getPlayer(this.activePlayerId);
   }
 
   public get isFinale() {
@@ -209,20 +209,20 @@ export class GameManager {
 
   public startGame() {
     this.loggingService.clearLog();
-    this.playerManager.resetPlayers();
+    const newPlayers = this.playerManager.resetPlayers();
     this.combatManager.resetAdditionalCombatPower();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.resetAllPlayerShips();
-    this.combatManager.setInitialPlayerCombatUnits(this.playerManager.players);
+    this.combatManager.setInitialPlayerCombatUnits(newPlayers);
     this.locationManager.resetLocationOwners();
     this.duneEventsManager.setGameEvents();
-    this.playerScoreManager.resetPlayersScores(this.playerManager.players);
+    this.playerScoreManager.resetPlayersScores(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
     this.removePlayerAgentsFromBoard();
     this.resetAccumulatedSpiceOnFields();
 
-    this.aIManager.assignPersonalitiesToAIPlayers(this.playerManager.players);
-    this.leadersService.assignLeadersToPlayers(this.playerManager.players);
+    this.aIManager.assignPersonalitiesToAIPlayers(newPlayers);
+    this.leadersService.assignLeadersToPlayers(newPlayers);
     this.conflictsService.setInitialConflict();
     this.minorHousesService.setInitialAvailableHouses();
     this.techTilesService.setInitialAvailableTechTiles();
@@ -230,7 +230,7 @@ export class GameManager {
     this.currentTurnSubject.next(1);
     this.currentTurnStateSubject.next('agent-placement');
     this.startingPlayerIdSubject.next(1);
-    this.activeAgentPlacementPlayerIdSubject.next(1);
+    this.activePlayerIdSubject.next(1);
     this.activeCombatPlayerId = 1;
     this.playerManager.allPlayersDrawInitialCards();
   }
@@ -254,10 +254,10 @@ export class GameManager {
     this.currentTurnStateSubject.next('agent-placement');
 
     this.startingPlayerIdSubject.next(
-      this.playerManager.players.length > this.startingPlayerId ? this.startingPlayerId + 1 : 1
+      this.playerManager.getPlayerCount() > this.startingPlayerId ? this.startingPlayerId + 1 : 1
     );
 
-    this.activeAgentPlacementPlayerIdSubject.next(this.startingPlayerId);
+    this.activePlayerIdSubject.next(this.startingPlayerId);
     this.activeCombatPlayerId = this.startingPlayerId;
 
     this.playerManager.allPlayersDrawInitialCards();
@@ -270,7 +270,7 @@ export class GameManager {
     this.currentTurnSubject.next(0);
     this.currentTurnStateSubject.next('none');
     this.startingPlayerIdSubject.next(0);
-    this.activeAgentPlacementPlayerIdSubject.next(0);
+    this.activePlayerIdSubject.next(0);
     this.activeCombatPlayerId = 0;
     this.duneEventsManager.resetGameEvents();
     this.leadersService.resetLeaders();
@@ -283,7 +283,7 @@ export class GameManager {
     this.agentsOnFieldsSubject.next([]);
 
     const playerAgents: PlayerAgents[] = [];
-    for (let player of this.playerManager.players) {
+    for (let player of this.playerManager.getPlayers()) {
       playerAgents.push({ playerId: player.id, agentAmount: player.agents });
     }
 
@@ -291,29 +291,31 @@ export class GameManager {
   }
 
   public addAgentToField(field: ActionField) {
-    if (this.currentTurnState !== 'agent-placement' || !this.activePlayer) {
+    const activePlayer = this.getActivePlayer();
+
+    if (this.currentTurnState !== 'agent-placement' || !activePlayer) {
       return;
     }
 
-    if (field.rewards.some((x) => x.type === 'sword-master') && this.activePlayer.hasSwordmaster) {
+    if (field.rewards.some((x) => x.type === 'sword-master') && activePlayer.hasSwordmaster) {
       return;
     }
 
     if (
       field.rewards.some((x) => x.type === 'council-seat-small' || x.type === 'council-seat-large') &&
-      this.activePlayer.hasCouncilSeat
+      activePlayer.hasCouncilSeat
     ) {
       return;
     }
 
     if (field.costs) {
-      if (!this.playerCanPayCosts(this.activeAgentPlacementPlayerId, field.costs)) {
+      if (!this.playerCanPayCosts(activePlayer.id, field.costs)) {
         return;
       }
 
       for (let cost of field.costs) {
         if (isResource(cost)) {
-          this.playerManager.removeResourceFromPlayer(this.activeAgentPlacementPlayerId, cost.type, cost.amount ?? 1);
+          this.playerManager.removeResourceFromPlayer(activePlayer.id, cost.type, cost.amount ?? 1);
         }
       }
     }
@@ -332,18 +334,18 @@ export class GameManager {
 
         if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
           const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
-          this.playerManager.addResourceToPlayer(this.activeAgentPlacementPlayerId, reward.type, accumulatedSpice);
+          this.playerManager.addResourceToPlayer(activePlayer.id, reward.type, accumulatedSpice);
         }
       }
       if (reward.type === 'mentat') {
-        this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
+        this.addAgentToPlayer(activePlayer.id);
       }
       if (reward.type === 'combat') {
         canEnterCombat = true;
       }
     }
 
-    const factionRewards = this.playerScoreManager.addFactionScore(this.activeAgentPlacementPlayerId, field.actionType, 1);
+    const factionRewards = this.playerScoreManager.addFactionScore(activePlayer.id, field.actionType, 1);
 
     for (let reward of factionRewards) {
       const aiInfo = this.addRewardToPlayer(reward);
@@ -355,37 +357,37 @@ export class GameManager {
       }
     }
 
-    if (this.activePlayer.isAI) {
-      const aiPlayer = this.aIManager.getAIPlayer(this.activePlayer.id);
-      if (aiPlayer && this.activePlayer) {
+    if (activePlayer.isAI) {
+      const aiPlayer = this.aIManager.getAIPlayer(activePlayer.id);
+      if (aiPlayer && activePlayer) {
         if (canDestroyOrDrawCard) {
-          const drawOrTrim = this.aIManager.getFieldDrawOrTrimDecision(this.activePlayer.id, field.title.en);
+          const drawOrTrim = this.aIManager.getFieldDrawOrTrimDecision(activePlayer.id, field.title.en);
 
           if (drawOrTrim === 'draw') {
-            this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, 1);
+            this.playerManager.playerDrawsCards(this.activePlayerId, 1);
           } else {
-            this.playerManager.addFocusTokens(this.activeAgentPlacementPlayerId, 1);
+            this.playerManager.addFocusTokens(this.activePlayerId, 1);
           }
         }
 
         if (field.title.en === 'upgrade') {
-          const dreadnoughtOrTech = this.aIManager.getUpgradedreadnoughtOrTechDecision(this.activePlayer.id);
+          const dreadnoughtOrTech = this.aIManager.getUpgradedreadnoughtOrTechDecision(activePlayer.id);
 
           if (dreadnoughtOrTech === 'dreadnought') {
-            this.combatManager.addPlayerShipsToGarrison(this.activePlayer.id, 1);
+            this.combatManager.addPlayerShipsToGarrison(activePlayer.id, 1);
             unitsGainedThisTurn += 1;
           }
           if (dreadnoughtOrTech === 'tech') {
-            this.buyTechOrStackTechAgents(this.activePlayer, 3);
+            this.buyTechOrStackTechAgents(activePlayer, 3);
           }
         }
         if (field.title.en === 'expedition') {
           // Techagents are added previously
-          this.buyTechOrStackTechAgents(this.activePlayer, -1);
+          this.buyTechOrStackTechAgents(activePlayer, -1);
         }
         if (field.title.en === 'trade rights') {
           // Techagents are added previously
-          this.buyTechOrStackTechAgents(this.activePlayer, -1);
+          this.buyTechOrStackTechAgents(activePlayer, -1);
         }
 
         if (canEnterCombat) {
@@ -393,36 +395,36 @@ export class GameManager {
 
           if (combatDecision) {
             if (this.isFinale) {
-              this.combatManager.addAllPossibleUnitsToCombat(this.activePlayer.id, unitsGainedThisTurn);
+              this.combatManager.addAllPossibleUnitsToCombat(activePlayer.id, unitsGainedThisTurn);
             } else if (combatDecision.includes('win')) {
               const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
-                this.combatManager.getPlayerCombatUnits(this.activePlayer.id),
-                this.combatManager.getEnemyCombatUnits(this.activePlayer.id)
+                this.combatManager.getPlayerCombatUnits(activePlayer.id),
+                this.combatManager.getEnemyCombatUnits(activePlayer.id)
               );
 
               if (addUnitsDecision === 'all') {
-                this.combatManager.addAllPossibleUnitsToCombat(this.activePlayer.id, unitsGainedThisTurn);
+                this.combatManager.addAllPossibleUnitsToCombat(activePlayer.id, unitsGainedThisTurn);
               } else if (addUnitsDecision === 'minimum') {
-                this.combatManager.addMinimumUnitsToCombat(this.activePlayer.id);
+                this.combatManager.addMinimumUnitsToCombat(activePlayer.id);
               }
             } else if (combatDecision.includes('participate')) {
-              this.combatManager.addMinimumUnitsToCombat(this.activePlayer.id);
+              this.combatManager.addMinimumUnitsToCombat(activePlayer.id);
             }
           }
         }
 
         if (field.title.en === 'spice sale') {
           const spiceToCurrencyFunction = (spice: number) => 3 + spice * 2;
-          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(this.activePlayer, spiceToCurrencyFunction);
+          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(activePlayer, spiceToCurrencyFunction);
           const currencyFromSpiceSale = spiceToCurrencyFunction(sellSpiceAmount);
 
-          this.playerManager.removeResourceFromPlayer(this.activePlayer.id, 'spice', sellSpiceAmount);
-          this.playerManager.addResourceToPlayer(this.activePlayer.id, 'currency', currencyFromSpiceSale);
+          this.playerManager.removeResourceFromPlayer(activePlayer.id, 'spice', sellSpiceAmount);
+          this.playerManager.addResourceToPlayer(activePlayer.id, 'currency', currencyFromSpiceSale);
         }
       }
     }
 
-    this.removeAgentFromPlayer(this.activeAgentPlacementPlayerId);
+    this.removeAgentFromPlayer(this.activePlayerId);
 
     this.loggingService.logAgentAction(field);
   }
@@ -438,10 +440,7 @@ export class GameManager {
   }
 
   private setPlayerOnField(fieldId: string) {
-    this.agentsOnFieldsSubject.next([
-      ...this.agentsOnFieldsSubject.value,
-      { playerId: this.activeAgentPlacementPlayerId, fieldId },
-    ]);
+    this.agentsOnFieldsSubject.next([...this.agentsOnFieldsSubject.value, { playerId: this.activePlayerId, fieldId }]);
   }
 
   public addAgentToPlayer(playerId: number) {
@@ -470,12 +469,12 @@ export class GameManager {
 
   public setNextPlayerActive(turnPhase: TurnPhaseType) {
     if (turnPhase === 'agent-placement') {
-      const playerWithHigherId = this.availablePlayerAgents.find((x) => x.playerId > this.activeAgentPlacementPlayerId);
+      const playerWithHigherId = this.availablePlayerAgents.find((x) => x.playerId > this.activePlayerId);
       if (playerWithHigherId) {
-        this.activeAgentPlacementPlayerIdSubject.next(playerWithHigherId.playerId);
+        this.activePlayerIdSubject.next(playerWithHigherId.playerId);
       } else {
         const firstPlayer = this.availablePlayerAgents[0];
-        this.activeAgentPlacementPlayerIdSubject.next(firstPlayer.playerId);
+        this.activePlayerIdSubject.next(firstPlayer.playerId);
       }
     }
     if (turnPhase === 'combat') {
@@ -512,7 +511,7 @@ export class GameManager {
       agentsOnFields: this.agentsOnFields,
       isOpeningTurn: this.isOpeningTurn(player.id),
       isFinale: this.isFinale,
-      enemyPlayers: this.playerManager.players.filter((x) => x.id !== player.id),
+      enemyPlayers: this.playerManager.getEnemyPlayers(player.id),
       playerLeader: this.leadersService.getLeader(player.id)!,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.availableTechTiles,
@@ -593,7 +592,7 @@ export class GameManager {
   }
 
   private playerCanPayCosts(id: number, costs: Reward[]) {
-    const player = this.playerManager.players.find((x) => x.id === id);
+    const player = this.playerManager.getPlayer(id);
     const resourcesToPay = costs.filter((x) => isResource(x));
     if (player) {
       for (let resource of resourcesToPay) {
@@ -622,7 +621,7 @@ export class GameManager {
     if (affordableTechTiles.length > 0) {
       const gameState = this.getGameState(player);
       const mostDesiredTechTile = availableTechTiles.sort(
-        (a, b) => b.aiEvaluation(player, gameState) - a.aiEvaluation(this.activePlayer!, gameState)
+        (a, b) => b.aiEvaluation(player, gameState) - a.aiEvaluation(this.getActivePlayer()!, gameState)
       )[0];
 
       const desire = mostDesiredTechTile.aiEvaluation(player, gameState);
@@ -681,7 +680,7 @@ export class GameManager {
   private addRewardToPlayer(reward: Reward) {
     const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false };
     if (isResource(reward)) {
-      this.playerManager.addResourceToPlayer(this.activeAgentPlacementPlayerId, reward.type, reward.amount ?? 1);
+      this.playerManager.addResourceToPlayer(this.activePlayerId, reward.type, reward.amount ?? 1);
     }
     if (
       reward.type === 'tech' ||
@@ -699,43 +698,43 @@ export class GameManager {
           : reward.type === 'tech-reduced-three'
           ? 4
           : 0;
-      this.playerManager.addTechAgentsToPlayer(this.activeAgentPlacementPlayerId, agents);
+      this.playerManager.addTechAgentsToPlayer(this.activePlayerId, agents);
     }
     if (reward.type === 'intrigue') {
-      this.playerManager.addIntriguesToPlayer(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      this.playerManager.addIntriguesToPlayer(this.activePlayerId, reward.amount ?? 1);
     }
     if (reward.type === 'troop') {
-      this.combatManager.addPlayerTroopsToGarrison(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      this.combatManager.addPlayerTroopsToGarrison(this.activePlayerId, reward.amount ?? 1);
       aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
     }
     if (reward.type === 'dreadnought') {
-      this.combatManager.addPlayerShipsToGarrison(this.activeAgentPlacementPlayerId, 1);
+      this.combatManager.addPlayerShipsToGarrison(this.activePlayerId, 1);
       aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
     }
     if (reward.type === 'card-draw') {
-      this.playerManager.playerDrawsCards(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      this.playerManager.playerDrawsCards(this.activePlayerId, reward.amount ?? 1);
     }
     if (reward.type === 'card-destroy') {
-      this.playerManager.addFocusTokens(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      this.playerManager.addFocusTokens(this.activePlayerId, reward.amount ?? 1);
     }
     if (reward.type == 'card-draw-or-destroy') {
       aiInfo.canDestroyOrDrawCard = true;
     }
     if (reward.type == 'persuasion') {
-      this.playerManager.addPersuasionToPlayer(this.activeAgentPlacementPlayerId, reward.amount ?? 1);
+      this.playerManager.addPersuasionToPlayer(this.activePlayerId, reward.amount ?? 1);
     }
     if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
-      this.playerManager.addCouncilSeatToPlayer(this.activeAgentPlacementPlayerId);
+      this.playerManager.addCouncilSeatToPlayer(this.activePlayerId);
     }
     if (reward.type === 'sword-master') {
-      this.playerManager.addPermanentAgentToPlayer(this.activeAgentPlacementPlayerId);
-      this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
+      this.playerManager.addPermanentAgentToPlayer(this.activePlayerId);
+      this.addAgentToPlayer(this.activePlayerId);
     }
     if (reward.type === 'mentat') {
-      this.addAgentToPlayer(this.activeAgentPlacementPlayerId);
+      this.addAgentToPlayer(this.activePlayerId);
     }
     if (reward.type === 'victory-point') {
-      this.playerScoreManager.addPlayerScore(this.activeAgentPlacementPlayerId, 'victoryPoints', reward.amount ?? 1);
+      this.playerScoreManager.addPlayerScore(this.activePlayerId, 'victoryPoints', reward.amount ?? 1);
     }
 
     return aiInfo;

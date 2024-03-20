@@ -72,12 +72,12 @@ export class DuneLocationComponent implements OnInit {
   }
 
   onActionFieldClicked(event: { playerId: number }) {
-    const ownerReward = this.location.ownerReward;
-    if (ownerReward && isResourceType(ownerReward.type)) {
-      if (this.owner && this.owner.id !== event.playerId) {
-        this.playerManager.addResourceToPlayer(this.owner.id, ownerReward.type, ownerReward.amount ?? 1);
-      }
-    }
+    // const ownerReward = this.location.ownerReward;
+    // if (ownerReward && isResourceType(ownerReward.type)) {
+    //   if (this.owner && this.owner.id !== event.playerId) {
+    //     this.playerManager.addResourceToPlayer(this.owner.id, ownerReward.type, ownerReward.amount ?? 1);
+    //   }
+    // }
   }
 
   public getRewardTypePath(rewardType: RewardType) {

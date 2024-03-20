@@ -38,10 +38,9 @@ export class SettingsService {
 
     this.settings$.subscribe((settings) => {
       this.settings = cloneDeep(settings);
+      this.setFields();
       localStorage.setItem('settings', JSON.stringify(settings));
     });
-
-    this.setFields();
   }
 
   public get gameContent() {

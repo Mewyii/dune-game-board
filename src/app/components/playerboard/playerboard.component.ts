@@ -39,7 +39,7 @@ export class PlayerboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.playerManager.players$.subscribe((players) => {
-      this.players = cloneDeep(players);
+      this.players = players;
     });
 
     this.gameManager.currentTurn$.subscribe((currentTurn) => {

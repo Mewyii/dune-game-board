@@ -29,7 +29,6 @@ export class PlayerManager {
   public maxPlayers = 4;
   private playersSubject = new BehaviorSubject<Player[]>([]);
   public players$ = this.playersSubject.asObservable();
-  public players: Player[] = [];
 
   constructor() {
     const playersString = localStorage.getItem('players');
@@ -39,22 +38,34 @@ export class PlayerManager {
     }
 
     this.players$.subscribe((players) => {
-      this.players = cloneDeep(players);
       localStorage.setItem('players', JSON.stringify(players));
     });
   }
 
+  /** Use with care.Players object gets cloned everytime it is used but is immutable. */
+  public getPlayers() {
+    return cloneDeep(this.playersSubject.value);
+  }
+
+  public getPlayerCount() {
+    return this.playersSubject.value.length;
+  }
+
   public getPlayer(playerId: number) {
-    return this.players.find((x) => x.id === playerId);
+    return cloneDeep(this.playersSubject.value.find((x) => x.id === playerId));
+  }
+
+  public getEnemyPlayers(playerId: number) {
+    return cloneDeep(this.playersSubject.value.filter((x) => x.id !== playerId));
   }
 
   public getPlayerColor(playerId: number) {
-    const player = this.players.find((x) => x.id === playerId);
+    const player = this.getPlayer(playerId);
     return player ? player.color : '';
   }
 
   public addPlayer() {
-    const players = this.players;
+    const players = this.getPlayers();
 
     if (players.length < this.maxPlayers) {
       players.push({
@@ -83,7 +94,7 @@ export class PlayerManager {
   }
 
   public removePlayer() {
-    const players = this.players;
+    const players = this.getPlayers();
 
     players.pop();
 
@@ -91,7 +102,7 @@ export class PlayerManager {
   }
 
   public resetPlayers() {
-    const players = this.players.map((player) => ({
+    const players = this.getPlayers().map((player) => ({
       ...player,
       agents: 2,
       resources: [
@@ -112,10 +123,12 @@ export class PlayerManager {
       hasSwordmaster: false,
     }));
     this.playersSubject.next(players);
+
+    return players;
   }
 
   public setAIActiveForPlayer(id: number, active: boolean) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -126,7 +139,7 @@ export class PlayerManager {
   }
 
   public addResourceToPlayer(id: number, type: ResourceType, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -142,7 +155,7 @@ export class PlayerManager {
   }
 
   public removeResourceFromPlayer(id: number, type: ResourceType, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -158,7 +171,7 @@ export class PlayerManager {
   }
 
   public addIntriguesToPlayer(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -169,7 +182,7 @@ export class PlayerManager {
   }
 
   public removeIntriguesFromPlayer(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -180,7 +193,7 @@ export class PlayerManager {
   }
 
   public addTechAgentsToPlayer(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -191,7 +204,7 @@ export class PlayerManager {
   }
 
   public removeTechAgentsFromPlayer(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -202,7 +215,7 @@ export class PlayerManager {
   }
 
   public addCardsToPlayerDeck(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -213,7 +226,7 @@ export class PlayerManager {
   }
 
   public removeCardsFromPlayerDeck(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -224,7 +237,7 @@ export class PlayerManager {
   }
 
   public boughtCardsFromImperiumRow(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -236,7 +249,7 @@ export class PlayerManager {
   }
 
   public addFocusTokens(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -247,7 +260,7 @@ export class PlayerManager {
   }
 
   public removeFocusTokens(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player && player.focusTokens >= amount) {
@@ -258,7 +271,7 @@ export class PlayerManager {
   }
 
   public trimCardsFromPlayerDeck(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player && player.focusTokens >= amount) {
@@ -271,7 +284,7 @@ export class PlayerManager {
   }
 
   public allPlayersDrawInitialCards() {
-    const players = this.players;
+    const players = this.getPlayers();
 
     for (const player of players) {
       player.cardsDrawnThisRound = 5;
@@ -281,7 +294,7 @@ export class PlayerManager {
   }
 
   public playerDrawsCards(id: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
@@ -292,7 +305,7 @@ export class PlayerManager {
   }
 
   public addPermanentAgentToPlayer(playerId: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
@@ -302,17 +315,17 @@ export class PlayerManager {
   }
 
   public addCouncilSeatToPlayer(playerId: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
-    players[playerIndex] = { ...player, hasCouncilSeat: true, permanentPersuasion: player.permanentPersuasion + 2 };
+    players[playerIndex] = { ...player, hasCouncilSeat: true, permanentPersuasion: player.permanentPersuasion + 3 };
 
     this.playersSubject.next(players);
   }
 
   public addPersuasionToPlayer(playerId: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
@@ -322,7 +335,7 @@ export class PlayerManager {
   }
 
   public removePersuasionFromPlayer(playerId: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
@@ -332,11 +345,11 @@ export class PlayerManager {
   }
 
   public resetPersuasionForPlayers() {
-    this.playersSubject.next(this.players.map((x) => ({ ...x, persuasionThisRound: 0 })));
+    this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, persuasionThisRound: 0 })));
   }
 
   public addPermanentPersuasionToPlayer(playerId: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
@@ -346,7 +359,7 @@ export class PlayerManager {
   }
 
   public removePermanentPersuasionFromPlayer(playerId: number, amount: number) {
-    const players = this.players;
+    const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
@@ -355,23 +368,27 @@ export class PlayerManager {
     this.playersSubject.next(players);
   }
 
+  public getFirstPlayerId() {
+    return cloneDeep(this.playersSubject.value[0].id);
+  }
+
   public getNextPlayerId(currentPlayerId?: number) {
     if (currentPlayerId) {
       const nextPlayerId = currentPlayerId + 1;
-      if (nextPlayerId > this.players.length) {
+      if (nextPlayerId > this.getPlayerCount()) {
         return 1;
       } else {
         return nextPlayerId;
       }
     } else {
-      return this.players[0].id;
+      return this.getFirstPlayerId();
     }
   }
 
   public isLastPlayer(currentPlayerId?: number) {
     if (currentPlayerId) {
       const nextPlayerId = currentPlayerId + 1;
-      if (nextPlayerId > this.players.length) {
+      if (nextPlayerId > this.getPlayerCount()) {
         return true;
       }
     }

@@ -31,7 +31,7 @@ export class MinorHousesComponent implements OnInit {
   }
 
   onTakeCardClicked(houseId: string) {
-    this.minorHousesService.setPlayerHouse(this.gameManager.activeAgentPlacementPlayerId, houseId);
+    this.minorHousesService.setPlayerHouse(this.gameManager.activePlayerId, houseId);
   }
 
   getRewardTypePath(rewardType: RewardType) {

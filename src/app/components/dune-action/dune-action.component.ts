@@ -47,11 +47,12 @@ export class DuneActionComponent implements OnInit {
       const playerIds = agentsOnFields.filter((x) => x.fieldId === this.action.title.en).map((x) => x.playerId);
       if (playerIds.length > 0) {
         const firstPlayerId = playerIds.shift()!;
-        this.playerOnField = this.playerManager.players.find((x) => x.id === firstPlayerId);
+        const players = this.playerManager.getPlayers();
+        this.playerOnField = players.find((x) => x.id === firstPlayerId);
 
         this.additionalPlayersOnField = [];
         for (const playerId of playerIds) {
-          const playerOnField = this.playerManager.players.find((x) => x.id === playerId);
+          const playerOnField = players.find((x) => x.id === playerId);
           if (playerOnField) {
             this.additionalPlayersOnField.push(playerOnField);
           }
@@ -75,7 +76,7 @@ export class DuneActionComponent implements OnInit {
   }
 
   public onActionFieldClicked() {
-    const currentPlayerId = this.gameManager.activePlayer?.id;
+    const currentPlayerId = this.gameManager.activePlayerId;
 
     if (currentPlayerId) {
       const playerAgents =

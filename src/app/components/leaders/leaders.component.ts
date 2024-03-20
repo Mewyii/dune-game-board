@@ -69,12 +69,12 @@ export class LeadersComponent implements OnInit {
       this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
     });
 
-    this.gameManager.activeAgentPlacementPlayerId$.subscribe((activePlayerId) => {
+    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
       const activeLeaderName = this.playerLeaders.find((x) => x.playerId === this.activePlayerId)?.leaderName;
       this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
 
-      this.currentPlayer = this.playerManager.players.find((x) => x.id === this.activePlayerId);
+      this.currentPlayer = this.playerManager.getPlayer(this.activePlayerId);
 
       this.currentPlayerScore = this.playerScoreManager.playerScores.find((x) => x.playerId === this.activePlayerId);
 
