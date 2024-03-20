@@ -22,13 +22,17 @@ export class DuneSymbolsPipe implements PipeTransform {
         const resource = resourceString[0].substring(10, resourceString[0].length - 1) as RewardType;
         const resourceImgPath = getRewardTypePath(resource);
 
+        const ratioFix = iconSizeNumber / 5;
+
         returnValue = returnValue.replace(
           resourceString[0],
           '<img style="min-width: ' +
             iconSize +
             ';height: ' +
             iconSize +
-            ';object-fit:scale-down; margin-bottom:-4px" src="' +
+            ';object-fit:scale-down; margin-bottom:-' +
+            ratioFix +
+            'px" src="' +
             resourceImgPath +
             '"/>'
         );
@@ -39,7 +43,7 @@ export class DuneSymbolsPipe implements PipeTransform {
         const resource = resourceString[0].substring(10, resourceString[0].length - amount.length - 9) as RewardType;
         const resourceImgPath = getRewardTypePath(resource);
 
-        const ratioFix = iconSizeNumber / 3;
+        const ratioFix = iconSizeNumber / 5;
 
         returnValue = returnValue.replace(
           resourceString[0],
@@ -47,7 +51,9 @@ export class DuneSymbolsPipe implements PipeTransform {
             iconSize +
             ';height: ' +
             iconSize +
-            ';object-fit:scale-down; margin-bottom:-4px" src="' +
+            ';object-fit:scale-down; margin-bottom:-' +
+            ratioFix +
+            'px" src="' +
             resourceImgPath +
             '"/><div style="position:absolute;top:0px;left:0px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
             (iconSizeNumber - ratioFix) +

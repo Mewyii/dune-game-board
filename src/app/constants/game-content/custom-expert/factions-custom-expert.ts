@@ -166,8 +166,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'hoher rat', en: 'high council' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 5 }],
-        rewards: [{ type: 'council-seat-small', amount: 2, iconHeight: 110 }],
+        costs: [{ type: 'currency', amount: 7 }],
+        rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador.png',
       },

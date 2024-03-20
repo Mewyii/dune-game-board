@@ -98,31 +98,36 @@
       <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
         <div class="score">0</div>
         <ng-container *ngIf="settingsService.settings.mode === 'game'">
-          <ng-container *ngFor="let playerScore of getPlayersOnScore(0); let i = index"
-            ><div
-              class="score-marker"
-              [style.background-color]="getPlayerColor(playerScore.playerId)"
-              [style.top]="25 + i * 25 + 'px'"
-              cdkDrag
-              [cdkDragData]="playerScore.playerId"
-            ></div>
-          </ng-container>
+          <div class="score-container large">
+            <ng-container *ngFor="let playerScore of combatScores; let i = index"
+              ><div
+                *ngIf="playerScore.score === 0"
+                class="score-marker"
+                [style.background-color]="getPlayerColor(playerScore.playerId)"
+                [style.top]="25 + i * 25 + 'px'"
+                cdkDrag
+                [cdkDragData]="playerScore.playerId"
+              ></div>
+            </ng-container>
+          </div>
         </ng-container>
       </div>
       <div class="combat-score-board">
-        <ng-container *ngFor="let score of combatScoreArray; let i = index; let last = last">
-          <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, i + 1)">
-            <div class="score">{{ i + 1 }}</div>
+        <ng-container *ngFor="let score of combatScoreArray; let scoreIndex = index; let last = last">
+          <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, scoreIndex + 1)">
+            <div class="score">{{ scoreIndex + 1 }}</div>
             <ng-container *ngIf="settingsService.settings.mode === 'game'">
-              <ng-container *ngFor="let playerScore of getPlayersOnScore(i + 1); let i = index"
-                ><div
-                  class="score-marker"
-                  [style.background-color]="getPlayerColor(playerScore.playerId)"
-                  [style.top]="5 + i * 25 + 'px'"
-                  cdkDrag
-                  [cdkDragData]="playerScore.playerId"
-                ></div>
-              </ng-container>
+              <div class="score-container">
+                <ng-container *ngFor="let playerScore of combatScores; let i = index">
+                  <div
+                    *ngIf="playerScore.score === scoreIndex + 1"
+                    class="score-marker"
+                    [style.background-color]="getPlayerColor(playerScore.playerId)"
+                    cdkDrag
+                    [cdkDragData]="playerScore.playerId"
+                  ></div>
+                </ng-container>
+              </div>
             </ng-container>
           </div>
         </ng-container>
@@ -145,6 +150,13 @@
         <span>=</span>
         <div class="legend-description">4</div>
       </div>
+    </div>
+    <div class="absolute-scores">
+      <ng-container *ngFor="let combatScore of combatScores">
+        <div *ngIf="combatScore.score > 22" [style.color]="getPlayerColor(combatScore.playerId)">
+          {{ combatScore.score }}
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
