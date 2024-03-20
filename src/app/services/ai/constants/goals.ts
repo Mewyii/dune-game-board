@@ -188,7 +188,7 @@ export const aiGoals: FieldsForGoals = {
         getCostAdjustedDesire(player, 'spice', 4, 0.9, virtualResources),
     },
   },
-  'get-troops': {
+  troops: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) => 0.2 * (4 - gameState.playerCombatUnits.troopsInGarrison),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
@@ -224,7 +224,7 @@ export const aiGoals: FieldsForGoals = {
   'intrigue-steal': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      gameState.enemyPlayers.some((x) => x.intrigueCount > 3) ? 0.1 : 0,
+      gameState.enemyPlayers.some((x) => x.intrigueCount > 3) ? 0.15 : 0,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: () => false,
@@ -233,23 +233,24 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'fold-space': {
-    baseDesire: 0.25,
-    desireModifier: () => 0,
+    baseDesire: 0.3,
+    desireModifier: (player, gameState, goals, virtualResources) =>
+      -0.0125 * player.cardsBought - 0.0125 * (player.cardsTrimmed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: {
       carthag: () => 0.5,
     },
   },
-  'get-persuasion': {
-    baseDesire: 0.3,
+  'get-board-persuasion': {
+    baseDesire: 0.35,
     desireModifier: (player, gameState, goals, virtualResources) =>
       -0.025 * player.cardsBought - 0.0125 * (player.cardsTrimmed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: {
       relations: () => 1.0,
-      'trade rights': () => 0.5,
+      'trade rights': () => 0.33,
     },
   },
   'draw-cards': {
@@ -311,7 +312,7 @@ export const aiGoals: FieldsForGoals = {
         getCostAdjustedDesire(player, 'spice', 4, 0.3, virtualResources),
     },
   },
-  'trim-deck': {
+  'trim-cards': {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
@@ -356,8 +357,8 @@ export const aiGoals: FieldsForGoals = {
           maxDesire = goalDesire;
         }
       }
-      if (!goals['get-troops'].goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals['get-troops'], player, gameState, virtualResources);
+      if (!goals['troops'].goalIsReachable(player, gameState, goals, virtualResources)) {
+        const goalDesire = getDesire(goals['troops'], player, gameState, virtualResources);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -411,8 +412,8 @@ export const aiGoals: FieldsForGoals = {
           maxDesire = goalDesire;
         }
       }
-      if (!goals['get-troops'].goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals['get-troops'], player, gameState, virtualResources);
+      if (!goals['troops'].goalIsReachable(player, gameState, goals, virtualResources)) {
+        const goalDesire = getDesire(goals['troops'], player, gameState, virtualResources);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;

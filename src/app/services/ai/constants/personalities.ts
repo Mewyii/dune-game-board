@@ -1,7 +1,7 @@
 import { AIPersonality } from '../models';
 
 const fighter: AIPersonality = {
-  'get-troops': 1.1,
+  troops: 1.1,
   'enter-combat': 1.05,
   dreadnought: 1.05,
   tech: 0.95,
@@ -21,13 +21,13 @@ const diplomat: AIPersonality = {
   'high-council': 1.05,
   tech: 0.95,
   'enter-combat': 0.95,
-  'get-troops': 0.9,
+  troops: 0.9,
 };
 
 const conspirator: AIPersonality = {
   intrigues: 1.1,
-  'get-troops': 1.05,
-  'trim-deck': 1.05,
+  troops: 1.05,
+  'trim-cards': 1.05,
   'high-council': 0.95,
   'enter-combat': 0.95,
   tech: 0.9,
@@ -37,9 +37,9 @@ const techie: AIPersonality = {
   tech: 1.1,
   'harvest-accumulated-spice-basin': 1.05,
   'harvest-accumulated-spice-flat': 1.05,
-  'trim-deck': 1.05,
+  'trim-cards': 1.05,
   'enter-combat': 0.95,
-  'get-troops': 0.95,
+  troops: 0.95,
   intrigues: 0.9,
 };
 

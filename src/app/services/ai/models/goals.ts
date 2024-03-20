@@ -15,13 +15,13 @@ export type AIGoals =
   | 'dreadnought'
   | 'tech'
   | 'enter-combat'
-  | 'get-troops'
+  | 'troops'
   | 'fremen-alliance'
   | 'bg-alliance'
   | 'guild-alliance'
   | 'emperor-alliance'
   | 'draw-cards'
-  | 'trim-deck'
+  | 'trim-cards'
   | 'intrigues'
   | 'intrigue-steal'
   | 'fold-space'
@@ -31,7 +31,7 @@ export type AIGoals =
   | 'harvest-accumulated-spice-basin'
   | 'harvest-accumulated-spice-flat'
   | 'swordmaster-helper'
-  | 'get-persuasion';
+  | 'get-board-persuasion';
 
 export interface GameState {
   playerScore: PlayerScore;

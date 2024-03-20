@@ -265,12 +265,12 @@ export class AIManager {
     possibleFields.sort((a, b) => b.value - a.value);
 
     const randomFactor = gameState.isOpeningTurn
-      ? 0.75
+      ? 0.66
       : this.aiDifficulty === 'hard'
       ? 0.1
       : this.aiDifficulty === 'medium'
-      ? 0.15
-      : 0.25;
+      ? 0.2
+      : 0.3;
     const slightlyRandomizedFields = randomizeArray(possibleFields, randomFactor);
 
     aiPlayer.preferredFields = slightlyRandomizedFields;
@@ -400,7 +400,7 @@ export class AIManager {
 
     let modifier = 1.0;
 
-    if (goal === 'enter-combat' || goal === 'get-troops' || goal === 'dreadnought') {
+    if (goal === 'enter-combat' || goal === 'troops' || goal === 'dreadnought') {
       if (conflictEvaluation === 'good') {
         modifier = 1.2;
       }
@@ -409,7 +409,7 @@ export class AIManager {
       }
     } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin') {
       modifier = 0.4 + techEvaluation;
-    } else if (goal === 'draw-cards' || goal === 'get-persuasion' || goal === 'high-council') {
+    } else if (goal === 'draw-cards' || goal === 'get-board-persuasion' || goal === 'high-council') {
       if (aiVariables.imperiumRow === 'good') {
         modifier = 1.2;
       }

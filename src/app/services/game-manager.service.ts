@@ -37,6 +37,8 @@ export type TurnPhaseType = 'none' | 'agent-placement' | 'combat' | 'done';
   providedIn: 'root',
 })
 export class GameManager {
+  public autoPlayAI = false;
+
   private currentTurnSubject = new BehaviorSubject<number>(0);
   public currentTurn$ = this.currentTurnSubject.asObservable();
 
@@ -148,22 +150,26 @@ export class GameManager {
       localStorage.setItem('agentsOnFields', JSON.stringify(agentsOnFields));
     });
 
-    this.activePlayerId$.subscribe((activeAgentPlacementPlayerId) => {
-      localStorage.setItem('activeAgentPlacementPlayerId', JSON.stringify(activeAgentPlacementPlayerId));
+    this.activePlayerId$.subscribe((activePlayerId) => {
+      localStorage.setItem('activeAgentPlacementPlayerId', JSON.stringify(activePlayerId));
 
-      this.setCurrentAIPlayer(activeAgentPlacementPlayerId);
+      this.setCurrentAIPlayer(activePlayerId);
 
-      this.setPreferredFieldsForAIPlayer(activeAgentPlacementPlayerId);
+      this.setPreferredFieldsForAIPlayer(activePlayerId);
 
-      // setTimeout(() => {
-      //   if (this.currentTurnState !== 'combat') {
-      //     const preferredField = this.aIManager.getPreferredFieldForPlayer(activeAgentPlacementPlayerId);
-      //     if (preferredField) {
-      //       this.addAgentToField(preferredField);
-      //       this.setNextPlayerActive('agent-placement');
-      //     }
-      //   }
-      // }, 250);
+      if (this.autoPlayAI) {
+        const activePlayerAgentCount = this.getAvailableAgentCountForPlayer(activePlayerId);
+
+        if (activePlayerAgentCount > 0) {
+          setTimeout(() => {
+            const preferredField = this.aIManager.getPreferredFieldForPlayer(activePlayerId);
+            if (preferredField) {
+              this.addAgentToField(preferredField);
+              this.setNextPlayerActive('agent-placement');
+            }
+          }, 1000);
+        }
+      }
     });
 
     this.isFinale$.subscribe((isFinale) => {
@@ -201,6 +207,10 @@ export class GameManager {
 
   public getActivePlayer() {
     return this.playerManager.getPlayer(this.activePlayerId);
+  }
+
+  public getAvailableAgentCountForPlayer(playerId: number) {
+    return this.availablePlayerAgents.find((x) => x.playerId === playerId)?.agentAmount ?? 0;
   }
 
   public get isFinale() {
@@ -297,6 +307,11 @@ export class GameManager {
       return;
     }
 
+    const activePlayerAgentCount = this.getAvailableAgentCountForPlayer(activePlayer.id);
+    if (activePlayerAgentCount < 1) {
+      return;
+    }
+
     if (field.rewards.some((x) => x.type === 'sword-master') && activePlayer.hasSwordmaster) {
       return;
     }
@@ -330,7 +345,9 @@ export class GameManager {
       if (!field.hasRewardOptions) {
         const aiInfo = this.addRewardToPlayer(reward);
         unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
-        canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+        if (!canDestroyOrDrawCard) {
+          canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+        }
 
         if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
           const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
@@ -350,7 +367,9 @@ export class GameManager {
     for (let reward of factionRewards) {
       const aiInfo = this.addRewardToPlayer(reward);
       unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
-      canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+      if (!canDestroyOrDrawCard) {
+        canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+      }
 
       if (reward.type === 'combat') {
         canEnterCombat = true;
@@ -632,6 +651,8 @@ export class GameManager {
         (desire > 0.25 || effectiveCosts < 1)
       ) {
         this.buyTechTileForPlayer(player, mostDesiredTechTile, discount);
+      } else if (this.isFinale) {
+        this.buyTechTileForPlayer(player, affordableTechTiles[0], discount);
       } else {
         this.playerManager.addTechAgentsToPlayer(player.id, discount + 1);
       }
