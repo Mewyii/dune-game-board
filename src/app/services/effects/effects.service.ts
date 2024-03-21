@@ -48,11 +48,11 @@ export class EffectsService {
   public currentTurn = 0;
 
   constructor(public gameManager: GameManager) {
-    this.gameManager.currentTurn$.subscribe((currentTurn) => {
+    this.gameManager.currentRound$.subscribe((currentTurn) => {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentTurnState$.subscribe((state) => {
+    this.gameManager.currentRoundState$.subscribe((state) => {
       if (state === 'combat') {
         this.showCombatAnimation();
       }

@@ -11,6 +11,7 @@ import { LeadersService } from 'src/app/services/leaders.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 
 @Component({
   selector: 'app-playerboard',
@@ -34,6 +35,7 @@ export class PlayerboardComponent implements OnInit {
     public playerScoreManager: PlayerScoreManager,
     public leadersService: LeadersService,
     public translateService: TranslateService,
+    private audioManager: AudioManager,
     public dialog: MatDialog
   ) {}
 
@@ -42,11 +44,11 @@ export class PlayerboardComponent implements OnInit {
       this.players = players;
     });
 
-    this.gameManager.currentTurn$.subscribe((currentTurn) => {
+    this.gameManager.currentRound$.subscribe((currentTurn) => {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentTurnState$.subscribe((currentTurnState) => {
+    this.gameManager.currentRoundState$.subscribe((currentTurnState) => {
       this.turnState = currentTurnState;
     });
 
@@ -106,6 +108,7 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onNextPlayerClicked() {
+    this.audioManager.playSound('click-soft');
     this.gameManager.setNextPlayerActive('agent-placement');
   }
 
@@ -113,8 +116,8 @@ export class PlayerboardComponent implements OnInit {
     this.gameManager.setTurnState('combat');
   }
 
-  onNextTurnClicked() {
-    this.gameManager.setNextTurn();
+  onNextRoundClicked() {
+    this.gameManager.setNextRound();
   }
 
   onFinishGameClicked() {

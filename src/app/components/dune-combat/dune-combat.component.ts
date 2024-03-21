@@ -7,6 +7,7 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SettingsService } from 'src/app/services/settings.service';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 
 export interface CombatScore {
   playerId: number;
@@ -37,7 +38,8 @@ export class DuneCombatComponent implements OnInit {
     public gameManager: GameManager,
     public combatManager: CombatManager,
     public playerManager: PlayerManager,
-    public settingsService: SettingsService
+    public settingsService: SettingsService,
+    private audioManager: AudioManager
   ) {}
 
   ngOnInit(): void {
@@ -57,26 +59,32 @@ export class DuneCombatComponent implements OnInit {
   }
 
   public onAddTroopToCombatClicked(playerId: number) {
+    this.audioManager.playSound('click');
     this.combatManager.addPlayerTroopsToCombat(playerId, 1);
   }
 
   public onRemoveTroopFromCombatClicked(playerId: number) {
+    this.audioManager.playSound('click');
     this.combatManager.removePlayerTroopsFromCombat(playerId, 1);
   }
 
   public onAddShipToCombatClicked(playerId: number) {
+    this.audioManager.playSound('click');
     this.combatManager.addPlayerShipsToCombat(playerId, 1);
   }
 
   public onRemoveShipFromCombatClicked(playerId: number) {
+    this.audioManager.playSound('click');
     this.combatManager.removePlayerShipsFromCombat(playerId, 1);
   }
 
   public onAddAdditionalCombatPowerToPlayer(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.combatManager.addAdditionalCombatPowerToPlayer(playerId, 1);
   }
 
   public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
   }
 

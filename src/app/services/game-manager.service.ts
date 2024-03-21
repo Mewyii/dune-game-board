@@ -15,6 +15,7 @@ import { ConflictsService } from './conflicts.service';
 import { MinorHousesService } from './minor-houses.service';
 import { TechTilesService } from './tech-tiles.service';
 import { TechTile } from '../constants/tech-tiles';
+import { AudioManager } from './audio-manager.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -39,11 +40,11 @@ export type TurnPhaseType = 'none' | 'agent-placement' | 'combat' | 'done';
 export class GameManager {
   public autoPlayAI = false;
 
-  private currentTurnSubject = new BehaviorSubject<number>(0);
-  public currentTurn$ = this.currentTurnSubject.asObservable();
+  private currentRoundSubject = new BehaviorSubject<number>(0);
+  public currentRound$ = this.currentRoundSubject.asObservable();
 
-  private currentTurnStateSubject = new BehaviorSubject<TurnPhaseType>('none');
-  public currentTurnState$ = this.currentTurnStateSubject.asObservable();
+  private currentRoundStateSubject = new BehaviorSubject<TurnPhaseType>('none');
+  public currentRoundState$ = this.currentRoundStateSubject.asObservable();
 
   private startingPlayerIdSubject = new BehaviorSubject<number>(0);
   public startingPlayerId$ = this.startingPlayerIdSubject.asObservable();
@@ -76,12 +77,13 @@ export class GameManager {
     private leadersService: LeadersService,
     private conflictsService: ConflictsService,
     private minorHousesService: MinorHousesService,
-    private techTilesService: TechTilesService
+    private techTilesService: TechTilesService,
+    private audioManager: AudioManager
   ) {
-    const currentTurnString = localStorage.getItem('currentTurn');
-    if (currentTurnString) {
-      const currentTurn = JSON.parse(currentTurnString) as number;
-      this.currentTurnSubject.next(currentTurn);
+    const currentRoundString = localStorage.getItem('currentTurn');
+    if (currentRoundString) {
+      const currentRound = JSON.parse(currentRoundString) as number;
+      this.currentRoundSubject.next(currentRound);
     }
 
     const startingPlayerIdString = localStorage.getItem('startingPlayerId');
@@ -96,10 +98,10 @@ export class GameManager {
       this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
     }
 
-    const currentTurnStateString = localStorage.getItem('currentTurnState');
-    if (currentTurnStateString) {
-      const currentTurnState = JSON.parse(currentTurnStateString) as TurnPhaseType;
-      this.currentTurnStateSubject.next(currentTurnState);
+    const currentRoundStateString = localStorage.getItem('currentTurnState');
+    if (currentRoundStateString) {
+      const currentRoundState = JSON.parse(currentRoundStateString) as TurnPhaseType;
+      this.currentRoundStateSubject.next(currentRoundState);
     }
 
     const availablePlayerAgentsString = localStorage.getItem('availablePlayerAgents');
@@ -126,7 +128,7 @@ export class GameManager {
       this.isFinaleSubject.next(isFinale);
     }
 
-    this.currentTurn$.subscribe((currentTurn) => {
+    this.currentRound$.subscribe((currentTurn) => {
       localStorage.setItem('currentTurn', JSON.stringify(currentTurn));
     });
 
@@ -138,7 +140,7 @@ export class GameManager {
       localStorage.setItem('accumulatedSpiceOnFields', JSON.stringify(accumulatedSpiceOnFields));
     });
 
-    this.currentTurnState$.subscribe((currentTurnState) => {
+    this.currentRoundState$.subscribe((currentTurnState) => {
       localStorage.setItem('currentTurnState', JSON.stringify(currentTurnState));
     });
 
@@ -178,7 +180,7 @@ export class GameManager {
   }
 
   public get currentTurn() {
-    return cloneDeep(this.currentTurnSubject.value);
+    return cloneDeep(this.currentRoundSubject.value);
   }
 
   public get startingPlayerId() {
@@ -202,7 +204,7 @@ export class GameManager {
   }
 
   public get currentTurnState() {
-    return cloneDeep(this.currentTurnStateSubject.value);
+    return cloneDeep(this.currentRoundStateSubject.value);
   }
 
   public getActivePlayer() {
@@ -219,6 +221,7 @@ export class GameManager {
 
   public startGame() {
     this.loggingService.clearLog();
+    this.audioManager.playSound('atmospheric');
     const newPlayers = this.playerManager.resetPlayers();
     this.combatManager.resetAdditionalCombatPower();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
@@ -237,15 +240,16 @@ export class GameManager {
     this.minorHousesService.setInitialAvailableHouses();
     this.techTilesService.setInitialAvailableTechTiles();
 
-    this.currentTurnSubject.next(1);
-    this.currentTurnStateSubject.next('agent-placement');
+    this.currentRoundSubject.next(1);
+    this.currentRoundStateSubject.next('agent-placement');
     this.startingPlayerIdSubject.next(1);
     this.activePlayerIdSubject.next(1);
     this.activeCombatPlayerId = 1;
     this.playerManager.allPlayersDrawInitialCards();
   }
 
-  public setNextTurn() {
+  public setNextRound() {
+    this.audioManager.playSound('ping');
     this.accumulateSpiceOnFields();
     this.removePlayerAgentsFromBoard();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
@@ -260,8 +264,8 @@ export class GameManager {
       this.isFinaleSubject.next(true);
     }
 
-    this.currentTurnSubject.next(this.currentTurnSubject.value + 1);
-    this.currentTurnStateSubject.next('agent-placement');
+    this.currentRoundSubject.next(this.currentRoundSubject.value + 1);
+    this.currentRoundStateSubject.next('agent-placement');
 
     this.startingPlayerIdSubject.next(
       this.playerManager.getPlayerCount() > this.startingPlayerId ? this.startingPlayerId + 1 : 1
@@ -274,11 +278,12 @@ export class GameManager {
   }
 
   public finishGame() {
+    this.audioManager.playSound('atmospheric');
     this.removePlayerAgentsFromBoard();
     this.combatManager.resetAdditionalCombatPower();
     this.loggingService.printLog();
-    this.currentTurnSubject.next(0);
-    this.currentTurnStateSubject.next('none');
+    this.currentRoundSubject.next(0);
+    this.currentRoundStateSubject.next('none');
     this.startingPlayerIdSubject.next(0);
     this.activePlayerIdSubject.next(0);
     this.activeCombatPlayerId = 0;
@@ -503,7 +508,10 @@ export class GameManager {
   }
 
   public setTurnState(turnPhase: TurnPhaseType) {
-    this.currentTurnStateSubject.next(turnPhase);
+    if (turnPhase === 'combat') {
+      this.audioManager.playSound('combat');
+    }
+    this.currentRoundStateSubject.next(turnPhase);
   }
 
   public setCurrentAIPlayer(playerId: number) {

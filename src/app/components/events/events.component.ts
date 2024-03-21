@@ -20,7 +20,7 @@ export class EventsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gameManager.currentTurn$.subscribe((turn) => {
+    this.gameManager.currentRound$.subscribe((turn) => {
       if (turn > 0) {
         this.currentEventIndex = turn - 1;
       } else {

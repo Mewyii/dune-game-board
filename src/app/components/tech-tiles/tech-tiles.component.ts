@@ -3,6 +3,7 @@ import { TechTile } from 'src/app/constants/tech-tiles';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { FactionType, LanguageString, RewardType } from 'src/app/models';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -19,7 +20,8 @@ export class TechTilesComponent {
   constructor(
     public gameManager: GameManager,
     public techTilesService: TechTilesService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    private audioManager: AudioManager
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +31,7 @@ export class TechTilesComponent {
   }
 
   onTakeCardClicked(techTileId: string) {
+    this.audioManager.playSound('click');
     this.techTilesService.setPlayerTechTile(this.gameManager.activePlayerId, techTileId);
   }
 

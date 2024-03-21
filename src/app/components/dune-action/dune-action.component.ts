@@ -7,6 +7,7 @@ import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 
 @Component({
   selector: 'app-dune-action',
@@ -37,7 +38,12 @@ export class DuneActionComponent implements OnInit {
 
   public highCouncilSeats: string[] = [];
 
-  constructor(public gameManager: GameManager, public playerManager: PlayerManager, public ts: TranslateService) {}
+  constructor(
+    public gameManager: GameManager,
+    public playerManager: PlayerManager,
+    public ts: TranslateService,
+    private audioManager: AudioManager
+  ) {}
 
   ngOnInit(): void {
     this.pathToActionType = getActionTypePath(this.action.actionType);
@@ -84,24 +90,28 @@ export class DuneActionComponent implements OnInit {
       if (playerAgentCount > 0) {
         this.gameManager.addAgentToField(this.action);
         this.actionFieldClick.emit({ playerId: currentPlayerId });
+        this.audioManager.playSound('click');
       }
     }
   }
 
   onPlayerMarkerRightClicked(playerId: number, fieldId: string) {
     this.gameManager.removePlayerAgentFromField(playerId, fieldId);
+    this.audioManager.playSound('click');
     return false;
   }
 
   onRewardClicked(fieldId: string, rewardType: RewardType) {
     if (rewardType === 'extra-spice') {
       this.gameManager.increaseAccumulatedSpiceOnField(fieldId);
+      this.audioManager.playSound('click');
     }
   }
 
   onRewardRightClicked(fieldId: string, rewardType: RewardType) {
     if (rewardType === 'extra-spice') {
       this.gameManager.decreaseAccumulatedSpiceOnField(fieldId);
+      this.audioManager.playSound('click');
     }
     return false;
   }

@@ -16,6 +16,7 @@ import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/servic
 import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 
 @Component({
   selector: 'dune-leaders',
@@ -55,6 +56,7 @@ export class LeadersComponent implements OnInit {
     public playerScoreManager: PlayerScoreManager,
     public minorHouseService: MinorHousesService,
     public techTilesService: TechTilesService,
+    private audioManager: AudioManager,
     public dialog: MatDialog
   ) {}
 
@@ -223,6 +225,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onFlipTechClicked(techTileId: string) {
+    this.audioManager.playSound('tech-tile');
     this.techTilesService.flipTechTile(techTileId);
   }
 
