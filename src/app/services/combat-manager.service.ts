@@ -348,7 +348,7 @@ export class CombatManager {
     const combatUnits = playerCombatUnits[combatUnitsIndex];
     playerCombatUnits[combatUnitsIndex] = {
       ...combatUnits,
-      additionalCombatPower: combatUnits.additionalCombatPower > 0 ? combatUnits.additionalCombatPower - 1 : 0,
+      additionalCombatPower: combatUnits.additionalCombatPower - 1,
     };
 
     this.playerCombatUnitsSubject.next(playerCombatUnits);

@@ -6,6 +6,7 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { LeadersService } from 'src/app/services/leaders.service';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 
 @Component({
   selector: 'app-dune-location',
@@ -36,7 +37,8 @@ export class DuneLocationComponent implements OnInit {
   constructor(
     private locationManager: LocationManager,
     private playerManager: PlayerManager,
-    private leaderService: LeadersService
+    private leaderService: LeadersService,
+    private audioManager: AudioManager
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +56,7 @@ export class DuneLocationComponent implements OnInit {
   }
 
   onOwnerIndicatorClicked() {
+    this.audioManager.playSound('click-soft');
     if (this.location.ownerReward?.type === 'persuasion') {
       if (this.owner) {
         this.playerManager.removePermanentPersuasionFromPlayer(this.owner.id, 1);

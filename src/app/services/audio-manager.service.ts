@@ -1,40 +1,74 @@
 import { Injectable } from '@angular/core';
 
-export type SoundType = 'click' | 'click-soft' | 'tech-tile' | 'atmospheric' | 'combat' | 'ping';
+export type SoundType =
+  | 'click'
+  | 'click-soft'
+  | 'tech-tile'
+  | 'atmospheric'
+  | 'combat'
+  | 'ping'
+  | 'water'
+  | 'solari'
+  | 'spice'
+  | 'aquire-tech'
+  | 'dreadnought'
+  | 'sword';
+
+export interface Sound {
+  url: string;
+  volume: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AudioManager {
-  private clickSound = new Audio('assets/audio/sounds/click.mp3');
-  private clickSoftSound = new Audio('assets/audio/sounds/click-minor.mp3');
-  private techSound = new Audio('assets/audio/sounds/flip.mp3');
-  private introSound = new Audio('assets/audio/sounds/intro.mp3');
-  private combatSound = new Audio('assets/audio/sounds/combat.mp3');
-  private nextRoundSound = new Audio('assets/audio/sounds/next-round.mp3');
+  private clickSound: Sound = { url: 'assets/audio/sounds/click.mp3', volume: 0.66 };
+  private clickSoftSound: Sound = { url: 'assets/audio/sounds/click-minor.mp3', volume: 0.33 };
+  private techSound: Sound = { url: 'assets/audio/sounds/flip.mp3', volume: 0.25 };
+  private introSound: Sound = { url: 'assets/audio/sounds/intro.mp3', volume: 1.0 };
+  private combatSound: Sound = { url: 'assets/audio/sounds/combat.mp3', volume: 0.33 };
+  private nextRoundSound: Sound = { url: 'assets/audio/sounds/next-round.mp3', volume: 0.66 };
+  private solariSound: Sound = { url: 'assets/audio/sounds/solari.mp3', volume: 1.0 };
+  private waterSound: Sound = { url: 'assets/audio/sounds/water.mp3', volume: 1.0 };
+  private spiceSound: Sound = { url: 'assets/audio/sounds/spice.mp3', volume: 1.0 };
+  private aquireTechSound: Sound = { url: 'assets/audio/sounds/aquire-tech.mp3', volume: 0.4 };
+  private dreadnoughtSound: Sound = { url: 'assets/audio/sounds/dreadnought.mp3', volume: 0.9 };
+  private swordSound: Sound = { url: 'assets/audio/sounds/sword.mp3', volume: 0.15 };
 
-  constructor() {
-    this.clickSound.volume = 0.66;
-    this.clickSoftSound.volume = 0.33;
-    this.techSound.volume = 0.5;
-    this.introSound.volume = 1.0;
-    this.combatSound.volume = 0.5;
-    this.nextRoundSound.volume = 0.66;
-  }
+  constructor() {}
 
   playSound(sound: SoundType) {
     if (sound === 'click') {
-      this.clickSound.play();
+      this.play(this.clickSound);
     } else if (sound === 'click-soft') {
-      this.clickSoftSound.play();
+      this.play(this.clickSoftSound);
     } else if (sound === 'tech-tile') {
-      this.techSound.play();
+      this.play(this.techSound);
     } else if (sound === 'atmospheric') {
-      this.introSound.play();
+      this.play(this.introSound);
     } else if (sound === 'combat') {
-      this.combatSound.play();
+      this.play(this.combatSound);
     } else if (sound === 'ping') {
-      this.nextRoundSound.play();
+      this.play(this.nextRoundSound);
+    } else if (sound === 'solari') {
+      this.play(this.solariSound);
+    } else if (sound === 'spice') {
+      this.play(this.spiceSound);
+    } else if (sound === 'water') {
+      this.play(this.waterSound);
+    } else if (sound === 'aquire-tech') {
+      this.play(this.aquireTechSound);
+    } else if (sound === 'dreadnought') {
+      this.play(this.dreadnoughtSound);
+    } else if (sound === 'sword') {
+      this.play(this.swordSound);
     }
+  }
+
+  private play(sound: Sound) {
+    const audio = new Audio(sound.url);
+    audio.volume = sound.volume;
+    audio.play();
   }
 }

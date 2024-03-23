@@ -145,74 +145,105 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddFocusTokenClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.addFocusTokens(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onRemoveFocusTokenClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.removeFocusTokens(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onAddTechAgentClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.addTechAgentsToPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onRemoveTechAgentClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.removeTechAgentsFromPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   public onAddTroopToGarrisonClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.combatManager.addPlayerTroopsToGarrison(playerId, 1);
   }
 
   public onRemoveTroopFromGarrisonClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.combatManager.removePlayerTroopsFromGarrison(playerId, 1);
   }
 
   public onAddShipToGarrisonClicked(playerId: number) {
+    this.audioManager.playSound('dreadnought');
     this.combatManager.addPlayerShipsToGarrison(playerId, 1);
   }
 
   public onRemoveShipFromGarrisonClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
   }
 
   onAddResourceClicked(id: number, type: ResourceType) {
+    if (type === 'currency') {
+      this.audioManager.playSound('solari');
+    } else if (type === 'water') {
+      this.audioManager.playSound('water');
+    } else if (type === 'spice') {
+      this.audioManager.playSound('spice');
+    }
+
     this.playerManager.addResourceToPlayer(id, type, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onRemoveResourceClicked(id: number, type: ResourceType) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.removeResourceFromPlayer(id, type, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onAddIntrigueClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.addIntriguesToPlayer(id, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onRemoveIntrigueClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.playerManager.removeIntriguesFromPlayer(id, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   public onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
+    this.audioManager.playSound('click-soft');
     this.playerScoreManager.addPlayerScore(id, scoreType, 1);
   }
 
   public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
+    this.audioManager.playSound('click-soft');
     this.playerScoreManager.removePlayerScore(id, scoreType, 1);
   }
 
   onAddPlayerAgentClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.gameManager.addAgentToPlayer(id);
   }
 
   onRemovePlayerAgentClicked(id: number) {
+    this.audioManager.playSound('click-soft');
     this.gameManager.removeAgentFromPlayer(id);
   }
 

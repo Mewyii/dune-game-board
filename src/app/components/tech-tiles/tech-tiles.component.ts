@@ -31,7 +31,7 @@ export class TechTilesComponent {
   }
 
   onTakeCardClicked(techTileId: string) {
-    this.audioManager.playSound('click');
+    this.audioManager.playSound('aquire-tech');
     this.techTilesService.setPlayerTechTile(this.gameManager.activePlayerId, techTileId);
   }
 

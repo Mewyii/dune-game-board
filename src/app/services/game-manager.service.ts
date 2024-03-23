@@ -398,6 +398,7 @@ export class GameManager {
           const dreadnoughtOrTech = this.aIManager.getUpgradedreadnoughtOrTechDecision(activePlayer.id);
 
           if (dreadnoughtOrTech === 'dreadnought') {
+            this.audioManager.playSound('dreadnought');
             this.combatManager.addPlayerShipsToGarrison(activePlayer.id, 1);
             unitsGainedThisTurn += 1;
           }
@@ -688,6 +689,8 @@ export class GameManager {
     }
 
     this.techTilesService.setPlayerTechTile(player.id, techTile.name.en);
+
+    this.audioManager.playSound('aquire-tech');
   }
 
   private isOpeningTurn(playerId: number) {
@@ -709,6 +712,14 @@ export class GameManager {
   private addRewardToPlayer(reward: Reward) {
     const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false };
     if (isResource(reward)) {
+      if (reward.type === 'currency') {
+        this.audioManager.playSound('solari');
+      } else if (reward.type === 'water') {
+        this.audioManager.playSound('water');
+      } else if (reward.type === 'spice') {
+        this.audioManager.playSound('spice');
+      }
+
       this.playerManager.addResourceToPlayer(this.activePlayerId, reward.type, reward.amount ?? 1);
     }
     if (
@@ -737,6 +748,7 @@ export class GameManager {
       aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
     }
     if (reward.type === 'dreadnought') {
+      this.audioManager.playSound('dreadnought');
       this.combatManager.addPlayerShipsToGarrison(this.activePlayerId, 1);
       aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
     }

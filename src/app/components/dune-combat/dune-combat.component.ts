@@ -79,12 +79,12 @@ export class DuneCombatComponent implements OnInit {
   }
 
   public onAddAdditionalCombatPowerToPlayer(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('sword');
     this.combatManager.addAdditionalCombatPowerToPlayer(playerId, 1);
   }
 
   public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('sword');
     this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
   }
 
