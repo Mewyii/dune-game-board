@@ -7,9 +7,9 @@ import { PlayerScore } from '../../player-score-manager.service';
 
 export const aiGoals: FieldsForGoals = {
   'high-council': {
-    baseDesire: 0.6,
+    baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.025 * (gameState.currentTurn - 1),
+      0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.02 * (gameState.currentTurn - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'currency', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
@@ -69,10 +69,10 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   dreadnought: {
-    baseDesire: 0.4,
+    baseDesire: 0.35,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'currency', virtualResources) -
-      0.01 * (gameState.currentTurn - 1) -
+      0.0075 * getResourceAmount(player, 'currency', virtualResources) -
+      0.0125 * (gameState.currentTurn - 1) -
       0.1 * getPlayerdreadnoughtCount(gameState),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'currency', virtualResources) > 3,
@@ -83,9 +83,9 @@ export const aiGoals: FieldsForGoals = {
     viableFields: {},
   },
   'fremen-alliance': {
-    baseDesire: 0.2,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.05 * gameState.playerScore.fremen +
+      0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.0125 * gameState.currentTurn : 0),
     goalIsReachable: () => false,
@@ -98,9 +98,9 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'bg-alliance': {
-    baseDesire: 0.2,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.05 * gameState.playerScore.fremen +
+      0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.0125 * gameState.currentTurn : 0),
     goalIsReachable: () => false,
@@ -113,9 +113,9 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'guild-alliance': {
-    baseDesire: 0.2,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.05 * gameState.playerScore.fremen +
+      0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.0125 * gameState.currentTurn : 0),
     goalIsReachable: () => false,
@@ -128,9 +128,9 @@ export const aiGoals: FieldsForGoals = {
     },
   },
   'emperor-alliance': {
-    baseDesire: 0.2,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.05 * gameState.playerScore.fremen +
+      0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.0125 * gameState.currentTurn : 0),
     goalIsReachable: () => false,
