@@ -5,6 +5,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { ActionType, FactionType } from 'src/app/models';
 
 @Component({
   selector: 'dune-card-configurator',
@@ -15,6 +16,18 @@ export class CardConfiguratorComponent implements OnInit {
   public imperiumCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
+  public fieldAccessess: { [type in ActionType]: number } = {
+    landsraad: 0,
+    choam: 0,
+    emperor: 0,
+    guild: 0,
+    bene: 0,
+    fremen: 0,
+    town: 0,
+    spice: 0,
+  };
+
+  public totalCardAmount = 0;
 
   constructor(
     public translateService: TranslateService,
@@ -25,6 +38,28 @@ export class CardConfiguratorComponent implements OnInit {
   ngOnInit(): void {
     this.cardConfiguratorService.imperiumCards$.subscribe((imperiumCards) => {
       this.imperiumCards = imperiumCards;
+
+      this.totalCardAmount = 0;
+      this.fieldAccessess = {
+        landsraad: 0,
+        choam: 0,
+        emperor: 0,
+        guild: 0,
+        bene: 0,
+        fremen: 0,
+        town: 0,
+        spice: 0,
+      };
+
+      for (const card of imperiumCards) {
+        this.totalCardAmount += card.cardAmount ?? 1;
+
+        if (card.fieldAccess) {
+          for (const access of card.fieldAccess) {
+            this.fieldAccessess[access] += card.cardAmount ?? 1;
+          }
+        }
+      }
     });
   }
 

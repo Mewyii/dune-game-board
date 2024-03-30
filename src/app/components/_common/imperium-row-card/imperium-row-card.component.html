@@ -58,7 +58,24 @@
       </ng-container>
     </div>
   </div>
-  <div class="card-aquire-costs-container" *ngIf="card.persuasionCosts">
+  <div class="card-aquire-effect-container" *ngIf="card.buyEffects && card.buyEffects.length">
+    <div class="card-aquire-effect">
+      <ng-container *ngFor="let reward of card.buyEffects">
+        <div class="reward-container">
+          <img class="reward aquire" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount aquire">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div
+    [class]="'card-aquire-costs-container' + (card.buyEffects && card.buyEffects.length > 0 ? ' highlighted' : '')"
+    *ngIf="card.persuasionCosts"
+  >
     <div class="card-aquire-costs">{{ card.persuasionCosts }}</div>
   </div>
 </div>

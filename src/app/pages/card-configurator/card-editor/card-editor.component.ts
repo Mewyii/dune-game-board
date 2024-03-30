@@ -55,6 +55,20 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
       this.imperiumCardForm.patchValue(newImperiumCard);
 
+      if (newImperiumCard.buyEffects) {
+        const buyEffectsArray = this.buyEffects;
+
+        buyEffectsArray.clear();
+        newImperiumCard.buyEffects.forEach((field) => {
+          buyEffectsArray.push(
+            this.fb.group({
+              type: field.type,
+              amount: field.amount,
+            })
+          );
+        });
+      }
+
       if (newImperiumCard.agentEffects) {
         this.hasCustomAgentEffect = false;
         const agentEffectsArray = this.agentEffects;
@@ -101,8 +115,10 @@ export class CardEditorComponent implements OnInit, OnChanges {
       persuasionCosts: null,
       fieldAccess: new FormControl([]),
       imageUrl: '',
+      cardAmount: 1,
     });
 
+    this.addBuyEffectControl();
     this.addAgentEffectControl();
     this.addRevealEffectControl();
 
@@ -119,6 +135,37 @@ export class CardEditorComponent implements OnInit, OnChanges {
     return this.imperiumCardForm.get('fieldAccess') as FormArray;
   }
 
+  // Buy Effects
+  get buyEffects() {
+    return this.imperiumCardForm.get('buyEffects') as FormArray;
+  }
+
+  getBuyEffectTypeControl(index: number): FormControl {
+    return this.buyEffects.at(index).get('type') as FormControl;
+  }
+
+  getBuyEffectAmountControl(index: number): FormControl {
+    return this.buyEffects.at(index).get('amount') as FormControl;
+  }
+
+  addBuyEffectControl() {
+    this.imperiumCardForm.addControl('buyEffects', new FormArray([]));
+  }
+
+  onAddBuyEffectClicked() {
+    this.buyEffects.push(
+      this.fb.group({
+        type: '',
+        amount: undefined,
+      })
+    );
+  }
+
+  onRemoveBuyEffectClicked(index: number) {
+    this.buyEffects.removeAt(index);
+  }
+
+  // Agent Effects
   get agentEffects() {
     return this.imperiumCardForm.get('agentEffects') as FormArray;
   }
@@ -182,6 +229,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
     }
   }
 
+  // Reveal Effects
   get revealEffects() {
     return this.imperiumCardForm.get('revealEffects') as FormArray;
   }

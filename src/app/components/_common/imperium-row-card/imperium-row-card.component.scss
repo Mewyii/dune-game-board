@@ -1,6 +1,6 @@
 
 .imperium-card {
-    height: 335px;
+    height: 340px;
     width: 230px;
     display: flex;
     flex-direction: column;
@@ -44,11 +44,12 @@
     font-size: small;
     color: #e1e1e1;
     white-space: pre-wrap;
-    height: 53px;
+    height: 55px;
     padding: 4px;
     background-image: url(/assets/images/card-backgrounds/reveal-effect.png);
     background-size: cover;
     border-radius: 0px 0px 4px 4px;
+    background-color: #1f2533;
 }
 
 .card-agent-effect-container {
@@ -58,7 +59,7 @@
     font-size: small;
     color: #e1e1e1;
     white-space: pre-wrap;
-    height: 53px;
+    height: 55px;
     background-image: url(/assets/images/card-backgrounds/agent-effect.png);
     background-size: cover;
 }
@@ -161,4 +162,44 @@
     font-size: xx-small;
     text-wrap: nowrap;
     clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
+}
+
+.card-aquire-costs-container.highlighted {
+    filter: saturate(1.2) brightness(1.4);
+}
+
+.card-aquire-effect-container {
+    position: absolute;
+    top: 24px;
+    right: 3px;
+    width: 28px;
+    padding-top: 29px;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+    background-image: url(/assets/images/card-backgrounds/aquire-effect.png);
+    background-size: cover;
+    background-position-y: bottom;
+}
+
+.card-aquire-effect {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 2px;
+    gap: 2px;
+    justify-content: center;
+    align-items: center;
+}
+
+.reward.aquire {
+    height: fit-content;
+    max-width: 24px;
+    max-height: 24px;
+}
+
+.reward-amount.aquire {
+    top: 1px;
 }

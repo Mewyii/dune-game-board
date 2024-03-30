@@ -9,7 +9,9 @@ export interface ImperiumCard {
   customAgentEffect?: LanguageString;
   revealEffects?: Reward[];
   customRevealEffect?: LanguageString;
+  buyEffects?: Reward[];
   imageUrl?: string;
+  cardAmount?: number;
 }
 
 export const imperiumCards: ImperiumCard[] = [

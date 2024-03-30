@@ -42,6 +42,7 @@ export const rewardTypes = [
   'faction-influence-down-bene',
   'faction-influence-down-fremen',
   'agent',
+  'agent-lift',
   'buildup',
   'signet-token',
   'signet-ring',

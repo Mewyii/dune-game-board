@@ -33,6 +33,34 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <!-- Buy Effects -->
+  <div class="card-effect-container">
+    <div class="title-container">
+      <span class="card-effect-title"> Buy Effects </span>
+    </div>
+    <div formArrayName="buyEffects">
+      <div class="form-group" *ngFor="let buyEffect of buyEffects.controls; let i = index">
+        <mat-form-field class="big-text-field">
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getBuyEffectTypeControl(i)">
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getBuyEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveBuyEffectClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddBuyEffectClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
   <!-- Agent Effects -->
   <div class="card-effect-container">
     <div class="title-container">
@@ -132,5 +160,10 @@
   <mat-form-field class="large-text-field margin-top">
     <mat-label>Image URL</mat-label>
     <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Amount</mat-label>
+    <input matInput type="number" formControlName="cardAmount" />
   </mat-form-field>
 </form>
