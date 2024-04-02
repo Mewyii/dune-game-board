@@ -1,6 +1,6 @@
 <div class="action-field">
   <div class="heading" [style.background-color]="backgroundColor">
-    <span class="title">{{ ts.translate(action.title) }}</span>
+    <span class="title">{{ ts.translate(action.title).toLocaleLowerCase() }}</span>
     <div class="border-remover" [style.background-color]="backgroundColor"></div>
   </div>
   <div class="actionTypeIcon" [style.background-image]="'url(' + pathToActionType + ')'"></div>
@@ -34,7 +34,7 @@
       class="reward-area"
       [style.width]="action.customWidth"
       [style.max-width]="action.customWidth"
-      [style.row-gap]="action.customWidth ? '0px' : '8px'"
+      [style.row-gap]="action.noGap ? '0px' : ''"
     >
       <ng-container *ngFor="let rewardType of action.rewards">
         <div

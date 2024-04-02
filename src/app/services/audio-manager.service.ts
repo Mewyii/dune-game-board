@@ -12,6 +12,9 @@ export type SoundType =
   | 'spice'
   | 'aquire-tech'
   | 'dreadnought'
+  | 'high-council'
+  | 'victory-point'
+  | 'swordmaster'
   | 'sword';
 
 export interface Sound {
@@ -33,8 +36,11 @@ export class AudioManager {
   private waterSound: Sound = { url: 'assets/audio/sounds/water.mp3', volume: 1.0 };
   private spiceSound: Sound = { url: 'assets/audio/sounds/spice.mp3', volume: 1.0 };
   private aquireTechSound: Sound = { url: 'assets/audio/sounds/aquire-tech.mp3', volume: 0.4 };
-  private dreadnoughtSound: Sound = { url: 'assets/audio/sounds/dreadnought.mp3', volume: 0.9 };
+  private dreadnoughtSound: Sound = { url: 'assets/audio/sounds/dreadnought.mp3', volume: 0.4 };
   private swordSound: Sound = { url: 'assets/audio/sounds/sword.mp3', volume: 0.15 };
+  private highCouncilSound: Sound = { url: 'assets/audio/sounds/high-council.mp3', volume: 0.9 };
+  private victoryPointSound: Sound = { url: 'assets/audio/sounds/victory-point.mp3', volume: 0.3 };
+  private swordmasterSound: Sound = { url: 'assets/audio/sounds/swordmaster.mp3', volume: 1.0 };
 
   constructor() {}
 
@@ -63,6 +69,12 @@ export class AudioManager {
       this.play(this.dreadnoughtSound);
     } else if (sound === 'sword') {
       this.play(this.swordSound);
+    } else if (sound === 'high-council') {
+      this.play(this.highCouncilSound);
+    } else if (sound === 'victory-point') {
+      this.play(this.victoryPointSound);
+    } else if (sound === 'swordmaster') {
+      this.play(this.swordmasterSound);
     }
   }
 
