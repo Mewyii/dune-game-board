@@ -189,6 +189,10 @@ export class AIManager {
 
     const virtualResources = gameState.playerLeader.aiFieldAccessModifier?.resources ?? [];
 
+    const conflictEvaluation = gameState.conflict.aiEvaluation(player, gameState);
+    const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
+    const imperiumRowEvaluation = this.getImperiumRowEvaluation();
+
     for (let [goalId, goal] of Object.entries(aiGoals)) {
       if (!goal.reachedGoal(player, gameState, aiGoals, virtualResources)) {
         const aiGoalId = goalId as AIGoals;
@@ -201,7 +205,7 @@ export class AIManager {
         const goalDesire =
           getDesire(goal, player, gameState, virtualResources) *
           (aiPlayer.personality[aiGoalId] ?? 1.0) *
-          this.getGameStateModifier(aiGoalId, player, gameState);
+          this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation);
         let desireCanBeFullfilled = false;
 
         if (goal.goalIsReachable(player, gameState, aiGoals, virtualResources) && goal.desiredFields) {
@@ -393,29 +397,29 @@ export class AIManager {
     return 'none';
   }
 
-  private getGameStateModifier(goal: AIGoals, player: Player, gameState: GameState) {
-    const aiVariables = this.aiVariables;
-    const conflictEvaluation = gameState.conflict.aiEvaluation;
-    const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
+  private getImperiumRowEvaluation() {
+    if (this.aiVariables.imperiumRow === 'good') {
+      return 1.2;
+    } else if (this.aiVariables.imperiumRow === 'bad') {
+      return 0.8;
+    }
+    return 1.0;
+  }
 
+  private getGameStateModifier(
+    goal: AIGoals,
+    conflictEvaluation: number,
+    techEvaluation: number,
+    imperiumRowEvaluation: number
+  ) {
     let modifier = 1.0;
 
     if (goal === 'enter-combat' || goal === 'troops' || goal === 'dreadnought') {
-      if (conflictEvaluation === 'good') {
-        modifier = 1.2;
-      }
-      if (conflictEvaluation === 'bad') {
-        modifier = 0.8;
-      }
+      modifier = 0.5 + conflictEvaluation;
     } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin') {
-      modifier = 0.4 + techEvaluation;
+      modifier = 0.5 + techEvaluation;
     } else if (goal === 'draw-cards' || goal === 'get-board-persuasion' || goal === 'high-council') {
-      if (aiVariables.imperiumRow === 'good') {
-        modifier = 1.2;
-      }
-      if (aiVariables.imperiumRow === 'bad') {
-        modifier = 0.8;
-      }
+      modifier = imperiumRowEvaluation;
     }
 
     return modifier;

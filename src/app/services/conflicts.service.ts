@@ -66,7 +66,7 @@ export class ConflictsService {
 
   private currentConflictSubject = new BehaviorSubject<Conflict>({
     name: { de: 'Wüstenkraft', en: 'desert power' },
-    aiEvaluation: 'good',
+    aiEvaluation: () => 0.5,
     lvl: 2,
     row: 1,
     column: 1,
@@ -97,7 +97,12 @@ export class ConflictsService {
     const currentConflictString = localStorage.getItem('currentConflict');
     if (currentConflictString) {
       const currentConflict = JSON.parse(currentConflictString) as Conflict;
-      this.currentConflictSubject.next(currentConflict);
+
+      // Workaround for local storage not being able to store functions
+      const realConflict = this.conflicts.find((x) => x.name.en === currentConflict.name.en);
+      if (realConflict) {
+        this.currentConflictSubject.next(realConflict);
+      }
 
       this.currentCardCoordinatesSubject.next(this.getCardCoordinates(currentConflict.column, currentConflict.row));
     }

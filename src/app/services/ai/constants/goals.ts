@@ -47,7 +47,7 @@ export const aiGoals: FieldsForGoals = {
   tech: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'spice', virtualResources) + 0.025 * player.techAgents,
+      0.01 * getResourceAmount(player, 'spice', virtualResources) + 0.02 * player.techAgents,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'currency', virtualResources) > 3,
     reachedGoal: () => false,
@@ -672,7 +672,7 @@ function playerLikelyWinsCombat(gameState: GameState) {
 }
 
 function getWinCombatDesireModifier(gameState: GameState) {
-  let desire = 0.4 + 0.025 * (gameState.currentTurn - 1) + 0.1 * gameState.playerAgentCount;
+  let desire = 0.4 + 0.1 * gameState.playerAgentCount;
 
   const playerStrength =
     getPlayerCombatStrength(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);
@@ -718,7 +718,7 @@ function getWinCombatDesireModifier(gameState: GameState) {
 }
 
 function getParticipateInCombatDesireModifier(gameState: GameState) {
-  let desire = 0.1 + 0.0125 * (gameState.currentTurn - 1);
+  let desire = 0.1 + 0.01 * (gameState.currentTurn - 1);
 
   let enemiesInCombat = 0;
   let garrisonStrengthOfEnemiesNotInCombat = 0;

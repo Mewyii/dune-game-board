@@ -31,3 +31,5 @@ export function randomizeArray<T>(a: Array<T>, randomizeFactor: number) {
   }
   return resultArray;
 }
+
+export const normalizeNumber = (val: number, max: number, min: number) => (val - min) / (max - min);
