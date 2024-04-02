@@ -53,7 +53,7 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: () => false,
     desiredFields: {},
     viableFields: {
-      'trade rights': (player, gameState, goals, virtualResources) =>
+      'Space Port': (player, gameState, goals, virtualResources) =>
         getResourceDesire(player, virtualResources, 0.2, [
           { resource: 'spice', amount: 0.025 },
           { resource: 'tech-agents', amount: 0.025 },
@@ -163,22 +163,22 @@ export const aiGoals: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => playerLikelyWinsCombat(gameState),
     viableFields: {
-      arrakeen: () => 0.6,
-      carthag: () => 0.6,
-      'sietch tabr': (player, gameState) => 0.6,
+      Arrakeen: () => 0.6,
+      Carthag: () => 0.6,
+      'Sietch Tabr': (player, gameState) => 0.6,
       'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.7, virtualResources),
       'imperial favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.5 : 0),
       conspiracy: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.emperor === 1 ? 0.7 : 0, virtualResources),
-      'imperial basin': () => 0.5,
-      'hagga basin': (player, gameState, goals, virtualResources) =>
+      'Imperial Basin': () => 0.5,
+      'Hagga Basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
-      'the great flat': (player, gameState, goals, virtualResources) =>
+      'The Great Flat': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
-      'research station (draw)': (player, gameState, goals, virtualResources) =>
+      'Research Station (draw)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
-      'research station (trim)': (player, gameState, goals, virtualResources) =>
+      'Research Station (trim)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'currency', 4, 0.5, virtualResources),
@@ -195,9 +195,9 @@ export const aiGoals: FieldsForGoals = {
       getResourceAmount(player, 'water', virtualResources) > 0 || getResourceAmount(player, 'spice', virtualResources) > 3,
     reachedGoal: () => false,
     viableFields: {
-      arrakeen: () => 0.3,
-      carthag: () => 0.3,
-      'sietch tabr': (player, gameState) => 0.3,
+      Arrakeen: () => 0.3,
+      Carthag: () => 0.3,
+      'Sietch Tabr': (player, gameState) => 0.3,
       'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 0.9 : 0.6, virtualResources),
       'desert equipment': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
@@ -214,6 +214,7 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: () => false,
     viableFields: {
       relations: () => 0.5,
+      Carthag: () => 0.5,
       conspiracy: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
       'mind training': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.5 : 0.0),
@@ -239,7 +240,7 @@ export const aiGoals: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: {
-      carthag: () => 0.5,
+      'Space Port': () => 0.5,
     },
   },
   'get-board-persuasion': {
@@ -250,7 +251,6 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: {
       relations: () => 1.0,
-      'trade rights': () => 0.33,
     },
   },
   'draw-cards': {
@@ -297,13 +297,13 @@ export const aiGoals: FieldsForGoals = {
     viableFields: {
       mentat: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'currency', 3, 0.3, virtualResources),
-      arrakeen: () => 0.3,
-      'research station (draw)': (player, gameState, goals, virtualResources) =>
+      Arrakeen: () => 0.3,
+      'Research Station (draw)': (player, gameState, goals, virtualResources) =>
         // if we cant buy 3 cards, we always trim
         playerCanDrawCards(player, 3)
           ? getCostAdjustedDesire(player, 'water', 2, clamp(0.6 + 0.075 * player.cardsBought, 0, 0.9), virtualResources)
           : 0,
-      'research station (trim)': (player, gameState, goals, virtualResources) =>
+      'Research Station (trim)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, clamp(0.5 + 0.075 * player.cardsBought, 0, 0.7), virtualResources),
       'mind training': (player, gameState) => 0.3,
       'hidden knowledge': (player, gameState, goals, virtualResources) =>
@@ -326,7 +326,7 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: (player, gameState) => player.cardsInDeck < 7 || gameState.isFinale,
     viableFields: {
       'mind training': (player, gameState) => 0.5,
-      'research station (trim)': (player, gameState, goals, virtualResources) =>
+      'Research Station (trim)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
       'fremen warriors': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 0.5 : 0.0, virtualResources),
@@ -384,7 +384,7 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'water', virtualResources) > 3,
     viableFields: {
       'desert equipment': () => 0.5,
-      'sietch tabr': (player, gameState) => 0.5,
+      'Sietch Tabr': (player, gameState) => 0.5,
     },
   },
   'collect-spice': {
@@ -432,21 +432,21 @@ export const aiGoals: FieldsForGoals = {
       getResourceAmount(player, 'water', virtualResources) > 1,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'spice', virtualResources) > 7,
     viableFields: {
-      'imperial basin': (player, gameState) => 0.25 + 0.4 * getAccumulatedSpice(gameState, 'imperial basin'),
-      'hagga basin': (player, gameState, goals, virtualResources) =>
+      'Imperial Basin': (player, gameState) => 0.25 + 0.4 * getAccumulatedSpice(gameState, 'Imperial Basin'),
+      'Hagga Basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
           'water',
           1,
-          0.5 + 0.2 * getAccumulatedSpice(gameState, 'hagga basin'),
+          0.5 + 0.2 * getAccumulatedSpice(gameState, 'Hagga Basin'),
           virtualResources
         ),
-      'the great flat': (player, gameState, goals, virtualResources) =>
+      'The Great Flat': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
           'water',
           2,
-          0.75 + 0.1 * getAccumulatedSpice(gameState, 'hagga basin'),
+          0.75 + 0.1 * getAccumulatedSpice(gameState, 'Hagga Basin'),
           virtualResources
         ),
     },
@@ -502,8 +502,8 @@ export const aiGoals: FieldsForGoals = {
       getResourceAmount(player, 'currency', virtualResources) > 11,
     viableFields: {
       'imperial favor': () => 0.5,
-      'trade rights': () => 0.33,
-      'spice sale': (player, gameState, goals, virtualResources) =>
+      'Space Port': () => 0.33,
+      'Spice Trade': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'spice', virtualResources) > 0
           ? 1.0 - 0.05 * getResourceAmount(player, 'currency', virtualResources)
           : 0,
@@ -514,23 +514,23 @@ export const aiGoals: FieldsForGoals = {
   },
   'harvest-accumulated-spice-basin': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals, virtualResources) => 0.2 * getAccumulatedSpice(gameState, 'hagga basin'),
+    desireModifier: (player, gameState, goals, virtualResources) => 0.2 * getAccumulatedSpice(gameState, 'Hagga Basin'),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 0,
-    reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'imperial basin') === 0,
+    reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'Imperial Basin') === 0,
     viableFields: {
-      'hagga basin': (player, gameState, goals, virtualResources) =>
+      'Hagga Basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
     },
   },
   'harvest-accumulated-spice-flat': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals, virtualResources) => 0.2 * getAccumulatedSpice(gameState, 'the great flat'),
+    desireModifier: (player, gameState, goals, virtualResources) => 0.2 * getAccumulatedSpice(gameState, 'The Great Flat'),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 1,
-    reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'the great flat') === 0,
+    reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'The Great Flat') === 0,
     viableFields: {
-      'the great flat': (player, gameState, goals, virtualResources) =>
+      'The Great Flat': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
     },
   },
@@ -544,8 +544,8 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster === true,
     viableFields: {
       'imperial favor': () => 1,
-      'trade rights': () => 0.75,
-      'spice sale': (player, gameState, goals, virtualResources) =>
+      'Space Port': () => 0.75,
+      'Spice Trade': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'spice', virtualResources) > 0 ? 0.25 : 0,
       expedition: (player, gameState) => (gameState.playerScore.guild === 1 ? 1 : 0),
       conspiracy: (player, gameState, goals, virtualResources) =>

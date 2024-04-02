@@ -1,14 +1,14 @@
 import { DuneLocation } from '../../../models';
 
-export const locationsCustom: DuneLocation[] = [
+export const locationsCustomAdvanced: DuneLocation[] = [
   {
     color: 'rgb(87, 71, 52)',
     position: {
-      marginTop: 750,
-      marginLeft: 1390,
+      marginTop: 885,
+      marginLeft: 1430,
     },
     actionField: {
-      title: { de: 'arrakeen', en: 'arrakeen' },
+      title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
       rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
@@ -18,25 +18,38 @@ export const locationsCustom: DuneLocation[] = [
   {
     color: 'rgb(87, 71, 52)',
     position: {
-      marginTop: 910,
-      marginLeft: 1110,
+      marginTop: 720,
+      marginLeft: 1375,
     },
     actionField: {
-      title: { de: 'carthag', en: 'carthag' },
+      title: { de: 'Raumhafen', en: 'Space Port' },
       actionType: 'town',
-      rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'foldspace' }, { type: 'currency', amount: 2 }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
+    },
+  },
+  {
+    color: 'rgb(87, 71, 52)',
+    position: {
+      marginTop: 940,
+      marginLeft: 1090,
+    },
+    actionField: {
+      title: { de: 'Carthag', en: 'Carthag' },
+      actionType: 'town',
+      rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
+      pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
     },
     ownerReward: { type: 'card-round-start' },
   },
   {
     color: 'rgb(87, 71, 52)',
     position: {
-      marginTop: 680,
-      marginLeft: 920,
+      marginTop: 665,
+      marginLeft: 970,
     },
     actionField: {
-      title: { de: 'forschungszentrum', en: 'research station' },
+      title: { de: 'Forschungszentrum', en: 'Research Station' },
       actionType: 'town',
       costs: [
         {
@@ -53,11 +66,11 @@ export const locationsCustom: DuneLocation[] = [
   {
     color: 'rgb(87, 71, 52)',
     position: {
-      marginTop: 840,
+      marginTop: 850,
       marginLeft: 600,
     },
     actionField: {
-      title: { de: 'sietch tabr', en: 'sietch tabr' },
+      title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
       rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
@@ -68,11 +81,11 @@ export const locationsCustom: DuneLocation[] = [
   {
     color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 1210,
-      marginLeft: 1240,
+      marginTop: 1190,
+      marginLeft: 1260,
     },
     actionField: {
-      title: { de: 'imperiales becken', en: 'imperial basin' },
+      title: { de: 'Imperiales Becken', en: 'Imperial Basin' },
       actionType: 'spice',
       rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
@@ -82,11 +95,11 @@ export const locationsCustom: DuneLocation[] = [
   {
     color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 1120,
-      marginLeft: 870,
+      marginTop: 1090,
+      marginLeft: 770,
     },
     actionField: {
-      title: { de: 'hagga-becken', en: 'hagga basin' },
+      title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
       actionType: 'spice',
       costs: [{ type: 'water' }],
       rewards: [{ type: 'spice', amount: 2 }, { type: 'extra-spice' }, { type: 'combat' }],
@@ -96,11 +109,11 @@ export const locationsCustom: DuneLocation[] = [
   {
     color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 1310,
-      marginLeft: 585,
+      marginTop: 1300,
+      marginLeft: 580,
     },
     actionField: {
-      title: { de: 'die grosse ebene', en: 'the great flat' },
+      title: { de: 'Die grosse Ebene', en: 'The Great Flat' },
       actionType: 'spice',
       costs: [{ type: 'water' }, { type: 'water' }],
       rewards: [{ type: 'spice', amount: 3 }, { type: 'extra-spice' }, { type: 'combat' }],

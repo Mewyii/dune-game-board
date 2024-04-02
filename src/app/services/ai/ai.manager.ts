@@ -244,7 +244,7 @@ export class AIManager {
 
     const conditionalFields: FieldLock[] = [
       {
-        fieldId: 'sietch tabr',
+        fieldId: 'Sietch Tabr',
         lock: {
           type: 'fremen',
           amount: 2,

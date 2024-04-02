@@ -410,7 +410,7 @@ export class GameManager {
           // Techagents are added previously
           this.buyTechOrStackTechAgents(activePlayer, -1);
         }
-        if (field.title.en === 'trade rights') {
+        if (field.title.en === 'Space Port') {
           // Techagents are added previously
           this.buyTechOrStackTechAgents(activePlayer, -1);
         }
@@ -438,7 +438,7 @@ export class GameManager {
           }
         }
 
-        if (field.title.en === 'spice sale') {
+        if (field.title.en === 'Spice Trade') {
           const spiceToCurrencyFunction = (spice: number) => 3 + spice * 2;
           const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(activePlayer, spiceToCurrencyFunction);
           const currencyFromSpiceSale = spiceToCurrencyFunction(sellSpiceAmount);
@@ -587,7 +587,7 @@ export class GameManager {
   }
 
   private accumulateSpiceOnFields() {
-    const spiceFieldNames = ['imperial basin', 'hagga basin', 'the great flat'];
+    const spiceFieldNames = ['Imperial Basin', 'Hagga Basin', 'The Great Flat'];
 
     const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
 
@@ -765,9 +765,11 @@ export class GameManager {
       this.playerManager.addPersuasionToPlayer(this.activePlayerId, reward.amount ?? 1);
     }
     if (reward.type === 'council-seat-small' || reward.type === 'council-seat-large') {
+      this.audioManager.playSound('high-council');
       this.playerManager.addCouncilSeatToPlayer(this.activePlayerId);
     }
     if (reward.type === 'sword-master') {
+      this.audioManager.playSound('swordmaster');
       this.playerManager.addPermanentAgentToPlayer(this.activePlayerId);
       this.addAgentToPlayer(this.activePlayerId);
     }
@@ -775,6 +777,7 @@ export class GameManager {
       this.addAgentToPlayer(this.activePlayerId);
     }
     if (reward.type === 'victory-point') {
+      this.audioManager.playSound('victory-point');
       this.playerScoreManager.addPlayerScore(this.activePlayerId, 'victoryPoints', reward.amount ?? 1);
     }
 

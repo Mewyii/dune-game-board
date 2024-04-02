@@ -48,7 +48,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
     aiFieldAccessModifier: {
-      directFieldAccess: ['sietch tabr'],
+      directFieldAccess: ['Sietch Tabr'],
     },
   },
   {

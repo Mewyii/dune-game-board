@@ -21,7 +21,7 @@ export class DuneLocationComponent implements OnInit {
       marginLeft: 2250,
     },
     actionField: {
-      title: { de: 'arrakeen', en: 'arrakeen' },
+      title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
       rewards: [
         { type: 'troop', amount: 1 },

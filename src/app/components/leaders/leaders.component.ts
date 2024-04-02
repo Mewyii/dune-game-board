@@ -229,6 +229,10 @@ export class LeadersComponent implements OnInit {
 
   public onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-soft');
+
+    if (scoreType === 'victoryPoints') {
+      this.audioManager.playSound('victory-point');
+    }
     this.playerScoreManager.addPlayerScore(id, scoreType, 1);
   }
 

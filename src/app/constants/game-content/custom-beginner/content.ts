@@ -1,12 +1,12 @@
 import { GameContent } from '../../board-settings';
-import { locationsCustom } from '../custom-beginner/locations-custom';
+import { locationsCustomBeginner } from './locations-custom-beginner';
 import { factionsCustomBeginner } from './factions-custom-beginner';
 import { ixCustomBeginner } from './ix-custom-beginner';
 
 export const gameContentCustomBeginner: GameContent = {
   name: 'custom-beginner',
   factions: factionsCustomBeginner,
-  locations: locationsCustom,
+  locations: locationsCustomBeginner,
   ix: ixCustomBeginner,
   useTechTiles: false,
   finaleTrigger: 8,
