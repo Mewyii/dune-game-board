@@ -38,9 +38,9 @@ export class AudioManager {
   private aquireTechSound: Sound = { url: 'assets/audio/sounds/aquire-tech.mp3', volume: 0.4 };
   private dreadnoughtSound: Sound = { url: 'assets/audio/sounds/dreadnought.mp3', volume: 0.4 };
   private swordSound: Sound = { url: 'assets/audio/sounds/sword.mp3', volume: 0.15 };
-  private highCouncilSound: Sound = { url: 'assets/audio/sounds/high-council.mp3', volume: 0.9 };
-  private victoryPointSound: Sound = { url: 'assets/audio/sounds/victory-point.mp3', volume: 0.3 };
-  private swordmasterSound: Sound = { url: 'assets/audio/sounds/swordmaster.mp3', volume: 1.0 };
+  private highCouncilSound: Sound = { url: 'assets/audio/sounds/high-council.mp3', volume: 1.0 };
+  private victoryPointSound: Sound = { url: 'assets/audio/sounds/victory-point.mp3', volume: 0.2 };
+  private swordmasterSound: Sound = { url: 'assets/audio/sounds/swordmaster.mp3', volume: 0.3 };
 
   constructor() {}
 

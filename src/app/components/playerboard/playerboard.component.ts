@@ -62,45 +62,18 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onAddPlayerClicked() {
+    this.audioManager.playSound('click-soft');
     this.playerManager.addPlayer();
   }
 
   onRemovePlayerClicked() {
+    this.audioManager.playSound('click-soft');
     this.playerManager.removePlayer();
   }
 
   onSetAIActiveClicked(id: number, event: MatSlideToggleChange) {
+    this.audioManager.playSound('tech-tile');
     this.playerManager.setAIActiveForPlayer(id, event.checked);
-  }
-
-  onSetCurrentAIPlayerClicked(id: number) {
-    this.gameManager.setCurrentAIPlayer(id);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onAddResourceClicked(id: number, type: ResourceType) {
-    this.playerManager.addResourceToPlayer(id, type, 1);
-  }
-
-  onRemoveResourceClicked(id: number, type: ResourceType) {
-    this.playerManager.removeResourceFromPlayer(id, type, 1);
-  }
-
-  onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
-    this.playerScoreManager.addPlayerScore(id, scoreType, 1);
-  }
-
-  onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
-    this.playerScoreManager.removePlayerScore(id, scoreType, 1);
-  }
-
-  onAddPlayerAgentClicked(id: number) {
-    this.gameManager.addAgentToPlayer(id);
-  }
-
-  onRemovePlayerAgentClicked(id: number) {
-    this.gameManager.removeAgentFromPlayer(id);
   }
 
   onStartGameClicked() {
