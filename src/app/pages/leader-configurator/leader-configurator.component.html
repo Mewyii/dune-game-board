@@ -1,6 +1,7 @@
 <div class="cards-configurator">
   <div class="cards-manager">
     <div class="action-bar">
+      <div class="settings-container"></div>
       <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()">
         <mat-icon>add</mat-icon>
       </button>
@@ -14,12 +15,12 @@
       <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
         <mat-icon>hide_source</mat-icon>
       </button>
-    </div>
-    <div class="action-bar">
-      <mat-form-field>
-        <mat-label>Card Export Border Size</mat-label>
-        <input matInput type="number" [(ngModel)]="imagePadding" />
-      </mat-form-field>
+      <div class="settings-container">
+        <mat-form-field>
+          <mat-label>Card Export Border Size</mat-label>
+          <input matInput type="number" [(ngModel)]="imagePadding" />
+        </mat-form-field>
+      </div>
     </div>
     <div class="cards-preview-container">
       <ng-container *ngFor="let leader of leaders">

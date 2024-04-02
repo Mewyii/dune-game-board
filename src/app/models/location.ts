@@ -21,6 +21,7 @@ export interface ActionField {
   hasRewardOptions?: boolean;
   requiresInfluence?: FactionInfluence;
   customWidth?: string;
+  noGap?: boolean;
 }
 
 export const nonFactionActionTypes = ['town', 'spice'] as const;

@@ -11,7 +11,7 @@ export class AllianceTokenComponent {
     title: { de: 'fremen', en: 'fremen' },
     type: 'fremen',
     position: {
-      marginBottom: 16,
+      marginTop: 16,
       marginLeft: 16,
       width: 600,
     },

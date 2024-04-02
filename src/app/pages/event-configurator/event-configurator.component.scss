@@ -22,6 +22,7 @@
     gap: 16px;
     width: 100%;
     justify-content: center;
+    align-items: baseline;
 }
 
 .cards-preview-container {
@@ -44,4 +45,11 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    padding-top: 12px;
+}
+
+.settings-container {
+    flex: 1 1;
+    display: flex;
+    justify-content: flex-end;
 }

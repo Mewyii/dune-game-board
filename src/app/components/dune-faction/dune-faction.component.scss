@@ -5,6 +5,7 @@
     border: 1px solid #9f9f9f4a;
     box-shadow: inset 0px 0px 15px -3px #0000007a;
     border-radius: 30px 4px;
+    min-width: 300px;
 }
 
 .faction-tile::after {
@@ -38,7 +39,7 @@
 
 .content {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .background-symbol{
@@ -182,8 +183,8 @@
     z-index: 1;
     position: relative;
     flex-wrap: wrap;
-    height: 350px;
-    column-gap: 32px;
+    column-gap: 44px;
+    row-gap: 44px;
     max-width: min-content;
 }
 

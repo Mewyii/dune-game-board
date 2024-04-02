@@ -5,7 +5,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'fremen', en: 'fremen' },
     type: 'fremen',
     position: {
-      marginBottom: 16,
+      marginTop: 16,
       marginLeft: 16,
     },
     actionFields: [
@@ -43,7 +43,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'bene gesserit', en: 'bene gesserit' },
     type: 'bene',
     position: {
-      marginBottom: 510,
+      marginTop: 510,
       marginLeft: 16,
     },
     actionFields: [
@@ -80,7 +80,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'raumgilde', en: 'spacing guild' },
     type: 'guild',
     position: {
-      marginBottom: 1010,
+      marginTop: 1010,
       marginLeft: 16,
     },
     actionFields: [
@@ -118,7 +118,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'imperator', en: 'emperor' },
     type: 'emperor',
     position: {
-      marginBottom: 1515,
+      marginTop: 1515,
       marginLeft: 16,
     },
     actionFields: [
@@ -158,7 +158,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'landsraad', en: 'landsraad' },
     type: 'landsraad',
     position: {
-      marginBottom: 1515,
+      marginTop: 1515,
       marginLeft: 585,
       width: 650,
     },
@@ -204,13 +204,13 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'mafea', en: 'choam' },
     type: 'choam',
     position: {
-      marginBottom: 1515,
+      marginTop: 1515,
       marginLeft: 1340,
       width: 320,
     },
     actionFields: [
       {
-        title: { de: 'spice-verkauf', en: 'spice sale' },
+        title: { de: 'spice-verkauf', en: 'Spice Trade' },
         actionType: 'spice',
         rewards: [
           { type: 'spice', amount: 2, width: 45 },

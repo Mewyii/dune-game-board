@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const stars: IParticlesProps = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { width: '100%', height: '625px' },
+  style: { width: '100%', height: '620px' },
   fullScreen: false,
   particles: {
     number: {

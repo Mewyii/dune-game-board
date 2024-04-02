@@ -16,6 +16,15 @@ export class CardConfiguratorComponent implements OnInit {
   public imperiumCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
+  public factions: { [type in FactionType]: number } = {
+    landsraad: 0,
+    choam: 0,
+    emperor: 0,
+    guild: 0,
+    bene: 0,
+    fremen: 0,
+  };
+
   public fieldAccessess: { [type in ActionType]: number } = {
     landsraad: 0,
     choam: 0,
@@ -40,6 +49,15 @@ export class CardConfiguratorComponent implements OnInit {
       this.imperiumCards = imperiumCards;
 
       this.totalCardAmount = 0;
+      this.factions = {
+        landsraad: 0,
+        choam: 0,
+        emperor: 0,
+        guild: 0,
+        bene: 0,
+        fremen: 0,
+      };
+
       this.fieldAccessess = {
         landsraad: 0,
         choam: 0,
@@ -53,6 +71,10 @@ export class CardConfiguratorComponent implements OnInit {
 
       for (const card of imperiumCards) {
         this.totalCardAmount += card.cardAmount ?? 1;
+
+        if (card.faction) {
+          this.factions[card.faction] += card.cardAmount ?? 1;
+        }
 
         if (card.fieldAccess) {
           for (const access of card.fieldAccess) {

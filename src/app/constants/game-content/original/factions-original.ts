@@ -5,7 +5,7 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'fremen', en: 'fremen' },
     type: 'fremen',
     position: {
-      marginBottom: 16,
+      marginTop: 1670,
       marginLeft: 16,
     },
     actionFields: [
@@ -42,7 +42,7 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'bene gesserit', en: 'bene gesserit' },
     type: 'bene',
     position: {
-      marginBottom: 510,
+      marginTop: 1175,
       marginLeft: 16,
     },
     actionFields: [
@@ -79,7 +79,7 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'raumgilde', en: 'spacing guild' },
     type: 'guild',
     position: {
-      marginBottom: 1010,
+      marginTop: 680,
       marginLeft: 16,
     },
     actionFields: [
@@ -117,7 +117,7 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'imperator', en: 'emperor' },
     type: 'emperor',
     position: {
-      marginBottom: 1515,
+      marginTop: 175,
       marginLeft: 16,
     },
     actionFields: [
@@ -155,9 +155,9 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'landsraad', en: 'landsraad' },
     type: 'landsraad',
     position: {
-      marginBottom: 1515,
-      marginLeft: 615,
-      width: 905,
+      marginTop: 175,
+      marginLeft: 610,
+      width: 910,
     },
     actionFields: [
       {
@@ -207,7 +207,7 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'mafea', en: 'choam' },
     type: 'choam',
     position: {
-      marginBottom: 1515,
+      marginTop: 175,
       marginLeft: 1650,
       width: 400,
     },
@@ -233,6 +233,7 @@ export const factionsOriginal: Faction[] = [
 
         hasRewardOptions: true,
         customWidth: '220px',
+        noGap: true,
       },
       {
         title: { de: 'abkommen treffen', en: 'secure contract' },

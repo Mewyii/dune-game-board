@@ -12,7 +12,7 @@ export interface Faction {
   title: LanguageString;
   type: FactionType;
   position: {
-    marginBottom: number;
+    marginTop: number;
     marginLeft: number;
     width?: number;
     height?: number;

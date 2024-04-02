@@ -5,7 +5,7 @@ export const factionsCustomAdvanced: Faction[] = [
     title: { de: 'fremen', en: 'fremen' },
     type: 'fremen',
     position: {
-      marginBottom: 16,
+      marginTop: 1670,
       marginLeft: 16,
     },
     actionFields: [
@@ -45,7 +45,7 @@ export const factionsCustomAdvanced: Faction[] = [
     title: { de: 'bene gesserit', en: 'bene gesserit' },
     type: 'bene',
     position: {
-      marginBottom: 510,
+      marginTop: 1170,
       marginLeft: 16,
     },
     actionFields: [
@@ -82,7 +82,7 @@ export const factionsCustomAdvanced: Faction[] = [
     title: { de: 'raumgilde', en: 'spacing guild' },
     type: 'guild',
     position: {
-      marginBottom: 1010,
+      marginTop: 670,
       marginLeft: 16,
     },
     actionFields: [
@@ -120,7 +120,7 @@ export const factionsCustomAdvanced: Faction[] = [
     title: { de: 'imperator', en: 'emperor' },
     type: 'emperor',
     position: {
-      marginBottom: 1515,
+      marginTop: 170,
       marginLeft: 16,
     },
     actionFields: [
@@ -160,9 +160,9 @@ export const factionsCustomAdvanced: Faction[] = [
     title: { de: 'landsraad', en: 'landsraad' },
     type: 'landsraad',
     position: {
-      marginBottom: 1515,
-      marginLeft: 585,
-      width: 650,
+      marginTop: 170,
+      marginLeft: 580,
+      width: 660,
     },
     actionFields: [
       {
@@ -178,8 +178,9 @@ export const factionsCustomAdvanced: Faction[] = [
         pathToImage: 'assets/images/action-backgrounds/mentat_4.png',
 
         isNonBlockingField: true,
-        hasRewardOptions: true,
         customWidth: '125px',
+        hasRewardOptions: true,
+        noGap: true,
       },
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
@@ -214,14 +215,14 @@ export const factionsCustomAdvanced: Faction[] = [
     title: { de: 'mafea', en: 'choam' },
     type: 'choam',
     position: {
-      marginBottom: 1515,
-      marginLeft: 1340,
+      marginTop: 170,
+      marginLeft: 1345,
       width: 320,
     },
     actionFields: [
       {
-        title: { de: 'spice-verkauf', en: 'spice sale' },
-        actionType: 'spice',
+        title: { de: 'Spice Handel', en: 'Spice Trade' },
+        actionType: 'landsraad',
         rewards: [
           { type: 'spice', amount: 1, width: 45 },
           { type: 'spice', amount: 2, width: 45 },
@@ -237,12 +238,7 @@ export const factionsCustomAdvanced: Faction[] = [
 
         hasRewardOptions: true,
         customWidth: '150px',
-      },
-      {
-        title: { de: 'handelsrechte', en: 'trade rights' },
-        actionType: 'spice',
-        rewards: [{ type: 'persuasion', amount: 1 }, { type: 'currency', amount: 2 }, { type: 'tech' }],
-        pathToImage: 'assets/images/action-backgrounds/spice_port.png',
+        noGap: true,
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',
