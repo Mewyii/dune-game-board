@@ -179,8 +179,8 @@ export const leaders: Leader[] = [
       en: 'daughter of the emperor',
     },
     passiveDescription: {
-      de: 'Entferne deinen Marker von der {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:currency}',
-      en: 'Remove your marker from the {faction:emperor}-track. Every time you would gain influence there: {resource:currency}',
+      de: 'Entferne deinen Marker von der {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}',
+      en: 'Remove your marker from the {faction:emperor}-track. Every time you would gain influence there: {resource:solari}',
     },
     signetName: {
       de: 'chronistin',
@@ -381,8 +381,8 @@ export const leaders: Leader[] = [
       de: 'isolationist',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:persuasion;amount:2} {resource:helper-arrow-right} {resource:currency}.',
-      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:persuasion;amount:2} {resource:helper-arrow-right} {resource:currency}.',
+      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:persuasion;amount:2} {resource:helper-arrow-right} {resource:solari}.',
+      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:persuasion;amount:2} {resource:helper-arrow-right} {resource:solari}.',
     },
     signetName: {
       en: 'address to the people',
@@ -418,8 +418,8 @@ export const leaders: Leader[] = [
       en: 'thorough approach',
     },
     signetDescription: {
-      de: 'Wenn du in diesem Zug {resource:currency}, {resource:spice} oder {resource:water} erhältst, erhältst du davon 1 mehr.',
-      en: 'If you get {resource:currency}, {resource:spice} or {resource:water} this turn, you get 1 more.',
+      de: 'Wenn du in diesem Zug {resource:solari}, {resource:spice} oder {resource:water} erhältst, erhältst du davon 1 mehr.',
+      en: 'If you get {resource:solari}, {resource:spice} or {resource:water} this turn, you get 1 more.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
   },

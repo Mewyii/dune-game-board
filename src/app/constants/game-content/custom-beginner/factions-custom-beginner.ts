@@ -96,7 +96,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'expedition', en: 'expedition' },
         actionType: 'guild',
-        rewards: [{ type: 'currency' }, { type: 'intrigue' }],
+        rewards: [{ type: 'solari' }, { type: 'intrigue' }],
         pathToImage: 'assets/images/action-backgrounds/foldspace.png',
       },
     ],
@@ -106,7 +106,7 @@ export const factionsCustomBeginner: Faction[] = [
     hasScoreBoard: true,
     levelTwoReward: [
       {
-        type: 'currency',
+        type: 'solari',
         amount: 3,
       },
     ],
@@ -128,13 +128,13 @@ export const factionsCustomBeginner: Faction[] = [
         title: { de: 'verschwörung', en: 'conspiracy' },
         actionType: 'emperor',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'currency', amount: 3 }, { type: 'troop', amount: 2 }],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'solari', amount: 3 }, { type: 'troop', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
       },
       {
         title: { de: 'imperiale gunst', en: 'imperial favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'currency', amount: 3 }, { type: 'intrigue-draw' }],
+        rewards: [{ type: 'solari', amount: 3 }, { type: 'intrigue-draw' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -168,7 +168,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'mentat', en: 'mentat' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 3 }],
+        costs: [{ type: 'solari', amount: 3 }],
         rewards: [
           { type: 'card-draw' },
           { type: 'separator', width: 10, iconHeight: 50 },
@@ -185,7 +185,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 10 }],
+        costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/swordmaster_2.png',
 
@@ -201,7 +201,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'hoher rat', en: 'high council' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 7 }],
+        costs: [{ type: 'solari', amount: 7 }],
         rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador.png',
@@ -230,9 +230,9 @@ export const factionsCustomBeginner: Faction[] = [
           { type: 'helper-arrow-down', iconHeight: 30, width: 45 },
           { type: 'helper-arrow-down', iconHeight: 30, width: 45 },
           { type: 'helper-arrow-down', iconHeight: 30, width: 45 },
-          { type: 'currency', amount: 5, width: 45 },
-          { type: 'currency', amount: 7, width: 45 },
-          { type: 'currency', amount: 9, width: 45 },
+          { type: 'solari', amount: 5, width: 45 },
+          { type: 'solari', amount: 7, width: 45 },
+          { type: 'solari', amount: 9, width: 45 },
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
 

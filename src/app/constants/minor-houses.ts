@@ -45,7 +45,7 @@ export const minorHouses: House[] = [
       de: 'Habe zwei oder weniger {resource:troop} in deiner Garnison und in der Schlacht.',
       en: 'Have two or fewer {resource:troop} in your garrison and in battle.',
     },
-    friendshipReward: [{ type: 'currency', amount: 3 }],
+    friendshipReward: [{ type: 'solari', amount: 3 }],
     customAllianceRequirement: {
       de: 'Habe keinen Agenten auf einem Kampffeld.',
       en: 'Have no agents on a battlefield.',
@@ -61,7 +61,7 @@ export const minorHouses: House[] = [
       de: '{resource:agent} auf 2 oder mehr: Imperiales Becken, Sietch Tabr, Destillanzüge, Forschungszentrum',
       en: '{resource:agent} on 2 or more: Imperial Basin, Sietch Tabr, Stillsuits, Research Station',
     },
-    friendshipReward: [{ type: 'card-round-start' }, { type: 'currency' }],
+    friendshipReward: [{ type: 'card-round-start' }, { type: 'solari' }],
     allianceRequirement: [{ type: 'water' }, { type: 'water' }],
     allianceReward: [{ type: 'victory-point' }],
   },
@@ -74,7 +74,7 @@ export const minorHouses: House[] = [
       de: '{resource:agent} auf 2 oder mehr: Handelsrechte, Carthag, Expedition, Aufrüstung',
       en: '{resource:agent} on 2 or more: Secure Contract, Carthag, Foldspace, Rally Troops',
     },
-    friendshipReward: [{ type: 'currency', amount: 3 }],
+    friendshipReward: [{ type: 'solari', amount: 3 }],
     customAllianceRequirement: { de: 'Verliere 1 Tech-Plättchen.', en: 'Lose 1 Tech-Tile.' },
     allianceReward: [{ type: 'victory-point' }],
   },
@@ -101,7 +101,7 @@ export const minorHouses: House[] = [
       en: '{resource:agent} on 2 or more: Imperial Basin, Hagga-Basin, The Great Flat, Hall Of Oratory',
     },
     customFriendshipReward: { de: '3 Tech-Agenten', en: '3 Tech-Agents' },
-    allianceRequirement: [{ type: 'currency', amount: 5 }],
+    allianceRequirement: [{ type: 'solari', amount: 5 }],
     allianceReward: [{ type: 'victory-point' }],
   },
   {
@@ -113,7 +113,7 @@ export const minorHouses: House[] = [
       de: '{resource:agent} auf: Verschwörung',
       en: '{resource:agent} on: Conspire',
     },
-    friendshipReward: [{ type: 'currency', amount: 3 }],
+    friendshipReward: [{ type: 'solari', amount: 3 }],
     customAllianceRequirement: {
       de: 'Besitze 4 oder mehr {resource:intrigue}.',
       en: 'Have 4 or more {resource:intrigue}',
@@ -169,7 +169,7 @@ export const minorHouses: House[] = [
     colorSecondary: '#730633',
     persuasion: 2,
     customFriendshipRequirement: { de: 'Entsorge eine Fremen Karte.', en: 'Trash a fremen card.' },
-    friendshipReward: [{ type: 'intrigue' }, { type: 'currency' }],
+    friendshipReward: [{ type: 'intrigue' }, { type: 'solari' }],
     customAllianceRequirement: {
       de: 'Verliere einen Fremen Einfluss.',
       en: 'Lose one fremen influence.',

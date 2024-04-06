@@ -16,7 +16,7 @@ interface HomeworldUpgrade {
 export class HomeworldTileComponent implements OnInit {
   public upgrades: HomeworldUpgrade[] = [
     { rewardType: 'persuasion', initialAmount: 1, upgradeCount: 2 },
-    { rewardType: 'currency', initialAmount: 2, upgradeCount: 2 },
+    { rewardType: 'solari', initialAmount: 2, upgradeCount: 2 },
     { rewardType: 'troop', initialAmount: 1, upgradeCount: 2 },
     { rewardType: 'water', initialAmount: 0, upgradeCount: 2 },
   ];

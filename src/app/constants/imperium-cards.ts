@@ -48,7 +48,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Wenn du eine weitere Imperator-Karte im Spiel hast: {resource:intrigue}',
       en: 'If you have another emperor card in play: {resource:intrigue}',
     },
-    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'currency' }],
+    revealEffects: [{ type: 'persuasion', amount: 1 }, { type: 'solari' }],
     imageUrl: '/assets/images/action-backgrounds/empire_ambassador_2.png',
   },
   {

@@ -35,7 +35,7 @@ export const leadersOld: LeaderImageOnly[] = [
     imageUrl: '/assets/images/leaders/old/leto.jpg',
     playableByAI: true,
     aiFieldAccessModifier: {
-      resources: [{ type: 'currency', amount: 1 }],
+      resources: [{ type: 'solari', amount: 1 }],
     },
   },
   {

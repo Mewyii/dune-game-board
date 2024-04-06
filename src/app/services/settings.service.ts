@@ -23,6 +23,7 @@ export class SettingsService {
 
   public maxSellableSpice = 3;
   public fields: ActionField[] = [];
+  public spiceAccumulationFields: ActionField[] = [];
   public unblockableFields: ActionField[] = [];
 
   private settingsSubject = new BehaviorSubject<Settings>(boardSettings);
@@ -63,6 +64,7 @@ export class SettingsService {
 
     this.fields = result;
     this.unblockableFields = this.fields.filter((x) => x.isNonBlockingField);
+    this.spiceAccumulationFields = this.fields.filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'));
   }
 
   getFactionName(factionType: FactionType) {

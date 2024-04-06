@@ -50,7 +50,7 @@ export const conflicts: Conflict[] = [
     aiEvaluation: (player, gameState) =>
       getRewardDesire('mentat', 1, player, gameState) +
       getRewardDesire('intrigue', 1, player, gameState) +
-      getRewardDesire('currency', 2, player, gameState),
+      getRewardDesire('solari', 2, player, gameState),
     lvl: 2,
     row: 1,
     column: 5,
@@ -65,7 +65,7 @@ export const conflicts: Conflict[] = [
   },
   {
     name: { de: 'Gildenbanküberfall', en: 'guild bank raid' },
-    aiEvaluation: (player, gameState) => getRewardDesire('currency', 6, player, gameState),
+    aiEvaluation: (player, gameState) => getRewardDesire('solari', 6, player, gameState),
     lvl: 2,
     row: 2,
     column: 1,
@@ -208,7 +208,7 @@ function getResourceDesire(resourceType: ResourceType, amount: number, player: P
   let modifier = 0.075;
   let maxDesiredAmount = 10;
 
-  if (resourceType === 'currency') {
+  if (resourceType === 'solari') {
     modifier = 0.075;
     if (!player.hasSwordmaster) {
       modifier += 0.025;

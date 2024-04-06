@@ -62,8 +62,8 @@ export const duneEvents: DuneEvent[] = [
       en: 'Imperial Delegation',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:intrigue-trash} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-emperor}   {resource:separator}   {resource:faction-influence-down-emperor} {resource:currency} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
-      en: '<b>Reveal turn (each player)</b>:   {resource:intrigue-trash} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-emperor}   {resource:separator}   {resource:faction-influence-down-emperor} {resource:currency} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:intrigue-trash} {resource:solari}{resource:helper-arrow-right}{resource:faction-influence-up-emperor}   {resource:separator}   {resource:faction-influence-down-emperor} {resource:solari} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:intrigue-trash} {resource:solari}{resource:helper-arrow-right}{resource:faction-influence-up-emperor}   {resource:separator}   {resource:faction-influence-down-emperor} {resource:solari} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/empire_ambassador.png',
     cardAmount: 1,
@@ -74,8 +74,8 @@ export const duneEvents: DuneEvent[] = [
       en: 'Guild Ambassadors',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:spice} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-guild}   {resource:separator}   {resource:faction-influence-down-guild} {resource:spice} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
-      en: '<b>Reveal turn (each player)</b>:   {resource:spice} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-guild}   {resource:separator}   {resource:faction-influence-down-guild} {resource:spice} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:spice} {resource:solari}{resource:helper-arrow-right}{resource:faction-influence-up-guild}   {resource:separator}   {resource:faction-influence-down-guild} {resource:spice} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:spice} {resource:solari}{resource:helper-arrow-right}{resource:faction-influence-up-guild}   {resource:separator}   {resource:faction-influence-down-guild} {resource:spice} {resource:persuasion;amount:1}{resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
@@ -86,8 +86,8 @@ export const duneEvents: DuneEvent[] = [
       en: 'Missionara Protectiva',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:water} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-bene}   {resource:separator}   {resource:faction-influence-down-bene} {resource:persuasion;amount:3}{resource:helper-arrow-right} {resource:victory-point}',
-      en: '<b>Reveal turn (each player)</b>:   {resource:water} {resource:currency}{resource:helper-arrow-right}{resource:faction-influence-up-bene}   {resource:separator}   {resource:faction-influence-down-bene} {resource:persuasion;amount:3}{resource:helper-arrow-right} {resource:victory-point}',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:water} {resource:solari}{resource:helper-arrow-right}{resource:faction-influence-up-bene}   {resource:separator}   {resource:faction-influence-down-bene} {resource:persuasion;amount:3}{resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:water} {resource:solari}{resource:helper-arrow-right}{resource:faction-influence-up-bene}   {resource:separator}   {resource:faction-influence-down-bene} {resource:persuasion;amount:3}{resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/bene_gesserit_3.png',
     cardAmount: 1,
@@ -110,8 +110,8 @@ export const duneEvents: DuneEvent[] = [
       en: 'Pilgrims',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>: Erhalte {resource:currency;amount:2} für jedes {faction:town}-Feld, auf dem sich einer deiner Agenten befindet.',
-      en: '<b>Reveal turn (each player)</b>: Gain {resource:currency;amount:2} for each {faction:town}-field with one of your agents on it.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Erhalte {resource:solari;amount:2} für jedes {faction:town}-Feld, auf dem sich einer deiner Agenten befindet.',
+      en: '<b>Reveal turn (each player)</b>: Gain {resource:solari;amount:2} for each {faction:town}-field with one of your agents on it.',
     },
     imagePath: 'assets/images/action-backgrounds/faithful.png',
     cardAmount: 1,
@@ -122,7 +122,7 @@ export const duneEvents: DuneEvent[] = [
       en: 'Smugglers',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:spice}{resource:helper-arrow-right}{resource:currency;amount:4}   {resource:separator}   {resource:loose-troop} {resource:loose-troop}{resource:helper-arrow-right} {resource:spice;amount:2}',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:spice}{resource:helper-arrow-right}{resource:solari;amount:4}   {resource:separator}   {resource:loose-troop} {resource:loose-troop}{resource:helper-arrow-right} {resource:spice;amount:2}',
       en: '<b>Reveal turn (each player)</b>:   {resource:loose-troop}{resource:loose-troop}{resource:helper-arrow-right}{resource:faction-influence-up-fremen}   {resource:separator}   {resource:faction-influence-down-fremen} {resource:water} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/smugglers.png',
@@ -146,8 +146,8 @@ export const duneEvents: DuneEvent[] = [
       en: 'Ixian Merchants',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:currency;amount:2}{resource:helper-arrow-right}{resource:tech-reduced-two}   {resource:separator}   <br>Entsorge 2 Techplättchen {resource:helper-arrow-right} {resource:victory-point}',
-      en: '<b>Reveal turn (each player)</b>:   {resource:currency;amount:2}{resource:helper-arrow-right}{resource:tech-reduced-two}   {resource:separator}   <br>Trash 2 techtiles {resource:helper-arrow-right} {resource:victory-point}',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>:   {resource:solari;amount:2}{resource:helper-arrow-right}{resource:tech-reduced-two}   {resource:separator}   <br>Entsorge 2 Techplättchen {resource:helper-arrow-right} {resource:victory-point}',
+      en: '<b>Reveal turn (each player)</b>:   {resource:solari;amount:2}{resource:helper-arrow-right}{resource:tech-reduced-two}   {resource:separator}   <br>Trash 2 techtiles {resource:helper-arrow-right} {resource:victory-point}',
     },
     imagePath: 'assets/images/action-backgrounds/industry_2.png',
     cardAmount: 1,

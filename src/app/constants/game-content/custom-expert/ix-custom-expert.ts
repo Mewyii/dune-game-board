@@ -1,9 +1,9 @@
 import { ActionField } from '../../../models';
 
-export const ixCustomAdvanced: ActionField = {
+export const ixCustomExpert: ActionField = {
   title: { de: 'aufrüstung', en: 'upgrade' },
   actionType: 'landsraad',
-  costs: [{ type: 'solari', amount: 4 }],
+  costs: [{ type: 'solari', amount: 6 }],
   rewards: [
     { type: 'dreadnought' },
     { type: 'separator', width: 10, iconHeight: 55 },

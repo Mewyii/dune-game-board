@@ -9,9 +9,9 @@ export const aiGoals: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.02 * (gameState.currentTurn - 1),
+      0.0125 * getResourceAmount(player, 'solari', virtualResources) - 0.02 * (gameState.currentTurn - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 6,
+      getResourceAmount(player, 'solari', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
     desiredFields: {
       'high council': () => 1,
@@ -21,9 +21,9 @@ export const aiGoals: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'currency', virtualResources) - 0.033 * (gameState.currentTurn - 1),
+      0.0125 * getResourceAmount(player, 'solari', virtualResources) - 0.033 * (gameState.currentTurn - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 9,
+      getResourceAmount(player, 'solari', virtualResources) > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster === true || gameState.isFinale,
     desiredFields: {
       swordmaster: () => 1,
@@ -33,11 +33,11 @@ export const aiGoals: FieldsForGoals = {
   mentat: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.025 * getResourceAmount(player, 'currency', virtualResources) +
+      0.025 * getResourceAmount(player, 'solari', virtualResources) +
       0.025 * (gameState.currentTurn - 1) +
       0.0125 * player.cardsBought,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 2,
+      getResourceAmount(player, 'solari', virtualResources) > 2,
     reachedGoal: (player, gameState) => gameState.accumulatedSpiceOnFields.some((x) => x.fieldId === 'mentat'),
     desiredFields: {
       mentat: () => 1,
@@ -49,7 +49,7 @@ export const aiGoals: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'spice', virtualResources) + 0.02 * player.techAgents,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 3,
+      getResourceAmount(player, 'solari', virtualResources) > 3,
     reachedGoal: () => false,
     desiredFields: {},
     viableFields: {
@@ -57,7 +57,7 @@ export const aiGoals: FieldsForGoals = {
         getResourceDesire(player, virtualResources, 0.2, [
           { resource: 'spice', amount: 0.025 },
           { resource: 'tech-agents', amount: 0.025 },
-          { resource: 'currency', amount: 0.0125, negative: true },
+          { resource: 'solari', amount: 0.0125, negative: true },
         ]),
       expedition: (player, gameState, goals, virtualResources) =>
         getResourceDesire(player, virtualResources, 0.5, [
@@ -65,17 +65,17 @@ export const aiGoals: FieldsForGoals = {
           { resource: 'tech-agents', amount: 0.025 },
         ]),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
-        getResourceAmount(player, 'currency', virtualResources) > 3 ? 1 : 0,
+        getResourceAmount(player, 'solari', virtualResources) > 3 ? 1 : 0,
     },
   },
   dreadnought: {
     baseDesire: 0.35,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0075 * getResourceAmount(player, 'currency', virtualResources) -
+      0.0075 * getResourceAmount(player, 'solari', virtualResources) -
       0.0125 * (gameState.currentTurn - 1) -
       0.1 * getPlayerdreadnoughtCount(gameState),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 3,
+      getResourceAmount(player, 'solari', virtualResources) > 3,
     reachedGoal: (player, gameState) => getPlayerdreadnoughtCount(gameState) > 1,
     desiredFields: {
       'upgrade (dreadnought)': (player, gameState, goals, virtualResources) => 1,
@@ -181,9 +181,9 @@ export const aiGoals: FieldsForGoals = {
       'Research Station (trim)': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'currency', 4, 0.5, virtualResources),
+        getCostAdjustedDesire(player, 'solari', 4, 0.5, virtualResources),
       'upgrade (dreadnought)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'currency', 4, 0.7, virtualResources),
+        getCostAdjustedDesire(player, 'solari', 4, 0.7, virtualResources),
       heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, 'spice', 4, 0.9, virtualResources),
     },
@@ -296,7 +296,7 @@ export const aiGoals: FieldsForGoals = {
     reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(player, 1),
     viableFields: {
       mentat: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'currency', 3, 0.3, virtualResources),
+        getCostAdjustedDesire(player, 'solari', 3, 0.3, virtualResources),
       Arrakeen: () => 0.3,
       'Research Station (draw)': (player, gameState, goals, virtualResources) =>
         // if we cant buy 3 cards, we always trim
@@ -393,10 +393,10 @@ export const aiGoals: FieldsForGoals = {
       let maxDesire = 0.0;
       const spice = getResourceAmount(player, 'spice', virtualResources);
       if (
-        !goals['collect-currency'].reachedGoal(player, gameState, goals, virtualResources) &&
-        !goals['collect-currency'].goalIsReachable(player, gameState, goals, virtualResources)
+        !goals['collect-solari'].reachedGoal(player, gameState, goals, virtualResources) &&
+        !goals['collect-solari'].goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals['collect-currency'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['collect-solari'], player, gameState, virtualResources);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -451,7 +451,7 @@ export const aiGoals: FieldsForGoals = {
         ),
     },
   },
-  'collect-currency': {
+  'collect-solari': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) => {
       let maxDesire = 0.0;
@@ -498,14 +498,13 @@ export const aiGoals: FieldsForGoals = {
     },
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 3,
-    reachedGoal: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 11,
+    reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'solari', virtualResources) > 11,
     viableFields: {
       'imperial favor': () => 0.5,
       'Space Port': () => 0.33,
       'Spice Trade': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'spice', virtualResources) > 0
-          ? 1.0 - 0.05 * getResourceAmount(player, 'currency', virtualResources)
+          ? 1.0 - 0.05 * getResourceAmount(player, 'solari', virtualResources)
           : 0,
       expedition: (player, gameState) => (gameState.playerScore.guild === 1 ? 0.66 : 0.16),
       conspiracy: (player, gameState, goals, virtualResources) =>
@@ -537,8 +536,8 @@ export const aiGoals: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'currency', virtualResources) > 6 && !player.hasSwordmaster
-        ? 0.35 - 0.05 * (getResourceAmount(player, 'currency', virtualResources) - 7) - 0.025 * (gameState.currentTurn - 1)
+      getResourceAmount(player, 'solari', virtualResources) > 6 && !player.hasSwordmaster
+        ? 0.35 - 0.05 * (getResourceAmount(player, 'solari', virtualResources) - 7) - 0.025 * (gameState.currentTurn - 1)
         : 0,
     goalIsReachable: (player, gameState) => gameState.isFinale,
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster === true,

@@ -73,9 +73,9 @@ export class PlayerManager {
         id: players.length + 1,
         agents: 2,
         resources: [
-          { type: 'currency', amount: 0 },
+          { type: 'solari', amount: 0 },
           { type: 'spice', amount: 0 },
-          { type: 'water', amount: 1 },
+          { type: 'water', amount: 0 },
         ],
         color: this.createPlayerColor(players.length + 1),
         cardsInDeck: 9,
@@ -103,13 +103,18 @@ export class PlayerManager {
   }
 
   public resetPlayers() {
+    const playerStartingResources = this.settingsService.gameContent.startingResources;
+    const playerStartingSolari = playerStartingResources.find((x) => x.type === 'solari')?.amount ?? 0;
+    const playerStartingSpice = playerStartingResources.find((x) => x.type === 'spice')?.amount ?? 0;
+    const playerStartingWater = playerStartingResources.find((x) => x.type === 'water')?.amount ?? 0;
+
     const players = this.getPlayers().map((player) => ({
       ...player,
       agents: 2,
       resources: [
-        { type: 'currency', amount: 0 },
-        { type: 'spice', amount: 0 },
-        { type: 'water', amount: 1 },
+        { type: 'solari', amount: playerStartingSolari },
+        { type: 'spice', amount: playerStartingSpice },
+        { type: 'water', amount: playerStartingWater },
       ] as Resource[],
       cardsInDeck: 9,
       cardsBought: 0,

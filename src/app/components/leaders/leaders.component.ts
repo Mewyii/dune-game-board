@@ -193,7 +193,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddResourceClicked(id: number, type: ResourceType) {
-    if (type === 'currency') {
+    if (type === 'solari') {
       this.audioManager.playSound('solari');
     } else if (type === 'water') {
       this.audioManager.playSound('water');

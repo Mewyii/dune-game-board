@@ -58,6 +58,7 @@ import { NumberToArrayPipe } from './pipes/number-to-array';
 import { EventEditorComponent } from './pages/event-configurator/event-editor/event-editor.component';
 import { DialogEventEditorComponent } from './pages/event-configurator/dialog-event-editor/dialog-event-editor.component';
 import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
+import { BoardEvaluationComponent } from './components/board-evaluation/board-evaluation.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { DialogSettingsComponent } from './components/dialog-settings/dialog-set
     EventEditorComponent,
     DialogEventEditorComponent,
     DialogSettingsComponent,
+    BoardEvaluationComponent,
   ],
   imports: [
     BrowserModule,

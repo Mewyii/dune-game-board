@@ -102,14 +102,14 @@ export class DuneActionComponent implements OnInit {
   }
 
   onRewardClicked(fieldId: string, rewardType: RewardType) {
-    if (rewardType === 'extra-spice') {
+    if (rewardType === 'spice-accumulation') {
       this.gameManager.increaseAccumulatedSpiceOnField(fieldId);
       this.audioManager.playSound('click-soft');
     }
   }
 
   onRewardRightClicked(fieldId: string, rewardType: RewardType) {
-    if (rewardType === 'extra-spice') {
+    if (rewardType === 'spice-accumulation') {
       this.gameManager.decreaseAccumulatedSpiceOnField(fieldId);
       this.audioManager.playSound('click-soft');
     }

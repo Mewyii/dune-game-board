@@ -16,6 +16,7 @@ import { MinorHousesService } from './minor-houses.service';
 import { TechTilesService } from './tech-tiles.service';
 import { TechTile } from '../constants/tech-tiles';
 import { AudioManager } from './audio-manager.service';
+import { SettingsService } from './settings.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -78,7 +79,8 @@ export class GameManager {
     private conflictsService: ConflictsService,
     private minorHousesService: MinorHousesService,
     private techTilesService: TechTilesService,
-    private audioManager: AudioManager
+    private audioManager: AudioManager,
+    private settingsService: SettingsService
   ) {
     const currentRoundString = localStorage.getItem('currentTurn');
     if (currentRoundString) {
@@ -439,12 +441,12 @@ export class GameManager {
         }
 
         if (field.title.en === 'Spice Trade') {
-          const spiceToCurrencyFunction = (spice: number) => 3 + spice * 2;
-          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(activePlayer, spiceToCurrencyFunction);
-          const currencyFromSpiceSale = spiceToCurrencyFunction(sellSpiceAmount);
+          const spiceToSolariFunction = (spice: number) => 3 + spice * 2;
+          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(activePlayer, spiceToSolariFunction);
+          const solariFromSpiceSale = spiceToSolariFunction(sellSpiceAmount);
 
           this.playerManager.removeResourceFromPlayer(activePlayer.id, 'spice', sellSpiceAmount);
-          this.playerManager.addResourceToPlayer(activePlayer.id, 'currency', currencyFromSpiceSale);
+          this.playerManager.addResourceToPlayer(activePlayer.id, 'solari', solariFromSpiceSale);
         }
       }
     }
@@ -587,7 +589,7 @@ export class GameManager {
   }
 
   private accumulateSpiceOnFields() {
-    const spiceFieldNames = ['Imperial Basin', 'Hagga Basin', 'The Great Flat'];
+    const spiceFieldNames = this.settingsService.spiceAccumulationFields.map((x) => x.title.en);
 
     const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
 
@@ -712,7 +714,7 @@ export class GameManager {
   private addRewardToPlayer(reward: Reward) {
     const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false };
     if (isResource(reward)) {
-      if (reward.type === 'currency') {
+      if (reward.type === 'solari') {
         this.audioManager.playSound('solari');
       } else if (reward.type === 'water') {
         this.audioManager.playSound('water');

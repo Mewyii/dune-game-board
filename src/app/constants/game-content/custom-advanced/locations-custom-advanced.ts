@@ -13,7 +13,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
       rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
     },
-    ownerReward: { type: 'currency' },
+    ownerReward: { type: 'solari' },
   },
   {
     color: 'rgb(87, 71, 52)',
@@ -24,7 +24,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
     actionField: {
       title: { de: 'Raumhafen', en: 'Space Port' },
       actionType: 'town',
-      rewards: [{ type: 'foldspace' }, { type: 'currency', amount: 2 }, { type: 'tech' }],
+      rewards: [{ type: 'foldspace' }, { type: 'solari', amount: 2 }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/carthag.png',
     },
   },
@@ -87,7 +87,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
     actionField: {
       title: { de: 'Imperiales Becken', en: 'Imperial Basin' },
       actionType: 'spice',
-      rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'combat' }],
+      rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
     },
     ownerReward: { type: 'persuasion', amount: 1 },
@@ -102,7 +102,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
       title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
       actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'spice', amount: 2 }, { type: 'extra-spice' }, { type: 'combat' }],
+      rewards: [{ type: 'spice', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandworm.png',
     },
   },
@@ -116,7 +116,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
       title: { de: 'Die grosse Ebene', en: 'The Great Flat' },
       actionType: 'spice',
       costs: [{ type: 'water' }, { type: 'water' }],
-      rewards: [{ type: 'spice', amount: 3 }, { type: 'extra-spice' }, { type: 'combat' }],
+      rewards: [{ type: 'spice', amount: 3 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert.png',
     },
   },
@@ -130,7 +130,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
   //   actionField: {
   //     title: "tuek's sietch",
   //     actionType: 'town',
-  //     rewards: [{ type: 'water' }, { type: 'currency', amount: 1 }, { type: 'combat' }],
+  //     rewards: [{ type: 'water' }, { type: 'solari', amount: 1 }, { type: 'combat' }],
   //     pathToImage: 'assets/images/action-backgrounds/desert_2.png',
   //
   //   },
@@ -145,7 +145,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
   //     title: 'ebene der toten',
   //     actionType: 'spice',
   //     costs: [{ type: 'water' }],
-  //     rewards: [{ type: 'spice' }, { type: 'extra-spice' }, { type: 'card-destroy' }],
+  //     rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'card-destroy' }],
   //     pathToImage: 'assets/images/action-backgrounds/desert.png',
   //
   //   },
@@ -173,7 +173,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
   //   actionField: {
   //     title: 'twisted mentat',
   //     actionType: 'landsraad',
-  //     costs: [{ type: 'currency', amount: 2 }],
+  //     costs: [{ type: 'solari', amount: 2 }],
   //     rewards: [{ type: 'card-destroy' }, { type: 'mentat', iconHeight: 95 }],
   //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',
   //

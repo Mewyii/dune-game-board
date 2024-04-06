@@ -154,7 +154,7 @@ export class PlayerScoreManager {
         const vpReward = this.settingsService.gameContent.victoryPointBoni?.find((x) => x.score === newPlayerScore)?.reward;
 
         if (vpReward) {
-          if (vpReward.type === 'currency' || vpReward.type === 'spice' || vpReward.type === 'water') {
+          if (vpReward.type === 'solari' || vpReward.type === 'spice' || vpReward.type === 'water') {
             this.playerManager.addResourceToPlayer(playerId, vpReward.type, vpReward.amount ?? 1);
           }
           if (vpReward.type === 'troop') {

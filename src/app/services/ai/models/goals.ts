@@ -27,7 +27,7 @@ export type AIGoals =
   | 'fold-space'
   | 'collect-water'
   | 'collect-spice'
-  | 'collect-currency'
+  | 'collect-solari'
   | 'harvest-accumulated-spice-basin'
   | 'harvest-accumulated-spice-flat'
   | 'swordmaster-helper'

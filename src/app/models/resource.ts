@@ -1,4 +1,4 @@
-export const resourceTypes = ['water', 'spice', 'currency'] as const;
+export const resourceTypes = ['water', 'spice', 'solari'] as const;
 
 export type ResourceType = (typeof resourceTypes)[number];
 

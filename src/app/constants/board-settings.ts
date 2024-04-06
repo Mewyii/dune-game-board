@@ -18,6 +18,7 @@ export interface GameContent {
   troopCombatStrength: number;
   dreadnoughtCombatStrength: number;
   highCouncilPersuasion: number;
+  startingResources: Reward[];
 }
 
 export type AppMode = 'board' | 'game';

@@ -1,0 +1,30 @@
+.evaluation-board {
+    background: #544132;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fffcfa;
+    padding: 32px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-left: 8px;
+}
+
+.field-evaluation-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.field-value {
+    width: 80%;
+    border-radius: 5px;
+    padding: 8px;
+    text-align: center;
+    background-color: #3a843a !important;
+    box-shadow: inset 0px 0px 10px -2px rgb(255, 255, 255);
+}

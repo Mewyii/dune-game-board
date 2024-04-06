@@ -12,7 +12,7 @@ export const rewardTypes = [
   'council-seat-large',
   'sword-master',
   'mentat',
-  'extra-spice',
+  'spice-accumulation',
   'victory-point',
   'sword',
   'combat',

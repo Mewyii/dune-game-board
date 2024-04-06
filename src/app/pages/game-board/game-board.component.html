@@ -28,12 +28,13 @@
     <dune-tech-tiles *ngIf="settings.mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
   </div>
   <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>
-  <div *ngIf="settings.mode === 'game'" class="sideboard-container">
-    <dune-game-manual *ngIf="gameManager.currentTurn === 0"></dune-game-manual>
+  <div class="sideboard-container">
+    <dune-game-manual *ngIf="settings.mode === 'game' && gameManager.currentTurn === 0"></dune-game-manual>
     <dune-events *ngIf="settings.mode === 'game'"></dune-events>
     <!-- <dune-minor-houses *ngIf="settings.mode === 'game'"></dune-minor-houses> -->
-    <dune-leaders></dune-leaders>
-    <dune-ai-tile></dune-ai-tile>
+    <dune-leaders *ngIf="settings.mode === 'game'"></dune-leaders>
+    <dune-ai-tile *ngIf="settings.mode === 'game'"></dune-ai-tile>
+    <dune-board-evaluation *ngIf="settings.mode === 'board'"></dune-board-evaluation>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
   <div *ngIf="settings.mode === 'game'" class="sideboard-container" style="margin-left: 8px">

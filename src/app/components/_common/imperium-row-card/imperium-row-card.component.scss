@@ -1,6 +1,6 @@
 
 .imperium-card {
-    height: 340px;
+    height: 342px;
     width: 230px;
     display: flex;
     flex-direction: column;
@@ -107,6 +107,7 @@
     font-size: x-large;
     padding-top: 3px;
     padding-left: 19px;
+    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.7));
 }
 
 .reward-container {
@@ -116,7 +117,7 @@
 
 .reward {
     height: 30px;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.7));
 }
 
 .reward-amount {
@@ -126,7 +127,7 @@
     width: 100%;
     color: white;
     font-size: large;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
     text-align: center;
 }
 
@@ -141,10 +142,12 @@
 }
 
 .field-access {
-    height: 25px;
-    width: 35px;
+    height: 24px;
+    width: 34px;
     background-image: url(/assets/images/card-backgrounds/field-access.png);
-    background-size: cover;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -152,8 +155,8 @@
 
 .field-access-image {
     max-width: 26px;
-    height: 20px;
-    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.759));
+    height: 18px;
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));
 }
 
 .faction-container {

@@ -108,7 +108,7 @@ export const factionsOriginal: Faction[] = [
     ],
     levelFourReward: [
       {
-        type: 'currency',
+        type: 'solari',
         amount: 3,
       },
     ],
@@ -125,13 +125,13 @@ export const factionsOriginal: Faction[] = [
         title: { de: 'verschwörung', en: 'conspire' },
         actionType: 'emperor',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'intrigue' }, { type: 'troop', amount: 2 }, { type: 'currency', amount: 5 }],
+        rewards: [{ type: 'intrigue' }, { type: 'troop', amount: 2 }, { type: 'solari', amount: 5 }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
       },
       {
         title: { de: 'wohlstand', en: 'wealth' },
         actionType: 'emperor',
-        rewards: [{ type: 'currency', amount: 2 }],
+        rewards: [{ type: 'solari', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -163,7 +163,7 @@ export const factionsOriginal: Faction[] = [
       {
         title: { de: 'hoher rat', en: 'high council' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 5 }],
+        costs: [{ type: 'solari', amount: 5 }],
         rewards: [{ type: 'council-seat-large', amount: 2, iconHeight: 55 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador.png',
@@ -177,14 +177,14 @@ export const factionsOriginal: Faction[] = [
       {
         title: { de: 'mentat', en: 'mentat' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 2 }],
+        costs: [{ type: 'solari', amount: 2 }],
         rewards: [{ type: 'card-draw' }, { type: 'mentat', iconHeight: 50 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_4.png',
       },
       {
         title: { de: 'truppen sammeln', en: 'rally troops' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 4 }],
+        costs: [{ type: 'solari', amount: 4 }],
         rewards: [{ type: 'troop', amount: 4 }],
         pathToImage: 'assets/images/action-backgrounds/troops_3.png',
 
@@ -193,7 +193,7 @@ export const factionsOriginal: Faction[] = [
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
         actionType: 'landsraad',
-        costs: [{ type: 'currency', amount: 8 }],
+        costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'sword-master', iconHeight: 50 }],
         pathToImage: 'assets/images/action-backgrounds/swordmaster_2.png',
         customWidth: '135px',
@@ -224,10 +224,10 @@ export const factionsOriginal: Faction[] = [
           { type: 'helper-arrow-down', iconHeight: 30, width: 50 },
           { type: 'helper-arrow-down', iconHeight: 30, width: 50 },
           { type: 'helper-arrow-down', iconHeight: 30, width: 50 },
-          { type: 'currency', amount: 6, width: 50 },
-          { type: 'currency', amount: 8, width: 50 },
-          { type: 'currency', amount: 10, width: 50 },
-          { type: 'currency', amount: 12, width: 50 },
+          { type: 'solari', amount: 6, width: 50 },
+          { type: 'solari', amount: 8, width: 50 },
+          { type: 'solari', amount: 10, width: 50 },
+          { type: 'solari', amount: 12, width: 50 },
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
 
@@ -238,7 +238,7 @@ export const factionsOriginal: Faction[] = [
       {
         title: { de: 'abkommen treffen', en: 'secure contract' },
         actionType: 'spice',
-        rewards: [{ type: 'currency', amount: 3 }],
+        rewards: [{ type: 'solari', amount: 3 }],
         pathToImage: 'assets/images/action-backgrounds/spice_port.png',
       },
     ],

@@ -47,7 +47,7 @@
             [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
             [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
             (click)="onRewardClicked(action.title.en, rewardType.type)"
-            [style.cursor]="rewardType.type === 'extra-spice' ? 'pointer' : ''"
+            [style.cursor]="rewardType.type === 'spice-accumulation' ? 'pointer' : ''"
             (contextmenu)="onRewardRightClicked(action.title.en, rewardType.type)"
           />
           <div *ngIf="rewardType.amount" class="reward-amount">

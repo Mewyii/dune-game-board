@@ -337,7 +337,7 @@ export class AIManager {
     return 'tech';
   }
 
-  public getDesiredSpiceToSell(player: Player, spiceToCurrencyFunction: (spice: number) => number) {
+  public getDesiredSpiceToSell(player: Player, spiceToSolariFunction: (spice: number) => number) {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === player.id);
     if (!aiPlayer) {
       return 0;
@@ -348,12 +348,12 @@ export class AIManager {
       return 0;
     }
 
-    const desiredCurrencyAmount = player.hasSwordmaster ? 9 : 10;
-    const playerCurrencyAmount = player.resources.find((x) => x.type === 'currency')?.amount ?? 0;
+    const desiredSolariAmount = player.hasSwordmaster ? 9 : 10;
+    const playerSolariAmount = player.resources.find((x) => x.type === 'solari')?.amount ?? 0;
 
     for (let spiceCount = 1; spiceCount <= playerSpiceAmount; spiceCount++) {
       if (
-        playerCurrencyAmount + spiceToCurrencyFunction(spiceCount) > desiredCurrencyAmount ||
+        playerSolariAmount + spiceToSolariFunction(spiceCount) > desiredSolariAmount ||
         spiceCount >= this.settingsService.maxSellableSpice
       ) {
         return spiceCount;

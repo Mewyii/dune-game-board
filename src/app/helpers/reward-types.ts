@@ -2,7 +2,7 @@ import { RewardType } from '../models';
 
 export function getRewardTypePath(rewardType: RewardType) {
   switch (rewardType) {
-    case 'currency':
+    case 'solari':
       return 'assets/images/reward-markers/marker_coin.png';
     case 'spice':
       return 'assets/images/reward-markers/marker_spice.png';
@@ -32,7 +32,7 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_sword.png';
     case 'persuasion':
       return 'assets/images/reward-markers/marker_conviction.png';
-    case 'extra-spice':
+    case 'spice-accumulation':
       return 'assets/images/reward-markers/marker_spice_extra.png';
     case 'council-seat-small':
       return 'assets/images/reward-markers/marker_high_council_2.png';
