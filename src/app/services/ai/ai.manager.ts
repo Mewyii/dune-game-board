@@ -322,7 +322,7 @@ export class AIManager {
     }
 
     const targetFields = aiPlayer.preferredFields.filter((x) => x.fieldId.includes(fieldId));
-    if (targetFields[0] && targetFields[0].fieldId.includes('trim')) {
+    if (targetFields[0] && targetFields[0].fieldId.toLocaleLowerCase().includes('trim')) {
       return 'trim';
     }
 
@@ -336,7 +336,7 @@ export class AIManager {
     }
 
     const targetFields = aiPlayer.preferredFields.filter((x) => x.fieldId.includes('upgrade'));
-    if (targetFields[0] && targetFields[0].fieldId.includes('dreadnought')) {
+    if (targetFields[0] && targetFields[0].fieldId.toLocaleLowerCase().includes('dreadnought')) {
       return 'dreadnought';
     }
 

@@ -170,7 +170,7 @@ export const factionsCustomExpert: Faction[] = [
         hasRewardOptions: true,
       },
       {
-        title: { de: 'schwertmeister', en: 'swordmaster' },
+        title: { de: 'schwertmeister', en: 'Swordmaster' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
@@ -178,13 +178,13 @@ export const factionsCustomExpert: Faction[] = [
         customWidth: '135px',
       },
       {
-        title: { de: 'beziehungen', en: 'relations' },
+        title: { de: 'beziehungen', en: 'Relations' },
         actionType: 'landsraad',
         rewards: [{ type: 'persuasion', amount: 1 }, { type: 'troop' }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/wealth_2.png',
       },
       {
-        title: { de: 'Sitz im hohen Rat', en: 'high council' },
+        title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],

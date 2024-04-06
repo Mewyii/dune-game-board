@@ -396,7 +396,7 @@ export class GameManager {
           }
         }
 
-        if (field.title.en === 'upgrade') {
+        if (field.title.en === 'Upgrade') {
           const dreadnoughtOrTech = this.aIManager.getUpgradedreadnoughtOrTechDecision(activePlayer.id);
 
           if (dreadnoughtOrTech === 'dreadnought') {
@@ -407,13 +407,15 @@ export class GameManager {
           if (dreadnoughtOrTech === 'tech') {
             this.buyTechOrStackTechAgents(activePlayer, 3);
           }
-        }
-        if (field.title.en === 'expedition') {
-          // Techagents are added previously
-          this.buyTechOrStackTechAgents(activePlayer, -1);
-        }
-        if (field.title.en === 'Space Port') {
-          // Techagents are added previously
+        } else if (
+          field.rewards.some(
+            (x) =>
+              x.type === 'tech' ||
+              x.type === 'tech-reduced' ||
+              x.type === 'tech-reduced-two' ||
+              x.type === 'tech-reduced-three'
+          )
+        ) {
           this.buyTechOrStackTechAgents(activePlayer, -1);
         }
 

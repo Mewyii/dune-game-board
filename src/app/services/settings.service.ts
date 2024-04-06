@@ -33,7 +33,14 @@ export class SettingsService {
   constructor() {
     const settingsString = localStorage.getItem('settings');
     if (settingsString) {
-      const settings = JSON.parse(settingsString) as Settings;
+      let settings = JSON.parse(settingsString) as Settings;
+
+      // Workaround for local storage not being able to store functions
+      const gameContent = this.gameContents.find((x) => x.name === settings.gameContent.name);
+      if (gameContent) {
+        settings.gameContent = gameContent;
+      }
+
       this.settingsSubject.next(settings);
     }
 
