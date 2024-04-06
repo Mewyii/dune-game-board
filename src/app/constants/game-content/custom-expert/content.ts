@@ -1,7 +1,8 @@
 import { GameContent } from '../../board-settings';
-import { factionsCustomExpert } from './factions-custom-expert';
-import { ixCustomExpert } from './ix-custom-expert';
-import { locationsCustomExpert } from './locations-custom-expert';
+import { aiGoalsCustomExpert } from './ai-goals';
+import { factionsCustomExpert } from './factions';
+import { ixCustomExpert } from './ix';
+import { locationsCustomExpert } from './locations';
 
 export const gameContentCustomExpert: GameContent = {
   name: 'custom-expert',
@@ -29,4 +30,5 @@ export const gameContentCustomExpert: GameContent = {
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
   startingResources: [{ type: 'solari', amount: 2 }],
+  aiGoals: aiGoalsCustomExpert,
 };

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { clamp, cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player } from '../player-manager.service';
 import { randomizeArray } from '../../helpers/common';
-import { GameState, AIGoals, AIPersonality, FieldsForGoals, AIGoal } from './models';
+import { GameState, AIGoals, AIPersonality, FieldsForGoals } from './models';
 import { aiPersonalities } from './constants';
-import { aiGoals, getDesire } from './constants/goals';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
-import { ActiveFactionType, FactionType } from 'src/app/models';
+import { ActiveFactionType } from 'src/app/models';
+import { getDesire } from './shared/ai-goal-functions';
 
 export interface AIPlayer {
   playerId: number;
@@ -57,6 +57,8 @@ export class AIManager {
   private aiDifficultySubject = new BehaviorSubject<AIDIfficultyTypes>('medium');
   public aiDifficulty$ = this.aiDifficultySubject.asObservable();
 
+  public aiGoals: FieldsForGoals | undefined;
+
   constructor(public settingsService: SettingsService) {
     const aiPlayersString = localStorage.getItem('aiPlayers');
     if (aiPlayersString) {
@@ -96,6 +98,10 @@ export class AIManager {
 
     this.aiDifficulty$.subscribe((aiDifficulty) => {
       localStorage.setItem('aiDifficulty', JSON.stringify(aiDifficulty));
+    });
+
+    this.settingsService.settings$.subscribe((x) => {
+      this.aiGoals = x.gameContent.aiGoals;
     });
   }
 
@@ -180,7 +186,7 @@ export class AIManager {
     const aiPlayers = this.aiPlayers;
     const aiPlayer = aiPlayers.find((x) => x.playerId === player.id);
 
-    if (!aiPlayer) {
+    if (!aiPlayer || !this.aiGoals) {
       return;
     }
 
@@ -193,24 +199,24 @@ export class AIManager {
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
     const imperiumRowEvaluation = this.getImperiumRowEvaluation();
 
-    for (let [goalId, goal] of Object.entries(aiGoals)) {
-      if (!goal.reachedGoal(player, gameState, aiGoals, virtualResources)) {
+    for (let [goalId, goal] of Object.entries(this.aiGoals)) {
+      if (!goal.reachedGoal(player, gameState, this.aiGoals, virtualResources)) {
         const aiGoalId = goalId as AIGoals;
 
-        const desireModifier = goal.desireModifier(player, gameState, aiGoals, virtualResources);
+        const desireModifier = goal.desireModifier(player, gameState, this.aiGoals, virtualResources);
         if (typeof desireModifier !== 'number') {
           decisions.push(desireModifier.name);
         }
 
         const goalDesire =
-          getDesire(goal, player, gameState, virtualResources) *
+          getDesire(goal, player, gameState, virtualResources, this.aiGoals) *
           (aiPlayer.personality[aiGoalId] ?? 1.0) *
           this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation);
         let desireCanBeFullfilled = false;
 
-        if (goal.goalIsReachable(player, gameState, aiGoals, virtualResources) && goal.desiredFields) {
+        if (goal.goalIsReachable(player, gameState, this.aiGoals, virtualResources) && goal.desiredFields) {
           for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields)) {
-            const fieldValue = getFieldValue(player, gameState, aiGoals, virtualResources) * goalDesire;
+            const fieldValue = getFieldValue(player, gameState, this.aiGoals, virtualResources) * goalDesire;
 
             if (fieldValue > 0) {
               const index = viableFields.findIndex((x) => x.fieldId === fieldId);
@@ -227,7 +233,7 @@ export class AIManager {
 
         if (!desireCanBeFullfilled) {
           for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields)) {
-            const fieldValue = getFieldValue(player, gameState, aiGoals, virtualResources) * goalDesire;
+            const fieldValue = getFieldValue(player, gameState, this.aiGoals, virtualResources) * goalDesire;
 
             if (fieldValue > 0) {
               const index = viableFields.findIndex((x) => x.fieldId === fieldId);

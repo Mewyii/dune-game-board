@@ -1,6 +1,6 @@
 import { GameContent } from '../../board-settings';
-import { factionsOriginal } from './factions-original';
-import { locationsOriginal } from './locations-original';
+import { factionsOriginal } from './factions';
+import { locationsOriginal } from './locations';
 
 export const gameContentOriginal: GameContent = {
   name: 'original',

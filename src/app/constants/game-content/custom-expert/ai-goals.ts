@@ -1,11 +1,23 @@
 import { clamp } from 'lodash';
-import { AIGoal, FieldsForGoals, GameState } from '../models';
-import { Player } from '../../player-manager.service';
-import { Resource, ResourceType } from 'src/app/models';
-import { PlayerCombatUnits } from '../../combat-manager.service';
-import { PlayerScore } from '../../player-score-manager.service';
+import {
+  enemyIsCloseToPlayerFactionScore,
+  getAccumulatedSpice,
+  getCostAdjustedDesire,
+  getDesire,
+  getParticipateInCombatDesireModifier,
+  getPlayerGarrisonStrength,
+  getPlayerdreadnoughtCount,
+  getResourceAmount,
+  getResourceDesire,
+  getWinCombatDesireModifier,
+  noOneHasMoreInfluence,
+  playerCanDrawCards,
+  playerCanGetAllianceThisTurn,
+  playerLikelyWinsCombat,
+} from 'src/app/services/ai/shared';
+import { FieldsForGoals } from 'src/app/services/ai/models';
 
-export const aiGoals: FieldsForGoals = {
+export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
@@ -341,7 +353,7 @@ export const aiGoals: FieldsForGoals = {
         !goals['collect-spice'].reachedGoal(player, gameState, goals, virtualResources) &&
         !goals['collect-spice'].goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals['collect-spice'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['collect-spice'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -351,28 +363,40 @@ export const aiGoals: FieldsForGoals = {
         !goals['draw-cards'].reachedGoal(player, gameState, goals, virtualResources) &&
         !goals['draw-cards'].goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals['draw-cards'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['draw-cards'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
         }
       }
       if (!goals['troops'].goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals['troops'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['troops'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
         }
       }
       if (!goals['harvest-accumulated-spice-basin'].goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals['harvest-accumulated-spice-basin'], player, gameState, virtualResources);
+        const goalDesire = getDesire(
+          goals['harvest-accumulated-spice-basin'],
+          player,
+          gameState,
+          virtualResources,
+          aiGoalsCustomExpert
+        );
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
         }
       }
       if (!goals['harvest-accumulated-spice-flat'].goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals['harvest-accumulated-spice-flat'], player, gameState, virtualResources);
+        const goalDesire = getDesire(
+          goals['harvest-accumulated-spice-flat'],
+          player,
+          gameState,
+          virtualResources,
+          aiGoalsCustomExpert
+        );
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -396,7 +420,7 @@ export const aiGoals: FieldsForGoals = {
         !goals['collect-solari'].reachedGoal(player, gameState, goals, virtualResources) &&
         !goals['collect-solari'].goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals['collect-solari'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['collect-solari'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -406,21 +430,21 @@ export const aiGoals: FieldsForGoals = {
         !goals['draw-cards'].reachedGoal(player, gameState, goals, virtualResources) &&
         !goals['draw-cards'].goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals['draw-cards'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['draw-cards'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
         }
       }
       if (!goals['troops'].goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals['troops'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['troops'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
         }
       }
       if (spice < 4) {
-        const goalDesire = getDesire(goals.intrigues, player, gameState, virtualResources);
+        const goalDesire = getDesire(goals.intrigues, player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -459,7 +483,7 @@ export const aiGoals: FieldsForGoals = {
         !goals.swordmaster.reachedGoal(player, gameState, goals, virtualResources) &&
         !goals.swordmaster.goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals.swordmaster, player, gameState, virtualResources);
+        const goalDesire = getDesire(goals.swordmaster, player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -469,7 +493,7 @@ export const aiGoals: FieldsForGoals = {
         !goals['high-council'].reachedGoal(player, gameState, goals, virtualResources) &&
         !goals['high-council'].goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals['high-council'], player, gameState, virtualResources);
+        const goalDesire = getDesire(goals['high-council'], player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -480,14 +504,14 @@ export const aiGoals: FieldsForGoals = {
         !goals.dreadnought.reachedGoal(player, gameState, goals, virtualResources) &&
         !goals.dreadnought.goalIsReachable(player, gameState, goals, virtualResources)
       ) {
-        const goalDesire = getDesire(goals.dreadnought, player, gameState, virtualResources);
+        const goalDesire = getDesire(goals.dreadnought, player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
         }
       }
       if (!gameState.isFinale && !goals.tech.goalIsReachable(player, gameState, goals, virtualResources)) {
-        const goalDesire = getDesire(goals.tech, player, gameState, virtualResources);
+        const goalDesire = getDesire(goals.tech, player, gameState, virtualResources, aiGoalsCustomExpert);
 
         if (goalDesire > maxDesire) {
           maxDesire = goalDesire;
@@ -552,259 +576,3 @@ export const aiGoals: FieldsForGoals = {
     },
   },
 };
-
-function getAccumulatedSpice(gameState: GameState, fieldId: string) {
-  const spice = gameState.accumulatedSpiceOnFields.find((x) => x.fieldId === fieldId);
-  if (spice) {
-    return spice.amount;
-  }
-  return 0;
-}
-
-function getResourceDesire(
-  player: Player,
-  virtualResources: Resource[],
-  baseDesire: number,
-  influences: {
-    resource: ResourceType | 'tech-agents' | 'intrigues' | 'cards-in-deck';
-    amount: number;
-    maxAmount?: number;
-    negative?: boolean;
-  }[]
-) {
-  let desire = baseDesire;
-  for (const influence of influences) {
-    const resourceAmount = getResourceAmount(player, influence.resource, virtualResources);
-    if (!influence.negative) {
-      desire = desire + clamp(resourceAmount * influence.amount, 0, influence.maxAmount ?? 1);
-    } else {
-      desire = desire - clamp(resourceAmount * influence.amount, 0, influence.maxAmount ?? 1);
-    }
-  }
-  return clamp(desire, 0, 1);
-}
-
-function getResourceAmount(
-  player: Player,
-  resourceType: ResourceType | 'tech-agents' | 'intrigues' | 'cards-in-deck',
-  virtualResources: Resource[]
-) {
-  switch (resourceType) {
-    case 'tech-agents':
-      return player.techAgents;
-    case 'intrigues':
-      return player.intrigueCount;
-    case 'cards-in-deck':
-      return player.cardsInDeck;
-    default:
-      const resource = player.resources.find((x) => x.type === resourceType);
-      const virtualResource = virtualResources.find((x) => x.type === resourceType);
-
-      return (resource?.amount ?? 0) + (virtualResource?.amount ?? 0);
-  }
-}
-
-function getPlayerdreadnoughtCount(gameState: GameState) {
-  return (
-    gameState.playerCombatUnits.shipsInGarrison +
-    gameState.playerCombatUnits.shipsInCombat +
-    gameState.playerCombatUnits.shipsInTimeout
-  );
-}
-
-function getPlayerCombatStrength(player: PlayerCombatUnits) {
-  return player.troopsInCombat * 2 + player.shipsInCombat * 4 + player.additionalCombatPower;
-}
-
-function getPlayerGarrisonStrength(player: PlayerCombatUnits) {
-  return player.troopsInGarrison * 2 + player.shipsInGarrison * 4;
-}
-
-function enemyCanContestPlayer(
-  player: PlayerCombatUnits,
-  enemy: PlayerCombatUnits,
-  gameState: GameState,
-  countEnemiesNotInCombat?: boolean
-) {
-  const combatPowerTreshold = 3 + Math.random() * 2 + (gameState.currentTurn - 1) * 0.5;
-
-  const playerCombatPower = getPlayerCombatStrength(player);
-
-  const enemyCombatPower = getPlayerCombatStrength(enemy);
-  const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount;
-
-  if (enemyAgentCount !== undefined && enemyAgentCount < 1 && playerCombatPower > enemyCombatPower) {
-    if (countEnemiesNotInCombat) {
-      if (enemyCombatPower === 0) {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  if (enemyCombatPower + combatPowerTreshold < playerCombatPower) {
-    return false;
-  }
-
-  return true;
-}
-
-function playerCanContestEnemy(
-  player: PlayerCombatUnits,
-  enemy: PlayerCombatUnits,
-  gameState: GameState,
-  countEnemiesNotInCombat?: boolean
-) {
-  return enemyCanContestPlayer(enemy, player, gameState, countEnemiesNotInCombat);
-}
-
-function playerLikelyWinsCombat(gameState: GameState) {
-  let result = true;
-
-  for (const enemy of gameState.enemyCombatUnits) {
-    if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState)) {
-      result = false;
-    }
-  }
-  return result;
-}
-
-function getWinCombatDesireModifier(gameState: GameState) {
-  let desire = 0.4 + 0.1 * gameState.playerAgentCount;
-
-  const playerStrength =
-    getPlayerCombatStrength(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);
-
-  desire = desire + 0.075 * playerStrength;
-
-  let strengthOfStrongestEnemy = 0;
-  let garrisonStrengthOfEnemiesNotInCombat = 0;
-  for (const enemy of gameState.enemyCombatUnits) {
-    const enemyCombatPower = getPlayerCombatStrength(enemy);
-
-    if (enemyCombatPower > 0) {
-      if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState)) {
-        desire = desire - 0.1;
-      }
-
-      if (!playerCanContestEnemy(gameState.playerCombatUnits, enemy, gameState)) {
-        desire = desire - 0.4;
-      }
-
-      const enemyStrength = enemyCombatPower + 0.2 * getPlayerGarrisonStrength(enemy);
-
-      if (enemyStrength > strengthOfStrongestEnemy) {
-        strengthOfStrongestEnemy = enemyStrength;
-      }
-    } else {
-      if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState, true)) {
-        desire = desire - 0.075;
-      }
-
-      garrisonStrengthOfEnemiesNotInCombat += getPlayerGarrisonStrength(enemy);
-    }
-  }
-
-  desire = desire - 0.025 * strengthOfStrongestEnemy;
-  desire = desire - 0.0025 * garrisonStrengthOfEnemiesNotInCombat;
-
-  if (playerLikelyWinsCombat(gameState)) {
-    desire = desire * 0.1;
-  }
-
-  return clamp(desire, 0.0, 1.0);
-}
-
-function getParticipateInCombatDesireModifier(gameState: GameState) {
-  let desire = 0.1 + 0.01 * (gameState.currentTurn - 1);
-
-  let enemiesInCombat = 0;
-  let garrisonStrengthOfEnemiesNotInCombat = 0;
-  for (const enemy of gameState.enemyCombatUnits) {
-    if (enemy.troopsInCombat > 0) {
-      enemiesInCombat++;
-
-      desire = desire - 0.05;
-    } else {
-      garrisonStrengthOfEnemiesNotInCombat += getPlayerGarrisonStrength(enemy);
-    }
-  }
-
-  const garrisonStrength = getPlayerGarrisonStrength(gameState.playerCombatUnits);
-
-  if (garrisonStrength > 0 && enemiesInCombat < 3) {
-    desire = desire + 0.05 * getInactiveEnemyCount(gameState);
-    desire = desire + 0.05 * garrisonStrength;
-    desire = desire - 0.0025 * garrisonStrengthOfEnemiesNotInCombat;
-
-    return clamp(desire, 0.0, 0.75);
-  }
-
-  return 0;
-}
-
-export function getDesire(goal: AIGoal, player: Player, gameState: GameState, virtualResources: Resource[]) {
-  const goalDesire = goal.desireModifier(player, gameState, aiGoals, virtualResources);
-  if (typeof goalDesire === 'number') {
-    return clamp(goal.baseDesire + goalDesire, 0, goal.maxDesire ?? 1);
-  } else {
-    return clamp(goal.baseDesire + goalDesire.modifier, 0, goal.maxDesire ?? 1);
-  }
-}
-
-function getInactiveEnemyCount(gamestate: GameState) {
-  return gamestate.enemyAgentCount.filter((x) => x.agentAmount < 1).length;
-}
-
-function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: keyof PlayerScore) {
-  const playerScore = gameState.playerScore[faction];
-
-  if (playerScore > 5) {
-    return false;
-  }
-
-  const enemyIsAheadOfPlayer = gameState.enemyScore.some((x) => x[faction] > playerScore);
-  const enemyIsCloseToPlayer = gameState.enemyScore.some((x) => x[faction] + 2 > playerScore);
-  if (!enemyIsAheadOfPlayer && enemyIsCloseToPlayer) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function playerCanGetAllianceThisTurn(player: Player, gameState: GameState, faction: keyof PlayerScore) {
-  const playerScore = gameState.playerScore[faction];
-
-  if (playerScore === 3) {
-    return !gameState.enemyScore.some((x) => x[faction] > 3);
-  }
-  return false;
-}
-
-function noOneHasMoreInfluence(player: Player, gameState: GameState, faction: keyof PlayerScore) {
-  const playerScore = gameState.playerScore[faction];
-
-  return !gameState.enemyScore.some((x) => x[faction] > playerScore);
-}
-
-function getCostAdjustedDesire(
-  player: Player,
-  resourceType: ResourceType,
-  costs: number,
-  desire: number,
-  virtualResources: Resource[]
-) {
-  const playerResourceAmount = getResourceAmount(player, resourceType, virtualResources);
-  if (costs > playerResourceAmount) {
-    return 0;
-  }
-
-  const desireAdjustment = 1.0 - 0.1 * costs + 0.1 * (playerResourceAmount - costs);
-
-  return clamp(desire * desireAdjustment, 0, 1);
-}
-
-function playerCanDrawCards(player: Player, amount: number) {
-  return player.cardsInDeck >= player.cardsDrawnThisRound + amount;
-}

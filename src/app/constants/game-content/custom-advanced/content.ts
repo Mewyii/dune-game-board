@@ -1,7 +1,8 @@
 import { GameContent } from '../../board-settings';
-import { factionsCustomAdvanced } from './factions-custom-advanced';
-import { ixCustomAdvanced } from './ix-custom-advanced';
-import { locationsCustomAdvanced } from './locations-custom-advanced';
+import { aiGoalsCustomAdvanced } from './ai-goals';
+import { factionsCustomAdvanced } from './factions';
+import { ixCustomAdvanced } from './ix';
+import { locationsCustomAdvanced } from './locations';
 
 export const gameContentCustomAdvanced: GameContent = {
   name: 'custom-advanced',
@@ -29,4 +30,5 @@ export const gameContentCustomAdvanced: GameContent = {
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
   startingResources: [{ type: 'water', amount: 1 }],
+  aiGoals: aiGoalsCustomAdvanced,
 };

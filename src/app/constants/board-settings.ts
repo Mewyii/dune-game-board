@@ -1,4 +1,5 @@
 import { ActionField, DuneLocation, Faction, LanguageType, Reward } from '../models';
+import { FieldsForGoals } from '../services/ai/models';
 import { gameContentCustomAdvanced } from './game-content';
 
 export interface VictoryPointReward {
@@ -19,6 +20,7 @@ export interface GameContent {
   dreadnoughtCombatStrength: number;
   highCouncilPersuasion: number;
   startingResources: Reward[];
+  aiGoals?: FieldsForGoals;
 }
 
 export type AppMode = 'board' | 'game';

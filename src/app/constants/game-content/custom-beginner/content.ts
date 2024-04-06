@@ -1,7 +1,7 @@
 import { GameContent } from '../../board-settings';
-import { locationsCustomBeginner } from './locations-custom-beginner';
-import { factionsCustomBeginner } from './factions-custom-beginner';
-import { ixCustomBeginner } from './ix-custom-beginner';
+import { locationsCustomBeginner } from './locations';
+import { factionsCustomBeginner } from './factions';
+import { ixCustomBeginner } from './ix';
 
 export const gameContentCustomBeginner: GameContent = {
   name: 'custom-beginner',
