@@ -8,7 +8,7 @@ import { Player, PlayerManager } from './player-manager.service';
 import { PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
-import { ActionField, ResourceType, Reward } from '../models';
+import { ActionField, ResourceType, Reward, RewardType } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
@@ -17,6 +17,7 @@ import { TechTilesService } from './tech-tiles.service';
 import { TechTile } from '../constants/tech-tiles';
 import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
+import { shuffle } from '../helpers/common';
 
 export interface AgentOnField {
   fieldId: string;
@@ -347,39 +348,54 @@ export class GameManager {
     let unitsGainedThisTurn = 0;
     let canEnterCombat = false;
     let canDestroyOrDrawCard = false;
+    let canBuyTech = false;
+    const fieldOptions: Reward[] = [];
+    const rewardOptionIndex = field.rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
+    const fieldHasRewardOptions = rewardOptionIndex > -1;
 
-    for (let reward of field.rewards) {
-      if (!field.hasRewardOptions) {
+    if (!field.tradeOptionField) {
+      for (const [index, reward] of field.rewards.entries()) {
+        const isRewardOption = fieldHasRewardOptions && (index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1);
+
+        if (!isRewardOption) {
+          const aiInfo = this.addRewardToPlayer(reward);
+          unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+          canDestroyOrDrawCard = canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard;
+          canBuyTech = canBuyTech || aiInfo.canBuyTech;
+
+          if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
+            const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
+            this.playerManager.addResourceToPlayer(activePlayer.id, reward.type, accumulatedSpice);
+          }
+        } else {
+          fieldOptions.push(reward);
+        }
+        if (reward.type === 'mentat') {
+          this.addAgentToPlayer(activePlayer.id);
+        }
+        if (reward.type == 'agent-lift') {
+          const playerAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === activePlayer.id);
+          if (playerAgentsOnFields) {
+            shuffle(playerAgentsOnFields);
+            this.removePlayerAgentFromField(activePlayer.id, playerAgentsOnFields[0].fieldId);
+          }
+        }
+        if (reward.type === 'combat') {
+          canEnterCombat = true;
+        }
+      }
+
+      const factionRewards = this.playerScoreManager.addFactionScore(activePlayer.id, field.actionType, 1);
+
+      for (const reward of factionRewards) {
         const aiInfo = this.addRewardToPlayer(reward);
         unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
-        if (!canDestroyOrDrawCard) {
-          canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
+        canDestroyOrDrawCard = canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard;
+        canBuyTech = canBuyTech || aiInfo.canBuyTech;
+
+        if (reward.type === 'combat') {
+          canEnterCombat = true;
         }
-
-        if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
-          const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
-          this.playerManager.addResourceToPlayer(activePlayer.id, reward.type, accumulatedSpice);
-        }
-      }
-      if (reward.type === 'mentat') {
-        this.addAgentToPlayer(activePlayer.id);
-      }
-      if (reward.type === 'combat') {
-        canEnterCombat = true;
-      }
-    }
-
-    const factionRewards = this.playerScoreManager.addFactionScore(activePlayer.id, field.actionType, 1);
-
-    for (let reward of factionRewards) {
-      const aiInfo = this.addRewardToPlayer(reward);
-      unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
-      if (!canDestroyOrDrawCard) {
-        canDestroyOrDrawCard = aiInfo.canDestroyOrDrawCard;
-      }
-
-      if (reward.type === 'combat') {
-        canEnterCombat = true;
       }
     }
 
@@ -395,27 +411,22 @@ export class GameManager {
             this.playerManager.addFocusTokens(this.activePlayerId, 1);
           }
         }
+        if (fieldHasRewardOptions) {
+          const aiDecision = this.aIManager.getFieldDecision(activePlayer.id, field.title.en);
+          const reward = field.rewards.find((x) => x.type.includes(aiDecision));
 
-        if (field.title.en === 'Upgrade') {
-          const dreadnoughtOrTech = this.aIManager.getUpgradedreadnoughtOrTechDecision(activePlayer.id);
+          if (reward) {
+            const aiInfo = this.addRewardToPlayer(reward);
+            unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+            canDestroyOrDrawCard = canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard;
+            canBuyTech = canBuyTech || aiInfo.canBuyTech;
+            if (!canBuyTech) {
+              canBuyTech = aiInfo.canBuyTech;
+            }
+          }
+        }
 
-          if (dreadnoughtOrTech === 'dreadnought') {
-            this.audioManager.playSound('dreadnought');
-            this.combatManager.addPlayerShipsToGarrison(activePlayer.id, 1);
-            unitsGainedThisTurn += 1;
-          }
-          if (dreadnoughtOrTech === 'tech') {
-            this.buyTechOrStackTechAgents(activePlayer, 3);
-          }
-        } else if (
-          field.rewards.some(
-            (x) =>
-              x.type === 'tech' ||
-              x.type === 'tech-reduced' ||
-              x.type === 'tech-reduced-two' ||
-              x.type === 'tech-reduced-three'
-          )
-        ) {
+        if (canBuyTech) {
           this.buyTechOrStackTechAgents(activePlayer, -1);
         }
 
@@ -442,10 +453,14 @@ export class GameManager {
           }
         }
 
-        if (field.title.en === 'Spice Trade') {
-          const spiceToSolariFunction = (spice: number) => 3 + spice * 2;
-          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(activePlayer, spiceToSolariFunction);
-          const solariFromSpiceSale = spiceToSolariFunction(sellSpiceAmount);
+        if (field.tradeOptionField) {
+          const tradeOption = field.tradeOptionField;
+          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(
+            activePlayer,
+            tradeOption.tradeFormula,
+            tradeOption.maxTradeAmount
+          );
+          const solariFromSpiceSale = tradeOption.tradeFormula(sellSpiceAmount);
 
           this.playerManager.removeResourceFromPlayer(activePlayer.id, 'spice', sellSpiceAmount);
           this.playerManager.addResourceToPlayer(activePlayer.id, 'solari', solariFromSpiceSale);
@@ -714,7 +729,7 @@ export class GameManager {
   }
 
   private addRewardToPlayer(reward: Reward) {
-    const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false };
+    const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false, canBuyTech: false };
     if (isResource(reward)) {
       if (reward.type === 'solari') {
         this.audioManager.playSound('solari');
@@ -743,6 +758,7 @@ export class GameManager {
           ? 4
           : 0;
       this.playerManager.addTechAgentsToPlayer(this.activePlayerId, agents);
+      aiInfo.canBuyTech = true;
     }
     if (reward.type === 'intrigue') {
       this.playerManager.addIntriguesToPlayer(this.activePlayerId, reward.amount ?? 1);

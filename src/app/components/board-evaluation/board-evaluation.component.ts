@@ -30,23 +30,37 @@ export class BoardEvaluationComponent implements OnInit {
       this.fieldValues = [];
 
       for (const actionField of actionFields) {
-        if (!actionField.hasRewardOptions) {
-          const fieldCosts = actionField.costs ? this.getRewardValue(actionField.costs) : 0;
+        const fieldCosts = actionField.costs ? this.getRewardValue(actionField.costs) : 0;
+
+        const rewardOptionIndex = actionField.rewards.findIndex(
+          (x) => x.type === 'separator' || x.type === 'separator-horizontal'
+        );
+        const fieldHasRewardOptions = rewardOptionIndex > -1;
+
+        if (!fieldHasRewardOptions) {
           const fieldRewards = this.getRewardValue(actionField.rewards);
           let fieldValue = fieldRewards - fieldCosts;
 
-          // if (
-          //   actionField.actionType === 'emperor' ||
-          //   actionField.actionType === 'guild' ||
-          //   actionField.actionType === 'bene' ||
-          //   actionField.actionType === 'fremen'
-          // ) {
-          //   fieldValue += 1;
-          // }
-
           this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
         } else {
-          this.fieldValues.push({ fieldId: actionField.title.en, value: 0 });
+          const optionalRewards = actionField.rewards.filter(
+            (item, index) => index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1
+          );
+
+          const nonOptionalRewards = this.getRewardValue(
+            actionField.rewards.filter((x) => !optionalRewards.some((y) => y.type === x.type))
+          );
+
+          let highestOptionalRewardValue = 0;
+          for (const reward of optionalRewards) {
+            const value = this.getRewardValue([reward]);
+            if (value > highestOptionalRewardValue) {
+              highestOptionalRewardValue = value;
+            }
+          }
+          let fieldValue = nonOptionalRewards + highestOptionalRewardValue - fieldCosts;
+
+          this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
         }
       }
 
@@ -111,7 +125,7 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'council-seat-small':
         case 'council-seat-large':
-          value += 4 * amount;
+          value += 3.5 * amount;
           break;
         case 'sword-master':
         case 'agent':

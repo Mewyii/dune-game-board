@@ -167,7 +167,6 @@ export const factionsCustomExpert: Faction[] = [
         ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
         customWidth: '125px',
-        hasRewardOptions: true,
       },
       {
         title: { de: 'schwertmeister', en: 'Swordmaster' },
@@ -186,7 +185,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 8 }],
+        costs: [{ type: 'solari', amount: 7 }],
         rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador.png',
@@ -220,10 +219,14 @@ export const factionsCustomExpert: Faction[] = [
           { type: 'solari', amount: 9, width: 45 },
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
-
-        hasRewardOptions: true,
         customWidth: '150px',
         noGap: true,
+        tradeOptionField: {
+          from: 'spice',
+          to: 'solari',
+          tradeFormula: (tradeAmount) => 3 + 2 * tradeAmount,
+          maxTradeAmount: 3,
+        },
       },
       {
         title: { de: 'Begünstigung', en: 'Favoritism' },

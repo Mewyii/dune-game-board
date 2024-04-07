@@ -50,7 +50,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
       0.0125 * player.cardsBought,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 2,
-    reachedGoal: (player, gameState) => gameState.accumulatedSpiceOnFields.some((x) => x.fieldId === 'mentat'),
+    reachedGoal: (player, gameState) => gameState.agentsOnFields.some((x) => x.fieldId === 'mentat'),
     desiredFields: {
       mentat: () => 1,
     },

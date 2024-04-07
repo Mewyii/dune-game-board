@@ -21,7 +21,6 @@ export class SettingsService {
     gameContentCustomExpert,
   ];
 
-  public maxSellableSpice = 3;
   public fields: ActionField[] = [];
   public spiceAccumulationFields: ActionField[] = [];
   public unblockableFields: ActionField[] = [];

@@ -315,6 +315,21 @@ export class AIManager {
     return fields.find((x) => preferredField.fieldId.includes(x.title.en));
   }
 
+  public getFieldDecision(playerId: number, fieldId: string): string {
+    const aiPlayer = this.aiPlayers.find((x) => x.playerId === playerId);
+    if (!aiPlayer) {
+      return '';
+    }
+
+    const targetFields = aiPlayer.preferredFields.filter((x) => x.fieldId.includes(fieldId));
+    if (targetFields[0]) {
+      const regex = /\((.*)\)/; // Matches anything within parentheses
+      const match = targetFields[0].fieldId.match(regex);
+      return match && match[1] ? match[1] : '';
+    }
+    return '';
+  }
+
   public getFieldDrawOrTrimDecision(playerId: number, fieldId: string): 'draw' | 'trim' {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === playerId);
     if (!aiPlayer) {
@@ -343,7 +358,7 @@ export class AIManager {
     return 'tech';
   }
 
-  public getDesiredSpiceToSell(player: Player, spiceToSolariFunction: (spice: number) => number) {
+  public getDesiredSpiceToSell(player: Player, spiceToSolariFunction: (spice: number) => number, maxAmount: number) {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === player.id);
     if (!aiPlayer) {
       return 0;
@@ -358,10 +373,7 @@ export class AIManager {
     const playerSolariAmount = player.resources.find((x) => x.type === 'solari')?.amount ?? 0;
 
     for (let spiceCount = 1; spiceCount <= playerSpiceAmount; spiceCount++) {
-      if (
-        playerSolariAmount + spiceToSolariFunction(spiceCount) > desiredSolariAmount ||
-        spiceCount >= this.settingsService.maxSellableSpice
-      ) {
+      if (playerSolariAmount + spiceToSolariFunction(spiceCount) > desiredSolariAmount || spiceCount >= maxAmount) {
         return spiceCount;
       }
     }

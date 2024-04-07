@@ -107,7 +107,7 @@
     font-size: x-large;
     padding-top: 3px;
     padding-left: 19px;
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.7));
 }
 
 .reward-container {
@@ -116,18 +116,18 @@
 }
 
 .reward {
-    height: 30px;
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.7));
+    height: 32px;
+    filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.7));
 }
 
 .reward-amount {
     position: absolute;
-    top: 4px;
+    top: 5px;
     right: 0px;
     width: 100%;
     color: white;
     font-size: large;
-    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
     text-align: center;
 }
 
@@ -156,7 +156,7 @@
 .field-access-image {
     max-width: 26px;
     height: 18px;
-    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));
+    filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));
 }
 
 .faction-container {

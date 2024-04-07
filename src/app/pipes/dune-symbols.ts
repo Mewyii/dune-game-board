@@ -32,7 +32,7 @@ export class DuneSymbolsPipe implements PipeTransform {
             iconSize +
             ';object-fit:scale-down; margin-bottom:-' +
             ratioFix +
-            'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.9));" src="' +
+            'px;filter:drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));" src="' +
             resourceImgPath +
             '"/>'
         );
@@ -53,7 +53,7 @@ export class DuneSymbolsPipe implements PipeTransform {
             iconSize +
             ';object-fit:scale-down; margin-bottom:-' +
             ratioFix +
-            'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.9));" src="' +
+            'px;filter:drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));" src="' +
             resourceImgPath +
             '"/><div style="position:absolute;top:0px;left:0px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
             (iconSizeNumber - ratioFix) +
@@ -79,7 +79,7 @@ export class DuneSymbolsPipe implements PipeTransform {
           (iconSizeNumber - ratioFix) +
           'px;height:' +
           (iconSizeNumber - ratioFix) +
-          'px;object-fit:scale-down; margin-bottom:-2px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.9));" src="' +
+          'px;object-fit:scale-down; margin-bottom:-2px;filter:drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));" src="' +
           factionImgPath +
           '"/>'
       );

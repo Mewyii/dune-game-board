@@ -11,7 +11,5 @@ export const ixCustomAdvanced: ActionField = {
     { type: 'combat' },
   ],
   pathToImage: 'assets/images/action-backgrounds/industry_2.png',
-
-  hasRewardOptions: true,
   customWidth: 'fit-content',
 };

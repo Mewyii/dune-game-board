@@ -179,7 +179,6 @@ export const factionsCustomAdvanced: Faction[] = [
 
         isNonBlockingField: true,
         customWidth: '125px',
-        hasRewardOptions: true,
         noGap: true,
       },
       {
@@ -188,8 +187,6 @@ export const factionsCustomAdvanced: Faction[] = [
         costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/swordmaster_2.png',
-
-        hasRewardOptions: false,
         customWidth: '135px',
       },
       {
@@ -235,10 +232,14 @@ export const factionsCustomAdvanced: Faction[] = [
           { type: 'solari', amount: 9, width: 45 },
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
-
-        hasRewardOptions: true,
         customWidth: '150px',
         noGap: true,
+        tradeOptionField: {
+          from: 'spice',
+          to: 'solari',
+          tradeFormula: (tradeAmount) => 3 + 2 * tradeAmount,
+          maxTradeAmount: 3,
+        },
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

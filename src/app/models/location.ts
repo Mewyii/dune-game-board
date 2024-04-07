@@ -1,4 +1,4 @@
-import { FactionInfluence, FactionType, LanguageString, Reward } from '.';
+import { FactionInfluence, FactionType, LanguageString, Reward, RewardType } from '.';
 
 export interface DuneLocation {
   color: string;
@@ -18,10 +18,15 @@ export interface ActionField {
   pathToImage: string;
   isBattlefield?: boolean;
   isNonBlockingField?: boolean;
-  hasRewardOptions?: boolean;
   requiresInfluence?: FactionInfluence;
   customWidth?: string;
   noGap?: boolean;
+  tradeOptionField?: {
+    from: RewardType;
+    to: RewardType;
+    tradeFormula: (tradeAmount: number) => number;
+    maxTradeAmount: number;
+  };
 }
 
 export const nonFactionActionTypes = ['town', 'spice'] as const;

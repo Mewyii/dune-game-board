@@ -187,8 +187,6 @@ export const factionsOriginal: Faction[] = [
         costs: [{ type: 'solari', amount: 4 }],
         rewards: [{ type: 'troop', amount: 4 }],
         pathToImage: 'assets/images/action-backgrounds/troops_3.png',
-
-        hasRewardOptions: true,
       },
       {
         title: { de: 'schwertmeister', en: 'swordmaster' },
@@ -230,8 +228,6 @@ export const factionsOriginal: Faction[] = [
           { type: 'solari', amount: 12, width: 50 },
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
-
-        hasRewardOptions: true,
         customWidth: '220px',
         noGap: true,
       },

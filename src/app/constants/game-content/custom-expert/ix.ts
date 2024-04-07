@@ -3,7 +3,7 @@ import { ActionField } from '../../../models';
 export const ixCustomExpert: ActionField = {
   title: { de: 'Aufrüstung', en: 'Upgrade' },
   actionType: 'landsraad',
-  costs: [{ type: 'solari', amount: 6 }],
+  costs: [{ type: 'solari', amount: 5 }],
   rewards: [
     { type: 'dreadnought' },
     { type: 'separator', width: 10, iconHeight: 55 },
@@ -11,7 +11,5 @@ export const ixCustomExpert: ActionField = {
     { type: 'combat' },
   ],
   pathToImage: 'assets/images/action-backgrounds/industry_2.png',
-
-  hasRewardOptions: true,
   customWidth: 'fit-content',
 };
