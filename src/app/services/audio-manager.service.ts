@@ -33,7 +33,7 @@ export class AudioManager {
   private combatSound: Sound = { url: 'assets/audio/sounds/combat.mp3', volume: 0.33 };
   private nextRoundSound: Sound = { url: 'assets/audio/sounds/next-round.mp3', volume: 0.66 };
   private solariSound: Sound = { url: 'assets/audio/sounds/solari.mp3', volume: 1.0 };
-  private waterSound: Sound = { url: 'assets/audio/sounds/water.mp3', volume: 1.0 };
+  private waterSound: Sound = { url: 'assets/audio/sounds/water.mp3', volume: 0.2 };
   private spiceSound: Sound = { url: 'assets/audio/sounds/spice.mp3', volume: 1.0 };
   private aquireTechSound: Sound = { url: 'assets/audio/sounds/aquire-tech.mp3', volume: 0.4 };
   private dreadnoughtSound: Sound = { url: 'assets/audio/sounds/dreadnought.mp3', volume: 0.4 };

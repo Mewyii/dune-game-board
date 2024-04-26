@@ -18,7 +18,7 @@ import {
 } from 'src/app/services/ai/shared';
 import { AIGoals, FieldsForGoals } from 'src/app/services/ai/models';
 
-export const aiGoalsCustomAdvanced: FieldsForGoals = {
+export const aiGoalsCustomBeginner: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
@@ -56,30 +56,6 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
       mentat: () => 1,
     },
     viableFields: {},
-  },
-  tech: {
-    baseDesire: 0.4,
-    desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'spice', virtualResources) + 0.02 * player.techAgents,
-    goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 3,
-    reachedGoal: () => false,
-    desiredFields: {},
-    viableFields: {
-      'Space Port': (player, gameState, goals, virtualResources) =>
-        getResourceDesire(player, virtualResources, 0.2, [
-          { resource: 'spice', amount: 0.025 },
-          { resource: 'tech-agents', amount: 0.025 },
-          { resource: 'solari', amount: 0.0125, negative: true },
-        ]),
-      expedition: (player, gameState, goals, virtualResources) =>
-        getResourceDesire(player, virtualResources, 0.5, [
-          { resource: 'spice', amount: 0.025 },
-          { resource: 'tech-agents', amount: 0.025 },
-        ]),
-      'upgrade (tech)': (player, gameState, goals, virtualResources) =>
-        getResourceAmount(player, 'solari', virtualResources) > 3 ? 1 : 0,
-    },
   },
   dreadnought: {
     baseDesire: 0.35,

@@ -2,6 +2,7 @@ import { GameContent } from '../../board-settings';
 import { locationsCustomBeginner } from './locations';
 import { factionsCustomBeginner } from './factions';
 import { ixCustomBeginner } from './ix';
+import { aiGoalsCustomBeginner } from './ai-goals';
 
 export const gameContentCustomBeginner: GameContent = {
   name: 'custom-beginner',
@@ -29,4 +30,5 @@ export const gameContentCustomBeginner: GameContent = {
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
   startingResources: [{ type: 'water', amount: 1 }],
+  aiGoals: aiGoalsCustomBeginner,
 };

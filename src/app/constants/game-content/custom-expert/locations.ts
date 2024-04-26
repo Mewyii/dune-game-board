@@ -2,7 +2,7 @@ import { DuneLocation } from '../../../models';
 
 export const locationsCustomExpert: DuneLocation[] = [
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 810,
       marginLeft: 1420,
@@ -16,22 +16,22 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'solari' },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(196, 172, 139)',
     position: {
       marginTop: 1300,
       marginLeft: 1130,
     },
     actionField: {
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
-      actionType: 'town',
+      actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'foldspace' }, { type: 'spice' }, { type: 'tech-reduced' }],
+      rewards: [{ type: 'foldspace' }, { type: 'spice-accumulation' }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 850,
       marginLeft: 1050,
@@ -45,7 +45,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'card-round-start' },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 660,
       marginLeft: 1000,
@@ -53,13 +53,13 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Imperiale Teststation', en: 'Imperial Test Station' },
       actionType: 'town',
-      rewards: [{ type: 'water' }, { type: 'card-draw' }, { type: 'combat' }],
+      rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
       requiresInfluence: { type: 'fremen' },
     },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 810,
       marginLeft: 600,
@@ -67,8 +67,8 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
-      costs: [{ type: 'water' }],
-      rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop', amount: 2 }, { type: 'combat' }],
+      costs: [{ type: 'water' }, { type: 'water' }],
+      rewards: [{ type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
     },
@@ -91,7 +91,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     color: 'rgb(196, 172, 139)',
     position: {
       marginTop: 1050,
-      marginLeft: 780,
+      marginLeft: 800,
     },
     actionField: {
       title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
@@ -117,7 +117,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   },
   // 5-6Player Stuff
   // {
-  //   color: 'rgb(87, 71, 52)',
+  //   color: 'rgb(87, 69, 52)',
   //   position: {
   //     marginTop: 1000,
   //     marginLeft: 1444,

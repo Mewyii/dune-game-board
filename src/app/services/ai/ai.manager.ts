@@ -252,25 +252,9 @@ export class AIManager {
       .map((x) => x.fieldId)
       .filter((fieldId) => !this.settingsService.unblockableFields.some((field) => field.title.en === fieldId));
 
-    const conditionalFields: FieldLock[] = [
-      {
-        fieldId: 'Sietch Tabr',
-        lock: {
-          type: 'fremen',
-          amount: 2,
-        },
-      },
-    ];
-
-    const lockedFields = this.getLockedFields(player, gameState, conditionalFields);
-
     const possibleFields = aiPlayer.canAccessBlockedFields
       ? viableFields
-      : viableFields.filter(
-          (viableField) =>
-            !lockedFields.includes(viableField.fieldId) &&
-            !blockedFields.some((fieldId) => viableField.fieldId.includes(fieldId))
-        );
+      : viableFields.filter((viableField) => !blockedFields.some((fieldId) => viableField.fieldId.includes(fieldId)));
 
     possibleFields.sort((a, b) => b.value - a.value);
 
@@ -287,13 +271,6 @@ export class AIManager {
     aiPlayer.decisions = decisions;
 
     this.aiPlayersSubject.next(aiPlayers);
-  }
-
-  getLockedFields(player: Player, gameState: GameState, conditionalFields: FieldLock[]) {
-    const unlockedFields = gameState.playerLeader.aiFieldAccessModifier?.directFieldAccess ?? [];
-    return conditionalFields
-      .filter((x) => !unlockedFields.includes(x.fieldId) && !this.hasFieldAccess(player, gameState, x.lock))
-      .map((x) => x.fieldId);
   }
 
   private hasFieldAccess(player: Player, gameState: GameState, lock: FactionInfluenceLock) {
@@ -330,15 +307,15 @@ export class AIManager {
     return '';
   }
 
-  public getFieldDrawOrTrimDecision(playerId: number, fieldId: string): 'draw' | 'trim' {
+  public getFieldDrawOrDestroyDecision(playerId: number, fieldId: string): 'draw' | 'destroy' {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === playerId);
     if (!aiPlayer) {
       return 'draw';
     }
 
     const targetFields = aiPlayer.preferredFields.filter((x) => x.fieldId.includes(fieldId));
-    if (targetFields[0] && targetFields[0].fieldId.toLocaleLowerCase().includes('trim')) {
-      return 'trim';
+    if (targetFields[0] && targetFields[0].fieldId.toLocaleLowerCase().includes('destroy')) {
+      return 'destroy';
     }
 
     return 'draw';
@@ -382,20 +359,32 @@ export class AIManager {
   }
 
   public getAddAdditionalUnitsToCombatDecision(
-    playerCombatUnits?: PlayerCombatUnits,
-    enemyCombatUnits?: PlayerCombatUnits[]
+    playerCombatUnits: PlayerCombatUnits,
+    enemyCombatUnits: PlayerCombatUnits[],
+    maxAddableUnits: number,
+    playerHasAgentsLeft: boolean,
+    playerHasIntrigues: boolean
   ) {
     if (!playerCombatUnits || !enemyCombatUnits) {
       return 'none';
     }
 
     const playerCombatPower = getPlayerCombatPower(playerCombatUnits);
+    const possibleAddedCombatPower = this.getMaxAddableCombatPower(playerCombatUnits, maxAddableUnits);
 
     const enemyCombatPowers = enemyCombatUnits.map((x) => getPlayerCombatPower(x));
     const highestEnemyCombatPower = Math.max(...enemyCombatPowers);
 
     if (playerCombatPower <= highestEnemyCombatPower) {
-      return 'all';
+      if (
+        playerHasAgentsLeft ||
+        playerHasIntrigues ||
+        playerCombatPower + possibleAddedCombatPower > highestEnemyCombatPower
+      ) {
+        return 'all';
+      } else {
+        return 'minimum';
+      }
     } else {
       const maxCombatPowerDifference = 10;
       const combatPowerDifference = playerCombatPower - highestEnemyCombatPower;
@@ -432,9 +421,9 @@ export class AIManager {
   ) {
     let modifier = 1.0;
 
-    if (goal === 'enter-combat' || goal === 'troops' || goal === 'dreadnought') {
+    if (goal === 'enter-combat') {
       modifier = 0.5 + conflictEvaluation;
-    } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin') {
+    } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin' || goal === 'harvest-accumulated-spice-flat') {
       modifier = 0.5 + techEvaluation;
     } else if (goal === 'draw-cards' || goal === 'get-board-persuasion' || goal === 'high-council') {
       modifier = imperiumRowEvaluation;
@@ -446,6 +435,23 @@ export class AIManager {
   private getRandomAIName() {
     const randomIndex = Math.floor(Math.random() * Object.keys(aiPersonalities).length);
     return Object.keys(aiPersonalities)[randomIndex];
+  }
+
+  private getMaxAddableCombatPower(playerCombatUnits: PlayerCombatUnits, maxAddableUnits: number) {
+    let addableUnits = maxAddableUnits;
+    let combatPower = 0;
+
+    addableUnits -= playerCombatUnits.shipsInGarrison;
+    combatPower += playerCombatUnits.shipsInGarrison * this.settingsService.gameContent.dreadnoughtCombatStrength;
+
+    if (addableUnits > 0) {
+      if (addableUnits < playerCombatUnits.troopsInGarrison) {
+        combatPower += addableUnits * this.settingsService.gameContent.troopCombatStrength;
+      } else {
+        combatPower += playerCombatUnits.troopsInGarrison * this.settingsService.gameContent.troopCombatStrength;
+      }
+    }
+    return combatPower;
   }
 }
 

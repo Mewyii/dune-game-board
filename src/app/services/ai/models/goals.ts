@@ -16,6 +16,7 @@ export type AIGoals =
   | 'tech'
   | 'enter-combat'
   | 'troops'
+  | 'fremen-friendship'
   | 'fremen-alliance'
   | 'bg-alliance'
   | 'guild-alliance'
@@ -73,5 +74,5 @@ export interface AIGoal {
 export type DesireModifierDecisions = { name: string; modifier: number };
 
 export type FieldsForGoals = {
-  [key in AIGoals]: AIGoal;
+  [key in AIGoals]?: AIGoal;
 };

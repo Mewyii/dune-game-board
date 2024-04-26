@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { add, cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { isResource } from '../helpers/resources';
-import { CombatManager } from './combat-manager.service';
+import { CombatManager, PlayerCombatUnits } from './combat-manager.service';
 import { LoggingService } from './log.service';
 import { Player, PlayerManager } from './player-manager.service';
 import { PlayerScoreManager } from './player-score-manager.service';
@@ -346,6 +346,7 @@ export class GameManager {
     this.setPlayerOnField(field.title.en);
 
     let unitsGainedThisTurn = 0;
+    let techAgentsGainedThisTurn = 0;
     let canEnterCombat = false;
     let canDestroyOrDrawCard = false;
     let canBuyTech = false;
@@ -360,12 +361,13 @@ export class GameManager {
         if (!isRewardOption) {
           const aiInfo = this.addRewardToPlayer(reward);
           unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+          techAgentsGainedThisTurn += aiInfo.techAgentsGainedThisTurn;
           canDestroyOrDrawCard = canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard;
           canBuyTech = canBuyTech || aiInfo.canBuyTech;
 
-          if (reward.type === 'spice' && this.fieldHasAccumulatedSpice(field.title.en)) {
+          if (reward.type === 'spice-accumulation' && this.fieldHasAccumulatedSpice(field.title.en)) {
             const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
-            this.playerManager.addResourceToPlayer(activePlayer.id, reward.type, accumulatedSpice);
+            this.playerManager.addResourceToPlayer(activePlayer.id, 'spice', accumulatedSpice);
           }
         } else {
           fieldOptions.push(reward);
@@ -390,6 +392,7 @@ export class GameManager {
       for (const reward of factionRewards) {
         const aiInfo = this.addRewardToPlayer(reward);
         unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+        techAgentsGainedThisTurn += aiInfo.techAgentsGainedThisTurn;
         canDestroyOrDrawCard = canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard;
         canBuyTech = canBuyTech || aiInfo.canBuyTech;
 
@@ -401,14 +404,15 @@ export class GameManager {
 
     if (activePlayer.isAI) {
       const aiPlayer = this.aIManager.getAIPlayer(activePlayer.id);
-      if (aiPlayer && activePlayer) {
-        if (canDestroyOrDrawCard) {
-          const drawOrTrim = this.aIManager.getFieldDrawOrTrimDecision(activePlayer.id, field.title.en);
 
-          if (drawOrTrim === 'draw') {
-            this.playerManager.playerDrawsCards(this.activePlayerId, 1);
+      if (activePlayer && aiPlayer) {
+        if (canDestroyOrDrawCard) {
+          const drawOrDestroy = this.aIManager.getFieldDrawOrDestroyDecision(activePlayer.id, field.title.en);
+
+          if (drawOrDestroy === 'draw') {
+            this.playerManager.playerDrawsCards(activePlayer.id, 1);
           } else {
-            this.playerManager.addFocusTokens(this.activePlayerId, 1);
+            this.playerManager.addFocusTokens(activePlayer.id, 1);
           }
         }
         if (fieldHasRewardOptions) {
@@ -418,6 +422,7 @@ export class GameManager {
           if (reward) {
             const aiInfo = this.addRewardToPlayer(reward);
             unitsGainedThisTurn += aiInfo.unitsGainedThisTurn;
+            techAgentsGainedThisTurn += aiInfo.techAgentsGainedThisTurn;
             canDestroyOrDrawCard = canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard;
             canBuyTech = canBuyTech || aiInfo.canBuyTech;
             if (!canBuyTech) {
@@ -427,28 +432,40 @@ export class GameManager {
         }
 
         if (canBuyTech) {
-          this.buyTechOrStackTechAgents(activePlayer, -1);
+          this.buyTechOrStackTechAgents(activePlayer, -1, techAgentsGainedThisTurn);
         }
 
         if (canEnterCombat) {
+          const playerCombatUnits = this.combatManager.getPlayerCombatUnits(activePlayer.id);
+          const enemyCombatUnits = this.combatManager.getEnemyCombatUnits(activePlayer.id);
+          const playerHasAgentsLeft =
+            (this.availablePlayerAgents.find((x) => x.playerId === activePlayer.id)?.agentAmount ?? 0) > 0;
+
           const combatDecision = aiPlayer.decisions.find((x) => x.includes('combat'));
 
           if (combatDecision) {
             if (this.isFinale) {
               this.combatManager.addAllPossibleUnitsToCombat(activePlayer.id, unitsGainedThisTurn);
             } else if (combatDecision.includes('win')) {
-              const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
-                this.combatManager.getPlayerCombatUnits(activePlayer.id),
-                this.combatManager.getEnemyCombatUnits(activePlayer.id)
-              );
+              if (playerCombatUnits && enemyCombatUnits) {
+                const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
+                  playerCombatUnits,
+                  enemyCombatUnits,
+                  unitsGainedThisTurn + 2,
+                  playerHasAgentsLeft,
+                  activePlayer.intrigueCount > 2
+                );
 
-              if (addUnitsDecision === 'all') {
-                this.combatManager.addAllPossibleUnitsToCombat(activePlayer.id, unitsGainedThisTurn);
-              } else if (addUnitsDecision === 'minimum') {
-                this.combatManager.addMinimumUnitsToCombat(activePlayer.id);
+                if (addUnitsDecision === 'all') {
+                  this.combatManager.addAllPossibleUnitsToCombat(activePlayer.id, unitsGainedThisTurn);
+                } else if (addUnitsDecision === 'minimum') {
+                  this.addMinimumUnitsToCombat(activePlayer.id, playerCombatUnits, enemyCombatUnits, playerHasAgentsLeft);
+                }
               }
             } else if (combatDecision.includes('participate')) {
-              this.combatManager.addMinimumUnitsToCombat(activePlayer.id);
+              if (playerCombatUnits) {
+                this.addMinimumUnitsToCombat(activePlayer.id, playerCombatUnits, enemyCombatUnits, playerHasAgentsLeft);
+              }
             }
           }
         }
@@ -468,7 +485,7 @@ export class GameManager {
       }
     }
 
-    this.removeAgentFromPlayer(this.activePlayerId);
+    this.removeAgentFromPlayer(activePlayer.id);
 
     this.loggingService.logAgentAction(field);
   }
@@ -656,11 +673,11 @@ export class GameManager {
     return true;
   }
 
-  private buyTechOrStackTechAgents(player: Player, techDiscount?: number) {
+  private buyTechOrStackTechAgents(player: Player, techDiscount?: number, techAgentsGainedThisTurn?: number) {
     const discount = techDiscount ?? 0;
     const availableTechTiles = this.techTilesService.availableTechTiles;
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
-    const availablePlayerTechAgents = player.techAgents;
+    const availablePlayerTechAgents = player.techAgents + (techAgentsGainedThisTurn ?? 0);
     const affordableTechTiles = availableTechTiles.filter(
       (x) => x.costs - discount <= availablePlayerTechAgents + availablePlayerSpice
     );
@@ -678,9 +695,9 @@ export class GameManager {
         affordableTechTiles.some((x) => x.name.en === mostDesiredTechTile.name.en) &&
         (desire > 0.25 || effectiveCosts < 1)
       ) {
-        this.buyTechTileForPlayer(player, mostDesiredTechTile, discount);
+        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, discount);
       } else if (this.isFinale) {
-        this.buyTechTileForPlayer(player, affordableTechTiles[0], discount);
+        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTechAgents, discount);
       } else {
         this.playerManager.addTechAgentsToPlayer(player.id, discount + 1);
       }
@@ -689,21 +706,16 @@ export class GameManager {
     }
   }
 
-  private buyTechTileForPlayer(player: Player, techTile: TechTile, discount: number) {
-    const availablePlayerTechAgents = player.techAgents;
-
+  private buyTechTileForPlayer(player: Player, techTile: TechTile, techAgents: number, discount: number) {
     const effectiveCosts = techTile.costs - discount;
 
     if (effectiveCosts > 0) {
-      if (availablePlayerTechAgents) {
-        this.playerManager.removeTechAgentsFromPlayer(
-          player.id,
-          effectiveCosts > availablePlayerTechAgents ? availablePlayerTechAgents : effectiveCosts
-        );
+      if (techAgents) {
+        this.playerManager.removeTechAgentsFromPlayer(player.id, effectiveCosts > techAgents ? techAgents : effectiveCosts);
       }
 
-      if (effectiveCosts > availablePlayerTechAgents) {
-        this.playerManager.removeResourceFromPlayer(player.id, 'spice', effectiveCosts - availablePlayerTechAgents);
+      if (effectiveCosts > techAgents) {
+        this.playerManager.removeResourceFromPlayer(player.id, 'spice', effectiveCosts - techAgents);
       }
     }
 
@@ -729,7 +741,7 @@ export class GameManager {
   }
 
   private addRewardToPlayer(reward: Reward) {
-    const aiInfo = { unitsGainedThisTurn: 0, canDestroyOrDrawCard: false, canBuyTech: false };
+    const aiInfo = { unitsGainedThisTurn: 0, techAgentsGainedThisTurn: 0, canDestroyOrDrawCard: false, canBuyTech: false };
     if (isResource(reward)) {
       if (reward.type === 'solari') {
         this.audioManager.playSound('solari');
@@ -759,6 +771,7 @@ export class GameManager {
           : 0;
       this.playerManager.addTechAgentsToPlayer(this.activePlayerId, agents);
       aiInfo.canBuyTech = true;
+      aiInfo.techAgentsGainedThisTurn += agents;
     }
     if (reward.type === 'intrigue') {
       this.playerManager.addIntriguesToPlayer(this.activePlayerId, reward.amount ?? 1);
@@ -802,5 +815,38 @@ export class GameManager {
     }
 
     return aiInfo;
+  }
+
+  public addMinimumUnitsToCombat(
+    playerId: number,
+    playerCombatUnits: PlayerCombatUnits,
+    enemyCombatUnits: PlayerCombatUnits[],
+    playerHasAgentsLeft: boolean
+  ) {
+    if (playerHasAgentsLeft) {
+      const troopsToAdd =
+        playerCombatUnits.troopsInGarrison > 0
+          ? playerCombatUnits.troopsInGarrison > 3
+            ? Math.round(Math.random()) + 1
+            : 1
+          : 0;
+
+      this.combatManager.addPlayerTroopsToCombat(playerId, troopsToAdd);
+
+      if (troopsToAdd === 0 && playerCombatUnits.shipsInGarrison > 0) {
+        if (playerCombatUnits.shipsInGarrison > 1 || Math.random() > 0.66) {
+          this.combatManager.addPlayerShipsToCombat(playerId, 1);
+        }
+      }
+    } else {
+      let troopsToAdd = playerCombatUnits.troopsInGarrison > 2 ? 2 : playerCombatUnits.troopsInGarrison;
+
+      const projectedCombatStrength = this.combatManager.getPlayerCombatScore(playerCombatUnits);
+
+      if (enemyCombatUnits.some((x) => projectedCombatStrength === this.combatManager.getPlayerCombatScore(x))) {
+        troopsToAdd--;
+      }
+      this.combatManager.addPlayerTroopsToCombat(playerId, troopsToAdd);
+    }
   }
 }

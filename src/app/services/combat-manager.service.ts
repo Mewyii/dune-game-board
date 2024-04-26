@@ -197,24 +197,6 @@ export class CombatManager {
     this.addPlayerTroopsToCombat(playerId, troopsToAdd);
   }
 
-  public addMinimumUnitsToCombat(playerId: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
-    if (!combatUnits) {
-      return;
-    }
-
-    const troopsToAdd =
-      combatUnits.troopsInGarrison > 0 ? (combatUnits.troopsInGarrison > 1 ? Math.round(Math.random()) + 1 : 1) : 0;
-
-    this.addPlayerTroopsToCombat(playerId, troopsToAdd);
-
-    if (troopsToAdd === 0 && combatUnits.shipsInGarrison > 0) {
-      if (combatUnits.shipsInGarrison > 1 || Math.random() > 0.66) {
-        this.addPlayerShipsToCombat(playerId, 1);
-      }
-    }
-  }
-
   public setPlayerShipsInCombat(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);

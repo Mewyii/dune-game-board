@@ -25,6 +25,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
   factions = [...activeFactionTypes, ...passiveFactionTypes, ''].sort((a, b) => a.localeCompare(b));
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes].sort((a, b) => a.localeCompare(b)); // Add other reward types
+  fontSizes = ['medium', 'small'];
 
   hasCustomAgentEffect = false;
   hasCustomRevealEffect = false;
@@ -200,6 +201,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         en: '',
         de: '',
+        fontSize: 'small',
       })
     );
   }
@@ -264,6 +266,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         en: '',
         de: '',
+        fontSize: 'small',
       })
     );
   }

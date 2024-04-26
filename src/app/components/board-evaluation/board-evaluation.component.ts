@@ -37,12 +37,12 @@ export class BoardEvaluationComponent implements OnInit {
         );
         const fieldHasRewardOptions = rewardOptionIndex > -1;
 
-        if (!fieldHasRewardOptions) {
+        if (!fieldHasRewardOptions && !actionField.tradeOptionField) {
           const fieldRewards = this.getRewardValue(actionField.rewards);
           let fieldValue = fieldRewards - fieldCosts;
 
           this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
-        } else {
+        } else if (fieldHasRewardOptions) {
           const optionalRewards = actionField.rewards.filter(
             (item, index) => index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1
           );
@@ -61,6 +61,8 @@ export class BoardEvaluationComponent implements OnInit {
           let fieldValue = nonOptionalRewards + highestOptionalRewardValue - fieldCosts;
 
           this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
+        } else if (actionField.tradeOptionField) {
+          this.fieldValues.push({ fieldId: actionField.title.en, value: actionField.tradeOptionField.tradeFormula(0) });
         }
       }
 

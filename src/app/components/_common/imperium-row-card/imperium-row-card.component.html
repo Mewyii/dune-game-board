@@ -18,11 +18,20 @@
       </ng-container>
     </div>
   </div>
-  <div class="card-agent-effect-container">
+  <div
+    class="card-agent-effect-container"
+    *ngIf="card.customAgentEffect || (card.agentEffects && card.agentEffects.length > 0)"
+  >
     <div class="card-agent-effect-custom" *ngIf="card.customAgentEffect">
       <div
-        class="card-agent-effect-custom-text"
+        *ngIf="!card.customAgentEffect.fontSize || card.customAgentEffect.fontSize == 'small'"
+        class="card-reveal-effect-custom-text"
         [innerHTML]="translateService.translate(card.customAgentEffect) | duneSymbols"
+      ></div>
+      <div
+        *ngIf="card.customAgentEffect.fontSize === 'medium'"
+        class="card-reveal-effect-custom-text medium"
+        [innerHTML]="translateService.translate(card.customAgentEffect) | duneSymbols : '20px'"
       ></div>
     </div>
     <div class="card-agent-effect" *ngIf="card.agentEffects">
@@ -38,11 +47,21 @@
       </ng-container>
     </div>
   </div>
+  <div
+    class="card-agent-effect-separator"
+    *ngIf="!card.customAgentEffect && (!card.agentEffects || card.agentEffects.length === 0)"
+  ></div>
   <div class="card-reveal-effect-container">
     <div class="card-reveal-effect-custom" *ngIf="card.customRevealEffect">
       <div
+        *ngIf="!card.customRevealEffect.fontSize || card.customRevealEffect.fontSize == 'small'"
         class="card-reveal-effect-custom-text"
         [innerHTML]="translateService.translate(card.customRevealEffect) | duneSymbols"
+      ></div>
+      <div
+        *ngIf="card.customRevealEffect.fontSize === 'medium'"
+        class="card-reveal-effect-custom-text medium"
+        [innerHTML]="translateService.translate(card.customRevealEffect) | duneSymbols : '20px'"
       ></div>
     </div>
     <div class="card-reveal-effect" *ngIf="card.revealEffects">

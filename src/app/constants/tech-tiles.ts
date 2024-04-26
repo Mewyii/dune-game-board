@@ -58,7 +58,7 @@ export const techTiles: TechTile[] = [
     costs: 3,
     imageUrl: '/assets/images/tech-tiles/detonation_devices.png',
     aiEvaluation: (player, gameState) =>
-      (gameState.playerCombatUnits.shipsInGarrison > 0 ? 0.6 : 0.1) + 0.25 * (gameState.currentTurn - 1),
+      gameState.playerCombatUnits.shipsInGarrison > 0 ? 0.5 + 0.2 * (gameState.currentTurn - 1) : 0.0,
   },
   {
     name: { de: 'Trainingsdrohnen', en: 'Training Drones' },

@@ -1,14 +1,18 @@
 import { ActionType, FactionType, LanguageString, Reward } from '../models';
 
+interface LanguageStringAndFontSize extends LanguageString {
+  fontSize?: 'medium' | 'small';
+}
+
 export interface ImperiumCard {
   name: LanguageString;
   faction?: FactionType;
   persuasionCosts?: number;
   fieldAccess?: ActionType[];
   agentEffects?: Reward[];
-  customAgentEffect?: LanguageString;
+  customAgentEffect?: LanguageStringAndFontSize;
   revealEffects?: Reward[];
-  customRevealEffect?: LanguageString;
+  customRevealEffect?: LanguageStringAndFontSize;
   buyEffects?: Reward[];
   imageUrl?: string;
   cardAmount?: number;

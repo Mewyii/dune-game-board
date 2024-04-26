@@ -2,7 +2,7 @@ import { DuneLocation } from '../../../models';
 
 export const locationsCustomBeginner: DuneLocation[] = [
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 885,
       marginLeft: 1430,
@@ -16,7 +16,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     ownerReward: { type: 'solari' },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 720,
       marginLeft: 1375,
@@ -29,7 +29,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 940,
       marginLeft: 1090,
@@ -43,7 +43,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     ownerReward: { type: 'card-round-start' },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 665,
       marginLeft: 970,
@@ -64,7 +64,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 850,
       marginLeft: 600,
@@ -122,7 +122,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   },
   // 5-6Player Stuff
   // {
-  //   color: 'rgb(87, 71, 52)',
+  //   color: 'rgb(87, 69, 52)',
   //   position: {
   //     marginTop: 1000,
   //     marginLeft: 1444,

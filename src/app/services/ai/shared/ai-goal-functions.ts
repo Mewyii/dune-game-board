@@ -216,20 +216,24 @@ export function getMaxDesireOfUnreachableGoal(
   gameState: GameState,
   goals: FieldsForGoals,
   virtualResources: Resource[],
-  goalType: AIGoals,
+  goalType: { type: AIGoals; modifier: number },
   currentDesire: number
 ) {
+  const goal = goals[goalType.type];
+  if (!goal) {
+    return currentDesire;
+  }
   if (
-    !goals[goalType].reachedGoal(player, gameState, goals, virtualResources) &&
-    !goals[goalType].goalIsReachable(player, gameState, goals, virtualResources)
+    !goal.reachedGoal(player, gameState, goals, virtualResources) &&
+    !goal.goalIsReachable(player, gameState, goals, virtualResources)
   ) {
-    const goalDesire = getDesire(goals[goalType], player, gameState, virtualResources, goals);
+    const goalDesire = getDesire(goal, player, gameState, virtualResources, goals);
 
     if (goalDesire > currentDesire) {
       return goalDesire;
     }
   }
-  return currentDesire;
+  return currentDesire * goalType.modifier;
 }
 
 export function getMaxDesireOfUnreachableGoals(
@@ -237,7 +241,7 @@ export function getMaxDesireOfUnreachableGoals(
   gameState: GameState,
   goals: FieldsForGoals,
   virtualResources: Resource[],
-  goalTypes: AIGoals[],
+  goalTypes: { type: AIGoals; modifier: number }[],
   currentDesire: number
 ) {
   for (const goalType of goalTypes) {
@@ -293,9 +297,23 @@ export function getCostAdjustedDesire(
     return 0;
   }
 
-  const desireAdjustment = 1.0 - 0.1 * costs + 0.1 * (playerResourceAmount - costs);
+  let resourceTypeModifier = 0.02 / desire;
+  if (resourceType === 'spice') {
+    resourceTypeModifier = 0.03 / desire;
+  } else if (resourceType === 'water') {
+    resourceTypeModifier = 0.035 / desire;
+  }
 
-  return clamp(desire * desireAdjustment, 0, 1);
+  const minDesireAdjustment = desire * 0.5;
+  const maxDesireAdjustment = desire * 1.5 <= 1.0 ? desire * 1.5 : 1.0;
+
+  const desireAdjustment = clamp(
+    1.0 - resourceTypeModifier * costs + (resourceTypeModifier / 2) * (playerResourceAmount - costs),
+    minDesireAdjustment,
+    maxDesireAdjustment
+  );
+
+  return desire * desireAdjustment;
 }
 
 export function playerCanDrawCards(player: Player, amount: number) {

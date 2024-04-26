@@ -8,7 +8,7 @@ import { getActionTypePath } from '../helpers/action-types';
 export class DuneSymbolsPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: string, iconSize: string = '16px'): SafeHtml {
+  transform(value: string, iconSize: string = '17px'): SafeHtml {
     const iconSizeNumber = parseInt(iconSize);
     let returnValue = value;
 
@@ -22,7 +22,7 @@ export class DuneSymbolsPipe implements PipeTransform {
         const resource = resourceString[0].substring(10, resourceString[0].length - 1) as RewardType;
         const resourceImgPath = getRewardTypePath(resource);
 
-        const ratioFix = iconSizeNumber / 5;
+        const ratioFix = Math.ceil(iconSizeNumber / 3);
 
         returnValue = returnValue.replace(
           resourceString[0],
@@ -31,8 +31,8 @@ export class DuneSymbolsPipe implements PipeTransform {
             ';height: ' +
             iconSize +
             ';object-fit:scale-down; margin-bottom:-' +
-            ratioFix +
-            'px;filter:drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));" src="' +
+            Math.ceil(ratioFix - ratioFix / 2) +
+            'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
             '"/>'
         );
@@ -43,7 +43,7 @@ export class DuneSymbolsPipe implements PipeTransform {
         const resource = resourceString[0].substring(10, resourceString[0].length - amount.length - 9) as RewardType;
         const resourceImgPath = getRewardTypePath(resource);
 
-        const ratioFix = iconSizeNumber / 5;
+        const ratioFix = Math.ceil(iconSizeNumber / 3);
 
         returnValue = returnValue.replace(
           resourceString[0],
@@ -52,8 +52,8 @@ export class DuneSymbolsPipe implements PipeTransform {
             ';height: ' +
             iconSize +
             ';object-fit:scale-down; margin-bottom:-' +
-            ratioFix +
-            'px;filter:drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));" src="' +
+            Math.ceil(ratioFix - ratioFix / 2) +
+            'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
             '"/><div style="position:absolute;top:0px;left:0px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
             (iconSizeNumber - ratioFix) +
@@ -70,7 +70,7 @@ export class DuneSymbolsPipe implements PipeTransform {
     for (const factionString of factionStrings) {
       const faction = factionString[0].substring(9, factionString[0].length - 1) as ActionType;
 
-      const ratioFix = iconSizeNumber / 5;
+      const ratioFix = Math.ceil(iconSizeNumber / 3);
 
       const factionImgPath = getActionTypePath(faction);
       returnValue = returnValue.replace(
@@ -79,7 +79,7 @@ export class DuneSymbolsPipe implements PipeTransform {
           (iconSizeNumber - ratioFix) +
           'px;height:' +
           (iconSizeNumber - ratioFix) +
-          'px;object-fit:scale-down; margin-bottom:-2px;filter:drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.8));" src="' +
+          'px;object-fit:scale-down; margin-bottom:-1px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
           factionImgPath +
           '"/>'
       );

@@ -2,7 +2,7 @@ import { DuneLocation } from '../../../models';
 
 export const locationsOriginal: DuneLocation[] = [
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 875,
       marginLeft: 1430,
@@ -16,7 +16,7 @@ export const locationsOriginal: DuneLocation[] = [
     ownerReward: { type: 'solari' },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 930,
       marginLeft: 1090,
@@ -30,7 +30,7 @@ export const locationsOriginal: DuneLocation[] = [
     ownerReward: { type: 'solari' },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 660,
       marginLeft: 970,
@@ -51,7 +51,7 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(87, 71, 52)',
+    color: 'rgb(87, 69, 52)',
     position: {
       marginTop: 850,
       marginLeft: 600,
