@@ -1,8 +1,8 @@
 .navigation-container {
     position: fixed;
     top: 25%;
-    left: 0;
-    background: #362b23;
+    right: 0;
+    background: #45382f;
     z-index: 3;
     word-break: break-word;
     text-wrap: wrap;
@@ -16,13 +16,13 @@
 }
 
 .navigation-element {
-    background-color: #72543d;
+    background-color: #886b54;
     padding: 6px;
-    cursor: pointer;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
     transition: 0.3s;
 }
 
 .navigation-element:hover {
-    background-color: #966f52;
+    background-color: #ad8465;
     color: rgb(46, 25, 0);
 }

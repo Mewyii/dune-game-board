@@ -17,6 +17,7 @@
 body {
     font-family: "Medieval";
     font-weight:bold;
+    cursor: url("assets/images/cursors/auto.png") 6 6, auto;
 }
 html, body { 
     // height: 100%; 
@@ -49,4 +50,8 @@ h2 {
 
 .mdc-dialog__surface {
     background-color: #e3dcd6 !important;
+ }
+
+ .mdc-fab, .mdc-fab:hover {
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
  }

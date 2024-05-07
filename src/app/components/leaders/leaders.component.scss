@@ -54,7 +54,7 @@ dune-leader-card {
 .control-button {
     height: 160px;
     width: 40px;
-    cursor: pointer;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
     display: flex;
     justify-content: center;
     align-items: center;
