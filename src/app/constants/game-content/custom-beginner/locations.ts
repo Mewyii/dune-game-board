@@ -4,35 +4,37 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(87, 69, 52)',
     position: {
-      marginTop: 885,
-      marginLeft: 1430,
+      marginTop: 810,
+      marginLeft: 1420,
     },
     actionField: {
       title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
-      rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'solari', amount: 2 }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
     },
     ownerReward: { type: 'solari' },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 720,
-      marginLeft: 1375,
+      marginTop: 1300,
+      marginLeft: 1130,
     },
     actionField: {
-      title: { de: 'Raumhafen', en: 'Space Port' },
-      actionType: 'town',
-      rewards: [{ type: 'foldspace' }, { type: 'solari', amount: 2 }, { type: 'troop' }],
-      pathToImage: 'assets/images/action-backgrounds/carthag.png',
+      title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
+      actionType: 'spice',
+      costs: [{ type: 'water' }],
+      rewards: [{ type: 'foldspace' }, { type: 'spice-accumulation' }, { type: 'combat' }],
+      pathToImage: 'assets/images/action-backgrounds/desert_5.png',
+      requiresInfluence: { type: 'guild' },
     },
   },
   {
     color: 'rgb(87, 69, 52)',
     position: {
-      marginTop: 940,
-      marginLeft: 1090,
+      marginTop: 850,
+      marginLeft: 1050,
     },
     actionField: {
       title: { de: 'Carthag', en: 'Carthag' },
@@ -45,44 +47,37 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(87, 69, 52)',
     position: {
-      marginTop: 665,
-      marginLeft: 970,
+      marginTop: 660,
+      marginLeft: 1000,
     },
     actionField: {
-      title: { de: 'Forschungszentrum', en: 'Research Station' },
+      title: { de: 'Imperiale Teststation', en: 'Imperial Test Station' },
       actionType: 'town',
-      costs: [
-        {
-          type: 'water',
-        },
-        {
-          type: 'water',
-        },
-      ],
-      rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
+      rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
+      requiresInfluence: { type: 'fremen' },
     },
   },
   {
     color: 'rgb(87, 69, 52)',
     position: {
-      marginTop: 850,
+      marginTop: 810,
       marginLeft: 600,
     },
     actionField: {
       title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
-      rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'combat' }],
+      costs: [{ type: 'water' }, { type: 'water' }],
+      rewards: [{ type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-
-      requiresInfluence: { type: 'fremen', amount: 2 },
+      requiresInfluence: { type: 'fremen' },
     },
   },
   {
     color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 1190,
-      marginLeft: 1260,
+      marginTop: 1060,
+      marginLeft: 1270,
     },
     actionField: {
       title: { de: 'Imperiales Becken', en: 'Imperial Basin' },
@@ -95,8 +90,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 1090,
-      marginLeft: 770,
+      marginTop: 1050,
+      marginLeft: 800,
     },
     actionField: {
       title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
@@ -109,8 +104,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(196, 172, 139)',
     position: {
-      marginTop: 1300,
-      marginLeft: 580,
+      marginTop: 1280,
+      marginLeft: 620,
     },
     actionField: {
       title: { de: 'Die grosse Ebene', en: 'The Great Flat' },

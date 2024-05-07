@@ -71,7 +71,7 @@
       <div class="spice-accumulation-marker"></div>
     </ng-container>
   </div>
-  <div class="high-council-indicator-area" *ngIf="action.title.en === 'high council'">
+  <div class="high-council-indicator-area" *ngIf="isHighCouncilField">
     <ng-container *ngFor="let seatColor of highCouncilSeats">
       <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
     </ng-container>

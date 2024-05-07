@@ -45,8 +45,8 @@ export class GameManager {
   private currentRoundSubject = new BehaviorSubject<number>(0);
   public currentRound$ = this.currentRoundSubject.asObservable();
 
-  private currentRoundStateSubject = new BehaviorSubject<TurnPhaseType>('none');
-  public currentRoundState$ = this.currentRoundStateSubject.asObservable();
+  private currentTurnStateSubject = new BehaviorSubject<TurnPhaseType>('none');
+  public currentTurnState$ = this.currentTurnStateSubject.asObservable();
 
   private startingPlayerIdSubject = new BehaviorSubject<number>(0);
   public startingPlayerId$ = this.startingPlayerIdSubject.asObservable();
@@ -101,10 +101,10 @@ export class GameManager {
       this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
     }
 
-    const currentRoundStateString = localStorage.getItem('currentTurnState');
-    if (currentRoundStateString) {
-      const currentRoundState = JSON.parse(currentRoundStateString) as TurnPhaseType;
-      this.currentRoundStateSubject.next(currentRoundState);
+    const currentTurnStateString = localStorage.getItem('currentTurnState');
+    if (currentTurnStateString) {
+      const currentTurnState = JSON.parse(currentTurnStateString) as TurnPhaseType;
+      this.currentTurnStateSubject.next(currentTurnState);
     }
 
     const availablePlayerAgentsString = localStorage.getItem('availablePlayerAgents');
@@ -143,7 +143,7 @@ export class GameManager {
       localStorage.setItem('accumulatedSpiceOnFields', JSON.stringify(accumulatedSpiceOnFields));
     });
 
-    this.currentRoundState$.subscribe((currentTurnState) => {
+    this.currentTurnState$.subscribe((currentTurnState) => {
       localStorage.setItem('currentTurnState', JSON.stringify(currentTurnState));
     });
 
@@ -182,7 +182,7 @@ export class GameManager {
     });
   }
 
-  public get currentTurn() {
+  public get currentRound() {
     return cloneDeep(this.currentRoundSubject.value);
   }
 
@@ -207,7 +207,7 @@ export class GameManager {
   }
 
   public get currentTurnState() {
-    return cloneDeep(this.currentRoundStateSubject.value);
+    return cloneDeep(this.currentTurnStateSubject.value);
   }
 
   public getActivePlayer() {
@@ -244,7 +244,7 @@ export class GameManager {
     this.techTilesService.setInitialAvailableTechTiles();
 
     this.currentRoundSubject.next(1);
-    this.currentRoundStateSubject.next('agent-placement');
+    this.currentTurnStateSubject.next('agent-placement');
     this.startingPlayerIdSubject.next(1);
     this.activePlayerIdSubject.next(1);
     this.activeCombatPlayerId = 1;
@@ -268,7 +268,7 @@ export class GameManager {
     }
 
     this.currentRoundSubject.next(this.currentRoundSubject.value + 1);
-    this.currentRoundStateSubject.next('agent-placement');
+    this.currentTurnStateSubject.next('agent-placement');
 
     this.startingPlayerIdSubject.next(
       this.playerManager.getPlayerCount() > this.startingPlayerId ? this.startingPlayerId + 1 : 1
@@ -286,7 +286,7 @@ export class GameManager {
     this.combatManager.resetAdditionalCombatPower();
     this.loggingService.printLog();
     this.currentRoundSubject.next(0);
-    this.currentRoundStateSubject.next('none');
+    this.currentTurnStateSubject.next('none');
     this.startingPlayerIdSubject.next(0);
     this.activePlayerIdSubject.next(0);
     this.activeCombatPlayerId = 0;
@@ -350,6 +350,7 @@ export class GameManager {
     let canEnterCombat = false;
     let canDestroyOrDrawCard = false;
     let canBuyTech = false;
+    let canLiftAgent = false;
     const fieldOptions: Reward[] = [];
     const rewardOptionIndex = field.rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
     const fieldHasRewardOptions = rewardOptionIndex > -1;
@@ -376,11 +377,7 @@ export class GameManager {
           this.addAgentToPlayer(activePlayer.id);
         }
         if (reward.type == 'agent-lift') {
-          const playerAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === activePlayer.id);
-          if (playerAgentsOnFields) {
-            shuffle(playerAgentsOnFields);
-            this.removePlayerAgentFromField(activePlayer.id, playerAgentsOnFields[0].fieldId);
-          }
+          canLiftAgent = true;
         }
         if (reward.type === 'combat') {
           canEnterCombat = true;
@@ -433,6 +430,14 @@ export class GameManager {
 
         if (canBuyTech) {
           this.buyTechOrStackTechAgents(activePlayer, -1, techAgentsGainedThisTurn);
+        }
+
+        if (canLiftAgent) {
+          const playerAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === activePlayer.id);
+          if (playerAgentsOnFields) {
+            shuffle(playerAgentsOnFields);
+            this.removePlayerAgentFromField(activePlayer.id, playerAgentsOnFields[0].fieldId);
+          }
         }
 
         if (canEnterCombat) {
@@ -548,7 +553,7 @@ export class GameManager {
     if (turnPhase === 'combat') {
       this.audioManager.playSound('combat');
     }
-    this.currentRoundStateSubject.next(turnPhase);
+    this.currentTurnStateSubject.next(turnPhase);
   }
 
   public setCurrentAIPlayer(playerId: number) {
@@ -564,7 +569,7 @@ export class GameManager {
 
   private getGameState(player: Player) {
     return {
-      currentTurn: this.currentTurn,
+      currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
       playerAgentCount: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
       enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
@@ -579,6 +584,7 @@ export class GameManager {
       playerLeader: this.leadersService.getLeader(player.id)!,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.availableTechTiles,
+      currentEvent: this.duneEventsManager.gameEvents[this.currentRound - 1],
     };
   }
 
@@ -725,7 +731,7 @@ export class GameManager {
   }
 
   private isOpeningTurn(playerId: number) {
-    if (this.currentTurn === 1) {
+    if (this.currentRound === 1) {
       return this.availablePlayerAgents.find((x) => x.playerId == playerId)?.agentAmount === 2;
     }
     return false;

@@ -166,8 +166,7 @@ export const factionsCustomExpert: Faction[] = [
           { type: 'faction-influence-up-choice' },
         ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
-        customWidth: '125px',
-        requiresInfluence: { type: 'bene' },
+        customWidth: '135px',
       },
       {
         title: { de: 'schwertmeister', en: 'Swordmaster' },
@@ -236,7 +235,6 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'solari', amount: 2 }],
         rewards: [{ type: 'water' }, { type: 'tech-reduced' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
-        requiresInfluence: { type: 'emperor' },
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player } from '../player-manager.service';
 import { randomizeArray } from '../../helpers/common';
-import { GameState, AIGoals, AIPersonality, FieldsForGoals } from './models';
+import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from './models';
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
@@ -186,6 +186,9 @@ export class AIManager {
     const aiPlayers = this.aiPlayers;
     const aiPlayer = aiPlayers.find((x) => x.playerId === player.id);
 
+    const gameEvent = gameState.currentEvent;
+    const playerLeader = gameState.playerLeader;
+
     if (!aiPlayer || !this.aiGoals) {
       return;
     }
@@ -193,11 +196,21 @@ export class AIManager {
     const viableFields: ViableField[] = [];
     const decisions: string[] = [];
 
-    const virtualResources = gameState.playerLeader.aiFieldAccessModifier?.resources ?? [];
+    const virtualResources = playerLeader.aiAdjustments?.fieldAccessModifier ?? [];
 
     const conflictEvaluation = gameState.conflict.aiEvaluation(player, gameState);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
     const imperiumRowEvaluation = this.getImperiumRowEvaluation();
+
+    let eventGoalModifiers: GoalModifier[] = [];
+    if (gameEvent && gameEvent.aiAdjustments && gameEvent.aiAdjustments.goalEvaluationModifier) {
+      eventGoalModifiers = gameEvent.aiAdjustments.goalEvaluationModifier(player, gameState);
+    }
+
+    let leaderGoalModifiers: GoalModifier[] = [];
+    if (playerLeader.aiAdjustments && playerLeader.aiAdjustments.goalEvaluationModifier) {
+      leaderGoalModifiers = playerLeader.aiAdjustments.goalEvaluationModifier(player, gameState);
+    }
 
     for (let [goalId, goal] of Object.entries(this.aiGoals)) {
       if (!goal.reachedGoal(player, gameState, this.aiGoals, virtualResources)) {
@@ -210,8 +223,11 @@ export class AIManager {
 
         const goalDesire =
           getDesire(goal, player, gameState, virtualResources, this.aiGoals) *
-          (aiPlayer.personality[aiGoalId] ?? 1.0) *
-          this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation);
+            (aiPlayer.personality[aiGoalId] ?? 1.0) *
+            this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation) +
+          this.getEventGoalModifier(aiGoalId, eventGoalModifiers) +
+          this.getLeaderGoalModifier(goalId, leaderGoalModifiers);
+
         let desireCanBeFullfilled = false;
 
         if (goal.goalIsReachable(player, gameState, this.aiGoals, virtualResources) && goal.desiredFields) {
@@ -430,6 +446,14 @@ export class AIManager {
     }
 
     return modifier;
+  }
+
+  private getLeaderGoalModifier(goalId: string, goalModifiers: GoalModifier[]) {
+    return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
+  }
+
+  private getEventGoalModifier(goalId: AIGoals, goalModifiers: GoalModifier[]) {
+    return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
   }
 
   private getRandomAIName() {

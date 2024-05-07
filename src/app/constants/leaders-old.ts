@@ -1,4 +1,5 @@
-import { LanguageString, Resource } from '../models';
+import { LanguageString } from '../models';
+import { AIAdjustments } from '../services/ai/models';
 
 export interface LeaderImageOnly {
   name: LanguageString;
@@ -6,12 +7,7 @@ export interface LeaderImageOnly {
   type: 'old';
   imageUrl: string;
   playableByAI?: boolean;
-  aiFieldAccessModifier?: AiFieldAccessModifier;
-}
-
-interface AiFieldAccessModifier {
-  resources?: Resource[];
-  directFieldAccess?: string[];
+  aiAdjustments?: AIAdjustments;
 }
 
 export const leadersOld: LeaderImageOnly[] = [
@@ -34,8 +30,9 @@ export const leadersOld: LeaderImageOnly[] = [
     type: 'old',
     imageUrl: '/assets/images/leaders/old/leto.jpg',
     playableByAI: true,
-    aiFieldAccessModifier: {
-      resources: [{ type: 'solari', amount: 1 }],
+    aiAdjustments: {
+      fieldAccessModifier: [{ type: 'solari', amount: 1 }],
+      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'landsraad' ? 0.05 : 0.0),
     },
   },
   {
@@ -47,6 +44,9 @@ export const leadersOld: LeaderImageOnly[] = [
     type: 'old',
     imageUrl: '/assets/images/leaders/old/ilban.jpg',
     playableByAI: true,
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => (field.costs?.some((x) => x.type === 'solari') ? 0.1 : 0.0),
+    },
   },
   {
     name: { de: 'helena richese', en: 'helena richese' },
@@ -85,6 +85,9 @@ export const leadersOld: LeaderImageOnly[] = [
     type: 'old',
     imageUrl: '/assets/images/leaders/old/ariana.jpg',
     playableByAI: true,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'collect-spice', modifier: -0.1 }],
+    },
   },
   {
     name: { de: 'graf memnon thorvald', en: 'count memnon thorvald' },
@@ -95,6 +98,9 @@ export const leadersOld: LeaderImageOnly[] = [
     type: 'old',
     imageUrl: '/assets/images/leaders/old/memnon.jpg',
     playableByAI: true,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'high-council', modifier: 0.1 }],
+    },
   },
   // {
   //   name: 'count hundro moritani',
@@ -108,6 +114,9 @@ export const leadersOld: LeaderImageOnly[] = [
     },
     type: 'old',
     imageUrl: '/assets/images/leaders/old/yuna.jpg',
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'collect-solari', modifier: 0.05 }],
+    },
   },
   {
     name: { de: 'erzherzog  armand ecaz', en: 'archduke armand ecaz' },
@@ -117,6 +126,10 @@ export const leadersOld: LeaderImageOnly[] = [
     },
     type: 'old',
     imageUrl: '/assets/images/leaders/old/armand.jpg',
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) =>
+        field.actionType === 'town' || field.actionType === 'spice' || field.actionType === 'landsraad' ? 0.05 : 0.0,
+    },
   },
   // {
   //   name: 'ilesa ecaz',

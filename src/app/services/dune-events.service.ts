@@ -18,7 +18,14 @@ export class DuneEventsManager {
     const eventsString = localStorage.getItem('events');
     if (eventsString) {
       const events = JSON.parse(eventsString) as DuneEvent[];
-      this.eventsSubject.next(events);
+
+      // Workaround for local storage not being able to store functions
+      const realEvents = events.map((x) => {
+        const techTile = duneEvents.find((y) => y.title.en === x.title.en);
+        return techTile ?? x;
+      });
+
+      this.eventsSubject.next(realEvents);
     } else {
     }
 
@@ -29,7 +36,14 @@ export class DuneEventsManager {
     const gameEventsString = localStorage.getItem('gameEvents');
     if (gameEventsString) {
       const gameEvents = JSON.parse(gameEventsString) as Omit<DuneEvent, 'cardAmount'>[];
-      this.gameEventsSubject.next(gameEvents);
+
+      // Workaround for local storage not being able to store functions
+      const realEvents = gameEvents.map((x) => {
+        const techTile = duneEvents.find((y) => y.title.en === x.title.en);
+        return techTile ?? x;
+      });
+
+      this.gameEventsSubject.next(realEvents);
     } else {
     }
 
@@ -47,13 +61,14 @@ export class DuneEventsManager {
   }
 
   public setGameEvents() {
-    const newEvents = [];
+    const newEvents: Omit<DuneEvent, 'cardAmount'>[] = [];
     for (let event of this.events) {
       for (let i = 0; i < (event.cardAmount ?? 1); i++) {
         newEvents.push({
           title: event.title,
           description: event.description,
           imagePath: event.imagePath,
+          aiAdjustments: event.aiAdjustments,
         });
       }
     }

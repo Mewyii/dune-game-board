@@ -78,7 +78,7 @@ export function enemyCanContestPlayer(
   gameState: GameState,
   countEnemiesNotInCombat?: boolean
 ) {
-  const combatPowerTreshold = 3 + Math.random() * 2 + (gameState.currentTurn - 1) * 0.5;
+  const combatPowerTreshold = 3 + Math.random() * 2 + (gameState.currentRound - 1) * 0.5;
 
   const playerCombatPower = getPlayerCombatStrength(player);
 
@@ -169,7 +169,7 @@ export function getWinCombatDesireModifier(gameState: GameState) {
 }
 
 export function getParticipateInCombatDesireModifier(gameState: GameState) {
-  let desire = 0.1 + 0.01 * (gameState.currentTurn - 1);
+  let desire = 0.1 + 0.01 * (gameState.currentRound - 1);
 
   let enemiesInCombat = 0;
   let garrisonStrengthOfEnemiesNotInCombat = 0;

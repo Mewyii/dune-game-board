@@ -35,6 +35,7 @@ export class DuneActionComponent implements OnInit {
   public additionalPlayersOnField: Player[] = [];
 
   public accumulatedSpice = 0;
+  public isHighCouncilField = false;
 
   public highCouncilSeats: string[] = [];
 
@@ -74,7 +75,10 @@ export class DuneActionComponent implements OnInit {
       this.accumulatedSpice = spiceOnField?.amount ?? 0;
     });
 
-    if (this.action.title.en === 'high council') {
+    this.isHighCouncilField = this.action.rewards.some(
+      (x) => x.type === 'council-seat-small' || x.type === 'council-seat-large'
+    );
+    if (this.isHighCouncilField) {
       this.playerManager.players$.subscribe((players) => {
         this.highCouncilSeats = players.filter((x) => x.hasCouncilSeat).map((x) => x.color);
       });

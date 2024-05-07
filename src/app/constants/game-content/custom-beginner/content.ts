@@ -29,6 +29,6 @@ export const gameContentCustomBeginner: GameContent = {
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
-  startingResources: [{ type: 'water', amount: 1 }],
+  startingResources: [{ type: 'solari', amount: 2 }],
   aiGoals: aiGoalsCustomBeginner,
 };

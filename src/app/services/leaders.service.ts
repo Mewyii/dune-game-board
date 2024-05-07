@@ -26,8 +26,15 @@ export class LeadersService {
   constructor() {
     const leadersString = localStorage.getItem('leaders');
     if (leadersString) {
-      const leaders = JSON.parse(leadersString) as (Leader | LeaderImageOnly)[];
-      this.leadersSubject.next(leaders);
+      const leaderss = JSON.parse(leadersString) as (Leader | LeaderImageOnly)[];
+
+      // Workaround for local storage not being able to store functions
+      const realLeaders = leaderss.map((x) => {
+        const techTile = [...leaders, ...leadersOld].find((y) => y.name.en === x.name.en);
+        return techTile ?? x;
+      });
+
+      this.leadersSubject.next(realLeaders);
     }
 
     this.leaders$.subscribe((leaders) => {

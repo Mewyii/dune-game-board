@@ -1,10 +1,12 @@
 import { LanguageString } from '../models';
+import { AIAdjustments } from '../services/ai/models';
 
 export interface DuneEvent {
   title: LanguageString;
   description: LanguageString;
   imagePath: string;
   cardAmount?: number;
+  aiAdjustments?: AIAdjustments;
 }
 
 export const duneEvents: DuneEvent[] = [
@@ -31,6 +33,13 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
     cardAmount: 3,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [
+        { type: 'collect-spice', modifier: -1.0 },
+        { type: 'harvest-accumulated-spice-basin', modifier: -1.0 },
+        { type: 'harvest-accumulated-spice-flat', modifier: -1.0 },
+      ],
+    },
   },
   {
     title: {
@@ -55,6 +64,13 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
     cardAmount: 3,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [
+        { type: 'collect-spice', modifier: -0.25 },
+        { type: 'harvest-accumulated-spice-basin', modifier: -0.25 },
+        { type: 'harvest-accumulated-spice-flat', modifier: -0.25 },
+      ],
+    },
   },
   {
     title: {
@@ -67,6 +83,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/empire_ambassador.png',
     cardAmount: 1,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'emperor-alliance', modifier: 0.1 }],
+    },
   },
   {
     title: {
@@ -79,6 +98,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'guild-alliance', modifier: 0.1 }],
+    },
   },
   {
     title: {
@@ -91,6 +113,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/bene_gesserit_3.png',
     cardAmount: 1,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'bg-alliance', modifier: 0.1 }],
+    },
   },
   {
     title: {
@@ -103,6 +128,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/fremen_warriors.png',
     cardAmount: 1,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'fremen-alliance', modifier: 0.1 }],
+    },
   },
   {
     title: {
@@ -115,6 +143,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/faithful.png',
     cardAmount: 1,
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'town' ? 0.1 : 0.0),
+    },
   },
   {
     title: {
@@ -139,6 +170,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/empire_ambassador_2.png',
     cardAmount: 1,
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'landsraad' ? 0.1 : 0.0),
+    },
   },
   {
     title: {

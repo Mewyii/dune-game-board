@@ -7,6 +7,7 @@ import { Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
 import { TechTile } from 'src/app/constants/tech-tiles';
+import { DuneEvent } from 'src/app/constants/events';
 
 export type AIGoals =
   | 'high-council'
@@ -38,7 +39,7 @@ export interface GameState {
   playerScore: PlayerScore;
   enemyScore: PlayerScore[];
   playerCombatUnits: PlayerCombatUnits;
-  currentTurn: number;
+  currentRound: number;
   accumulatedSpiceOnFields: SpiceAccumulation[];
   enemyCombatUnits: PlayerCombatUnits[];
   agentsOnFields: AgentOnField[];
@@ -50,6 +51,7 @@ export interface GameState {
   playerLeader: Leader | LeaderImageOnly;
   conflict: Conflict;
   availableTechTiles: TechTile[];
+  currentEvent: DuneEvent | undefined;
 }
 
 export interface AIGoal {

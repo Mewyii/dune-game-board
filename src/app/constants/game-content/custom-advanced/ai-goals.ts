@@ -22,7 +22,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'solari', virtualResources) - 0.02 * (gameState.currentTurn - 1),
+      0.0125 * getResourceAmount(player, 'solari', virtualResources) - 0.02 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
@@ -34,7 +34,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.0125 * getResourceAmount(player, 'solari', virtualResources) - 0.033 * (gameState.currentTurn - 1),
+      0.0125 * getResourceAmount(player, 'solari', virtualResources) - 0.033 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster === true || gameState.isFinale,
@@ -47,7 +47,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * getResourceAmount(player, 'solari', virtualResources) +
-      0.025 * (gameState.currentTurn - 1) +
+      0.025 * (gameState.currentRound - 1) +
       0.0125 * player.cardsBought,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 2,
@@ -85,7 +85,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     baseDesire: 0.35,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0075 * getResourceAmount(player, 'solari', virtualResources) -
-      0.0125 * (gameState.currentTurn - 1) -
+      0.0125 * (gameState.currentRound - 1) -
       0.1 * getPlayerdreadnoughtCount(gameState),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 3,
@@ -100,7 +100,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.0125 * gameState.currentTurn : 0),
+      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.0125 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.fremen > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'fremen'),
@@ -115,7 +115,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.0125 * gameState.currentTurn : 0),
+      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.0125 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.bene > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'bene'),
@@ -130,7 +130,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.0125 * gameState.currentTurn : 0),
+      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.0125 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.guild > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'guild'),
@@ -145,7 +145,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.033 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.0125 * gameState.currentTurn : 0),
+      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.0125 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.emperor > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'emperor'),
@@ -273,7 +273,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
         ? clamp(
             0.4 +
               (player.hasCouncilSeat ? 0.1 : 0) -
-              0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn +
+              0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
               0.033 * player.cardsBought +
               0.025 * (player.cardsTrimmed + player.focusTokens),
             0,
@@ -329,7 +329,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
-        -(0.0066 * (gameState.currentTurn - 1) * gameState.currentTurn) +
+        -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
           0.1 * player.cardsBought -
           0.15 * (player.cardsTrimmed + player.focusTokens),
         -0.4,
@@ -460,7 +460,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 6 && !player.hasSwordmaster
-        ? 0.35 - 0.05 * (getResourceAmount(player, 'solari', virtualResources) - 7) - 0.025 * (gameState.currentTurn - 1)
+        ? 0.35 - 0.05 * (getResourceAmount(player, 'solari', virtualResources) - 7) - 0.025 * (gameState.currentRound - 1)
         : 0,
     goalIsReachable: (player, gameState) => gameState.isFinale,
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster === true,

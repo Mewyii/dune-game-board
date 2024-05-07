@@ -1,12 +1,12 @@
 <div class="player-board-container">
   <div class="heading">
-    <div *ngIf="gameManager.currentTurn == 0">{{ translateService.translate(playersString).toLocaleLowerCase() }}</div>
-    <div *ngIf="gameManager.currentTurn == 0">
+    <div *ngIf="gameManager.currentRound == 0">{{ translateService.translate(playersString).toLocaleLowerCase() }}</div>
+    <div *ngIf="gameManager.currentRound == 0">
       <button
         mat-mini-fab
         [color]="'accent'"
         (click)="onRemovePlayerClicked()"
-        [disabled]="players.length === 0 || gameManager.currentTurn !== 0"
+        [disabled]="players.length === 0 || gameManager.currentRound !== 0"
         [style]="'margin-right: 6px'"
       >
         <mat-icon>remove</mat-icon>
@@ -15,7 +15,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onAddPlayerClicked()"
-        [disabled]="players.length === playerManager.maxPlayers || gameManager.currentTurn !== 0"
+        [disabled]="players.length === playerManager.maxPlayers || gameManager.currentRound !== 0"
       >
         <mat-icon>add</mat-icon>
       </button>
@@ -39,14 +39,14 @@
     </div>
     <div class="ai-area">
       <mat-slide-toggle
-        *ngIf="gameManager.currentTurn == 0"
+        *ngIf="gameManager.currentRound == 0"
         [color]="'accent'"
         [checked]="player.isAI"
         (change)="onSetAIActiveClicked(player.id, $event)"
         [disabled]="currentTurn > 0"
         >AI</mat-slide-toggle
       >
-      <div *ngIf="gameManager.currentTurn != 0 && player.isAI" class="ai-label">ai</div>
+      <div *ngIf="gameManager.currentRound != 0 && player.isAI" class="ai-label">ai</div>
     </div>
     <div class="agent-area">
       <ng-container *ngFor="let object of player.agents + 1 | numberToArray; let i = index">

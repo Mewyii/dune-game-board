@@ -1,4 +1,5 @@
-import { LanguageString, Resource } from '../models';
+import { LanguageString } from '../models';
+import { AIAdjustments } from '../services/ai/models';
 
 export interface Leader {
   name: LanguageString;
@@ -10,12 +11,7 @@ export interface Leader {
   signetDescription: LanguageString;
   imageUrl: string;
   playableByAI?: boolean;
-  aiFieldAccessModifier?: AiFieldAccessModifier;
-}
-
-interface AiFieldAccessModifier {
-  resources?: Resource[];
-  directFieldAccess?: string[];
+  aiAdjustments?: AIAdjustments;
 }
 
 export const leaders: Leader[] = [
@@ -47,8 +43,8 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
-    aiFieldAccessModifier: {
-      directFieldAccess: ['Sietch Tabr'],
+    aiAdjustments: {
+      directFieldAccess: ['sietch tabr'],
     },
   },
   {
@@ -79,6 +75,9 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/liet.png',
     playableByAI: true,
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
+    },
   },
   {
     name: {
@@ -222,6 +221,9 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/feyd.png',
     playableByAI: true,
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => (field.rewards.some((x) => x.type === 'intrigue') ? 0.05 : 0.0),
+    },
   },
   {
     name: {
@@ -309,6 +311,9 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/mohiam.png',
     playableByAI: true,
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'bene' ? 0.025 : 0.0),
+    },
   },
   {
     name: {
@@ -337,6 +342,10 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) =>
+        field.rewards.some((x) => x.type === 'persuasion') ? 0.025 : 0.0,
+    },
   },
   {
     name: {
@@ -394,6 +403,11 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'high-council', modifier: -0.2 }],
+      fieldEvaluationModifier: (player, gameState, field) =>
+        field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
+    },
   },
   {
     name: {

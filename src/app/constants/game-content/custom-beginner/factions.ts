@@ -10,14 +10,13 @@ export const factionsCustomBeginner: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'fremenkrieger', en: 'fremen warriors' },
+        title: { de: 'Die Wüste Verstehen', en: 'Desert Knowledge' },
         actionType: 'fremen',
-        costs: [{ type: 'water' }],
-        rewards: [{ type: 'troop', amount: 2 }, { type: 'combat' }],
+        rewards: [{ type: 'card-draw-or-destroy' }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
       },
       {
-        title: { de: 'wüstenausrüstung', en: 'desert equipment' },
+        title: { de: 'Wüstenausrüstung', en: 'Desert Equipment' },
         actionType: 'fremen',
         rewards: [{ type: 'water' }],
         pathToImage: 'assets/images/action-backgrounds/stillsuits.png',
@@ -28,9 +27,6 @@ export const factionsCustomBeginner: Faction[] = [
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
     levelTwoReward: [
-      {
-        type: 'card-destroy',
-      },
       {
         type: 'troop',
       },
@@ -50,14 +46,14 @@ export const factionsCustomBeginner: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'verborgenes wissen', en: 'hidden knowledge' },
+        title: { de: 'Hellsicht', en: 'Truthsay' },
         actionType: 'bene',
         costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-discard' }, { type: 'intrigue' }],
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-discard' }, { type: 'agent-lift' }],
         pathToImage: 'assets/images/action-backgrounds/bene_gesserit_4.png',
       },
       {
-        title: { de: 'geistesausbildung', en: 'mind training' },
+        title: { de: 'Geistesausbildung', en: 'Mind Training' },
         actionType: 'bene',
         rewards: [{ type: 'card-draw' }, { type: 'card-destroy' }],
         pathToImage: 'assets/images/action-backgrounds/book.png',
@@ -71,6 +67,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         type: 'intrigue',
       },
+      { type: 'intrigue-draw' },
     ],
     levelFourReward: [
       {
@@ -87,17 +84,20 @@ export const factionsCustomBeginner: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'heighliner', en: 'heighliner' },
+        title: { de: 'Heighliner', en: 'Heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 4 }, { type: 'combat' }],
+        rewards: [
+          { type: 'card-draw', amount: 2 },
+          { type: 'troop', amount: 5 },
+        ],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
       },
       {
-        title: { de: 'expedition', en: 'expedition' },
+        title: { de: 'Gildenabkommen', en: 'Guild Contract' },
         actionType: 'guild',
-        rewards: [{ type: 'solari' }, { type: 'intrigue' }],
-        pathToImage: 'assets/images/action-backgrounds/foldspace.png',
+        rewards: [{ type: 'solari', amount: 3 }],
+        pathToImage: 'assets/images/action-backgrounds/guild_navigators.png',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Spacing_Guild.png',
@@ -106,8 +106,7 @@ export const factionsCustomBeginner: Faction[] = [
     hasScoreBoard: true,
     levelTwoReward: [
       {
-        type: 'solari',
-        amount: 3,
+        type: 'foldspace',
       },
     ],
     levelFourReward: [
@@ -125,16 +124,16 @@ export const factionsCustomBeginner: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'verschwörung', en: 'conspiracy' },
+        title: { de: 'Verschwörung', en: 'Conspiracy' },
         actionType: 'emperor',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'solari', amount: 3 }, { type: 'troop', amount: 2 }],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
       },
       {
-        title: { de: 'imperiale gunst', en: 'imperial favor' },
+        title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'solari', amount: 3 }, { type: 'intrigue-draw' }],
+        rewards: [{ type: 'intrigue' }, { type: 'solari' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -142,14 +141,7 @@ export const factionsCustomBeginner: Faction[] = [
     primaryColor: 'rgb(85 85 85)',
     secondaryColor: '#262626b8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'troop',
-      },
-      {
-        type: 'combat',
-      },
-    ],
+    levelTwoReward: [{ type: 'solari', amount: 2 }],
     levelFourReward: [
       {
         type: 'victory-point',
@@ -166,41 +158,34 @@ export const factionsCustomBeginner: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'mentat', en: 'mentat' },
+        title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
-        rewards: [
-          { type: 'card-draw' },
-          { type: 'separator', width: 10, iconHeight: 50 },
-          { type: 'troop', amount: 2 },
-          { type: 'mentat', iconHeight: 50 },
-        ],
-        pathToImage: 'assets/images/action-backgrounds/mentat_4.png',
-        isNonBlockingField: true,
-        customWidth: '125px',
-        noGap: true,
+        rewards: [{ type: 'persuasion', amount: 2 }],
+        pathToImage: 'assets/images/action-backgrounds/troops_2.png',
+        customWidth: '130px',
       },
       {
-        title: { de: 'schwertmeister', en: 'swordmaster' },
+        title: { de: 'schwertmeister', en: 'Swordmaster' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 10 }],
+        costs: [{ type: 'solari', amount: 9 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
-        pathToImage: 'assets/images/action-backgrounds/swordmaster_2.png',
+        pathToImage: 'assets/images/action-backgrounds/ceremony_3.png',
         customWidth: '135px',
       },
       {
-        title: { de: 'beziehungen', en: 'relations' },
+        title: { de: 'Bündnisse', en: 'Alliances' },
         actionType: 'landsraad',
-        rewards: [{ type: 'persuasion', amount: 1 }, { type: 'intrigue' }],
-        pathToImage: 'assets/images/action-backgrounds/wealth_2.png',
+        costs: [{ type: 'solari', amount: 3 }],
+        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 2 }, { type: 'persuasion', amount: 1 }],
+        pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
       },
       {
-        title: { de: 'hoher rat', en: 'high council' },
+        title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 7 }],
         rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
-        pathToImage: 'assets/images/action-backgrounds/empire_ambassador.png',
+        pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
@@ -239,6 +224,13 @@ export const factionsCustomBeginner: Faction[] = [
           tradeFormula: (tradeAmount) => 3 + 2 * tradeAmount,
           maxTradeAmount: 3,
         },
+      },
+      {
+        title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
+        actionType: 'landsraad',
+        costs: [{ type: 'solari', amount: 2 }],
+        rewards: [{ type: 'card-draw' }, { type: 'water' }, { type: 'troop' }],
+        pathToImage: 'assets/images/action-backgrounds/freighter.png',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

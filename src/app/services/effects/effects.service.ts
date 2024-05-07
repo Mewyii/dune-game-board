@@ -52,7 +52,7 @@ export class EffectsService {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentRoundState$.subscribe((state) => {
+    this.gameManager.currentTurnState$.subscribe((state) => {
       if (state === 'combat') {
         this.showCombatAnimation();
       }

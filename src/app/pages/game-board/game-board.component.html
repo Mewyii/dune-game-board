@@ -29,7 +29,7 @@
   </div>
   <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>
   <div class="sideboard-container">
-    <dune-game-manual *ngIf="settings.mode === 'game' && gameManager.currentTurn === 0"></dune-game-manual>
+    <dune-game-manual *ngIf="settings.mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
     <dune-events *ngIf="settings.mode === 'game'"></dune-events>
     <!-- <dune-minor-houses *ngIf="settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders *ngIf="settings.mode === 'game'"></dune-leaders>

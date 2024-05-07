@@ -48,7 +48,7 @@ export class PlayerboardComponent implements OnInit {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentRoundState$.subscribe((currentTurnState) => {
+    this.gameManager.currentTurnState$.subscribe((currentTurnState) => {
       this.turnState = currentTurnState;
     });
 
