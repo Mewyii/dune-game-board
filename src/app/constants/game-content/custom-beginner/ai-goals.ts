@@ -154,7 +154,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       const participateInCombatDesire = !alwaysTryToWinCombat ? getParticipateInCombatDesireModifier(gameState) : 0;
 
       const modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
-      const name = winCombatDesire * 3 > participateInCombatDesire ? 'combat: win' : 'combat: participate';
+      const name = winCombatDesire * 3 > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
 
       console.log('combat: win ' + winCombatDesire * 3);
       console.log('combat: partipicate ' + participateInCombatDesire);
@@ -297,7 +297,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       // console.log('spice must flows: ' + getSpiceMustFlowsDesire);
 
       const modifier = deckBuildingDesire > getSpiceMustFlowsDesire ? deckBuildingDesire : getSpiceMustFlowsDesire;
-      const name = deckBuildingDesire > getSpiceMustFlowsDesire ? 'card-draw: build deck' : 'card-draw: spice must flows';
+      const name = deckBuildingDesire > getSpiceMustFlowsDesire ? 'persuasion: build deck' : 'persuasion: spice must flows';
 
       return {
         name,

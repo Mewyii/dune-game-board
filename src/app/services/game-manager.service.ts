@@ -446,7 +446,7 @@ export class GameManager {
           const playerHasAgentsLeft =
             (this.availablePlayerAgents.find((x) => x.playerId === activePlayer.id)?.agentAmount ?? 0) > 0;
 
-          const combatDecision = aiPlayer.decisions.find((x) => x.includes('combat'));
+          const combatDecision = aiPlayer.decisions.find((x) => x.includes('conflict'));
 
           if (combatDecision) {
             if (this.isFinale) {
