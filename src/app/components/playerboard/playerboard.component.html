@@ -34,7 +34,7 @@
         [style.color]="player.color"
       >
         <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
-        {{ getPlayerLeaderName(player.id).toLocaleLowerCase() }}
+        {{ translateService.translate(getPlayerLeaderName(player.id)).toLocaleLowerCase() }}
       </div>
     </div>
     <div class="ai-area">

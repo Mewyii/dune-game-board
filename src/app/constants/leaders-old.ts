@@ -29,7 +29,6 @@ export const leadersOld: LeaderImageOnly[] = [
     },
     type: 'old',
     imageUrl: '/assets/images/leaders/old/leto.jpg',
-    playableByAI: true,
     aiAdjustments: {
       fieldAccessModifier: [{ type: 'solari', amount: 1 }],
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'landsraad' ? 0.05 : 0.0),

@@ -216,12 +216,11 @@ export function getMaxDesireOfUnreachableGoal(
   gameState: GameState,
   goals: FieldsForGoals,
   virtualResources: Resource[],
-  goalType: { type: AIGoals; modifier: number },
-  currentDesire: number
+  goalType: { type: AIGoals; modifier: number }
 ) {
   const goal = goals[goalType.type];
   if (!goal) {
-    return currentDesire;
+    return 0.0;
   }
   if (
     !goal.reachedGoal(player, gameState, goals, virtualResources) &&
@@ -229,11 +228,10 @@ export function getMaxDesireOfUnreachableGoal(
   ) {
     const goalDesire = getDesire(goal, player, gameState, virtualResources, goals);
 
-    if (goalDesire > currentDesire) {
-      return goalDesire;
-    }
+    return goalDesire * goalType.modifier;
+  } else {
+    return 0.0;
   }
-  return currentDesire * goalType.modifier;
 }
 
 export function getMaxDesireOfUnreachableGoals(
@@ -245,7 +243,10 @@ export function getMaxDesireOfUnreachableGoals(
   currentDesire: number
 ) {
   for (const goalType of goalTypes) {
-    currentDesire = getMaxDesireOfUnreachableGoal(player, gameState, goals, virtualResources, goalType, currentDesire);
+    const goalDesire = getMaxDesireOfUnreachableGoal(player, gameState, goals, virtualResources, goalType);
+    if (goalDesire > currentDesire) {
+      currentDesire = goalDesire;
+    }
   }
   return currentDesire;
 }
@@ -277,6 +278,12 @@ export function playerCanGetAllianceThisTurn(player: Player, gameState: GameStat
     return !gameState.enemyScore.some((x) => x[faction] > 3);
   }
   return false;
+}
+
+export function playerCanGetVictoryPointThisTurn(player: Player, gameState: GameState, faction: keyof PlayerScore) {
+  const playerScore = gameState.playerScore[faction];
+
+  return playerScore === 3;
 }
 
 export function noOneHasMoreInfluence(player: Player, gameState: GameState, faction: keyof PlayerScore) {

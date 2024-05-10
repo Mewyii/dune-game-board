@@ -122,11 +122,11 @@ export class PlayerboardComponent implements OnInit {
   }
 
   getPlayerLeaderName(playerId: number) {
-    const playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === playerId);
-    if (playerLeader) {
-      return playerLeader.leaderName;
+    const leader = this.leadersService.getLeader(playerId);
+    if (leader) {
+      return leader.name;
     } else {
-      return 'p. ' + playerId;
+      return { en: 'p. ' + playerId, de: 'p. ' + playerId };
     }
   }
 

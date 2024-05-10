@@ -53,7 +53,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Imperiale Teststation', en: 'Imperial Test Station' },
       actionType: 'town',
-      rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }],
+      rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
       requiresInfluence: { type: 'fremen' },
     },

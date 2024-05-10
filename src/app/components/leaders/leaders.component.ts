@@ -173,7 +173,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onAddTroopToGarrisonClicked(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('troops');
     this.combatManager.addPlayerTroopsToGarrison(playerId, 1);
   }
 
@@ -214,7 +214,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddIntrigueClicked(id: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('intrigue');
     this.playerManager.addIntriguesToPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);

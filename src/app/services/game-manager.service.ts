@@ -380,6 +380,7 @@ export class GameManager {
           canLiftAgent = true;
         }
         if (reward.type === 'combat') {
+          this.audioManager.playSound('combat');
           canEnterCombat = true;
         }
       }
@@ -444,7 +445,7 @@ export class GameManager {
           const playerCombatUnits = this.combatManager.getPlayerCombatUnits(activePlayer.id);
           const enemyCombatUnits = this.combatManager.getEnemyCombatUnits(activePlayer.id);
           const playerHasAgentsLeft =
-            (this.availablePlayerAgents.find((x) => x.playerId === activePlayer.id)?.agentAmount ?? 0) > 0;
+            (this.availablePlayerAgents.find((x) => x.playerId === activePlayer.id)?.agentAmount ?? 0) > 1;
 
           const combatDecision = aiPlayer.decisions.find((x) => x.includes('conflict'));
 
@@ -484,6 +485,7 @@ export class GameManager {
           );
           const solariFromSpiceSale = tradeOption.tradeFormula(sellSpiceAmount);
 
+          this.audioManager.playSound('solari', solariFromSpiceSale);
           this.playerManager.removeResourceFromPlayer(activePlayer.id, 'spice', sellSpiceAmount);
           this.playerManager.addResourceToPlayer(activePlayer.id, 'solari', solariFromSpiceSale);
         }
@@ -750,11 +752,11 @@ export class GameManager {
     const aiInfo = { unitsGainedThisTurn: 0, techAgentsGainedThisTurn: 0, canDestroyOrDrawCard: false, canBuyTech: false };
     if (isResource(reward)) {
       if (reward.type === 'solari') {
-        this.audioManager.playSound('solari');
+        this.audioManager.playSound('solari', reward.amount);
       } else if (reward.type === 'water') {
-        this.audioManager.playSound('water');
+        this.audioManager.playSound('water', reward.amount);
       } else if (reward.type === 'spice') {
-        this.audioManager.playSound('spice');
+        this.audioManager.playSound('spice', reward.amount);
       }
 
       this.playerManager.addResourceToPlayer(this.activePlayerId, reward.type, reward.amount ?? 1);
@@ -780,9 +782,11 @@ export class GameManager {
       aiInfo.techAgentsGainedThisTurn += agents;
     }
     if (reward.type === 'intrigue') {
+      this.audioManager.playSound('intrigue', reward.amount);
       this.playerManager.addIntriguesToPlayer(this.activePlayerId, reward.amount ?? 1);
     }
     if (reward.type === 'troop') {
+      this.audioManager.playSound('troops', reward.amount);
       this.combatManager.addPlayerTroopsToGarrison(this.activePlayerId, reward.amount ?? 1);
       aiInfo.unitsGainedThisTurn += reward.amount ?? 1;
     }
@@ -847,10 +851,17 @@ export class GameManager {
     } else {
       let troopsToAdd = playerCombatUnits.troopsInGarrison > 2 ? 2 : playerCombatUnits.troopsInGarrison;
 
-      const projectedCombatStrength = this.combatManager.getPlayerCombatScore(playerCombatUnits);
+      const projectedCombatStrength = this.combatManager.getPlayerCombatScore({
+        ...playerCombatUnits,
+        troopsInCombat: playerCombatUnits.troopsInCombat + troopsToAdd,
+      });
 
       if (enemyCombatUnits.some((x) => projectedCombatStrength === this.combatManager.getPlayerCombatScore(x))) {
-        troopsToAdd--;
+        if (troopsToAdd === 1 && playerCombatUnits.troopsInGarrison > 1) {
+          troopsToAdd++;
+        } else {
+          troopsToAdd--;
+        }
       }
       this.combatManager.addPlayerTroopsToCombat(playerId, troopsToAdd);
     }

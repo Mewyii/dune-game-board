@@ -522,4 +522,33 @@ export const leaders: Leader[] = [
     type: 'new',
     playableByAI: true,
   },
+  {
+    name: {
+      en: 'Leto Atreides I',
+      de: 'Leto I. Atreides ',
+    },
+    house: {
+      en: 'House Atreides',
+      de: 'Haus Atreides',
+    },
+    passiveName: {
+      en: 'Fair Leader',
+      de: 'Gerechter Anführer',
+    },
+    passiveDescription: {
+      en: '<b>Reveal turn</b>: {resource:persuasion;amount:1}',
+      de: '<b>Aufdeckzug</b>: {resource:persuasion;amount:1}',
+    },
+    signetName: {
+      en: 'Landsraad connections',
+      de: 'Landsraad-Verbindungen',
+    },
+    signetDescription: {
+      en: '',
+      de: 'Gegnerische Agenten blockieren deinen Agenten auf {faction:landsraad}-Feldern nicht.',
+    },
+    imageUrl: '/assets/images/leaders/leto.png',
+    type: 'new',
+    playableByAI: true,
+  },
 ];

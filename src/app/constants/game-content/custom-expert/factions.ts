@@ -12,7 +12,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Die Wüste Verstehen', en: 'Desert Knowledge' },
         actionType: 'fremen',
-        rewards: [{ type: 'card-draw-or-destroy' }, { type: 'combat' }],
+        costs: [{ type: 'spice', amount: 1 }],
+        rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
       },
       {
@@ -89,7 +90,7 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'spice', amount: 4 }],
         rewards: [
           { type: 'card-draw', amount: 2 },
-          { type: 'troop', amount: 5 },
+          { type: 'troop', amount: 4 },
         ],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
       },
@@ -126,8 +127,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Verschwörung', en: 'Conspiracy' },
         actionType: 'emperor',
-        costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
+        costs: [{ type: 'spice', amount: 3 }],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 2 }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
       },
       {
@@ -158,15 +159,12 @@ export const factionsCustomExpert: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'Propaganda', en: 'Propaganda' },
+        title: { de: 'Bündnisse', en: 'Alliances' },
         actionType: 'landsraad',
-        rewards: [
-          { type: 'persuasion', amount: 2 },
-          { type: 'separator', width: 10, iconHeight: 50 },
-          { type: 'faction-influence-up-choice' },
-        ],
-        pathToImage: 'assets/images/action-backgrounds/troops_2.png',
-        customWidth: '135px',
+        costs: [{ type: 'solari', amount: 2 }],
+        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 2 }, { type: 'tech' }],
+        pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
+        customWidth: '130px',
       },
       {
         title: { de: 'schwertmeister', en: 'Swordmaster' },
@@ -177,11 +175,10 @@ export const factionsCustomExpert: Faction[] = [
         customWidth: '135px',
       },
       {
-        title: { de: 'Bündnisse', en: 'Alliances' },
+        title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
-        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 2 }, { type: 'persuasion', amount: 1 }],
-        pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
+        rewards: [{ type: 'persuasion', amount: 2 }],
+        pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },

@@ -205,24 +205,25 @@ function getInfluenceBumpDesire(amount: number, gameState: GameState, bumpAmount
 }
 
 function getResourceDesire(resourceType: ResourceType, amount: number, player: Player) {
-  let modifier = 0.075;
-  let maxDesiredAmount = 10;
+  let modifier = 0.0;
+  let maxDesiredAmount = 0;
 
   if (resourceType === 'solari') {
-    modifier = 0.075;
-    if (!player.hasSwordmaster) {
-      modifier += 0.025;
-    }
-    if (!player.hasCouncilSeat) {
-      modifier += 0.025;
-    }
+    modifier = 0.08;
     maxDesiredAmount = 10;
   } else if (resourceType === 'spice') {
-    modifier = 0.125;
-    maxDesiredAmount = 6;
+    modifier = 0.12;
+    maxDesiredAmount = 5;
   } else if (resourceType === 'water') {
-    modifier = 0.175;
+    modifier = 0.16;
     maxDesiredAmount = 3;
+  }
+
+  if (!player.hasSwordmaster) {
+    modifier += 0.02;
+  }
+  if (!player.hasCouncilSeat) {
+    modifier += 0.02;
   }
   const playerResourceAmount = player.resources.find((x) => x.type === resourceType)?.amount ?? 0;
   return modifier * amount * (1 - normalizeNumber(playerResourceAmount, maxDesiredAmount, 0));

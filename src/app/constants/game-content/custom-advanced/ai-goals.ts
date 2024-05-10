@@ -165,8 +165,8 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
       const modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
       const name = winCombatDesire * 3 > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
 
-      console.log('combat: win ' + winCombatDesire * 3);
-      console.log('combat: partipicate ' + participateInCombatDesire);
+      console.log('conflict: win ' + winCombatDesire * 3);
+      console.log('conflict: participate ' + participateInCombatDesire);
 
       return {
         name,
