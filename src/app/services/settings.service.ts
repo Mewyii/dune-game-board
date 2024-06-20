@@ -21,7 +21,7 @@ export class SettingsService {
     gameContentCustomExpert,
   ];
 
-  public fields: ActionField[] = [];
+  private fields: ActionField[] = [];
   public spiceAccumulationFields: ActionField[] = [];
   public unblockableFields: ActionField[] = [];
 
@@ -52,6 +52,10 @@ export class SettingsService {
 
   public get gameContent() {
     return this.settings.gameContent;
+  }
+
+  public get boardFields() {
+    return cloneDeep(this.fields);
   }
 
   public setFields() {

@@ -183,7 +183,7 @@ export class AIManager {
   }
 
   public setPreferredFieldsForAIPlayer(player: Player, gameState: GameState) {
-    const boardFields = this.getFieldsWithCombatAdjustments(this.getFieldsWithChoices(this.settingsService.fields));
+    const boardFields = this.getFieldsWithCombatAdjustments(this.getFieldsWithChoices(this.settingsService.boardFields));
     const aiPlayers = this.aiPlayers;
     const aiPlayer = aiPlayers.find((x) => x.playerId === player.id);
 
@@ -305,7 +305,7 @@ export class AIManager {
       return undefined;
     }
 
-    const fields = this.settingsService.fields;
+    const fields = this.settingsService.boardFields;
     return fields.find((x) => preferredField.fieldId.includes(x.title.en));
   }
 
