@@ -3,7 +3,7 @@ import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { Player } from '../../player-manager.service';
 import { PlayerScore } from '../../player-score-manager.service';
-import { Resource } from 'src/app/models';
+import { ActionField, Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
 import { TechTile } from 'src/app/constants/tech-tiles';
@@ -65,10 +65,10 @@ export interface AIGoal {
   maxDesire?: number;
   goalIsReachable: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => boolean;
   reachedGoal: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => boolean;
-  desiredFields?: {
+  desiredFields?: (boardFields: ActionField[]) => {
     [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
   };
-  viableFields: {
+  viableFields: (boardFields: ActionField[]) => {
     [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
   };
 }

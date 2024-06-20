@@ -26,10 +26,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
-    desiredFields: {
+    desiredFields: (fields) => ({
       'high council': () => 1,
-    },
-    viableFields: {},
+    }),
+    viableFields: () => ({}),
   },
   swordmaster: {
     baseDesire: 0.8,
@@ -38,10 +38,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster === true || gameState.isFinale,
-    desiredFields: {
+    desiredFields: (fields) => ({
       swordmaster: () => 1,
-    },
-    viableFields: {},
+    }),
+    viableFields: () => ({}),
   },
   mentat: {
     baseDesire: 0.0,
@@ -52,10 +52,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 2,
     reachedGoal: (player, gameState) => gameState.agentsOnFields.some((x) => x.fieldId === 'mentat'),
-    desiredFields: {
+    desiredFields: (fields) => ({
       mentat: () => 1,
-    },
-    viableFields: {},
+    }),
+    viableFields: () => ({}),
   },
   tech: {
     baseDesire: 0.4,
@@ -64,8 +64,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 3,
     reachedGoal: () => false,
-    desiredFields: {},
-    viableFields: {
+    viableFields: (fields) => ({
       'Space Port': (player, gameState, goals, virtualResources) =>
         getResourceDesire(player, virtualResources, 0.2, [
           { resource: 'spice', amount: 0.025 },
@@ -79,7 +78,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
         ]),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'solari', virtualResources) > 3 ? 1 : 0,
-    },
+    }),
   },
   dreadnought: {
     baseDesire: 0.35,
@@ -90,10 +89,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 3,
     reachedGoal: (player, gameState) => getPlayerdreadnoughtCount(gameState) > 1,
-    desiredFields: {
+    desiredFields: (fields) => ({
       'upgrade (dreadnought)': (player, gameState, goals, virtualResources) => 1,
-    },
-    viableFields: {},
+    }),
+    viableFields: () => ({}),
   },
   'fremen-alliance': {
     baseDesire: 0.25,
@@ -104,11 +103,11 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.fremen > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'fremen'),
-    viableFields: {
+    viableFields: (fields) => ({
       'fremen warriors': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.5, virtualResources),
       'desert equipment': () => 0.5,
-    },
+    }),
   },
   'bg-alliance': {
     baseDesire: 0.25,
@@ -119,11 +118,11 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.bene > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'bene'),
-    viableFields: {
+    viableFields: (fields) => ({
       'hidden knowledge': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 2, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 2 }], 0.5, virtualResources),
       'mind training': () => 0.5,
-    },
+    }),
   },
   'guild-alliance': {
     baseDesire: 0.25,
@@ -134,11 +133,11 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.guild > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'guild'),
-    viableFields: {
+    viableFields: (fields) => ({
       heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5, virtualResources),
       expedition: () => 0.5,
-    },
+    }),
   },
   'emperor-alliance': {
     baseDesire: 0.25,
@@ -149,11 +148,11 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.emperor > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'emperor'),
-    viableFields: {
+    viableFields: (fields) => ({
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5, virtualResources),
       'imperial favor': () => 0.5,
-    },
+    }),
   },
   'enter-combat': {
     baseDesire: 0.0,
@@ -175,31 +174,36 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => playerLikelyWinsCombat(gameState),
-    viableFields: {
+    viableFields: (fields) => ({
       Arrakeen: () => 0.6,
       Carthag: () => 0.6,
       'Sietch Tabr': (player, gameState) => 0.6,
       'fremen warriors': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, 0.7, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.7, virtualResources),
       'imperial favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.5 : 0),
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.emperor === 1 ? 0.7 : 0, virtualResources),
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'spice', amount: 4 }],
+          gameState.playerScore.emperor === 1 ? 0.7 : 0,
+          virtualResources
+        ),
       'Imperial Basin': () => 0.5,
       'Hagga Basin': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.5, virtualResources),
       'The Great Flat': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.5, virtualResources),
       'Research Station (draw)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.5, virtualResources),
       'Research Station (trim)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.5, virtualResources),
       'upgrade (tech)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'solari', 4, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'solari', amount: 4 }], 0.5, virtualResources),
       'upgrade (dreadnought)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'solari', 4, 0.7, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'solari', amount: 4 }], 0.7, virtualResources),
       heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 0.9, virtualResources),
-    },
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.9, virtualResources),
+    }),
   },
   troops: {
     baseDesire: 0.0,
@@ -207,33 +211,48 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 0 || getResourceAmount(player, 'spice', virtualResources) > 3,
     reachedGoal: () => false,
-    viableFields: {
+    viableFields: (fields) => ({
       Arrakeen: () => 0.3,
       Carthag: () => 0.3,
       'Sietch Tabr': (player, gameState) => 0.3,
       'fremen warriors': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 0.9 : 0.6, virtualResources),
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'water', amount: 1 }],
+          gameState.playerScore.fremen === 1 ? 0.9 : 0.6,
+          virtualResources
+        ),
       'desert equipment': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
       heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 1.0, virtualResources),
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, gameState.playerScore.emperor === 1 ? 0.8 : 0.6, virtualResources),
-    },
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'spice', amount: 4 }],
+          gameState.playerScore.emperor === 1 ? 0.8 : 0.6,
+          virtualResources
+        ),
+    }),
   },
   intrigues: {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) => -0.05 * player.intrigueCount,
     goalIsReachable: () => false,
     reachedGoal: () => false,
-    viableFields: {
+    viableFields: (fields) => ({
       relations: () => 0.5,
       Carthag: () => 0.5,
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 1.0, virtualResources),
       'mind training': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.5 : 0.0),
       'hidden knowledge': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 2, gameState.playerScore.bene === 1 ? 0.5 : 0.0, virtualResources),
-    },
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'spice', amount: 2 }],
+          gameState.playerScore.bene === 1 ? 0.5 : 0.0,
+          virtualResources
+        ),
+    }),
   },
   'intrigue-steal': {
     baseDesire: 0.0,
@@ -242,9 +261,9 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: () => false,
-    viableFields: {
+    viableFields: (fields) => ({
       'imperial favor': () => 1.0,
-    },
+    }),
   },
   'fold-space': {
     baseDesire: 0.3,
@@ -252,9 +271,9 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
       -0.0125 * player.cardsBought - 0.0125 * (player.cardsTrimmed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
-    viableFields: {
+    viableFields: (fields) => ({
       'Space Port': () => 0.5,
-    },
+    }),
   },
   'get-board-persuasion': {
     baseDesire: 0.35,
@@ -262,9 +281,9 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
       -0.025 * player.cardsBought - 0.0125 * (player.cardsTrimmed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
-    viableFields: {
+    viableFields: (fields) => ({
       relations: () => 1.0,
-    },
+    }),
   },
   'draw-cards': {
     baseDesire: 0.0,
@@ -307,23 +326,38 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 1 || getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(player, 1),
-    viableFields: {
+    viableFields: (fields) => ({
       mentat: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'solari', 3, 0.3, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'solari', amount: 3 }], 0.3, virtualResources),
       Arrakeen: () => 0.3,
       'Research Station (draw)': (player, gameState, goals, virtualResources) =>
         // if we cant buy 3 cards, we always trim
         playerCanDrawCards(player, 3)
-          ? getCostAdjustedDesire(player, 'water', 2, clamp(0.6 + 0.075 * player.cardsBought, 0, 0.9), virtualResources)
+          ? getCostAdjustedDesire(
+              player,
+              [{ type: 'water', amount: 2 }],
+              clamp(0.6 + 0.075 * player.cardsBought, 0, 0.9),
+              virtualResources
+            )
           : 0,
       'Research Station (trim)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 2, clamp(0.5 + 0.075 * player.cardsBought, 0, 0.7), virtualResources),
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'water', amount: 2 }],
+          clamp(0.5 + 0.075 * player.cardsBought, 0, 0.7),
+          virtualResources
+        ),
       'mind training': (player, gameState) => 0.3,
       'hidden knowledge': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 2, clamp(0.6 + 0.075 * player.cardsBought, 0, 0.5), virtualResources),
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'spice', amount: 2 }],
+          clamp(0.6 + 0.075 * player.cardsBought, 0, 0.5),
+          virtualResources
+        ),
       heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 0.3, virtualResources),
-    },
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.3, virtualResources),
+    }),
   },
   'trim-cards': {
     baseDesire: 0.4,
@@ -337,14 +371,19 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
       ),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => player.cardsInDeck < 7 || gameState.isFinale,
-    viableFields: {
+    viableFields: (fields) => ({
       'mind training': (player, gameState) => 0.5,
       'Research Station (trim)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.5, virtualResources),
       'fremen warriors': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, gameState.playerScore.fremen === 1 ? 0.5 : 0.0, virtualResources),
+        getCostAdjustedDesire(
+          player,
+          [{ type: 'water', amount: 1 }],
+          gameState.playerScore.fremen === 1 ? 0.5 : 0.0,
+          virtualResources
+        ),
       'desert equipment': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.5 : 0.0),
-    },
+    }),
   },
   'collect-water': {
     baseDesire: 0.0,
@@ -363,10 +402,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'water', virtualResources) > 3,
-    viableFields: {
+    viableFields: (fields) => ({
       'desert equipment': () => 0.5,
       'Sietch Tabr': (player, gameState) => 0.5,
-    },
+    }),
   },
   'collect-spice': {
     baseDesire: 0.0,
@@ -385,25 +424,23 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 1,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'spice', virtualResources) > 7,
-    viableFields: {
+    viableFields: (fields) => ({
       'Imperial Basin': (player, gameState) => 0.25 + 0.4 * getAccumulatedSpice(gameState, 'Imperial Basin'),
       'Hagga Basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
-          'water',
-          1,
+          [{ type: 'water', amount: 1 }],
           0.5 + 0.2 * getAccumulatedSpice(gameState, 'Hagga Basin'),
           virtualResources
         ),
       'The Great Flat': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
-          'water',
-          2,
+          [{ type: 'water', amount: 2 }],
           0.75 + 0.1 * getAccumulatedSpice(gameState, 'Hagga Basin'),
           virtualResources
         ),
-    },
+    }),
   },
   'collect-solari': {
     baseDesire: 0.0,
@@ -422,7 +459,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 3,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'solari', virtualResources) > 11,
-    viableFields: {
+    viableFields: (fields) => ({
       'imperial favor': () => 0.5,
       'Space Port': () => 0.33,
       'Spice Trade': (player, gameState, goals, virtualResources) =>
@@ -431,8 +468,8 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
           : 0,
       expedition: (player, gameState) => (gameState.playerScore.guild === 1 ? 0.66 : 0.16),
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 0.5, virtualResources),
-    },
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5, virtualResources),
+    }),
   },
   'harvest-accumulated-spice-basin': {
     baseDesire: 0.0,
@@ -440,10 +477,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 0,
     reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'Imperial Basin') === 0,
-    viableFields: {
+    viableFields: (fields) => ({
       'Hagga Basin': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 1, 0.5, virtualResources),
-    },
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.5, virtualResources),
+    }),
   },
   'harvest-accumulated-spice-flat': {
     baseDesire: 0.0,
@@ -451,10 +488,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 1,
     reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'The Great Flat') === 0,
-    viableFields: {
+    viableFields: (fields) => ({
       'The Great Flat': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'water', 2, 0.5, virtualResources),
-    },
+        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.5, virtualResources),
+    }),
   },
   'swordmaster-helper': {
     baseDesire: 0.0,
@@ -464,14 +501,14 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
         : 0,
     goalIsReachable: (player, gameState) => gameState.isFinale,
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster === true,
-    viableFields: {
+    viableFields: (fields) => ({
       'imperial favor': () => 1,
       'Space Port': () => 0.75,
       'Spice Trade': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'spice', virtualResources) > 0 ? 0.25 : 0,
       expedition: (player, gameState) => (gameState.playerScore.guild === 1 ? 1 : 0),
       conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, 'spice', 4, 1.0, virtualResources),
-    },
+        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 1.0, virtualResources),
+    }),
   },
 };

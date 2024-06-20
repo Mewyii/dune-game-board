@@ -292,37 +292,47 @@ export function noOneHasMoreInfluence(player: Player, gameState: GameState, fact
   return !gameState.enemyScore.some((x) => x[faction] > playerScore);
 }
 
-export function getCostAdjustedDesire(
-  player: Player,
-  resourceType: ResourceType,
-  costs: number,
-  desire: number,
-  virtualResources: Resource[]
-) {
-  const playerResourceAmount = getResourceAmount(player, resourceType, virtualResources);
-  if (costs > playerResourceAmount) {
-    return 0;
+export function getCostAdjustedDesire(player: Player, resources: Resource[], desire: number, virtualResources: Resource[]) {
+  let desireAdjustment = 1.0;
+  let resourcesUsed: Resource[] = [];
+  for (const resource of resources) {
+    const costs = resource.amount ?? 1;
+    const playerResourceAmount = getResourceAmount(player, resource.type, virtualResources);
+    const alreadyUsedResourceAmount = getResourceAmountFromArray(resourcesUsed, resource.type);
+
+    if (costs > playerResourceAmount - alreadyUsedResourceAmount) {
+      return 0;
+    }
+
+    let resourceTypeModifier = 0.02 / desire;
+    if (resource.type === 'spice') {
+      resourceTypeModifier = 0.035 / desire;
+    } else if (resource.type === 'water') {
+      resourceTypeModifier = 0.04 / desire;
+    }
+
+    const minDesireAdjustment = desire * 0.5;
+    const maxDesireAdjustment = desire * 1.5 <= 1.0 ? desire * 1.5 : 1.0;
+
+    desireAdjustment = clamp(
+      desireAdjustment - resourceTypeModifier * costs + (resourceTypeModifier / 2) * (playerResourceAmount - costs),
+      minDesireAdjustment,
+      maxDesireAdjustment
+    );
+
+    resourcesUsed.push(resource);
   }
-
-  let resourceTypeModifier = 0.02 / desire;
-  if (resourceType === 'spice') {
-    resourceTypeModifier = 0.03 / desire;
-  } else if (resourceType === 'water') {
-    resourceTypeModifier = 0.035 / desire;
-  }
-
-  const minDesireAdjustment = desire * 0.5;
-  const maxDesireAdjustment = desire * 1.5 <= 1.0 ? desire * 1.5 : 1.0;
-
-  const desireAdjustment = clamp(
-    1.0 - resourceTypeModifier * costs + (resourceTypeModifier / 2) * (playerResourceAmount - costs),
-    minDesireAdjustment,
-    maxDesireAdjustment
-  );
 
   return desire * desireAdjustment;
 }
 
 export function playerCanDrawCards(player: Player, amount: number) {
   return player.cardsInDeck >= player.cardsDrawnThisRound + amount;
+}
+
+export function getResourceAmountFromArray(resources: Resource[], type: ResourceType) {
+  return resources
+    .filter((x) => x.type === type)
+    .map((x) => x.amount ?? 1)
+    .reduce((a, b) => a + b, 0);
 }

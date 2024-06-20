@@ -45,7 +45,7 @@ export class AudioManager {
   private victoryPointSound: Sound = { url: 'assets/audio/sounds/victory-point.mp3', volume: 0.2 };
   private swordmasterSound: Sound = { url: 'assets/audio/sounds/swordmaster.mp3', volume: 0.3 };
   private intrigueSound: Sound = { url: 'assets/audio/sounds/intrigue.mp3', volume: 0.3 };
-  private combatSound: Sound = { url: 'assets/audio/sounds/combat.mp3', volume: 0.4 };
+  private combatSound: Sound = { url: 'assets/audio/sounds/combat.mp3', volume: 0.25 };
   private troopsSound: Sound = { url: 'assets/audio/sounds/troops.mp3', volume: 0.8 };
 
   constructor() {}

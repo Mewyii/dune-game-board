@@ -7,7 +7,7 @@ import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from 
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
-import { ActiveFactionType } from 'src/app/models';
+import { ActionField, ActiveFactionType } from 'src/app/models';
 import { getDesire } from './shared/ai-goal-functions';
 
 export interface AIPlayer {
@@ -183,6 +183,7 @@ export class AIManager {
   }
 
   public setPreferredFieldsForAIPlayer(player: Player, gameState: GameState) {
+    const boardFields = this.getFieldsWithCombatAdjustments(this.getFieldsWithChoices(this.settingsService.fields));
     const aiPlayers = this.aiPlayers;
     const aiPlayer = aiPlayers.find((x) => x.playerId === player.id);
 
@@ -231,7 +232,7 @@ export class AIManager {
         let desireCanBeFullfilled = false;
 
         if (goal.goalIsReachable(player, gameState, this.aiGoals, virtualResources) && goal.desiredFields) {
-          for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields)) {
+          for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields(boardFields))) {
             const fieldValue = getFieldValue(player, gameState, this.aiGoals, virtualResources) * goalDesire;
 
             if (fieldValue > 0) {
@@ -248,7 +249,7 @@ export class AIManager {
         }
 
         if (!desireCanBeFullfilled) {
-          for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields)) {
+          for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields(boardFields))) {
             const fieldValue = getFieldValue(player, gameState, this.aiGoals, virtualResources) * goalDesire;
 
             if (fieldValue > 0) {
@@ -439,7 +440,7 @@ export class AIManager {
 
     if (goal === 'enter-combat') {
       modifier = 0.5 + conflictEvaluation;
-    } else if (goal === 'tech' || goal === 'harvest-accumulated-spice-basin' || goal === 'harvest-accumulated-spice-flat') {
+    } else if (goal === 'tech') {
       modifier = 0.5 + techEvaluation;
     } else if (goal === 'draw-cards' || goal === 'get-board-persuasion' || goal === 'high-council') {
       modifier = imperiumRowEvaluation;
@@ -476,6 +477,78 @@ export class AIManager {
       }
     }
     return combatPower;
+  }
+
+  getFieldsWithChoices(fields: ActionField[]) {
+    const result: ActionField[] = [];
+    for (const field of fields) {
+      if (field.rewards.some((x) => x.type === 'card-draw-or-destroy')) {
+        const cardDrawOption = {
+          ...field,
+          title: { ...field.title, en: field.title.en + ' (card-draw)' },
+          rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-draw' : x.type })),
+        };
+
+        const cardDestroyOption = {
+          ...field,
+          title: { ...field.title, en: field.title.en + ' (card-destroy)' },
+          rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-destroy' : x.type })),
+        };
+
+        result.push(cardDrawOption);
+        result.push(cardDestroyOption);
+      } else if (field.rewards.some((x) => x.type === 'separator' || x.type === 'separator-horizontal')) {
+        const separatorIndex = field.rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
+
+        const leftOptionRewardType = field.rewards[separatorIndex - 1].type.toLocaleLowerCase();
+        const leftOption = {
+          ...field,
+          title: { ...field.title, en: field.title.en + ' (' + leftOptionRewardType + ')' },
+          rewards: field.rewards.filter((x, index) => index !== separatorIndex + 1),
+        };
+
+        const rightOptionRewardType = field.rewards[separatorIndex + 1].type.toLocaleLowerCase();
+        const rightOption = {
+          ...field,
+          title: { ...field.title, en: field.title.en + ' (' + rightOptionRewardType + ')' },
+          rewards: field.rewards.filter((x, index) => index !== separatorIndex - 1),
+        };
+
+        result.push(leftOption);
+        result.push(rightOption);
+      } else {
+        result.push(field);
+      }
+    }
+    return result;
+  }
+
+  getFieldsWithCombatAdjustments(fields: ActionField[]) {
+    return fields.map((field) => {
+      const combatRewardIndex = field.rewards.findIndex((x) => x.type === 'combat');
+
+      if (combatRewardIndex > -1) {
+        let modifier = 0.4;
+
+        const troopRewards = field.rewards.find((x) => x.type === 'troop');
+        if (troopRewards) {
+          modifier = modifier + 0.15 * (troopRewards.amount ?? 1);
+        }
+        const dreadnoughtRewards = field.rewards.find((x) => x.type === 'dreadnought');
+        if (dreadnoughtRewards) {
+          modifier = modifier + 0.35 * (dreadnoughtRewards.amount ?? 1);
+        }
+        const intrigueRewards = field.rewards.find((x) => x.type === 'intrigue');
+        if (intrigueRewards) {
+          modifier = modifier + 0.075 * (intrigueRewards.amount ?? 1);
+        }
+
+        field.rewards[combatRewardIndex].amount = modifier;
+        return field;
+      } else {
+        return field;
+      }
+    });
   }
 }
 

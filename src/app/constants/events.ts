@@ -32,13 +32,9 @@ export const duneEvents: DuneEvent[] = [
       en: 'Spice can not be harvested. <br>The combat strength of all units is reduced to 1.',
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
-    cardAmount: 3,
+    cardAmount: 2,
     aiAdjustments: {
-      goalEvaluationModifier: () => [
-        { type: 'collect-spice', modifier: -1.0 },
-        { type: 'harvest-accumulated-spice-basin', modifier: -1.0 },
-        { type: 'harvest-accumulated-spice-flat', modifier: -1.0 },
-      ],
+      goalEvaluationModifier: () => [{ type: 'collect-spice', modifier: -1.0 }],
     },
   },
   {
@@ -51,7 +47,7 @@ export const duneEvents: DuneEvent[] = [
       en: '<b>Round start</b>: +1 bonus spice on spice fields.',
     },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
-    cardAmount: 6,
+    cardAmount: 4,
   },
   {
     title: {
@@ -63,13 +59,9 @@ export const duneEvents: DuneEvent[] = [
       en: 'Spice fields yield -1 spice.',
     },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
-    cardAmount: 3,
+    cardAmount: 2,
     aiAdjustments: {
-      goalEvaluationModifier: () => [
-        { type: 'collect-spice', modifier: -0.25 },
-        { type: 'harvest-accumulated-spice-basin', modifier: -0.25 },
-        { type: 'harvest-accumulated-spice-flat', modifier: -0.25 },
-      ],
+      goalEvaluationModifier: () => [{ type: 'collect-spice', modifier: -0.25 }],
     },
   },
   {
@@ -84,7 +76,7 @@ export const duneEvents: DuneEvent[] = [
     imagePath: 'assets/images/action-backgrounds/empire_ambassador.png',
     cardAmount: 1,
     aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'emperor-alliance', modifier: 0.1 }],
+      goalEvaluationModifier: () => [{ type: 'emperor-alliance', modifier: 0.15 }],
     },
   },
   {
@@ -99,7 +91,7 @@ export const duneEvents: DuneEvent[] = [
     imagePath: 'assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
     aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'guild-alliance', modifier: 0.1 }],
+      goalEvaluationModifier: () => [{ type: 'guild-alliance', modifier: 0.15 }],
     },
   },
   {
@@ -114,7 +106,7 @@ export const duneEvents: DuneEvent[] = [
     imagePath: 'assets/images/action-backgrounds/bene_gesserit_3.png',
     cardAmount: 1,
     aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'bg-alliance', modifier: 0.1 }],
+      goalEvaluationModifier: () => [{ type: 'bg-alliance', modifier: 0.15 }],
     },
   },
   {
@@ -129,7 +121,7 @@ export const duneEvents: DuneEvent[] = [
     imagePath: 'assets/images/action-backgrounds/fremen_warriors.png',
     cardAmount: 1,
     aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'fremen-alliance', modifier: 0.1 }],
+      goalEvaluationModifier: () => [{ type: 'fremen-alliance', modifier: 0.15 }],
     },
   },
   {
@@ -197,6 +189,9 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/conspiracy.png',
     cardAmount: 1,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'intrigues', modifier: 0.1 }],
+    },
   },
   {
     title: {
@@ -209,5 +204,8 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/bene_gesserit.png',
     cardAmount: 1,
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'troops', modifier: 0.1 }],
+    },
   },
 ];

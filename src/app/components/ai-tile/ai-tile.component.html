@@ -72,7 +72,7 @@
         {{ field.fieldId.toLocaleLowerCase() }} <span *ngIf="showDetails"> {{ field.value }}</span>
       </div>
     </div>
-    <div>
+    <div class="ai-strategy-container">
       <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of currentAIPlayer.decisions">
         {{ decision }}
       </div>

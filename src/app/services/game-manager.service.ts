@@ -368,6 +368,7 @@ export class GameManager {
 
           if (reward.type === 'spice-accumulation' && this.fieldHasAccumulatedSpice(field.title.en)) {
             const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
+            this.audioManager.playSound('spice', accumulatedSpice);
             this.playerManager.addResourceToPlayer(activePlayer.id, 'spice', accumulatedSpice);
           }
         } else {
@@ -553,7 +554,7 @@ export class GameManager {
 
   public setTurnState(turnPhase: TurnPhaseType) {
     if (turnPhase === 'combat') {
-      this.audioManager.playSound('combat');
+      this.audioManager.playSound('conflict');
     }
     this.currentTurnStateSubject.next(turnPhase);
   }
