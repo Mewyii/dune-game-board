@@ -34,7 +34,8 @@
       class="reward-area"
       [style.width]="action.customWidth"
       [style.max-width]="action.customWidth"
-      [style.row-gap]="action.noGap ? '0px' : ''"
+      [style.row-gap]="action.noRowGap ? '0px' : ''"
+      [style.column-gap]="action.noColumnGap ? '0px' : ''"
     >
       <ng-container *ngFor="let rewardType of action.rewards">
         <div

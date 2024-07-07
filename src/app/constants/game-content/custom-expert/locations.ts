@@ -10,10 +10,10 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
-      rewards: [{ type: 'solari', amount: 2 }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
     },
-    ownerReward: { type: 'solari' },
+    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -24,8 +24,8 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
-      costs: [{ type: 'water' }],
-      rewards: [{ type: 'foldspace' }, { type: 'spice-accumulation' }, { type: 'tech' }],
+      costs: [{ type: 'water' }, { type: 'water' }],
+      rewards: [{ type: 'foldspace' }, { type: 'spice-accumulation' }, { type: 'tech-reduced' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },
@@ -42,7 +42,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
     },
-    ownerReward: { type: 'card-round-start' },
+    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(87, 69, 52)',
@@ -67,7 +67,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
-      costs: [{ type: 'water' }, { type: 'water' }],
+      costs: [{ type: 'water' }],
       rewards: [{ type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },

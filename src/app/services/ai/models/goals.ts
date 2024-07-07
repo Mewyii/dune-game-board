@@ -43,6 +43,7 @@ export interface GameState {
   accumulatedSpiceOnFields: SpiceAccumulation[];
   enemyCombatUnits: PlayerCombatUnits[];
   agentsOnFields: AgentOnField[];
+  playerAgentsOnFields: AgentOnField[];
   playerAgentCount: number;
   enemyAgentCount: PlayerAgents[];
   isOpeningTurn: boolean;

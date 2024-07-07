@@ -1,0 +1,55 @@
+<div class="cards-configurator">
+  <div class="cards-manager">
+    <div class="action-bar">
+      <div class="settings-container"></div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()">
+        <mat-icon>download</mat-icon>
+      </button>
+      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
+      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()">
+        <mat-icon>upload</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
+        <mat-icon>hide_source</mat-icon>
+      </button>
+      <div class="settings-container">
+        <mat-form-field>
+          <mat-label>Card Export Border Size</mat-label>
+          <input matInput type="number" [(ngModel)]="imagePadding" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="action-bar">
+      <div>Total {{ totalCardAmount }} cards</div>
+    </div>
+    <div class="action-bar" [style.gap]="'32px'">
+      <div>card-access:</div>
+      <div *ngFor="let item of fieldAccessess | keyvalue">
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.2-2' }}%)
+      </div>
+    </div>
+    <div class="cards-preview-container">
+      <ng-container *ngFor="let card of startingCards">
+        <div class="card-container">
+          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
+            <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+          </div>
+          <div class="card-action-bar" *ngIf="showControls">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

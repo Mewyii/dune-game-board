@@ -278,6 +278,16 @@ export class LeadersComponent implements OnInit {
     });
   }
 
+  public onAddPermanentPersuasionClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
+    this.playerManager.addPermanentPersuasionToPlayer(playerId, 1);
+  }
+
+  public onRemovePermanentPersuasionClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
+    this.playerManager.removePermanentPersuasionFromPlayer(playerId, 1);
+  }
+
   public getIsTechTileFlipped(techTileId: string) {
     return this.playerTechTiles.find((x) => x.techTileId === techTileId)?.isFlipped;
   }

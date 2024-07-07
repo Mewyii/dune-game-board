@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ImperiumCard } from 'src/app/constants/imperium-cards';
 import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ActionType, FactionType } from 'src/app/models';
+import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
 
 @Component({
-  selector: 'dune-card-configurator',
-  templateUrl: './card-configurator.component.html',
-  styleUrls: ['./card-configurator.component.scss'],
+  selector: 'dune-starting-card-configurator',
+  templateUrl: './starting-card-configurator.component.html',
+  styleUrls: ['./starting-card-configurator.component.scss'],
 })
-export class CardConfiguratorComponent implements OnInit {
-  public imperiumCards: ImperiumCard[] = [];
+export class StartingCardConfiguratorComponent implements OnInit {
+  public startingCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
   public factions: { [type in FactionType]: number } = {
@@ -45,18 +45,10 @@ export class CardConfiguratorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cardConfiguratorService.imperiumCards$.subscribe((imperiumCards) => {
-      this.imperiumCards = imperiumCards;
+    this.cardConfiguratorService.startingCards$.subscribe((startingCards) => {
+      this.startingCards = startingCards;
 
       this.totalCardAmount = 0;
-      this.factions = {
-        landsraad: 0,
-        choam: 0,
-        emperor: 0,
-        guild: 0,
-        bene: 0,
-        fremen: 0,
-      };
 
       this.fieldAccessess = {
         landsraad: 0,
@@ -69,12 +61,8 @@ export class CardConfiguratorComponent implements OnInit {
         spice: 0,
       };
 
-      for (const card of imperiumCards) {
+      for (const card of startingCards) {
         this.totalCardAmount += card.cardAmount ?? 1;
-
-        if (card.faction) {
-          this.factions[card.faction] += card.cardAmount ?? 1;
-        }
 
         if (card.fieldAccess) {
           for (const access of card.fieldAccess) {
@@ -86,7 +74,7 @@ export class CardConfiguratorComponent implements OnInit {
   }
 
   onExportCardsClicked() {
-    const jsonContent = JSON.stringify(this.imperiumCards, null, 2);
+    const jsonContent = JSON.stringify(this.startingCards, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -111,8 +99,8 @@ export class CardConfiguratorComponent implements OnInit {
 
     reader.onload = (e: any) => {
       const content = e.target.result;
-      const imperiumCards = JSON.parse(content) as ImperiumCard[];
-      this.cardConfiguratorService.setCards(imperiumCards);
+      const startingCards = JSON.parse(content) as ImperiumCard[];
+      this.cardConfiguratorService.addStartingCards(startingCards);
 
       input.value = '';
     };
@@ -131,13 +119,13 @@ export class CardConfiguratorComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: ImperiumCard | undefined) => {
       if (result) {
-        this.cardConfiguratorService.addCard(result);
+        this.cardConfiguratorService.addStartingCard(result);
       }
     });
   }
 
   onDeleteCardClicked(id: string) {
-    this.cardConfiguratorService.deleteCard(id);
+    this.cardConfiguratorService.deleteStartingCard(id);
   }
 
   onEditCardClicked(imperiumCard: ImperiumCard) {
@@ -151,7 +139,7 @@ export class CardConfiguratorComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: ImperiumCard | undefined) => {
       if (result) {
-        this.cardConfiguratorService.editCard(result);
+        this.cardConfiguratorService.editStartingCard(result);
       }
     });
   }

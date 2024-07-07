@@ -20,7 +20,8 @@ export interface ActionField {
   isNonBlockingField?: boolean;
   requiresInfluence?: FactionInfluence;
   customWidth?: string;
-  noGap?: boolean;
+  noRowGap?: boolean;
+  noColumnGap?: boolean;
   tradeOptionField?: {
     from: RewardType;
     to: RewardType;

@@ -1,5 +1,5 @@
 import { clamp } from 'lodash';
-import { Resource, ResourceType } from 'src/app/models';
+import { Resource, ResourceType, Reward, RewardType } from 'src/app/models';
 import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { Player } from 'src/app/services/player-manager.service';
@@ -331,6 +331,13 @@ export function playerCanDrawCards(player: Player, amount: number) {
 }
 
 export function getResourceAmountFromArray(resources: Resource[], type: ResourceType) {
+  return resources
+    .filter((x) => x.type === type)
+    .map((x) => x.amount ?? 1)
+    .reduce((a, b) => a + b, 0);
+}
+
+export function getRewardAmountFromArray(resources: Reward[], type: RewardType) {
   return resources
     .filter((x) => x.type === type)
     .map((x) => x.amount ?? 1)

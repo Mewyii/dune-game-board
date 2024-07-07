@@ -217,7 +217,7 @@ export const factionsCustomBeginner: Faction[] = [
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
         customWidth: '150px',
-        noGap: true,
+        noRowGap: true,
         tradeOptionField: {
           from: 'spice',
           to: 'solari',

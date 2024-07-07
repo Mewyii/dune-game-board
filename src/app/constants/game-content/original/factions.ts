@@ -229,7 +229,7 @@ export const factionsOriginal: Faction[] = [
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
         customWidth: '220px',
-        noGap: true,
+        noRowGap: true,
       },
       {
         title: { de: 'abkommen treffen', en: 'secure contract' },

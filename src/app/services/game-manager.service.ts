@@ -18,6 +18,7 @@ import { TechTile } from '../constants/tech-tiles';
 import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { shuffle } from '../helpers/common';
+import { GameState } from './ai/models';
 
 export interface AgentOnField {
   fieldId: string;
@@ -435,10 +436,12 @@ export class GameManager {
         }
 
         if (canLiftAgent) {
-          const playerAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === activePlayer.id);
-          if (playerAgentsOnFields) {
-            shuffle(playerAgentsOnFields);
-            this.removePlayerAgentFromField(activePlayer.id, playerAgentsOnFields[0].fieldId);
+          const playerAgentsOnOtherFields = this.agentsOnFields.filter(
+            (x) => x.playerId === activePlayer.id && x.fieldId !== field.title.en
+          );
+          if (playerAgentsOnOtherFields) {
+            shuffle(playerAgentsOnOtherFields);
+            this.removePlayerAgentFromField(activePlayer.id, playerAgentsOnOtherFields[0].fieldId);
           }
         }
 
@@ -570,7 +573,7 @@ export class GameManager {
     }
   }
 
-  private getGameState(player: Player) {
+  private getGameState(player: Player): GameState {
     return {
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
@@ -581,6 +584,7 @@ export class GameManager {
       playerCombatUnits: this.combatManager.getPlayerCombatUnits(player.id)!,
       enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
       agentsOnFields: this.agentsOnFields,
+      playerAgentsOnFields: this.agentsOnFields.filter((x) => x.playerId === player.id),
       isOpeningTurn: this.isOpeningTurn(player.id),
       isFinale: this.isFinale,
       enemyPlayers: this.playerManager.getEnemyPlayers(player.id),

@@ -38,12 +38,12 @@
     </div>
     <div class="info-container vertical">
       <div class="resource-container">
-        <div class="tech-agent-marker" [style.background-color]="currentPlayer.color"></div>
-        <div>{{ currentPlayer.techAgents }}</div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
+        <img class="resource" [src]="getRewardTypePath('persuasion')" />
+        <div>{{ currentPlayer.permanentPersuasion }}</div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePermanentPersuasionClicked(currentPlayer.id)">
           <mat-icon>remove</mat-icon>
         </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
+        <button mat-mini-fab [color]="'accent'" (click)="onAddPermanentPersuasionClicked(currentPlayer.id)">
           <mat-icon>add</mat-icon>
         </button>
       </div>
@@ -74,7 +74,7 @@
         </button>
       </div>
     </div>
-    <div class="info-container vertical">
+    <div class="info-container vertical column">
       <div>units</div>
       <div class="units-control-bar">
         <div class="resource-display">
@@ -104,8 +104,22 @@
           <mat-icon>add</mat-icon>
         </button>
       </div>
+      <div class="units-control-bar">
+        <div class="resource-display">
+          <div class="tech-agent-marker" [style.background-color]="currentPlayer.color"></div>
+          <div class="resource-amount on-background">
+            <span>{{ currentPlayer.techAgents }}</span>
+          </div>
+        </div>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </div>
-    <div class="info-container vertical">
+    <div class="info-container vertical column">
       <div>resources</div>
       <div class="resource-container" *ngFor="let resource of currentPlayer.resources">
         <div class="resource-display">
@@ -146,7 +160,7 @@
         </button>
       </div>
     </div>
-    <div class="info-container vertical">
+    <div class="info-container vertical column">
       <div>factions</div>
       <div class="resource-container">
         <img class="resource" [src]="getFactionTypePath('fremen')" />

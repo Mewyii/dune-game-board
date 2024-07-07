@@ -92,6 +92,10 @@ dune-leader-card {
 .info-container.vertical {
     flex-direction: column;
     gap: 12px;
+    justify-content: center;
+}
+
+.info-container.vertical.column {
     justify-content: flex-start;
 }
 
@@ -109,15 +113,16 @@ dune-leader-card {
 }
 
 .tech-agent-marker {
-    width: 20px;
-    height: 20px;
+    width: 31px;
+    height: 31px;
     border-radius: 25%;
-    border: 3px solid rgb(155 129 43);
+    border: 3px solid rgb(155, 129, 43);
     filter: drop-shadow(0px 0px 5px black);
     left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
+    animation-name: _ngcontent-ng-c1197454014_unit-marker-anim;
     animation-timing-function: ease-in-out;
     animation-duration: 1.5s;
+    margin: 10px;
 }
 
 .focus-marker {

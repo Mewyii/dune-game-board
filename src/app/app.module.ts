@@ -39,7 +39,8 @@ import { MinorHouseCardComponent } from './components/_common/minor-house-card/m
 import { ImperiumRowCardComponent } from './components/_common/imperium-row-card/imperium-row-card.component';
 import { GameBoardComponent } from './pages/game-board/game-board.component';
 import { LeaderConfiguratorComponent } from './pages/leader-configurator/leader-configurator.component';
-import { CardConfiguratorComponent } from './pages/card-configurator/card-configurator.component';
+import { ImperiumCardConfiguratorComponent } from './pages/card-configurator/imperium-card-configurator.component';
+import { StartingCardConfiguratorComponent } from './pages/starting-card-configurator/starting-card-configurator.component';
 import { CardEditorComponent } from './pages/card-configurator/card-editor/card-editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogCardEditorComponent } from './pages/card-configurator/dialog-card-editor/dialog-card-editor.component';
@@ -85,7 +86,7 @@ import { BoardEvaluationComponent } from './components/board-evaluation/board-ev
     ImperiumRowCardComponent,
     GameBoardComponent,
     LeaderConfiguratorComponent,
-    CardConfiguratorComponent,
+    ImperiumCardConfiguratorComponent,
     CardEditorComponent,
     DialogCardEditorComponent,
     NotificationComponent,
@@ -103,6 +104,7 @@ import { BoardEvaluationComponent } from './components/board-evaluation/board-ev
     DialogEventEditorComponent,
     DialogSettingsComponent,
     BoardEvaluationComponent,
+    StartingCardConfiguratorComponent,
   ],
   imports: [
     BrowserModule,

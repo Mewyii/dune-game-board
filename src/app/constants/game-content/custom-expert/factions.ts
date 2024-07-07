@@ -68,7 +68,6 @@ export const factionsCustomExpert: Faction[] = [
       {
         type: 'intrigue',
       },
-      { type: 'intrigue-draw' },
     ],
     levelFourReward: [
       {
@@ -97,7 +96,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Gildenabkommen', en: 'Guild Contract' },
         actionType: 'guild',
-        rewards: [{ type: 'solari', amount: 3 }],
+        rewards: [{ type: 'solari', amount: 2 }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/guild_navigators.png',
       },
     ],
@@ -134,7 +133,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'intrigue' }, { type: 'solari' }],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue-draw' }, { type: 'solari' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -159,12 +158,19 @@ export const factionsCustomExpert: Faction[] = [
     },
     actionFields: [
       {
-        title: { de: 'Bündnisse', en: 'Alliances' },
+        title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 2 }],
-        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 2 }, { type: 'tech' }],
+        costs: [{ type: 'solari', amount: 3 }],
+        rewards: [
+          { type: 'troop', amount: 3 },
+          { type: 'separator' },
+          { type: 'card-draw', amount: 2 },
+          { type: 'persuasion', amount: 1 },
+        ],
+        requiresInfluence: { type: 'bene' },
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
         customWidth: '130px',
+        noColumnGap: true,
       },
       {
         title: { de: 'schwertmeister', en: 'Swordmaster' },
@@ -177,7 +183,10 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        rewards: [{ type: 'persuasion', amount: 2 }],
+        rewards: [
+          { type: 'persuasion', amount: 1 },
+          { type: 'solari', amount: 2 },
+        ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {
@@ -218,7 +227,7 @@ export const factionsCustomExpert: Faction[] = [
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
         customWidth: '150px',
-        noGap: true,
+        noRowGap: true,
         tradeOptionField: {
           from: 'spice',
           to: 'solari',
@@ -229,8 +238,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 2 }],
-        rewards: [{ type: 'water' }, { type: 'tech-reduced' }],
+        costs: [{ type: 'solari', amount: 3 }],
+        rewards: [{ type: 'water' }, { type: 'water' }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
       },
     ],

@@ -123,7 +123,7 @@ export class BoardEvaluationComponent implements OnInit {
           value += 2 * amount;
           break;
         case 'foldspace':
-          value += 1.5 * amount;
+          value += 1.75 * amount;
           break;
         case 'council-seat-small':
         case 'council-seat-large':

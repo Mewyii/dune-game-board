@@ -501,23 +501,23 @@ export class AIManager {
         const separatorIndex = field.rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
 
         const leftOptionRewardType = field.rewards[separatorIndex - 1].type.toLocaleLowerCase();
-        const leftOption = {
+        const leftOptionField = {
           ...field,
           title: { ...field.title, en: field.title.en + ' (' + leftOptionRewardType + ')' },
           rewards: field.rewards.filter((x, index) => index !== separatorIndex + 1),
         };
 
         const rightOptionRewardType = field.rewards[separatorIndex + 1].type.toLocaleLowerCase();
-        const rightOption = {
+        const rightOptionField = {
           ...field,
           title: { ...field.title, en: field.title.en + ' (' + rightOptionRewardType + ')' },
           rewards: field.rewards.filter((x, index) => index !== separatorIndex - 1),
         };
 
-        result.push(leftOption);
-        result.push(rightOption);
+        result.push(cloneDeep(leftOptionField));
+        result.push(cloneDeep(rightOptionField));
       } else {
-        result.push(field);
+        result.push(cloneDeep(field));
       }
     }
     return result;

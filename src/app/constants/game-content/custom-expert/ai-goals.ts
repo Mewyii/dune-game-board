@@ -8,6 +8,8 @@ import {
   getPlayerGarrisonStrength,
   getPlayerdreadnoughtCount,
   getResourceAmount,
+  getResourceAmountFromArray,
+  getRewardAmountFromArray,
   getWinCombatDesireModifier,
   noOneHasMoreInfluence,
   playerCanDrawCards,
@@ -51,9 +53,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   mentat: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'spice', virtualResources) +
-      0.015 * (gameState.currentRound - 1) +
-      0.02 * player.cardsBought,
+      (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
+      (0.01 * getResourceAmount(player, 'spice', virtualResources) +
+        0.015 * (gameState.currentRound - 1) +
+        0.02 * player.cardsBought),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState) => gameState.agentsOnFields.some((x) => x.fieldId === 'Truthsay'),
@@ -91,7 +94,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: (fields) => ({}),
   },
   'fremen-friendship': {
-    baseDesire: 0.125,
+    baseDesire: 0.1,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen + 0.02 * (gameState.currentRound - 1),
     goalIsReachable: () => false,
@@ -229,20 +232,15 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      'Mind Training': (player, gameState) => (gameState.playerScore.bene === 1 ? 1.0 : 0.0),
-      Truthsay: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'spice', amount: 2 }],
-          gameState.playerScore.bene === 1 ? 1.0 : 0.0,
-          virtualResources
-        ),
+      ...getViableBoardFields(fields, 'intrigue-draw', 0, 1),
     }),
   },
   'fold-space': {
-    baseDesire: 0.3,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      -0.01 * player.cardsBought - 0.01 * (player.cardsTrimmed + player.focusTokens),
+      (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
+      0.01 * player.cardsBought -
+      0.01 * (player.cardsTrimmed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
@@ -374,8 +372,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       "Tuek's Sietch": (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
-          [{ type: 'water', amount: 1 }],
-          0.0 + 0.4 * getAccumulatedSpice(gameState, "Tuek's Sietch"),
+          [{ type: 'water', amount: 2 }],
+          0.0 + 0.3 * getAccumulatedSpice(gameState, "Tuek's Sietch"),
           virtualResources
         ),
       'Imperial Basin': (player, gameState) => 0.4 + 0.4 * getAccumulatedSpice(gameState, 'Imperial Basin'),
@@ -436,8 +434,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster === true,
     viableFields: (fields) => ({
       'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 1.0 : 0.5),
-      'Guild Contract': () => 1.0,
-      Arrakeen: () => 0.75,
+      'Alliances (persuasion)': () => 0.75,
+      'Alliances (card-draw)': () => 0.75,
+      'Guild Contract': () => 0.75,
       'Spice Trade': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'spice', virtualResources) > 0 ? 0.5 : 0,
       Conspiracy: (player, gameState, goals, virtualResources) =>
@@ -483,8 +482,7 @@ function getViableBoardFields(
   } = {};
 
   for (const field of fieldsWithReward) {
-    const reward = field.rewards.find((x) => x.type === rewardType);
-    const baseFieldDesire = normalizeNumber(reward!.amount ?? 1, maxReward, minReward);
+    const baseFieldDesire = normalizeNumber(getRewardAmountFromArray(field.rewards, rewardType), maxReward, minReward);
 
     if (field.costs && isResourceArray(field.costs)) {
       viableFields[field.title.en] = (player, gameState, goals, virtualResources) =>
