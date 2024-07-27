@@ -8,7 +8,6 @@
     background: rgb(34 27 22);
     color:white;
     font-size: large;
-    margin: 0px 8px;
     border-radius: 5px;
 }
 
@@ -168,4 +167,12 @@
     flex-wrap: wrap;
     gap: 16px;
     justify-content: center;
+}
+
+.cards-area {
+    display:flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    margin-top: 16px;
 }

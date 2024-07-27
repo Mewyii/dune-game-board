@@ -119,6 +119,32 @@ export const locationsCustomExpert: DuneLocation[] = [
   // {
   //   color: 'rgb(87, 69, 52)',
   //   position: {
+  //     marginTop: 635,
+  //     marginLeft: 1375,
+  //   },
+  //   actionField: {
+  //     title: { de: 'Raumhafen', en: 'Space Port' },
+  //     actionType: 'town',
+  //     rewards: [{ type: 'foldspace' }, { type: 'solari', amount: 2 }, { type: 'tech' }],
+  //     pathToImage: 'assets/images/action-backgrounds/carthag.png',
+  //   },
+  // },
+  // {
+  //   color: 'rgb(77, 94, 75)',
+  //   position: {
+  //     marginTop: 630,
+  //     marginLeft: 595,
+  //   },
+  //   actionField: {
+  //     title: { de: 'Spice-Schmuggel', en: 'Spice-Smuggling' },
+  //     actionType: 'landsraad',
+  //     rewards: [{ type: 'spice' }, { type: 'persuasion', amount: 1 }],
+  //     pathToImage: 'assets/images/action-backgrounds/carthag.png',
+  //   },
+  // },
+  // {
+  //   color: 'rgb(87, 69, 52)',
+  //   position: {
   //     marginTop: 1000,
   //     marginLeft: 1444,
   //   },

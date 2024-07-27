@@ -11,204 +11,226 @@
     ></div>
     <div class="control-button" (click)="setNextLeader()">></div>
   </div>
+  <div class="control-bar center" *ngIf="currentPlayer">
+    <button
+      mat-fab
+      [color]="'accent'"
+      (click)="onAiActionClicked(currentPlayer.id)"
+      matTooltip="AI"
+      [disabled]="currentPlayer.turnState !== 'agent-placement'"
+      *ngIf="currentPlayer.isAI"
+    >
+      <mat-icon>hourglass_empty</mat-icon>
+    </button>
+    <button *ngIf="currentTurn" mat-fab color="accent" (click)="onNextPlayerClicked()" matTooltip="End Turn">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+    <button
+      mat-fab
+      [color]="'accent'"
+      (click)="onRevealCardsClicked(currentPlayer.id)"
+      matTooltip="Reveal"
+      [disabled]="currentPlayer.turnState !== 'agent-placement'"
+    >
+      <mat-icon>remove_red_eye</mat-icon>
+    </button>
+  </div>
   <div class="control-bar" *ngIf="currentPlayer">
-    <div class="info-container vertical">
-      <div class="resource-container">
-        <div class="agents-icon-container">
-          <div class="agents-icon" [style.background-color]="currentPlayer.color"></div>
-        </div>
-        <div>{{ currentPlayerAvailableAgents?.agentAmount }}</div>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onRemovePlayerAgentClicked(currentPlayer.id)"
-          [disabled]="gameManager.currentTurnState === 'combat'"
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onAddPlayerAgentClicked(currentPlayer.id)"
-          [disabled]="gameManager.currentTurnState === 'combat'"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="info-container vertical">
-      <div class="resource-container">
-        <img class="resource" [src]="getRewardTypePath('persuasion')" />
-        <div>{{ currentPlayer.permanentPersuasion }}</div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePermanentPersuasionClicked(currentPlayer.id)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPermanentPersuasionClicked(currentPlayer.id)">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="info-container vertical">
-      <div class="resource-container">
-        <div class="focus-marker"></div>
-        <div>{{ currentPlayer.focusTokens }}</div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveFocusTokenClicked(currentPlayer.id)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddFocusTokenClicked(currentPlayer.id)">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="info-container vertical">
-      <div class="resource-container">
-        <img class="resource" [src]="getRewardTypePath('victory-point')" />
-        <div class="resource-amount">
-          <span>{{ getPlayerScore('victoryPoints') }}</span>
-        </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'victoryPoints')">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div class="info-container vertical column">
-      <div>units</div>
-      <div class="units-control-bar">
-        <div class="resource-display">
-          <img class="resource" [src]="getRewardTypePath('troop')" />
-          <div class="resource-amount on-background">
-            <span>{{ currentPlayerCombatUnits?.troopsInGarrison }}</span>
+    <div class="line">
+      <div class="info-container left">
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPlayerAgentClicked(currentPlayer.id)"
+            (contextmenu)="onRemovePlayerAgentClicked(currentPlayer.id)"
+          >
+            <div class="agents-icon-container">
+              <div class="agents-icon" [style.background-color]="currentPlayer.color"></div>
+            </div>
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayerAvailableAgents?.agentAmount }}</span>
+            </div>
           </div>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromGarrisonClicked(currentPlayer.id)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddTroopToGarrisonClicked(currentPlayer.id)">
-          <mat-icon>add</mat-icon>
-        </button>
       </div>
-      <div class="units-control-bar">
-        <div class="resource-display">
-          <img class="resource" [src]="getRewardTypePath('dreadnought')" />
-          <div class="resource-amount on-background">
-            <span>{{ currentPlayerCombatUnits?.shipsInGarrison }}</span>
+      <div class="info-container">
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            [style]="'filter: saturate(0.25);'"
+            (click)="onAddPermanentPersuasionClicked(currentPlayer.id)"
+            (contextmenu)="onRemovePermanentPersuasionClicked(currentPlayer.id)"
+          >
+            <img class="resource" [src]="getRewardTypePath('persuasion')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.permanentPersuasion }}</span>
+            </div>
           </div>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromGarrisonClicked(currentPlayer.id)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddShipToGarrisonClicked(currentPlayer.id)">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <div class="units-control-bar">
-        <div class="resource-display">
-          <div class="tech-agent-marker" [style.background-color]="currentPlayer.color"></div>
-          <div class="resource-amount on-background">
-            <span>{{ currentPlayer.techAgents }}</span>
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPersuasionGainedThisRoundClicked(currentPlayer.id)"
+            (contextmenu)="onRemovePersuasionGainedThisRoundClicked(currentPlayer.id)"
+          >
+            <img class="resource" [src]="getRewardTypePath('persuasion')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.persuasionGainedThisRound }}</span>
+            </div>
           </div>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveTechAgentClicked(currentPlayer.id)">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddTechAgentClicked(currentPlayer.id)">
-          <mat-icon>add</mat-icon>
-        </button>
+      </div>
+      <div class="info-container right">
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
+            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
+          >
+            <img class="resource dark" [src]="getRewardTypePath('victory-point')" />
+            <div class="resource-amount on-background">
+              <span>{{ getPlayerScore('victoryPoints') }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="info-container vertical column">
-      <div>resources</div>
-      <div class="resource-container" *ngFor="let resource of currentPlayer.resources">
-        <div class="resource-display">
-          <img class="resource" [src]="getRewardTypePath(resource.type)" />
-          <div class="resource-amount on-background">
-            <span>{{ resource.amount }}</span>
+    <div class="line">
+      <div class="info-container left">
+        <div class="units-control-bar">
+          <div
+            class="resource-display"
+            (click)="onAddTroopToGarrisonClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveTroopFromGarrisonClicked(currentPlayer.id)"
+          >
+            <img class="resource" [src]="getRewardTypePath('troop')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayerCombatUnits?.troopsInGarrison }}</span>
+            </div>
           </div>
         </div>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onRemoveResourceClicked(currentPlayer.id, resource.type)"
-          [disabled]="resource.amount === 0"
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddResourceClicked(currentPlayer.id, resource.type)">
-          <mat-icon>add</mat-icon>
-        </button>
+        <div class="units-control-bar">
+          <div
+            class="resource-display"
+            (click)="onAddShipToGarrisonClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveShipFromGarrisonClicked(currentPlayer.id)"
+          >
+            <img class="resource" [src]="getRewardTypePath('dreadnought')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayerCombatUnits?.shipsInGarrison }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="resource-container">
-        <div class="resource-display">
-          <img class="resource intrigue" [src]="getRewardTypePath('intrigue')" />
-          <div class="resource-amount on-background">
-            <span>{{ currentPlayer.intrigueCount }}</span>
+      <div class="info-container">
+        <div class="resource-container" *ngFor="let resource of currentPlayer.resources">
+          <div
+            class="resource-display"
+            (click)="onAddResourceClicked(currentPlayer.id, resource.type)"
+            (contextmenu)="onRemoveResourceClicked(currentPlayer.id, resource.type)"
+          >
+            <img class="resource" [src]="getRewardTypePath(resource.type)" />
+            <div class="resource-amount on-background">
+              <span>{{ resource.amount }}</span>
+            </div>
           </div>
         </div>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onRemoveIntrigueClicked(currentPlayer.id)"
-          [disabled]="currentPlayer.intrigueCount === 0"
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddIntrigueClicked(currentPlayer.id)">
-          <mat-icon>add</mat-icon>
-        </button>
+      </div>
+      <div class="info-container right">
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddIntrigueClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveIntrigueClicked(currentPlayer.id)"
+          >
+            <img class="resource intrigue" [src]="getRewardTypePath('intrigue')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.intrigueCount }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="info-container vertical column">
-      <div>factions</div>
-      <div class="resource-container">
-        <img class="resource" [src]="getFactionTypePath('fremen')" />
-        <div class="resource-amount">
-          <span>{{ getPlayerScore('fremen') }}</span>
+    <div class="line">
+      <div class="info-container left">
+        <div class="units-control-bar">
+          <div
+            class="resource-display"
+            (click)="onAddTechAgentClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveTechAgentClicked(currentPlayer.id)"
+          >
+            <div class="tech-agent-marker">
+              <div class="tech-background-image"></div>
+            </div>
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.techAgents }}</span>
+            </div>
+          </div>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'fremen')">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'fremen')">
-          <mat-icon>add</mat-icon>
-        </button>
       </div>
-      <div class="resource-container">
-        <img class="resource" [src]="getFactionTypePath('bene')" />
-        <div class="resource-amount">
-          <span>{{ getPlayerScore('bene') }}</span>
+      <div class="info-container">
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'fremen')"
+            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'fremen')"
+          >
+            <img class="resource dark" [src]="getFactionTypePath('fremen')" />
+            <div class="resource-amount on-background">
+              <span>{{ getPlayerScore('fremen') }}</span>
+            </div>
+          </div>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'bene')">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'bene')">
-          <mat-icon>add</mat-icon>
-        </button>
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'bene')"
+            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'bene')"
+          >
+            <img class="resource dark" [src]="getFactionTypePath('bene')" />
+            <div class="resource-amount on-background">
+              <span>{{ getPlayerScore('bene') }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'guild')"
+            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'guild')"
+          >
+            <img class="resource dark" [src]="getFactionTypePath('guild')" />
+            <div class="resource-amount on-background">
+              <span>{{ getPlayerScore('guild') }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'emperor')"
+            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'emperor')"
+          >
+            <img class="resource dark" [src]="getFactionTypePath('emperor')" />
+            <div class="resource-amount on-background">
+              <span>{{ getPlayerScore('emperor') }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="resource-container">
-        <img class="resource" [src]="getFactionTypePath('guild')" />
-        <div class="resource-amount">
-          <span>{{ getPlayerScore('guild') }}</span>
+      <div class="info-container right">
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddFocusTokenClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
+          >
+            <div class="focus-marker"></div>
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.focusTokens }}</span>
+            </div>
+          </div>
         </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'guild')">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'guild')">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <div class="resource-container">
-        <img class="resource" [src]="getFactionTypePath('emperor')" />
-        <div class="resource-amount">
-          <span>{{ getPlayerScore('emperor') }}</span>
-        </div>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePlayerScoreClicked(currentPlayer.id, 'emperor')">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerScoreClicked(currentPlayer.id, 'emperor')">
-          <mat-icon>add</mat-icon>
-        </button>
       </div>
     </div>
   </div>

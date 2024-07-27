@@ -46,66 +46,6 @@ export class AITileComponent implements OnInit {
     });
   }
 
-  onAddCardToDeckClicked(id: number) {
-    this.playerManager.addCardsToPlayerDeck(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onRemoveCardFromDeckClicked(id: number) {
-    this.playerManager.removeCardsFromPlayerDeck(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onBoughtCardClicked(id: number) {
-    this.playerManager.boughtCardsFromImperiumRow(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onAddFocusTokenClicked(id: number) {
-    this.playerManager.addFocusTokens(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onRemoveFocusTokenClicked(id: number) {
-    this.playerManager.removeFocusTokens(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onTrimCardClicked(id: number) {
-    this.playerManager.trimCardsFromPlayerDeck(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onAddIntrigueClicked(id: number) {
-    this.playerManager.addIntriguesToPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onRemoveIntrigueClicked(id: number) {
-    this.playerManager.removeIntriguesFromPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onAddTechAgentClicked(id: number) {
-    this.playerManager.addTechAgentsToPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onRemoveTechAgentClicked(id: number) {
-    this.playerManager.removeTechAgentsFromPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
   getAIVariable(variableType: keyof AIVariables) {
     return this.aiVariables ? this.aiVariables[variableType] : undefined;
   }

@@ -59,6 +59,26 @@
         </div>
       </ng-container>
     </div>
+    <div class="cards-area">
+      <div class="resource-display">
+        <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
+        <div class="resource-amount">
+          <span>{{ getPlayerHandCards(player.id)?.cards?.length }}</span>
+        </div>
+      </div>
+      <div class="resource-display">
+        <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+        <div class="resource-amount">
+          <span>{{ getPlayerDiscardPile(player.id)?.cards?.length }}</span>
+        </div>
+      </div>
+      <div class="resource-display">
+        <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
+        <div class="resource-amount">
+          <span>{{ getPlayerDeck(player.id)?.cards?.length }}</span>
+        </div>
+      </div>
+    </div>
     <div class="resource-area">
       <div class="resource-container" *ngFor="let resource of player.resources">
         <div class="resource-display">
@@ -69,34 +89,15 @@
         </div>
       </div>
     </div>
-    <div class="persuasion-area">
-      <div
-        class="resource-display"
-        [style]="player.persuasionThisRound + player.permanentPersuasion === 0 ? 'filter: saturate(0.25);' : ''"
-      >
-        <img class="resource" [src]="getRewardTypePath('persuasion')" />
-        <div class="resource-amount" *ngIf="player.persuasionThisRound > 0 || player.permanentPersuasion > 0">
-          <span>{{ player.persuasionThisRound + player.permanentPersuasion }}</span>
-        </div>
-      </div>
-    </div>
   </div>
   <div class="action-container" [style]="'padding-bottom: 48px'">
-    <button
-      *ngIf="(currentTurn && turnState === 'agent-placement') || turnState === 'combat'"
-      mat-fab
-      color="accent"
-      (click)="onNextPlayerClicked()"
-      matTooltip="End Turn"
-    >
-      <mat-icon>keyboard_arrow_right</mat-icon>
-    </button>
     <button
       mat-fab
       *ngIf="currentTurn && turnState === 'agent-placement'"
       color="accent"
       (click)="onBeginCombatClicked()"
       matTooltip="Combat"
+      [disabled]="!canSwitchToCombatPhase"
     >
       <mat-icon>flash_on</mat-icon>
     </button>

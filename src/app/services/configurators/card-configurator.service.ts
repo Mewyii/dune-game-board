@@ -107,7 +107,7 @@ export class CardConfiguratorService {
   }
 
   addStartingCard(card: ImperiumCard) {
-    this.startingCardsSubject.next([...this.imperiumCards, card]);
+    this.startingCardsSubject.next([...this.startingCards, card]);
   }
 
   editStartingCard(card: ImperiumCard) {

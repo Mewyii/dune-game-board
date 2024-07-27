@@ -7,8 +7,12 @@ import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from 
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
-import { ActionField, ActiveFactionType } from 'src/app/models';
+import { ActionField, ActiveFactionType, Reward, RewardType } from 'src/app/models';
 import { getDesire } from './shared/ai-goal-functions';
+import { ImperiumDeckCard } from '../cards.service';
+import { PlayerFactionScoreType, PlayerScore, PlayerScoreType } from '../player-score-manager.service';
+import { isFactionScoreRewardType } from 'src/app/helpers/rewards';
+import { isFactionScoreType } from 'src/app/helpers/faction-score';
 
 export interface AIPlayer {
   playerId: number;
@@ -39,6 +43,22 @@ interface FieldLock {
 interface FactionInfluenceLock {
   type: ActiveFactionType;
   amount: number;
+}
+
+export interface AIAgentPlacementInfo {
+  unitsGainedThisTurn: number;
+  techAgentsGainedThisTurn: number;
+  canEnterCombat: boolean;
+  canDestroyOrDrawCard: boolean;
+  canBuyTech: boolean;
+  canLiftAgent: boolean;
+}
+
+export interface AIRewardArrayInfo {
+  hasRewardOptions: boolean;
+  hasRewardConversion: boolean;
+  rewardConversionIndex: number;
+  rewardOptionIndex: number;
 }
 
 @Injectable({
@@ -269,10 +289,33 @@ export class AIManager {
       .map((x) => x.fieldId)
       .filter((fieldId) => !this.settingsService.unblockableFields.some((field) => field.title.en === fieldId));
 
-    const possibleFields = aiPlayer.canAccessBlockedFields
+    let possibleFields = aiPlayer.canAccessBlockedFields
       ? viableFields
       : viableFields.filter((viableField) => !blockedFields.some((fieldId) => viableField.fieldId.includes(fieldId)));
 
+    if (gameState.playerHandCards) {
+      const fieldAccessFromCards = gameState.playerHandCards.flatMap((x) => x.fieldAccess).filter((x) => x !== undefined);
+      const factionAndFieldAccessFromCards = gameState.playerHandCards
+        .flatMap((x) => (x.faction && x.fieldAccess ? { faction: x.faction, actionType: x.fieldAccess } : undefined))
+        .filter((x) => x !== undefined);
+      const factionAccessFromFactionInfluence: PlayerFactionScoreType[] = this.getFactionFriendships(gameState.playerScore);
+
+      const accessibleFields = boardFields
+        .filter((x) =>
+          !x.requiresInfluence
+            ? fieldAccessFromCards.some((actionType) => x.actionType === actionType)
+            : (fieldAccessFromCards.some((actionType) => x.actionType === actionType) &&
+                factionAccessFromFactionInfluence.some((y) => y === x.requiresInfluence!.type)) ||
+              factionAndFieldAccessFromCards.some(
+                (y) => y.actionType.includes(x.actionType) && y.faction === x.requiresInfluence!.type
+              )
+        )
+        .map((x) => x.title.en);
+
+      possibleFields = possibleFields.filter((viableField) =>
+        accessibleFields.some((fieldId) => viableField.fieldId.includes(fieldId))
+      );
+    }
     possibleFields.sort((a, b) => b.value - a.value);
 
     const randomFactor = gameState.isOpeningTurn
@@ -288,6 +331,15 @@ export class AIManager {
     aiPlayer.decisions = decisions;
 
     this.aiPlayersSubject.next(aiPlayers);
+  }
+  getFactionFriendships(playerScore: PlayerScore) {
+    const result: PlayerFactionScoreType[] = [];
+    for (const [index, value] of Object.entries(playerScore)) {
+      if (value > 1 && isFactionScoreType(index)) {
+        result.push(index);
+      }
+    }
+    return result;
   }
 
   private hasFieldAccess(player: Player, gameState: GameState, lock: FactionInfluenceLock) {
@@ -421,6 +473,46 @@ export class AIManager {
     return 'none';
   }
 
+  getCardToPlay(preferredField: ActionField, playerHandCards: ImperiumDeckCard[]) {
+    const usableCards = playerHandCards.filter((x) =>
+      x.fieldAccess?.some((accessType) => accessType === preferredField.actionType)
+    );
+    if (usableCards.length > 0) {
+      const cardEvaluations = usableCards.map((card) => {
+        const evaluation = this.getImperiumCardPlayEvaluation(card);
+        return { evaluation, card };
+      });
+      cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
+      return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
+  getCardToBuy(availablePersuasion: number, cards: ImperiumDeckCard[]) {
+    const buyableCards = cards.filter((x) => (x.persuasionCosts ?? 0) <= availablePersuasion);
+    if (buyableCards.length > 0) {
+      const cardEvaluations = buyableCards.map((card) => {
+        const evaluation = this.getImperiumCardBuyEvaluation(card);
+        return { evaluation, card };
+      });
+      cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
+      return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
+  getCardToTrash(cards: ImperiumDeckCard[]) {
+    if (cards.length > 0) {
+      const cardEvaluations = cards.map((card) => {
+        const evaluation = this.getImperiumCardTrashEvaluation(card);
+        return { evaluation, card };
+      });
+      cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
+      return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
   private getImperiumRowEvaluation() {
     if (this.aiVariables.imperiumRow === 'good') {
       return 1.2;
@@ -549,6 +641,255 @@ export class AIManager {
         return field;
       }
     });
+  }
+
+  getDesiredFactionScoreType(playerScores: PlayerScore): PlayerFactionScoreType {
+    let desiredFactionScoreType: PlayerFactionScoreType = 'fremen';
+    let desiredFactionScoreAmount = playerScores.fremen;
+    if (playerScores.bene > desiredFactionScoreAmount && playerScores.bene < 4) {
+      desiredFactionScoreType = 'bene';
+      desiredFactionScoreAmount = playerScores.bene;
+    }
+    if (playerScores.emperor > desiredFactionScoreAmount && playerScores.emperor < 4) {
+      desiredFactionScoreType = 'emperor';
+      desiredFactionScoreAmount = playerScores.emperor;
+    }
+    if (playerScores.guild > desiredFactionScoreAmount && playerScores.guild < 4) {
+      desiredFactionScoreType = 'guild';
+      desiredFactionScoreAmount = playerScores.guild;
+    }
+
+    return desiredFactionScoreType;
+  }
+
+  private getImperiumCardPlayEvaluation(card: ImperiumDeckCard) {
+    let evaluationValue = 0;
+    if (card.fieldAccess) {
+      evaluationValue -= card.fieldAccess.length * 0.1;
+    }
+    if (card.agentEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.agentEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const agentEffect of card.agentEffects) {
+          evaluationValue += this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.customAgentEffect) {
+      evaluationValue += 1 * (card.persuasionCosts ?? 1);
+    }
+
+    if (card.revealEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.revealEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const revealEffect of card.revealEffects) {
+          evaluationValue -= this.getEffectEvaluation(revealEffect.type) * (revealEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.customRevealEffect) {
+      evaluationValue -= 1 * (card.persuasionCosts ?? 1);
+    }
+
+    return evaluationValue;
+  }
+
+  private getImperiumCardBuyEvaluation(card: ImperiumDeckCard) {
+    let evaluationValue = 0;
+    if (card.persuasionCosts) {
+      evaluationValue += card.persuasionCosts * 1;
+    }
+    if (card.buyEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const agentEffect of card.buyEffects) {
+          evaluationValue += this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.fieldAccess) {
+      evaluationValue += card.fieldAccess.length * 1.5;
+    }
+    if (card.agentEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.agentEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const agentEffect of card.agentEffects) {
+          evaluationValue += this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.customAgentEffect) {
+      evaluationValue += 1 * (card.persuasionCosts ?? 1);
+    }
+    if (card.revealEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.revealEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const revealEffect of card.revealEffects) {
+          evaluationValue += this.getEffectEvaluation(revealEffect.type) * (revealEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.customRevealEffect) {
+      evaluationValue += 1 * (card.persuasionCosts ?? 1);
+    }
+
+    return evaluationValue;
+  }
+
+  private getImperiumCardTrashEvaluation(card: ImperiumDeckCard) {
+    let evaluationValue = 0;
+    if (card.persuasionCosts) {
+      evaluationValue -= card.persuasionCosts * 1;
+    }
+    if (card.buyEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const agentEffect of card.buyEffects) {
+          evaluationValue -= this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.fieldAccess) {
+      evaluationValue -= card.fieldAccess.length * 1.5;
+    }
+    if (card.agentEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.agentEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const agentEffect of card.agentEffects) {
+          evaluationValue -= this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.customAgentEffect) {
+      evaluationValue -= 1 * (card.persuasionCosts ?? 1);
+    }
+
+    if (card.revealEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.revealEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        for (const revealEffect of card.revealEffects) {
+          evaluationValue -= this.getEffectEvaluation(revealEffect.type) * (revealEffect.amount ?? 1);
+        }
+      }
+    }
+    if (card.customRevealEffect) {
+      evaluationValue -= 1 * (card.persuasionCosts ?? 1);
+    }
+
+    return evaluationValue;
+  }
+
+  private getEffectEvaluation(rewardType: RewardType) {
+    switch (rewardType) {
+      case 'water':
+        return 2.25;
+      case 'spice':
+        return 2;
+      case 'solari':
+        return 1;
+      case 'troop':
+        return 1.5;
+      case 'dreadnought':
+        return 6;
+      case 'card-draw':
+        return 1.75;
+      case 'card-discard':
+        return -1.25;
+      case 'card-destroy':
+        return 1.75;
+      case 'card-draw-or-destroy':
+        return 2;
+      case 'intrigue':
+        return 1.75;
+      case 'persuasion':
+        return 1.75;
+      case 'foldspace':
+        return 1.75;
+      case 'council-seat-small':
+      case 'council-seat-large':
+        return 3.5;
+      case 'sword-master':
+        return 15;
+      case 'mentat':
+        return 3.5;
+      case 'spice-accumulation':
+        return 0;
+      case 'victory-point':
+        return 10;
+      case 'sword':
+        return 1;
+      case 'combat':
+        return 1;
+      case 'intrigue-trash':
+        return -1;
+      case 'intrigue-draw':
+        return 1.75;
+      case 'helper-arrow-down':
+        return 0;
+      case 'helper-arrow-right':
+        return 0;
+      case 'placeholder':
+        return 0;
+      case 'separator':
+        return 0;
+      case 'separator-horizontal':
+        return 0;
+      case 'tech':
+        return 1;
+      case 'tech-reduced':
+        return 2.25;
+      case 'tech-reduced-two':
+        return 4.5;
+      case 'tech-reduced-three':
+        return 6.75;
+      case 'control-spice':
+        return 0;
+      case 'card-round-start':
+        return 1.5;
+      case 'shipping':
+        return 2.5;
+      case 'faction-influence-up-choice':
+        return 4;
+      case 'faction-influence-up-emperor':
+      case 'faction-influence-up-guild':
+      case 'faction-influence-up-bene':
+      case 'faction-influence-up-fremen':
+        return 3;
+      case 'faction-influence-up-twice-choice':
+        return 6;
+      case 'faction-influence-down-choice':
+        return -2;
+      case 'faction-influence-down-emperor':
+      case 'faction-influence-down-guild':
+      case 'faction-influence-down-bene':
+      case 'faction-influence-down-fremen':
+        return -3;
+      case 'agent':
+        return 0;
+      case 'agent-lift':
+        return 4;
+      case 'buildup':
+        return 0;
+      case 'signet-token':
+        return 0;
+      case 'signet-ring':
+        return 2;
+      case 'loose-troop':
+        return -1;
+      default:
+        return 0;
+    }
+  }
+
+  public getRewardArrayAIInfos(rewards: Reward[]): AIRewardArrayInfo {
+    const rewardOptionIndex = rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
+    const hasRewardOptions = rewardOptionIndex > -1;
+
+    const rewardConversionIndex = rewards.findIndex(
+      (x) => x.type === 'helper-arrow-right' || x.type === 'helper-arrow-down'
+    );
+    const hasRewardConversion = rewardConversionIndex > -1;
+    return { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex };
   }
 }
 

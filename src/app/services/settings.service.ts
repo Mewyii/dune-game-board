@@ -89,6 +89,14 @@ export class SettingsService {
     this.settingsSubject.next({ ...this.settings, language: lang });
   }
 
+  getCustomCards() {
+    return this.gameContent.customCards;
+  }
+
+  getAlwaysBuyableCards() {
+    return this.gameContent.alwaysBuyableCards ?? [];
+  }
+
   setGameContent(name: string) {
     const gameContent = this.gameContents.find((x) => x.name === name);
     if (gameContent) {

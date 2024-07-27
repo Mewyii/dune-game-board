@@ -1,0 +1,47 @@
+<div class="imperium-row-container">
+  <div class="heading">
+    <div>imperium-reihe</div>
+    <div class="persuasion-area" *ngIf="activePlayer">
+      <div class="resource-display" [style]="'filter: saturate(0.25);'">
+        <img class="resource small" [src]="getRewardTypePath('persuasion')" />
+        <div class="resource-amount" *ngIf="activePlayer.permanentPersuasion > 0">
+          <span>{{ activePlayer.permanentPersuasion }}</span>
+        </div>
+      </div>
+      +
+      <div class="resource-display">
+        <img class="resource small" [src]="getRewardTypePath('persuasion')" />
+        <div class="resource-amount" *ngIf="activePlayer.persuasionGainedThisRound > 0">
+          <span>{{ activePlayer.persuasionGainedThisRound }}</span>
+        </div>
+      </div>
+      =
+      <div class="resource-display" [style]="'filter: saturate(1.25) brightness(1.25);'">
+        <img class="resource" [src]="getRewardTypePath('persuasion')" />
+        <div class="resource-amount" *ngIf="activePlayerPersuasion > 0">
+          <span>{{ activePlayerPersuasion }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cards-container" *ngFor="let card of imperiumRowCards" (click)="setCardActive(card.id)">
+    <dune-imperium-row-card
+      [class]="
+        (card.id === activeCardId ? 'active' : '') +
+        (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
+        (activePlayerTurnState === 'reveal' && card.persuasionCosts && activePlayerPersuasion >= card.persuasionCosts
+          ? ' buyable'
+          : '')
+      "
+      [card]="card"
+    ></dune-imperium-row-card>
+    <div class="card-action-container" *ngIf="card.id === activeCardId">
+      <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
+        <mat-icon>check</mat-icon>
+      </button>
+      <button class="card-remove-button" mat-fab [color]="'accent'" (click)="onRemoveCardClicked(card)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

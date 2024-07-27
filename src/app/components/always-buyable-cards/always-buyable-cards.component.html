@@ -1,0 +1,44 @@
+<div class="spice-must-flow-container" *ngIf="spiceMustFlowCard" (click)="setCardActive(spiceMustFlowCard.name.en)">
+  <dune-imperium-row-card
+    [class]="
+      (spiceMustFlowCard.name.en === activeCardId ? 'active' : '') +
+      (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
+      (activePlayerTurnState === 'reveal' &&
+      spiceMustFlowCard.persuasionCosts &&
+      activePlayerPersuasion >= spiceMustFlowCard.persuasionCosts
+        ? ' buyable'
+        : '')
+    "
+    [card]="spiceMustFlowCard"
+  ></dune-imperium-row-card>
+  <div class="card-action-container" *ngIf="spiceMustFlowCard.name.en === activeCardId">
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyAlwaysAvailableCardClicked(spiceMustFlowCard)">
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="liason-container" *ngIf="shownLiasonCard" (click)="setCardActive(shownLiasonCard.name.en)">
+  <dune-imperium-row-card
+    [class]="
+      (shownLiasonCard.name.en === activeCardId ? 'active' : '') +
+      (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
+      (activePlayerTurnState === 'reveal' &&
+      shownLiasonCard.persuasionCosts &&
+      activePlayerPersuasion >= shownLiasonCard.persuasionCosts
+        ? ' buyable'
+        : '')
+    "
+    [card]="shownLiasonCard"
+  ></dune-imperium-row-card>
+  <div class="card-action-container" *ngIf="shownLiasonCard.name.en === activeCardId">
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowPreviousLiasonClicked()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyAlwaysAvailableCardClicked(shownLiasonCard)">
+      <mat-icon>check</mat-icon>
+    </button>
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowNextLiasonClicked()">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </div>
+</div>

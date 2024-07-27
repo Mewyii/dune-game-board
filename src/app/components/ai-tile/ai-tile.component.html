@@ -36,33 +36,6 @@
       >
     </div>
   </div>
-  <h3>deck</h3>
-  <div class="heading-container" *ngIf="currentAIPlayer">
-    <div class="info-container">
-      <div>size</div>
-      <div class="value">{{ currentPlayer.cardsInDeck }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveCardFromDeckClicked(currentPlayer.id)">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddCardToDeckClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    <div class="info-container">
-      <div>bought</div>
-      <div class="value">{{ currentPlayer.cardsBought }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onBoughtCardClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    <div class="info-container">
-      <div>trimmed</div>
-      <div class="value">{{ currentPlayer.cardsTrimmed }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onTrimCardClicked(currentPlayer.id)">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-  </div>
   <div class="decision-container" *ngIf="currentAIPlayer">
     <div class="preferred-fields-container">
       <div

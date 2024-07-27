@@ -1,4 +1,4 @@
-<div class="action-field">
+<div [class]="'action-field' + (activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer ? ' highlighted' : '')">
   <div class="heading" [style.background-color]="backgroundColor">
     <span class="title">{{ ts.translate(action.title).toLocaleLowerCase() }}</span>
     <div class="border-remover" [style.background-color]="backgroundColor"></div>

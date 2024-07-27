@@ -8,6 +8,7 @@ import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
 import { TechTile } from 'src/app/constants/tech-tiles';
 import { DuneEvent } from 'src/app/constants/events';
+import { ImperiumDeckCard } from '../../cards.service';
 
 export type AIGoals =
   | 'high-council'
@@ -53,6 +54,13 @@ export interface GameState {
   conflict: Conflict;
   availableTechTiles: TechTile[];
   currentEvent: DuneEvent | undefined;
+  playerDeckSizeTotal: number;
+  playerDeckCards?: ImperiumDeckCard[];
+  playerHandCards?: ImperiumDeckCard[];
+  playerDiscardPileCards?: ImperiumDeckCard[];
+  playerTrashPileCards?: ImperiumDeckCard[];
+  playerCardsBought: number;
+  playerCardsTrashed: number;
 }
 
 export interface AIGoal {

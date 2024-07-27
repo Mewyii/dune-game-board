@@ -1,0 +1,46 @@
+.spice-must-flow-container {
+    position: absolute;
+    top: 1155px;
+    right: 5px;
+}
+
+.liason-container {
+    position: absolute;
+    top: 1155px;
+    right: 267px;
+}
+
+dune-imperium-row-card {
+    transition: 0.5s;
+    transform: scale(0.75);
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+    display: block;
+    user-select: none;
+}
+
+dune-imperium-row-card.desaturated {
+    filter: saturate(0.75) brightness(0.75);
+}
+
+dune-imperium-row-card.buyable {
+    filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
+}
+
+dune-imperium-row-card:hover,
+dune-imperium-row-card.active {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    transform: scale(1.25);
+    z-index: 3;
+    position: relative;
+}
+
+.card-action-container {
+    width: 100%;
+    position: absolute;
+    top: 150px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 3;
+}

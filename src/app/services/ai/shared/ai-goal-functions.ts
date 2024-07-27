@@ -18,7 +18,7 @@ export function getResourceDesire(
   virtualResources: Resource[],
   baseDesire: number,
   influences: {
-    resource: ResourceType | 'tech-agents' | 'intrigues' | 'cards-in-deck';
+    resource: ResourceType | 'tech-agents' | 'intrigues';
     amount: number;
     maxAmount?: number;
     negative?: boolean;
@@ -38,7 +38,7 @@ export function getResourceDesire(
 
 export function getResourceAmount(
   player: Player,
-  resourceType: ResourceType | 'tech-agents' | 'intrigues' | 'cards-in-deck',
+  resourceType: ResourceType | 'tech-agents' | 'intrigues',
   virtualResources: Resource[]
 ) {
   switch (resourceType) {
@@ -46,8 +46,6 @@ export function getResourceAmount(
       return player.techAgents;
     case 'intrigues':
       return player.intrigueCount;
-    case 'cards-in-deck':
-      return player.cardsInDeck;
     default:
       const resource = player.resources.find((x) => x.type === resourceType);
       const virtualResource = virtualResources.find((x) => x.type === resourceType);
@@ -326,8 +324,8 @@ export function getCostAdjustedDesire(player: Player, resources: Resource[], des
   return desire * desireAdjustment;
 }
 
-export function playerCanDrawCards(player: Player, amount: number) {
-  return player.cardsInDeck >= player.cardsDrawnThisRound + amount;
+export function playerCanDrawCards(gameState: GameState, amount: number) {
+  return gameState.playerDeckCards && gameState.playerDeckCards.length > 0;
 }
 
 export function getResourceAmountFromArray(resources: Resource[], type: ResourceType) {

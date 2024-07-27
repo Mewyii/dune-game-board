@@ -48,7 +48,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'spice', virtualResources) +
       0.015 * (gameState.currentRound - 1) +
-      0.02 * player.cardsBought,
+      0.02 * gameState.playerCardsBought,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState) => gameState.agentsOnFields.some((x) => x.fieldId === 'Truthsay'),
@@ -253,7 +253,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'fold-space': {
     baseDesire: 0.3,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      -0.0125 * player.cardsBought - 0.0125 * (player.cardsTrimmed + player.focusTokens),
+      -0.0125 * gameState.playerCardsBought - 0.0125 * (gameState.playerCardsTrashed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
@@ -269,7 +269,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'get-board-persuasion': {
     baseDesire: 0.5,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      -0.025 * player.cardsBought - 0.0125 * (player.cardsTrimmed + player.focusTokens),
+      -0.025 * gameState.playerCardsBought - 0.0125 * (gameState.playerCardsTrashed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
@@ -286,20 +286,20 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
             0.4 +
               (player.hasCouncilSeat ? 0.1 : 0) -
               0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
-              0.033 * player.cardsBought +
-              0.025 * (player.cardsTrimmed + player.focusTokens),
+              0.033 * gameState.playerCardsBought +
+              0.025 * (gameState.playerCardsTrashed + player.focusTokens),
             0,
             0.6
           )
         : 0;
 
       const getSpiceMustFlowsDesire =
-        player.cardsInDeck > 7
+        gameState.playerDeckSizeTotal > 7
           ? clamp(
               0.1 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
-                0.05 * player.cardsBought +
-                0.05 * (player.cardsTrimmed + player.focusTokens),
+                0.05 * gameState.playerCardsBought +
+                0.05 * (gameState.playerCardsTrashed + player.focusTokens),
               0,
               0.6
             )
@@ -318,17 +318,17 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     },
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
-    reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(player, 1),
+    reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(gameState, 1),
     viableFields: (fields) => ({
       Alliances: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, [{ type: 'solari', amount: 3 }], 0.3, virtualResources),
-      'Imperial Test Station (card-draw)': (player) => clamp(0.6 + 0.025 * player.cardsBought, 0, 0.7),
+      'Imperial Test Station (card-draw)': (player, gameState) => clamp(0.6 + 0.025 * gameState.playerCardsBought, 0, 0.7),
       'Imperial Test Station (card-destroy)': (player) => clamp(0.3, 0, 0.7),
       Heighliner: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
           [{ type: 'spice', amount: 4 }],
-          clamp(0.6 + 0.025 * player.cardsBought, 0, 0.7),
+          clamp(0.6 + 0.025 * gameState.playerCardsBought, 0, 0.7),
           virtualResources
         ),
       'Mind Training': (player, gameState) => 0.3,
@@ -336,7 +336,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         getCostAdjustedDesire(
           player,
           [{ type: 'spice', amount: 2 }],
-          clamp(0.5 + 0.025 * player.cardsBought, 0, 0.7),
+          clamp(0.5 + 0.025 * gameState.playerCardsBought, 0, 0.7),
           virtualResources
         ),
       'Desert Knowledge (card-draw)': (player, gameState) => 0.3,
@@ -349,13 +349,13 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
-          0.1 * player.cardsBought -
-          0.15 * (player.cardsTrimmed + player.focusTokens),
+          0.1 * gameState.playerCardsBought -
+          0.15 * (gameState.playerCardsTrashed + player.focusTokens),
         -0.4,
         0.4
       ),
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState) => player.cardsInDeck < 7 || gameState.isFinale,
+    reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 7 || gameState.isFinale,
     viableFields: (fields) => ({
       'Mind Training': (player, gameState) => 0.5,
       'Desert Knowledge (card-destroy)': (player, gameState) => 0.5,

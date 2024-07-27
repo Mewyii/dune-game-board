@@ -1,0 +1,102 @@
+.player-hand-container {
+    position: fixed;
+    display: flex;
+    gap: 8px;
+    margin-left: 25%;
+    min-width: 2000px;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    height: 40px;
+    background-color: #45382f;
+    padding: 8px;
+    border-radius: 5px 5px 0px 0px;
+    filter: drop-shadow(0px 0px 12px black);
+}
+
+.player-cards-container {
+    flex: 1 1;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+.card-container {
+    transition: .5s;
+    transform: translate(0rem, -300px);
+}
+
+.card-container:hover {
+    z-index: 1;
+}
+
+.card-container.hidden {
+    transform: none;
+}
+
+dune-imperium-row-card {
+    transition: .5s;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+    display: block;
+    user-select: none;
+}
+
+dune-imperium-row-card:hover,
+dune-imperium-row-card.active {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    transform: scale(1.25) translate(0rem, -32px);
+    z-index: 3;
+    position: relative;
+}
+
+dune-imperium-row-card.played {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73)) brightness(1.2) saturate(1.2);
+    transform: scale(1.25) translate(0rem, -32px);
+}
+
+dune-imperium-row-card.not-played {
+    filter: brightness(0.8) saturate(0.8);
+}
+
+.draw-card-button {
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
+    transition: .3s;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+}
+
+.draw-card-button:hover {
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25)) brightness(1.2) saturate(1.2);
+}
+
+.draw-card-button.active {
+    filter: drop-shadow(0px 0px 3px rgb(255, 170, 73)) brightness(1.25) saturate(1.25);
+}
+
+.draw-card-icon {
+    height: 38px;
+    min-width: 38px;
+    object-fit: scale-down;
+}
+
+.card-action-container {
+    width: 100%;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 3;
+}
+
+.card-activate-button {
+
+}
+
+.card-discard-button {
+
+}
+
+.card-remove-button {
+
+}

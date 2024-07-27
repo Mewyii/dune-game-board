@@ -12,6 +12,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
 
 @Component({
   selector: 'app-playerboard',
@@ -22,18 +23,23 @@ export class PlayerboardComponent implements OnInit {
   public players: Player[] = [];
   public currentTurn = 0;
   public turnState = '';
+  public canSwitchToCombatPhase = false;
   public availablePlayerAgents: PlayerAgents[] = [];
 
   public playerScores: PlayerScore[] = [];
 
   public playersString: LanguageString = { de: 'Spieler', en: 'Players' };
   public roundString: LanguageString = { de: 'Runde', en: 'Round' };
+  public playerDecks: PlayerCardStack[] = [];
+  public playerDiscardPiles: PlayerCardStack[] = [];
+  public playerHandCards: PlayerCardStack[] = [];
 
   constructor(
     public gameManager: GameManager,
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
     public leadersService: LeadersService,
+    public cardsService: CardsService,
     public translateService: TranslateService,
     private audioManager: AudioManager,
     public dialog: MatDialog
@@ -42,6 +48,7 @@ export class PlayerboardComponent implements OnInit {
   ngOnInit(): void {
     this.playerManager.players$.subscribe((players) => {
       this.players = players;
+      this.canSwitchToCombatPhase = !players.some((x) => x.turnState === 'agent-placement');
     });
 
     this.gameManager.currentRound$.subscribe((currentTurn) => {
@@ -58,6 +65,18 @@ export class PlayerboardComponent implements OnInit {
 
     this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       this.playerScores = playerScores;
+    });
+
+    this.cardsService.playerDecks$.subscribe((playerDecks) => {
+      this.playerDecks = playerDecks;
+    });
+
+    this.cardsService.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
+      this.playerDiscardPiles = playerDiscardPiles;
+    });
+
+    this.cardsService.playerHands$.subscribe((playerHandCards) => {
+      this.playerHandCards = playerHandCards;
     });
   }
 
@@ -80,12 +99,15 @@ export class PlayerboardComponent implements OnInit {
     this.gameManager.startGame();
   }
 
-  onNextPlayerClicked() {
-    this.audioManager.playSound('click-soft');
-    this.gameManager.setNextPlayerActive('agent-placement');
-  }
-
   onBeginCombatClicked() {
+    const currentPlayer = this.gameManager.getActivePlayer();
+    if (currentPlayer && currentPlayer.turnState === 'reveal') {
+      const playerHand = this.cardsService.getPlayerHand(currentPlayer.id);
+      if (playerHand && playerHand.cards) {
+        this.cardsService.discardPlayerHandCards(currentPlayer.id);
+        this.playerManager.setTurnStateForPlayer(currentPlayer.id, 'done');
+      }
+    }
     this.gameManager.setTurnState('combat');
   }
 
@@ -119,6 +141,18 @@ export class PlayerboardComponent implements OnInit {
     } else {
       return 0;
     }
+  }
+
+  public getPlayerDeck(playerId: number) {
+    return this.playerDecks.find((x) => x.playerId === playerId);
+  }
+
+  public getPlayerDiscardPile(playerId: number) {
+    return this.playerDiscardPiles.find((x) => x.playerId === playerId);
+  }
+
+  public getPlayerHandCards(playerId: number) {
+    return this.playerHandCards.find((x) => x.playerId === playerId);
   }
 
   getPlayerLeaderName(playerId: number) {

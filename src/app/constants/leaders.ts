@@ -545,7 +545,7 @@ export const leaders: Leader[] = [
     },
     signetDescription: {
       en: '',
-      de: 'Gegnerische Agenten blockieren deinen Agenten auf {faction:landsraad}-Feldern nicht.',
+      de: '{resource:signet-token}. Entsorge ihn, damit gegnerische Agenten deinen Agenten auf {faction:landsraad}-Feldern nicht blockieren.',
     },
     imageUrl: '/assets/images/leaders/leto.png',
     type: 'new',

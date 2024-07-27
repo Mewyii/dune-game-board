@@ -4,21 +4,22 @@ import { BehaviorSubject } from 'rxjs';
 import { Resource, ResourceType } from '../models';
 import { SettingsService } from './settings.service';
 
+export type PlayerTurnState = 'agent-placement' | 'reveal' | 'done';
+
 export interface Player {
   id: number;
   agents: number;
+  turnState: PlayerTurnState;
   resources: Resource[];
   color: string;
   hasSwordmaster?: boolean;
   hasCouncilSeat?: boolean;
   intrigueCount: number;
-  cardsInDeck: number;
-  cardsBought: number;
   focusTokens: number;
-  cardsTrimmed: number;
-  cardsDrawnThisRound: number;
+  cardsDrawnAtRoundStart: number;
   techAgents: number;
-  persuasionThisRound: number;
+  persuasionGainedThisRound: number;
+  persuasionSpentThisRound: number;
   permanentPersuasion: number;
   isAI?: boolean;
 }
@@ -43,9 +44,13 @@ export class PlayerManager {
     });
   }
 
-  /** Use with care.Players object gets cloned everytime it is used but is immutable. */
+  /** Use with care. Players object gets cloned everytime it is used but is immutable. */
   public getPlayers() {
     return cloneDeep(this.playersSubject.value);
+  }
+
+  public getPlayerIds() {
+    return cloneDeep(this.playersSubject.value).map((x) => x.id);
   }
 
   public getPlayerCount() {
@@ -65,6 +70,16 @@ export class PlayerManager {
     return player ? player.color : '';
   }
 
+  getPlayerPersuasion(playerId: number) {
+    const player = this.getPlayer(playerId);
+    return player ? player.permanentPersuasion + player.persuasionGainedThisRound : 0;
+  }
+
+  getPlayerFocusTokens(playerId: number) {
+    const player = this.getPlayer(playerId);
+    return player ? player.focusTokens : 0;
+  }
+
   public addPlayer() {
     const players = this.getPlayers();
 
@@ -72,19 +87,18 @@ export class PlayerManager {
       players.push({
         id: players.length + 1,
         agents: 2,
+        turnState: 'agent-placement',
         resources: [
           { type: 'solari', amount: 0 },
           { type: 'spice', amount: 0 },
           { type: 'water', amount: 0 },
         ],
         color: this.createPlayerColor(players.length + 1),
-        cardsInDeck: 9,
-        cardsBought: 0,
         focusTokens: 0,
-        cardsTrimmed: 0,
         intrigueCount: 0,
-        cardsDrawnThisRound: 0,
-        persuasionThisRound: 0,
+        cardsDrawnAtRoundStart: 5,
+        persuasionGainedThisRound: 0,
+        persuasionSpentThisRound: 0,
         techAgents: 0,
         permanentPersuasion: 0,
         isAI: true,
@@ -108,22 +122,22 @@ export class PlayerManager {
     const playerStartingSpice = playerStartingResources.find((x) => x.type === 'spice')?.amount ?? 0;
     const playerStartingWater = playerStartingResources.find((x) => x.type === 'water')?.amount ?? 0;
 
-    const players = this.getPlayers().map((player) => ({
+    const players: Player[] = this.getPlayers().map((player) => ({
       ...player,
       agents: 2,
+      turnState: 'agent-placement',
       resources: [
         { type: 'solari', amount: playerStartingSolari },
         { type: 'spice', amount: playerStartingSpice },
         { type: 'water', amount: playerStartingWater },
       ] as Resource[],
-      cardsInDeck: 9,
       cardsBought: 0,
       focusTokens: 0,
-      cardsTrimmed: 0,
       intrigueCount: 0,
-      cardsDrawnThisRound: 0,
+      cardsDrawnAtRoundStart: 5,
       techAgents: 0,
-      persuasionThisRound: 0,
+      persuasionGainedThisRound: 0,
+      persuasionSpentThisRound: 0,
       permanentPersuasion: 0,
       hasCouncilSeat: false,
       hasSwordmaster: false,
@@ -131,6 +145,21 @@ export class PlayerManager {
     this.playersSubject.next(players);
 
     return players;
+  }
+
+  public setTurnStateForPlayer(id: number, turnState: PlayerTurnState) {
+    const players = this.getPlayers();
+
+    const player = players.find((x) => x.id === id);
+    if (player) {
+      player.turnState = turnState;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public resetTurnStateForPlayers() {
+    this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, turnState: 'agent-placement' })));
   }
 
   public setAIActiveForPlayer(id: number, active: boolean) {
@@ -220,40 +249,6 @@ export class PlayerManager {
     this.playersSubject.next(players);
   }
 
-  public addCardsToPlayerDeck(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.cardsInDeck = player.cardsInDeck + amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public removeCardsFromPlayerDeck(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.cardsInDeck = player.cardsInDeck - amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public boughtCardsFromImperiumRow(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.cardsBought = player.cardsBought + amount;
-      player.cardsInDeck = player.cardsInDeck + amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
   public addFocusTokens(id: number, amount: number) {
     const players = this.getPlayers();
 
@@ -271,40 +266,6 @@ export class PlayerManager {
     const player = players.find((x) => x.id === id);
     if (player && player.focusTokens >= amount) {
       player.focusTokens = player.focusTokens - amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public trimCardsFromPlayerDeck(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player && player.focusTokens >= amount) {
-      player.focusTokens = player.focusTokens - amount;
-      player.cardsTrimmed = player.cardsTrimmed + amount;
-      player.cardsInDeck = player.cardsInDeck - amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public allPlayersDrawInitialCards() {
-    const players = this.getPlayers();
-
-    for (const player of players) {
-      player.cardsDrawnThisRound = 5;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public playerDrawsCards(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.cardsDrawnThisRound = player.cardsDrawnThisRound + amount;
     }
 
     this.playersSubject.next(players);
@@ -334,28 +295,40 @@ export class PlayerManager {
     this.playersSubject.next(players);
   }
 
-  public addPersuasionToPlayer(playerId: number, amount: number) {
+  public addPersuasionGainedToPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
-    players[playerIndex] = { ...player, persuasionThisRound: player.persuasionThisRound + amount };
+    players[playerIndex] = { ...player, persuasionGainedThisRound: player.persuasionGainedThisRound + amount };
 
     this.playersSubject.next(players);
   }
 
-  public removePersuasionFromPlayer(playerId: number, amount: number) {
+  public removePersuasionGainedFromPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
     const player = players[playerIndex];
-    players[playerIndex] = { ...player, persuasionThisRound: player.persuasionThisRound - amount };
+    players[playerIndex] = { ...player, persuasionGainedThisRound: player.persuasionGainedThisRound - amount };
+
+    this.playersSubject.next(players);
+  }
+
+  public addPersuasionSpentToPlayer(playerId: number, amount: number) {
+    const players = this.getPlayers();
+
+    const playerIndex = players.findIndex((x) => x.id === playerId);
+    const player = players[playerIndex];
+    players[playerIndex] = { ...player, persuasionSpentThisRound: player.persuasionSpentThisRound + amount };
 
     this.playersSubject.next(players);
   }
 
   public resetPersuasionForPlayers() {
-    this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, persuasionThisRound: 0 })));
+    this.playersSubject.next(
+      this.getPlayers().map((x) => ({ ...x, persuasionGainedThisRound: 0, persuasionSpentThisRound: 0 }))
+    );
   }
 
   public addPermanentPersuasionToPlayer(playerId: number, amount: number) {

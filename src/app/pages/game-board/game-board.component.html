@@ -1,4 +1,5 @@
-<div [style]="'display:flex; padding-left: 32px, padding-top: 16px'" *ngIf="settings && gameContent">
+<div [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px'" *ngIf="settings && gameContent">
+  <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>
   <div class="board">
     <ng-particles
       *ngIf="settings.mode === 'game'"
@@ -26,19 +27,21 @@
     <app-card-areas></app-card-areas>
     <dune-conflicts *ngIf="settings.mode === 'game'"></dune-conflicts>
     <dune-tech-tiles *ngIf="settings.mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
+    <dune-always-buyable-cards *ngIf="settings.mode === 'game'"></dune-always-buyable-cards>
   </div>
-  <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>
+  <dune-imperium-row></dune-imperium-row>
   <div class="sideboard-container">
     <dune-game-manual *ngIf="settings.mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
     <dune-events *ngIf="settings.mode === 'game'"></dune-events>
     <!-- <dune-minor-houses *ngIf="settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders *ngIf="settings.mode === 'game'"></dune-leaders>
-    <dune-ai-tile *ngIf="settings.mode === 'game'"></dune-ai-tile>
+    <dune-ai-tile *ngIf="settings.mode === 'game' && gameManager.currentRound !== 0"></dune-ai-tile>
     <dune-board-evaluation *ngIf="settings.mode === 'board'"></dune-board-evaluation>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
-  <div *ngIf="settings.mode === 'game'" class="sideboard-container" style="margin-left: 8px">
+  <div *ngIf="settings.mode === 'game'" class="sideboard-container">
     <dune-audio-player></dune-audio-player>
   </div>
+  <dune-player-hand *ngIf="settings.mode === 'game'"></dune-player-hand>
 </div>
 <dune-particle-effects></dune-particle-effects>

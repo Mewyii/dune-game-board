@@ -1,0 +1,76 @@
+<ng-container>
+  <div class="player-hand-container">
+    <div class="player-cards-container">
+      <ng-container *ngIf="playerHandCards && cardsShown === 'hand'">
+        <div
+          *ngFor="let handCard of playerHandCards.cards"
+          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+          (click)="setCardActive(handCard.id)"
+        >
+          <dune-imperium-row-card
+            [class]="
+              (handCard.id === activeCardId ? 'active' : '') +
+              (playedPlayerCardId ? (handCard.id === playedPlayerCardId ? ' played' : ' not-played') : '')
+            "
+            [card]="handCard"
+          ></dune-imperium-row-card>
+          <div class="card-action-container" *ngIf="handCard.id === activeCardId">
+            <button
+              *ngIf="currentPlayer?.turnState === 'agent-placement' && handCard.id !== playedPlayerCardId"
+              class="card-activate-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onPlayCardClicked(handCard.id)"
+            >
+              <mat-icon>check</mat-icon>
+            </button>
+            <button
+              *ngIf="handCard.id === playedPlayerCardId"
+              class="card-activate-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onUnPlayCardClicked(handCard.id)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+            <button class="card-discard-button" mat-fab [color]="'accent'" (click)="onDiscardCardClicked(handCard)">
+              <mat-icon>expand_more</mat-icon>
+            </button>
+            <button class="card-remove-button" mat-fab [color]="'accent'" (click)="onTrashHandCardClicked(handCard)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="playerDiscardPiles && cardsShown === 'discard'">
+        <div
+          *ngFor="let card of playerDiscardPiles.cards"
+          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+          (click)="setCardActive(card.id)"
+        >
+          <dune-imperium-row-card [class]="card.id === activeCardId ? 'active' : ''" [card]="card"></dune-imperium-row-card>
+          <div class="card-action-container" *ngIf="card.id === activeCardId">
+            <button class="card-remove-button" mat-fab [color]="'accent'" (click)="onTrashDiscardedCardClicked(card)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="draw-card-button" (click)="onDrawCardClicked()">
+      <img class="draw-card-icon" [src]="getRewardTypePath('card-draw')" />
+    </div>
+    <div [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')" (click)="onShowHandClicked()">
+      <img class="draw-card-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
+    </div>
+    <div [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')" (click)="onShowDiscardPileClicked()">
+      <img class="draw-card-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+    </div>
+    <div [style.marginBottom]="'8px'">
+      <button mat-mini-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">
+        <mat-icon *ngIf="!showCards">expand_less</mat-icon>
+        <mat-icon *ngIf="showCards">expand_more</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-container>

@@ -184,8 +184,8 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
         rewards: [
-          { type: 'persuasion', amount: 1 },
           { type: 'solari', amount: 2 },
+          { type: 'persuasion', amount: 1 },
         ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },

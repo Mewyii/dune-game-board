@@ -60,6 +60,9 @@ import { EventEditorComponent } from './pages/event-configurator/event-editor/ev
 import { DialogEventEditorComponent } from './pages/event-configurator/dialog-event-editor/dialog-event-editor.component';
 import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
 import { BoardEvaluationComponent } from './components/board-evaluation/board-evaluation.component';
+import { PlayerHandComponent } from './components/player-hand/player-hand.component';
+import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
+import { AlwaysBuyableCardsComponent } from './components/always-buyable-cards/always-buyable-cards.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +108,9 @@ import { BoardEvaluationComponent } from './components/board-evaluation/board-ev
     DialogSettingsComponent,
     BoardEvaluationComponent,
     StartingCardConfiguratorComponent,
+    PlayerHandComponent,
+    ImperiumRowComponent,
+    AlwaysBuyableCardsComponent,
   ],
   imports: [
     BrowserModule,

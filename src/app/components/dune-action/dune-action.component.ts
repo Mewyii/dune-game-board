@@ -5,9 +5,10 @@ import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { CardsService } from 'src/app/services/cards.service';
 
 @Component({
   selector: 'app-dune-action',
@@ -39,11 +40,17 @@ export class DuneActionComponent implements OnInit {
 
   public highCouncilSeats: string[] = [];
 
+  public activePlayerId: number = 0;
+  public activePlayerTurnState: PlayerTurnState | undefined;
+
+  public isAccessibleByPlayer = false;
+
   constructor(
     public gameManager: GameManager,
     public playerManager: PlayerManager,
     public ts: TranslateService,
-    private audioManager: AudioManager
+    private audioManager: AudioManager,
+    private cardsService: CardsService
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +75,26 @@ export class DuneActionComponent implements OnInit {
         this.additionalPlayersOnField = [];
         this.playerOnField = undefined;
       }
+    });
+
+    this.gameManager.activePlayerId$.subscribe((playerId) => {
+      this.activePlayerId = playerId;
+
+      this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+
+      this.isAccessibleByPlayer = this.cardsService
+        .getPlayerBoardAccess(this.activePlayerId)
+        .includes(this.action.actionType);
+    });
+
+    this.cardsService.playerHands$.subscribe((playerHandCards) => {
+      this.isAccessibleByPlayer = this.cardsService
+        .getPlayerBoardAccess(this.activePlayerId)
+        .includes(this.action.actionType);
+    });
+
+    this.playerManager.players$.subscribe((players) => {
+      this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
     });
 
     this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {

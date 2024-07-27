@@ -17,6 +17,7 @@ import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.se
 import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { CardsService } from 'src/app/services/cards.service';
 
 @Component({
   selector: 'dune-leaders',
@@ -26,6 +27,8 @@ import { AudioManager } from 'src/app/services/audio-manager.service';
 export class LeadersComponent implements OnInit {
   public leaders: (Leader | LeaderImageOnly)[] = [];
   public newLeaders: Leader[] = [];
+
+  public currentTurn = 0;
 
   public playerLeaders: PlayerLeader[] = [];
   public activePlayerId: number = 0;
@@ -56,6 +59,7 @@ export class LeadersComponent implements OnInit {
     public playerScoreManager: PlayerScoreManager,
     public minorHouseService: MinorHousesService,
     public techTilesService: TechTilesService,
+    public cardsService: CardsService,
     private audioManager: AudioManager,
     public dialog: MatDialog
   ) {}
@@ -116,6 +120,10 @@ export class LeadersComponent implements OnInit {
       this.playerTechTiles = playerTechTiles;
       this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
     });
+
+    this.gameManager.currentRound$.subscribe((currentTurn) => {
+      this.currentTurn = currentTurn;
+    });
   }
 
   setNextLeader() {
@@ -156,6 +164,7 @@ export class LeadersComponent implements OnInit {
     this.playerManager.removeFocusTokens(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
+    return false;
   }
 
   onAddTechAgentClicked(id: number) {
@@ -170,26 +179,37 @@ export class LeadersComponent implements OnInit {
     this.playerManager.removeTechAgentsFromPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
+    return false;
   }
 
   public onAddTroopToGarrisonClicked(playerId: number) {
     this.audioManager.playSound('troops');
     this.combatManager.addPlayerTroopsToGarrison(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
   }
 
   public onRemoveTroopFromGarrisonClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.combatManager.removePlayerTroopsFromGarrison(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    return false;
   }
 
   public onAddShipToGarrisonClicked(playerId: number) {
     this.audioManager.playSound('dreadnought');
     this.combatManager.addPlayerShipsToGarrison(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
   }
 
   public onRemoveShipFromGarrisonClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    return false;
   }
 
   onAddResourceClicked(id: number, type: ResourceType) {
@@ -211,6 +231,7 @@ export class LeadersComponent implements OnInit {
     this.playerManager.removeResourceFromPlayer(id, type, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
+    return false;
   }
 
   onAddIntrigueClicked(id: number) {
@@ -225,6 +246,7 @@ export class LeadersComponent implements OnInit {
     this.playerManager.removeIntriguesFromPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
+    return false;
   }
 
   public onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
@@ -234,11 +256,14 @@ export class LeadersComponent implements OnInit {
       this.audioManager.playSound('victory-point');
     }
     this.playerScoreManager.addPlayerScore(id, scoreType, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-soft');
     this.playerScoreManager.removePlayerScore(id, scoreType, 1);
+    return false;
   }
 
   onAddPlayerAgentClicked(id: number) {
@@ -249,6 +274,7 @@ export class LeadersComponent implements OnInit {
   onRemovePlayerAgentClicked(id: number) {
     this.audioManager.playSound('click-soft');
     this.gameManager.removeAgentFromPlayer(id);
+    return false;
   }
 
   onHouseLevelUpClicked(houseId: string) {
@@ -281,11 +307,51 @@ export class LeadersComponent implements OnInit {
   public onAddPermanentPersuasionClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.playerManager.addPermanentPersuasionToPlayer(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
   }
 
   public onRemovePermanentPersuasionClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.playerManager.removePermanentPersuasionFromPlayer(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    return false;
+  }
+
+  public onAddPersuasionGainedThisRoundClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
+    this.playerManager.addPersuasionGainedToPlayer(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+  }
+
+  public onRemovePersuasionGainedThisRoundClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
+    this.playerManager.removePersuasionGainedFromPlayer(playerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    return false;
+  }
+
+  public onRevealCardsClicked(playerId: number) {
+    this.gameManager.revealPlayerCards(playerId);
+  }
+
+  public onNextPlayerClicked() {
+    if (this.currentPlayer && this.currentPlayer.turnState === 'reveal') {
+      const playerHand = this.cardsService.getPlayerHand(this.currentPlayer.id);
+      if (playerHand && playerHand.cards) {
+        this.cardsService.discardPlayerHandCards(this.currentPlayer.id);
+        this.playerManager.setTurnStateForPlayer(this.currentPlayer.id, 'done');
+      }
+    }
+    this.audioManager.playSound('click-soft');
+    this.gameManager.setNextPlayerActive('agent-placement');
+  }
+
+  public onAiActionClicked(playerId: number) {
+    this.gameManager.doAIAction(playerId);
   }
 
   public getIsTechTileFlipped(techTileId: string) {

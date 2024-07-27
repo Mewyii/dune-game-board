@@ -1,6 +1,7 @@
 import { ActionField, DuneLocation, Faction, LanguageType, Reward } from '../models';
 import { FieldsForGoals } from '../services/ai/models';
 import { gameContentCustomAdvanced } from './game-content';
+import { ImperiumCard } from './imperium-cards';
 
 export interface VictoryPointReward {
   score: number;
@@ -21,6 +22,8 @@ export interface GameContent {
   highCouncilPersuasion: number;
   startingResources: Reward[];
   aiGoals?: FieldsForGoals;
+  alwaysBuyableCards?: ImperiumCard[];
+  customCards?: ImperiumCard[];
 }
 
 export type AppMode = 'board' | 'game';

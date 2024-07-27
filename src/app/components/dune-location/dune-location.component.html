@@ -11,11 +11,11 @@
   <ng-container *ngIf="location.ownerReward">
     <div class="location-owning-area">
       <div
-        class="location-owner-indicator"
+        [class]="'location-owner-indicator' + (owner ? ' owned' : '')"
         [style.border-color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
       >
-        <span class="location-owner-name">{{ leaderInitials }}</span>
+        <span *ngIf="owner" class="location-owner-name">{{ leaderInitials }}</span>
       </div>
       <div class="location-owner-reward-area" [style.background-color]="location.color">
         <img class="location-owner-defenders-advantage" [src]="'assets/images/reward-markers/marker_shield_2.png'" />

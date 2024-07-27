@@ -56,7 +56,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
       (0.01 * getResourceAmount(player, 'spice', virtualResources) +
         0.015 * (gameState.currentRound - 1) +
-        0.02 * player.cardsBought),
+        0.02 * gameState.playerCardsBought),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState) => gameState.agentsOnFields.some((x) => x.fieldId === 'Truthsay'),
@@ -239,8 +239,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
       (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
-      0.01 * player.cardsBought -
-      0.01 * (player.cardsTrimmed + player.focusTokens),
+      0.01 * gameState.playerCardsBought -
+      0.01 * (gameState.playerCardsTrashed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
@@ -255,7 +255,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'get-board-persuasion': {
     baseDesire: 0.5,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      -0.02 * player.cardsBought - 0.01 * (player.cardsTrimmed + player.focusTokens) - (player.hasCouncilSeat ? 0.05 : 0.0),
+      -0.02 * gameState.playerCardsBought -
+      0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
+      (player.hasCouncilSeat ? 0.05 : 0.0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
@@ -270,20 +272,20 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
             0.4 +
               (player.hasCouncilSeat ? 0.1 : 0) -
               0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
-              0.033 * player.cardsBought +
-              0.025 * (player.cardsTrimmed + player.focusTokens),
+              0.033 * gameState.playerCardsBought +
+              0.025 * (gameState.playerCardsTrashed + player.focusTokens),
             0,
             0.6
           )
         : 0;
 
       const getSpiceMustFlowsDesire =
-        player.cardsInDeck > 7
+        gameState.playerDeckSizeTotal > 7
           ? clamp(
               0.1 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
-                0.05 * player.cardsBought +
-                0.05 * (player.cardsTrimmed + player.focusTokens),
+                0.05 * gameState.playerCardsBought +
+                0.05 * (gameState.playerCardsTrashed + player.focusTokens),
               0,
               0.6
             )
@@ -302,14 +304,14 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     },
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
-    reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(player, 1),
+    reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(gameState, 1),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'card-draw', 0, 3),
       Truthsay: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
           [{ type: 'spice', amount: 2 }],
-          clamp(0.5 + 0.025 * player.cardsBought, 0, 0.7),
+          clamp(0.5 + 0.025 * gameState.playerCardsBought, 0, 0.7),
           virtualResources
         ),
     }),
@@ -319,13 +321,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
-          0.1 * player.cardsBought -
-          0.15 * (player.cardsTrimmed + player.focusTokens),
+          0.1 * gameState.playerCardsBought -
+          0.15 * (gameState.playerCardsTrashed + player.focusTokens),
         -0.4,
         0.4
       ),
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState) => player.cardsInDeck < 7 || gameState.isFinale,
+    reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 8 || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'card-destroy', 0, 2),
     }),

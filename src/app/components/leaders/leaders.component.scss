@@ -82,11 +82,27 @@ dune-leader-card {
     justify-content: center;
 }
 
+.line {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 64px;
+}
+
 .info-container {
     display: flex;
-    gap: 6px;
+    gap: 16px;
     align-items: center;
     justify-content: center;
+    flex: 1 1;
+}
+
+.info-container.left {
+    justify-content: flex-start;
+}
+
+.info-container.right {
+    justify-content: flex-end;
 }
 
 .info-container.vertical {
@@ -99,38 +115,59 @@ dune-leader-card {
     justify-content: flex-start;
 }
 
+.info-container.half-width {
+    width: 50%;
+}
+
 .agents-icon-container {
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
 }
 
 .agents-icon {
-    height: 40px;
-    width: 25px;
+    height: 50px;
+    width: 32px;
+    margin: 0px 11px;
     mask-image: url(/assets/images/reward-markers/marker_agent.png);
     mask-size: contain;
     mask-mode: luminance;
+    mask-repeat: no-repeat;
     background-color: #bebebe;
 }
 
 .tech-agent-marker {
-    width: 31px;
-    height: 31px;
+    box-sizing: border-box;
+    width: 45px;
+    height: 45px;
+    margin: 5px;
     border-radius: 25%;
-    border: 3px solid rgb(155, 129, 43);
-    filter: drop-shadow(0px 0px 5px black);
+    border: 5px solid rgb(51, 42, 26);
+    background-color: rgb(148, 136, 0);
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
     left: calc(50% - 13px);
-    animation-name: _ngcontent-ng-c1197454014_unit-marker-anim;
+    animation-name: unit-marker-anim;
     animation-timing-function: ease-in-out;
     animation-duration: 1.5s;
-    margin: 10px;
+}
+
+.tech-background-image {
+    background-image: url(/assets/images/faction-symbols/Symbol_Ix.png);
+    background-size: contain;
+    opacity: 0.33;
+    width: auto;
+    height: 100%;
+    margin: 2px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
 }
 
 .focus-marker {
-    width: 20px;
-    height: 20px;
+    box-sizing: border-box;
+    width: 41px;
+    height: 41px;
+    margin: 7px;
     border-radius: 50%;
-    border: 2px solid white;
-    background-color: white;
+    border: 4px solid white;
+    background-color: rgb(255 255 255 / 20%);
     filter: drop-shadow(0px 0px 5px white);
     left: calc(50% - 13px);
     animation-name: unit-marker-anim;
@@ -178,6 +215,14 @@ dune-leader-card {
     max-height: 55px;
     position: relative;
     color: white;
+    transition: .3s;
+    user-select: none;
+}
+
+.resource-display:hover {
+    filter: brightness(1.2) saturate(1.2);
+    transform: scale(1.1);
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
 }
 
 .resource {
@@ -185,6 +230,10 @@ dune-leader-card {
     width: 55px;
     object-fit: scale-down;
     filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+.resource.dark {
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.8);
 }
 
 .resource.intrigue {
