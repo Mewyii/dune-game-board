@@ -67,10 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "dune-game-board:build:production"
+              "buildTarget": "dune-game-board:build:production"
             },
             "development": {
-              "browserTarget": "dune-game-board:build:development"
+              "buildTarget": "dune-game-board:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +78,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dune-game-board:build"
+            "buildTarget": "dune-game-board:build"
           }
         },
         "test": {
