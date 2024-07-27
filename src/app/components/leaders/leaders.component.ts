@@ -263,6 +263,8 @@ export class LeadersComponent implements OnInit {
   public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-soft');
     this.playerScoreManager.removePlayerScore(id, scoreType, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
     return false;
   }
 

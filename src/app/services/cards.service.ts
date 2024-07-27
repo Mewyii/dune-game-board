@@ -5,6 +5,7 @@ import { shuffle } from '../helpers/common';
 import { PlayerManager } from './player-manager.service';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { ImperiumCard } from '../constants/imperium-cards';
+import { ActionType, FactionType } from '../models';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
@@ -17,6 +18,11 @@ export interface PlayerCardStack {
 export interface PlayerCard {
   playerId: number;
   cardId: string;
+}
+
+export interface CardFactionAndFieldAccess {
+  faction: FactionType;
+  actionType: ActionType[];
 }
 
 @Injectable({
@@ -126,15 +132,6 @@ export class CardsService {
 
   public get playerTrashPiles() {
     return cloneDeep(this.playerTrashPilesSubject.value);
-  }
-
-  public getPlayerBoardAccess(playerId: number) {
-    const playerHandCards = this.getPlayerHand(playerId);
-    if (playerHandCards) {
-      return playerHandCards.cards.filter((x) => x.fieldAccess).flatMap((x) => x.fieldAccess!);
-    } else {
-      return [];
-    }
   }
 
   getPlayerHand(playerId: number) {

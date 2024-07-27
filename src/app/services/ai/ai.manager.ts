@@ -7,12 +7,13 @@ import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from 
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
-import { ActionField, ActiveFactionType, Reward, RewardType } from 'src/app/models';
+import { ActionField, ActionType, ActiveFactionType, FactionType, Reward, RewardType } from 'src/app/models';
 import { getDesire } from './shared/ai-goal-functions';
-import { ImperiumDeckCard } from '../cards.service';
+import { CardFactionAndFieldAccess, ImperiumDeckCard } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreType } from '../player-score-manager.service';
 import { isFactionScoreRewardType } from 'src/app/helpers/rewards';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
+import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 
 export interface AIPlayer {
   playerId: number;
@@ -294,10 +295,8 @@ export class AIManager {
       : viableFields.filter((viableField) => !blockedFields.some((fieldId) => viableField.fieldId.includes(fieldId)));
 
     if (gameState.playerHandCards) {
-      const fieldAccessFromCards = gameState.playerHandCards.flatMap((x) => x.fieldAccess).filter((x) => x !== undefined);
-      const factionAndFieldAccessFromCards = gameState.playerHandCards
-        .flatMap((x) => (x.faction && x.fieldAccess ? { faction: x.faction, actionType: x.fieldAccess } : undefined))
-        .filter((x) => x !== undefined);
+      const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
+      const factionAndFieldAccessFromCards = getCardsFactionAndFieldAccess(gameState.playerHandCards);
       const factionAccessFromFactionInfluence: PlayerFactionScoreType[] = this.getFactionFriendships(gameState.playerScore);
 
       const accessibleFields = boardFields

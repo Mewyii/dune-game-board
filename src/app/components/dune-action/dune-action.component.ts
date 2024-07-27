@@ -9,6 +9,9 @@ import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-
 import { TranslateService } from 'src/app/services/translate-service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
+import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { isFactionScoreType } from 'src/app/helpers/faction-score';
+import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 
 @Component({
   selector: 'app-dune-action',
@@ -50,7 +53,8 @@ export class DuneActionComponent implements OnInit {
     public playerManager: PlayerManager,
     public ts: TranslateService,
     private audioManager: AudioManager,
-    private cardsService: CardsService
+    private cardsService: CardsService,
+    private playerScoreManager: PlayerScoreManager
   ) {}
 
   ngOnInit(): void {
@@ -82,15 +86,11 @@ export class DuneActionComponent implements OnInit {
 
       this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
 
-      this.isAccessibleByPlayer = this.cardsService
-        .getPlayerBoardAccess(this.activePlayerId)
-        .includes(this.action.actionType);
+      this.isAccessibleByPlayer = this.getPlayerAccessibility();
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
-      this.isAccessibleByPlayer = this.cardsService
-        .getPlayerBoardAccess(this.activePlayerId)
-        .includes(this.action.actionType);
+      this.isAccessibleByPlayer = this.getPlayerAccessibility();
     });
 
     this.playerManager.players$.subscribe((players) => {
@@ -100,6 +100,10 @@ export class DuneActionComponent implements OnInit {
     this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {
       const spiceOnField = accumulatedSpice.find((x) => x.fieldId === this.action.title.en);
       this.accumulatedSpice = spiceOnField?.amount ?? 0;
+    });
+
+    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
+      this.isAccessibleByPlayer = this.getPlayerAccessibility();
     });
 
     this.isHighCouncilField = this.action.rewards.some(
@@ -161,5 +165,28 @@ export class DuneActionComponent implements OnInit {
 
   public trackSpiceOnField(index: number, spiceOnField: number) {
     return spiceOnField;
+  }
+
+  private getPlayerAccessibility() {
+    const factionRequiredType = this.action.requiresInfluence?.type;
+    const playerHand = this.cardsService.getPlayerHand(this.activePlayerId);
+    if (!playerHand) {
+      return false;
+    }
+
+    if (!factionRequiredType || !isFactionScoreType(factionRequiredType)) {
+      return getCardsFieldAccess(playerHand.cards).includes(this.action.actionType);
+    } else {
+      const playerScore = this.playerScoreManager.getPlayerScore(this.activePlayerId);
+      if (playerScore) {
+        if (playerScore[factionRequiredType] > 1) {
+          return getCardsFieldAccess(playerHand.cards).includes(this.action.actionType);
+        }
+      }
+      return getCardsFactionAndFieldAccess(playerHand.cards).some(
+        (x) => x.faction === factionRequiredType && x.actionType.includes(this.action.actionType)
+      );
+    }
+    return false;
   }
 }
