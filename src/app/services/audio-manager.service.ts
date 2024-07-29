@@ -18,7 +18,9 @@ export type SoundType =
   | 'intrigue'
   | 'troops'
   | 'combat'
-  | 'sword';
+  | 'sword'
+  | 'fog'
+  | 'card-draw';
 
 export interface Sound {
   url: string;
@@ -47,6 +49,8 @@ export class AudioManager {
   private intrigueSound: Sound = { url: 'assets/audio/sounds/intrigue.mp3', volume: 0.3 };
   private combatSound: Sound = { url: 'assets/audio/sounds/combat.mp3', volume: 0.25 };
   private troopsSound: Sound = { url: 'assets/audio/sounds/troops.mp3', volume: 0.8 };
+  private fogSound: Sound = { url: 'assets/audio/sounds/fog.mp3', volume: 1.0 };
+  private cardDrawSound: Sound = { url: 'assets/audio/sounds/card-draw.mp3', volume: 1.0 };
 
   constructor() {}
 
@@ -87,6 +91,10 @@ export class AudioManager {
       this.play(this.combatSound);
     } else if (sound === 'intrigue') {
       this.play(this.intrigueSound);
+    } else if (sound === 'fog') {
+      this.play(this.fogSound);
+    } else if (sound === 'card-draw') {
+      this.play(this.cardDrawSound);
     }
 
     if (chorusAmount > 1) {
