@@ -49,6 +49,7 @@ export class LeadersComponent implements OnInit {
 
   public playerTechTiles: PlayerTechTile[] = [];
   public techTiles: TechTile[] = [];
+  public activeTechTileId = '';
 
   constructor(
     public leadersService: LeadersService,
@@ -249,6 +250,21 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
+  onAddSignetTokenClicked(id: number) {
+    this.audioManager.playSound('intrigue');
+    this.playerManager.addSignetTokensToPlayer(id, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
+  }
+
+  onRemoveSignetTokenClicked(id: number) {
+    this.audioManager.playSound('click-soft');
+    this.playerManager.removeSignetTokensFromPlayer(id, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
+    return false;
+  }
+
   public onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-soft');
 
@@ -354,6 +370,14 @@ export class LeadersComponent implements OnInit {
 
   public onAiActionClicked(playerId: number) {
     this.gameManager.doAIAction(playerId);
+  }
+
+  setTechTileActive(techTileId: string) {
+    if (this.activeTechTileId !== techTileId) {
+      this.activeTechTileId = techTileId;
+    } else {
+      this.activeTechTileId = '';
+    }
   }
 
   public getIsTechTileFlipped(techTileId: string) {

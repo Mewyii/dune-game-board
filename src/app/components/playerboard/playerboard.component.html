@@ -102,7 +102,16 @@
       <mat-icon>flash_on</mat-icon>
     </button>
     <button
-      *ngIf="currentTurn && turnState !== 'agent-placement'"
+      *ngIf="currentTurn && turnState === 'combat'"
+      mat-fab
+      color="accent"
+      (click)="onResolveCombatClicked()"
+      matTooltip="Resolve Conflict"
+    >
+      <mat-icon>groups</mat-icon>
+    </button>
+    <button
+      *ngIf="currentTurn && turnState === 'combat-resolvement'"
       mat-fab
       color="accent"
       (click)="onNextRoundClicked()"

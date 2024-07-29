@@ -71,7 +71,7 @@ export class AlwaysBuyableCardsComponent {
     }
     if (card.buyEffects) {
       for (const effect of card.buyEffects) {
-        this.gameManager.addRewardToPlayer(effect);
+        this.gameManager.addRewardToPlayer(this.activePlayerId, effect);
       }
     }
 

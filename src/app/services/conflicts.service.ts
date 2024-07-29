@@ -3,6 +3,7 @@ import { BehaviorSubject, Subject, first } from 'rxjs';
 import { cloneDeep, random } from 'lodash';
 import { Conflict, conflicts } from '../constants/conflicts';
 import { shuffle } from '../helpers/common';
+import { Reward } from '../models';
 
 export interface ConflictSet {
   id: number;
@@ -70,6 +71,7 @@ export class ConflictsService {
     lvl: 2,
     row: 1,
     column: 1,
+    rewards: [],
   });
   public currentConflict$ = this.currentConflictSubject.asObservable();
 

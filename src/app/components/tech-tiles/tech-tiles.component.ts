@@ -16,6 +16,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 export class TechTilesComponent {
   public availableTechTiles: TechTile[] = [];
   public title: LanguageString = { de: 'haus', en: 'house' };
+  public activeTechTileId = '';
 
   constructor(
     public gameManager: GameManager,
@@ -33,6 +34,14 @@ export class TechTilesComponent {
   onTakeCardClicked(techTileId: string) {
     this.audioManager.playSound('aquire-tech');
     this.techTilesService.setPlayerTechTile(this.gameManager.activePlayerId, techTileId);
+  }
+
+  setTechTileActive(techTileId: string) {
+    if (this.activeTechTileId !== techTileId) {
+      this.activeTechTileId = techTileId;
+    } else {
+      this.activeTechTileId = '';
+    }
   }
 
   getRewardTypePath(rewardType: RewardType) {

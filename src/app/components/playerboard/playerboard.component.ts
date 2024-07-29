@@ -111,6 +111,10 @@ export class PlayerboardComponent implements OnInit {
     this.gameManager.setTurnState('combat');
   }
 
+  onResolveCombatClicked() {
+    this.gameManager.resolveCombat();
+  }
+
   onNextRoundClicked() {
     this.gameManager.setNextRound();
   }

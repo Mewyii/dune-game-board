@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { RewardType } from 'src/app/models';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, ImperiumDeckCard, PlayerCard, PlayerCardStack } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'dune-player-hand',
@@ -19,9 +21,15 @@ export class PlayerHandComponent implements OnInit {
   public playedPlayerCardId: string | undefined;
 
   public showCards = false;
-  public cardsShown: 'hand' | 'discard' = 'hand';
+  public cardsShown: 'hand' | 'discard' | 'deck' = 'hand';
 
-  constructor(private playerManager: PlayerManager, public gameManager: GameManager, private cardsService: CardsService) {}
+  constructor(
+    private playerManager: PlayerManager,
+    public gameManager: GameManager,
+    private cardsService: CardsService,
+    private audioManager: AudioManager,
+    private settingsService: SettingsService
+  ) {}
 
   ngOnInit(): void {
     this.playerManager.players$.subscribe((players) => {
@@ -56,7 +64,15 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onDrawCardClicked() {
+    this.audioManager.playSound('card-draw');
     this.cardsService.drawPlayerCardsFromDeck(this.activePlayerId, 1);
+  }
+
+  onAddFoldspaceToHandClicked() {
+    const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.name.en.toLocaleLowerCase() === 'foldspace');
+    if (foldspaceCard) {
+      this.cardsService.addCardToPlayerHand(this.activePlayerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
+    }
   }
 
   onShowHandClicked() {
@@ -65,6 +81,10 @@ export class PlayerHandComponent implements OnInit {
 
   onShowDiscardPileClicked() {
     this.cardsShown = 'discard';
+  }
+
+  onShowDeckClicked() {
+    this.cardsShown = 'deck';
   }
 
   onPlayCardClicked(cardId: string) {
@@ -105,6 +125,18 @@ export class PlayerHandComponent implements OnInit {
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
       }
+    }
+  }
+
+  onShuffleDiscardPileUnderDeckClicked() {
+    if (this.currentPlayer) {
+      this.cardsService.shufflePlayerDiscardPileUnderDeck(this.activePlayerId);
+    }
+  }
+
+  onShuffleDeckClicked() {
+    if (this.currentPlayer) {
+      this.cardsService.shufflePlayerDeck(this.activePlayerId);
     }
   }
 

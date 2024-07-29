@@ -27,7 +27,7 @@
 }
 
 dune-imperium-row-card {
-    transition: 0.5s;
+    transition: 0.66s;
     transform: scale(0.75) translateY(-150px);
     margin-top: 16px;
     max-height: 200px;
@@ -71,7 +71,7 @@ dune-imperium-row-card.active {
     left: 0;
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 16px;
     z-index: 3;
 }
 

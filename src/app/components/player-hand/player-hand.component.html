@@ -57,14 +57,38 @@
         </div>
       </ng-container>
     </div>
-    <div class="draw-card-button" (click)="onDrawCardClicked()">
+    <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()">
       <img class="draw-card-icon" [src]="getRewardTypePath('card-draw')" />
     </div>
+    <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onAddFoldspaceToHandClicked()">
+      <img class="draw-card-icon" [src]="getRewardTypePath('foldspace')" />
+    </div>
+    <button
+      *ngIf="cardsShown === 'discard'"
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onShuffleDiscardPileUnderDeckClicked()"
+      matTooltip="shuffle under deck"
+    >
+      <mat-icon>redo</mat-icon>
+    </button>
+    <button
+      *ngIf="cardsShown === 'deck'"
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onShuffleDeckClicked()"
+      matTooltip="shuffle deck"
+    >
+      <mat-icon>sync</mat-icon>
+    </button>
     <div [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')" (click)="onShowHandClicked()">
-      <img class="draw-card-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
+      <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
     </div>
     <div [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')" (click)="onShowDiscardPileClicked()">
-      <img class="draw-card-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+      <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+    </div>
+    <div [class]="'draw-card-button' + (cardsShown === 'deck' ? ' active' : '')" (click)="onShowDeckClicked()">
+      <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
     </div>
     <div [style.marginBottom]="'8px'">
       <button mat-mini-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">

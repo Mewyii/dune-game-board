@@ -60,7 +60,7 @@ export class ImperiumRowComponent implements OnInit {
     }
     if (card.buyEffects) {
       for (const effect of card.buyEffects) {
-        this.gameManager.addRewardToPlayer(effect);
+        this.gameManager.addRewardToPlayer(this.activePlayerId, effect);
       }
     }
     this.cardsService.aquirePlayerCardFromImperiumDeck(this.activePlayerId, card);

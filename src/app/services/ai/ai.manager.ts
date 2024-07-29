@@ -7,7 +7,15 @@ import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from 
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
-import { ActionField, ActionType, ActiveFactionType, FactionType, Reward, RewardType } from 'src/app/models';
+import {
+  ActionField,
+  ActionType,
+  ActiveFactionType,
+  activeFactionTypes,
+  FactionType,
+  Reward,
+  RewardType,
+} from 'src/app/models';
 import { getDesire } from './shared/ai-goal-functions';
 import { CardFactionAndFieldAccess, ImperiumDeckCard } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreType } from '../player-score-manager.service';
@@ -53,6 +61,9 @@ export interface AIAgentPlacementInfo {
   canDestroyOrDrawCard: boolean;
   canBuyTech: boolean;
   canLiftAgent: boolean;
+  factionInfluenceUpChoiceAmount: number;
+  factionInfluenceUpChoiceTwiceAmount: number;
+  shippingAmount: number;
 }
 
 export interface AIRewardArrayInfo {
@@ -642,20 +653,20 @@ export class AIManager {
     });
   }
 
-  getDesiredFactionScoreType(playerScores: PlayerScore): PlayerFactionScoreType {
-    let desiredFactionScoreType: PlayerFactionScoreType = 'fremen';
-    let desiredFactionScoreAmount = playerScores.fremen;
-    if (playerScores.bene > desiredFactionScoreAmount && playerScores.bene < 4) {
-      desiredFactionScoreType = 'bene';
-      desiredFactionScoreAmount = playerScores.bene;
-    }
-    if (playerScores.emperor > desiredFactionScoreAmount && playerScores.emperor < 4) {
-      desiredFactionScoreType = 'emperor';
-      desiredFactionScoreAmount = playerScores.emperor;
-    }
-    if (playerScores.guild > desiredFactionScoreAmount && playerScores.guild < 4) {
-      desiredFactionScoreType = 'guild';
-      desiredFactionScoreAmount = playerScores.guild;
+  getDesiredFactionScoreType(
+    playerScores: PlayerScore,
+    exclusions?: PlayerFactionScoreType[]
+  ): PlayerFactionScoreType | undefined {
+    let desiredFactionScoreType: PlayerFactionScoreType | undefined;
+    let desiredFactionScoreAmount = -1;
+
+    for (const factionType of activeFactionTypes) {
+      if (!exclusions?.includes(factionType)) {
+        if (playerScores[factionType] > desiredFactionScoreAmount && playerScores[factionType] < 4) {
+          desiredFactionScoreType = factionType;
+          desiredFactionScoreAmount = playerScores[factionType];
+        }
+      }
     }
 
     return desiredFactionScoreType;

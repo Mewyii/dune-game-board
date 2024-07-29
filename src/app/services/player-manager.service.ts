@@ -15,6 +15,7 @@ export interface Player {
   hasSwordmaster?: boolean;
   hasCouncilSeat?: boolean;
   intrigueCount: number;
+  signetTokenCount: number;
   focusTokens: number;
   cardsDrawnAtRoundStart: number;
   techAgents: number;
@@ -96,6 +97,7 @@ export class PlayerManager {
         color: this.createPlayerColor(players.length + 1),
         focusTokens: 0,
         intrigueCount: 0,
+        signetTokenCount: 0,
         cardsDrawnAtRoundStart: 5,
         persuasionGainedThisRound: 0,
         persuasionSpentThisRound: 0,
@@ -134,6 +136,7 @@ export class PlayerManager {
       cardsBought: 0,
       focusTokens: 0,
       intrigueCount: 0,
+      signetTokenCount: 0,
       cardsDrawnAtRoundStart: 5,
       techAgents: 0,
       persuasionGainedThisRound: 0,
@@ -222,6 +225,28 @@ export class PlayerManager {
     const player = players.find((x) => x.id === id);
     if (player) {
       player.intrigueCount = player.intrigueCount - amount;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public addSignetTokensToPlayer(id: number, amount: number) {
+    const players = this.getPlayers();
+
+    const player = players.find((x) => x.id === id);
+    if (player) {
+      player.signetTokenCount = player.signetTokenCount + amount;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public removeSignetTokensFromPlayer(id: number, amount: number) {
+    const players = this.getPlayers();
+
+    const player = players.find((x) => x.id === id);
+    if (player) {
+      player.signetTokenCount = player.signetTokenCount - amount;
     }
 
     this.playersSubject.next(players);

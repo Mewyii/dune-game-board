@@ -47,6 +47,7 @@ export const rewardTypes = [
   'signet-token',
   'signet-ring',
   'loose-troop',
+  'location-control',
 ] as const;
 
 export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];

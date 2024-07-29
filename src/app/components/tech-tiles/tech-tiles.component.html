@@ -1,11 +1,15 @@
 <div class="available-techs">
   <ng-container *ngFor="let techTile of availableTechTiles">
-    <div class="tech-tile-container">
-      <div class="tech-tile" [style.background-image]="'url(' + techTile.imageUrl + ')'"></div>
-      <!-- <dune-minor-house-card [house]="house"></dune-minor-house-card> -->
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTakeCardClicked(techTile.name.en)">
-        <mat-icon>check</mat-icon>
-      </button>
+    <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
+      <div
+        [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
+        [style.background-image]="'url(' + techTile.imageUrl + ')'"
+      ></div>
+      <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
+        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTakeCardClicked(techTile.name.en)">
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
     </div>
   </ng-container>
 </div>

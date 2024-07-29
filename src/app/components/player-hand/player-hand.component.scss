@@ -1,13 +1,14 @@
 .player-hand-container {
     position: fixed;
     display: flex;
+    align-items: center;
     gap: 8px;
-    margin-left: 25%;
-    min-width: 2000px;
+    margin-left: 20%;
+    min-width: 2250px;
     bottom: 0;
     left: 0;
     z-index: 2;
-    height: 40px;
+    height: 50px;
     background-color: #45382f;
     padding: 8px;
     border-radius: 5px 5px 0px 0px;
@@ -18,11 +19,11 @@
     flex: 1 1;
     display: flex;
     justify-content: center;
-    gap: 2px;
+    gap: 6px;
+    max-height: 50px;
 }
 
 .card-container {
-    transition: .5s;
     transform: translate(0rem, -300px);
 }
 
@@ -35,7 +36,7 @@
 }
 
 dune-imperium-row-card {
-    transition: .5s;
+    transition: .66s;
     cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
     display: block;
     user-select: none;
@@ -72,6 +73,12 @@ dune-imperium-row-card.not-played {
     filter: drop-shadow(0px 0px 3px rgb(255, 170, 73)) brightness(1.25) saturate(1.25);
 }
 
+.card-stack-icon {
+    height: 50px;
+    min-width: 50px;
+    object-fit: scale-down;
+}
+
 .draw-card-icon {
     height: 38px;
     min-width: 38px;
@@ -85,7 +92,7 @@ dune-imperium-row-card.not-played {
     left: 0;
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 16px;
     z-index: 3;
 }
 

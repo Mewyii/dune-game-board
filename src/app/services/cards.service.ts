@@ -312,6 +312,37 @@ export class CardsService {
     this.playerDecksSubject.next(playerDecks);
   }
 
+  shufflePlayerDiscardPileUnderDeck(playerId: number) {
+    const playerDiscardPiles = this.playerDiscardPiles;
+    const playerDiscardPileIndex = playerDiscardPiles.findIndex((x) => x.playerId === playerId);
+    if (playerDiscardPileIndex > -1) {
+      const playerDiscardPileCards = playerDiscardPiles[playerDiscardPileIndex].cards;
+      playerDiscardPiles[playerDiscardPileIndex].cards = [];
+      this.playerDiscardPilesSubject.next(playerDiscardPiles);
+      this.shuffleCardsUnderPlayerDeck(playerId, playerDiscardPileCards);
+    }
+  }
+
+  shuffleCardsUnderPlayerDeck(playerId: number, cards: ImperiumDeckCard[]) {
+    const playerDecks = this.playerDecks;
+    const playerDeckIndex = playerDecks.findIndex((x) => x.playerId === playerId);
+    if (playerDeckIndex > -1) {
+      const playerDeckCards = playerDecks[playerDeckIndex].cards;
+      playerDecks[playerDeckIndex].cards = [...playerDeckCards, ...shuffle(cards)];
+      this.playerDecksSubject.next(playerDecks);
+    }
+  }
+
+  shufflePlayerDeck(playerId: number) {
+    const playerDecks = this.playerDecks;
+    const playerDeckIndex = playerDecks.findIndex((x) => x.playerId === playerId);
+    if (playerDeckIndex > -1) {
+      const playerDeckCards = playerDecks[playerDeckIndex].cards;
+      playerDecks[playerDeckIndex].cards = [...shuffle(playerDeckCards)];
+      this.playerDecksSubject.next(playerDecks);
+    }
+  }
+
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
     this.addCardToPlayerDiscardPile(playerId, card);

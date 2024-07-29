@@ -51,6 +51,16 @@
               <span>{{ currentPlayerAvailableAgents?.agentAmount }}</span>
             </div>
           </div>
+          <div
+            class="resource-display"
+            (click)="onAddSignetTokenClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveSignetTokenClicked(currentPlayer.id)"
+          >
+            <img class="resource intrigue" [src]="getRewardTypePath('signet-token')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.signetTokenCount }}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="info-container">
@@ -266,23 +276,25 @@
   </div>
   <div class="control-bar center" *ngIf="techTiles.length > 0">
     <ng-container *ngFor="let techTile of techTiles">
-      <div class="tech-tile-container">
+      <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
         <div
           *ngIf="getIsTechTileFlipped(techTile.name.en)"
-          class="tech-tile"
+          [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
           [style.background-image]="'url(/assets/images/tech-tiles/_backside.jpg)'"
         ></div>
         <div
           *ngIf="!getIsTechTileFlipped(techTile.name.en)"
-          class="tech-tile"
+          [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
           [style.background-image]="'url(' + techTile.imageUrl + ')'"
         ></div>
-        <button class="tech-flip-button" mat-mini-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.name.en)">
-          <mat-icon>refresh</mat-icon>
-        </button>
-        <button class="tech-trash-button" mat-mini-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.name.en)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
+          <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.name.en)">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.name.en)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </ng-container>
   </div>

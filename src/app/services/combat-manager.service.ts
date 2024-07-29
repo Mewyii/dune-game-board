@@ -336,6 +336,16 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
+  public getPlayerCombatScores() {
+    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
+    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+
+    return this.playerCombatUnits.map((x) => ({
+      playerId: x.playerId,
+      score: x.troopsInCombat * troopCombatStrength + x.shipsInCombat * dreadnoughtCombatStrength + x.additionalCombatPower,
+    }));
+  }
+
   public getPlayerCombatScore(playerCombatUnits: PlayerCombatUnits) {
     return (
       playerCombatUnits.troopsInCombat * this.settingsService.gameContent.troopCombatStrength +
