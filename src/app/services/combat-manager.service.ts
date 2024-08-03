@@ -91,6 +91,17 @@ export class CombatManager {
     }
   }
 
+  public removePlayerTroopsFromGarrisonOrCombat(playerId: number, troops: number) {
+    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    if (combatUnits) {
+      if (combatUnits.troopsInGarrison - troops >= 0) {
+        this.setPlayerTroopsInGarrison(playerId, combatUnits.troopsInGarrison - troops);
+      } else if (combatUnits.troopsInCombat - troops >= 0) {
+        this.setPlayerTroopsInCombat(playerId, combatUnits.troopsInGarrison - troops);
+      }
+    }
+  }
+
   public setPlayerShipsInGarrison(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);

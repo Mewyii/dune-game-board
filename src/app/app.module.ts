@@ -63,6 +63,7 @@ import { BoardEvaluationComponent } from './components/board-evaluation/board-ev
 import { PlayerHandComponent } from './components/player-hand/player-hand.component';
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
 import { AlwaysBuyableCardsComponent } from './components/always-buyable-cards/always-buyable-cards.component';
+import { StopPropagationClickDirective } from './directives/stop-propagation-click';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { AlwaysBuyableCardsComponent } from './components/always-buyable-cards/a
     PlayerHandComponent,
     ImperiumRowComponent,
     AlwaysBuyableCardsComponent,
+    StopPropagationClickDirective,
   ],
   imports: [
     BrowserModule,

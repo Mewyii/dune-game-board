@@ -9,41 +9,6 @@
       <div class="units-gathering-area"></div>
     </div>
     <ng-container *ngIf="settingsService.settings.mode === 'game'">
-      <ng-container *ngFor="let player of players; let i = index; trackBy: trackPlayer">
-        <div
-          class="units-control-bar-container"
-          [style.top]="195 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
-          [style.left]="-90 + (i > 0 ? 225 : 0) + (i > 1 ? 680 : 0) + (i > 2 ? 225 : 0) + 'px'"
-        >
-          <div class="units-control-bar">
-            <div class="troop-marker combat-insert"></div>
-            <button mat-mini-fab [color]="'accent'" (click)="onRemoveTroopFromCombatClicked(player.id)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onAddTroopToCombatClicked(player.id)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <div class="units-control-bar">
-            <div class="ship-marker combat-insert"></div>
-            <button mat-mini-fab [color]="'accent'" (click)="onRemoveShipFromCombatClicked(player.id)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onAddShipToCombatClicked(player.id)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <div class="units-control-bar">
-            <div class="swords-marker combat-insert"></div>
-            <button mat-mini-fab [color]="'accent'" (click)="onRemoveAdditionalCombatPowerFromPlayer(player.id)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onAddAdditionalCombatPowerToPlayer(player.id)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-        </div>
-      </ng-container>
       <ng-container *ngFor="let combatUnits of playerCombatUnits; let i = index; trackBy: trackCombatUnits">
         <div
           class="units-in-timeout-container"
@@ -55,9 +20,10 @@
           </ng-container>
         </div>
         <div
-          class="units-in-garrison-container"
-          [style.top]="220 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
-          [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
+          [class]="'units-in-garrison-container' + (activeGarrisonPlayerId === combatUnits.playerId ? ' active' : '')"
+          [style.top]="225 - (i > 0 && i < 3 ? 210 : 0) + 'px'"
+          [style.left]="55 + (i > 0 ? 215 : 0) + (i > 1 ? 430 : 0) + (i > 2 ? 200 : 0) + 'px'"
+          (click)="setActiveGarrisonPlayerId(combatUnits.playerId)"
         >
           <ng-container
             *ngFor="let ship of combatUnits.shipsInGarrison | numberToArray; let is = index; trackBy: trackCount"
@@ -73,11 +39,37 @@
               <div class="troop-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
             </div>
           </ng-container>
+          <div class="units-control-bar-container" *ngIf="activeGarrisonPlayerId === combatUnits.playerId">
+            <div class="units-control-bar">
+              <div
+                class="troop-marker combat-insert"
+                (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
+                (contextmenu)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
+                stopPropagationClick
+              ></div>
+            </div>
+            <div class="units-control-bar">
+              <div
+                class="ship-marker combat-insert"
+                (click)="onAddShipToCombatClicked(combatUnits.playerId)"
+                (contextmenu)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
+                stopPropagationClick
+              ></div>
+            </div>
+            <div class="units-control-bar">
+              <div
+                class="swords-marker combat-insert"
+                (click)="onAddAdditionalCombatPowerToPlayer(combatUnits.playerId)"
+                (contextmenu)="onRemoveAdditionalCombatPowerFromPlayer(combatUnits.playerId)"
+                stopPropagationClick
+              ></div>
+            </div>
+          </div>
         </div>
         <div
           [class]="'units-in-combat-container ' + (i > 0 && i < 3 ? 'top ' : '') + (i > 1 ? 'right' : '')"
-          [style.top]="255 - (i > 0 && i < 3 ? 90 : 0) + 'px'"
-          [style.left]="310 - (i > 0 && i < 3 ? 35 : 0) + (i > 1 ? 290 : 0) + 'px'"
+          [style.top]="260 - (i > 0 && i < 3 ? 95 : 0) + 'px'"
+          [style.left]="290 - (i > 0 && i < 3 ? 15 : 0) + (i > 1 ? 320 : 0) + 'px'"
         >
           <ng-container *ngFor="let ship of combatUnits.shipsInCombat | numberToArray; let is = index; trackBy: trackCount">
             <div class="ship-marker-container">
@@ -94,69 +86,72 @@
         </div>
       </ng-container>
     </ng-container>
-    <div class="lower-row" cdkDropListGroup>
-      <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
-        <div class="score">0</div>
-        <ng-container *ngIf="settingsService.settings.mode === 'game'">
-          <div class="score-container large">
-            <ng-container *ngFor="let playerScore of combatScores; let i = index"
-              ><div
-                *ngIf="playerScore.score === 0"
-                class="score-marker"
-                [style.background-color]="getPlayerColor(playerScore.playerId)"
-                [style.top]="25 + i * 25 + 'px'"
-                cdkDrag
-                [cdkDragData]="playerScore.playerId"
-              ></div>
-            </ng-container>
-          </div>
-        </ng-container>
-      </div>
-      <div class="combat-score-board">
-        <ng-container *ngFor="let score of combatScoreArray; let scoreIndex = index; let last = last">
-          <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, scoreIndex + 1)">
-            <div class="score">{{ scoreIndex + 1 }}</div>
-            <ng-container *ngIf="settingsService.settings.mode === 'game'">
-              <div class="score-container">
-                <ng-container *ngFor="let playerScore of combatScores; let i = index">
-                  <div
-                    *ngIf="playerScore.score === scoreIndex + 1"
-                    class="score-marker"
-                    [style.background-color]="getPlayerColor(playerScore.playerId)"
-                    cdkDrag
-                    [cdkDragData]="playerScore.playerId"
-                  ></div>
-                </ng-container>
-              </div>
-            </ng-container>
-          </div>
-        </ng-container>
-      </div>
-    </div>
+
     <img class="battlefield-background" [src]="'assets/images/battefield_background.png'" />
-    <div class="score-legend">
-      <div class="legend-container">
-        <img class="legend-icon" [src]="getRewardTypePath('sword')" />
-        <span>=</span>
-        <div class="legend-description">1</div>
-      </div>
-      <div class="legend-container">
-        <img class="legend-icon" [src]="getRewardTypePath('troop')" />
-        <span>=</span>
-        <div class="legend-description">2</div>
-      </div>
-      <div class="legend-container" *ngIf="useDreadnoughts">
-        <img class="legend-icon" [src]="getRewardTypePath('dreadnought')" />
-        <span>=</span>
-        <div class="legend-description">4</div>
-      </div>
-    </div>
-    <div class="absolute-scores">
-      <ng-container *ngFor="let combatScore of combatScores">
-        <div *ngIf="combatScore.score > 22" [style.color]="getPlayerColor(combatScore.playerId)">
-          {{ combatScore.score }}
+  </div>
+</div>
+<div class="score-tile">
+  <div class="lower-row" cdkDropListGroup>
+    <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
+      <div class="score">0</div>
+      <ng-container *ngIf="settingsService.settings.mode === 'game'">
+        <div class="score-container large">
+          <ng-container *ngFor="let playerScore of combatScores; let i = index"
+            ><div
+              *ngIf="playerScore.score === 0"
+              class="score-marker"
+              [style.background-color]="getPlayerColor(playerScore.playerId)"
+              [style.top]="25 + i * 25 + 'px'"
+              cdkDrag
+              [cdkDragData]="playerScore.playerId"
+            ></div>
+          </ng-container>
         </div>
       </ng-container>
     </div>
+    <div class="combat-score-board">
+      <ng-container *ngFor="let score of combatScoreArray; let scoreIndex = index; let last = last">
+        <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, scoreIndex + 1)">
+          <div class="score">{{ scoreIndex + 1 }}</div>
+          <ng-container *ngIf="settingsService.settings.mode === 'game'">
+            <div class="score-container">
+              <ng-container *ngFor="let playerScore of combatScores; let i = index">
+                <div
+                  *ngIf="playerScore.score === scoreIndex + 1"
+                  class="score-marker"
+                  [style.background-color]="getPlayerColor(playerScore.playerId)"
+                  cdkDrag
+                  [cdkDragData]="playerScore.playerId"
+                ></div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="score-legend">
+    <div class="legend-container">
+      <img class="legend-icon" [src]="getRewardTypePath('sword')" />
+      <span>=</span>
+      <div class="legend-description">1</div>
+    </div>
+    <div class="legend-container">
+      <img class="legend-icon" [src]="getRewardTypePath('troop')" />
+      <span>=</span>
+      <div class="legend-description">2</div>
+    </div>
+    <div class="legend-container" *ngIf="useDreadnoughts">
+      <img class="legend-icon" [src]="getRewardTypePath('dreadnought')" />
+      <span>=</span>
+      <div class="legend-description">4</div>
+    </div>
+  </div>
+  <div class="absolute-scores">
+    <ng-container *ngFor="let combatScore of combatScores">
+      <div *ngIf="combatScore.score > 22" [style.color]="getPlayerColor(combatScore.playerId)">
+        {{ combatScore.score }}
+      </div>
+    </ng-container>
   </div>
 </div>

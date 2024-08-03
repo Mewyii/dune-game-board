@@ -18,6 +18,10 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_card_draw_or_delete.png';
     case 'troop':
       return 'assets/images/reward-markers/marker_troop.png';
+    case 'troop-sardaukar':
+      return 'assets/images/reward-markers/marker_troop_sardaukar.png';
+    case 'troop-fremen':
+      return 'assets/images/reward-markers/marker_troop_fremen.png';
     case 'loose-troop':
       return 'assets/images/reward-markers/marker_troop_delete.png';
     case 'intrigue':

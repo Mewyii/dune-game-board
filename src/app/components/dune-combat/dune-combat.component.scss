@@ -1,9 +1,8 @@
 .combat-tile {
     position: absolute;
-    right: 425px;
-    bottom: 16px;
-    width: 1100px;
-    height: 545px;
+    right: 390px;
+    bottom: 240px;
+    width: 1170px;
     display: flex;
     border-radius: 50%;
 }
@@ -12,7 +11,7 @@
     flex: 1 1;
     display:flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 95px;
     padding-right: 32px;
     position:relative;
 }
@@ -20,7 +19,7 @@
 .units-area .upper-row {
     display: flex;
     justify-content: center;
-    gap: 130px;
+    gap: 140px;
     align-items: center;
 }
 
@@ -31,26 +30,28 @@
 }
 
 .units-gathering-area {
-    width: 225px;
-    height: 150px;
+    width: 290px;
+    height: 110px;
     background: #c19e7d30;
     border-radius: 48%;
     box-sizing: border-box;
     box-shadow: inset 0px 0px 20px 2px #e7dbbb;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(5px);
+    filter: blur(4px);
 }
 
 .battlefield-background {
     position: absolute;
-    top: 75px;
-    left: calc(50% - 190px);
-    width: 380px;
+    top: 115px;
+    left: calc(50% - 160px);
+    width: 300px;
     transform: rotate3d(1, 0, 0, 67deg);
     opacity: 0.2;
-    filter: invert(1) blur(8px);
+    filter: invert(1) blur(6px);
+    transform: rotateY(-355deg) rotateX(72deg) rotateZ(44deg);
 }
 
-.units-area .lower-row {
+.lower-row {
     display: flex;
     gap: 3px;
     font-size: large;
@@ -67,7 +68,7 @@
 
 .score-legend {
     position: absolute;
-    top: 335px;
+    top: -45px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -84,6 +85,15 @@
 
 .legend-icon{
     height:1.5em;
+}
+
+.score-tile {
+    position: absolute;
+    right: 425px;
+    bottom: 16px;
+    width: 1100px;
+    display: flex;
+    border-radius: 50%;
 }
 
 .score-element {
@@ -146,9 +156,10 @@
 .units-control-bar-container {
     position: absolute;
     display:flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 16px;
     z-index: 2;
+    top: -45px;
+    left: 10px;
 }
 
 .units-control-bar {
@@ -165,6 +176,14 @@
     flex-wrap: wrap;
     width: 175px;
     gap: 2px;
+    transition: .5s;
+}
+
+.units-in-garrison-container:hover,
+.units-in-garrison-container.active {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+    transform: scale(1.1);
 }
 
 .units-in-combat-container {

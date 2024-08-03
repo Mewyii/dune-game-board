@@ -34,6 +34,8 @@ export class DuneCombatComponent implements OnInit {
 
   public playerCombatUnits: PlayerCombatUnits[] = [];
 
+  public activeGarrisonPlayerId = 0;
+
   constructor(
     public gameManager: GameManager,
     public combatManager: CombatManager,
@@ -66,6 +68,7 @@ export class DuneCombatComponent implements OnInit {
   public onRemoveTroopFromCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
     this.combatManager.removePlayerTroopsFromCombat(playerId, 1);
+    return false;
   }
 
   public onAddShipToCombatClicked(playerId: number) {
@@ -76,6 +79,7 @@ export class DuneCombatComponent implements OnInit {
   public onRemoveShipFromCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
     this.combatManager.removePlayerShipsFromCombat(playerId, 1);
+    return false;
   }
 
   public onAddAdditionalCombatPowerToPlayer(playerId: number) {
@@ -86,6 +90,15 @@ export class DuneCombatComponent implements OnInit {
   public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
     this.audioManager.playSound('sword');
     this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
+    return false;
+  }
+
+  public setActiveGarrisonPlayerId(playerId: number) {
+    if (this.activeGarrisonPlayerId !== playerId) {
+      this.activeGarrisonPlayerId = playerId;
+    } else {
+      this.activeGarrisonPlayerId = 0;
+    }
   }
 
   public getRewardTypePath(rewardType: RewardType) {
