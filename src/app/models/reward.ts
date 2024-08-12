@@ -48,6 +48,7 @@ export const rewardTypes = [
   'signet-ring',
   'loose-troop',
   'location-control',
+  'tech-tile-flip',
 ] as const;
 
 export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];

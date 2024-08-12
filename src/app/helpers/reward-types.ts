@@ -108,6 +108,10 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_signet_ring.png';
     case 'signet-token':
       return 'assets/images/reward-markers/marker_signet_token.png';
+    case 'tech-tile-flip':
+      return 'assets/images/reward-markers/marker_tech_tile_flip.png';
+    case 'location-control':
+      return 'assets/images/reward-markers/marker_location_control.png';
     default:
       return '';
   }

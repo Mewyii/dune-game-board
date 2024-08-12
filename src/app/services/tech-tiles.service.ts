@@ -2,7 +2,22 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { shuffle } from '../helpers/common';
-import { TechTile, techTiles } from '../constants/tech-tiles';
+import { techTiles } from '../constants/tech-tiles';
+import { FactionType, LanguageString, Reward } from '../models';
+import { LanguageStringAndFontSize } from '../constants/imperium-cards';
+import { Player } from './player-manager.service';
+import { GameState } from './ai/models';
+
+export interface TechTileCard {
+  name: LanguageString;
+  faction?: FactionType;
+  costs: number;
+  effects?: Reward[];
+  customEffect?: LanguageStringAndFontSize;
+  buyEffects?: Reward[];
+  imageUrl?: string;
+  aiEvaluation: (player: Player, gameState: GameState) => number;
+}
 
 export interface PlayerTechTile {
   playerId: number;
@@ -14,21 +29,24 @@ export interface PlayerTechTile {
   providedIn: 'root',
 })
 export class TechTilesService {
-  private techTiles = techTiles;
-  private availableTechTilesSubject = new BehaviorSubject<TechTile[]>([]);
+  private techTiles: TechTileCard[] = techTiles;
+  private availableTechTilesSubject = new BehaviorSubject<TechTileCard[]>([]);
   public availableTechTiles$ = this.availableTechTilesSubject.asObservable();
 
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
   public playerTechTiles$ = this.playerTechTilesSubject.asObservable();
 
+  private newTechTilesSubject = new BehaviorSubject<TechTileCard[]>([]);
+  public newTechTiles$ = this.newTechTilesSubject.asObservable();
+
   constructor() {
     const availableTechTilesString = localStorage.getItem('availableTechTiles');
     if (availableTechTilesString) {
-      const availableTechTiles = JSON.parse(availableTechTilesString) as TechTile[];
+      const availableTechTiles = JSON.parse(availableTechTilesString) as TechTileCard[];
 
       // Workaround for local storage not being able to store functions
       const realTechTiles = availableTechTiles.map((x) => {
-        const techTile = this.techTiles.find((y) => y.name.en === x.name.en);
+        const techTile = this.newTechTiles.find((y) => y.name.en === x.name.en);
         return techTile ?? x;
       });
 
@@ -48,6 +66,16 @@ export class TechTilesService {
     this.playerTechTiles$.subscribe((playerTechTiles) => {
       localStorage.setItem('playerTechTiles', JSON.stringify(playerTechTiles));
     });
+
+    const newTechTilesString = localStorage.getItem('newTechTiles');
+    if (newTechTilesString) {
+      const newTechTiles = JSON.parse(newTechTilesString) as TechTileCard[];
+      this.newTechTilesSubject.next(newTechTiles);
+    }
+
+    this.newTechTiles$.subscribe((newTechTiles) => {
+      localStorage.setItem('newTechTiles', JSON.stringify(newTechTiles));
+    });
   }
 
   public get availableTechTiles() {
@@ -56,6 +84,10 @@ export class TechTilesService {
 
   public get playerTechTiles() {
     return cloneDeep(this.playerTechTilesSubject.value);
+  }
+
+  public get newTechTiles() {
+    return cloneDeep(this.newTechTilesSubject.value);
   }
 
   setInitialAvailableTechTiles() {
@@ -116,5 +148,23 @@ export class TechTilesService {
   trashTechTile(techTileId: string) {
     this.techTiles = this.techTiles.filter((x) => x.name.en !== techTileId);
     this.playerTechTilesSubject.next(this.playerTechTiles.filter((x) => x.techTileId !== techTileId));
+  }
+
+  addTechTile(card: TechTileCard) {
+    this.newTechTilesSubject.next([...this.newTechTiles, card]);
+  }
+
+  editTechTile(card: TechTileCard) {
+    const cardId = card.name.en;
+
+    const newTechTiles = this.newTechTiles;
+    const cardIndex = newTechTiles.findIndex((x) => x.name.en === cardId);
+    newTechTiles[cardIndex] = card;
+
+    this.newTechTilesSubject.next(newTechTiles);
+  }
+
+  deleteTechTile(id: string) {
+    this.newTechTilesSubject.next(this.newTechTiles.filter((x) => x.name.en !== id));
   }
 }

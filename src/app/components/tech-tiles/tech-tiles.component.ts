@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { TechTile } from 'src/app/constants/tech-tiles';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { FactionType, LanguageString, RewardType } from 'src/app/models';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { TechTilesService } from 'src/app/services/tech-tiles.service';
+import { TechTileCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -14,7 +13,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./tech-tiles.component.scss'],
 })
 export class TechTilesComponent {
-  public availableTechTiles: TechTile[] = [];
+  public availableTechTiles: TechTileCard[] = [];
   public title: LanguageString = { de: 'haus', en: 'house' };
   public activeTechTileId = '';
 

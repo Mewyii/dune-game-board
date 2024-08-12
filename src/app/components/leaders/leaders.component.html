@@ -282,11 +282,11 @@
           [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
           [style.background-image]="'url(/assets/images/tech-tiles/_backside.jpg)'"
         ></div>
-        <div
+        <dune-tech-tile
           *ngIf="!getIsTechTileFlipped(techTile.name.en)"
-          [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
-          [style.background-image]="'url(' + techTile.imageUrl + ')'"
-        ></div>
+          [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
+          [card]="techTile"
+        ></dune-tech-tile>
         <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
           <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.name.en)">
             <mat-icon>refresh</mat-icon>

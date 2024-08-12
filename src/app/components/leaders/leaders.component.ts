@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { House } from 'src/app/constants/minor-houses';
-import { TechTile } from 'src/app/constants/tech-tiles';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
@@ -13,7 +12,7 @@ import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
-import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.service';
+import { PlayerTechTile, TechTileCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -48,7 +47,7 @@ export class LeadersComponent implements OnInit {
   public houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
   public playerTechTiles: PlayerTechTile[] = [];
-  public techTiles: TechTile[] = [];
+  public techTiles: TechTileCard[] = [];
   public activeTechTileId = '';
 
   constructor(

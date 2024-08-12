@@ -1,0 +1,47 @@
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: baseline;
+}
+
+.medium-text-field {
+    width: 250px;
+}
+
+.big-text-field {
+    width: 300px;
+}
+
+.large-text-field {
+    width: 800px;
+}
+
+.padding-top {
+    padding-top: 8px;
+}
+
+.margin-top {
+    margin-top: 32px;
+}
+
+.card-effect-container {
+    margin-top: 32px;
+    width: 100%;
+    min-height: 240px;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+}
+
+.card-effect-title {
+    margin-right: 16px;
+}

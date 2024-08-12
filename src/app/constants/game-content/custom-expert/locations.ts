@@ -13,7 +13,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
+    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -29,6 +29,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },
+    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(87, 69, 52)',
@@ -72,6 +73,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
     },
+    ownerReward: { type: 'troop' },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -85,7 +87,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
+    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(196, 172, 139)',

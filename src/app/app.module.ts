@@ -64,6 +64,10 @@ import { PlayerHandComponent } from './components/player-hand/player-hand.compon
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
 import { AlwaysBuyableCardsComponent } from './components/always-buyable-cards/always-buyable-cards.component';
 import { StopPropagationClickDirective } from './directives/stop-propagation-click';
+import { TechTileConfiguratorComponent } from './pages/tech-tile-configurator/tech-tile-configurator.component';
+import { TechTileComponent } from './components/_common/tech-tile/tech-tile.component';
+import { DialogTechTileEditorComponent } from './pages/tech-tile-configurator/dialog-tech-tile-editor/dialog-tech-tile-editor.component';
+import { TechTileEditorComponent } from './pages/tech-tile-configurator/tech-tile-editor/tech-tile-editor.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +92,7 @@ import { StopPropagationClickDirective } from './directives/stop-propagation-cli
     MinorHousesComponent,
     MinorHouseCardComponent,
     ImperiumRowCardComponent,
+    TechTileComponent,
     GameBoardComponent,
     LeaderConfiguratorComponent,
     ImperiumCardConfiguratorComponent,
@@ -113,6 +118,9 @@ import { StopPropagationClickDirective } from './directives/stop-propagation-cli
     ImperiumRowComponent,
     AlwaysBuyableCardsComponent,
     StopPropagationClickDirective,
+    TechTileConfiguratorComponent,
+    DialogTechTileEditorComponent,
+    TechTileEditorComponent,
   ],
   imports: [
     BrowserModule,

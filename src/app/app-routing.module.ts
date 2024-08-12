@@ -6,6 +6,7 @@ import { LeaderConfiguratorComponent } from './pages/leader-configurator/leader-
 import { AboutComponent } from './pages/about/about.component';
 import { EventConfiguratorComponent } from './pages/event-configurator/event-configurator.component';
 import { StartingCardConfiguratorComponent } from './pages/starting-card-configurator/starting-card-configurator.component';
+import { TechTileConfiguratorComponent } from './pages/tech-tile-configurator/tech-tile-configurator.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,12 @@ const routes: Routes = [
     title: 'Dune Starting Card-Configurator',
     path: 'starting-card-configurator',
     component: StartingCardConfiguratorComponent,
+    pathMatch: 'full',
+  },
+  {
+    title: 'Dune Tech-Tile-Configurator',
+    path: 'tech-tile-configurator',
+    component: TechTileConfiguratorComponent,
     pathMatch: 'full',
   },
   {

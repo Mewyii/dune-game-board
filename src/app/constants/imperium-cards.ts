@@ -1,6 +1,6 @@
 import { ActionType, FactionType, LanguageString, Reward } from '../models';
 
-interface LanguageStringAndFontSize extends LanguageString {
+export interface LanguageStringAndFontSize extends LanguageString {
   fontSize?: 'medium' | 'small';
 }
 

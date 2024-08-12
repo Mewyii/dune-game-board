@@ -63,6 +63,7 @@ export interface AIAgentPlacementInfo {
   canLiftAgent: boolean;
   factionInfluenceUpChoiceAmount: number;
   factionInfluenceUpChoiceTwiceAmount: number;
+  factionInfluenceDownChoiceAmount: number;
   shippingAmount: number;
 }
 
@@ -653,7 +654,7 @@ export class AIManager {
     });
   }
 
-  getDesiredFactionScoreType(
+  getMostDesiredFactionScoreType(
     playerScores: PlayerScore,
     exclusions?: PlayerFactionScoreType[]
   ): PlayerFactionScoreType | undefined {
@@ -672,6 +673,25 @@ export class AIManager {
     return desiredFactionScoreType;
   }
 
+  getLeastDesiredFactionScoreType(
+    playerScores: PlayerScore,
+    exclusions?: PlayerFactionScoreType[]
+  ): PlayerFactionScoreType | undefined {
+    let desiredFactionScoreType: PlayerFactionScoreType | undefined;
+    let desiredFactionScoreAmount = 100;
+
+    for (const factionType of activeFactionTypes) {
+      if (!exclusions?.includes(factionType)) {
+        if (playerScores[factionType] < desiredFactionScoreAmount && playerScores[factionType] > 0) {
+          desiredFactionScoreType = factionType;
+          desiredFactionScoreAmount = playerScores[factionType];
+        }
+      }
+    }
+
+    return desiredFactionScoreType;
+  }
+
   private getImperiumCardPlayEvaluation(card: ImperiumDeckCard) {
     let evaluationValue = 0;
     if (card.fieldAccess) {
@@ -680,9 +700,7 @@ export class AIManager {
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.agentEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const agentEffect of card.agentEffects) {
-          evaluationValue += this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
-        }
+        evaluationValue += this.getRewardArrayEvaluation(card.agentEffects);
       }
     }
     if (card.customAgentEffect) {
@@ -692,9 +710,7 @@ export class AIManager {
     if (card.revealEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.revealEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const revealEffect of card.revealEffects) {
-          evaluationValue -= this.getEffectEvaluation(revealEffect.type) * (revealEffect.amount ?? 1);
-        }
+        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects);
       }
     }
     if (card.customRevealEffect) {
@@ -712,9 +728,7 @@ export class AIManager {
     if (card.buyEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const agentEffect of card.buyEffects) {
-          evaluationValue += this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
-        }
+        evaluationValue += this.getRewardArrayEvaluation(card.buyEffects);
       }
     }
     if (card.fieldAccess) {
@@ -723,9 +737,7 @@ export class AIManager {
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.agentEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const agentEffect of card.agentEffects) {
-          evaluationValue += this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
-        }
+        evaluationValue += this.getRewardArrayEvaluation(card.agentEffects);
       }
     }
     if (card.customAgentEffect) {
@@ -734,9 +746,7 @@ export class AIManager {
     if (card.revealEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.revealEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const revealEffect of card.revealEffects) {
-          evaluationValue += this.getEffectEvaluation(revealEffect.type) * (revealEffect.amount ?? 1);
-        }
+        evaluationValue += this.getRewardArrayEvaluation(card.revealEffects);
       }
     }
     if (card.customRevealEffect) {
@@ -754,9 +764,7 @@ export class AIManager {
     if (card.buyEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const agentEffect of card.buyEffects) {
-          evaluationValue -= this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
-        }
+        evaluationValue -= this.getRewardArrayEvaluation(card.buyEffects);
       }
     }
     if (card.fieldAccess) {
@@ -765,9 +773,7 @@ export class AIManager {
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.agentEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const agentEffect of card.agentEffects) {
-          evaluationValue -= this.getEffectEvaluation(agentEffect.type) * (agentEffect.amount ?? 1);
-        }
+        evaluationValue -= this.getRewardArrayEvaluation(card.agentEffects);
       }
     }
     if (card.customAgentEffect) {
@@ -777,15 +783,21 @@ export class AIManager {
     if (card.revealEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.revealEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        for (const revealEffect of card.revealEffects) {
-          evaluationValue -= this.getEffectEvaluation(revealEffect.type) * (revealEffect.amount ?? 1);
-        }
+        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects);
       }
     }
     if (card.customRevealEffect) {
       evaluationValue -= 1 * (card.persuasionCosts ?? 1);
     }
 
+    return evaluationValue;
+  }
+
+  public getRewardArrayEvaluation(rewards: Reward[]) {
+    let evaluationValue = 0;
+    for (const reward of rewards) {
+      evaluationValue += this.getEffectEvaluation(reward.type) * (reward.amount ?? 1);
+    }
     return evaluationValue;
   }
 

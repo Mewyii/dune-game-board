@@ -78,7 +78,7 @@ export class StartingCardConfiguratorComponent implements OnInit {
     const blob = new Blob([jsonContent], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = 'imperium_cards.json';
+    link.download = 'starting_cards.json';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

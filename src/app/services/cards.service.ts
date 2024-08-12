@@ -10,6 +10,7 @@ import { ActionType, FactionType } from '../models';
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
 }
+
 export interface PlayerCardStack {
   playerId: number;
   cards: ImperiumDeckCard[];

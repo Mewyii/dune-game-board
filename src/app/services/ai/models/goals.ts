@@ -6,9 +6,9 @@ import { PlayerScore } from '../../player-score-manager.service';
 import { ActionField, Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
-import { TechTile } from 'src/app/constants/tech-tiles';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard } from '../../cards.service';
+import { TechTileCard } from '../../tech-tiles.service';
 
 export type AIGoals =
   | 'high-council'
@@ -52,7 +52,7 @@ export interface GameState {
   enemyPlayers: Player[];
   playerLeader: Leader | LeaderImageOnly;
   conflict: Conflict;
-  availableTechTiles: TechTile[];
+  availableTechTiles: TechTileCard[];
   currentEvent: DuneEvent | undefined;
   playerDeckSizeTotal: number;
   playerDeckCards?: ImperiumDeckCard[];

@@ -1,0 +1,112 @@
+<form [formGroup]="techTileForm">
+  <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
+    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+      <mat-label>Name (English)</mat-label>
+      <input matInput formControlName="en" [readonly]="editMode" />
+    </mat-form-field>
+    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+      <mat-label>Name (German)</mat-label>
+      <input matInput formControlName="de" [readonly]="editMode" />
+    </mat-form-field>
+  </div>
+
+  <!-- Faction -->
+  <mat-form-field>
+    <mat-label>Faction</mat-label>
+    <mat-select formControlName="faction">
+      <mat-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Persuasion Costs -->
+  <mat-form-field>
+    <mat-label>Costs</mat-label>
+    <input matInput formControlName="costs" type="number" />
+  </mat-form-field>
+
+  <!-- Buy Effects -->
+  <div class="card-effect-container">
+    <div class="title-container">
+      <span class="card-effect-title"> Buy Effects </span>
+    </div>
+    <div formArrayName="buyEffects">
+      <div class="form-group" *ngFor="let buyEffect of buyEffects.controls; let i = index">
+        <mat-form-field class="big-text-field">
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getBuyEffectTypeControl(i)">
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getBuyEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveBuyEffectClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddBuyEffectClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Agent Effects -->
+  <div class="card-effect-container">
+    <div class="title-container">
+      <span class="card-effect-title"> Effects </span>
+      <mat-checkbox
+        [(ngModel)]="hasCustomAgentEffect"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="updateAgentEffects()"
+      ></mat-checkbox
+      >Custom Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <div *ngIf="!hasCustomAgentEffect" formArrayName="effects">
+      <div class="form-group" *ngFor="let effect of effects.controls; let i = index">
+        <mat-form-field class="big-text-field">
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getAgentEffectTypeControl(i)">
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getAgentEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveAgentEffectClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddAgentEffectClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="hasCustomAgentEffect" class="form-group" formGroupName="customEffect">
+      <mat-form-field class="large-text-field">
+        <mat-label>English</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="large-text-field">
+        <mat-label>German</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Font Size</mat-label>
+        <mat-select formControlName="fontSize">
+          <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <mat-form-field class="large-text-field margin-top">
+    <mat-label>Image URL</mat-label>
+    <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+</form>
