@@ -10,7 +10,7 @@
     border-right: 3px solid #9d8939;
     border-radius: 12px;
     position: relative;
-    color: #fffcfa;
+    color: white;
     font-size: x-small;
     background-color: #151515;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
@@ -55,12 +55,11 @@
     font-family: "Roboto", "Verdana";
     font-weight: initial;
     font-size: small;
-    color: #e1e1e1;
     white-space: pre-wrap;
     min-height: 30px;
     padding: 8px;
     background-size: cover;
-    background-color: rgb(0 0 0 / 35%);
+    background-color: rgba(69, 58, 17, 0.5);
     box-sizing: border-box;
     border-radius: 0px 0px 10px 10px;
 }
@@ -77,6 +76,7 @@
     justify-content: center;
     align-items: center;
     width:100%;
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, .66));
 }
 
 .card-reveal-effect-custom-text,

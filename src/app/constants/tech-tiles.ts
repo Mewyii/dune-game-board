@@ -7,13 +7,13 @@ export const techTiles: TechTileCard[] = [
       de: 'Maula Pistolen Fabrik',
     },
     faction: 'fremen',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/industry_2.png',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
     buyEffects: [],
     customEffect: {
       en: '',
-      de: '<b>Aufdeckzug</b>: +{resource:sword} für jede Truppe im Konflikt.',
-      fontSize: 'small',
+      de: '<b>Aufdeckzug</b>:<br>{resource:solari;amount:2}{resource:helper-arrow-right}{resource:sword} für jede Truppe im Konflikt',
+      fontSize: 'medium',
     },
     aiEvaluation: () => 0,
   },
@@ -24,9 +24,13 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'fremen',
     costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/industry_2.png',
+    imageUrl: '/assets/images/action-backgrounds/industry_2 .png',
     buyEffects: [],
-    effects: [],
+    customEffect: {
+      en: '',
+      de: 'Alle {resource:water}-Kosten sind um 1 reduziert (min. 1).',
+      fontSize: 'medium',
+    },
     aiEvaluation: () => 0,
   },
   {
@@ -63,10 +67,14 @@ export const techTiles: TechTileCard[] = [
       de: 'Handelshafen',
     },
     faction: 'guild',
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/port.png',
     buyEffects: [],
-    effects: [],
+    customEffect: {
+      en: '',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>2 Raumgilden-Karten: {resource:shipping}<br>3 Raumgilden-Karten: {resource:shipping}{resource:shipping}<br>4+ Raumgilden-Karten: {resource:victory-point}',
+      fontSize: 'small',
+    },
     aiEvaluation: () => 0,
   },
   {
@@ -74,12 +82,21 @@ export const techTiles: TechTileCard[] = [
       en: 'Ornithopter Hangar',
       de: 'Ornithopter Hangar',
     },
-    costs: 5,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/port_2.png',
     buyEffects: [],
     effects: [
       {
-        type: 'card-round-start',
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-arrow-right',
+      },
+      {
+        type: 'agent-lift',
       },
     ],
     aiEvaluation: () => 0,
@@ -90,9 +107,13 @@ export const techTiles: TechTileCard[] = [
       de: 'Spice Raffinerien',
     },
     costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_4.png',
+    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
     buyEffects: [],
-    effects: [],
+    customEffect: {
+      en: '',
+      de: 'Alle {resource:spice}-Kosten sind um 1 reduziert (min. 1).',
+      fontSize: 'medium',
+    },
     aiEvaluation: () => 0,
   },
   {
@@ -101,8 +122,8 @@ export const techTiles: TechTileCard[] = [
       de: 'Destillanzugs-Manufaktur',
     },
     faction: 'fremen',
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_2.png',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_5.png',
     buyEffects: [],
     effects: [
       {
@@ -110,12 +131,16 @@ export const techTiles: TechTileCard[] = [
       },
       {
         type: 'solari',
+        amount: 2,
       },
       {
         type: 'helper-arrow-right',
       },
       {
         type: 'water',
+      },
+      {
+        type: 'card-draw',
       },
     ],
     aiEvaluation: () => 0,
@@ -125,8 +150,8 @@ export const techTiles: TechTileCard[] = [
       en: 'Lighter',
       de: 'Leichter',
     },
-    costs: 6,
-    imageUrl: '/assets/images/action-backgrounds/ship.png',
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
     buyEffects: [
       {
         type: 'troop',
@@ -134,23 +159,12 @@ export const techTiles: TechTileCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'troop',
-      },
     ],
-    effects: [],
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Imperial Testing Station',
-      de: 'Imperiale Teststation',
+    customEffect: {
+      en: '',
+      de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}<br><br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
+      fontSize: 'small',
     },
-    faction: 'emperor',
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/research_station.png',
-    buyEffects: [],
-    effects: [],
     aiEvaluation: () => 0,
   },
   {
@@ -160,7 +174,7 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'bene',
     costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/industry_2.png',
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
     buyEffects: [
       {
         type: 'faction-influence-up-choice',
@@ -169,7 +183,7 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:spice;amount:2}{resource:intrigue-trash}{resource:helper-arrow-right}{resource:victory-point}',
-      fontSize: 'small',
+      fontSize: 'medium',
     },
     aiEvaluation: () => 0,
   },
@@ -212,31 +226,9 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     customEffect: {
       en: '',
-      de: 'Du kannst deinen ersten Zug passen.<br><br><b>Aufdeckzug:</b> <br>2 Bene-Gesserit-Karten: {resource:intrigue}<br>3 Bene-Gesserit-Karten: {resource:faction-influence-up-choice}<br>4+ Bene-Gesserit-Karten: {resource:victory-point}',
+      de: '{resource:tech-tile-flip}{resource:helper-arrow-right}Passe deinen Zug.<br><br><b>Aufdeckzug:</b> <br>2 Bene-Gesserit-Karten: {resource:intrigue}<br>3 Bene-Gesserit-Karten: {resource:faction-influence-up-choice}<br>4+ Bene-Gesserit-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Embassy on Caladan ',
-      de: 'Botschaft auf Caladan',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/caladan.png',
-    buyEffects: [],
-    effects: [],
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Embassy on Giedi Prime',
-      de: 'Botschaft auf Giedi Primus',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/giedi_prime.png',
-    buyEffects: [],
-    effects: [],
     aiEvaluation: () => 0,
   },
   {
@@ -245,11 +237,11 @@ export const techTiles: TechTileCard[] = [
       de: 'Verbesserte Sandcrawler- Antriebe',
     },
     costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/sandcrawler.png',
+    imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
     buyEffects: [],
     customEffect: {
       en: '',
-      de: 'Immer wenn du Spice sammelst, erhalte 1 mehr.',
+      de: '<b>Wenn du Spice sammelst:</b><br> Erhalte {resource:spice}',
       fontSize: 'medium',
     },
     aiEvaluation: () => 0,
@@ -260,7 +252,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Verbesserte Carryall-Suspensoren',
     },
     costs: 2,
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/carryall.png',
     buyEffects: [],
     customEffect: {
       en: '',
@@ -277,7 +269,11 @@ export const techTiles: TechTileCard[] = [
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/ornithopter.png',
     buyEffects: [],
-    effects: [],
+    customEffect: {
+      en: '',
+      de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-arrow-right}Behalte die dafür gespielte Karte auf deiner Hand.',
+      fontSize: 'small',
+    },
     aiEvaluation: () => 0,
   },
   {
@@ -286,7 +282,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Schmuggler-Außenposten',
     },
     faction: 'guild',
-    costs: 3,
+    costs: 2,
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
     buyEffects: [],
     effects: [
@@ -294,7 +290,7 @@ export const techTiles: TechTileCard[] = [
         type: 'tech-tile-flip',
       },
       {
-        type: 'spice',
+        type: 'card-discard',
       },
       {
         type: 'helper-arrow-right',
@@ -310,14 +306,24 @@ export const techTiles: TechTileCard[] = [
       en: 'Flagship',
       de: 'Flaggschiff',
     },
-    costs: 7,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
+    costs: 8,
+    imageUrl: '/assets/images/action-backgrounds/lighter.png',
     buyEffects: [
       {
-        type: 'victory-point',
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'location-control',
       },
     ],
-    effects: [],
+    customEffect: {
+      en: '',
+      de: '<b>Aufdeckzug:</b><br>{resource:faction-influence-down-choice}{resource:helper-arrow-right} {resource:victory-point}',
+      fontSize: 'medium',
+    },
     aiEvaluation: () => 0,
   },
   {
@@ -355,7 +361,7 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'guild',
     costs: 5,
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
     buyEffects: [
       {
         type: 'faction-influence-up-choice',
@@ -407,7 +413,7 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'emperor',
     costs: 5,
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_12.png',
     buyEffects: [
       {
         type: 'faction-influence-up-choice',
@@ -416,7 +422,72 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:intrigue}<br><br><b>Aufdeckzug:</b><br>{resource:solari;amount:5} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
+      fontSize: 'medium',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Experimental Shields',
+      de: 'Experimentelle Schilde',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/shields.png',
+    buyEffects: [],
+    customEffect: {
+      en: '',
+      de: '<b>Nach einem Konflikt:</b> <br>Schlachtschiffe müssen keine Runde aussetzen.',
+      fontSize: 'medium',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Heavy Lasguns',
+      de: 'Schwere Lasguns',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    buyEffects: [],
+    customEffect: {
+      en: '',
+      de: '<b>Wenn du ein Schlachtschiff in den Konflikt einsetzt:</b><br>Jeder Gegner verliert eine Einheit.',
       fontSize: 'small',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Sardaukar Commando Post',
+      de: 'Sardaukar Kommando-Posten',
+    },
+    faction: 'emperor',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
+    buyEffects: [],
+    customEffect: {
+      en: '',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>2 Imperator-Karten: {resource:sword}{resource:sword}<br>3 Imperator-Karten: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Imperator-Karten: {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Artillery Arsenal',
+      de: 'Artillerie-Arsenal',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/infrastructure.png',
+    buyEffects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}{resource:sword}<br><br><b>',
+      fontSize: 'medium',
     },
     aiEvaluation: () => 0,
   },
