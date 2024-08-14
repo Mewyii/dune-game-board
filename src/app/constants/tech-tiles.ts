@@ -3,8 +3,8 @@ import { TechTileCard } from '../services/tech-tiles.service';
 export const techTiles: TechTileCard[] = [
   {
     name: {
-      en: 'Maula Pistol Factory',
-      de: 'Maula Pistolen Fabrik',
+      en: 'Maula Pistol Works',
+      de: 'Maula Pistolen Werk',
     },
     faction: 'fremen',
     costs: 2,
@@ -24,11 +24,232 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'fremen',
     costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/industry_2 .png',
+    imageUrl: '/assets/images/action-backgrounds/windtraps.png',
     buyEffects: [],
     customEffect: {
       en: '',
       de: 'Alle {resource:water}-Kosten sind um 1 reduziert (min. 1).',
+      fontSize: 'medium',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Stillsuits Factory',
+      de: 'Destillanzugs-Fabrik',
+    },
+    faction: 'fremen',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_5.png',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-arrow-right',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Smuggler outposts',
+      de: 'Schmuggler-Aussenposten',
+    },
+    faction: 'guild',
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-arrow-right',
+      },
+      {
+        type: 'shipping',
+      },
+    ],
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Trade Port',
+      de: 'Handelshafen',
+    },
+    faction: 'guild',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/port.png',
+    buyEffects: [],
+    customEffect: {
+      en: '',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>2 Raumgilden-Karten: {resource:shipping}<br>3 Raumgilden-Karten: {resource:shipping}{resource:shipping}<br>4+ Raumgilden-Karten: {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Guild Bank',
+      de: 'Gilden-Bank',
+    },
+    faction: 'guild',
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
+    buyEffects: [
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>Entsorge 2 "Das Spice muss fließen"-Karten für {resource:victory-point}.',
+      fontSize: 'small',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Sardaukar Commando Post',
+      de: 'Sardaukar Kommando-Posten',
+    },
+    faction: 'emperor',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
+    buyEffects: [],
+    customEffect: {
+      en: '',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>2 Imperator-Karten: {resource:sword}{resource:sword}<br>3 Imperator-Karten: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Imperator-Karten: {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Imperial Barracks',
+      de: 'Imperiale Kaserne',
+    },
+    faction: 'emperor',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/military_camp.png',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-arrow-right',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: "Governor's Palace",
+      de: 'Statthalterpalast',
+    },
+    faction: 'emperor',
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_12.png',
+    buyEffects: [
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:intrigue}<br><br><b>Aufdeckzug:</b><br>{resource:solari;amount:5} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
+      fontSize: 'medium',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Spy Network',
+      de: 'Spionage-Netzwerk',
+    },
+    faction: 'bene',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
+    buyEffects: [],
+    customEffect: {
+      en: '',
+      de: '{resource:tech-tile-flip}{resource:helper-arrow-right}Passe deinen Zug.<br><br><b>Aufdeckzug:</b> <br>2 Bene-Gesserit-Karten: {resource:intrigue}<br>3 Bene-Gesserit-Karten: {resource:faction-influence-up-choice}<br>4+ Bene-Gesserit-Karten: {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Missionaria Protectiva',
+      de: 'Missionaria Protectiva',
+    },
+    faction: 'bene',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
+    buyEffects: [
+      {
+        type: 'faction-influence-up-fremen',
+      },
+    ],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-arrow-right',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-destroy',
+      },
+    ],
+    aiEvaluation: () => 0,
+  },
+  {
+    name: {
+      en: 'Bene Gesserit Conclave',
+      de: 'Bene Gesserit Konklave',
+    },
+    faction: 'bene',
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    buyEffects: [
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:spice;amount:2}{resource:intrigue-trash}{resource:helper-arrow-right}{resource:victory-point}',
       fontSize: 'medium',
     },
     aiEvaluation: () => 0,
@@ -59,22 +280,6 @@ export const techTiles: TechTileCard[] = [
         type: 'foldspace',
       },
     ],
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Trade Port',
-      de: 'Handelshafen',
-    },
-    faction: 'guild',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/port.png',
-    buyEffects: [],
-    customEffect: {
-      en: '',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>2 Raumgilden-Karten: {resource:shipping}<br>3 Raumgilden-Karten: {resource:shipping}{resource:shipping}<br>4+ Raumgilden-Karten: {resource:victory-point}',
-      fontSize: 'small',
-    },
     aiEvaluation: () => 0,
   },
   {
@@ -118,35 +323,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Stillsuits Factory',
-      de: 'Destillanzugs-Manufaktur',
-    },
-    faction: 'fremen',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_5.png',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'solari',
-        amount: 2,
-      },
-      {
-        type: 'helper-arrow-right',
-      },
-      {
-        type: 'water',
-      },
-      {
-        type: 'card-draw',
-      },
-    ],
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
       en: 'Lighter',
       de: 'Leichter',
     },
@@ -163,70 +339,6 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}<br><br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
-      fontSize: 'small',
-    },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Bene Gesserit Conclave',
-      de: 'Bene Gesserit Konklave',
-    },
-    faction: 'bene',
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
-    buyEffects: [
-      {
-        type: 'faction-influence-up-choice',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:spice;amount:2}{resource:intrigue-trash}{resource:helper-arrow-right}{resource:victory-point}',
-      fontSize: 'medium',
-    },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Imperial Barracks',
-      de: 'Imperiale Kaserne',
-    },
-    faction: 'emperor',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/military_camp.png',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'solari',
-      },
-      {
-        type: 'helper-arrow-right',
-      },
-      {
-        type: 'troop',
-      },
-      {
-        type: 'troop',
-      },
-    ],
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Spy Network',
-      de: 'Spionage-Netzwerk',
-    },
-    faction: 'bene',
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
-    buyEffects: [],
-    customEffect: {
-      en: '',
-      de: '{resource:tech-tile-flip}{resource:helper-arrow-right}Passe deinen Zug.<br><br><b>Aufdeckzug:</b> <br>2 Bene-Gesserit-Karten: {resource:intrigue}<br>3 Bene-Gesserit-Karten: {resource:faction-influence-up-choice}<br>4+ Bene-Gesserit-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: () => 0,
@@ -274,31 +386,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-arrow-right}Behalte die dafür gespielte Karte auf deiner Hand.',
       fontSize: 'small',
     },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Smuggler outposts',
-      de: 'Schmuggler-Außenposten',
-    },
-    faction: 'guild',
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'helper-arrow-right',
-      },
-      {
-        type: 'shipping',
-      },
-    ],
     aiEvaluation: () => 0,
   },
   {
@@ -356,78 +443,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Guild Bank',
-      de: 'Gilden-Bank',
-    },
-    faction: 'guild',
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
-    buyEffects: [
-      {
-        type: 'faction-influence-up-choice',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>Entsorge 2 "Das Spice muss fließen"-Karten für {resource:victory-point}.',
-      fontSize: 'small',
-    },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Missionaria Protectiva',
-      de: 'Missionaria Protectiva',
-    },
-    faction: 'bene',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
-    buyEffects: [
-      {
-        type: 'faction-influence-up-fremen',
-      },
-    ],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-arrow-right',
-      },
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'card-destroy',
-      },
-    ],
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: "Governor's Palace",
-      de: 'Statthalterpalast',
-    },
-    faction: 'emperor',
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_12.png',
-    buyEffects: [
-      {
-        type: 'faction-influence-up-choice',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-arrow-right}{resource:intrigue}<br><br><b>Aufdeckzug:</b><br>{resource:solari;amount:5} {resource:persuasion;amount:2}{resource:helper-arrow-right} {resource:victory-point}',
-      fontSize: 'medium',
-    },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
       en: 'Experimental Shields',
       de: 'Experimentelle Schilde',
     },
@@ -452,22 +467,6 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '<b>Wenn du ein Schlachtschiff in den Konflikt einsetzt:</b><br>Jeder Gegner verliert eine Einheit.',
-      fontSize: 'small',
-    },
-    aiEvaluation: () => 0,
-  },
-  {
-    name: {
-      en: 'Sardaukar Commando Post',
-      de: 'Sardaukar Kommando-Posten',
-    },
-    faction: 'emperor',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
-    buyEffects: [],
-    customEffect: {
-      en: '',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>2 Imperator-Karten: {resource:sword}{resource:sword}<br>3 Imperator-Karten: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Imperator-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: () => 0,

@@ -47,7 +47,7 @@ export class DuneSymbolsPipe implements PipeTransform {
 
         returnValue = returnValue.replace(
           resourceString[0],
-          '<div style="position:relative;display:inline-block"><img style="min-width: ' +
+          '<div style="position:relative;display:inline-block;color:white;"><img style="min-width: ' +
             iconSize +
             ';height: ' +
             iconSize +

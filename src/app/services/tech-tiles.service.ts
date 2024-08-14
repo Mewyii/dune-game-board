@@ -36,7 +36,7 @@ export class TechTilesService {
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
   public playerTechTiles$ = this.playerTechTilesSubject.asObservable();
 
-  private newTechTilesSubject = new BehaviorSubject<TechTileCard[]>([]);
+  private newTechTilesSubject = new BehaviorSubject<TechTileCard[]>(techTiles);
   public newTechTiles$ = this.newTechTilesSubject.asObservable();
 
   constructor() {
