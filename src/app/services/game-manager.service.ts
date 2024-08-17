@@ -21,6 +21,7 @@ import { GameState } from './ai/models';
 import { CardsService, ImperiumDeckCard } from './cards.service';
 import { isFactionScoreRewardType } from '../helpers/rewards';
 import { getFactionScoreTypeFromReward } from '../helpers/faction-score';
+import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 
 export interface AgentOnField {
   fieldId: string;
@@ -947,6 +948,9 @@ export class GameManager {
       (playerDiscardPileCards?.filter((x) => x.persuasionCosts).length ?? 0) +
       (playerTrashPileCards?.filter((x) => x.persuasionCosts).length ?? 0);
 
+    const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
+    const playerDreadnoughtCount = getPlayerdreadnoughtCount(playerCombatUnits);
+
     return {
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
@@ -954,7 +958,7 @@ export class GameManager {
       enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
       playerScore: this.playerScoreManager.getPlayerScore(player.id)!,
       enemyScore: this.playerScoreManager.getEnemyScore(player.id)!,
-      playerCombatUnits: this.combatManager.getPlayerCombatUnits(player.id)!,
+      playerCombatUnits,
       enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
       agentsOnFields: this.agentsOnFields,
       playerAgentsOnFields: this.agentsOnFields.filter((x) => x.playerId === player.id),
@@ -973,6 +977,7 @@ export class GameManager {
       playerTrashPileCards,
       playerCardsBought,
       playerCardsTrashed,
+      playerDreadnoughtCount,
     };
   }
 

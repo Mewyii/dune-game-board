@@ -3,11 +3,9 @@ import {
   enemyIsCloseToPlayerFactionScore,
   getAccumulatedSpice,
   getCostAdjustedDesire,
-  getDesire,
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesireModifier,
   getPlayerGarrisonStrength,
-  getPlayerdreadnoughtCount,
   getResourceAmount,
   getResourceDesire,
   getWinCombatDesireModifier,
@@ -85,10 +83,10 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0075 * getResourceAmount(player, 'solari', virtualResources) -
       0.0125 * (gameState.currentRound - 1) -
-      0.1 * getPlayerdreadnoughtCount(gameState),
+      0.1 * gameState.playerDreadnoughtCount,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 3,
-    reachedGoal: (player, gameState) => getPlayerdreadnoughtCount(gameState) > 1,
+    reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1,
     desiredFields: (fields) => ({
       'upgrade (dreadnought)': (player, gameState, goals, virtualResources) => 1,
     }),

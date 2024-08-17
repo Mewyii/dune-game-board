@@ -6,9 +6,7 @@ import {
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesireModifier,
   getPlayerGarrisonStrength,
-  getPlayerdreadnoughtCount,
   getResourceAmount,
-  getResourceAmountFromArray,
   getRewardAmountFromArray,
   getWinCombatDesireModifier,
   noOneHasMoreInfluence,
@@ -23,6 +21,7 @@ import { Player } from 'src/app/services/player-manager.service';
 import { FactionType, Resource, RewardType } from '../../../models';
 import { isResourceArray } from 'src/app/helpers/resources';
 import { normalizeNumber } from 'src/app/helpers/common';
+import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
@@ -83,11 +82,11 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'solari', virtualResources) -
       0.02 * (gameState.currentRound - 1) -
-      0.05 * getPlayerdreadnoughtCount(gameState) +
+      0.05 * gameState.playerDreadnoughtCount +
       0.015 * (4 - gameState.playerCombatUnits.troopsInGarrison),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 4,
-    reachedGoal: (player, gameState) => getPlayerdreadnoughtCount(gameState) > 1,
+    reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', 0, 1),
     }),

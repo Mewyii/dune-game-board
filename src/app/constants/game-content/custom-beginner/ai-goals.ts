@@ -6,7 +6,6 @@ import {
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesireModifier,
   getPlayerGarrisonStrength,
-  getPlayerdreadnoughtCount,
   getResourceAmount,
   getWinCombatDesireModifier,
   noOneHasMoreInfluence,
@@ -63,11 +62,11 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'solari', virtualResources) -
       0.025 * (gameState.currentRound - 1) -
-      0.05 * getPlayerdreadnoughtCount(gameState) +
+      0.05 * gameState.playerDreadnoughtCount +
       0.0175 * (5 - gameState.playerCombatUnits.troopsInGarrison),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 4,
-    reachedGoal: (player, gameState) => getPlayerdreadnoughtCount(gameState) > 1,
+    reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1,
     desiredFields: (fields) => ({
       Upgrade: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(player, [{ type: 'solari', amount: 5 }], 1.0, virtualResources),

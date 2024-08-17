@@ -61,6 +61,7 @@ export interface GameState {
   playerTrashPileCards?: ImperiumDeckCard[];
   playerCardsBought: number;
   playerCardsTrashed: number;
+  playerDreadnoughtCount: number;
 }
 
 export interface AIGoal {

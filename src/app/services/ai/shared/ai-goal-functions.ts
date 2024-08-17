@@ -54,14 +54,6 @@ export function getResourceAmount(
   }
 }
 
-export function getPlayerdreadnoughtCount(gameState: GameState) {
-  return (
-    gameState.playerCombatUnits.shipsInGarrison +
-    gameState.playerCombatUnits.shipsInCombat +
-    gameState.playerCombatUnits.shipsInTimeout
-  );
-}
-
 export function getPlayerCombatStrength(player: PlayerCombatUnits) {
   return player.troopsInCombat * 2 + player.shipsInCombat * 4 + player.additionalCombatPower;
 }
