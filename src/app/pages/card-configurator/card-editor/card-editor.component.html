@@ -1,12 +1,12 @@
 <form [formGroup]="imperiumCardForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="medium-text-field">
       <mat-label>Name (English)</mat-label>
-      <input matInput formControlName="en" [readonly]="editMode" />
+      <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="medium-text-field">
       <mat-label>Name (German)</mat-label>
-      <input matInput formControlName="de" [readonly]="editMode" />
+      <input matInput formControlName="de" />
     </mat-form-field>
   </div>
 
