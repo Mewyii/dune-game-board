@@ -38,6 +38,14 @@
     box-shadow: inset 0px 0px 20px 2px #e7dbbb;
     backdrop-filter: blur(5px);
     filter: blur(4px);
+    transition: .5s;
+}
+
+.units-gathering-area:hover,
+.units-gathering-area.active {
+    filter: blur(4px) drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+    transform: scale(1.1);
 }
 
 .battlefield-background {
@@ -158,7 +166,7 @@
     display:flex;
     gap: 16px;
     z-index: 2;
-    top: -45px;
+    top: -50px;
     left: 10px;
 }
 
@@ -179,11 +187,8 @@
     transition: .5s;
 }
 
-.units-in-garrison-container:hover,
-.units-in-garrison-container.active {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+.units-in-garrison-container:hover {
     cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
-    transform: scale(1.1);
 }
 
 .units-in-combat-container {

@@ -93,7 +93,11 @@ export class TechTilesService {
   setInitialAvailableTechTiles() {
     this.techTiles = techTiles;
     this.playerTechTilesSubject.next([]);
-    this.availableTechTilesSubject.next(shuffle(this.techTiles).slice(0, 3));
+    this.availableTechTilesSubject.next(shuffle(this.techTiles));
+  }
+
+  removeAvailableTechTile(techTileId: string) {
+    this.availableTechTilesSubject.next(this.availableTechTiles.filter((x) => x.name.en !== techTileId));
   }
 
   resetAvailableTechTiles() {
@@ -143,6 +147,10 @@ export class TechTilesService {
 
       this.playerTechTilesSubject.next(playerTechTiles);
     }
+  }
+
+  unFlipTechTiles() {
+    this.playerTechTilesSubject.next(this.playerTechTiles.map((x) => ({ ...x, isFlipped: false })));
   }
 
   trashTechTile(techTileId: string) {

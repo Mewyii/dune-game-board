@@ -57,11 +57,24 @@
         </div>
       </ng-container>
     </div>
-    <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()">
+    <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()" matTooltip="Draw card">
       <img class="draw-card-icon" [src]="getRewardTypePath('card-draw')" />
     </div>
-    <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onAddFoldspaceToHandClicked()">
+    <div
+      *ngIf="cardsShown === 'hand'"
+      class="draw-card-button"
+      (click)="onAddFoldspaceToHandClicked()"
+      matTooltip="Draw foldspace"
+    >
       <img class="draw-card-icon" [src]="getRewardTypePath('foldspace')" />
+    </div>
+    <div
+      *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
+      class="draw-card-button"
+      (click)="onAIDiscardCardClicked()"
+      matTooltip="AI Discard card"
+    >
+      <img class="draw-card-icon" [src]="getRewardTypePath('card-discard')" />
     </div>
     <button
       *ngIf="cardsShown === 'discard'"
@@ -81,13 +94,25 @@
     >
       <mat-icon>sync</mat-icon>
     </button>
-    <div [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')" (click)="onShowHandClicked()">
+    <div
+      [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')"
+      (click)="onShowHandClicked()"
+      matTooltip="Hand"
+    >
       <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
     </div>
-    <div [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')" (click)="onShowDiscardPileClicked()">
+    <div
+      [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')"
+      (click)="onShowDiscardPileClicked()"
+      matTooltip="Discard-pile"
+    >
       <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
     </div>
-    <div [class]="'draw-card-button' + (cardsShown === 'deck' ? ' active' : '')" (click)="onShowDeckClicked()">
+    <div
+      [class]="'draw-card-button' + (cardsShown === 'deck' ? ' active' : '')"
+      (click)="onShowDeckClicked()"
+      matTooltip="Deck"
+    >
       <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
     </div>
     <div [style.marginBottom]="'8px'">

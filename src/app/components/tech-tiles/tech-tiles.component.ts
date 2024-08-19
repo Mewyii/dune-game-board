@@ -26,13 +26,17 @@ export class TechTilesComponent {
 
   ngOnInit(): void {
     this.techTilesService.availableTechTiles$.subscribe((techTiles) => {
-      this.availableTechTiles = techTiles;
+      this.availableTechTiles = techTiles.slice(0, 3);
     });
   }
 
   onTakeCardClicked(techTileId: string) {
     this.audioManager.playSound('aquire-tech');
     this.techTilesService.setPlayerTechTile(this.gameManager.activePlayerId, techTileId);
+  }
+
+  onTrashCardClicked(techTileId: string) {
+    this.techTilesService.removeAvailableTechTile(techTileId);
   }
 
   setTechTileActive(techTileId: string) {

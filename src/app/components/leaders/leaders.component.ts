@@ -352,7 +352,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRevealCardsClicked(playerId: number) {
-    this.gameManager.revealPlayerCards(playerId);
+    this.gameManager.setPlayerRevealTurn(playerId);
   }
 
   public onNextPlayerClicked() {

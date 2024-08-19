@@ -100,6 +100,10 @@ export class PlayerHandComponent implements OnInit {
     this.activeCardId = '';
   }
 
+  onAIDiscardCardClicked() {
+    this.gameManager.aiDiscardHandCard(this.activePlayerId);
+  }
+
   onTrashHandCardClicked(card: ImperiumDeckCard) {
     if (this.currentPlayer) {
       if (this.currentPlayer.turnState === 'agent-placement') {

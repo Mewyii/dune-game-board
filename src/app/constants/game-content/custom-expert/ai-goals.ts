@@ -54,7 +54,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
       (0.01 * getResourceAmount(player, 'spice', virtualResources) +
-        0.015 * (gameState.currentRound - 1) +
+        0.02 * (gameState.currentRound - 1) +
         0.02 * gameState.playerCardsBought),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
@@ -65,7 +65,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: (fields) => ({}),
   },
   tech: {
-    baseDesire: 0.45,
+    baseDesire: 0.4,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0125 * getResourceAmount(player, 'spice', virtualResources) + 0.033 * player.techAgents,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
@@ -316,7 +316,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   'trim-cards': {
-    baseDesire: 0.4,
+    baseDesire: 0.45,
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +

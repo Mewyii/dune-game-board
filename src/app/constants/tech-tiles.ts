@@ -15,7 +15,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug</b>:<br>{resource:solari;amount:2}{resource:helper-arrow-right}{resource:sword} für jede Truppe im Konflikt',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.4 + 0.05 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -23,15 +23,15 @@ export const techTiles: TechTileCard[] = [
       de: 'Windfallen',
     },
     faction: 'fremen',
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/windtraps.png',
     buyEffects: [],
     customEffect: {
       en: '',
-      de: 'Alle {resource:water}-Kosten sind um 1 reduziert (min. 1).',
+      de: '<b>Rundenbeginn:</b><br>{resource:water}',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.9 - 0.1 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.8 - 0.1 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -59,7 +59,7 @@ export const techTiles: TechTileCard[] = [
         type: 'card-draw',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.7,
+    aiEvaluation: (player, gameState) => 0.6,
   },
   {
     name: {
@@ -84,7 +84,7 @@ export const techTiles: TechTileCard[] = [
         type: 'shipping',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.3,
+    aiEvaluation: (player, gameState) => 0.2,
   },
   {
     name: {
@@ -100,7 +100,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>2 Raumgilden-Karten: {resource:shipping}<br>3 Raumgilden-Karten: {resource:shipping}{resource:shipping}<br>4+ Raumgilden-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.7 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) => 0.6 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -121,7 +121,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
-      0.8 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed + (player.hasCouncilSeat ? 0.1 : 0.0),
+      0.7 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed + (player.hasCouncilSeat ? 0.1 : 0.0),
   },
   {
     name: {
@@ -137,7 +137,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-arrow-right}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>2 Imperator-Karten: {resource:sword}{resource:sword}<br>3 Imperator-Karten: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Imperator-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.8 + 0.025 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) => 0.7 + 0.025 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -165,7 +165,7 @@ export const techTiles: TechTileCard[] = [
         type: 'troop',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.7,
+    aiEvaluation: (player, gameState) => 0.6,
   },
   {
     name: {
@@ -186,7 +186,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.8 +
+      0.7 +
       0.025 * gameState.playerCardsBought +
       0.025 * gameState.playerCardsTrashed +
       (player.hasSwordmaster ? 0.1 : 0.0) +
@@ -207,7 +207,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
-      0.6 - 0.05 * (gameState.currentRound - 1) + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed,
+      0.5 - 0.05 * (gameState.currentRound - 1) + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -239,7 +239,7 @@ export const techTiles: TechTileCard[] = [
         type: 'card-destroy',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.7 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) => 0.6 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -260,7 +260,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.7 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed + (player.hasSwordmaster ? 0.1 : 0.0),
+      0.6 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed + (player.hasSwordmaster ? 0.1 : 0.0),
   },
   {
     name: {
@@ -288,7 +288,7 @@ export const techTiles: TechTileCard[] = [
         type: 'foldspace',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.5 - 0.025 * gameState.playerCardsBought - 0.025 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) => 0.4 - 0.025 * gameState.playerCardsBought - 0.025 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -312,7 +312,7 @@ export const techTiles: TechTileCard[] = [
         type: 'agent-lift',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.5 + 0.05 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.4 + 0.05 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -327,7 +327,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Alle {resource:spice}-Kosten sind um 1 reduziert (min. 1).',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.8 - 0.05 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.7 - 0.05 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -349,7 +349,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}<br><br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.8 + 0.1 * gameState.playerDreadnoughtCount,
+    aiEvaluation: (player, gameState) => 0.7 + 0.1 * gameState.playerDreadnoughtCount,
   },
   {
     name: {
@@ -364,7 +364,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du Spice sammelst:</b><br> Erhalte {resource:spice}',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.9 - 0.15 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.8 - 0.15 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -379,7 +379,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Spice zu sammeln kostet dich {resource:water} weniger.',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.9 - 0.15 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.8 - 0.15 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -394,7 +394,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-arrow-right}Behalte die dafür gespielte Karte auf deiner Hand.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.2 + 0.1 * gameState.playerCardsBought + 0.1 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) => 0.1 + 0.1 * gameState.playerCardsBought + 0.1 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -420,7 +420,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.3 +
+      0.2 +
       0.05 * gameState.playerScore.bene +
       0.05 * gameState.playerScore.emperor +
       0.05 * gameState.playerScore.fremen +
@@ -452,7 +452,7 @@ export const techTiles: TechTileCard[] = [
         type: 'combat',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.3 - 0.05 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.2 - 0.05 * (gameState.currentRound - 1),
   },
   {
     name: {
@@ -467,7 +467,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Nach einem Konflikt:</b> <br>Schlachtschiffe müssen keine Runde aussetzen.',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.1 + 0.4 * gameState.playerDreadnoughtCount,
+    aiEvaluation: (player, gameState) => 0.0 + 0.4 * gameState.playerDreadnoughtCount,
   },
   {
     name: {
@@ -482,7 +482,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du ein Schlachtschiff in den Konflikt einsetzt:</b><br>Jeder Gegner verliert eine Einheit.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.1 + 0.4 * gameState.playerDreadnoughtCount,
+    aiEvaluation: (player, gameState) => 0.0 + 0.4 * gameState.playerDreadnoughtCount,
   },
   {
     name: {
@@ -501,6 +501,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}{resource:sword}<br><br><b>',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.7 - 0.05 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.6 - 0.05 * (gameState.currentRound - 1),
   },
 ];

@@ -25,6 +25,7 @@
 
 .card-container {
     transform: translate(0rem, -300px);
+    transition: .66s;
 }
 
 .card-container:hover {

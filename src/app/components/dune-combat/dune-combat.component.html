@@ -1,12 +1,24 @@
 <div class="combat-tile">
   <div class="units-area">
     <div class="upper-row">
-      <div class="units-gathering-area"></div>
-      <div class="units-gathering-area"></div>
+      <div
+        [class]="'units-gathering-area' + (activeGarrisonPlayerId === 2 ? ' active' : '')"
+        (click)="setActiveGarrisonPlayerId(2)"
+      ></div>
+      <div
+        [class]="'units-gathering-area' + (activeGarrisonPlayerId === 3 ? ' active' : '')"
+        (click)="setActiveGarrisonPlayerId(3)"
+      ></div>
     </div>
     <div class="mid-row">
-      <div class="units-gathering-area"></div>
-      <div class="units-gathering-area"></div>
+      <div
+        [class]="'units-gathering-area' + (activeGarrisonPlayerId === 1 ? ' active' : '')"
+        (click)="setActiveGarrisonPlayerId(1)"
+      ></div>
+      <div
+        [class]="'units-gathering-area' + (activeGarrisonPlayerId === 4 ? ' active' : '')"
+        (click)="setActiveGarrisonPlayerId(4)"
+      ></div>
     </div>
     <ng-container *ngIf="settingsService.settings.mode === 'game'">
       <ng-container *ngFor="let combatUnits of playerCombatUnits; let i = index; trackBy: trackCombatUnits">
@@ -20,7 +32,7 @@
           </ng-container>
         </div>
         <div
-          [class]="'units-in-garrison-container' + (activeGarrisonPlayerId === combatUnits.playerId ? ' active' : '')"
+          [class]="'units-in-garrison-container'"
           [style.top]="225 - (i > 0 && i < 3 ? 210 : 0) + 'px'"
           [style.left]="55 + (i > 0 ? 215 : 0) + (i > 1 ? 430 : 0) + (i > 2 ? 200 : 0) + 'px'"
           (click)="setActiveGarrisonPlayerId(combatUnits.playerId)"

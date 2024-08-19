@@ -58,6 +58,18 @@ export class SettingsService {
     return cloneDeep(this.fields);
   }
 
+  public getBoardField(id: string) {
+    return this.fields.find((x) => x.title.en === id);
+  }
+
+  public getBoardLocations() {
+    return cloneDeep(this.gameContent.locations);
+  }
+
+  public getBoardLocation(id: string) {
+    return cloneDeep(this.gameContent.locations.find((x) => x.actionField.title.en === id));
+  }
+
   public setFields() {
     const result: ActionField[] = [];
     for (const faction of this.gameContent.factions) {
