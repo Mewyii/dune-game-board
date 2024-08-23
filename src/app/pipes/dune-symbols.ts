@@ -76,10 +76,12 @@ export class DuneSymbolsPipe implements PipeTransform {
       returnValue = returnValue.replace(
         factionString[0],
         '<img style="min-width:' +
-          (iconSizeNumber - ratioFix) +
+          Math.ceil(iconSizeNumber - ratioFix / 2) +
           'px;height:' +
-          (iconSizeNumber - ratioFix) +
-          'px;object-fit:scale-down; margin-bottom:-1px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
+          Math.ceil(iconSizeNumber - ratioFix / 1.5) +
+          'px;object-fit:scale-down; margin-bottom:-' +
+          Math.ceil(0.25 * ratioFix) +
+          'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
           factionImgPath +
           '"/>'
       );

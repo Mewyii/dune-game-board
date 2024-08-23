@@ -218,3 +218,9 @@
 .reward-amount.aquire {
     top: 1px;
 }
+
+.imperium-card ::ng-deep br {
+    display: block;
+    content: "";
+    height: 3px;
+ }

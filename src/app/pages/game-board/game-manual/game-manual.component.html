@@ -11,23 +11,22 @@
       The AI will tell you which board space it wants to go to (depending on its goals and resources). You will have to check
       for additional card effects or tech tile effects.
     </div>
-
+    <br /><br /><br />
+    <h5>Finale</h5>
+    <div>Each <b>controlled location</b> (even by a dreadnought) gives the player one victory point.</div>
     <br /><br /><br />
     <h4>New mechanics / symbols</h4>
-    <h5>Finale</h5>
-    <div>Each controlled location (even by a dreadnought) gives the player one victory point.</div>
-    <br />
     <div>
-      Dreadnoughts now have 4 combat strength. They always need to rest one round after they were put into conflict. When a
-      conflict is won, each involved dreadnought can be placed on one location of choice to control it. At the next reveal
-      turn, the control-reward can be collected and the dreadnought can be removed or it can stay (players choice). Enemy
-      dreadnoughts controlling locations can be destroyed in two ways: By placing a dreadnought OR by placing a
+      <b>Dreadnoughts</b> now have 4 combat strength. They always need to rest one round after they were put into conflict.
+      When a conflict is won, each involved dreadnought can be placed on one location of choice to control it. At the next
+      reveal turn, the control-reward can be collected and the dreadnought can be removed or it can stay (players choice).
+      Enemy dreadnoughts controlling locations can be destroyed in two ways: By placing a dreadnought OR by placing a
       control-marker on top of the locations.
     </div>
     <br />
     <div
       [innerHTML]="
-        'Focus token: With the trash symbol ({resource:card-destroy}), you now get a focus token instead. You keep this token until your reveal turn, then you have to use (trash) it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
+        '<b>Focus token</b>: With the trash symbol ({resource:card-destroy}), you now get a focus token instead. You keep this token until your reveal turn, then you have to use (trash) it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
           | duneSymbols : '24px'
       "
     ></div>

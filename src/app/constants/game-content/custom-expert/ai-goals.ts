@@ -21,7 +21,6 @@ import { Player } from 'src/app/services/player-manager.service';
 import { FactionType, Resource, RewardType } from '../../../models';
 import { isResourceArray } from 'src/app/helpers/resources';
 import { normalizeNumber } from 'src/app/helpers/common';
-import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
@@ -54,7 +53,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
       (0.01 * getResourceAmount(player, 'spice', virtualResources) +
-        0.02 * (gameState.currentRound - 1) +
+        0.025 * (gameState.currentRound - 1) +
         0.02 * gameState.playerCardsBought),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
@@ -65,7 +64,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: (fields) => ({}),
   },
   tech: {
-    baseDesire: 0.4,
+    baseDesire: 0.35,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0125 * getResourceAmount(player, 'spice', virtualResources) + 0.033 * player.techAgents,
     goalIsReachable: (player, gameState, goals, virtualResources) =>
