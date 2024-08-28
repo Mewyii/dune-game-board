@@ -67,7 +67,6 @@ export class ConflictsService {
 
   private currentConflictSubject = new BehaviorSubject<Conflict>({
     name: { de: 'Wüstenkraft', en: 'desert power' },
-    aiEvaluation: () => 0.5,
     lvl: 2,
     row: 1,
     column: 1,

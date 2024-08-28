@@ -1,5 +1,6 @@
 import { LanguageString } from '../models';
 import { AIAdjustments } from '../services/ai/models';
+import { GameModifiers } from '../services/game-modifier.service';
 
 export interface Leader {
   name: LanguageString;
@@ -12,6 +13,7 @@ export interface Leader {
   imageUrl: string;
   playableByAI?: boolean;
   aiAdjustments?: AIAdjustments;
+  gameModifiers?: GameModifiers;
 }
 
 export const leaders: Leader[] = [
@@ -61,7 +63,7 @@ export const leaders: Leader[] = [
       en: 'leader of the fremen',
     },
     passiveDescription: {
-      de: 'Entferne deinen Marker von der {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}',
+      de: 'Entferne deinen Marker von der {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
       en: 'Remove your marker from the {faction:fremen}-track. Every time you would gain influence there: {resource:water}',
     },
     signetName: {
@@ -78,6 +80,7 @@ export const leaders: Leader[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
     },
+    gameModifiers: { factionInfluenceModifier: { fremen: { noInfluence: true, alternateReward: { type: 'water' } } } },
   },
   {
     name: {
@@ -178,7 +181,7 @@ export const leaders: Leader[] = [
       en: 'daughter of the emperor',
     },
     passiveDescription: {
-      de: 'Entferne deinen Marker von der {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}',
+      de: 'Entferne deinen Marker von der {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Ignoriere alle {faction:emperor} -Anforderungen.',
       en: 'Remove your marker from the {faction:emperor}-track. Every time you would gain influence there: {resource:solari}',
     },
     signetName: {
@@ -192,6 +195,7 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
     playableByAI: true,
+    gameModifiers: { factionInfluenceModifier: { emperor: { noInfluence: true, alternateReward: { type: 'solari' } } } },
   },
   {
     name: {
@@ -297,7 +301,7 @@ export const leaders: Leader[] = [
       en: 'reverend mother',
     },
     passiveDescription: {
-      de: 'Entferne deinen Marker von der {faction:bene}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:spice}',
+      de: 'Entferne deinen Marker von der {faction:bene}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:spice}<br>Ignoriere alle {faction:bene} -Anforderungen.',
       en: 'Remove your marker from the {faction:bene}-track. Every time you would gain influence there: {resource:spice}',
     },
     signetName: {
@@ -314,6 +318,7 @@ export const leaders: Leader[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'bene' ? 0.025 : 0.0),
     },
+    gameModifiers: { factionInfluenceModifier: { bene: { noInfluence: true, alternateReward: { type: 'spice' } } } },
   },
   {
     name: {
@@ -338,7 +343,7 @@ export const leaders: Leader[] = [
     },
     signetDescription: {
       en: 'You can activate the agent effect of one of your handcards.',
-      de: 'Du kannst den Agenten-Effekt einer deiner Handkarten aktivieren.',
+      de: '{resource:card-draw}{resource:separator}Aktiviere den Agenten-Effekt einer deiner Handkarten.',
     },
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',

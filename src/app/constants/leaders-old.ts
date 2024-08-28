@@ -1,5 +1,6 @@
 import { LanguageString } from '../models';
 import { AIAdjustments } from '../services/ai/models';
+import { GameModifiers } from '../services/game-modifier.service';
 
 export interface LeaderImageOnly {
   name: LanguageString;
@@ -8,6 +9,7 @@ export interface LeaderImageOnly {
   imageUrl: string;
   playableByAI?: boolean;
   aiAdjustments?: AIAdjustments;
+  gameModifiers?: GameModifiers;
 }
 
 export const leadersOld: LeaderImageOnly[] = [

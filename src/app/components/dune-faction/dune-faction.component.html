@@ -58,6 +58,7 @@
         <ng-container *ngFor="let playerScore of playerScores; let i = index; trackBy: trackPlayerScore">
           <div
             class="score-marker"
+            [class.hidden]="isExcluded(playerScore.playerId)"
             [style.bottom]="15 + playerScore.score * 50 + 'px'"
             [style.left]="15 + i * 35 + 'px'"
             [style.background-color]="getPlayerColor(playerScore.playerId)"

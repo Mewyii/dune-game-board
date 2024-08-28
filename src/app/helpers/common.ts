@@ -33,3 +33,5 @@ export function randomizeArray<T>(a: Array<T>, randomizeFactor: number) {
 }
 
 export const normalizeNumber = (value: number, max: number, min: number) => (value - min) / (max - min);
+
+export const getNumberAverage = (arr: number[]) => arr.reduce((p, c) => p + c, 0) / arr.length;

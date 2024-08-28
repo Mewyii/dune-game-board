@@ -29,7 +29,7 @@ export class LeadersComponent implements OnInit {
 
   public currentTurn = 0;
 
-  public playerLeaders: PlayerLeader[] = [];
+  public playerLeader: PlayerLeader | undefined;
   public activePlayerId: number = 0;
 
   public activeLeader: Leader | LeaderImageOnly | undefined;
@@ -69,15 +69,17 @@ export class LeadersComponent implements OnInit {
     this.newLeaders = this.leaders.filter((x) => x.type === 'new') as Leader[];
 
     this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
-      this.playerLeaders = playerLeaders;
+      this.playerLeader = playerLeaders.find((x) => x.playerId === this.activePlayerId);
 
-      const activeLeaderName = this.playerLeaders.find((x) => x.playerId === this.activePlayerId)?.leaderName;
+      const activeLeaderName = this.playerLeader?.leaderName;
       this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
     });
 
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
-      const activeLeaderName = this.playerLeaders.find((x) => x.playerId === this.activePlayerId)?.leaderName;
+      this.playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === activePlayerId);
+
+      const activeLeaderName = this.playerLeader?.leaderName;
       this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
 
       this.currentPlayer = this.playerManager.getPlayer(this.activePlayerId);
@@ -150,6 +152,10 @@ export class LeadersComponent implements OnInit {
         this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.name.en);
       }
     }
+  }
+
+  onLockInLeaderClicked() {
+    this.gameManager.lockInLeader(this.activePlayerId, this.activeLeader);
   }
 
   onAddFocusTokenClicked(id: number) {

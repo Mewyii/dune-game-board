@@ -24,8 +24,8 @@ export class ImperiumRowComponent implements OnInit {
   constructor(private playerManager: PlayerManager, private gameManager: GameManager, public cardsService: CardsService) {}
 
   ngOnInit(): void {
-    this.cardsService.imperiumDeck$.subscribe((imperiumCards) => {
-      this.imperiumRowCards = imperiumCards.slice(0, 6);
+    this.cardsService.imperiumRow$.subscribe((imperiumCards) => {
+      this.imperiumRowCards = imperiumCards;
     });
 
     this.playerManager.players$.subscribe((players) => {

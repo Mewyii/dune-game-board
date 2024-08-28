@@ -209,6 +209,10 @@
     animation-duration: 1.5s;
 }
 
+.hidden {
+    display: none;
+}
+
 @keyframes marker-anim {
     0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
     20%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.75)}

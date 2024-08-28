@@ -89,6 +89,15 @@
       *ngIf="cardsShown === 'deck'"
       mat-mini-fab
       [color]="'accent'"
+      (click)="onShowTopCardClicked()"
+      matTooltip="show top card"
+    >
+      <mat-icon>visibility</mat-icon>
+    </button>
+    <button
+      *ngIf="cardsShown === 'deck'"
+      mat-mini-fab
+      [color]="'accent'"
       (click)="onShuffleDeckClicked()"
       matTooltip="shuffle deck"
     >

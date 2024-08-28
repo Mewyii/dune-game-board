@@ -6,6 +6,8 @@ import { CardsService, ImperiumDeckCard, PlayerCard, PlayerCardStack } from 'src
 import { GameManager } from 'src/app/services/game-manager.service';
 import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'dune-player-hand',
@@ -28,7 +30,8 @@ export class PlayerHandComponent implements OnInit {
     public gameManager: GameManager,
     private cardsService: CardsService,
     private audioManager: AudioManager,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +69,8 @@ export class PlayerHandComponent implements OnInit {
   onDrawCardClicked() {
     this.audioManager.playSound('card-draw');
     this.cardsService.drawPlayerCardsFromDeck(this.activePlayerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAddFoldspaceToHandClicked() {
@@ -73,6 +78,8 @@ export class PlayerHandComponent implements OnInit {
     if (foldspaceCard) {
       this.cardsService.addCardToPlayerHand(this.activePlayerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
     }
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onShowHandClicked() {
@@ -102,6 +109,8 @@ export class PlayerHandComponent implements OnInit {
 
   onAIDiscardCardClicked() {
     this.gameManager.aiDiscardHandCard(this.activePlayerId);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onTrashHandCardClicked(card: ImperiumDeckCard) {
@@ -135,6 +144,22 @@ export class PlayerHandComponent implements OnInit {
   onShuffleDiscardPileUnderDeckClicked() {
     if (this.currentPlayer) {
       this.cardsService.shufflePlayerDiscardPileUnderDeck(this.activePlayerId);
+    }
+  }
+
+  onShowTopCardClicked() {
+    if (this.currentPlayer) {
+      const deck = this.cardsService.getPlayerDeck(this.currentPlayer.id)?.cards;
+      if (deck && deck.length > 0) {
+        const topCard = deck[0];
+
+        const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
+          data: {
+            title: 'Top Deck Card',
+            imperiumCards: [topCard],
+          },
+        });
+      }
     }
   }
 

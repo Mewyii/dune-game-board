@@ -6,6 +6,7 @@ import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-m
 import { TranslateService } from 'src/app/services/translate-service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { AppMode } from 'src/app/constants/board-settings';
+import { GameModifiersService } from 'src/app/services/game-modifier.service';
 
 @Component({
   selector: 'app-dune-faction',
@@ -52,10 +53,13 @@ export class DuneFactionComponent implements OnInit {
 
   public allianceTakenByPlayerId = 0;
 
+  public excludedPlayers: number[] = [];
+
   constructor(
     public playerManager: PlayerManager,
     public playerScoreManager: PlayerScoreManager,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public gameModifiersService: GameModifiersService
   ) {}
 
   ngOnInit(): void {
@@ -82,6 +86,12 @@ export class DuneFactionComponent implements OnInit {
           playerAlliances.find((x) => x.alliances.some((allianceType) => allianceType === factionType))?.playerId ?? 0;
       }
     });
+
+    this.gameModifiersService.playerGameModifiers$.subscribe((gameModifiers) => {
+      this.excludedPlayers = gameModifiers
+        .filter((x) => x.factionInfluenceModifier && x.factionInfluenceModifier[this.faction.type]?.noInfluence === true)
+        .map((x) => x.playerId);
+    });
   }
 
   public getPlayerColor(playerId: number) {
@@ -104,6 +114,10 @@ export class DuneFactionComponent implements OnInit {
     }
     result = result + ')';
     return result;
+  }
+
+  public isExcluded(playerId: number) {
+    return this.excludedPlayers.includes(playerId);
   }
 
   public trackPlayerScore(index: number, playerScore: { playerId: number; score: number }) {

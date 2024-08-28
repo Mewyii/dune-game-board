@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { shuffle } from '../helpers/common';
 import { PlayerManager } from './player-manager.service';
@@ -32,6 +32,7 @@ export interface CardFactionAndFieldAccess {
 export class CardsService {
   private imperiumDeckSubject = new BehaviorSubject<ImperiumDeckCard[]>([]);
   public imperiumDeck$ = this.imperiumDeckSubject.asObservable();
+  public imperiumRow$ = this.imperiumDeck$.pipe(map((x) => x.slice(0, 6)));
 
   private playerDecksSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerDecks$ = this.playerDecksSubject.asObservable();
@@ -113,6 +114,10 @@ export class CardsService {
 
   public get imperiumDeck() {
     return cloneDeep(this.imperiumDeckSubject.value);
+  }
+
+  public get imperiumRow() {
+    return cloneDeep(this.imperiumDeck.slice(0, 6));
   }
 
   public get playerDecks() {
@@ -204,7 +209,7 @@ export class CardsService {
       const addedPlayerCards: ImperiumDeckCard[] = [];
       for (let i = 0; i < amount; i++) {
         if (playerDeck.cards.length > 0) {
-          const card = playerDeck.cards.pop();
+          const card = playerDeck.cards.shift();
           if (card) {
             addedPlayerCards.push(card);
           }
@@ -304,7 +309,7 @@ export class CardsService {
     for (const playerDiscardPile of playerDiscardPiles) {
       const playerDeck = playerDecks.find((x) => x.playerId === playerDiscardPile.playerId);
       if (playerDeck) {
-        playerDeck.cards = [...shuffle(playerDiscardPile.cards), ...playerDeck.cards];
+        playerDeck.cards = [...playerDeck.cards, ...shuffle(playerDiscardPile.cards)];
       } else {
         playerDecks.push({ playerId: playerDiscardPile.playerId, cards: playerDiscardPile.cards });
       }

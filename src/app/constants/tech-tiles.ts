@@ -420,7 +420,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.2 +
+      0.3 +
       0.05 * gameState.playerScore.bene +
       0.05 * gameState.playerScore.emperor +
       0.05 * gameState.playerScore.fremen +
@@ -452,7 +452,7 @@ export const techTiles: TechTileCard[] = [
         type: 'combat',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.2 - 0.05 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.2 + 0.05 * (gameState.currentRound - 1),
   },
   {
     name: {

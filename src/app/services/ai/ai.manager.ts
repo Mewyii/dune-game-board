@@ -2,25 +2,15 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player } from '../player-manager.service';
-import { randomizeArray } from '../../helpers/common';
+import { getNumberAverage, normalizeNumber, randomizeArray } from '../../helpers/common';
 import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from './models';
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
-import {
-  ActionField,
-  ActionType,
-  ActiveFactionType,
-  activeFactionTypes,
-  DuneLocation,
-  FactionType,
-  Reward,
-  RewardType,
-} from 'src/app/models';
+import { ActionField, ActiveFactionType, activeFactionTypes, DuneLocation, Reward, RewardType } from 'src/app/models';
 import { getDesire, getResourceAmount } from './shared/ai-goal-functions';
-import { CardFactionAndFieldAccess, ImperiumDeckCard } from '../cards.service';
-import { PlayerFactionScoreType, PlayerScore, PlayerScoreType } from '../player-score-manager.service';
-import { isFactionScoreRewardType } from 'src/app/helpers/rewards';
+import { ImperiumDeckCard } from '../cards.service';
+import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
@@ -37,6 +27,7 @@ export interface AIPlayer {
 export type AIVariableValues = 'good' | 'okay' | 'bad';
 
 export type AIDIfficultyTypes = 'easy' | 'medium' | 'hard';
+
 export interface AIVariables {
   imperiumRow: AIVariableValues;
 }
@@ -235,9 +226,13 @@ export class AIManager {
 
     const virtualResources = playerLeader.aiAdjustments?.fieldAccessModifier ?? [];
 
-    const conflictEvaluation = gameState.conflict.aiEvaluation(player, gameState);
+    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 15);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
-    const imperiumRowEvaluation = this.getImperiumRowEvaluation();
+
+    const evaluatedImperiumRowCards = gameState.imperiumRowCards.map((x) =>
+      this.getImperiumCardBuyEvaluation(x, player, gameState)
+    );
+    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 9, 0);
 
     let eventGoalModifiers: GoalModifier[] = [];
     if (gameEvent && gameEvent.aiAdjustments && gameEvent.aiAdjustments.goalEvaluationModifier) {
@@ -614,11 +609,15 @@ export class AIManager {
     let modifier = 1.0;
 
     if (goal === 'enter-combat') {
-      modifier = 0.5 + conflictEvaluation;
+      modifier = conflictEvaluation;
+    } else if (goal === 'troops' || goal === 'dreadnought') {
+      modifier = (conflictEvaluation + 2) / 3;
     } else if (goal === 'tech') {
       modifier = 0.5 + techEvaluation;
-    } else if (goal === 'draw-cards' || goal === 'get-board-persuasion' || goal === 'high-council') {
+    } else if (goal === 'draw-cards' || goal === 'get-board-persuasion') {
       modifier = imperiumRowEvaluation;
+    } else if (goal === 'high-council') {
+      modifier = (imperiumRowEvaluation + 2) / 3;
     }
 
     return modifier;
@@ -785,14 +784,14 @@ export class AIManager {
       } else if (hasRewardConversion) {
         const costs = card.agentEffects.slice(0, rewardConversionIndex);
         const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getRewardArrayEvaluation(costs, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
         const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue += -costsEvaluation + rewardsEvaluation;
       }
     }
     if (card.customAgentEffect) {
-      evaluationValue += 0.75 * (card.persuasionCosts ?? 1);
+      evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 1);
     }
 
     if (card.revealEffects) {
@@ -811,14 +810,14 @@ export class AIManager {
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getRewardArrayEvaluation(costs, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
         const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
     }
     if (card.customRevealEffect) {
-      evaluationValue -= 0.75 * (card.persuasionCosts ?? 1);
+      evaluationValue -= 2 + 0.5 * (card.persuasionCosts ?? 1);
     }
 
     return evaluationValue;
@@ -827,7 +826,7 @@ export class AIManager {
   private getImperiumCardBuyEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (card.persuasionCosts) {
-      evaluationValue += card.persuasionCosts * 1;
+      evaluationValue += card.persuasionCosts * 0.1;
     }
     if (card.buyEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
@@ -836,7 +835,7 @@ export class AIManager {
       }
     }
     if (card.fieldAccess) {
-      evaluationValue += card.fieldAccess.length * 1.5;
+      evaluationValue += card.fieldAccess.length * 1;
     }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
@@ -854,14 +853,14 @@ export class AIManager {
       } else if (hasRewardConversion) {
         const costs = card.agentEffects.slice(0, rewardConversionIndex);
         const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getRewardArrayEvaluation(costs, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
         const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue += -costsEvaluation + rewardsEvaluation;
       }
     }
     if (card.customAgentEffect) {
-      evaluationValue += 1 * (card.persuasionCosts ?? 1);
+      evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 1);
     }
     if (card.revealEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
@@ -879,14 +878,14 @@ export class AIManager {
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getRewardArrayEvaluation(costs, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
         const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue += -costsEvaluation + rewardsEvaluation;
       }
     }
     if (card.customRevealEffect) {
-      evaluationValue += 1 * (card.persuasionCosts ?? 1);
+      evaluationValue += 2 + 0.5 * (card.persuasionCosts ?? 1);
     }
 
     return evaluationValue;
@@ -895,7 +894,7 @@ export class AIManager {
   private getImperiumCardTrashEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (card.persuasionCosts) {
-      evaluationValue -= card.persuasionCosts * 1;
+      evaluationValue -= card.persuasionCosts * 0.1;
     }
     if (card.buyEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
@@ -904,7 +903,7 @@ export class AIManager {
       }
     }
     if (card.fieldAccess) {
-      evaluationValue -= card.fieldAccess.length * 1.5;
+      evaluationValue -= card.fieldAccess.length * 1;
     }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
@@ -918,18 +917,18 @@ export class AIManager {
         const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState);
         const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState);
 
-        evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+        evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.agentEffects.slice(0, rewardConversionIndex);
         const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getRewardArrayEvaluation(costs, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
         const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
-        evaluationValue += -costsEvaluation + rewardsEvaluation;
+        evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
     }
     if (card.customAgentEffect) {
-      evaluationValue -= 1 * (card.persuasionCosts ?? 1);
+      evaluationValue -= 1 + 0.5 * (card.persuasionCosts ?? 1);
     }
 
     if (card.revealEffects) {
@@ -948,14 +947,14 @@ export class AIManager {
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getRewardArrayEvaluation(costs, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
         const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
-        evaluationValue += -costsEvaluation + rewardsEvaluation;
+        evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
     }
     if (card.customRevealEffect) {
-      evaluationValue -= 1 * (card.persuasionCosts ?? 1);
+      evaluationValue -= 2 + 0.5 * (card.persuasionCosts ?? 1);
     }
 
     return evaluationValue;
@@ -969,6 +968,18 @@ export class AIManager {
     return evaluationValue;
   }
 
+  public getCostsArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    for (const reward of rewards) {
+      evaluationValue += Math.abs(this.getEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1));
+    }
+    return evaluationValue;
+  }
+
+  public getNormalizedRewardArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState, normalizeMax = 10) {
+    return normalizeNumber(this.getRewardArrayEvaluation(rewards, player, gameState), normalizeMax, 0);
+  }
+
   private getEffectEvaluation(rewardType: RewardType, player: Player, gameState: GameState) {
     switch (rewardType) {
       case 'water':
@@ -976,7 +987,13 @@ export class AIManager {
       case 'spice':
         return 2 - 0.15 * getResourceAmount(player, 'spice', []);
       case 'solari':
-        return 1 - 0.1 * getResourceAmount(player, 'solari', []);
+        return (
+          1.25 -
+          0.1 * getResourceAmount(player, 'solari', []) -
+          (!player.hasSwordmaster ? 0.2 : 0) -
+          (!player.hasCouncilSeat ? 0.2 : 0) -
+          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+        );
       case 'troop':
         return 1.5 - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'dreadnought':
@@ -1005,7 +1022,7 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 8 + 2 * (gameState.currentRound - 1);
+        return 9 + 1.5 * (gameState.currentRound - 1);
       case 'sword':
         return 1;
       case 'combat':
@@ -1065,7 +1082,7 @@ export class AIManager {
       case 'signet-ring':
         return 2 - 0.1 * (gameState.currentRound - 1);
       case 'location-control':
-        return 6;
+        return 7.5;
       case 'loose-troop':
         return -1 + 0.1 * (gameState.currentRound - 1);
       default:

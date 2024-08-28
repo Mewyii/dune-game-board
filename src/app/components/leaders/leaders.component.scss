@@ -13,11 +13,13 @@
 }
 
 .leader-viewer {
-    height:415px;
+    position: relative;
+    height: 415px;
     display: flex;
     gap: 12px;
     justify-content: center;
     align-items: center;
+    user-select: none;
 }
 
 .leader-list {
@@ -328,6 +330,17 @@ dune-tech-tile.active,
     justify-content: center;
     gap: 16px;
     z-index: 3;
+}
+
+.leader-action-container {
+    width: 50%;
+    position: absolute;
+    top: calc(50% - 55px / 2);
+    left: 25%;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    z-index: 2;
 }
 
 @keyframes unit-marker-anim {

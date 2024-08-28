@@ -9,6 +9,7 @@ import { LeaderImageOnly, leadersOld } from '../constants/leaders-old';
 export interface PlayerLeader {
   playerId: number;
   leaderName: string;
+  isLockedIn?: boolean;
 }
 
 @Injectable({
@@ -106,6 +107,16 @@ export class LeadersService {
 
     if (leader && playerLeaderIndex > -1) {
       playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], leaderName: leader.name.en };
+      this.playerLeadersSubject.next(playerLeaders);
+    }
+  }
+
+  lockInLeader(playerId: number) {
+    const playerLeaders = this.playerLeaders;
+    const playerLeaderIndex = playerLeaders.findIndex((x) => x.playerId === playerId);
+
+    if (playerLeaderIndex > -1) {
+      playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], isLockedIn: true };
       this.playerLeadersSubject.next(playerLeaders);
     }
   }

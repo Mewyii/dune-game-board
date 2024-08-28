@@ -18,3 +18,7 @@ export function getFactionTypePath(actionType: FactionType) {
       return '';
   }
 }
+
+export function isFactionType(type: string): type is FactionType {
+  return type === 'fremen' || type === 'guild' || type === 'bene' || type === 'emperor';
+}
