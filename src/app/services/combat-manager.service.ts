@@ -257,6 +257,28 @@ export class CombatManager {
     }
   }
 
+  public destroyPlayerShipsInCombat(playerId: number, ships: number) {
+    const playerCombatUnits = this.playerCombatUnits;
+    const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
+    if (playerCombatUnitsIndex > -1) {
+      const combatScore = playerCombatUnits[playerCombatUnitsIndex];
+
+      if (combatScore.shipsInCombat - ships >= 0) {
+        playerCombatUnits[playerCombatUnitsIndex] = {
+          ...combatScore,
+          shipsInCombat: combatScore.shipsInCombat - ships,
+        };
+      } else {
+        playerCombatUnits[playerCombatUnitsIndex] = {
+          ...combatScore,
+          shipsInCombat: 0,
+        };
+      }
+    }
+
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
+  }
+
   public setAllPlayerShipsFromCombatToTimeout() {
     const playerCombatUnits = this.playerCombatUnits;
 

@@ -112,7 +112,7 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onResolveCombatClicked() {
-    this.gameManager.resolveCombat();
+    this.gameManager.resolveConflict();
   }
 
   onNextRoundClicked() {

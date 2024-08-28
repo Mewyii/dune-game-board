@@ -375,6 +375,21 @@ export class AIManager {
     return fields.find((x) => preferredField.fieldId.includes(x.title.en));
   }
 
+  public getPreferredFieldsForPlayer(playerId: number, amount = 1) {
+    const aiPlayer = this.aiPlayers.find((x) => x.playerId === playerId);
+    if (!aiPlayer) {
+      return undefined;
+    }
+
+    const preferredFields = aiPlayer.preferredFields.slice(0, amount);
+    if (!preferredFields) {
+      return undefined;
+    }
+
+    const fields = this.settingsService.boardFields;
+    return fields.filter((x) => preferredFields.some((y) => y.fieldId.includes(x.title.en)));
+  }
+
   public getFieldDecision(playerId: number, fieldId: string): string {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === playerId);
     if (!aiPlayer) {
@@ -488,7 +503,7 @@ export class AIManager {
   }
 
   getPreferredLocationForPlayer(player: Player, controllableLocations: DuneLocation[], gameState: GameState) {
-    let preferredLocation = controllableLocations[0];
+    let preferredLocation = undefined;
     let preferredLocationValue = 0;
 
     for (const location of controllableLocations) {
@@ -516,6 +531,30 @@ export class AIManager {
       });
       cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
       return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
+  getCardAndFieldToPlay(
+    preferredFields: ActionField[],
+    playerHandCards: ImperiumDeckCard[],
+    player: Player,
+    gameState: GameState
+  ) {
+    const usableCards = playerHandCards.filter((x) =>
+      x.fieldAccess?.some((accessType) => preferredFields.some((y) => y.actionType === accessType))
+    );
+
+    if (usableCards.length > 0) {
+      const cardEvaluations = usableCards.map((card) => {
+        const cardEvaluation = this.getImperiumCardPlayEvaluation(card, player, gameState);
+        const fieldIndex = preferredFields.findIndex((x) => card.fieldAccess?.includes(x.actionType));
+        const evaluation = cardEvaluation - fieldIndex;
+        return { evaluation, card, fieldIndex };
+      });
+      cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
+
+      return { cardToPlay: cardEvaluations[0].card, preferredField: preferredFields[cardEvaluations[0].fieldIndex] };
     }
     return undefined;
   }
@@ -753,7 +792,7 @@ export class AIManager {
       }
     }
     if (card.customAgentEffect) {
-      evaluationValue += 1 * (card.persuasionCosts ?? 1);
+      evaluationValue += 0.75 * (card.persuasionCosts ?? 1);
     }
 
     if (card.revealEffects) {
@@ -779,7 +818,7 @@ export class AIManager {
       }
     }
     if (card.customRevealEffect) {
-      evaluationValue -= 1 * (card.persuasionCosts ?? 1);
+      evaluationValue -= 0.75 * (card.persuasionCosts ?? 1);
     }
 
     return evaluationValue;

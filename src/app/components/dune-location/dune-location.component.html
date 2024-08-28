@@ -16,6 +16,17 @@
         (click)="onOwnerIndicatorClicked()"
       >
         <span *ngIf="owner" class="location-owner-name">{{ leaderInitials }}</span>
+        <ng-container *ngIf="occupier">
+          <div class="ship-marker-container">
+            <div class="ship-marker" [style.background-color]="occupier.color"></div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isActive">
+          <div class="control-bar">
+            <div class="location-owner-indicator small" (click)="onOwnerChangeClicked()"></div>
+            <div class="ship-marker" (click)="onOccupierChangeClicked()"></div>
+          </div>
+        </ng-container>
       </div>
       <div class="location-owner-reward-area" [style.background-color]="location.color">
         <img class="location-owner-defenders-advantage" [src]="'assets/images/reward-markers/marker_shield_2.png'" />

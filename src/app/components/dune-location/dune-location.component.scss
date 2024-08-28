@@ -28,6 +28,7 @@
     border-top-width: 50px;
     border-radius: 3px;
     border-style: solid;
+    border-color: #e49944be;
     border-bottom-color: transparent !important;
     position: relative;
     z-index: 1;
@@ -128,4 +129,41 @@
     flex: 1 1;
     height: 0px;
     // border-bottom: 4px solid #00000029;
+}
+
+.ship-marker-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -35px;
+    left: -38px;
+    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 1));
+}
+
+.ship-marker {
+    min-width: 75px;
+    min-height: 55px;
+    background-color: #e49944be;
+    box-sizing: border-box;
+    mask-image: url(/assets/images/reward-markers/marker_ship_colored.png);
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-mode: luminance;
+}
+
+.control-bar {
+    position: absolute;
+    top: -10px;
+    left: -75px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.location-owner-indicator.small {
+    border-bottom-width: 15px;
+    border-left-width: 25px;
+    border-right-width: 25px;
+    border-top-width: 40px;
 }
