@@ -1,29 +1,41 @@
 .leader-card {
     width: 600px;
-    height: 425px;
+    height: 420px;
     border-radius: 8px;
     position: relative;
-    background-size: cover;
+    background-size: 100%;
     color: #fffcfa;
     font-size: small;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+    background-position-y: 16px;
+}
+
+.leader-frame {
+    background-image: url(/assets/images/leaders/_leader_frame.png);
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
 }
 
 .leader-title {
-    padding: 12px 12px 6px 16px;
+    padding: 12px 12px 5px 16px;
     font-size: x-large;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
 .underline {
-    width: 100%;
+    width: 95%;
     height: 1px;
+    margin-left: 12px;
     background: linear-gradient(45deg, rgba(255, 165, 0, 0.5), rgba(255, 206, 115, 0.5) 25%,transparent 75%);
 }
 
 .leader-house {
-    padding: 4px 42px;
-    color: #e1e1e1;
+    padding: 0px 18px;
+    color: #878787;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
@@ -70,40 +82,32 @@
 .leader-passive-container {
     position: absolute;
     border-radius: 0px 6px 0px 8px;
-    left: 0;
+    left: 47px;
     bottom: 0;
-    height: 104px;
+    height: 92px;
     padding: 8px;
-    width: 45%;
-    background-color: #00000096;
-    border-top: 1px solid rgb(127 127 127 / 33%);
-    border-right: 1px solid rgb(64 64 64 / 25%);
+    width: 40%;
 }
 
 .leader-signet-container {
     position: absolute;
-    border-radius: 6px 0px 8px 0px;
     right: 0;
     bottom: 0;
-    height: 104px;
+    height: 92px;
     padding: 8px;
-    width: 45%;
-    background-color: rgb(44 32 10 / 59%);
-    border-top: 1px solid rgb(255 165 0 / 33%);
-    border-left: 1px solid rgb(127 82 0 / 25%);
+    width: 38%;
 }
 
 .leader-passive-name,
 .leader-signet-name {
-    font-size: 12px;
-    margin-bottom: 12px;
+    font-size: 11px;
+    margin-bottom: 8px;
 }
 
 .leader-passive-description,
 .leader-signet-description {
     font-family: "Roboto", "Verdana";
     font-weight: initial;
-    font-size: medium;
     color: #e1e1e1;
     white-space: pre-wrap;
 }

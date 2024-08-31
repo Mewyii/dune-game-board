@@ -51,36 +51,36 @@ export const leaders: Leader[] = [
   },
   {
     name: {
-      de: 'liet lynes',
       en: 'liet lynes',
+      de: 'liet lynes',
     },
     house: {
-      de: 'fremen',
       en: 'fremen',
+      de: 'fremen',
     },
     passiveName: {
-      de: 'anführer der fremen',
       en: 'leader of the fremen',
+      de: 'anführer der fremen',
     },
     passiveDescription: {
-      de: 'Entferne deinen Marker von der {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
       en: 'Remove your marker from the {faction:fremen}-track. Every time you would gain influence there: {resource:water}',
+      de: 'Entferne deinen Marker von der {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
     },
     signetName: {
-      de: 'pflanzen des paradieses',
       en: 'planting the paradise',
+      de: 'pflanzen des paradieses',
     },
     signetDescription: {
-      de: '{resource:signet-token}{resource:separator}{resource:water}{resource:troop} {resource:helper-arrow-right} {resource:signet-token}{resource:signet-token}{resource:separator}{resource:signet-token}{resource:signet-token} {resource:helper-arrow-right} {resource:victory-point}',
-      en: '{resource:signet-token}{resource:separator}{resource:water}{resource:troop} {resource:helper-arrow-right} {resource:signet-token}{resource:signet-token}{resource:separator}{resource:signet-token}{resource:signet-token} {resource:helper-arrow-right} {resource:victory-point}',
+      en: '<br>{resource:signet-token}{resource:separator}{resource:water}{resource:troop} {resource:helper-arrow-right} {resource:signet-token}{resource:signet-token}{resource:separator}{resource:signet-token}{resource:signet-token} {resource:helper-arrow-right} {resource:victory-point}',
+      de: '<br>{resource:signet-token}{resource:separator}{resource:water}{resource:troop} {resource:helper-arrow-right} {resource:signet-token}{resource:signet-token}{resource:separator}{resource:signet-token}{resource:signet-token} {resource:helper-arrow-right} {resource:victory-point}',
     },
-    type: 'new',
     imageUrl: '/assets/images/leaders/liet.png',
     playableByAI: true,
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
     },
     gameModifiers: { factionInfluenceModifier: { fremen: { noInfluence: true, alternateReward: { type: 'water' } } } },
+    type: 'new',
   },
   {
     name: {
@@ -113,59 +113,59 @@ export const leaders: Leader[] = [
   },
   {
     name: {
-      de: 'alia atreides',
       en: 'alia atreides',
+      de: 'alia atreides',
     },
     house: {
-      de: 'haus atreides',
       en: 'house atreides',
+      de: 'haus atreides',
     },
     passiveName: {
-      de: 'vorgeboren',
       en: 'pre-born',
+      de: 'vorgeboren',
     },
     passiveDescription: {
-      de: '{resource:card-round-start}. Du kannst deinen Siegelring nicht entsorgen. Jedes Mal, wenn du ihn aufdeckst, verlierst du {resource:victory-point}.',
       en: '{resource:card-round-start}. You cannot trash your signet ring. Every time you reveal it, you lose {resource:victory-point}.',
+      de: '{resource:card-round-start}. Du kannst deinen Siegelring nicht entsorgen. Jedes Mal, wenn du ihn aufdeckst, verlierst du {resource:victory-point}.',
     },
     signetName: {
-      de: 'ego-erinnerungen',
       en: 'ego-memories',
+      de: 'ego-erinnerungen',
     },
     signetDescription: {
-      de: '{resource:card-discard} {resource:card-destroy}',
-      en: '{resource:card-discard} {resource:card-destroy}',
+      en: '<br>{resource:card-discard} {resource:card-destroy}',
+      de: '<br>{resource:card-discard} {resource:card-destroy}',
     },
-    type: 'new',
     imageUrl: '/assets/images/leaders/alia.png',
+    type: 'new',
   },
   {
     name: {
-      de: 'der prediger',
       en: 'the preacher',
+      de: 'der prediger',
     },
     house: {
-      de: '-',
       en: '-',
+      de: '-',
     },
     passiveName: {
-      de: 'blind und doch sehend',
       en: 'blind but seeing',
+      de: 'blind und doch sehend',
     },
     passiveDescription: {
-      de: '<b>Aufdeckzug</b>: Bevor du aufdeckst, darfst du 1 deiner Karten im Spiel zurück auf deine Hand nehmen.',
       en: '<b>Reveal turn</b>: Before you reveal, you may add 1 of your cards in play back to your hand.',
+      de: '<b>Aufdeckzug</b>: Bevor du aufdeckst, darfst du 1 deiner Karten im Spiel zurück auf deine Hand nehmen.',
     },
     signetName: {
-      de: 'anklagender prophet',
       en: 'accusing prophet',
+      de: 'anklagender prophet',
     },
     signetDescription: {
-      de: 'Jeder Spieler {resource:card-discard}.',
-      en: 'Every player {resource:card-discard}.',
+      en: '<br>Every player {resource:card-discard}.',
+      de: '<br>Jeder Spieler {resource:card-discard}.',
     },
-    type: 'new',
     imageUrl: '/assets/images/leaders/preacher.png',
+    type: 'new',
   },
   {
     name: {
@@ -195,7 +195,16 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
     playableByAI: true,
-    gameModifiers: { factionInfluenceModifier: { emperor: { noInfluence: true, alternateReward: { type: 'solari' } } } },
+    gameModifiers: {
+      factionInfluenceModifier: {
+        emperor: {
+          noInfluence: true,
+          alternateReward: {
+            type: 'solari',
+          },
+        },
+      },
+    },
   },
   {
     name: {
@@ -366,20 +375,19 @@ export const leaders: Leader[] = [
       de: 'graf von ix',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: {resource:tech}',
-      de: '<b>Aufdeckzug</b>: {resource:tech}',
+      en: '<br><b>Reveal turn</b>: {resource:tech}',
+      de: '<br><b>Aufdeckzug</b>: {resource:tech}',
     },
     signetName: {
       en: 'enhanced cybernetics',
       de: 'kybernetische upgrades',
     },
     signetDescription: {
-      en: '{resource:card-discard} {resource:helper-arrow-right} {resource:card-draw}',
-      de: '{resource:card-discard} {resource:helper-arrow-right} {resource:card-draw}',
+      en: '<br>{resource:card-discard} {resource:helper-arrow-right} {resource:card-draw}',
+      de: '<br>{resource:card-discard} {resource:helper-arrow-right} {resource:card-draw}',
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
-    playableByAI: true,
   },
   {
     name: {
@@ -464,8 +472,8 @@ export const leaders: Leader[] = [
       de: 'Lisan al Gaib',
     },
     signetDescription: {
-      en: '{resource:card-draw} {resource:separator} {resource:troop}',
-      de: '{resource:card-draw} {resource:separator} {resource:troop}',
+      en: '<br>{resource:card-draw} {resource:separator} {resource:troop}',
+      de: '<br>{resource:card-draw} {resource:separator} {resource:troop}',
     },
     imageUrl: '/assets/images/leaders/paul_muaddib.png',
     type: 'new',
@@ -492,8 +500,8 @@ export const leaders: Leader[] = [
       de: 'Umsichtige Planung',
     },
     signetDescription: {
-      en: '{resource:spice} {resource:helper-arrow-right} {resource:intrigue}',
-      de: '{resource:spice} {resource:helper-arrow-right} {resource:intrigue}',
+      en: '<br>{resource:spice} {resource:helper-arrow-right} {resource:intrigue}',
+      de: '<br>{resource:spice} {resource:helper-arrow-right} {resource:intrigue}',
     },
     imageUrl: '/assets/images/leaders/paul_emperor.png',
     type: 'new',
@@ -520,8 +528,8 @@ export const leaders: Leader[] = [
       de: 'Grenzenlose Gier',
     },
     signetDescription: {
-      en: '{resource:loose-troop} {resource:helper-arrow-right} {resource:spice}',
-      de: '{resource:loose-troop} {resource:helper-arrow-right} {resource:spice}',
+      en: '<br>{resource:loose-troop} {resource:helper-arrow-right} {resource:spice}',
+      de: '<br>{resource:loose-troop} {resource:helper-arrow-right} {resource:spice}',
     },
     imageUrl: '/assets/images/leaders/vlad.png',
     type: 'new',
@@ -541,8 +549,8 @@ export const leaders: Leader[] = [
       de: 'Gerechter Anführer',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: {resource:persuasion;amount:1}',
-      de: '<b>Aufdeckzug</b>: {resource:persuasion;amount:1}',
+      en: '<br><b>Reveal turn</b>: {resource:persuasion;amount:1}',
+      de: '<br><b>Aufdeckzug</b>: {resource:persuasion;amount:1}',
     },
     signetName: {
       en: 'Landsraad connections',
