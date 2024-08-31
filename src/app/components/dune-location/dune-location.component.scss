@@ -64,10 +64,25 @@
     align-items: center;
     gap: 2px;
     top: 0px;
-    width: 118px;
+    width: 126px;
     left: -34px;
-    padding: 2px 4px 4px;
-    border-radius: 0px 0px 14px 6px;
+}
+
+.location-owner-game-reward-area {
+    background-color: rgb(87, 69, 52);
+    flex: 1 1;
+    padding: 5px;
+    border-radius: 0px 0px 0px 12px;
+    box-shadow: inset 0px 0px 50px #0000002b;
+}
+
+.location-owner-finale-reward-area {
+    background-color: rgb(62, 71, 94);
+    flex: 1 1;
+    padding: 5px;
+    border-radius: 0px 0px 12px 0px;
+    display: flex;
+    justify-content: flex-end;
     box-shadow: inset 0px 0px 50px #0000002b;
 }
 
@@ -95,8 +110,8 @@
 }
 
 
-.location-owner-defenders-advantage {
-    width: 28px;
+.location-owner-victory-point-finale {
+    max-height: 25px;
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
 }
 

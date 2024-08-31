@@ -28,14 +28,17 @@
           </div>
         </ng-container>
       </div>
-      <div class="location-owner-reward-area" [style.background-color]="location.color">
-        <img class="location-owner-defenders-advantage" [src]="'assets/images/reward-markers/marker_shield_2.png'" />
-        <div class="connector"></div>
-        <div class="location-owner-visitor-reward-container">
-          <img class="location-owner-visitor-reward" [src]="getRewardTypePath(location.ownerReward.type)" />
-          <div class="location-owner-visitor-reward-amount">
-            {{ location.ownerReward.amount }}
+      <div class="location-owner-reward-area">
+        <div class="location-owner-game-reward-area" [style.background-color]="location.color">
+          <div class="location-owner-visitor-reward-container">
+            <img class="location-owner-visitor-reward" [src]="getRewardTypePath(location.ownerReward.type)" />
+            <div class="location-owner-visitor-reward-amount">
+              {{ location.ownerReward.amount }}
+            </div>
           </div>
+        </div>
+        <div class="location-owner-finale-reward-area">
+          <img class="location-owner-victory-point-finale" [src]="getRewardTypePath('victory-point')" />
         </div>
         <div class="border-remover" [style.background-color]="location.color"></div>
       </div>
