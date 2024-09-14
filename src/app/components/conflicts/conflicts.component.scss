@@ -17,3 +17,25 @@
     background-position-x: 168px;
     background-position-y: 255px;
 }
+
+.conflict-card.background.clickable {
+    transition: 0.66s;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+}
+
+.conflict-card.background.clickable:hover,
+.conflict-card.background.clickable.active {
+    transform: scale(1.1);
+}
+
+.conflict-action-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: calc(255px / 2 - 28px);
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    z-index: 3;
+}

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { ImperiumCard } from 'src/app/constants/imperium-cards';
+import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { RewardType } from 'src/app/models';
 import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -24,12 +26,14 @@ export class AlwaysBuyableCardsComponent {
   public activePlayer: Player | undefined;
   public activePlayerPersuasion: number = 0;
   public activePlayerTurnState: PlayerTurnState | undefined;
+  public imperiumRowModifiers: ImperiumRowModifier[] | undefined;
 
   constructor(
     private playerManager: PlayerManager,
     private gameManager: GameManager,
     public cardsService: CardsService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private gameModifierService: GameModifiersService
   ) {}
 
   ngOnInit(): void {
@@ -44,10 +48,7 @@ export class AlwaysBuyableCardsComponent {
       if (this.activePlayer) {
         this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
 
-        this.activePlayerPersuasion =
-          this.activePlayer.persuasionGainedThisRound +
-          this.activePlayer.permanentPersuasion -
-          this.activePlayer.persuasionSpentThisRound;
+        this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
       }
     });
 
@@ -57,17 +58,21 @@ export class AlwaysBuyableCardsComponent {
       if (this.activePlayer) {
         this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
 
-        this.activePlayerPersuasion =
-          this.activePlayer.persuasionGainedThisRound +
-          this.activePlayer.permanentPersuasion -
-          this.activePlayer.persuasionSpentThisRound;
+        this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
+
+        this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
       }
+    });
+
+    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+      this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
     });
   }
 
   onBuyAlwaysAvailableCardClicked(card: ImperiumCard) {
+    const costModifier = getCardCostModifier(card, this.imperiumRowModifiers);
     if (card.persuasionCosts) {
-      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts);
+      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
     }
     if (card.buyEffects) {
       for (const effect of card.buyEffects) {
@@ -104,7 +109,15 @@ export class AlwaysBuyableCardsComponent {
     }
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
+  getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
+  }
+
+  getCardCostModifier(card: ImperiumCard) {
+    return getCardCostModifier(card, this.imperiumRowModifiers);
+  }
+
+  private getPlayerPersuasion(player: Player) {
+    return player.persuasionGainedThisRound + player.permanentPersuasion - player.persuasionSpentThisRound;
   }
 }

@@ -69,6 +69,8 @@ import { TechTileComponent } from './components/_common/tech-tile/tech-tile.comp
 import { DialogTechTileEditorComponent } from './pages/tech-tile-configurator/dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 import { TechTileEditorComponent } from './pages/tech-tile-configurator/tech-tile-editor/tech-tile-editor.component';
 import { ImperiumCardsPreviewDialogComponent } from './components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
+import { PlayerRewardChoicesComponent } from './components/player-reward-choices/player-reward-choices.component';
+import { ConflictsPreviewDialogComponent } from './components/_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
 
 @NgModule({
   declarations: [
@@ -123,6 +125,8 @@ import { ImperiumCardsPreviewDialogComponent } from './components/_common/dialog
     DialogTechTileEditorComponent,
     TechTileEditorComponent,
     ImperiumCardsPreviewDialogComponent,
+    PlayerRewardChoicesComponent,
+    ConflictsPreviewDialogComponent,
   ],
   imports: [
     BrowserModule,

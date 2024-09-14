@@ -79,7 +79,9 @@ export const leaders: Leader[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
     },
-    gameModifiers: { factionInfluenceModifier: { fremen: { noInfluence: true, alternateReward: { type: 'water' } } } },
+    gameModifiers: {
+      factionInfluenceModifiers: { fremen: { id: 'liet', noInfluence: true, alternateReward: { type: 'water' } } },
+    },
     type: 'new',
   },
   {
@@ -110,6 +112,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/chani.png',
     playableByAI: true,
     type: 'new',
+    gameModifiers: { imperiumRowModifiers: [{ id: 'chani', factionType: 'fremen', persuasionAmount: -1 }] },
   },
   {
     name: {
@@ -196,8 +199,9 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/irulan.png',
     playableByAI: true,
     gameModifiers: {
-      factionInfluenceModifier: {
+      factionInfluenceModifiers: {
         emperor: {
+          id: 'irulan',
           noInfluence: true,
           alternateReward: {
             type: 'solari',
@@ -295,6 +299,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/margot.png',
     playableByAI: true,
     type: 'new',
+    gameModifiers: { customActions: [{ id: 'margot-charm', action: 'charm' }] },
   },
   {
     name: {
@@ -327,7 +332,13 @@ export const leaders: Leader[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'bene' ? 0.025 : 0.0),
     },
-    gameModifiers: { factionInfluenceModifier: { bene: { noInfluence: true, alternateReward: { type: 'spice' } } } },
+    gameModifiers: {
+      factionInfluenceModifiers: { bene: { id: 'mohiam', noInfluence: true, alternateReward: { type: 'spice' } } },
+      customActions: [
+        { id: 'mohiam-vision-conflict', action: 'vision-conflict' },
+        { id: 'mohiam-vision-intrigues', action: 'vision-intrigues' },
+      ],
+    },
   },
   {
     name: {
@@ -477,6 +488,12 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/paul_muaddib.png',
     type: 'new',
+    gameModifiers: {
+      customActions: [
+        { id: 'muadib-vision-deck', action: 'vision-deck' },
+        { id: 'muadib-vision-intrigues', action: 'vision-intrigues' },
+      ],
+    },
   },
   {
     name: {
@@ -505,6 +522,13 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/paul_emperor.png',
     type: 'new',
+    gameModifiers: {
+      customActions: [
+        { id: 'emperor-paul-vision-deck', action: 'vision-deck' },
+        { id: 'emperor-paul-vision-intrigues', action: 'vision-intrigues' },
+        { id: 'emperor-paul-vision-conflict', action: 'vision-conflict' },
+      ],
+    },
   },
   {
     name: {

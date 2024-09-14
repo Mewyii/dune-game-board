@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
-import { BehaviorSubject, filter, map } from 'rxjs';
+import { cloneDeep, isArray } from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 import { Player } from './player-manager.service';
 import { FactionType, Reward } from '../models';
 
-export interface FactionInfluenceModifier {
+export interface GameModifier {
+  id: string;
+}
+
+export interface FactionInfluenceModifier extends GameModifier {
   noInfluence: boolean;
   alternateReward: Reward;
 }
@@ -13,8 +17,22 @@ export type FactionInfluenceModifiers = {
   [key in FactionType]?: FactionInfluenceModifier;
 };
 
+export interface ImperiumRowModifier extends GameModifier {
+  cardId?: string;
+  factionType?: FactionType;
+  persuasionAmount: number;
+}
+
+export type CustomGameActionType = 'charm' | 'vision-conflict' | 'vision-deck' | 'vision-intrigues';
+
+export interface CustomGameActionModifier extends GameModifier {
+  action: CustomGameActionType;
+}
+
 export interface GameModifiers {
-  factionInfluenceModifier?: FactionInfluenceModifiers;
+  factionInfluenceModifiers?: FactionInfluenceModifiers;
+  imperiumRowModifiers?: ImperiumRowModifier[];
+  customActions?: CustomGameActionModifier[];
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
@@ -43,11 +61,19 @@ export class GameModifiersService {
     return cloneDeep(this.playerGameModifiersSubject.value);
   }
 
-  public getPlayerGameModifier(playerId: number) {
+  public getPlayerGameModifiers(playerId: number) {
     return this.playerGameModifiers.find((x) => x.playerId === playerId);
   }
 
-  addPlayerGameModifier(playerId: number, gameModifiers: GameModifiers) {
+  public getPlayerImperiumRowModifiers(playerId: number) {
+    return this.playerGameModifiers.find((x) => x.playerId === playerId)?.imperiumRowModifiers;
+  }
+
+  public getPlayerCustomActionModifiers(playerId: number) {
+    return this.playerGameModifiers.find((x) => x.playerId === playerId)?.customActions;
+  }
+
+  addPlayerGameModifiers(playerId: number, gameModifiers: GameModifiers) {
     const playerGameModifiers = this.playerGameModifiers;
     const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
     if (playerGameModifierIndex > -1) {
@@ -59,12 +85,30 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
+  addPlayerImperiumRowModifier(playerId: number, content: Omit<ImperiumRowModifier, 'id'>) {
+    const playerGameModifiers = this.playerGameModifiers;
+    const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
+    if (playerGameModifierIndex > -1) {
+      const playerModifiers = playerGameModifiers[playerGameModifierIndex];
+      const imperiumRowModifiers = playerModifiers.imperiumRowModifiers;
+      if (imperiumRowModifiers) {
+        imperiumRowModifiers.push({ id: crypto.randomUUID(), ...content });
+      } else {
+        playerModifiers.imperiumRowModifiers = [{ id: crypto.randomUUID(), ...content }];
+      }
+    } else {
+      playerGameModifiers.push({ playerId, imperiumRowModifiers: [{ id: crypto.randomUUID(), ...content }] });
+    }
+
+    this.playerGameModifiersSubject.next(playerGameModifiers);
+  }
+
   public resetplayerGameModifiers(players: Player[]) {
     const playerGameModifiers: PlayerGameModifiers[] = [];
     for (let player of players) {
       playerGameModifiers.push({
         playerId: player.id,
-        factionInfluenceModifier: undefined,
+        factionInfluenceModifiers: undefined,
       });
     }
 
@@ -73,5 +117,11 @@ export class GameModifiersService {
 
   public resetAllPlayerGameModifiers() {
     this.playerGameModifiersSubject.next([]);
+  }
+
+  public playerHasCustomActionAvailable(playerId: number, actionType: CustomGameActionType) {
+    return !!this.playerGameModifiers
+      .find((x) => x.playerId === playerId)
+      ?.customActions?.some((x) => x.action === actionType);
   }
 }

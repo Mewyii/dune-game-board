@@ -106,7 +106,7 @@ export class SettingsService {
   }
 
   getAlwaysBuyableCards() {
-    return this.gameContent.alwaysBuyableCards ?? [];
+    return cloneDeep(this.gameContent.alwaysBuyableCards) ?? [];
   }
 
   setGameContent(name: string) {

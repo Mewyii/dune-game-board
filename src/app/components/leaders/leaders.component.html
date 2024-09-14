@@ -20,12 +20,19 @@
       [color]="'accent'"
       (click)="onAiActionClicked(currentPlayer.id)"
       matTooltip="AI"
-      [disabled]="currentPlayer.turnState !== 'agent-placement'"
+      [disabled]="currentPlayer.turnState === 'done'"
       *ngIf="currentPlayer.isAI"
     >
       <mat-icon>hourglass_empty</mat-icon>
     </button>
-    <button *ngIf="currentTurn" mat-fab color="accent" (click)="onNextPlayerClicked()" matTooltip="End Turn">
+    <button
+      *ngIf="currentTurn"
+      mat-fab
+      color="accent"
+      (click)="onNextPlayerClicked()"
+      matTooltip="End Turn"
+      [disabled]="currentPlayer.isAI && currentPlayer.turnState === 'reveal'"
+    >
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
     <button
@@ -35,7 +42,7 @@
       matTooltip="Reveal"
       [disabled]="currentPlayer.turnState !== 'agent-placement'"
     >
-      <mat-icon>remove_red_eye</mat-icon>
+      <mat-icon>hdr_strong</mat-icon>
     </button>
   </div>
   <div class="control-bar" *ngIf="currentPlayer">

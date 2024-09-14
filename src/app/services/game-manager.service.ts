@@ -25,8 +25,10 @@ import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { Leader } from '../constants/leaders';
 import { LeaderImageOnly } from '../constants/leaders-old';
 import { GameModifiersService } from './game-modifier.service';
-import { getFactionInfluenceModifier, hasFactionInfluenceModifier } from '../helpers/game-modifiers';
+import { getCardCostModifier, getFactionInfluenceModifier, hasFactionInfluenceModifier } from '../helpers/game-modifiers';
 import { isFactionType } from '../helpers/faction-types';
+import { PlayerRewardChoicesService } from './player-reward-choices.service';
+import { TranslateService } from './translate-service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -92,7 +94,9 @@ export class GameManager {
     private audioManager: AudioManager,
     private settingsService: SettingsService,
     private cardsService: CardsService,
-    private gameModifiersService: GameModifiersService
+    private gameModifiersService: GameModifiersService,
+    private playerRewardChoicesService: PlayerRewardChoicesService,
+    private translateService: TranslateService
   ) {
     const currentRoundString = localStorage.getItem('currentTurn');
     if (currentRoundString) {
@@ -240,6 +244,7 @@ export class GameManager {
     this.combatManager.setInitialPlayerCombatUnits(newPlayers);
     this.locationManager.resetLocationOwners();
     this.locationManager.resetLocationOccupiers();
+    this.playerRewardChoicesService.resetPlayerRewardChoices();
     this.duneEventsManager.setGameEvents();
     this.playerScoreManager.resetPlayersScores(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
@@ -250,8 +255,8 @@ export class GameManager {
     this.cardsService.setImperiumDeck();
     this.cardsService.setInitialPlayerDecks();
     this.aIManager.assignPersonalitiesToAIPlayers(newPlayers);
-    this.leadersService.assignLeadersToPlayers(newPlayers);
-    this.conflictsService.setInitialConflict();
+    this.leadersService.assignRandomLeadersToPlayers(newPlayers);
+    this.conflictsService.setInitialConflictStack();
     this.minorHousesService.setInitialAvailableHouses();
     this.techTilesService.setInitialAvailableTechTiles();
 
@@ -461,17 +466,15 @@ export class GameManager {
           }
         }
         if (card.customRevealEffect) {
-          const extractedRewards = this.getExtractedRewardsFromCustomAgentEffect(card.customRevealEffect.en);
-          for (const reward of extractedRewards) {
+          const localizedString = this.translateService.translate(card.customRevealEffect);
+          const { rewards, restString } = this.getExtractedRewardsFromCustomAgentEffect(localizedString);
+          for (const reward of rewards) {
             const aiInfo = this.addRewardToPlayer(playerId, reward);
             revealAiInfo = this.updateAiAgentPlacementInfo(revealAiInfo, aiInfo);
           }
 
-          const shouldBeTrashed =
-            card.customRevealEffect.en.includes('Trash this card.') &&
-            !card.customRevealEffect.en.includes('{resource:helper-arrow-right}');
-          if (shouldBeTrashed) {
-            this.cardsService.trashPlayerHandCard(playerId, card);
+          if (restString && player.isAI) {
+            this.playerRewardChoicesService.addPlayerCustomChoice(playerId, restString);
           }
         }
       }
@@ -524,7 +527,7 @@ export class GameManager {
       return;
     }
 
-    const gameModifiers = this.gameModifiersService.getPlayerGameModifier(activePlayer.id);
+    const gameModifiers = this.gameModifiersService.getPlayerGameModifiers(activePlayer.id);
 
     if (field.costs) {
       if (!this.playerCanPayCosts(activePlayer.id, field.costs)) {
@@ -706,6 +709,7 @@ export class GameManager {
       factionInfluenceDownChoiceAmount:
         aiAgentPlacementInfo.factionInfluenceDownChoiceAmount + aiInfo.factionInfluenceDownChoiceAmount,
       locationControlAmount: aiAgentPlacementInfo.locationControlAmount + aiInfo.locationControlAmount,
+      signetRingAmount: aiAgentPlacementInfo.signetRingAmount + aiInfo.signetRingAmount,
     };
   }
 
@@ -764,16 +768,15 @@ export class GameManager {
           }
         }
         if (card.customAgentEffect) {
-          const extractedRewards = this.getExtractedRewardsFromCustomAgentEffect(card.customAgentEffect.en);
-          for (const reward of extractedRewards) {
+          const localizedString = this.translateService.translate(card.customAgentEffect);
+          const { rewards, restString } = this.getExtractedRewardsFromCustomAgentEffect(localizedString);
+          for (const reward of rewards) {
             const aiInfo = this.addRewardToPlayer(playerId, reward);
             agentEffectsAIInfo = this.updateAiAgentPlacementInfo(agentEffectsAIInfo, aiInfo);
           }
-          const shouldBeTrashed =
-            card.customAgentEffect.en.includes('Trash this card.') &&
-            !card.customAgentEffect.en.includes('{resource:helper-arrow-right}');
-          if (shouldBeTrashed) {
-            this.cardsService.trashPlayerHandCard(playerId, card);
+
+          if (restString && isAI) {
+            this.playerRewardChoicesService.addPlayerCustomChoice(playerId, restString);
           }
         }
       }
@@ -840,7 +843,7 @@ export class GameManager {
     }
   }
 
-  public setTurnState(turnPhase: TurnPhaseType) {
+  public setRoundState(turnPhase: TurnPhaseType) {
     if (turnPhase === 'combat') {
       this.audioManager.playSound('conflict');
     }
@@ -884,14 +887,17 @@ export class GameManager {
         canPlaceAgent = false;
       }
     }
-    if (!canPlaceAgent) {
+    if (!canPlaceAgent && player.turnState !== 'reveal') {
       this.setPlayerRevealTurn(playerId);
-
+    }
+    if (player.turnState === 'reveal') {
       const playerPersuasionAvailable = this.playerManager.getPlayerPersuasion(playerId);
       this.aiChooseAndBuyCards(playerId, playerPersuasionAvailable);
 
       const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
       this.chooseAndTrashDeckCards(playerId, playerFocusTokens);
+
+      this.playerManager.setTurnStateForPlayer(playerId, 'done');
     }
   }
 
@@ -961,6 +967,13 @@ export class GameManager {
     if (aiInfo.factionInfluenceDownChoiceAmount > 0) {
       this.addFactionInfluenceDownChoiceForAI(player.id, aiInfo.factionInfluenceDownChoiceAmount);
     }
+    if (aiInfo.signetRingAmount > 0) {
+      for (let i = 0; i < aiInfo.signetRingAmount; i++) {
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'signet-ring',
+        });
+      }
+    }
     if (aiInfo.canBuyTech) {
       this.buyTechOrStackTechAgents(player, -1, aiInfo.techAgentsGainedThisTurn);
     }
@@ -976,15 +989,24 @@ export class GameManager {
     const gameState = this.getGameState(player);
 
     const imperiumRow = this.cardsService.imperiumDeck.slice(0, 6);
+    const imperiumRowModifiers = this.gameModifiersService.getPlayerImperiumRowModifiers(playerId);
+
     const alwaysBuyableCards = this.settingsService
       .getAlwaysBuyableCards()
       .map((x) => this.cardsService.instantiateImperiumCard(x));
     const availableCards = [...imperiumRow, ...shuffle(alwaysBuyableCards)];
 
-    const cardToBuy = this.aIManager.getCardToBuy(availablePersuasion, availableCards, player, gameState);
+    const cardToBuy = this.aIManager.getCardToBuy(
+      availablePersuasion,
+      availableCards,
+      player,
+      gameState,
+      imperiumRowModifiers
+    );
     if (cardToBuy) {
+      const costModifier = getCardCostModifier(cardToBuy, imperiumRowModifiers);
       if (cardToBuy.persuasionCosts) {
-        this.playerManager.addPersuasionSpentToPlayer(playerId, cardToBuy.persuasionCosts);
+        this.playerManager.addPersuasionSpentToPlayer(playerId, cardToBuy.persuasionCosts + costModifier);
       }
       if (cardToBuy.buyEffects) {
         for (const effect of cardToBuy.buyEffects) {
@@ -997,7 +1019,7 @@ export class GameManager {
 
       this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
 
-      this.aiChooseAndBuyCards(playerId, availablePersuasion - (cardToBuy.persuasionCosts ?? 0));
+      this.aiChooseAndBuyCards(playerId, availablePersuasion - ((cardToBuy.persuasionCosts ?? 0) + costModifier));
     }
   }
 
@@ -1272,7 +1294,7 @@ export class GameManager {
   }
 
   public addRewardToPlayer(playerId: number, reward: Reward) {
-    const playerGameModifier = this.gameModifiersService.getPlayerGameModifier(playerId);
+    const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(playerId);
 
     let aiInfo = this.getInitialAIAgentPlacementInfos();
     const rewardType = reward.type;
@@ -1378,6 +1400,8 @@ export class GameManager {
       }
     } else if (rewardType === 'location-control') {
       aiInfo.locationControlAmount++;
+    } else if (rewardType === 'signet-ring') {
+      aiInfo.signetRingAmount++;
     }
 
     return aiInfo;
@@ -1434,7 +1458,7 @@ export class GameManager {
     this.leadersService.lockInLeader(playerId);
 
     if (leader && leader.gameModifiers) {
-      this.gameModifiersService.addPlayerGameModifier(playerId, leader.gameModifiers);
+      this.gameModifiersService.addPlayerGameModifiers(playerId, leader.gameModifiers);
     }
   }
 
@@ -1491,6 +1515,7 @@ export class GameManager {
       factionInfluenceDownChoiceAmount: 0,
       shippingAmount: 0,
       locationControlAmount: 0,
+      signetRingAmount: 0,
     };
   }
 
@@ -1562,10 +1587,11 @@ export class GameManager {
 
   private getExtractedRewardsFromCustomAgentEffect(customAgentEffect: string) {
     const rewards: Reward[] = [];
+    let restString = customAgentEffect;
 
     const potentialReward = customAgentEffect.slice(0, customAgentEffect.indexOf('}') + 1).trim();
 
-    const resourceRegExp = /{resource:.*?}/g;
+    const resourceRegExp = /^{resource:.*?}/g;
     const isReward = resourceRegExp.test(potentialReward);
     if (isReward) {
       const amountRegExp = /;amount:.*?}/g;
@@ -1580,11 +1606,13 @@ export class GameManager {
         const resource = potentialReward.substring(10, potentialReward.length - amount.length - 9) as RewardType;
         rewards.push({ type: resource, amount: amountNumber });
       }
-      const rest = customAgentEffect.slice(customAgentEffect.indexOf('}') + 1).trim();
-      if (rest.length > 0) {
-        rewards.push(...this.getExtractedRewardsFromCustomAgentEffect(rest));
+      restString = customAgentEffect.slice(customAgentEffect.indexOf('}') + 1).trim();
+      if (restString.length > 0) {
+        const newResult = this.getExtractedRewardsFromCustomAgentEffect(restString);
+        rewards.push(...newResult.rewards);
+        restString = newResult.restString;
       }
     }
-    return rewards;
+    return { rewards: rewards, restString: restString };
   }
 }

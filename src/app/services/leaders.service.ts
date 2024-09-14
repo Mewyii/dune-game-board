@@ -82,7 +82,7 @@ export class LeadersService {
     this.leadersSubject.next([...leaders, ...leadersOld]);
   }
 
-  assignLeadersToPlayers(players: Player[]) {
+  assignRandomLeadersToPlayers(players: Player[]) {
     const playerLeaders: PlayerLeader[] = [];
 
     const leaders = cloneDeep(this.leaders.filter((x) => x.playableByAI));

@@ -35,6 +35,7 @@
     <dune-events *ngIf="settings.mode === 'game'"></dune-events>
     <!-- <dune-minor-houses *ngIf="settings.mode === 'game'"></dune-minor-houses> -->
     <dune-leaders *ngIf="settings.mode === 'game'"></dune-leaders>
+    <dune-player-reward-choices *ngIf="settings.mode === 'game'"></dune-player-reward-choices>
     <dune-ai-tile *ngIf="settings.mode === 'game' && gameManager.currentRound !== 0"></dune-ai-tile>
     <dune-board-evaluation *ngIf="settings.mode === 'board'"></dune-board-evaluation>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->

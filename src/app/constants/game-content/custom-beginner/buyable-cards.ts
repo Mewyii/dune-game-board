@@ -58,7 +58,7 @@ export const buyableCardsCustomBeginner: ImperiumCard[] = [
   {
     name: {
       en: 'The Spice Must Flow',
-      de: 'Das Spice muss fließen',
+      de: 'Das Spice muss fliessen',
     },
     persuasionCosts: 9,
     fieldAccess: [],

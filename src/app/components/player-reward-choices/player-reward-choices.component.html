@@ -1,0 +1,22 @@
+<div class="choices-board" *ngIf="playerRewardChoices">
+  <div
+    class="reward-choice"
+    *ngFor="let rewardChoice of playerRewardChoices.rewardChoices"
+    (click)="onRewardChoiceClicked(rewardChoice.id)"
+  >
+    <div class="reward-container">
+      <img class="reward" [src]="getRewardTypePath(rewardChoice.choice.type)" />
+      <ng-container *ngIf="rewardChoice.choice.amount">
+        <div class="reward-amount">
+          {{ rewardChoice.choice.amount }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div
+    class="reward-choice"
+    *ngFor="let rewardChoice of playerRewardChoices.customChoices"
+    [innerHTML]="rewardChoice.choice | duneSymbols : '20px'"
+    (click)="onCustomChoiceClicked(rewardChoice.id)"
+  ></div>
+</div>

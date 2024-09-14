@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
+import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { RewardType } from 'src/app/models';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
-import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'dune-imperium-row',
@@ -20,8 +20,15 @@ export class ImperiumRowComponent implements OnInit {
   public activePlayer: Player | undefined;
   public activePlayerPersuasion: number = 0;
   public activePlayerTurnState: PlayerTurnState | undefined;
+  public imperiumRowModifiers: ImperiumRowModifier[] | undefined;
+  public playerCanCharm = false;
 
-  constructor(private playerManager: PlayerManager, private gameManager: GameManager, public cardsService: CardsService) {}
+  constructor(
+    private playerManager: PlayerManager,
+    private gameManager: GameManager,
+    public cardsService: CardsService,
+    private gameModifierService: GameModifiersService
+  ) {}
 
   ngOnInit(): void {
     this.cardsService.imperiumRow$.subscribe((imperiumCards) => {
@@ -46,17 +53,23 @@ export class ImperiumRowComponent implements OnInit {
       if (this.activePlayer) {
         this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
 
-        this.activePlayerPersuasion =
-          this.activePlayer.persuasionGainedThisRound +
-          this.activePlayer.permanentPersuasion -
-          this.activePlayer.persuasionSpentThisRound;
+        this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
+
+        this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
+        this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
       }
+    });
+
+    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+      this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
+      this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
     });
   }
 
   onBuyCardClicked(card: ImperiumDeckCard) {
+    const costModifier = getCardCostModifier(card, this.imperiumRowModifiers);
     if (card.persuasionCosts) {
-      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts);
+      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
     }
     if (card.buyEffects) {
       for (const effect of card.buyEffects) {
@@ -70,6 +83,14 @@ export class ImperiumRowComponent implements OnInit {
     this.cardsService.removeCardFromImperiumDeck(card);
   }
 
+  onCharmCardClicked(card: ImperiumDeckCard) {
+    this.gameModifierService.addPlayerImperiumRowModifier(this.activePlayerId, { cardId: card.id, persuasionAmount: -1 });
+    const enemyPlayers = this.playerManager.getEnemyPlayers(this.activePlayerId);
+    for (const player of enemyPlayers) {
+      this.gameModifierService.addPlayerImperiumRowModifier(player.id, { cardId: card.id, persuasionAmount: 1 });
+    }
+  }
+
   setCardActive(cardId: string) {
     if (this.activeCardId !== cardId) {
       this.activeCardId = cardId;
@@ -78,7 +99,15 @@ export class ImperiumRowComponent implements OnInit {
     }
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
+  getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
+  }
+
+  getCardCostModifier(card: ImperiumDeckCard) {
+    return getCardCostModifier(card, this.imperiumRowModifiers);
+  }
+
+  private getPlayerPersuasion(player: Player) {
+    return player.persuasionGainedThisRound + player.permanentPersuasion - player.persuasionSpentThisRound;
   }
 }

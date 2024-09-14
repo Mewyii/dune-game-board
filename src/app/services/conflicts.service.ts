@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, first } from 'rxjs';
+import { BehaviorSubject, Subject, first, map } from 'rxjs';
 import { cloneDeep, random } from 'lodash';
 import { Conflict, conflicts } from '../constants/conflicts';
 import { shuffle } from '../helpers/common';
@@ -62,17 +62,10 @@ export class ConflictsService {
   private currentCardCoordinatesSubject = new BehaviorSubject<CardCoordinates>({ x: 0, y: 0 });
   public currentCardCoordinates$ = this.currentCardCoordinatesSubject.asObservable();
 
-  private playedConflictsSubject = new BehaviorSubject<string[]>([]);
-  public playedConflicts$ = this.playedConflictsSubject.asObservable();
+  private conflictStackSubject = new BehaviorSubject<Conflict[]>([]);
+  public conflictStack$ = this.conflictStackSubject.asObservable();
 
-  private currentConflictSubject = new BehaviorSubject<Conflict>({
-    name: { de: 'Wüstenkraft', en: 'desert power' },
-    lvl: 2,
-    row: 1,
-    column: 1,
-    rewards: [],
-  });
-  public currentConflict$ = this.currentConflictSubject.asObservable();
+  public currentConflict$ = this.conflictStack$.pipe(map((x) => x[0]));
 
   constructor() {
     const currentConflictSetString = localStorage.getItem('currentConflictSet');
@@ -85,31 +78,20 @@ export class ConflictsService {
       localStorage.setItem('currentConflictSet', JSON.stringify(currentConflictSet));
     });
 
-    const playedConflictsString = localStorage.getItem('playedConflicts');
-    if (playedConflictsString) {
-      const playedConflicts = JSON.parse(playedConflictsString) as string[];
-      this.playedConflictsSubject.next(playedConflicts);
-    }
-
-    this.playedConflicts$.subscribe((playedConflicts) => {
-      localStorage.setItem('playedConflicts', JSON.stringify(playedConflicts));
-    });
-
-    const currentConflictString = localStorage.getItem('currentConflict');
-    if (currentConflictString) {
-      const currentConflict = JSON.parse(currentConflictString) as Conflict;
+    const conflictStackString = localStorage.getItem('conflictStack');
+    if (conflictStackString) {
+      const conflictStack = JSON.parse(conflictStackString) as Conflict[];
 
       // Workaround for local storage not being able to store functions
-      const realConflict = this.conflicts.find((x) => x.name.en === currentConflict.name.en);
-      if (realConflict) {
-        this.currentConflictSubject.next(realConflict);
-      }
-
-      this.currentCardCoordinatesSubject.next(this.getCardCoordinates(currentConflict.column, currentConflict.row));
+      const realConflictStack = conflictStack.map((conflict) => {
+        const realConflict = this.conflicts.find((x) => x.name.en === conflict.name.en);
+        return realConflict ?? conflict;
+      });
+      this.conflictStackSubject.next(realConflictStack);
     }
 
-    this.currentConflict$.subscribe((currentConflict) => {
-      localStorage.setItem('currentConflict', JSON.stringify(currentConflict));
+    this.conflictStack$.subscribe((conflictStack) => {
+      localStorage.setItem('conflictStack', JSON.stringify(conflictStack));
     });
   }
 
@@ -118,47 +100,44 @@ export class ConflictsService {
   }
 
   public get currentConflict() {
-    return cloneDeep(this.currentConflictSubject.value);
+    return this.conflictStack.shift()!;
   }
 
-  public get playedConflicts() {
-    return cloneDeep(this.playedConflictsSubject.value);
+  public get conflictStack() {
+    return cloneDeep(this.conflictStackSubject.value);
   }
 
-  setInitialConflict() {
-    this.setNextConflictSet();
+  setInitialConflictStack() {
+    this.setConflictSet(2);
 
-    const shuffledConflicts = shuffle(this.conflicts.filter((x) => x.lvl === this.currentConflictSet.id));
-    const firstConflict = shuffledConflicts[0];
+    const secondLevelConflicts = this.conflicts.filter((x) => x.lvl === 2);
+    const thirdLevelConflicts = this.conflicts.filter((x) => x.lvl === 3);
 
-    this.currentConflictSubject.next(firstConflict);
+    const conflictStack = [...shuffle(secondLevelConflicts).slice(0, 5), ...shuffle(thirdLevelConflicts).slice(0, 5)];
 
-    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(firstConflict.column, firstConflict.row));
-    this.playedConflictsSubject.next([...this.playedConflicts, firstConflict.name.en]);
+    this.conflictStackSubject.next(conflictStack);
+
+    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(conflictStack[0].column, conflictStack[0].row));
   }
 
   setNextConflict() {
-    if (this.playedConflicts.length >= this.currentConflictSet.roundTreshold) {
-      this.setNextConflictSet();
+    const conflictStack = this.conflictStack;
+    conflictStack.shift();
+
+    const nextConflict = conflictStack[0];
+    if (nextConflict) {
+      if (nextConflict.lvl !== this.currentConflictSet.id) {
+        this.setConflictSet(nextConflict.lvl);
+      }
+      this.currentCardCoordinatesSubject.next(this.getCardCoordinates(nextConflict.column, nextConflict.row));
+      this.conflictStackSubject.next(conflictStack);
     }
-
-    const shuffledConflicts = shuffle(
-      this.conflicts.filter((x) => x.lvl === this.currentConflictSet.id && !this.playedConflicts.includes(x.name.en))
-    );
-
-    const nextConflict = shuffledConflicts[0];
-
-    this.currentConflictSubject.next(nextConflict);
-    this.currentCardCoordinatesSubject.next(this.getCardCoordinates(nextConflict.column, nextConflict.row));
-    this.playedConflictsSubject.next([...this.playedConflicts, nextConflict.name.en]);
   }
 
-  setNextConflictSet() {
-    const currentIndex = conflictSets.findIndex((x) => x.id === this.currentConflictSet?.id);
+  setConflictSet(id: number) {
+    const currentIndex = conflictSets.findIndex((x) => x.id === id);
     if (currentIndex > -1) {
-      this.currentConflictSetSubject.next(conflictSets[currentIndex + 1]);
-    } else {
-      this.currentConflictSetSubject.next(conflictSets[0]);
+      this.currentConflictSetSubject.next(conflictSets[currentIndex]);
     }
   }
 
@@ -169,6 +148,5 @@ export class ConflictsService {
   resetConflicts() {
     this.currentConflictSetSubject.next({ id: 0, columns: 0, rows: 0, roundTreshold: 0, imageSize: 0, imagePath: '' });
     this.currentCardCoordinatesSubject.next({ x: 0, y: 0 });
-    this.playedConflictsSubject.next([]);
   }
 }

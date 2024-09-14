@@ -1,10 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ImperiumCard } from 'src/app/constants/imperium-cards';
-import { House } from 'src/app/constants/minor-houses';
 import { getActionTypePath } from 'src/app/helpers/action-types';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { ActionType, FactionType, LanguageString, RewardType } from 'src/app/models';
+import { ActionType, FactionType, RewardType } from 'src/app/models';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -15,6 +13,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 })
 export class ImperiumRowCardComponent {
   @Input() card!: ImperiumCard;
+  @Input() costModifier = 0;
 
   constructor(public translateService: TranslateService, public settingsService: SettingsService) {}
 

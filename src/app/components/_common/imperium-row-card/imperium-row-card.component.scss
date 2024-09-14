@@ -183,6 +183,14 @@
     filter: saturate(1.2) brightness(1.4);
 }
 
+.card-aquire-costs-container.negative {
+    color: #f15f5f;
+}
+
+.card-aquire-costs-container.positive {
+    color: #5ff15f;
+}
+
 .card-aquire-effect-container {
     position: absolute;
     top: 24px;

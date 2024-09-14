@@ -92,9 +92,13 @@
     </div>
   </div>
   <div
-    [class]="'card-aquire-costs-container' + (card.buyEffects && card.buyEffects.length > 0 ? ' highlighted' : '')"
+    [class]="
+      'card-aquire-costs-container' +
+      (card.buyEffects && card.buyEffects.length > 0 ? ' highlighted' : '') +
+      (costModifier ? (costModifier > 0 ? ' negative' : ' positive') : '')
+    "
     *ngIf="card.persuasionCosts"
   >
-    <div class="card-aquire-costs">{{ card.persuasionCosts }}</div>
+    <div class="card-aquire-costs">{{ card.persuasionCosts + costModifier }}</div>
   </div>
 </div>

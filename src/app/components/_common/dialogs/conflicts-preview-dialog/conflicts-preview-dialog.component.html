@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+  <div
+    class="conflict-card"
+    [style.background-image]="'url(' + data.currentConflictSet.imagePath + ')'"
+    [style.background-size]="data.currentConflictSet.imageSize + 'px'"
+    [style.background-position-x]="data.currentCardCoordinates.x + 'px'"
+    [style.background-position-y]="data.currentCardCoordinates.y + 'px'"
+  ></div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancel</button>
+</div>

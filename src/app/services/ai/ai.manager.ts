@@ -14,6 +14,8 @@ import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.ser
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
+import { ImperiumRowModifier } from '../game-modifier.service';
+import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 
 export interface AIPlayer {
   playerId: number;
@@ -59,6 +61,7 @@ export interface AIAgentPlacementInfo {
   factionInfluenceDownChoiceAmount: number;
   shippingAmount: number;
   locationControlAmount: number;
+  signetRingAmount: number;
 }
 
 export interface AIRewardArrayInfo {
@@ -554,8 +557,16 @@ export class AIManager {
     return undefined;
   }
 
-  getCardToBuy(availablePersuasion: number, cards: ImperiumDeckCard[], player: Player, gameState: GameState) {
-    const buyableCards = cards.filter((x) => (x.persuasionCosts ?? 0) <= availablePersuasion);
+  getCardToBuy(
+    availablePersuasion: number,
+    cards: ImperiumDeckCard[],
+    player: Player,
+    gameState: GameState,
+    imperiumRowModifiers?: ImperiumRowModifier[]
+  ) {
+    const buyableCards = cards.filter(
+      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion
+    );
     if (buyableCards.length > 0) {
       const cardEvaluations = buyableCards.map((card) => {
         const evaluation = this.getImperiumCardBuyEvaluation(card, player, gameState);

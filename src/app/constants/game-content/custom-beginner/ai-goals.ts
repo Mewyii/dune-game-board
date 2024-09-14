@@ -7,142 +7,141 @@ import {
   getParticipateInCombatDesireModifier,
   getPlayerGarrisonStrength,
   getResourceAmount,
+  getRewardAmountFromArray,
   getWinCombatDesireModifier,
   noOneHasMoreInfluence,
   playerCanDrawCards,
   playerCanGetAllianceThisTurn,
+  playerCanGetVictoryPointThisTurn,
   playerLikelyWinsCombat,
 } from 'src/app/services/ai/shared';
-import { AIGoals, FieldsForGoals } from 'src/app/services/ai/models';
+import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
+import { ActionField } from 'src/app/models/location';
+import { Player } from 'src/app/services/player-manager.service';
+import { FactionType, Resource, RewardType } from '../../../models';
+import { isResourceArray } from 'src/app/helpers/resources';
+import { normalizeNumber } from 'src/app/helpers/common';
 
 export const aiGoalsCustomBeginner: FieldsForGoals = {
   'high-council': {
-    baseDesire: 0.7,
+    baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.015 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat === true || gameState.isFinale,
     desiredFields: (fields) => ({
-      'High Council Seat': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 7 }], 1.0, virtualResources),
+      // Three because "amount" is used for the persuasion indicator
+      ...getViableBoardFields(fields, 'council-seat-small', 0, 3),
     }),
-    viableFields: () => ({}),
+    viableFields: (fields) => ({}),
   },
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.033 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.04 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 8,
     reachedGoal: (player, gameState) => player.hasSwordmaster === true || gameState.isFinale,
     desiredFields: (fields) => ({
-      Swordmaster: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 9 }], 1.0, virtualResources),
+      ...getViableBoardFields(fields, 'sword-master', 0, 1),
     }),
-    viableFields: () => ({}),
+    viableFields: (fields) => ({}),
   },
   mentat: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'spice', virtualResources) +
-      0.015 * (gameState.currentRound - 1) +
-      0.02 * gameState.playerCardsBought,
+      (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
+      (0.01 * getResourceAmount(player, 'spice', virtualResources) +
+        0.025 * (gameState.currentRound - 1) +
+        0.02 * gameState.playerCardsBought),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState) => gameState.agentsOnFields.some((x) => x.fieldId === 'Truthsay'),
     desiredFields: (fields) => ({
-      Truthsay: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 2 }], 1.0, virtualResources),
+      ...getViableBoardFields(fields, 'agent-lift', 0, 1),
     }),
-    viableFields: () => ({}),
+    viableFields: (fields) => ({}),
   },
   dreadnought: {
-    baseDesire: 0.4,
+    baseDesire: 0.35,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'solari', virtualResources) -
-      0.025 * (gameState.currentRound - 1) -
+      0.02 * (gameState.currentRound - 1) -
       0.05 * gameState.playerDreadnoughtCount +
-      0.0175 * (5 - gameState.playerCombatUnits.troopsInGarrison),
+      0.015 * (4 - gameState.playerCombatUnits.troopsInGarrison),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 4,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1,
     desiredFields: (fields) => ({
-      Upgrade: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 5 }], 1.0, virtualResources),
+      ...getViableBoardFields(fields, 'dreadnought', 0, 1),
     }),
-    viableFields: () => ({}),
+    viableFields: (fields) => ({}),
   },
   'fremen-friendship': {
-    baseDesire: 0.125,
+    baseDesire: 0.1,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen + 0.02 * (gameState.currentRound - 1),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerScore.fremen > 1,
     viableFields: (fields) => ({
-      'Desert Equipment': () => 0.5,
-      'Desert Knowledge (card-draw)': () => 0.5,
-      'Desert Knowledge (card-destroy)': () => 0.5,
+      ...getViableBoardFieldsForFaction(fields, 'fremen'),
     }),
   },
   'fremen-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.0125 * gameState.currentRound : 0),
+      (playerCanGetVictoryPointThisTurn(player, gameState, 'fremen') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.1 : 0) +
+      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.fremen > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'fremen'),
     viableFields: (fields) => ({
-      'Desert Equipment': () => 0.5,
-      'Desert Knowledge (card-draw)': () => 0.5,
-      'Desert Knowledge (card-destroy)': () => 0.5,
+      ...getViableBoardFieldsForFaction(fields, 'fremen'),
     }),
   },
   'bg-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.0125 * gameState.currentRound : 0),
+      (playerCanGetVictoryPointThisTurn(player, gameState, 'bene') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.1 : 0) +
+      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.bene > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'bene'),
     viableFields: (fields) => ({
-      Truthsay: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 2 }], 0.5, virtualResources),
-      'Mind Training': () => 0.5,
+      ...getViableBoardFieldsForFaction(fields, 'bene'),
     }),
   },
   'guild-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.0125 * gameState.currentRound : 0),
+      (playerCanGetVictoryPointThisTurn(player, gameState, 'guild') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.1 : 0) +
+      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.guild > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'guild'),
     viableFields: (fields) => ({
-      Heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5, virtualResources),
-      'Guild Contract': () => 0.5,
+      ...getViableBoardFieldsForFaction(fields, 'guild'),
     }),
   },
   'emperor-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.0125 * gameState.currentRound : 0),
+      (playerCanGetVictoryPointThisTurn(player, gameState, 'emperor') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.1 : 0) +
+      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.emperor > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'emperor'),
     viableFields: (fields) => ({
-      Conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5, virtualResources),
-      'Imperial Favor': () => 0.5,
+      ...getViableBoardFieldsForFaction(fields, 'emperor'),
     }),
   },
   'enter-combat': {
@@ -155,8 +154,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       const modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
       const name = winCombatDesire * 3 > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
 
-      console.log('conflict: win ' + winCombatDesire * 3);
-      console.log('conflict: participate ' + participateInCombatDesire);
+      // console.log('conflict: win ' + winCombatDesire * 3);
+      // console.log('conflict: participate ' + participateInCombatDesire);
 
       return {
         name,
@@ -166,62 +165,41 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => playerLikelyWinsCombat(gameState),
     viableFields: (fields) => ({
-      Arrakeen: () => 0.6,
-      Carthag: () => 0.6,
-      'Sietch Tabr': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.9, virtualResources),
-      Conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.9, virtualResources),
-      'Desert Knowledge (card-draw)': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.6 : 0),
-      'Desert Knowledge (card-destroy)': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.6 : 0),
-      'Imperial Basin': () => 0.5,
-      "Tuek's Sietch": (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.5, virtualResources),
-      'Hagga Basin': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.5, virtualResources),
-      'The Great Flat': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.5, virtualResources),
-      'Upgrade (tech)': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 6 }], 0.5, virtualResources),
-      Upgrade: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 6 }], 0.8, virtualResources),
+      // Influenced by troops, intrigues and dreadnoughts
+      // Custom amounts generated by ai manager
+      ...getViableBoardFields(fields, 'combat', 0, 1),
+      'Desert Knowledge (card-draw)': (player, gameState, goals, virtualResources) =>
+        gameState.playerScore.fremen === 1
+          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.6, virtualResources)
+          : getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.4, virtualResources),
+      'Desert Knowledge (card-destroy)': (player, gameState, goals, virtualResources) =>
+        gameState.playerScore.fremen === 1
+          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.6, virtualResources)
+          : getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.4, virtualResources),
     }),
   },
   troops: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.125 * (5 - gameState.playerCombatUnits.troopsInGarrison),
+      0.15 * (4 - gameState.playerCombatUnits.troopsInGarrison),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'water', virtualResources) > 1 || getResourceAmount(player, 'spice', virtualResources) > 3,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      Arrakeen: () => 0.3,
-      Carthag: () => 0.3,
-      'Sietch Tabr': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 0.75, virtualResources),
-      Alliances: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 3 }], 0.6, virtualResources),
+      ...getViableBoardFields(fields, 'troop', 0, 4),
       'Desert Equipment': (player, gameState, goals, virtualResources) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
       'Desert Knowledge (card-draw)': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
       'Desert Knowledge (card-destroy)': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
-      Heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 1, virtualResources),
-      Conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.75, virtualResources),
-      'Supply Shipment': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 2 }], 0.3, virtualResources),
     }),
   },
   intrigues: {
     baseDesire: 0.3,
-    desireModifier: (player, gameState, goals, virtualResources) => -0.033 * player.intrigueCount,
+    desireModifier: (player, gameState, goals, virtualResources) =>
+      0.01 * (gameState.currentRound - 1) - 0.033 * player.intrigueCount,
     goalIsReachable: () => false,
     reachedGoal: (player) => player.intrigueCount > 2,
     viableFields: (fields) => ({
-      Carthag: () => 0.5,
-      'Imperial Favor': () => 0.5,
-      Conspiracy: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 1.0, virtualResources),
+      ...getViableBoardFields(fields, 'intrigue', 0, 2),
       'Mind Training': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.5 : 0.0),
       Truthsay: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
@@ -239,42 +217,36 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      'Mind Training': (player, gameState) => (gameState.playerScore.bene === 1 ? 1.0 : 0.0),
-      Truthsay: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'spice', amount: 2 }],
-          gameState.playerScore.bene === 1 ? 1.0 : 0.0,
-          virtualResources
-        ),
+      ...getViableBoardFields(fields, 'intrigue-draw', 0, 1),
     }),
   },
   'fold-space': {
-    baseDesire: 0.3,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      -0.0125 * gameState.playerCardsBought - 0.0125 * (gameState.playerCardsTrashed + player.focusTokens),
+      (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
+      0.01 * gameState.playerCardsBought -
+      0.01 * (gameState.playerCardsTrashed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
+      ...getViableBoardFields(fields, 'foldspace', 0, 2),
       Heighliner: (player, gameState, goals, virtualResources) =>
         gameState.playerScore.guild === 1
           ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5, virtualResources)
           : 0,
       'Guild Contract': (player, gameState) => (gameState.playerScore.guild === 1 ? 0.5 : 0),
-      "Tuek's Sietch": (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 0.5, virtualResources),
     }),
   },
   'get-board-persuasion': {
     baseDesire: 0.5,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      -0.025 * gameState.playerCardsBought - 0.0125 * (gameState.playerCardsTrashed + player.focusTokens),
+      -0.02 * gameState.playerCardsBought -
+      0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
+      (player.hasCouncilSeat ? 0.05 : 0.0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.isFinale,
     viableFields: (fields) => ({
-      Propaganda: (player, gameState, goals, virtualResources) => 1.0,
-      Alliances: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 3 }], 0.5, virtualResources),
+      ...getViableBoardFields(fields, 'persuasion', 0, 2),
     }),
   },
   'draw-cards': {
@@ -319,18 +291,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: (player, gameState, goals, virtualResources) => !playerCanDrawCards(gameState, 1),
     viableFields: (fields) => ({
-      Alliances: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 3 }], 0.3, virtualResources),
-      'Imperial Test Station (card-draw)': (player, gameState) => clamp(0.6 + 0.025 * gameState.playerCardsBought, 0, 0.7),
-      'Imperial Test Station (card-destroy)': (player) => clamp(0.3, 0, 0.7),
-      Heighliner: (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'spice', amount: 4 }],
-          clamp(0.6 + 0.025 * gameState.playerCardsBought, 0, 0.7),
-          virtualResources
-        ),
-      'Mind Training': (player, gameState) => 0.3,
+      ...getViableBoardFields(fields, 'card-draw', 0, 3),
       Truthsay: (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
@@ -338,13 +299,10 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
           clamp(0.5 + 0.025 * gameState.playerCardsBought, 0, 0.7),
           virtualResources
         ),
-      'Desert Knowledge (card-draw)': (player, gameState) => 0.3,
-      'Supply Shipment': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 2 }], 0.3, virtualResources),
     }),
   },
   'trim-cards': {
-    baseDesire: 0.4,
+    baseDesire: 0.45,
     desireModifier: (player, gameState, goals, virtualResources) =>
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
@@ -354,11 +312,9 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         0.4
       ),
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 7 || gameState.isFinale,
+    reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 8 || gameState.isFinale,
     viableFields: (fields) => ({
-      'Mind Training': (player, gameState) => 0.5,
-      'Desert Knowledge (card-destroy)': (player, gameState) => 0.5,
-      'Imperial Test Station (card-destroy)': (player) => 0.5,
+      ...getViableBoardFields(fields, 'card-destroy', 0, 2),
     }),
   },
   'collect-water': {
@@ -367,11 +323,11 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       let maxDesire = 0.0;
 
       const waterDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
-        { type: 'collect-spice', modifier: 1.0 },
-        { type: 'troops', modifier: 1.0 },
+        { type: 'collect-spice', modifier: 0.9 },
         { type: 'harvest-accumulated-spice-basin', modifier: 1.0 },
         { type: 'harvest-accumulated-spice-flat', modifier: 1.0 },
-        { type: 'tech', modifier: 0.75 },
+        { type: 'enter-combat', modifier: 0.9 },
+        { type: 'troops', modifier: 0.7 },
       ];
 
       return getMaxDesireOfUnreachableGoals(player, gameState, goals, virtualResources, waterDependentGoalTypes, maxDesire);
@@ -379,9 +335,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals, virtualResources) => getResourceAmount(player, 'water', virtualResources) > 1,
     viableFields: (fields) => ({
-      'Supply Shipment': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'solari', amount: 2 }], 0.5, virtualResources),
-      'Desert Equipment': (player, gameState) => 0.5,
+      ...getViableBoardFields(fields, 'water', 0, 2),
     }),
   },
   'collect-spice': {
@@ -392,8 +346,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       const spiceDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
         { type: 'collect-solari', modifier: 1.0 },
         { type: 'troops', modifier: 0.9 },
-        { type: 'draw-cards', modifier: 0.9 },
-        { type: 'intrigues', modifier: 0.9 },
+        { type: 'draw-cards', modifier: 1.0 },
+        { type: 'intrigues', modifier: 0.7 },
       ];
 
       return getMaxDesireOfUnreachableGoals(player, gameState, goals, virtualResources, spiceDependentGoalTypes, maxDesire);
@@ -405,23 +359,23 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       "Tuek's Sietch": (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
-          [{ type: 'water', amount: 1 }],
-          0.0 + 0.4 * getAccumulatedSpice(gameState, "Tuek's Sietch"),
+          [{ type: 'water', amount: 2 }],
+          0.0 + 0.3 * getAccumulatedSpice(gameState, "Tuek's Sietch"),
           virtualResources
         ),
-      'Imperial Basin': (player, gameState) => 0.35 + 0.4 * getAccumulatedSpice(gameState, 'Imperial Basin'),
+      'Imperial Basin': (player, gameState) => 0.4 + 0.4 * getAccumulatedSpice(gameState, 'Imperial Basin'),
       'Hagga Basin': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
           [{ type: 'water', amount: 1 }],
-          0.6 + 0.3 * getAccumulatedSpice(gameState, 'Hagga Basin'),
+          0.7 + 0.3 * getAccumulatedSpice(gameState, 'Hagga Basin'),
           virtualResources
         ),
       'The Great Flat': (player, gameState, goals, virtualResources) =>
         getCostAdjustedDesire(
           player,
           [{ type: 'water', amount: 2 }],
-          0.8 + 0.2 * getAccumulatedSpice(gameState, 'Hagga Basin'),
+          0.9 + 0.2 * getAccumulatedSpice(gameState, 'The Great Flat'),
           virtualResources
         ),
     }),
@@ -435,7 +389,6 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         { type: 'swordmaster', modifier: 1.0 },
         { type: 'high-council', modifier: 1.0 },
         { type: 'dreadnought', modifier: 1.0 },
-        { type: 'tech', modifier: 1.0 },
       ];
 
       return getMaxDesireOfUnreachableGoals(player, gameState, goals, virtualResources, solariDependentGoalTypes, maxDesire);
@@ -445,55 +398,33 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     reachedGoal: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > (!player.hasSwordmaster ? 8 : 6),
     viableFields: (fields) => ({
-      Arrakeen: () => 0.35,
+      ...getViableBoardFields(fields, 'solari', 0, 6),
       'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.5 : 0.2),
       Conspiracy: (player, gameState, goals, virtualResources) =>
         gameState.playerScore.emperor === 1
-          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.35, virtualResources)
+          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 3 }], 0.35, virtualResources)
           : 0,
-      'Guild Contract': () => 0.5,
       'Spice Trade': (player, gameState, goals, virtualResources) =>
         getResourceAmount(player, 'spice', virtualResources) > 0
-          ? 1.0 - 0.033 * getResourceAmount(player, 'solari', virtualResources)
+          ? 1.0 - 0.02 * getResourceAmount(player, 'solari', virtualResources)
           : 0,
-    }),
-  },
-  'harvest-accumulated-spice-basin': {
-    baseDesire: 0.0,
-    desireModifier: (player, gameState, goals, virtualResources) => 0.25 * getAccumulatedSpice(gameState, 'Hagga Basin'),
-    goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'water', virtualResources) > 0,
-    reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'Imperial Basin') === 0,
-    viableFields: (fields) => ({
-      'Hagga Basin': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 1 }], 1.0, virtualResources),
-    }),
-  },
-  'harvest-accumulated-spice-flat': {
-    baseDesire: 0.0,
-    desireModifier: (player, gameState, goals, virtualResources) => 0.25 * getAccumulatedSpice(gameState, 'The Great Flat'),
-    goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'water', virtualResources) > 1,
-    reachedGoal: (player, gameState) => getAccumulatedSpice(gameState, 'The Great Flat') === 0,
-    viableFields: (fields) => ({
-      'The Great Flat': (player, gameState, goals, virtualResources) =>
-        getCostAdjustedDesire(player, [{ type: 'water', amount: 2 }], 1.0, virtualResources),
     }),
   },
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 6 && !player.hasSwordmaster
-        ? 0.35 - 0.05 * (getResourceAmount(player, 'solari', virtualResources) - 7) - 0.025 * (gameState.currentRound - 1)
+      getResourceAmount(player, 'solari', virtualResources) > 5 && !player.hasSwordmaster
+        ? 0.2 - 0.02 * (gameState.currentRound - 1)
         : 0,
     goalIsReachable: (player, gameState) => gameState.isFinale,
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster === true,
     viableFields: (fields) => ({
-      'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.75 : 0.5),
-      'Guild Contract': () => 1.0,
-      Arrakeen: () => 0.75,
+      'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 1.0 : 0.5),
+      'Alliances (persuasion)': () => 0.75,
+      'Alliances (card-draw)': () => 0.75,
+      'Guild Contract': () => 0.75,
       'Spice Trade': (player, gameState, goals, virtualResources) =>
-        getResourceAmount(player, 'spice', virtualResources) > 0 ? 0.25 : 0,
+        getResourceAmount(player, 'spice', virtualResources) > 0 ? 0.5 : 0,
       Conspiracy: (player, gameState, goals, virtualResources) =>
         gameState.playerScore.emperor === 1
           ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.75, virtualResources)
@@ -501,3 +432,51 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     }),
   },
 };
+
+function getViableBoardFieldsForFaction(
+  fields: ActionField[],
+  factionType: FactionType
+): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number } {
+  const factionFields = fields.filter((x) => x.actionType === factionType);
+  const viableFields: {
+    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
+  } = {};
+
+  for (const field of factionFields) {
+    const baseFieldDesire = 0.5;
+
+    if (field.costs && isResourceArray(field.costs)) {
+      viableFields[field.title.en] = (player, gameState, goals, virtualResources) =>
+        getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire, virtualResources);
+    } else {
+      viableFields[field.title.en] = () => baseFieldDesire;
+    }
+  }
+
+  return viableFields;
+}
+
+function getViableBoardFields(
+  fields: ActionField[],
+  rewardType: RewardType,
+  minReward: number,
+  maxReward: number
+): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number } {
+  const fieldsWithReward = fields.filter((x) => x.rewards.some((y) => y.type === rewardType));
+  const viableFields: {
+    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
+  } = {};
+
+  for (const field of fieldsWithReward) {
+    const baseFieldDesire = normalizeNumber(getRewardAmountFromArray(field.rewards, rewardType), maxReward, minReward);
+
+    if (field.costs && isResourceArray(field.costs)) {
+      viableFields[field.title.en] = (player, gameState, goals, virtualResources) =>
+        getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire, virtualResources);
+    } else {
+      viableFields[field.title.en] = () => baseFieldDesire;
+    }
+  }
+
+  return viableFields;
+}

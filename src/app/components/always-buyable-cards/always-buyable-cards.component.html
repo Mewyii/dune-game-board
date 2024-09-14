@@ -29,6 +29,7 @@
         : '')
     "
     [card]="shownLiasonCard"
+    [costModifier]="getCardCostModifier(shownLiasonCard)"
   ></dune-imperium-row-card>
   <div class="card-action-container" *ngIf="shownLiasonCard.name.en === activeCardId">
     <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowPreviousLiasonClicked()">

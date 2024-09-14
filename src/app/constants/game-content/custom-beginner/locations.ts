@@ -10,10 +10,10 @@ export const locationsCustomBeginner: DuneLocation[] = [
     actionField: {
       title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
-      rewards: [{ type: 'solari', amount: 2 }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
     },
-    ownerReward: { type: 'solari' },
+    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -24,11 +24,12 @@ export const locationsCustomBeginner: DuneLocation[] = [
     actionField: {
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
-      costs: [{ type: 'water' }],
-      rewards: [{ type: 'foldspace' }, { type: 'spice-accumulation' }, { type: 'combat' }],
+      costs: [{ type: 'water' }, { type: 'water' }],
+      rewards: [{ type: 'foldspace' }, { type: 'spice-accumulation' }, { type: 'faction-influence-up-choice' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },
+    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(87, 69, 52)',
@@ -42,7 +43,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
     },
-    ownerReward: { type: 'card-round-start' },
+    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(87, 69, 52)',
@@ -53,7 +54,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     actionField: {
       title: { de: 'Imperiale Teststation', en: 'Imperial Test Station' },
       actionType: 'town',
-      rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }],
+      rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/research_station.png',
       requiresInfluence: { type: 'fremen' },
     },
@@ -67,11 +68,12 @@ export const locationsCustomBeginner: DuneLocation[] = [
     actionField: {
       title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
-      costs: [{ type: 'water' }, { type: 'water' }],
+      costs: [{ type: 'water' }],
       rewards: [{ type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
     },
+    ownerReward: { type: 'troop' },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -85,7 +87,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
       rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
+    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(196, 172, 139)',
@@ -115,64 +117,4 @@ export const locationsCustomBeginner: DuneLocation[] = [
       pathToImage: 'assets/images/action-backgrounds/desert.png',
     },
   },
-  // 5-6Player Stuff
-  // {
-  //   color: 'rgb(87, 69, 52)',
-  //   position: {
-  //     marginTop: 1000,
-  //     marginLeft: 1444,
-  //   },
-  //   actionField: {
-  //     title: "tuek's sietch",
-  //     actionType: 'town',
-  //     rewards: [{ type: 'water' }, { type: 'solari', amount: 1 }, { type: 'combat' }],
-  //     pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(196, 172, 139)',
-  //   position: {
-  //     marginTop: 1080,
-  //     marginLeft: 540,
-  //   },
-  //   actionField: {
-  //     title: 'ebene der toten',
-  //     actionType: 'spice',
-  //     costs: [{ type: 'water' }],
-  //     rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'card-destroy' }],
-  //     pathToImage: 'assets/images/action-backgrounds/desert.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(79, 94, 78)',
-  //   position: {
-  //     marginTop: 1170,
-  //     marginLeft: 1800,
-  //   },
-  //   actionField: {
-  //     title: 'bashar',
-  //     actionType: 'landsraad',
-  //     rewards: [{ type: 'troop', amount: 3 }],
-  //     pathToImage: 'assets/images/action-backgrounds/sardaukar.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(79, 94, 78)',
-  //   position: {
-  //     marginTop: 1370,
-  //     marginLeft: 1800,
-  //   },
-  //   actionField: {
-  //     title: 'twisted mentat',
-  //     actionType: 'landsraad',
-  //     costs: [{ type: 'solari', amount: 2 }],
-  //     rewards: [{ type: 'card-destroy' }, { type: 'mentat', iconHeight: 95 }],
-  //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',
-  //
-  //     customWidth: 'fit-content',
-  //   },
-  // },
 ];
