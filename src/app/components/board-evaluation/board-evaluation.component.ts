@@ -96,9 +96,9 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'dreadnought':
           if (rewards.some((x) => x.type === 'combat')) {
-            value += 7 * amount;
+            value += 8 * amount;
           } else {
-            value += 5 * amount;
+            value += 6 * amount;
           }
           break;
         case 'card-draw':
@@ -120,7 +120,7 @@ export class BoardEvaluationComponent implements OnInit {
           value += 1.75 * amount;
           break;
         case 'persuasion':
-          value += 2 * amount;
+          value += 1.5 * amount;
           break;
         case 'foldspace':
           value += 1.75 * amount;
@@ -137,16 +137,16 @@ export class BoardEvaluationComponent implements OnInit {
           value += 0.1 * amount;
           break;
         case 'tech':
-          value += 1 * amount;
+          value += 0.5 * amount;
           break;
         case 'tech-reduced':
-          value += 2.25 * amount;
+          value += 2.5 * amount;
           break;
         case 'tech-reduced-two':
-          value += 4.5 * amount;
+          value += 4.75 * amount;
           break;
         case 'tech-reduced-three':
-          value += 6.75 * amount;
+          value += 7.0 * amount;
           break;
         case 'combat':
           if (rewards.some((x) => x.type === 'troop')) {

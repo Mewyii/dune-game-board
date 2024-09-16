@@ -46,7 +46,8 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'tech',
+        type: 'solari',
+        amount: 1,
       },
     ],
   },
@@ -149,8 +150,7 @@ export const startingCards: ImperiumCard[] = [
     buyEffects: [],
     revealEffects: [
       {
-        type: 'persuasion',
-        amount: 1,
+        type: 'tech',
       },
     ],
     customAgentEffect: {
@@ -158,5 +158,22 @@ export const startingCards: ImperiumCard[] = [
       de: 'Entsorge diese Karte.',
       fontSize: 'small',
     },
+  },
+  {
+    name: {
+      en: 'Scouts',
+      de: 'Kundschafter',
+    },
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
+    cardAmount: 1,
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
   },
 ];

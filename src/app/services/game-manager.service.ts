@@ -864,7 +864,7 @@ export class GameManager {
   public doAIAction(playerId: number) {
     const player = this.playerManager.getPlayer(playerId);
     const playerAgentCount = this.getAvailableAgentCountForPlayer(playerId);
-    let canPlaceAgent = playerAgentCount > 0;
+    let couldPlaceAgent = false;
 
     if (!player || player.turnState === 'done') {
       return;
@@ -872,22 +872,23 @@ export class GameManager {
 
     const gameState = this.getGameState(player);
 
-    if (player.turnState === 'agent-placement' && canPlaceAgent) {
+    if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
       const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards;
-      const preferredFields = this.aIManager.getPreferredFieldsForPlayer(playerId, 3);
-      if (playerHandCards && playerHandCards.length > 0 && preferredFields && preferredFields.length > 0) {
-        const cardAndField = this.aIManager.getCardAndFieldToPlay(preferredFields, playerHandCards, player, gameState);
-        if (cardAndField) {
+      if (playerHandCards && playerHandCards.length > 0) {
+        const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState, 3);
+
+        const boardField = this.settingsService.boardFields.find((x) =>
+          cardAndField?.preferredField.fieldId.includes(x.title.en)
+        );
+        if (boardField && cardAndField) {
           this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
-          if (preferredFields) {
-            this.addAgentToField(cardAndField.preferredField);
-          }
+          this.addAgentToField(boardField);
+
+          couldPlaceAgent = true;
         }
-      } else if (!preferredFields || preferredFields.length < 1) {
-        canPlaceAgent = false;
       }
     }
-    if (!canPlaceAgent && player.turnState !== 'reveal') {
+    if (!couldPlaceAgent && player.turnState !== 'reveal') {
       this.setPlayerRevealTurn(playerId);
     }
     if (player.turnState === 'reveal') {
