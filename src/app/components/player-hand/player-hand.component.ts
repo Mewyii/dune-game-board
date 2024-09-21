@@ -8,6 +8,7 @@ import { Player, PlayerManager } from 'src/app/services/player-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { GameModifiersService } from 'src/app/services/game-modifier.service';
 
 @Component({
   selector: 'dune-player-hand',
@@ -111,6 +112,13 @@ export class PlayerHandComponent implements OnInit {
     this.gameManager.aiDiscardHandCard(this.activePlayerId);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+  }
+
+  onReturnDiscardedCardToHandClicked(card: ImperiumDeckCard) {
+    if (this.currentPlayer) {
+      this.cardsService.returnDiscardedPlayerCardToHand(this.activePlayerId, card);
+      this.activeCardId = '';
+    }
   }
 
   onTrashHandCardClicked(card: ImperiumDeckCard) {

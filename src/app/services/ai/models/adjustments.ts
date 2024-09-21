@@ -8,7 +8,6 @@ export interface GoalModifier {
 }
 
 export interface AIAdjustments {
-  directFieldAccess?: string[];
   fieldAccessModifier?: Resource[];
   fieldEvaluationModifier?: (player: Player, gameState: GameState, field: ActionField) => number;
   goalEvaluationModifier?: (player: Player, gameState: GameState) => GoalModifier[];

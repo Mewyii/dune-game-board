@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { cloneDeep, isArray } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Player } from './player-manager.service';
-import { FactionType, Reward } from '../models';
+import { ActiveFactionType, FactionType, Reward } from '../models';
 
 export interface GameModifier {
   id: string;
@@ -29,10 +29,16 @@ export interface CustomGameActionModifier extends GameModifier {
   action: CustomGameActionType;
 }
 
+export interface FieldAccessModifier extends GameModifier {
+  fieldId?: string;
+  factionType?: ActiveFactionType;
+}
+
 export interface GameModifiers {
   factionInfluenceModifiers?: FactionInfluenceModifiers;
   imperiumRowModifiers?: ImperiumRowModifier[];
   customActions?: CustomGameActionModifier[];
+  fieldAccessModifiers?: FieldAccessModifier[];
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
@@ -67,6 +73,20 @@ export class GameModifiersService {
 
   public getPlayerImperiumRowModifiers(playerId: number) {
     return this.playerGameModifiers.find((x) => x.playerId === playerId)?.imperiumRowModifiers;
+  }
+
+  public getPlayerFieldUnlocksForFactions(playerId: number): ActiveFactionType[] | undefined {
+    return this.playerGameModifiers
+      .find((x) => x.playerId === playerId)
+      ?.fieldAccessModifiers?.map((x) => x.factionType)
+      .filter((x) => x !== undefined) as ActiveFactionType[] | undefined;
+  }
+
+  public getPlayerFieldUnlocksForIds(playerId: number): string[] | undefined {
+    return this.playerGameModifiers
+      .find((x) => x.playerId === playerId)
+      ?.fieldAccessModifiers?.map((x) => x.fieldId)
+      .filter((x) => x !== undefined) as string[] | undefined;
   }
 
   public getPlayerCustomActionModifiers(playerId: number) {

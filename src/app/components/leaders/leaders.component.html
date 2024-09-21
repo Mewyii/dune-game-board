@@ -8,7 +8,7 @@
       [style.background-image]="'url(' + activeLeader.imageUrl + ')'"
     ></div>
     <div class="leader-action-container" *ngIf="!playerLeader?.isLockedIn">
-      <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()">
+      <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()" matTooltip="Select">
         <mat-icon>check</mat-icon>
       </button>
     </div>

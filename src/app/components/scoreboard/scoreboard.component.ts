@@ -36,7 +36,7 @@ export class ScoreboardComponent implements OnInit {
     });
 
     this.settingsService.settings$.subscribe((x) => {
-      this.scoreArray = new Array(x.gameContent.maxVictoryPoints ?? 14);
+      this.scoreArray = new Array(x.gameContent.maxVictoryPoints ?? 13);
       this.victoryPointBoni = x.gameContent.victoryPointBoni;
       if (x.gameContent.finaleTrigger) {
         this.finaleTrigger = x.gameContent.finaleTrigger;

@@ -21,6 +21,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onPlayCardClicked(handCard.id)"
+              matTooltip="Play"
             >
               <mat-icon>check</mat-icon>
             </button>
@@ -30,13 +31,26 @@
               mat-fab
               [color]="'accent'"
               (click)="onUnPlayCardClicked(handCard.id)"
+              matTooltip="Cancel"
             >
               <mat-icon>close</mat-icon>
             </button>
-            <button class="card-discard-button" mat-fab [color]="'accent'" (click)="onDiscardCardClicked(handCard)">
+            <button
+              class="card-discard-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onDiscardCardClicked(handCard)"
+              matTooltip="Discard"
+            >
               <mat-icon>expand_more</mat-icon>
             </button>
-            <button class="card-remove-button" mat-fab [color]="'accent'" (click)="onTrashHandCardClicked(handCard)">
+            <button
+              class="card-remove-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onTrashHandCardClicked(handCard)"
+              matTooltip="Trash"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -50,7 +64,22 @@
         >
           <dune-imperium-row-card [class]="card.id === activeCardId ? 'active' : ''" [card]="card"></dune-imperium-row-card>
           <div class="card-action-container" *ngIf="card.id === activeCardId">
-            <button class="card-remove-button" mat-fab [color]="'accent'" (click)="onTrashDiscardedCardClicked(card)">
+            <button
+              class="card-remove-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onReturnDiscardedCardToHandClicked(card)"
+              matTooltip="Return To Hand"
+            >
+              <mat-icon>expand_less</mat-icon>
+            </button>
+            <button
+              class="card-remove-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onTrashDiscardedCardClicked(card)"
+              matTooltip="Trash"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -64,7 +93,7 @@
       *ngIf="cardsShown === 'hand'"
       class="draw-card-button"
       (click)="onAddFoldspaceToHandClicked()"
-      matTooltip="Draw foldspace"
+      matTooltip="Draw Foldspace"
     >
       <img class="draw-card-icon" [src]="getRewardTypePath('foldspace')" />
     </div>

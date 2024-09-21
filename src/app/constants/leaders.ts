@@ -45,8 +45,8 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
-    aiAdjustments: {
-      directFieldAccess: ['sietch tabr'],
+    gameModifiers: {
+      fieldAccessModifiers: [{ id: 'stilgar-naib', fieldId: 'sietch tabr' }],
     },
   },
   {
@@ -81,6 +81,7 @@ export const leaders: Leader[] = [
     },
     gameModifiers: {
       factionInfluenceModifiers: { fremen: { id: 'liet', noInfluence: true, alternateReward: { type: 'water' } } },
+      fieldAccessModifiers: [{ id: 'liet-fremen', factionType: 'fremen' }],
     },
     type: 'new',
   },
@@ -208,6 +209,7 @@ export const leaders: Leader[] = [
           },
         },
       },
+      fieldAccessModifiers: [{ id: 'irulan-emperor', factionType: 'emperor' }],
     },
   },
   {
@@ -338,6 +340,7 @@ export const leaders: Leader[] = [
         { id: 'mohiam-vision-conflict', action: 'vision-conflict' },
         { id: 'mohiam-vision-intrigues', action: 'vision-intrigues' },
       ],
+      fieldAccessModifiers: [{ id: 'mohiam-bene', factionType: 'bene' }],
     },
   },
   {

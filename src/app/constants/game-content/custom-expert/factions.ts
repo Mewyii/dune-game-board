@@ -96,7 +96,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Gildenabkommen', en: 'Guild Contract' },
         actionType: 'guild',
-        rewards: [{ type: 'solari', amount: 2 }, { type: 'tech' }],
+        rewards: [{ type: 'solari', amount: 3 }],
         pathToImage: 'assets/images/action-backgrounds/guild_navigators.png',
       },
     ],
@@ -133,7 +133,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue-draw' }, { type: 'solari' }],
+        rewards: [{ type: 'solari' }, { type: 'intrigue' }, { type: 'intrigue-draw' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -183,10 +183,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        rewards: [
-          { type: 'solari', amount: 2 },
-          { type: 'persuasion', amount: 1 },
-        ],
+        rewards: [{ type: 'solari' }, { type: 'persuasion', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {
@@ -238,9 +235,10 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
+        costs: [{ type: 'solari', amount: 2 }],
         rewards: [{ type: 'water' }, { type: 'water' }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
+        requiresInfluence: { type: 'emperor' },
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

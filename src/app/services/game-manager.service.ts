@@ -5,7 +5,7 @@ import { isResource, isResourceType } from '../helpers/resources';
 import { CombatManager, PlayerCombatUnits } from './combat-manager.service';
 import { LoggingService } from './log.service';
 import { Player, PlayerManager } from './player-manager.service';
-import { PlayerFactionScoreType, PlayerScoreManager } from './player-score-manager.service';
+import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
 import { ActionField, Reward, RewardType } from '../models';
@@ -20,7 +20,7 @@ import { shuffle } from '../helpers/common';
 import { GameState } from './ai/models';
 import { CardsService, ImperiumDeckCard } from './cards.service';
 import { isFactionScoreRewardType } from '../helpers/rewards';
-import { getFactionScoreTypeFromReward } from '../helpers/faction-score';
+import { getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { Leader } from '../constants/leaders';
 import { LeaderImageOnly } from '../constants/leaders-old';
@@ -1071,12 +1071,17 @@ export class GameManager {
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
     const playerDreadnoughtCount = getPlayerdreadnoughtCount(playerCombatUnits);
 
+    const playerScore = this.playerScoreManager.getPlayerScore(player.id)!;
+    const playerFactionFriendships = this.getFactionFriendships(playerScore);
+    const playerFieldUnlocksForFactions = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id);
+    const playerFieldUnlocksForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id);
+
     return {
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
       playerAgentCount: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
       enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
-      playerScore: this.playerScoreManager.getPlayerScore(player.id)!,
+      playerScore: playerScore,
       enemyScore: this.playerScoreManager.getEnemyScore(player.id)!,
       playerCombatUnits,
       enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
@@ -1099,6 +1104,9 @@ export class GameManager {
       playerCardsTrashed,
       playerDreadnoughtCount,
       imperiumRowCards: this.cardsService.imperiumRow,
+      playerFactionFriendships,
+      playerFieldUnlocksForFactions,
+      playerFieldUnlocksForIds,
     };
   }
 
@@ -1615,5 +1623,15 @@ export class GameManager {
       }
     }
     return { rewards: rewards, restString: restString };
+  }
+
+  private getFactionFriendships(playerScore: PlayerScore) {
+    const result: PlayerFactionScoreType[] = [];
+    for (const [index, value] of Object.entries(playerScore)) {
+      if (value > 1 && isFactionScoreType(index)) {
+        result.push(index);
+      }
+    }
+    return result;
   }
 }

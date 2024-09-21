@@ -12,7 +12,7 @@ export const gameContentCustomExpert: GameContent = {
   locations: locationsCustomExpert,
   ix: ixCustomExpert,
   useTechTiles: true,
-  finaleTrigger: 8,
+  finaleTrigger: 7,
   victoryPointBoni: [
     { score: 1, reward: { type: 'solari' } },
     { score: 2, reward: { type: 'troop' } },

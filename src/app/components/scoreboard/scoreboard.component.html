@@ -30,7 +30,7 @@
     <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index; trackBy: trackPlayerScore">
       <div
         class="score-marker"
-        [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 152 + 'px'"
+        [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 163 + 'px'"
         [style.top]="10 + (i % 2 === 0 ? 0 : 40) + 'px'"
         [style.background-color]="getPlayerColor(playerScore.playerId)"
       ></div>

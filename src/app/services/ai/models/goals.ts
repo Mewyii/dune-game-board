@@ -2,8 +2,8 @@ import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { Player } from '../../player-manager.service';
-import { PlayerScore } from '../../player-score-manager.service';
-import { ActionField, Resource } from 'src/app/models';
+import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
+import { ActionField, ActiveFactionType, Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
 import { DuneEvent } from 'src/app/constants/events';
@@ -63,6 +63,9 @@ export interface GameState {
   playerCardsTrashed: number;
   playerDreadnoughtCount: number;
   imperiumRowCards: ImperiumDeckCard[];
+  playerFactionFriendships: PlayerFactionScoreType[];
+  playerFieldUnlocksForFactions?: ActiveFactionType[];
+  playerFieldUnlocksForIds?: string[];
 }
 
 export interface AIGoal {

@@ -319,7 +319,6 @@ export class AIManager {
 
     const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
     const factionAndFieldAccessFromCards = getCardsFactionAndFieldAccess(gameState.playerHandCards);
-    const factionAccessFromFactionInfluence: PlayerFactionScoreType[] = this.getFactionFriendships(gameState.playerScore);
 
     const accessibleFields = boardFields
       .map((x) => {
@@ -332,11 +331,15 @@ export class AIManager {
             if (!x.requiresInfluence) {
               accessTrough = 'card';
             } else {
-              const hasEnoughFactionInfluence = factionAccessFromFactionInfluence.some(
+              const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
                 (y) => y === x.requiresInfluence!.type
               );
 
-              if (hasEnoughFactionInfluence) {
+              const hasDirectAccess =
+                gameState.playerFieldUnlocksForFactions?.some((y) => y === x.requiresInfluence!.type) ||
+                gameState.playerFieldUnlocksForIds?.some((y) => y.toLocaleLowerCase() === x.title.en.toLocaleLowerCase());
+
+              if (hasEnoughFactionInfluence || hasDirectAccess) {
                 accessTrough = 'influence';
               } else {
                 const hasFactionAccessViaCard = factionAndFieldAccessFromCards.some(
@@ -371,15 +374,6 @@ export class AIManager {
     aiPlayer.decisions = decisions;
 
     this.aiPlayersSubject.next(aiPlayers);
-  }
-  getFactionFriendships(playerScore: PlayerScore) {
-    const result: PlayerFactionScoreType[] = [];
-    for (const [index, value] of Object.entries(playerScore)) {
-      if (value > 1 && isFactionScoreType(index)) {
-        result.push(index);
-      }
-    }
-    return result;
   }
 
   public getPreferredFieldForPlayer(playerId: number) {
@@ -1051,7 +1045,7 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 9 + 1.5 * (gameState.currentRound - 1);
+        return 9 + 1.75 * (gameState.currentRound - 1);
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 || ignoreTurnState ? 1 : 0.25;
       case 'combat':

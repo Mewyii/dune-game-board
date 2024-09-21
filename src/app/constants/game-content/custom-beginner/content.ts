@@ -14,7 +14,7 @@ export const gameContentCustomBeginner: GameContent = {
   useTechTiles: false,
   alwaysBuyableCards: buyableCardsCustomBeginner,
   customCards: customCardsCustomBeginner,
-  finaleTrigger: 8,
+  finaleTrigger: 7,
   victoryPointBoni: [
     { score: 1, reward: { type: 'solari' } },
     { score: 2, reward: { type: 'troop' } },
