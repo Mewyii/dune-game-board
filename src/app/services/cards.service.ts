@@ -6,6 +6,13 @@ import { PlayerManager } from './player-manager.service';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { ImperiumCard } from '../constants/imperium-cards';
 import { ActionType, FactionType } from '../models';
+import { SettingsService } from './settings.service';
+
+export type CustomCardType = 'other' | 'unlimited' | 'limited';
+
+export interface CustomCard extends ImperiumCard {
+  type: CustomCardType;
+}
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
@@ -49,7 +56,17 @@ export class CardsService {
   private playedPlayerCardsSubject = new BehaviorSubject<PlayerCard[]>([]);
   public playedPlayerCards$ = this.playedPlayerCardsSubject.asObservable();
 
-  constructor(private playerManager: PlayerManager, private cardConfiguratorService: CardConfiguratorService) {
+  private limitedCustomCardsSubject = new BehaviorSubject<ImperiumDeckCard[]>([]);
+  public limitedCustomCards$ = this.limitedCustomCardsSubject.asObservable();
+
+  private unlimitedCustomCardsSubject = new BehaviorSubject<ImperiumCard[]>([]);
+  public unlimitedCustomCards$ = this.unlimitedCustomCardsSubject.asObservable();
+
+  constructor(
+    private playerManager: PlayerManager,
+    private cardConfiguratorService: CardConfiguratorService,
+    private settingsService: SettingsService
+  ) {
     const imperiumDeckString = localStorage.getItem('imperiumDeck');
     if (imperiumDeckString) {
       const imperiumDeck = JSON.parse(imperiumDeckString) as ImperiumDeckCard[];
@@ -110,6 +127,26 @@ export class CardsService {
     this.playedPlayerCards$.subscribe((playedPlayerCards) => {
       localStorage.setItem('playedPlayerCards', JSON.stringify(playedPlayerCards));
     });
+
+    const limitedCustomCardsString = localStorage.getItem('limitedCustomCards');
+    if (limitedCustomCardsString) {
+      const limitedCustomCards = JSON.parse(limitedCustomCardsString) as ImperiumDeckCard[];
+      this.limitedCustomCardsSubject.next(limitedCustomCards);
+    }
+
+    this.limitedCustomCards$.subscribe((limitedCustomCards) => {
+      localStorage.setItem('limitedCustomCards', JSON.stringify(limitedCustomCards));
+    });
+
+    const unlimitedCustomCardsString = localStorage.getItem('unlimitedCustomCards');
+    if (unlimitedCustomCardsString) {
+      const unlimitedCustomCards = JSON.parse(unlimitedCustomCardsString) as ImperiumDeckCard[];
+      this.unlimitedCustomCardsSubject.next(unlimitedCustomCards);
+    }
+
+    this.unlimitedCustomCards$.subscribe((unlimitedCustomCards) => {
+      localStorage.setItem('unlimitedCustomCards', JSON.stringify(unlimitedCustomCards));
+    });
   }
 
   public get imperiumDeck() {
@@ -138,6 +175,14 @@ export class CardsService {
 
   public get playerTrashPiles() {
     return cloneDeep(this.playerTrashPilesSubject.value);
+  }
+
+  public get limitedCustomCards() {
+    return cloneDeep(this.limitedCustomCardsSubject.value);
+  }
+
+  public get unlimitedCustomCards() {
+    return cloneDeep(this.unlimitedCustomCardsSubject.value);
   }
 
   getPlayerHand(playerId: number) {
@@ -176,8 +221,44 @@ export class CardsService {
     this.imperiumDeckSubject.next(shuffle(imperiumDeck));
   }
 
+  setLimitedCustomCards() {
+    const customCardStack: ImperiumDeckCard[] = [];
+    const customCards = this.settingsService.getCustomCards();
+    if (customCards) {
+      for (const customCard of customCards) {
+        if (customCard.type === 'limited') {
+          for (let i = 0; i < (customCard.cardAmount ?? 1); i++) {
+            customCardStack.push(this.instantiateImperiumCard(customCard));
+          }
+        }
+      }
+    }
+
+    this.limitedCustomCardsSubject.next(customCardStack);
+  }
+
+  setUnlimitedCustomCards() {
+    const customCardStack: ImperiumCard[] = [];
+    const customCards = this.settingsService.getCustomCards();
+    if (customCards) {
+      for (const customCard of customCards) {
+        if (customCard.type === 'unlimited') {
+          for (let i = 0; i < (customCard.cardAmount ?? 1); i++) {
+            customCardStack.push(customCard);
+          }
+        }
+      }
+    }
+
+    this.unlimitedCustomCardsSubject.next(customCardStack);
+  }
+
   removeCardFromImperiumDeck(card: ImperiumDeckCard) {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x, index) => x.id !== card.id)]);
+  }
+
+  removeCardFromLimitedCustomCards(card: ImperiumDeckCard) {
+    this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x, index) => x.id !== card.id)]);
   }
 
   setInitialPlayerDecks() {
@@ -361,6 +442,11 @@ export class CardsService {
 
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
+    this.addCardToPlayerDiscardPile(playerId, card);
+  }
+
+  aquirePlayerCardFromLimitedCustomCards(playerId: number, card: ImperiumDeckCard) {
+    this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x) => x.id !== card.id)]);
     this.addCardToPlayerDiscardPile(playerId, card);
   }
 

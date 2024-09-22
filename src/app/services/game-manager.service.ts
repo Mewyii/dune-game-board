@@ -252,6 +252,8 @@ export class GameManager {
     this.resetAccumulatedSpiceOnFields();
 
     this.cardsService.resetPlayerTrashPiles();
+    this.cardsService.setLimitedCustomCards();
+    this.cardsService.setUnlimitedCustomCards();
     this.cardsService.setImperiumDeck();
     this.cardsService.setInitialPlayerDecks();
     this.aIManager.assignPersonalitiesToAIPlayers(newPlayers);
@@ -992,9 +994,11 @@ export class GameManager {
     const imperiumRow = this.cardsService.imperiumDeck.slice(0, 6);
     const imperiumRowModifiers = this.gameModifiersService.getPlayerImperiumRowModifiers(playerId);
 
-    const alwaysBuyableCards = this.settingsService
-      .getAlwaysBuyableCards()
-      .map((x) => this.cardsService.instantiateImperiumCard(x));
+    const alwaysBuyableCards = [
+      ...this.cardsService.limitedCustomCards,
+      ...this.cardsService.unlimitedCustomCards.map((x) => this.cardsService.instantiateImperiumCard(x)),
+    ];
+
     const availableCards = [...imperiumRow, ...shuffle(alwaysBuyableCards)];
 
     const cardToBuy = this.aIManager.getCardToBuy(
@@ -1018,7 +1022,11 @@ export class GameManager {
 
       this.aiResolveRewardChoices(buyAiInfo, player);
 
-      this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
+      if (this.cardsService.limitedCustomCards.some((x) => x.id === cardToBuy.id)) {
+        this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, cardToBuy);
+      } else {
+        this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
+      }
 
       this.aiChooseAndBuyCards(playerId, availablePersuasion - ((cardToBuy.persuasionCosts ?? 0) + costModifier));
     }

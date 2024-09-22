@@ -1,44 +1,49 @@
-<div class="spice-must-flow-container" *ngIf="spiceMustFlowCard" (click)="setCardActive(spiceMustFlowCard.name.en)">
+<div class="spice-must-flow-container" *ngIf="unlimitedCard" (click)="setCardActive(unlimitedCard.name.en)">
   <dune-imperium-row-card
     [class]="
-      (spiceMustFlowCard.name.en === activeCardId ? 'active' : '') +
+      (unlimitedCard.name.en === activeCardId ? 'active' : '') +
       (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
       (activePlayerTurnState === 'reveal' &&
-      spiceMustFlowCard.persuasionCosts &&
-      activePlayerPersuasion >= spiceMustFlowCard.persuasionCosts
+      unlimitedCard.persuasionCosts &&
+      activePlayerPersuasion >= unlimitedCard.persuasionCosts
         ? ' buyable'
         : '')
     "
-    [card]="spiceMustFlowCard"
+    [card]="unlimitedCard"
   ></dune-imperium-row-card>
-  <div class="card-action-container" *ngIf="spiceMustFlowCard.name.en === activeCardId">
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyAlwaysAvailableCardClicked(spiceMustFlowCard)">
+  <div class="card-action-container" *ngIf="unlimitedCard.name.en === activeCardId">
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyAlwaysAvailableCardClicked(unlimitedCard)">
       <mat-icon>check</mat-icon>
     </button>
   </div>
 </div>
-<div class="liason-container" *ngIf="shownLiasonCard" (click)="setCardActive(shownLiasonCard.name.en)">
+<div class="liason-container" *ngIf="shownLimitedCustomCard" (click)="setCardActive(shownLimitedCustomCard.id)">
   <dune-imperium-row-card
     [class]="
-      (shownLiasonCard.name.en === activeCardId ? 'active' : '') +
+      (shownLimitedCustomCard.id === activeCardId ? 'active' : '') +
       (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
       (activePlayerTurnState === 'reveal' &&
-      shownLiasonCard.persuasionCosts &&
-      activePlayerPersuasion >= shownLiasonCard.persuasionCosts
+      shownLimitedCustomCard.persuasionCosts &&
+      activePlayerPersuasion >= shownLimitedCustomCard.persuasionCosts
         ? ' buyable'
         : '')
     "
-    [card]="shownLiasonCard"
-    [costModifier]="getCardCostModifier(shownLiasonCard)"
+    [card]="shownLimitedCustomCard"
+    [costModifier]="getCardCostModifier(shownLimitedCustomCard)"
   ></dune-imperium-row-card>
-  <div class="card-action-container" *ngIf="shownLiasonCard.name.en === activeCardId">
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowPreviousLiasonClicked()">
+  <div class="card-action-container" *ngIf="shownLimitedCustomCard.id === activeCardId">
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowPreviousLimitedCustomCardClicked()">
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyAlwaysAvailableCardClicked(shownLiasonCard)">
+    <button
+      class="card-buy-button"
+      mat-fab
+      [color]="'accent'"
+      (click)="onBuyLimitedCustomCardClicked(shownLimitedCustomCard)"
+    >
       <mat-icon>check</mat-icon>
     </button>
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowNextLiasonClicked()">
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowNextLimitedCustomCardClicked()">
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
   </div>

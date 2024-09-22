@@ -4,7 +4,6 @@ import { factionsCustomBeginner } from './factions';
 import { ixCustomBeginner } from './ix';
 import { aiGoalsCustomBeginner } from './ai-goals';
 import { customCardsCustomBeginner } from './custom-cards';
-import { buyableCardsCustomBeginner } from './buyable-cards';
 
 export const gameContentCustomBeginner: GameContent = {
   name: 'custom-beginner',
@@ -12,7 +11,6 @@ export const gameContentCustomBeginner: GameContent = {
   locations: locationsCustomBeginner,
   ix: ixCustomBeginner,
   useTechTiles: false,
-  alwaysBuyableCards: buyableCardsCustomBeginner,
   customCards: customCardsCustomBeginner,
   finaleTrigger: 7,
   victoryPointBoni: [

@@ -6,7 +6,7 @@ export const ixCustomExpert: ActionField = {
   costs: [{ type: 'solari', amount: 5 }],
   rewards: [
     { type: 'dreadnought' },
-    { type: 'separator', width: 10, iconHeight: 55 },
+    { type: 'helper-or', width: 10, iconHeight: 55 },
     { type: 'tech-reduced-three' },
     { type: 'combat' },
   ],

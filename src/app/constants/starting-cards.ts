@@ -161,7 +161,7 @@ export const startingCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Scouts',
+      en: 'Scout',
       de: 'Kundschafter',
     },
     fieldAccess: ['town'],

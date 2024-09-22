@@ -46,7 +46,12 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
     gameModifiers: {
-      fieldAccessModifiers: [{ id: 'stilgar-naib', fieldId: 'sietch tabr' }],
+      fieldAccessModifiers: [
+        {
+          id: 'stilgar-naib',
+          fieldId: 'sietch tabr',
+        },
+      ],
     },
   },
   {
@@ -63,7 +68,7 @@ export const leaders: Leader[] = [
       de: 'anführer der fremen',
     },
     passiveDescription: {
-      en: 'Remove your marker from the {faction:fremen}-track. Every time you would gain influence there: {resource:water}',
+      en: 'Remove your marker from the {faction:fremen}-track. Every time you would gain influence there: {resource:water}<br>Ignore all {faction:fremen} -Requirements.',
       de: 'Entferne deinen Marker von der {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
     },
     signetName: {
@@ -71,8 +76,8 @@ export const leaders: Leader[] = [
       de: 'pflanzen des paradieses',
     },
     signetDescription: {
-      en: '<br>{resource:signet-token}{resource:separator}{resource:water}{resource:troop} {resource:helper-arrow-right} {resource:signet-token}{resource:signet-token}{resource:separator}{resource:signet-token}{resource:signet-token} {resource:helper-arrow-right} {resource:victory-point}',
-      de: '<br>{resource:signet-token}{resource:separator}{resource:water}{resource:troop} {resource:helper-arrow-right} {resource:signet-token}{resource:signet-token}{resource:separator}{resource:signet-token}{resource:signet-token} {resource:helper-arrow-right} {resource:victory-point}',
+      en: '<br>{resource:signet-token}{resource:helper-or}{resource:water}{resource:troop} {resource:helper-trade} {resource:signet-token}{resource:signet-token}{resource:helper-or}{resource:signet-token}{resource:signet-token} {resource:helper-trade} {resource:victory-point}',
+      de: '<br>{resource:signet-token}{resource:helper-or}{resource:water}{resource:troop} {resource:helper-trade} {resource:signet-token}{resource:signet-token}{resource:helper-or}{resource:signet-token}{resource:signet-token} {resource:helper-trade} {resource:victory-point}',
     },
     imageUrl: '/assets/images/leaders/liet.png',
     playableByAI: true,
@@ -80,8 +85,21 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
     },
     gameModifiers: {
-      factionInfluenceModifiers: { fremen: { id: 'liet', noInfluence: true, alternateReward: { type: 'water' } } },
-      fieldAccessModifiers: [{ id: 'liet-fremen', factionType: 'fremen' }],
+      factionInfluenceModifiers: {
+        fremen: {
+          id: 'liet',
+          noInfluence: true,
+          alternateReward: {
+            type: 'water',
+          },
+        },
+      },
+      fieldAccessModifiers: [
+        {
+          id: 'liet-fremen',
+          factionType: 'fremen',
+        },
+      ],
     },
     type: 'new',
   },
@@ -113,7 +131,15 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/chani.png',
     playableByAI: true,
     type: 'new',
-    gameModifiers: { imperiumRowModifiers: [{ id: 'chani', factionType: 'fremen', persuasionAmount: -1 }] },
+    gameModifiers: {
+      imperiumRowModifiers: [
+        {
+          id: 'chani',
+          factionType: 'fremen',
+          persuasionAmount: -1,
+        },
+      ],
+    },
   },
   {
     name: {
@@ -157,7 +183,7 @@ export const leaders: Leader[] = [
       de: 'blind und doch sehend',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: Before you reveal, you may add 1 of your cards in play back to your hand.',
+      en: '<b>Reveal turn</b>: Before you reveal, you may put 1 of your cards in play back to your hand.',
       de: '<b>Aufdeckzug</b>: Bevor du aufdeckst, darfst du 1 deiner Karten im Spiel zurück auf deine Hand nehmen.',
     },
     signetName: {
@@ -186,15 +212,15 @@ export const leaders: Leader[] = [
     },
     passiveDescription: {
       de: 'Entferne deinen Marker von der {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Ignoriere alle {faction:emperor} -Anforderungen.',
-      en: 'Remove your marker from the {faction:emperor}-track. Every time you would gain influence there: {resource:solari}',
+      en: 'Remove your marker from the {faction:emperor}-track. Every time you would gain influence there: {resource:solari}<br>Ignore all {faction:emperor} -requirements.',
     },
     signetName: {
       de: 'chronistin',
       en: 'chronicler',
     },
     signetDescription: {
-      de: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Du kannst ihn entsorgen wenn du einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
-      en: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. You may trash it when you place an agent to get {resource:card-draw}{resource:card-draw}.',
+      de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Du kannst ihn entsorgen wenn du einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
+      en: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. You may trash it when you place an agent to get {resource:card-draw}{resource:card-draw}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
@@ -209,7 +235,12 @@ export const leaders: Leader[] = [
           },
         },
       },
-      fieldAccessModifiers: [{ id: 'irulan-emperor', factionType: 'emperor' }],
+      fieldAccessModifiers: [
+        {
+          id: 'irulan-emperor',
+          factionType: 'emperor',
+        },
+      ],
     },
   },
   {
@@ -266,8 +297,8 @@ export const leaders: Leader[] = [
       en: 'feigned weakness',
     },
     signetDescription: {
-      de: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:separator}{resource:intrigue} zu erhalten.',
-      en: '{resource:card-discard} {resource:helper-arrow-right} {resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:separator}{resource:intrigue}.',
+      de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
+      en: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/hasimir.png',
@@ -295,13 +326,20 @@ export const leaders: Leader[] = [
       de: 'hypnotische verführung',
     },
     signetDescription: {
-      en: 'Place {resource:signet-token} on a card in the imperium row. It costs you {resource:persuasion;amount:1} less and enemies {resource:persuasion;amount:1} more.',
+      en: 'Place {resource:signet-token} on a card in the imperium row. It costs you {resource:persuasion;amount:1} less and opponents {resource:persuasion;amount:1} more.',
       de: 'Lege {resource:signet-token} auf eine Karte in der Imperium-Reihe. Sie kostet dich {resource:persuasion;amount:1} weniger, Gegner {resource:persuasion;amount:1} mehr.',
     },
     imageUrl: '/assets/images/leaders/margot.png',
     playableByAI: true,
     type: 'new',
-    gameModifiers: { customActions: [{ id: 'margot-charm', action: 'charm' }] },
+    gameModifiers: {
+      customActions: [
+        {
+          id: 'margot-charm',
+          action: 'charm',
+        },
+      ],
+    },
   },
   {
     name: {
@@ -318,7 +356,7 @@ export const leaders: Leader[] = [
     },
     passiveDescription: {
       de: 'Entferne deinen Marker von der {faction:bene}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:spice}<br>Ignoriere alle {faction:bene} -Anforderungen.',
-      en: 'Remove your marker from the {faction:bene}-track. Every time you would gain influence there: {resource:spice}',
+      en: 'Remove your marker from the {faction:bene}-track. Every time you would gain influence there: {resource:spice}<br>Ignore all {faction:bene} -requirements.',
     },
     signetName: {
       de: 'wahrsagerin',
@@ -335,12 +373,31 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'bene' ? 0.025 : 0.0),
     },
     gameModifiers: {
-      factionInfluenceModifiers: { bene: { id: 'mohiam', noInfluence: true, alternateReward: { type: 'spice' } } },
+      factionInfluenceModifiers: {
+        bene: {
+          id: 'mohiam',
+          noInfluence: true,
+          alternateReward: {
+            type: 'spice',
+          },
+        },
+      },
       customActions: [
-        { id: 'mohiam-vision-conflict', action: 'vision-conflict' },
-        { id: 'mohiam-vision-intrigues', action: 'vision-intrigues' },
+        {
+          id: 'mohiam-vision-conflict',
+          action: 'vision-conflict',
+        },
+        {
+          id: 'mohiam-vision-intrigues',
+          action: 'vision-intrigues',
+        },
       ],
-      fieldAccessModifiers: [{ id: 'mohiam-bene', factionType: 'bene' }],
+      fieldAccessModifiers: [
+        {
+          id: 'mohiam-bene',
+          factionType: 'bene',
+        },
+      ],
     },
   },
   {
@@ -365,8 +422,8 @@ export const leaders: Leader[] = [
       de: 'inspirierende präsenz',
     },
     signetDescription: {
-      en: 'You can activate the agent effect of one of your handcards.',
-      de: '{resource:card-draw}{resource:separator}Aktiviere den Agenten-Effekt einer deiner Handkarten.',
+      en: '{resource:card-draw}{resource:helper-or}You can activate the agent effect of one of your handcards.',
+      de: '{resource:card-draw}{resource:helper-or}Aktiviere den Agenten-Effekt einer deiner Handkarten.',
     },
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',
@@ -397,8 +454,8 @@ export const leaders: Leader[] = [
       de: 'kybernetische upgrades',
     },
     signetDescription: {
-      en: '<br>{resource:card-discard} {resource:helper-arrow-right} {resource:card-draw}',
-      de: '<br>{resource:card-discard} {resource:helper-arrow-right} {resource:card-draw}',
+      en: '<br>{resource:card-discard} {resource:helper-trade} {resource:card-draw}',
+      de: '<br>{resource:card-discard} {resource:helper-trade} {resource:card-draw}',
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
@@ -417,8 +474,8 @@ export const leaders: Leader[] = [
       de: 'isolationist',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:persuasion;amount:2} {resource:helper-arrow-right} {resource:solari}.',
-      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:persuasion;amount:2} {resource:helper-arrow-right} {resource:solari}.',
+      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:persuasion;amount:2} {resource:helper-trade} {resource:solari}.',
+      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:persuasion;amount:2} {resource:helper-trade} {resource:solari}.',
     },
     signetName: {
       en: 'address to the people',
@@ -451,8 +508,8 @@ export const leaders: Leader[] = [
       en: 'declining house',
     },
     passiveDescription: {
-      de: '<b>Spielbeginn</b>: Entferne alle überzeugenden Argumente aus deinem Deck.',
-      en: '<b>Game start</b>: Remove all convincing arguments from your deck.',
+      de: '<b>Spielbeginn</b>: Entferne alle {resource:persuasion;amount:2}-Karten aus deinem Deck.',
+      en: '<b>Game start</b>: Remove all {resource:persuasion;amount:2}-cards from your deck.',
     },
     signetName: {
       de: 'sorgfältiges vorgehen',
@@ -486,15 +543,21 @@ export const leaders: Leader[] = [
       de: 'Lisan al Gaib',
     },
     signetDescription: {
-      en: '<br>{resource:card-draw} {resource:separator} {resource:troop}',
-      de: '<br>{resource:card-draw} {resource:separator} {resource:troop}',
+      en: '<br>{resource:card-draw} {resource:helper-or} {resource:troop}',
+      de: '<br>{resource:card-draw} {resource:helper-or} {resource:troop}',
     },
     imageUrl: '/assets/images/leaders/paul_muaddib.png',
     type: 'new',
     gameModifiers: {
       customActions: [
-        { id: 'muadib-vision-deck', action: 'vision-deck' },
-        { id: 'muadib-vision-intrigues', action: 'vision-intrigues' },
+        {
+          id: 'muadib-vision-deck',
+          action: 'vision-deck',
+        },
+        {
+          id: 'muadib-vision-intrigues',
+          action: 'vision-intrigues',
+        },
       ],
     },
   },
@@ -520,16 +583,25 @@ export const leaders: Leader[] = [
       de: 'Umsichtige Planung',
     },
     signetDescription: {
-      en: '<br>{resource:spice} {resource:helper-arrow-right} {resource:intrigue}',
-      de: '<br>{resource:spice} {resource:helper-arrow-right} {resource:intrigue}',
+      en: '<br>{resource:spice} {resource:helper-trade} {resource:intrigue}',
+      de: '<br>{resource:spice} {resource:helper-trade} {resource:intrigue}',
     },
     imageUrl: '/assets/images/leaders/paul_emperor.png',
     type: 'new',
     gameModifiers: {
       customActions: [
-        { id: 'emperor-paul-vision-deck', action: 'vision-deck' },
-        { id: 'emperor-paul-vision-intrigues', action: 'vision-intrigues' },
-        { id: 'emperor-paul-vision-conflict', action: 'vision-conflict' },
+        {
+          id: 'emperor-paul-vision-deck',
+          action: 'vision-deck',
+        },
+        {
+          id: 'emperor-paul-vision-intrigues',
+          action: 'vision-intrigues',
+        },
+        {
+          id: 'emperor-paul-vision-conflict',
+          action: 'vision-conflict',
+        },
       ],
     },
   },
@@ -555,8 +627,8 @@ export const leaders: Leader[] = [
       de: 'Grenzenlose Gier',
     },
     signetDescription: {
-      en: '<br>{resource:loose-troop} {resource:helper-arrow-right} {resource:spice}',
-      de: '<br>{resource:loose-troop} {resource:helper-arrow-right} {resource:spice}',
+      en: '<br>{resource:loose-troop} {resource:helper-trade} {resource:spice}',
+      de: '<br>{resource:loose-troop} {resource:helper-trade} {resource:spice}',
     },
     imageUrl: '/assets/images/leaders/vlad.png',
     type: 'new',
@@ -584,7 +656,7 @@ export const leaders: Leader[] = [
       de: 'Landsraad-Verbindungen',
     },
     signetDescription: {
-      en: '',
+      en: '{resource:signet-token}. Trash it so enemy agents dont block your agent at {faction:landsraad} board spaces.',
       de: '{resource:signet-token}. Entsorge ihn, damit gegnerische Agenten deinen Agenten auf {faction:landsraad}-Feldern nicht blockieren.',
     },
     imageUrl: '/assets/images/leaders/leto.png',

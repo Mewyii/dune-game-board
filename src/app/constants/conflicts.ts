@@ -43,7 +43,7 @@ export const conflicts: Conflict[] = [
     rewards: [
       [{ type: 'faction-influence-up-choice' }, { type: 'intrigue' }, { type: 'intrigue' }],
       [{ type: 'intrigue' }, { type: 'spice', amount: 1 }],
-      [{ type: 'intrigue' }, { type: 'separator' }, { type: 'spice', amount: 1 }],
+      [{ type: 'intrigue' }, { type: 'helper-or' }, { type: 'spice', amount: 1 }],
     ],
   },
   {
@@ -127,7 +127,7 @@ export const conflicts: Conflict[] = [
     rewards: [
       [{ type: 'shipping' }, { type: 'shipping' }, { type: 'troop' }],
       [{ type: 'intrigue' }, { type: 'water' }],
-      [{ type: 'intrigue' }, { type: 'separator' }, { type: 'water' }],
+      [{ type: 'intrigue' }, { type: 'helper-or' }, { type: 'water' }],
     ],
   },
   {
@@ -185,9 +185,9 @@ export const conflicts: Conflict[] = [
       [
         { type: 'victory-point' },
         // { type: 'solari', amount: 6 },
-        // { type: 'helper-arrow-right' },
+        // { type: 'helper-trade' },
         // { type: 'spice', amount: 4 },
-        // { type: 'helper-arrow-right' },
+        // { type: 'helper-trade' },
         // { type: 'victory-point' },
       ],
       [{ type: 'victory-point' }],

@@ -689,8 +689,8 @@ export class AIManager {
 
         result.push(cardDrawOption);
         result.push(cardDestroyOption);
-      } else if (field.rewards.some((x) => x.type === 'separator' || x.type === 'separator-horizontal')) {
-        const separatorIndex = field.rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
+      } else if (field.rewards.some((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal')) {
+        const separatorIndex = field.rewards.findIndex((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal');
 
         const leftOptionRewardType = field.rewards[separatorIndex - 1].type.toLocaleLowerCase();
         const leftOptionField = {
@@ -1054,15 +1054,15 @@ export class AIManager {
         return -1;
       case 'intrigue-draw':
         return 1.75;
-      case 'helper-arrow-down':
+      case 'helper-trade-horizontal':
         return 0;
-      case 'helper-arrow-right':
+      case 'helper-trade':
         return 0;
       case 'placeholder':
         return 0;
-      case 'separator':
+      case 'helper-or':
         return 0;
-      case 'separator-horizontal':
+      case 'helper-or-horizontal':
         return 0;
       case 'tech':
         return 1;
@@ -1072,8 +1072,6 @@ export class AIManager {
         return 4.5;
       case 'tech-reduced-three':
         return 6.75;
-      case 'control-spice':
-        return 0;
       case 'card-round-start':
         return 1.5;
       case 'shipping':
@@ -1114,11 +1112,11 @@ export class AIManager {
   }
 
   public getRewardArrayAIInfos(rewards: Reward[]): AIRewardArrayInfo {
-    const rewardOptionIndex = rewards.findIndex((x) => x.type === 'separator' || x.type === 'separator-horizontal');
+    const rewardOptionIndex = rewards.findIndex((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal');
     const hasRewardOptions = rewardOptionIndex > -1;
 
     const rewardConversionIndex = rewards.findIndex(
-      (x) => x.type === 'helper-arrow-right' || x.type === 'helper-arrow-down'
+      (x) => x.type === 'helper-trade' || x.type === 'helper-trade-horizontal'
     );
     const hasRewardConversion = rewardConversionIndex > -1;
     return { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex };

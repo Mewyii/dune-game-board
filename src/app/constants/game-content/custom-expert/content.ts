@@ -1,6 +1,5 @@
 import { GameContent } from '../../board-settings';
 import { aiGoalsCustomExpert } from './ai-goals';
-import { buyableCardsCustomExpert } from './buyable-cards';
 import { customCardsCustomExpert } from './custom-cards';
 import { factionsCustomExpert } from './factions';
 import { ixCustomExpert } from './ix';
@@ -33,6 +32,5 @@ export const gameContentCustomExpert: GameContent = {
   highCouncilPersuasion: 3,
   startingResources: [{ type: 'solari', amount: 1 }],
   aiGoals: aiGoalsCustomExpert,
-  alwaysBuyableCards: buyableCardsCustomExpert,
   customCards: customCardsCustomExpert,
 };

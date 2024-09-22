@@ -18,10 +18,6 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_card_draw_or_delete.png';
     case 'troop':
       return 'assets/images/reward-markers/marker_troop.png';
-    case 'troop-sardaukar':
-      return 'assets/images/reward-markers/marker_troop_sardaukar.png';
-    case 'troop-fremen':
-      return 'assets/images/reward-markers/marker_troop_fremen.png';
     case 'loose-troop':
       return 'assets/images/reward-markers/marker_troop_delete.png';
     case 'intrigue':
@@ -60,18 +56,16 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_tech_reduced_3.png';
     case 'dreadnought':
       return 'assets/images/reward-markers/marker_ship.png';
-    case 'helper-arrow-down':
+    case 'helper-trade-horizontal':
       return 'assets/images/reward-markers/marker_helper_arrow_down.png';
-    case 'helper-arrow-right':
+    case 'helper-trade':
       return 'assets/images/reward-markers/marker_helper_arrow_right.png';
     case 'placeholder':
       return 'assets/images/reward-markers/marker_placeholder.png';
-    case 'separator':
+    case 'helper-or':
       return 'assets/images/reward-markers/marker_separator.png';
-    case 'separator-horizontal':
+    case 'helper-or-horizontal':
       return 'assets/images/reward-markers/marker_separator_horizontal.png';
-    case 'control-spice':
-      return 'assets/images/reward-markers/marker_control_spice.png';
     case 'card-round-start':
       return 'assets/images/reward-markers/marker_card_round_start.png';
     case 'shipping':

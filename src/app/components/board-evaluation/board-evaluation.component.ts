@@ -33,7 +33,7 @@ export class BoardEvaluationComponent implements OnInit {
         const fieldCosts = actionField.costs ? this.getRewardValue(actionField.costs) : 0;
 
         const rewardOptionIndex = actionField.rewards.findIndex(
-          (x) => x.type === 'separator' || x.type === 'separator-horizontal'
+          (x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal'
         );
         const fieldHasRewardOptions = rewardOptionIndex > -1;
 
@@ -192,12 +192,11 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'spice-accumulation':
         case 'intrigue-trash':
-        case 'helper-arrow-down':
-        case 'helper-arrow-right':
+        case 'helper-trade-horizontal':
+        case 'helper-trade':
         case 'placeholder':
-        case 'separator':
-        case 'separator-horizontal':
-        case 'control-spice':
+        case 'helper-or':
+        case 'helper-or-horizontal':
         case 'buildup':
         case 'signet-token':
         default:
