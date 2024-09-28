@@ -245,7 +245,7 @@
             (click)="onAddFocusTokenClicked(currentPlayer.id)"
             (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
           >
-            <div class="focus-marker"></div>
+            <img class="resource dark" [src]="getRewardTypePath('focus')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.focusTokens }}</span>
             </div>

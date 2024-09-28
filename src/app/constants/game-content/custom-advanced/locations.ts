@@ -145,7 +145,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
   //     title: 'ebene der toten',
   //     actionType: 'spice',
   //     costs: [{ type: 'water' }],
-  //     rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'card-destroy' }],
+  //     rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'focus' }],
   //     pathToImage: 'assets/images/action-backgrounds/desert.png',
   //
   //   },
@@ -174,7 +174,7 @@ export const locationsCustomAdvanced: DuneLocation[] = [
   //     title: 'twisted mentat',
   //     actionType: 'landsraad',
   //     costs: [{ type: 'solari', amount: 2 }],
-  //     rewards: [{ type: 'card-destroy' }, { type: 'mentat', iconHeight: 95 }],
+  //     rewards: [{ type: 'focus' }, { type: 'mentat', iconHeight: 95 }],
   //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',
   //
   //     customWidth: 'fit-content',

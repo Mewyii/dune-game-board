@@ -46,8 +46,7 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'solari',
-        amount: 1,
+        type: 'tech',
       },
     ],
   },
@@ -80,7 +79,7 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
   },
@@ -145,12 +144,13 @@ export const startingCards: ImperiumCard[] = [
       de: 'Vergangene Verbindungen',
     },
     fieldAccess: ['bene', 'emperor', 'fremen', 'guild'],
-    imageUrl: '/assets/images/action-backgrounds/spice_2.png',
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_10.png',
     cardAmount: 1,
     buyEffects: [],
     revealEffects: [
       {
-        type: 'tech',
+        type: 'persuasion',
+        amount: 1,
       },
     ],
     customAgentEffect: {
@@ -161,18 +161,24 @@ export const startingCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Scout',
-      de: 'Kundschafter',
+      en: 'The Spice Must Flow',
+      de: 'Das Spice muss fliessen',
     },
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
+    fieldAccess: ['spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/spice_2.png',
     cardAmount: 1,
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
       {
-        type: 'persuasion',
-        amount: 1,
+        type: 'spice',
+        amount: 6,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
       },
     ],
   },

@@ -108,6 +108,7 @@ export class BoardEvaluationComponent implements OnInit {
           value -= 1 * amount;
           break;
         case 'card-destroy':
+        case 'focus':
           value += 1.75 * amount;
           break;
         case 'card-draw-or-destroy':

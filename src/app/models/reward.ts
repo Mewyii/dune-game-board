@@ -23,6 +23,7 @@ export const rewardTypes = [
   'faction-influence-up-fremen',
   'faction-influence-up-guild',
   'faction-influence-up-twice-choice',
+  'focus',
   'foldspace',
   'helper-or',
   'helper-or-horizontal',

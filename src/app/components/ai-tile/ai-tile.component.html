@@ -5,7 +5,7 @@
       [color]="'accent'"
       [checked]="showDetails"
       (change)="showDetails = !showDetails"
-      >Details</mat-slide-toggle
+      >AI Details</mat-slide-toggle
     >
   </div>
   <div class="heading-container" *ngIf="currentAIPlayer && showDetails">
@@ -43,7 +43,7 @@
     </div>
   </div> -->
   <div class="decision-container" *ngIf="currentPlayer.isAI && currentAIPlayer">
-    <div class="preferred-fields-container">
+    <div class="preferred-fields-container" *ngIf="showDetails">
       <div
         *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first"
         [class]="'field ' + (i < 3 ? 'good ' : i < 6 ? 'medium ' : 'bad ') + (isFirst ? 'first' : '')"

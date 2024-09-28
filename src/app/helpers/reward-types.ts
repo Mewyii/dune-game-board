@@ -106,6 +106,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_tech_tile_flip.png';
     case 'location-control':
       return 'assets/images/reward-markers/marker_location_control.png';
+    case 'focus':
+      return 'assets/images/reward-markers/marker_focus.png';
     default:
       return '';
   }

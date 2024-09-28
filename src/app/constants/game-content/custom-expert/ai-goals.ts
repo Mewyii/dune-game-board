@@ -106,7 +106,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetVictoryPointThisTurn(player, gameState, 'fremen') ? 0.1 : 0) +
-      (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
@@ -120,7 +120,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetVictoryPointThisTurn(player, gameState, 'bene') ? 0.1 : 0) +
-      (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
@@ -134,7 +134,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetVictoryPointThisTurn(player, gameState, 'guild') ? 0.1 : 0) +
-      (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
@@ -148,7 +148,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetVictoryPointThisTurn(player, gameState, 'emperor') ? 0.1 : 0) +
-      (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.1 : 0) +
+      (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>

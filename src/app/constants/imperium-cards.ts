@@ -30,7 +30,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     buyEffects: [
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     agentEffects: [],
@@ -46,7 +46,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 3,
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
   },
@@ -92,7 +92,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     buyEffects: [],
     customAgentEffect: {
-      en: 'You may look at the top card of the conflict stack.',
+      en: 'You may look at the top card of the conflict deck.',
       de: 'Du kannst dir die oberste Karte des Konflikt-Stapels ansehen.',
       fontSize: 'small',
     },
@@ -112,14 +112,18 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/book_2.png',
     cardAmount: 2,
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'focus',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
         amount: 1,
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     customAgentEffect: {
@@ -163,20 +167,11 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['emperor', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/emperor.png',
     cardAmount: 2,
-    buyEffects: [
-      {
-        type: 'card-destroy',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-    ],
-    customAgentEffect: {
-      en: '{faction:emperor} -Connection: {resource:intrigue}',
-      de: '{faction:emperor} -Verbindung: {resource:intrigue}',
+    buyEffects: [],
+    agentEffects: [],
+    customRevealEffect: {
+      en: '{resource:persuasion;amount:1}<br>{faction:emperor} -Connection: {resource:intrigue}',
+      de: '{resource:persuasion;amount:1}<br>{faction:emperor} -Verbindung: {resource:intrigue}',
       fontSize: 'medium',
     },
   },
@@ -215,6 +210,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [
       {
         type: 'solari',
+        amount: 2,
       },
     ],
     revealEffects: [
@@ -242,15 +238,11 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/guild_banker_8.png',
     cardAmount: 2,
-    buyEffects: [
-      {
-        type: 'solari',
-        amount: 2,
-      },
-    ],
+    buyEffects: [],
     agentEffects: [
       {
         type: 'solari',
+        amount: 2,
       },
     ],
     revealEffects: [
@@ -297,7 +289,7 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:1}<br>You may retreat <b>1</b> inserted troops after the conflict.',
+      en: '{resource:persuasion;amount:1}<br>You may retreat <b>1</b> inserted troops after the combat phase.',
       de: '{resource:persuasion;amount:1}<br>Du kannst nach der Kampf-Phase <b>1</b> eingesetzten Trupp zurückziehen.',
       fontSize: 'small',
     },
@@ -318,7 +310,7 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
     customRevealEffect: {
-      en: 'You may retreat up to <b>2</b> inserted troops after the conflict.',
+      en: 'You may retreat up to <b>2</b> inserted troops after the combat phase.',
       de: 'Du kannst nach der Kampf-Phase bis zu <b>2</b> eingesetzte Truppen zurückziehen.',
       fontSize: 'small',
     },
@@ -681,7 +673,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-or',
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
       {
         type: 'sword',
@@ -851,8 +843,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customAgentEffect: {
-      en: '{resource:card-destroy}{resource:card-destroy}{resource:card-draw}{resource:card-draw}<br>Trash this card.',
-      de: '{resource:card-destroy}{resource:card-destroy}{resource:card-draw}{resource:card-draw}<br>Entsorge diese Karte.',
+      en: '{resource:focus}{resource:focus}{resource:card-draw}{resource:card-draw}<br>Trash this card.',
+      de: '{resource:focus}{resource:focus}{resource:card-draw}{resource:card-draw}<br>Entsorge diese Karte.',
       fontSize: 'medium',
     },
   },
@@ -873,7 +865,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     customAgentEffect: {
@@ -1094,7 +1086,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
   },
@@ -1129,7 +1121,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
   },
@@ -1153,12 +1145,12 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     customAgentEffect: {
-      en: '{resource:card-destroy}<br>{faction:emperor} -Connection: {resource:card-draw}',
-      de: '{resource:card-destroy}<br>{faction:emperor} -Verbindung: {resource:card-draw}',
+      en: '{resource:focus}<br>{faction:emperor} -Connection: {resource:card-draw}',
+      de: '{resource:focus}<br>{faction:emperor} -Verbindung: {resource:card-draw}',
       fontSize: 'medium',
     },
   },
@@ -1353,7 +1345,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Insurgents',
       de: 'Aufrührer',
     },
-    persuasionCosts: 5,
+    persuasionCosts: 4,
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/battle.png',
     cardAmount: 2,
@@ -1609,7 +1601,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'troop',
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     revealEffects: [
@@ -1689,8 +1681,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:2}{resource:sword}<br>{faction:fremen} -Connection: {resource:card-destroy}',
-      de: '{resource:persuasion;amount:2}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:card-destroy}',
+      en: '{resource:persuasion;amount:2}{resource:sword}<br>{faction:fremen} -Connection: {resource:focus}',
+      de: '{resource:persuasion;amount:2}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:focus}',
       fontSize: 'medium',
     },
   },
@@ -2050,7 +2042,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     buyEffects: [
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     agentEffects: [
@@ -2067,7 +2059,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
       {
         type: 'sword',

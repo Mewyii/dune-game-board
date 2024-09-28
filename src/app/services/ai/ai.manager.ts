@@ -817,19 +817,19 @@ export class AIManager {
         card.revealEffects
       );
       if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects, player, gameState);
+        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects, player, gameState, true);
       } else if (hasRewardOptions) {
         const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
         const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState);
+        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
+        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
 
         evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
+        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
 
         evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
@@ -1026,6 +1026,7 @@ export class AIManager {
       case 'card-discard':
         return -1.0 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
       case 'card-destroy':
+      case 'focus':
         return 2 + 0.1 * gameState.playerCardsBought - 0.2 * gameState.playerCardsTrashed;
       case 'card-draw-or-destroy':
         return 2 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed;
@@ -1045,7 +1046,7 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 9 + 1.75 * (gameState.currentRound - 1);
+        return 10 + 1.5 * (gameState.currentRound - 1);
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 || ignoreTurnState ? 1 : 0.25;
       case 'combat':

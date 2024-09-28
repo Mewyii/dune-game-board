@@ -67,23 +67,14 @@ export const techTiles: TechTileCard[] = [
       de: 'Schmuggler-Aussenposten',
     },
     faction: 'guild',
-    costs: 1,
+    costs: 2,
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
     buyEffects: [],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'shipping',
-      },
-    ],
+    customEffect: {
+      en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:shipping}.<br><br><b>Reveal turn:</b> <br>{resource:tech}',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:shipping}.<br><br><b>Aufdeckzug:</b> <br>{resource:tech}',
+      fontSize: 'medium',
+    },
     aiEvaluation: (player, gameState) => 0.2,
   },
   {
@@ -92,7 +83,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Handelshafen',
     },
     faction: 'guild',
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/port.png',
     buyEffects: [],
     customEffect: {
@@ -116,9 +107,9 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Reveal turn:</b><br>Trash 2 "The Spice Must Flow" cards for {resource:victory-point}.',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>Entsorge 2 "Das Spice muss fließen"-Karten für {resource:victory-point}.',
-      fontSize: 'small',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Reveal turn:</b><br>{resource:spice;amount:3}{resource:loose-troop}{resource:helper-trade}{resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>{resource:spice;amount:3}{resource:loose-troop}{resource:helper-trade}{resource:victory-point}',
+      fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
       0.7 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed + (player.hasCouncilSeat ? 0.1 : 0.0),
@@ -129,7 +120,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Sardaukar Kommando-Posten',
     },
     faction: 'emperor',
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
     buyEffects: [],
     customEffect: {
@@ -236,7 +227,7 @@ export const techTiles: TechTileCard[] = [
         type: 'card-draw',
       },
       {
-        type: 'card-destroy',
+        type: 'focus',
       },
     ],
     aiEvaluation: (player, gameState) => 0.6 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed,
@@ -255,8 +246,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Reveal turn</b>: <br>{resource:spice;amount:2}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:spice;amount:2}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Reveal turn</b>: <br>{resource:spice;amount:3}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:spice;amount:3}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -435,8 +426,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/shields.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>After a conflict:</b> <br>Dreadnoughts have no timeout.',
-      de: '<b>Nach einem Konflikt:</b> <br>Schlachtschiffe müssen keine Runde aussetzen.',
+      en: '<b>After the combat phase:</b> <br>Dreadnoughts have no timeout.',
+      de: '<b>Nach der Kampf-Phase:</b> <br>Schlachtschiffe müssen keine Runde aussetzen.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.4 * gameState.playerDreadnoughtCount,

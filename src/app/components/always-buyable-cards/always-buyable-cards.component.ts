@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Settings } from 'src/app/constants/board-settings';
 import { ImperiumCard } from 'src/app/constants/imperium-cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
@@ -7,6 +8,7 @@ import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'dune-always-buyable-cards',
@@ -14,6 +16,8 @@ import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-
   styleUrls: ['./always-buyable-cards.component.scss'],
 })
 export class AlwaysBuyableCardsComponent {
+  public settings: Settings | undefined;
+
   public limitedCustomCards: ImperiumDeckCard[] = [];
   public shownLimitedCustomCard: ImperiumDeckCard | undefined;
   public shownLimitedCustomCardIndex = 0;
@@ -28,6 +32,7 @@ export class AlwaysBuyableCardsComponent {
   public imperiumRowModifiers: ImperiumRowModifier[] | undefined;
 
   constructor(
+    private settingsService: SettingsService,
     private playerManager: PlayerManager,
     private gameManager: GameManager,
     public cardsService: CardsService,
@@ -35,6 +40,10 @@ export class AlwaysBuyableCardsComponent {
   ) {}
 
   ngOnInit(): void {
+    this.settingsService.settings$.subscribe((settings) => {
+      this.settings = settings;
+    });
+
     this.cardsService.limitedCustomCards$.subscribe((cards) => {
       this.limitedCustomCards = cards;
 
@@ -48,6 +57,8 @@ export class AlwaysBuyableCardsComponent {
     this.cardsService.unlimitedCustomCards$.subscribe((cards) => {
       if (cards.length > 0) {
         this.unlimitedCard = cards[0];
+      } else {
+        this.unlimitedCard = undefined;
       }
     });
 

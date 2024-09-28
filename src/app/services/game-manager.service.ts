@@ -234,7 +234,7 @@ export class GameManager {
   }
 
   public startGame() {
-    this.loggingService.clearLog();
+    this.loggingService.clearLogs();
     this.audioManager.playSound('atmospheric');
     this.gameModifiersService.resetAllPlayerGameModifiers();
     const newPlayers = this.playerManager.resetPlayers();
@@ -390,7 +390,7 @@ export class GameManager {
     this.audioManager.playSound('atmospheric');
     this.removePlayerAgentsFromBoard();
     this.combatManager.resetAdditionalCombatPower();
-    this.loggingService.printLog();
+    this.loggingService.printLogs();
     this.currentRoundSubject.next(0);
     this.currentTurnStateSubject.next('none');
     this.startingPlayerIdSubject.next(0);
@@ -543,7 +543,7 @@ export class GameManager {
       }
     }
 
-    this.setPlayerOnField(field.title.en);
+    this.setPlayerOnField(activePlayer.id, field);
 
     let aiAgentPlacementInfos = this.getInitialAIAgentPlacementInfos();
 
@@ -796,8 +796,10 @@ export class GameManager {
     this.addAgentToPlayer(playerId);
   }
 
-  private setPlayerOnField(fieldId: string) {
-    this.agentsOnFieldsSubject.next([...this.agentsOnFieldsSubject.value, { playerId: this.activePlayerId, fieldId }]);
+  private setPlayerOnField(playerId: number, field: ActionField) {
+    this.agentsOnFieldsSubject.next([...this.agentsOnFieldsSubject.value, { playerId, fieldId: field.title.en }]);
+
+    this.loggingService.logPlayerSentAgentToField(playerId, this.translateService.translate(field.title));
   }
 
   public addAgentToPlayer(playerId: number) {
@@ -1389,6 +1391,8 @@ export class GameManager {
       this.playerManager.addFocusTokens(playerId, reward.amount ?? 1);
     } else if (rewardType == 'card-draw-or-destroy') {
       aiInfo.canDestroyOrDrawCard = true;
+    } else if (rewardType === 'focus') {
+      this.playerManager.addFocusTokens(playerId, reward.amount ?? 1);
     } else if (rewardType == 'persuasion') {
       this.playerManager.addPersuasionGainedToPlayer(playerId, reward.amount ?? 1);
     } else if (rewardType == 'sword') {
@@ -1420,6 +1424,8 @@ export class GameManager {
     } else if (rewardType === 'signet-ring') {
       aiInfo.signetRingAmount++;
     }
+
+    this.loggingService.logPlayerResourceGained(playerId, rewardType, reward.amount);
 
     return aiInfo;
   }
@@ -1462,7 +1468,7 @@ export class GameManager {
           this.cardsService.discardPlayerHandCard(playerId, cardToDiscard);
         }
       }
-    } else if (costType === 'card-destroy') {
+    } else if (costType === 'card-destroy' || costType === 'focus') {
       this.playerManager.addFocusTokens(playerId, cost.amount ?? 1);
     } else if (costType == 'persuasion') {
       this.playerManager.addPersuasionSpentToPlayer(playerId, cost.amount ?? 1);

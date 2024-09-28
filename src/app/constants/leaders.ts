@@ -191,8 +191,8 @@ export const leaders: Leader[] = [
       de: 'anklagender prophet',
     },
     signetDescription: {
-      en: '<br>Every player {resource:card-discard}.',
-      de: '<br>Jeder Spieler {resource:card-discard}.',
+      en: '<br>Every player: {resource:card-discard}',
+      de: '<br>Jeder Spieler: {resource:card-discard}',
     },
     imageUrl: '/assets/images/leaders/preacher.png',
     type: 'new',
@@ -289,16 +289,16 @@ export const leaders: Leader[] = [
       en: 'political tactician',
     },
     passiveDescription: {
-      de: 'Du beginnst mit {resource:foldspace}{resource:foldspace} in deinem Deck.',
-      en: 'You begin with {resource:foldspace}{resource:foldspace} in your deck.',
+      de: '<b>Spielbeginn</b>: Mische {resource:foldspace}{resource:foldspace} in dein Deck.',
+      en: '<b>Game start</b>: Shuffle {resource:foldspace}{resource:foldspace} into your deck.',
     },
     signetName: {
       de: 'vorgetäuschte schwäche',
       en: 'feigned weakness',
     },
     signetDescription: {
-      de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
-      en: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue}.',
+      de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
+      en: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue}.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/hasimir.png',
@@ -474,16 +474,16 @@ export const leaders: Leader[] = [
       de: 'isolationist',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: You cannot purchase cards from the imperium row. You can instead {resource:persuasion;amount:2} {resource:helper-trade} {resource:solari}.',
-      de: '<b>Aufdeckzug</b>: Du kannst du keine Karten aus der Imperium-Reihe erwerben. Du kannst {resource:persuasion;amount:2} {resource:helper-trade} {resource:solari}.',
+      en: 'You cannot purchase cards.<br><br><b>Reveal turn</b>: {resource:persuasion;amount:3}{resource:helper-trade}{resource:spice} (any number of times)',
+      de: 'Du kannst du keine Karten erwerben.<br><br><b>Aufdeckzug</b>:  {resource:persuasion;amount:3}{resource:helper-trade}{resource:spice} (beliebig oft)',
     },
     signetName: {
       en: 'address to the people',
       de: 'ansprache an das volk',
     },
     signetDescription: {
-      en: '{resource:signet-token}. Trash it at your reveal turn to get {resource:persuasion;amount:2} {resource:troop}.',
-      de: '{resource:signet-token}. Entsorge ihn an deinem Aufdeckzug, um {resource:persuasion;amount:2} {resource:troop} zu erhalten.',
+      en: '<br>{resource:solari} {resource:troop}',
+      de: '<br>{resource:solari} {resource:troop}',
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
@@ -516,8 +516,8 @@ export const leaders: Leader[] = [
       en: 'thorough approach',
     },
     signetDescription: {
-      de: 'Wenn du in diesem Zug {resource:solari}, {resource:spice} oder {resource:water} erhältst, erhältst du davon 1 mehr.',
-      en: 'If you get {resource:solari}, {resource:spice} or {resource:water} this turn, you get 1 more.',
+      de: 'Erhältst du in diesem Zug {resource:solari}/{resource:spice}/{resource:water}, erhalte davon jeweils +1.',
+      en: 'If you get {resource:solari}/{resource:spice}/{resource:water} this turn, you get +1 of each.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
   },
@@ -535,7 +535,7 @@ export const leaders: Leader[] = [
       de: 'Visionen',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: You may look at the top card of your deck and the intrigue stack.',
+      en: '<b>Round start</b>: You may look at the top card of your deck and the intrigue deck.',
       de: '<b>Rundenbeginn</b>: Du kannst dir die oberste Karte deines Decks und des Intrigenstapels ansehen.',
     },
     signetName: {
@@ -575,8 +575,8 @@ export const leaders: Leader[] = [
       de: 'Vorwissen',
     },
     passiveDescription: {
-      en: 'You may look at the top card of your deck, the intrigue stack as well as the conflict stack at any time.',
-      de: 'Du kannst dir jederzeit die oberste Karte deines Decks, des Intrigen- sowie des Konfliktstapels ansehen.',
+      en: 'You may look at the top card of your deck, the intrigue deck as well as the conflict deck at any time.',
+      de: 'Du kannst dir jederzeit die oberste Karte deines Decks, des Intrigen- sowie des Konflikt-Stapels ansehen.',
     },
     signetName: {
       en: 'Careful planning',
@@ -619,7 +619,7 @@ export const leaders: Leader[] = [
       de: 'Verschwörer',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: Search the intrigue stack for any intrigue and add it to your hand. Then shuffle it.',
+      en: '<b>Game start</b>: Search the intrigue deck for any intrigue and add it to your hand. Then shuffle it.',
       de: '<b>Spielbeginn</b>: Durchsuche den Intrigenstapel nach einer beliebigen Intrige und nimm diese auf deine Hand. Mische ihn danach.',
     },
     signetName: {
