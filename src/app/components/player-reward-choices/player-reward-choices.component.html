@@ -10,6 +10,15 @@
         Player {{ logEntry.playerId }} got {{ logEntry.amount }}
         <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />.
       </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-buy'">
+        Player {{ logEntry.playerId }} bought card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-trash'">
+        Player {{ logEntry.playerId }} trashed card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-discard'">
+        Player {{ logEntry.playerId }} discarded card {{ logEntry.cardName }}.
+      </ng-container>
     </div>
   </div>
   <ng-container *ngIf="playerRewardChoices">

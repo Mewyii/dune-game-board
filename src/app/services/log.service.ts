@@ -21,7 +21,30 @@ export interface PlayerFieldLog {
   fieldName: string;
 }
 
-export type PlayerActionLog = playerRewardLog | PlayerFieldLog;
+export interface PlayerCardBuyLog {
+  playerId: number;
+  type: 'card-buy';
+  cardName: string;
+}
+
+export interface PlayerCardDiscardLog {
+  playerId: number;
+  type: 'card-discard';
+  cardName: string;
+}
+
+export interface PlayerCardTrashLog {
+  playerId: number;
+  type: 'card-trash';
+  cardName: string;
+}
+
+export type PlayerActionLog =
+  | playerRewardLog
+  | PlayerFieldLog
+  | PlayerCardBuyLog
+  | PlayerCardTrashLog
+  | PlayerCardDiscardLog;
 
 @Injectable({
   providedIn: 'root',
@@ -94,6 +117,18 @@ export class LoggingService {
 
   logPlayerSentAgentToField(playerId: number, fieldName: string) {
     this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'field-visit', fieldName: fieldName }]);
+  }
+
+  logPlayerBoughtCard(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-buy', cardName: cardName }]);
+  }
+
+  logPlayerDiscardedCard(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-discard', cardName: cardName }]);
+  }
+
+  logPlayerTrashedCard(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-trash', cardName: cardName }]);
   }
 
   public printLogs() {

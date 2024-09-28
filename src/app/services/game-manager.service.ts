@@ -921,6 +921,8 @@ export class GameManager {
       const cardToDiscard = this.aIManager.getCardToDiscard(discardableCards, player, gameState);
       if (cardToDiscard) {
         this.cardsService.discardPlayerHandCard(playerId, cardToDiscard);
+
+        this.loggingService.logPlayerDiscardedCard(playerId, this.translateService.translate(cardToDiscard.name));
       }
     }
   }
@@ -1030,6 +1032,8 @@ export class GameManager {
         this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
       }
 
+      this.loggingService.logPlayerBoughtCard(playerId, this.translateService.translate(cardToBuy.name));
+
       this.aiChooseAndBuyCards(playerId, availablePersuasion - ((cardToBuy.persuasionCosts ?? 0) + costModifier));
     }
   }
@@ -1058,6 +1062,8 @@ export class GameManager {
       this.cardsService.trashPlayerHandCard(playerId, cardToTrash);
 
       this.playerManager.removeFocusTokens(playerId, 1);
+
+      this.loggingService.logPlayerTrashedCard(playerId, this.translateService.translate(cardToTrash.name));
 
       if (focusTokens > 1) {
         this.chooseAndTrashDeckCards(playerId, focusTokens - 1);

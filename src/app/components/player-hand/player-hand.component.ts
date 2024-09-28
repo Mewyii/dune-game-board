@@ -9,6 +9,8 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { LoggingService } from 'src/app/services/log.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-player-hand',
@@ -32,7 +34,9 @@ export class PlayerHandComponent implements OnInit {
     private cardsService: CardsService,
     private audioManager: AudioManager,
     private settingsService: SettingsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private logService: LoggingService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -106,6 +110,8 @@ export class PlayerHandComponent implements OnInit {
   onDiscardCardClicked(card: ImperiumDeckCard) {
     this.cardsService.discardPlayerHandCard(this.activePlayerId, card);
     this.activeCardId = '';
+
+    this.logService.logPlayerDiscardedCard(this.activePlayerId, this.translateService.translate(card.name));
   }
 
   onAIDiscardCardClicked() {
@@ -126,11 +132,15 @@ export class PlayerHandComponent implements OnInit {
       if (this.currentPlayer.turnState === 'agent-placement') {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.activeCardId = '';
+
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
       }
-      if (this.currentPlayer.turnState === 'reveal' || this.currentPlayer.focusTokens > 0) {
+      if (this.currentPlayer.turnState === 'reveal' && this.currentPlayer.focusTokens > 0) {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
+
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
       }
     }
   }
@@ -140,11 +150,15 @@ export class PlayerHandComponent implements OnInit {
       if (this.currentPlayer.turnState === 'agent-placement') {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.activeCardId = '';
+
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
       }
-      if (this.currentPlayer.turnState === 'reveal' || this.currentPlayer.focusTokens > 0) {
+      if (this.currentPlayer.turnState === 'reveal' && this.currentPlayer.focusTokens > 0) {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
+
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
       }
     }
   }

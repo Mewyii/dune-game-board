@@ -5,7 +5,9 @@ import { RewardType } from 'src/app/models';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
+import { LoggingService } from 'src/app/services/log.service';
 import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-imperium-row',
@@ -27,7 +29,9 @@ export class ImperiumRowComponent implements OnInit {
     private playerManager: PlayerManager,
     private gameManager: GameManager,
     public cardsService: CardsService,
-    private gameModifierService: GameModifiersService
+    private gameModifierService: GameModifiersService,
+    private logService: LoggingService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +81,8 @@ export class ImperiumRowComponent implements OnInit {
       }
     }
     this.cardsService.aquirePlayerCardFromImperiumDeck(this.activePlayerId, card);
+
+    this.logService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
   }
 
   onRemoveCardClicked(card: ImperiumDeckCard) {
