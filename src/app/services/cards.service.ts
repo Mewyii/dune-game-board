@@ -376,11 +376,16 @@ export class CardsService {
 
   trashDiscardedPlayerCard(playerId: number, card: ImperiumDeckCard) {
     const playerDiscardPiles = this.playerDiscardPiles;
-    const playerHandIndex = playerDiscardPiles.findIndex((x) => x.playerId === playerId);
-    if (playerHandIndex > -1) {
-      playerDiscardPiles[playerHandIndex].cards = playerDiscardPiles[playerHandIndex].cards.filter((x) => x.id !== card.id);
-      this.playerDiscardPilesSubject.next(playerDiscardPiles);
-      this.addCardToPlayerTrashPile(playerId, card);
+    const playerDiscardPileIndex = playerDiscardPiles.findIndex((x) => x.playerId === playerId);
+    if (playerDiscardPileIndex > -1) {
+      const cardIndex = playerDiscardPiles[playerDiscardPileIndex].cards.findIndex((x) => x.id === card.id);
+      if (cardIndex > -1) {
+        playerDiscardPiles[playerDiscardPileIndex].cards = playerDiscardPiles[playerDiscardPileIndex].cards.filter(
+          (x) => x.id !== card.id
+        );
+        this.playerDiscardPilesSubject.next(playerDiscardPiles);
+        this.addCardToPlayerTrashPile(playerId, card);
+      }
     }
   }
 
@@ -388,9 +393,12 @@ export class CardsService {
     const playerHands = this.playerHands;
     const playerHandIndex = this.playerHands.findIndex((x) => x.playerId === playerId);
     if (playerHandIndex > -1) {
-      playerHands[playerHandIndex].cards = playerHands[playerHandIndex].cards.filter((x) => x.id !== card.id);
-      this.playerHandsSubject.next(playerHands);
-      this.addCardToPlayerTrashPile(playerId, card);
+      const cardIndex = playerHands[playerHandIndex].cards.findIndex((x) => x.id === card.id);
+      if (cardIndex > -1) {
+        playerHands[playerHandIndex].cards = playerHands[playerHandIndex].cards.filter((x) => x.id !== card.id);
+        this.playerHandsSubject.next(playerHands);
+        this.addCardToPlayerTrashPile(playerId, card);
+      }
     }
   }
 

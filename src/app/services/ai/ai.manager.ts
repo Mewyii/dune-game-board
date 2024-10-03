@@ -241,13 +241,13 @@ export class AIManager {
 
     const virtualResources = playerLeader.aiAdjustments?.fieldAccessModifier ?? [];
 
-    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 15);
+    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 30);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
 
     const evaluatedImperiumRowCards = gameState.imperiumRowCards.map((x) =>
       this.getImperiumCardBuyEvaluation(x, player, gameState)
     );
-    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 9, 0);
+    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 12, 4);
 
     let eventGoalModifiers: GoalModifier[] = [];
     if (gameEvent && gameEvent.aiAdjustments && gameEvent.aiAdjustments.goalEvaluationModifier) {
@@ -627,15 +627,15 @@ export class AIManager {
     let modifier = 1.0;
 
     if (goal === 'enter-combat') {
-      modifier = conflictEvaluation;
+      modifier = 0.5 + conflictEvaluation;
     } else if (goal === 'troops' || goal === 'dreadnought') {
-      modifier = (conflictEvaluation + 2) / 3;
+      modifier = (0.5 + conflictEvaluation + 2) / 3;
     } else if (goal === 'tech') {
       modifier = 0.5 + techEvaluation;
     } else if (goal === 'draw-cards' || goal === 'get-board-persuasion') {
-      modifier = imperiumRowEvaluation;
+      modifier = 0.5 + imperiumRowEvaluation;
     } else if (goal === 'high-council') {
-      modifier = (imperiumRowEvaluation + 2) / 3;
+      modifier = (0.5 + imperiumRowEvaluation + 1) / 2;
     }
 
     return modifier;
@@ -1000,16 +1000,28 @@ export class AIManager {
 
     switch (rewardType) {
       case 'water':
-        return 2.25 - 0.2 * getResourceAmount(player, 'water', []);
+        return (
+          3 -
+          0.4 * getResourceAmount(player, 'water', []) -
+          (player.hasSwordmaster ? 0.1 : 0) -
+          (player.hasCouncilSeat ? 0.1 : 0) -
+          0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+        );
       case 'spice':
-        return 2 - 0.15 * getResourceAmount(player, 'spice', []);
+        return (
+          2.5 -
+          0.2 * getResourceAmount(player, 'spice', []) -
+          (player.hasSwordmaster ? 0.2 : 0) -
+          (player.hasCouncilSeat ? 0.2 : 0) -
+          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+        );
       case 'solari':
         return (
-          1.25 -
+          1.5 -
           0.1 * getResourceAmount(player, 'solari', []) -
-          (!player.hasSwordmaster ? 0.2 : 0) -
-          (!player.hasCouncilSeat ? 0.2 : 0) -
-          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+          (player.hasSwordmaster ? 0.3 : 0) -
+          (player.hasCouncilSeat ? 0.3 : 0) -
+          0.15 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
         );
       case 'troop':
         return 1.5 - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
@@ -1040,7 +1052,7 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 10 + 1.5 * (gameState.currentRound - 1);
+        return 9 + 0.5 * (gameState.currentRound - 1);
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 || ignoreTurnState ? 1 : 0.25;
       case 'combat':
@@ -1098,7 +1110,7 @@ export class AIManager {
       case 'signet-ring':
         return 2 - 0.1 * (gameState.currentRound - 1);
       case 'location-control':
-        return 7.5;
+        return 6 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
         return -1 + 0.1 * (gameState.currentRound - 1);
       default:

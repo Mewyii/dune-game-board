@@ -91,7 +91,8 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>2 Raumgilden-Karten: {resource:shipping}<br>3 Raumgilden-Karten: {resource:shipping}{resource:shipping}<br>4+ Raumgilden-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.6 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) =>
+      0.6 - 0.033 * (gameState.currentRound - 1) + 0.01 * gameState.playerCardsBought + 0.01 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -112,7 +113,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.7 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed + (player.hasCouncilSeat ? 0.1 : 0.0),
+      0.7 + 0.01 * gameState.playerCardsBought + 0.01 * gameState.playerCardsTrashed + (player.hasCouncilSeat ? 0.1 : 0.0),
   },
   {
     name: {
@@ -128,7 +129,8 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>2 Imperator-Karten: {resource:sword}{resource:sword}<br>3 Imperator-Karten: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Imperator-Karten: {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.6 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) =>
+      0.6 - 0.01 * (gameState.currentRound - 1) + 0.01 * gameState.playerCardsBought + 0.01 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -166,8 +168,8 @@ export const techTiles: TechTileCard[] = [
     },
     aiEvaluation: (player, gameState) =>
       0.7 +
-      0.025 * gameState.playerCardsBought +
-      0.025 * gameState.playerCardsTrashed +
+      0.01 * gameState.playerCardsBought +
+      0.01 * gameState.playerCardsTrashed +
       (player.hasSwordmaster ? 0.1 : 0.0) +
       (player.hasCouncilSeat ? 0.1 : 0.0) -
       0.05 * player.intrigueCount,
@@ -187,10 +189,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
-      0.4 -
-      0.025 * (gameState.currentRound - 1) +
-      0.025 * gameState.playerCardsBought +
-      0.025 * gameState.playerCardsTrashed,
+      0.4 - 0.01 * (gameState.currentRound - 1) + 0.01 * gameState.playerCardsBought + 0.01 * gameState.playerCardsTrashed,
   },
   {
     name: {
@@ -226,7 +225,7 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.6 + 0.05 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed + (player.hasSwordmaster ? 0.1 : 0.0),
+      0.6 + 0.02 * gameState.playerCardsBought + 0.01 * gameState.playerCardsTrashed + (player.hasSwordmaster ? 0.1 : 0.0),
   },
   {
     name: {
@@ -332,7 +331,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-trade}Behalte die dafür gespielte Karte auf deiner Hand.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.2 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed,
+    aiEvaluation: (player, gameState) => 0.2 + 0.033 * gameState.playerCardsBought + 0.033 * gameState.playerCardsTrashed,
   },
   {
     name: {

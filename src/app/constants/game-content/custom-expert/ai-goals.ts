@@ -26,7 +26,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.65,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.02 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.015 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 6,
     reachedGoal: (player, gameState) => player.hasCouncilSeat || gameState.isFinale,
@@ -39,7 +39,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.04 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.035 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 8,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
@@ -85,7 +85,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       0.01 * getResourceAmount(player, 'solari', virtualResources) -
       0.02 * (gameState.currentRound - 1) -
       0.025 * gameState.playerDreadnoughtCount +
-      0.015 * (4 - gameState.playerCombatUnits.troopsInGarrison) +
+      0.01 * (4 - gameState.playerCombatUnits.troopsInGarrison) +
       (gameState.isFinale ? 0.2 : 0.0),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'solari', virtualResources) > 4,
