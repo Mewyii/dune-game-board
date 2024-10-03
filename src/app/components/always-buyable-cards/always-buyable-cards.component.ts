@@ -7,8 +7,10 @@ import { RewardType } from 'src/app/models';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
+import { LoggingService } from 'src/app/services/log.service';
 import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-always-buyable-cards',
@@ -36,7 +38,9 @@ export class AlwaysBuyableCardsComponent {
     private playerManager: PlayerManager,
     private gameManager: GameManager,
     public cardsService: CardsService,
-    private gameModifierService: GameModifiersService
+    private gameModifierService: GameModifiersService,
+    private logService: LoggingService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -100,6 +104,8 @@ export class AlwaysBuyableCardsComponent {
     }
 
     this.cardsService.addCardToPlayerDiscardPile(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
+
+    this.logService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
   }
 
   onShowNextLimitedCustomCardClicked() {
@@ -133,6 +139,8 @@ export class AlwaysBuyableCardsComponent {
     this.cardsService.removeCardFromLimitedCustomCards(card);
 
     this.cardsService.addCardToPlayerDiscardPile(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
+
+    this.logService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
   }
 
   setCardActive(cardId: string) {

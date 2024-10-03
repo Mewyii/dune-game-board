@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
+import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 
 @Component({
   selector: 'app-playerboard',
@@ -97,6 +98,16 @@ export class PlayerboardComponent implements OnInit {
 
   onStartGameClicked() {
     this.gameManager.startGame();
+  }
+
+  showSettingsDialog() {
+    const dialogRef = this.dialog.open(DialogSettingsComponent, {
+      width: '500px',
+      data: {
+        title: 'Settings',
+      },
+    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   onBeginCombatClicked() {

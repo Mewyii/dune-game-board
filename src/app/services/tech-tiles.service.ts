@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { shuffle } from '../helpers/common';
 import { techTiles } from '../constants/tech-tiles';
@@ -32,6 +32,7 @@ export class TechTilesService {
   private techTiles: TechTileCard[] = techTiles;
   private availableTechTilesSubject = new BehaviorSubject<TechTileCard[]>([]);
   public availableTechTiles$ = this.availableTechTilesSubject.asObservable();
+  public buyableTechTiles$ = this.availableTechTilesSubject.pipe(map((x) => x.slice(0, 3)));
 
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
   public playerTechTiles$ = this.playerTechTilesSubject.asObservable();
@@ -80,6 +81,10 @@ export class TechTilesService {
 
   public get availableTechTiles() {
     return cloneDeep(this.availableTechTilesSubject.value);
+  }
+
+  public get buyableTechTiles() {
+    return cloneDeep(this.availableTechTiles.slice(0, 3));
   }
 
   public get playerTechTiles() {
@@ -170,6 +175,22 @@ export class TechTilesService {
     newTechTiles[cardIndex] = card;
 
     this.newTechTilesSubject.next(newTechTiles);
+  }
+
+  sortTechTiles(category: keyof TechTileCard, order: 'asc' | 'desc') {
+    if (category === 'costs') {
+      const orderedTechTiles = this.newTechTiles.sort((a, b) => {
+        const aCosts = a.costs ?? 0;
+        const bCosts = b.costs ?? 0;
+        if (order === 'asc') {
+          return aCosts - bCosts;
+        } else if (order === 'desc') {
+          return bCosts - aCosts;
+        }
+        return 0;
+      });
+      this.newTechTilesSubject.next(orderedTechTiles);
+    }
   }
 
   deleteTechTile(id: string) {

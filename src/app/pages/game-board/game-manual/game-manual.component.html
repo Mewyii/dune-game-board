@@ -26,14 +26,25 @@
     <br />
     <div
       [innerHTML]="
-        '<b>Focus token</b>: With the trash symbol ({resource:card-destroy}), you now get a focus token instead. You keep this token until your reveal turn, then you have to use (trash) it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
+        '{resource:focus}: You get one focus. You keep this token until your reveal turn, then you have to use (trash) it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
           | duneSymbols : '24px'
       "
     ></div>
     <br />
     <div
       [innerHTML]="
-        '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get a focus token.' | duneSymbols : '24px'
+        '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get one focus.' | duneSymbols : '24px'
+      "
+    ></div>
+    <br />
+    <div
+      [innerHTML]="'{resource:location-control}: You gain control of one location of your choice.' | duneSymbols : '24px'"
+    ></div>
+    <br />
+    <div
+      [innerHTML]="
+        '{resource:foldspace}: Foldspaces are added to your hand when you get them. They dont draw cards anymore.'
+          | duneSymbols : '24px'
       "
     ></div>
     <br />

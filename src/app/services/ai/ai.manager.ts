@@ -914,12 +914,6 @@ export class AIManager {
     if (card.persuasionCosts) {
       evaluationValue -= card.persuasionCosts * 0.1;
     }
-    if (card.buyEffects) {
-      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
-      if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue -= this.getRewardArrayEvaluation(card.buyEffects, player, gameState, true);
-      }
-    }
     if (card.fieldAccess) {
       evaluationValue -= card.fieldAccess.length * 1;
     }
@@ -961,7 +955,7 @@ export class AIManager {
         const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
         const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
 
-        evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+        evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);

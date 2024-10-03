@@ -88,6 +88,10 @@ export class ConflictsService {
         return realConflict ?? conflict;
       });
       this.conflictStackSubject.next(realConflictStack);
+
+      this.currentCardCoordinatesSubject.next(
+        this.getCardCoordinates(realConflictStack[0].column, realConflictStack[0].row)
+      );
     }
 
     this.conflictStack$.subscribe((conflictStack) => {

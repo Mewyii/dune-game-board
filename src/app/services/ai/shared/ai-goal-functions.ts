@@ -212,10 +212,7 @@ export function getMaxDesireOfUnreachableGoal(
   if (!goal) {
     return 0.0;
   }
-  if (
-    !goal.reachedGoal(player, gameState, goals, virtualResources) &&
-    !goal.goalIsReachable(player, gameState, goals, virtualResources)
-  ) {
+  if (!goal.reachedGoal(player, gameState, goals, virtualResources)) {
     const goalDesire = getDesire(goal, player, gameState, virtualResources, goals);
 
     return goalDesire * goalType.modifier;

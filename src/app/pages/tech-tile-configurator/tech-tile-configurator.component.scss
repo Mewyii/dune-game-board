@@ -56,3 +56,9 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.sortable-category {
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+    color: orange;
+    font-weight: bold;
+}

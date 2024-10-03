@@ -15,6 +15,20 @@ export class TechTileConfiguratorComponent implements OnInit {
   public showControls = true;
   public imagePadding = 0;
 
+  public totalTechTileAmount = 0;
+
+  public costs: { [type in number]: number } = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+  };
+
   constructor(
     public translateService: TranslateService,
     public techTilesService: TechTilesService,
@@ -23,7 +37,27 @@ export class TechTileConfiguratorComponent implements OnInit {
 
   ngOnInit(): void {
     this.techTilesService.newTechTiles$.subscribe((newTechTiles) => {
+      this.totalTechTileAmount = 0;
+
+      this.costs = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+      };
+
       this.techTiles = newTechTiles;
+
+      for (const techTile of newTechTiles) {
+        this.totalTechTileAmount++;
+
+        this.costs[techTile.costs]++;
+      }
     });
   }
 
@@ -116,6 +150,10 @@ export class TechTileConfiguratorComponent implements OnInit {
 
   onToggleControlsClicked() {
     this.showControls = !this.showControls;
+  }
+
+  onSortByCostsClicked() {
+    this.techTilesService.sortTechTiles('costs', 'asc');
   }
 
   private createEmptyImperiumCard(): TechTileCard {

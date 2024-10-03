@@ -32,14 +32,4 @@ export class AppComponent {
       });
     }
   }
-
-  showSettingsDialog() {
-    const dialogRef = this.dialog.open(DialogSettingsComponent, {
-      width: '500px',
-      data: {
-        title: 'Settings',
-      },
-    });
-    dialogRef.afterClosed().subscribe(() => {});
-  }
 }

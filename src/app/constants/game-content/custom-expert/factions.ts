@@ -56,7 +56,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Geistesausbildung', en: 'Mind Training' },
         actionType: 'bene',
-        rewards: [{ type: 'card-draw' }, { type: 'card-destroy' }],
+        rewards: [{ type: 'card-draw' }, { type: 'focus' }],
         pathToImage: 'assets/images/action-backgrounds/book.png',
       },
     ],

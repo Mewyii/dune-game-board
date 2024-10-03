@@ -56,7 +56,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Geistesausbildung', en: 'Mind Training' },
         actionType: 'bene',
-        rewards: [{ type: 'card-draw' }, { type: 'card-destroy' }],
+        rewards: [{ type: 'card-draw' }, { type: 'focus' }],
         pathToImage: 'assets/images/action-backgrounds/book.png',
       },
     ],
@@ -133,7 +133,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue-draw' }, { type: 'solari' }],
+        rewards: [{ type: 'solari' }, { type: 'intrigue' }, { type: 'intrigue-draw' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -183,10 +183,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        rewards: [
-          { type: 'solari', amount: 2 },
-          { type: 'persuasion', amount: 1 },
-        ],
+        rewards: [{ type: 'solari' }, { type: 'persuasion', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {
@@ -239,8 +236,9 @@ export const factionsCustomBeginner: Faction[] = [
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 2 }],
-        rewards: [{ type: 'card-draw' }, { type: 'water' }, { type: 'troop' }],
+        rewards: [{ type: 'water' }, { type: 'water' }, { type: 'troop' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
+        requiresInfluence: { type: 'emperor' },
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

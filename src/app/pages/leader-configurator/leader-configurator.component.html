@@ -2,14 +2,14 @@
   <div class="cards-manager">
     <div class="action-bar">
       <div class="settings-container"></div>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()">
+      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()" matTooltip="Add Leader">
         <mat-icon>add</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()">
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Leaders">
         <mat-icon>download</mat-icon>
       </button>
       <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
-      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()">
+      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()" matTooltip="Export Leaders">
         <mat-icon>upload</mat-icon>
       </button>
       <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
@@ -29,13 +29,13 @@
             <dune-leader-card [leader]="leader"></dune-leader-card>
           </div>
           <div class="card-action-bar" *ngIf="showControls">
-            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(leader)">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(leader)" matTooltip="Edit">
               <mat-icon>settings</mat-icon>
             </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(leader.name.en)">
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(leader.name.en)" matTooltip="Delete">
               <mat-icon>delete</mat-icon>
             </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, leader.name.en)">
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, leader.name.en)" matTooltip="Save">
               <mat-icon>download</mat-icon>
             </button>
           </div>

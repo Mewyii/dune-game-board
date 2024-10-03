@@ -1,7 +1,7 @@
 import { ActionField, DuneLocation, Faction, LanguageType, Reward } from '../models';
 import { FieldsForGoals } from '../services/ai/models';
 import { CustomCard } from '../services/cards.service';
-import { gameContentCustomAdvanced } from './game-content';
+import { gameContentCustomAdvanced, gameContentCustomExpert } from './game-content';
 
 export interface VictoryPointReward {
   score: number;
@@ -35,6 +35,6 @@ export interface Settings {
 
 export const boardSettings: Settings = {
   mode: 'game',
-  language: 'de',
-  gameContent: gameContentCustomAdvanced,
+  language: 'en',
+  gameContent: gameContentCustomExpert,
 };

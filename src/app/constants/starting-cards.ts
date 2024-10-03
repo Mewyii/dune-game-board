@@ -161,24 +161,17 @@ export const startingCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'The Spice Must Flow',
-      de: 'Das Spice muss fliessen',
+      en: 'Scouts',
+      de: 'Kundschafter',
     },
     fieldAccess: ['spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/spice_2.png',
+    imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
     cardAmount: 1,
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
       {
-        type: 'spice',
-        amount: 6,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'victory-point',
+        type: 'sword',
       },
     ],
   },

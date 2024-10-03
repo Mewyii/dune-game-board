@@ -1367,6 +1367,9 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'persuasion',
         amount: 1,
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -1740,39 +1743,6 @@ export const imperiumCards: ImperiumCard[] = [
       en: '{resource:spice} -costs for fields are reduced by <b>1</b>.',
       de: '{resource:spice} -Kosten für Felder sind um <b>1</b> reduziert.',
       fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Area Bombardment',
-      de: 'Flächen Bombardierung',
-    },
-    persuasionCosts: 6,
-    fieldAccess: ['emperor', 'guild', 'bene', 'fremen', 'landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/assault.png',
-    cardAmount: 1,
-    buyEffects: [],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 2,
-      },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-    customAgentEffect: {
-      en: 'Place {resource:troop} on this board space. It can not be used. Remove {resource:troop} after the next round.',
-      de: 'Lege {resource:troop} auf dieses Feld. Es kann nicht verwendet werden. Entferne {resource:troop} nach der nächsten Runde.',
     },
   },
   {

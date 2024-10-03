@@ -25,8 +25,8 @@ export class TechTilesComponent {
   ) {}
 
   ngOnInit(): void {
-    this.techTilesService.availableTechTiles$.subscribe((techTiles) => {
-      this.availableTechTiles = techTiles.slice(0, 3);
+    this.techTilesService.buyableTechTiles$.subscribe((techTiles) => {
+      this.availableTechTiles = techTiles;
     });
   }
 

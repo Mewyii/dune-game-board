@@ -630,7 +630,7 @@ export class GameManager {
           const playerAgentsOnOtherFields = this.agentsOnFields.filter(
             (x) => x.playerId === activePlayer.id && x.fieldId !== field.title.en
           );
-          if (playerAgentsOnOtherFields) {
+          if (playerAgentsOnOtherFields.length > 0) {
             shuffle(playerAgentsOnOtherFields);
             this.removePlayerAgentFromField(activePlayer.id, playerAgentsOnOtherFields[0].fieldId);
           }
@@ -1108,7 +1108,7 @@ export class GameManager {
       enemyPlayers: this.playerManager.getEnemyPlayers(player.id),
       playerLeader: this.leadersService.getLeader(player.id)!,
       conflict: this.conflictsService.currentConflict,
-      availableTechTiles: this.techTilesService.availableTechTiles,
+      availableTechTiles: this.techTilesService.buyableTechTiles,
       currentEvent: this.duneEventsManager.gameEvents[this.currentRound - 1],
       playerDeckSizeTotal:
         (playerDeckCards?.length ?? 0) + (playerHandCards?.length ?? 0) + (playerDiscardPileCards?.length ?? 0),
@@ -1242,16 +1242,16 @@ export class GameManager {
 
   private buyTechOrStackTechAgents(player: Player, techDiscount?: number, techAgentsGainedThisTurn?: number) {
     const discount = techDiscount ?? 0;
-    const availableTechTiles = this.techTilesService.availableTechTiles;
+    const buyableTechTiles = this.techTilesService.buyableTechTiles;
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTechAgents = player.techAgents + (techAgentsGainedThisTurn ?? 0);
-    const affordableTechTiles = availableTechTiles.filter(
+    const affordableTechTiles = buyableTechTiles.filter(
       (x) => x.costs - discount <= availablePlayerTechAgents + availablePlayerSpice
     );
 
     if (affordableTechTiles.length > 0) {
       const gameState = this.getGameState(player);
-      const mostDesiredTechTile = availableTechTiles.sort(
+      const mostDesiredTechTile = buyableTechTiles.sort(
         (a, b) => b.aiEvaluation(player, gameState) - a.aiEvaluation(this.getActivePlayer()!, gameState)
       )[0];
 

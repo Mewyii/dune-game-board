@@ -375,15 +375,22 @@ export class CombatManager {
 
     return this.playerCombatUnits.map((x) => ({
       playerId: x.playerId,
-      score: x.troopsInCombat * troopCombatStrength + x.shipsInCombat * dreadnoughtCombatStrength + x.additionalCombatPower,
+      score:
+        x.troopsInCombat > 0 || x.shipsInCombat > 0
+          ? x.troopsInCombat * troopCombatStrength + x.shipsInCombat * dreadnoughtCombatStrength + x.additionalCombatPower
+          : 0,
     }));
   }
 
   public getPlayerCombatScore(playerCombatUnits: PlayerCombatUnits) {
-    return (
-      playerCombatUnits.troopsInCombat * this.settingsService.gameContent.troopCombatStrength +
-      playerCombatUnits.shipsInCombat * this.settingsService.gameContent.dreadnoughtCombatStrength +
-      playerCombatUnits.additionalCombatPower
-    );
+    if (playerCombatUnits.troopsInCombat > 0 || playerCombatUnits.shipsInCombat > 0) {
+      return (
+        playerCombatUnits.troopsInCombat * this.settingsService.gameContent.troopCombatStrength +
+        playerCombatUnits.shipsInCombat * this.settingsService.gameContent.dreadnoughtCombatStrength +
+        playerCombatUnits.additionalCombatPower
+      );
+    } else {
+      return 0;
+    }
   }
 }

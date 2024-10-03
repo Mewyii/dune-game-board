@@ -91,6 +91,9 @@
     </div>
   </div>
   <div class="action-container" [style]="'padding-bottom: 48px'">
+    <button *ngIf="!currentTurn" mat-fab color="accent" (click)="showSettingsDialog()" matTooltip="Settings">
+      <mat-icon>settings</mat-icon>
+    </button>
     <button
       mat-fab
       *ngIf="currentTurn && turnState === 'agent-placement'"
@@ -130,7 +133,7 @@
       <mat-icon>play_arrow</mat-icon>
     </button>
 
-    <button *ngIf="currentTurn" mat-fab color="accent" (click)="onFinishGameClicked()" matTooltip="Finish">
+    <button *ngIf="currentTurn" mat-fab color="accent" (click)="onFinishGameClicked()" matTooltip="Finish Game">
       <mat-icon>power_settings_new</mat-icon>
     </button>
   </div>
