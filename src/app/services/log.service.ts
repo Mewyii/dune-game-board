@@ -27,6 +27,12 @@ export interface PlayerCardBuyLog {
   cardName: string;
 }
 
+export interface PlayerCardPlayLog {
+  playerId: number;
+  type: 'card-play';
+  cardName: string;
+}
+
 export interface PlayerCardDiscardLog {
   playerId: number;
   type: 'card-discard';
@@ -43,6 +49,7 @@ export type PlayerActionLog =
   | playerRewardLog
   | PlayerFieldLog
   | PlayerCardBuyLog
+  | PlayerCardPlayLog
   | PlayerCardTrashLog
   | PlayerCardDiscardLog;
 
@@ -121,6 +128,10 @@ export class LoggingService {
 
   logPlayerBoughtCard(playerId: number, cardName: string) {
     this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-buy', cardName: cardName }]);
+  }
+
+  logPlayerPlayedCard(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-play', cardName: cardName }]);
   }
 
   logPlayerDiscardedCard(playerId: number, cardName: string) {

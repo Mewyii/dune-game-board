@@ -108,6 +108,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_location_control.png';
     case 'focus':
       return 'assets/images/reward-markers/marker_focus.png';
+    case 'trash-self':
+      return 'assets/images/reward-markers/marker_card_trash_self.png';
     default:
       return '';
   }

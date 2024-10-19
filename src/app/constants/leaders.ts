@@ -56,8 +56,8 @@ export const leaders: Leader[] = [
   },
   {
     name: {
-      en: 'liet lynes',
-      de: 'liet lynes',
+      en: 'Liet Kynes',
+      de: 'Liet Kynes',
     },
     house: {
       en: 'fremen',
@@ -474,16 +474,16 @@ export const leaders: Leader[] = [
       de: 'isolationist',
     },
     passiveDescription: {
-      en: 'You cannot purchase cards.<br><br><b>Reveal turn</b>: {resource:persuasion;amount:3}{resource:helper-trade}{resource:spice} (any number of times)',
-      de: 'Du kannst du keine Karten erwerben.<br><br><b>Aufdeckzug</b>:  {resource:persuasion;amount:3}{resource:helper-trade}{resource:spice} (beliebig oft)',
+      en: 'You cannot purchase cards.<br><br><b>Reveal turn</b>: {resource:persuasion;amount:2}{resource:helper-trade}{resource:solari} (any number of times)',
+      de: 'Du kannst du keine Karten erwerben.<br><br><b>Aufdeckzug</b>:  {resource:persuasion;amount:2}{resource:helper-trade}{resource:solari} (beliebig oft)',
     },
     signetName: {
       en: 'address to the people',
       de: 'ansprache an das volk',
     },
     signetDescription: {
-      en: '<br>{resource:solari} {resource:troop}',
-      de: '<br>{resource:solari} {resource:troop}',
+      en: '<br>{resource:card-draw} {resource:troop}',
+      de: '<br>{resource:card-draw} {resource:troop}',
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
@@ -516,8 +516,8 @@ export const leaders: Leader[] = [
       en: 'thorough approach',
     },
     signetDescription: {
-      de: 'Erhältst du in diesem Zug {resource:solari}/{resource:spice}/{resource:water}, erhalte davon jeweils +1.',
-      en: 'If you get {resource:solari}/{resource:spice}/{resource:water} this turn, you get +1 of each.',
+      de: 'Erhältst du in diesem Zug {resource:solari}, {resource:spice} oder {resource:water}, erhalte davon jeweils +1.',
+      en: 'If you get {resource:solari}, {resource:spice} oder {resource:water} this turn, you get +1 of each.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
   },
@@ -660,6 +660,35 @@ export const leaders: Leader[] = [
       de: '{resource:signet-token}. Entsorge ihn, damit gegnerische Agenten deinen Agenten auf {faction:landsraad}-Feldern nicht blockieren.',
     },
     imageUrl: '/assets/images/leaders/leto.png',
+    type: 'new',
+    playableByAI: true,
+  },
+  {
+    name: {
+      en: 'Count Glossu Rabban',
+      de: 'Graf Glossu Rabban',
+    },
+    house: {
+      en: 'House Harkonnen',
+      de: 'Haus Harkonnen',
+    },
+    passiveName: {
+      en: 'Fair Leader',
+      de: 'Gerechter Anführer',
+    },
+    passiveDescription: {
+      en: '<br><b>Reveal turn</b>: {resource:persuasion;amount:1}',
+      de: '<br><b>Aufdeckzug</b>: {resource:persuasion;amount:1}',
+    },
+    signetName: {
+      en: 'Landsraad connections',
+      de: 'Landsraad-Verbindungen',
+    },
+    signetDescription: {
+      en: '{resource:signet-token}. Trash it so enemy agents dont block your agent at {faction:landsraad} board spaces.',
+      de: '{resource:signet-token}. Entsorge ihn, damit gegnerische Agenten deinen Agenten auf {faction:landsraad}-Feldern nicht blockieren.',
+    },
+    imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
     playableByAI: true,
   },

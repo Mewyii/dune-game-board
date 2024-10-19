@@ -49,6 +49,7 @@ export const rewardTypes = [
   'tech-reduced-two',
   'tech-tile-flip',
   'victory-point',
+  'trash-self',
 ] as const;
 
 export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];

@@ -67,19 +67,16 @@ export const customCardsCustomBeginner: CustomCard[] = [
       en: 'The Spice Must Flow',
       de: 'Das Spice muss fliessen',
     },
-    persuasionCosts: 9,
+    persuasionCosts: 8,
     fieldAccess: [],
     imageUrl: '/assets/images/action-backgrounds/spice_2.png',
-    buyEffects: [
-      {
-        type: 'victory-point',
-      },
-    ],
     agentEffects: [],
     revealEffects: [
       {
-        type: 'spice',
-        amount: 1,
+        type: 'victory-point',
+      },
+      {
+        type: 'trash-self',
       },
     ],
   },
@@ -94,10 +91,6 @@ export const customCardsCustomBeginner: CustomCard[] = [
     imageUrl: '/assets/images/action-backgrounds/foldspace.png',
     buyEffects: [],
     revealEffects: [],
-    customAgentEffect: {
-      en: 'Trash this card.',
-      de: 'Entsorge diese Karte.',
-      fontSize: 'medium',
-    },
+    agentEffects: [{ type: 'trash-self' }],
   },
 ];

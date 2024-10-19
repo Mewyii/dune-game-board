@@ -6,6 +6,7 @@ import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-edit
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ActionType, FactionType } from 'src/app/models';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-card-configurator',
@@ -160,6 +161,20 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: ImperiumCard | undefined) => {
       if (result) {
         this.cardConfiguratorService.addImperiumCard(result);
+      }
+    });
+  }
+
+  onRemoveCardsClicked() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Are you sure you want to remove all cards?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.cardConfiguratorService.setImperiumCards([]);
       }
     });
   }

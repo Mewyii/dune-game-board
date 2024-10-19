@@ -243,7 +243,6 @@ export class GameManager {
     this.combatManager.resetAllPlayerShips();
     this.combatManager.setInitialPlayerCombatUnits(newPlayers);
     this.locationManager.resetLocationOwners();
-    this.locationManager.resetLocationOccupiers();
     this.playerRewardChoicesService.resetPlayerRewardChoices();
     this.duneEventsManager.setGameEvents();
     this.playerScoreManager.resetPlayersScores(newPlayers);
@@ -330,7 +329,7 @@ export class GameManager {
           if (isFirstCycle) {
             const dreadnoughtCount = this.combatManager.getPlayerCombatUnits(player.id)?.shipsInCombat;
             if (dreadnoughtCount && dreadnoughtCount > 0) {
-              this.aiOccupyLocations(player, dreadnoughtCount);
+              this.aiControlLocations(player, dreadnoughtCount);
             }
           }
         }
@@ -432,7 +431,7 @@ export class GameManager {
 
           if (!hasRewardOptions && !hasRewardConversion) {
             for (const reward of card.revealEffects) {
-              const aiInfo = this.addRewardToPlayer(playerId, reward);
+              const aiInfo = this.addRewardToPlayer(playerId, reward, card);
               revealAiInfo = this.updateAiAgentPlacementInfo(revealAiInfo, aiInfo);
             }
           } else if (player.isAI && hasRewardOptions) {
@@ -443,12 +442,12 @@ export class GameManager {
 
             if (leftSideEvaluation >= rightSideEvaluation) {
               for (const reward of leftSideRewards) {
-                const aiInfo = this.addRewardToPlayer(playerId, reward);
+                const aiInfo = this.addRewardToPlayer(playerId, reward, card);
                 revealAiInfo = this.updateAiAgentPlacementInfo(revealAiInfo, aiInfo);
               }
             } else {
               for (const reward of rightSideRewards) {
-                const aiInfo = this.addRewardToPlayer(playerId, reward);
+                const aiInfo = this.addRewardToPlayer(playerId, reward, card);
                 revealAiInfo = this.updateAiAgentPlacementInfo(revealAiInfo, aiInfo);
               }
             }
@@ -461,7 +460,7 @@ export class GameManager {
                 revealAiInfo = this.updateAiAgentPlacementInfo(revealAiInfo, aiInfo);
               }
               for (const reward of rewards) {
-                const aiInfo = this.addRewardToPlayer(playerId, reward);
+                const aiInfo = this.addRewardToPlayer(playerId, reward, card);
                 revealAiInfo = this.updateAiAgentPlacementInfo(revealAiInfo, aiInfo);
               }
             }
@@ -483,14 +482,6 @@ export class GameManager {
 
       if (player.isAI) {
         this.aiResolveRewardChoices(revealAiInfo, player);
-
-        const occupiedLocations = this.locationManager.getPlayerOccupiedLocations(playerId);
-        for (const occupiedLocation of occupiedLocations) {
-          if (!this.isFinale && Math.random() < 0.66) {
-            this.locationManager.resetLocationOccupier(occupiedLocation.locationId);
-            this.combatManager.addPlayerShipsToGarrison(playerId, 1);
-          }
-        }
       }
     }
   }
@@ -727,7 +718,7 @@ export class GameManager {
             this.aIManager.getRewardArrayAIInfos(card.agentEffects);
           if (!hasRewardOptions && !hasRewardConversion) {
             for (const agentEffect of card.agentEffects) {
-              const aiInfo = this.addRewardToPlayer(playerId, agentEffect);
+              const aiInfo = this.addRewardToPlayer(playerId, agentEffect, card);
               agentEffectsAIInfo = this.updateAiAgentPlacementInfo(agentEffectsAIInfo, aiInfo);
             }
           } else if (isAI && hasRewardOptions) {
@@ -745,12 +736,12 @@ export class GameManager {
 
             if (leftSideEvaluation >= rightSideEvaluation) {
               for (const reward of leftSideRewards) {
-                const aiInfo = this.addRewardToPlayer(playerId, reward);
+                const aiInfo = this.addRewardToPlayer(playerId, reward, card);
                 agentEffectsAIInfo = this.updateAiAgentPlacementInfo(agentEffectsAIInfo, aiInfo);
               }
             } else {
               for (const reward of rightSideRewards) {
-                const aiInfo = this.addRewardToPlayer(playerId, reward);
+                const aiInfo = this.addRewardToPlayer(playerId, reward, card);
                 agentEffectsAIInfo = this.updateAiAgentPlacementInfo(agentEffectsAIInfo, aiInfo);
               }
             }
@@ -763,7 +754,7 @@ export class GameManager {
                 agentEffectsAIInfo = this.updateAiAgentPlacementInfo(agentEffectsAIInfo, aiInfo);
               }
               for (const reward of rewards) {
-                const aiInfo = this.addRewardToPlayer(playerId, reward);
+                const aiInfo = this.addRewardToPlayer(playerId, reward, card);
                 agentEffectsAIInfo = this.updateAiAgentPlacementInfo(agentEffectsAIInfo, aiInfo);
               }
             }
@@ -865,6 +856,30 @@ export class GameManager {
     }
   }
 
+  public changeLocationOwner(locationId: string, playerId?: number) {
+    const playerLocation = this.locationManager.getPlayerLocation(locationId);
+    if (playerLocation) {
+      if (playerId) {
+        if (playerLocation.playerId !== playerId) {
+          this.locationManager.setLocationOwner(locationId, playerId);
+          this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' });
+          this.addRewardToPlayer(playerId, { type: 'victory-point' });
+        } else {
+          this.locationManager.setLocationOwner(locationId, playerId);
+          this.addRewardToPlayer(playerId, { type: 'victory-point' });
+        }
+      } else {
+        this.locationManager.resetLocationOwner(locationId);
+        this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' });
+      }
+    } else {
+      if (playerId) {
+        this.locationManager.setLocationOwner(locationId, playerId);
+        this.addRewardToPlayer(playerId, { type: 'victory-point' });
+      }
+    }
+  }
+
   public doAIAction(playerId: number) {
     const player = this.playerManager.getPlayer(playerId);
     const playerAgentCount = this.getAvailableAgentCountForPlayer(playerId);
@@ -886,6 +901,7 @@ export class GameManager {
         );
         if (boardField && cardAndField) {
           this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
+          this.loggingService.logPlayerPlayedCard(playerId, this.translateService.translate(cardAndField.cardToPlay.name));
           this.addAgentToField(boardField);
 
           couldPlaceAgent = true;
@@ -927,7 +943,7 @@ export class GameManager {
     }
   }
 
-  aiOccupyLocations(player: Player, locationsToOccupy: number) {
+  private aiControlLocations(player: Player, locationsToOccupy: number) {
     const gameState = this.getGameState(player);
 
     for (let i = 0; i < locationsToOccupy; i++) {
@@ -939,13 +955,12 @@ export class GameManager {
 
       const preferredLocation = this.aIManager.getPreferredLocationForPlayer(player, controllableLocations, gameState);
       if (preferredLocation) {
-        this.combatManager.destroyPlayerShipsInCombat(player.id, 1);
-        this.locationManager.changeLocationOccupier(preferredLocation.actionField.title.en, player.id);
+        this.changeLocationOwner(preferredLocation.actionField.title.en, player.id);
       }
     }
   }
 
-  public aiResolveRewardChoices(aiInfo: AIAgentPlacementInfo, player: Player) {
+  private aiResolveRewardChoices(aiInfo: AIAgentPlacementInfo, player: Player) {
     if (aiInfo.shippingAmount > 0) {
       this.addRewardToPlayer(player.id, { type: 'water', amount: aiInfo.shippingAmount });
     }
@@ -961,7 +976,7 @@ export class GameManager {
 
         const preferredLocation = this.aIManager.getPreferredLocationForPlayer(player, controllableLocations, gameState);
         if (preferredLocation) {
-          this.locationManager.changeLocationOwner(preferredLocation.actionField.title.en, player.id);
+          this.changeLocationOwner(preferredLocation.actionField.title.en, player.id);
         }
       }
     }
@@ -1318,7 +1333,7 @@ export class GameManager {
     }
   }
 
-  public addRewardToPlayer(playerId: number, reward: Reward) {
+  public addRewardToPlayer(playerId: number, reward: Reward, card?: ImperiumDeckCard) {
     const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(playerId);
 
     let aiInfo = this.getInitialAIAgentPlacementInfos();
@@ -1429,6 +1444,9 @@ export class GameManager {
       aiInfo.locationControlAmount++;
     } else if (rewardType === 'signet-ring') {
       aiInfo.signetRingAmount++;
+    } else if (rewardType === 'trash-self' && card) {
+      this.cardsService.trashPlayerHandCard(playerId, card);
+      this.loggingService.logPlayerTrashedCard(playerId, this.translateService.translate(card.name));
     }
 
     this.loggingService.logPlayerResourceGained(playerId, rewardType, reward.amount);
@@ -1476,8 +1494,10 @@ export class GameManager {
       }
     } else if (costType === 'card-destroy' || costType === 'focus') {
       this.playerManager.addFocusTokens(playerId, cost.amount ?? 1);
-    } else if (costType == 'persuasion') {
+    } else if (costType === 'persuasion') {
       this.playerManager.addPersuasionSpentToPlayer(playerId, cost.amount ?? 1);
+    } else if (costType === 'victory-point') {
+      this.playerScoreManager.removePlayerScore(playerId, 'victoryPoints', cost.amount ?? 1);
     }
 
     return aiInfo;

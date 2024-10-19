@@ -99,8 +99,9 @@ export class PlayerHandComponent implements OnInit {
     this.cardsShown = 'deck';
   }
 
-  onPlayCardClicked(cardId: string) {
-    this.cardsService.setPlayedPlayerCard(this.activePlayerId, cardId);
+  onPlayCardClicked(card: ImperiumDeckCard) {
+    this.cardsService.setPlayedPlayerCard(this.activePlayerId, card.id);
+    this.logService.logPlayerPlayedCard(this.activePlayerId, this.translateService.translate(card.name));
   }
 
   onUnPlayCardClicked(cardId: string) {
@@ -134,8 +135,7 @@ export class PlayerHandComponent implements OnInit {
         this.activeCardId = '';
 
         this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
-      }
-      if (this.currentPlayer.turnState === 'reveal' && this.currentPlayer.focusTokens > 0) {
+      } else if (this.currentPlayer.focusTokens > 0) {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';

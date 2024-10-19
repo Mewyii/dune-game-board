@@ -263,8 +263,8 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     buyEffects: [],
     customAgentEffect: {
-      en: 'Every opponent loses {resource:spice}/{resource:water}/{resource:solari}',
-      de: 'Jeder Gegner verliert {resource:spice}/{resource:water}/{resource:solari}',
+      en: 'Each opponent loses {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
+      de: 'Jeder Gegner verliert {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
       fontSize: 'small',
     },
     customRevealEffect: {
@@ -299,7 +299,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Dr. Yueh, Suk Doctor',
       de: 'Dr. Yueh, Suk-Arzt',
     },
-    persuasionCosts: 2,
+    persuasionCosts: 3,
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/yueh_2.png',
     cardAmount: 1,
@@ -509,17 +509,20 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Yueh, Traitor',
       de: 'Dr. Yueh, Verräter',
     },
-    persuasionCosts: 3,
+    persuasionCosts: 2,
     fieldAccess: [],
     imageUrl: '/assets/images/action-backgrounds/yueh.png',
     cardAmount: 1,
     buyEffects: [],
     agentEffects: [],
-    customRevealEffect: {
-      en: '{resource:location-control}<br>Trash this card.',
-      de: '{resource:location-control}<br>Entsorge diese Karte.',
-      fontSize: 'medium',
-    },
+    revealEffects: [
+      { type: 'faction-influence-down-choice' },
+      { type: 'helper-trade' },
+      { type: 'location-control' },
+      { type: 'sword' },
+      { type: 'sword' },
+      { type: 'trash-self' },
+    ],
   },
   {
     name: {
@@ -747,8 +750,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customAgentEffect: {
-      en: 'Each opponent retreats a battleship or loses one troop.',
-      de: 'Jeder Gegner zieht ein Schlachtschiff zurück oder verliert einen Trupp.',
+      en: 'Each opponent retreats a battleship or loses <b>1</b> troop.',
+      de: 'Jeder Gegner zieht ein Schlachtschiff zurück oder verliert <b>1</b> Trupp.',
       fontSize: 'small',
     },
   },
@@ -817,8 +820,8 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     customRevealEffect: {
-      en: '{resource:sword}{resource:sword}<br>Deploy up to <b>3</b> troops from your garrison to conflict.',
-      de: '{resource:sword}{resource:sword}<br>Setze bis zu <b>3</b> Truppen aus deiner Garnison im Konflikt ein.',
+      en: '{resource:sword}{resource:sword}<br>Deploy up to <b>2</b> troops from your garrison to the conflict.',
+      de: '{resource:sword}{resource:sword}<br>Setze bis zu <b>2</b> Truppen aus deiner Garnison im Konflikt ein.',
       fontSize: 'small',
     },
   },
@@ -842,11 +845,13 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
-    customAgentEffect: {
-      en: '{resource:focus}{resource:focus}{resource:card-draw}{resource:card-draw}<br>Trash this card.',
-      de: '{resource:focus}{resource:focus}{resource:card-draw}{resource:card-draw}<br>Entsorge diese Karte.',
-      fontSize: 'medium',
-    },
+    agentEffects: [
+      { type: 'card-draw' },
+      { type: 'card-draw' },
+      { type: 'focus' },
+      { type: 'focus' },
+      { type: 'trash-self' },
+    ],
   },
   {
     name: {
@@ -1556,11 +1561,7 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     agentEffects: [],
-    customRevealEffect: {
-      en: '{resource:location-control}<br>Trash this card.',
-      de: '{resource:location-control}<br>Entsorge diese Karte.',
-      fontSize: 'medium',
-    },
+    revealEffects: [{ type: 'location-control' }, { type: 'trash-self' }],
   },
   {
     name: {
@@ -1768,8 +1769,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customAgentEffect: {
-      en: '{resource:card-draw} <br>Ignore enemy agents or influence requirements.',
-      de: '{resource:card-draw} <br>Ignoriere gegnerische Agenten oder Einfluss-Anforderungen.',
+      en: 'Ignore enemy agents and influence requirements.<br>{resource:card-draw}',
+      de: 'Ignoriere gegnerische Agenten und Einfluss-Anforderungen.<br>{resource:card-draw}',
       fontSize: 'small',
     },
   },
@@ -1784,11 +1785,14 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     buyEffects: [],
     agentEffects: [],
-    customRevealEffect: {
-      en: '{resource:loose-troop}{resource:loose-troop}{resource:faction-influence-down-guild}{resource:faction-influence-down-emperor}{resource:helper-trade}{resource:victory-point}{resource:victory-point}<br>Trash this card.',
-      de: '{resource:loose-troop}{resource:loose-troop}{resource:faction-influence-down-guild}{resource:faction-influence-down-emperor}{resource:helper-trade}{resource:victory-point}{resource:victory-point}<br>Entsorge diese Karte.',
-      fontSize: 'medium',
-    },
+    revealEffects: [
+      { type: 'faction-influence-down-guild' },
+      { type: 'faction-influence-down-emperor' },
+      { type: 'helper-trade' },
+      { type: 'victory-point' },
+      { type: 'victory-point' },
+      { type: 'trash-self' },
+    ],
   },
   {
     name: {
@@ -1854,8 +1858,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: 'Each opponent loses all units in the conflict.<br>Trash this card.',
-      de: 'Jeder Gegner verliert alle Einheiten im Konflikt.<br>Entsorge diese Karte.',
+      en: 'Each opponent loses all units in the conflict.<br>{resource:trash-self}',
+      de: 'Jeder Gegner verliert alle Einheiten im Konflikt.<br>{resource:trash-self}',
       fontSize: 'small',
     },
   },
@@ -1996,7 +2000,7 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customAgentEffect: {
-      en: '{resource:card-draw}<br>Fields of this type are blocked for all opponents this round.',
+      en: '{resource:card-draw}<br>Board spaces of this type are blocked for all opponents this round.',
       de: '{resource:card-draw}<br>Felder dieses Typs sind für alle Gegner in dieser Runde blockiert.',
       fontSize: 'small',
     },
@@ -2131,8 +2135,8 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     buyEffects: [],
     customAgentEffect: {
-      en: '{faction:bene} or {faction:fremen} Alliance: Trash this card {resource:helper-trade} {resource:victory-point}',
-      de: '{faction:bene} oder {faction:fremen} Allianz: {resource:victory-point}. Entsorge diese Karte.',
+      en: '{faction:bene} or {faction:fremen} Alliance: {resource:victory-point} {resource:trash-self}',
+      de: '{faction:bene} oder {faction:fremen} Allianz: {resource:victory-point} {resource:trash-self}',
       fontSize: 'small',
     },
     customRevealEffect: {

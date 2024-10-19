@@ -153,11 +153,7 @@ export const startingCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
-    customAgentEffect: {
-      en: 'Trash this card.',
-      de: 'Entsorge diese Karte.',
-      fontSize: 'small',
-    },
+    agentEffects: [{ type: 'trash-self' }],
   },
   {
     name: {

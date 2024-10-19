@@ -13,6 +13,9 @@
       <ng-container *ngIf="logEntry.type === 'card-buy'">
         Player {{ logEntry.playerId }} bought card {{ logEntry.cardName }}.
       </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-play'">
+        Player {{ logEntry.playerId }} played card {{ logEntry.cardName }}.
+      </ng-container>
       <ng-container *ngIf="logEntry.type === 'card-trash'">
         Player {{ logEntry.playerId }} trashed card {{ logEntry.cardName }}.
       </ng-container>

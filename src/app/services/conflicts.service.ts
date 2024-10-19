@@ -89,9 +89,13 @@ export class ConflictsService {
       });
       this.conflictStackSubject.next(realConflictStack);
 
-      this.currentCardCoordinatesSubject.next(
-        this.getCardCoordinates(realConflictStack[0].column, realConflictStack[0].row)
-      );
+      if (realConflictStack[0]) {
+        this.currentCardCoordinatesSubject.next(
+          this.getCardCoordinates(realConflictStack[0].column, realConflictStack[0].row)
+        );
+      } else {
+        this.currentCardCoordinatesSubject.next({ x: 0, y: 0 });
+      }
     }
 
     this.conflictStack$.subscribe((conflictStack) => {

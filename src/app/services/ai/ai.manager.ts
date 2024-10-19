@@ -247,7 +247,7 @@ export class AIManager {
     const evaluatedImperiumRowCards = gameState.imperiumRowCards.map((x) =>
       this.getImperiumCardBuyEvaluation(x, player, gameState)
     );
-    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 12, 4);
+    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 15, 5);
 
     let eventGoalModifiers: GoalModifier[] = [];
     if (gameEvent && gameEvent.aiAdjustments && gameEvent.aiAdjustments.goalEvaluationModifier) {
@@ -1113,6 +1113,8 @@ export class AIManager {
         return 6 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
         return -1 + 0.1 * (gameState.currentRound - 1);
+      case 'trash-self':
+        return -1;
       default:
         return 0;
     }
