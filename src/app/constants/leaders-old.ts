@@ -13,29 +13,29 @@ export interface LeaderImageOnly {
 }
 
 export const leadersOld: LeaderImageOnly[] = [
-  {
-    name: { de: 'paul atreides', en: 'paul atreides' },
-    house: {
-      de: 'haus atreides',
-      en: 'house atreides',
-    },
-    type: 'old',
-    imageUrl: '/assets/images/leaders/old/paul.jpg',
-    playableByAI: true,
-  },
-  {
-    name: { de: 'herzog leto atreides', en: 'duke leto atreides' },
-    house: {
-      de: 'haus atreides',
-      en: 'house atreides',
-    },
-    type: 'old',
-    imageUrl: '/assets/images/leaders/old/leto.jpg',
-    aiAdjustments: {
-      fieldAccessModifier: [{ type: 'solari', amount: 1 }],
-      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'landsraad' ? 0.05 : 0.0),
-    },
-  },
+  // {
+  //   name: { de: 'paul atreides', en: 'paul atreides' },
+  //   house: {
+  //     de: 'haus atreides',
+  //     en: 'house atreides',
+  //   },
+  //   type: 'old',
+  //   imageUrl: '/assets/images/leaders/old/paul.jpg',
+  //   playableByAI: true,
+  // },
+  // {
+  //   name: { de: 'herzog leto atreides', en: 'duke leto atreides' },
+  //   house: {
+  //     de: 'haus atreides',
+  //     en: 'house atreides',
+  //   },
+  //   type: 'old',
+  //   imageUrl: '/assets/images/leaders/old/leto.jpg',
+  //   aiAdjustments: {
+  //     fieldAccessModifier: [{ type: 'solari', amount: 1 }],
+  //     fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'landsraad' ? 0.05 : 0.0),
+  //   },
+  // },
   {
     name: { de: 'graf ilban richese', en: 'count ilban richese' },
     house: {
@@ -58,25 +58,25 @@ export const leadersOld: LeaderImageOnly[] = [
     type: 'old',
     imageUrl: '/assets/images/leaders/old/helena.jpg',
   },
-  {
-    name: { de: 'baron vladimir harkonnen', en: 'baron vladimir harkonnen' },
-    house: {
-      de: 'haus harkonnen',
-      en: 'house harkonnen',
-    },
-    type: 'old',
-    imageUrl: '/assets/images/leaders/old/vlad.jpg',
-  },
-  {
-    name: { de: 'glossu "die bestie" rabban', en: 'glossu "the beast" rabban' },
-    house: {
-      de: 'haus harkonnen',
-      en: 'house harkonnen',
-    },
-    type: 'old',
-    imageUrl: '/assets/images/leaders/old/rabban.jpg',
-    playableByAI: true,
-  },
+  // {
+  //   name: { de: 'baron vladimir harkonnen', en: 'baron vladimir harkonnen' },
+  //   house: {
+  //     de: 'haus harkonnen',
+  //     en: 'house harkonnen',
+  //   },
+  //   type: 'old',
+  //   imageUrl: '/assets/images/leaders/old/vlad.jpg',
+  // },
+  // {
+  //   name: { de: 'glossu "die bestie" rabban', en: 'glossu "the beast" rabban' },
+  //   house: {
+  //     de: 'haus harkonnen',
+  //     en: 'house harkonnen',
+  //   },
+  //   type: 'old',
+  //   imageUrl: '/assets/images/leaders/old/rabban.jpg',
+  //   playableByAI: true,
+  // },
   {
     name: { de: 'gräfin ariana thorvald', en: 'countess ariana thorvald' },
     house: {

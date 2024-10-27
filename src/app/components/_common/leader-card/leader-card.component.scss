@@ -82,10 +82,9 @@
 .leader-passive-container {
     position: absolute;
     border-radius: 0px 6px 0px 8px;
-    left: 47px;
+    left: 40px;
     bottom: 0;
-    height: 92px;
-    padding: 8px;
+    padding: 12px;
     width: 40%;
 }
 
@@ -93,15 +92,23 @@
     position: absolute;
     right: 0;
     bottom: 0;
-    height: 92px;
-    padding: 8px;
+    padding: 12px;
     width: 38%;
 }
 
 .leader-passive-name,
 .leader-signet-name {
-    font-size: 11px;
-    margin-bottom: 8px;
+    font-size: 10px;
+    margin-bottom: 2px;
+    margin-left: 4px;
+}
+
+.leader-passive-description-container,
+.leader-signet-description-container {
+    height: 62px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
 }
 
 .leader-passive-description,

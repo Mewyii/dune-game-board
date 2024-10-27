@@ -2246,4 +2246,37 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
   },
+  {
+    name: {
+      en: 'Mohiam, Reverend Mother',
+      de: 'Mohiam, Ehrwürdige Mutter',
+    },
+    faction: 'bene',
+    persuasionCosts: 8,
+    fieldAccess: ['bene', 'emperor', 'landsraad'],
+    imageUrl: '/assets/images/leaders/mohiam.png',
+    cardAmount: 1,
+    buyEffects: [
+      {
+        type: 'faction-influence-up-bene',
+      },
+      {
+        type: 'faction-influence-up-bene',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
+    customAgentEffect: {
+      en: '',
+      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
+      fontSize: 'small',
+    },
+  },
 ];

@@ -11,20 +11,24 @@
       <div class="leader-passive-name">
         {{ translateService.translate(leader.passiveName).toLocaleLowerCase() }}
       </div>
-      <div
-        class="leader-passive-description"
-        [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
-      ></div>
+      <div class="leader-signet-description-container">
+        <div
+          class="leader-passive-description"
+          [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
+        ></div>
+      </div>
     </div>
     <div class="leader-signet-container">
       <div class="leader-signet-name">
         <!-- <img class="signet-ring" src="/assets/images/reward-markers/marker_signet_ring.png" /> -->
         {{ translateService.translate(leader.signetName).toLocaleLowerCase() }}
       </div>
-      <div
-        class="leader-signet-description"
-        [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"
-      ></div>
+      <div class="leader-signet-description-container">
+        <div
+          class="leader-signet-description"
+          [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"
+        ></div>
+      </div>
     </div>
     <!-- <div class="deck-indicator">{{ translateService.translate(deckName) }}</div>
     <div class="discard-indicator">{{ translateService.translate(discardName) }}</div> -->
