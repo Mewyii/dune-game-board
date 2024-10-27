@@ -26,6 +26,7 @@
     <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
     <app-card-areas></app-card-areas>
     <dune-conflicts *ngIf="settings.mode === 'game'"></dune-conflicts>
+    <dune-intrigues *ngIf="settings.mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
     <dune-tech-tiles *ngIf="settings.mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
     <dune-always-buyable-cards></dune-always-buyable-cards>
   </div>

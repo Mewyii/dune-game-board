@@ -3,7 +3,7 @@ import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/m
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
 import { cloneDeep } from 'lodash';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
+import { IntriguesService, PlayerIntrigueStack } from 'src/app/services/intrigues.service';
 
 @Component({
   selector: 'app-playerboard',
@@ -34,13 +35,15 @@ export class PlayerboardComponent implements OnInit {
   public playerDecks: PlayerCardStack[] = [];
   public playerDiscardPiles: PlayerCardStack[] = [];
   public playerHandCards: PlayerCardStack[] = [];
+  public playerIntrigues: PlayerIntrigueStack[] = [];
 
   constructor(
     public gameManager: GameManager,
-    public playerManager: PlayerManager,
+    public playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     public leadersService: LeadersService,
     public cardsService: CardsService,
+    public intriguesService: IntriguesService,
     public translateService: TranslateService,
     private audioManager: AudioManager,
     public dialog: MatDialog
@@ -78,6 +81,10 @@ export class PlayerboardComponent implements OnInit {
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
       this.playerHandCards = playerHandCards;
+    });
+
+    this.intriguesService.playerIntrigues$.subscribe((playerIntrigues) => {
+      this.playerIntrigues = playerIntrigues;
     });
   }
 
@@ -168,6 +175,10 @@ export class PlayerboardComponent implements OnInit {
 
   public getPlayerHandCards(playerId: number) {
     return this.playerHandCards.find((x) => x.playerId === playerId);
+  }
+
+  public getPlayerIntrigues(playerId: number) {
+    return this.playerIntrigues.find((x) => x.playerId === playerId);
   }
 
   getPlayerLeaderName(playerId: number) {

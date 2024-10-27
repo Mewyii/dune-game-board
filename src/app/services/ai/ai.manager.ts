@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from '../player-manager.service';
+import { Player } from '../players.service';
 import { getNumberAverage, normalizeNumber, randomizeArray } from '../../helpers/common';
 import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from './models';
 import { aiPersonalities } from './constants';
@@ -25,6 +25,7 @@ import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/help
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { ImperiumRowModifier } from '../game-modifier.service';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
+import { IntrigueDeckCard } from '../intrigues.service';
 
 export interface AIPlayer {
   playerId: number;
@@ -618,6 +619,18 @@ export class AIManager {
     return undefined;
   }
 
+  getIntrigueToTrash(playerIntrigueCards: IntrigueDeckCard[], player: Player, gameState: GameState) {
+    if (playerIntrigueCards.length > 0) {
+      const cardEvaluations = playerIntrigueCards.map((card) => {
+        const evaluation = this.getIntrigueCardTrashEvaluation(card, player, gameState);
+        return { evaluation, card };
+      });
+      cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
+      return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
   private getGameStateModifier(
     goal: AIGoals,
     conflictEvaluation: number,
@@ -972,6 +985,34 @@ export class AIManager {
     return evaluationValue;
   }
 
+  private getIntrigueCardTrashEvaluation(card: IntrigueDeckCard, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    if (card.effects) {
+      const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
+        card.effects
+      );
+      if (!hasRewardOptions && !hasRewardConversion) {
+        evaluationValue -= this.getRewardArrayEvaluation(card.effects, player, gameState, true);
+      } else if (hasRewardOptions) {
+        const leftSideRewards = card.effects.slice(0, rewardOptionIndex);
+        const rightSideRewards = card.effects.slice(rewardOptionIndex + 1);
+        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
+        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
+
+        evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+      } else if (hasRewardConversion) {
+        const costs = card.effects.slice(0, rewardConversionIndex);
+        const rewards = card.effects.slice(rewardConversionIndex + 1);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
+        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
+
+        evaluationValue -= -costsEvaluation + rewardsEvaluation;
+      }
+    }
+
+    return evaluationValue;
+  }
+
   public getRewardArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState, ignoreTurnState = false) {
     let evaluationValue = 0;
     for (const reward of rewards) {
@@ -1037,7 +1078,7 @@ export class AIManager {
       case 'card-draw-or-destroy':
         return 2 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed;
       case 'intrigue':
-        return 1.75 - 0.25 * player.intrigueCount;
+        return 1.75 - 0.25 * gameState.playerIntrigueCount;
       case 'persuasion':
         return 1.75;
       case 'foldspace':

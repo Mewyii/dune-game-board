@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AIDIfficultyTypes, AIManager, AIPlayer, AIVariableValues, AIVariables } from 'src/app/services/ai/ai.manager';
 import { aiPersonalities } from 'src/app/services/ai/constants';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -21,7 +21,7 @@ export class AITileComponent implements OnInit {
   constructor(
     public translateService: TranslateService,
     public gameManager: GameManager,
-    public playerManager: PlayerManager,
+    public playerManager: PlayersService,
     public aiManager: AIManager
   ) {}
 

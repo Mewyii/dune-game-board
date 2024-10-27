@@ -158,14 +158,10 @@
       </div>
       <div class="info-container right">
         <div class="resource-container">
-          <div
-            class="resource-display"
-            (click)="onAddIntrigueClicked(currentPlayer.id)"
-            (contextmenu)="onRemoveIntrigueClicked(currentPlayer.id)"
-          >
+          <div class="resource-display" (click)="onAddIntrigueClicked(currentPlayer.id)" (contextmenu)="(false)">
             <img class="resource intrigue" [src]="getRewardTypePath('intrigue')" />
             <div class="resource-amount on-background">
-              <span>{{ currentPlayer.intrigueCount }}</span>
+              <span>{{ currentPlayerIntrigueCount }}</span>
             </div>
           </div>
         </div>

@@ -1,0 +1,87 @@
+
+.intrigue-card {
+    border-radius: 10px;
+    height: 255px;
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: small;
+    background-color: #151515;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+    box-sizing: border-box;
+    font-family: "Medieval";
+    font-weight: bold;
+    line-height: initial;
+}
+
+.card-header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 8px 8px 0px 0px;
+    color: #f3f5de;
+    background-image: url(/assets/images/tech-tile-backgrounds/heading.png);
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.card-content {
+    background-size: cover;
+    background-position: top;
+    border-radius: 0px 0px 8px 8px;
+    flex: 1 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-content.complot {
+    border-top: 2px solid #8a6b31;
+    background-image: linear-gradient(#b38229, 5%, #8a6b31, 70%, #53411e);
+}
+
+.card-content.combat {
+    border-top: 2px solid #792020;
+    background-image: linear-gradient(#9c0808, 5%, #792020, 70%, #591818);
+}
+
+.card-effects-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+
+.card-title {
+    padding: 4px;
+    font-size: large;
+    text-align: center;
+}
+
+.reward-container {
+    position: relative;
+    width: min-content;
+}
+
+.reward {
+    height: 36px;
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+}
+
+.reward-amount {
+    position: absolute;
+    top: 3px;
+    right: 0px;
+    width: 100%;
+    color: white;
+    font-size: large;
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+    text-align: center;
+}

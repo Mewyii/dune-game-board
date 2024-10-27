@@ -17,7 +17,7 @@ import {
 } from 'src/app/services/ai/shared';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { ActionField } from 'src/app/models/location';
-import { Player } from 'src/app/services/player-manager.service';
+import { Player } from 'src/app/services/players.service';
 import { FactionType, Resource, RewardType } from '../../../models';
 import { isResourceArray } from 'src/app/helpers/resources';
 import { normalizeNumber } from 'src/app/helpers/common';
@@ -211,9 +211,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   intrigues: {
     baseDesire: 0.3,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * (gameState.currentRound - 1) - 0.033 * player.intrigueCount,
+      0.01 * (gameState.currentRound - 1) - 0.033 * gameState.playerIntrigueCount,
     goalIsReachable: () => false,
-    reachedGoal: (player) => player.intrigueCount > 2,
+    reachedGoal: (player, gameState) => gameState.playerIntrigueCount > 2,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'intrigue', 0, 2),
       'Mind Training': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.5 : 0.0),
@@ -228,8 +228,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   },
   'intrigue-steal': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals, virtualResources) =>
-      gameState.enemyPlayers.filter((x) => x.intrigueCount > 3).length * 0.2,
+    desireModifier: (player, gameState, goals, virtualResources) => (gameState.playerCanStealIntrigues ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({

@@ -1,7 +1,7 @@
 import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
-import { Player } from '../../player-manager.service';
+import { Player } from '../../players.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
 import { ActionField, ActiveFactionType, Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
@@ -66,6 +66,8 @@ export interface GameState {
   playerFactionFriendships: PlayerFactionScoreType[];
   playerFieldUnlocksForFactions?: ActiveFactionType[];
   playerFieldUnlocksForIds?: string[];
+  playerIntrigueCount: number;
+  playerCanStealIntrigues: boolean;
 }
 
 export interface AIGoal {

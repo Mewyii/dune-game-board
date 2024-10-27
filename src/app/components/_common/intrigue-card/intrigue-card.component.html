@@ -1,0 +1,21 @@
+<div class="intrigue-card">
+  <div class="card-header">
+    <span>
+      {{ translateService.translate(card.name).toLocaleLowerCase() }}
+    </span>
+  </div>
+  <div [class]="'card-content ' + card.type">
+    <div class="card-effects-container">
+      <ng-container *ngFor="let reward of card.effects">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

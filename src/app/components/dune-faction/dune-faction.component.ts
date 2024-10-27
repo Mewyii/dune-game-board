@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Faction, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -56,7 +56,7 @@ export class DuneFactionComponent implements OnInit {
   public excludedPlayers: number[] = [];
 
   constructor(
-    public playerManager: PlayerManager,
+    public playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     public translateService: TranslateService,
     public gameModifiersService: GameModifiersService

@@ -11,6 +11,7 @@ export interface PlayerRewardChoice<T> {
 export interface PlayerRewardChoices {
   playerId: number;
   rewardChoices: PlayerRewardChoice<Reward>[];
+  rewardsChoices: PlayerRewardChoice<Reward[]>[];
   customChoices: PlayerRewardChoice<string>[];
 }
 
@@ -57,6 +58,26 @@ export class PlayerRewardChoicesService {
       playerRewardChoices.push({
         playerId,
         rewardChoices: [{ id: crypto.randomUUID(), choice: reward }],
+        rewardsChoices: [],
+        customChoices: [],
+      });
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    }
+  }
+
+  public addPlayerRewardsChoice(playerId: number, rewards: Reward[]) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
+
+    if (index > -1) {
+      playerRewardChoices[index].rewardsChoices.push({ id: crypto.randomUUID(), choice: rewards });
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    } else {
+      playerRewardChoices.push({
+        playerId,
+        rewardChoices: [],
+        rewardsChoices: [{ id: crypto.randomUUID(), choice: rewards }],
         customChoices: [],
       });
       this.playerRewardChoicesSubject.next(playerRewardChoices);
@@ -75,6 +96,7 @@ export class PlayerRewardChoicesService {
       playerRewardChoices.push({
         playerId,
         rewardChoices: [],
+        rewardsChoices: [],
         customChoices: [{ id: crypto.randomUUID(), choice: customChoice }],
       });
       this.playerRewardChoicesSubject.next(playerRewardChoices);
@@ -88,6 +110,17 @@ export class PlayerRewardChoicesService {
 
     if (index > -1) {
       playerRewardChoices[index].rewardChoices = playerRewardChoices[index].rewardChoices.filter((x) => x.id !== id);
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    }
+  }
+
+  public removePlayerRewardsChoice(playerId: number, id: string) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
+
+    if (index > -1) {
+      playerRewardChoices[index].rewardsChoices = playerRewardChoices[index].rewardsChoices.filter((x) => x.id !== id);
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     }
   }

@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isResource, isResourceType } from '../helpers/resources';
 import { CombatManager, PlayerCombatUnits } from './combat-manager.service';
 import { LoggingService } from './log.service';
-import { Player, PlayerManager } from './player-manager.service';
+import { Player, PlayersService } from './players.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
@@ -29,6 +29,7 @@ import { getCardCostModifier, getFactionInfluenceModifier, hasFactionInfluenceMo
 import { isFactionType } from '../helpers/faction-types';
 import { PlayerRewardChoicesService } from './player-reward-choices.service';
 import { TranslateService } from './translate-service';
+import { IntriguesService } from './intrigues.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -81,7 +82,7 @@ export class GameManager {
 
   constructor(
     private playerScoreManager: PlayerScoreManager,
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     private combatManager: CombatManager,
     private locationManager: LocationManager,
     private loggingService: LoggingService,
@@ -96,7 +97,8 @@ export class GameManager {
     private cardsService: CardsService,
     private gameModifiersService: GameModifiersService,
     private playerRewardChoicesService: PlayerRewardChoicesService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private intriguesService: IntriguesService
   ) {
     const currentRoundString = localStorage.getItem('currentTurn');
     if (currentRoundString) {
@@ -255,6 +257,7 @@ export class GameManager {
     this.cardsService.setUnlimitedCustomCards();
     this.cardsService.setImperiumDeck();
     this.cardsService.setInitialPlayerDecks();
+    this.intriguesService.setInitialIntrigueDeck();
     this.aIManager.assignPersonalitiesToAIPlayers(newPlayers);
     this.leadersService.assignRandomLeadersToPlayers(newPlayers);
     this.conflictsService.setInitialConflictStack();
@@ -630,6 +633,7 @@ export class GameManager {
         if (aiAgentPlacementInfos.canEnterCombat) {
           const playerCombatUnits = this.combatManager.getPlayerCombatUnits(activePlayer.id);
           const enemyCombatUnits = this.combatManager.getEnemyCombatUnits(activePlayer.id);
+          const playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(activePlayer.id);
           const playerHasAgentsLeft =
             (this.availablePlayerAgents.find((x) => x.playerId === activePlayer.id)?.agentAmount ?? 0) > 1;
 
@@ -645,7 +649,7 @@ export class GameManager {
                   enemyCombatUnits,
                   aiAgentPlacementInfos.unitsGainedThisTurn + 2,
                   playerHasAgentsLeft,
-                  activePlayer.intrigueCount > 2
+                  playerIntrigueCount > 2
                 );
 
                 if (addUnitsDecision === 'all') {
@@ -1107,6 +1111,9 @@ export class GameManager {
     const playerFieldUnlocksForFactions = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id);
     const playerFieldUnlocksForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id);
 
+    const playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(player.id);
+    const playerCanStealIntrigues = this.intriguesService.getEnemyIntrigues(player.id).some((x) => x.intrigues.length > 3);
+
     return {
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
@@ -1138,6 +1145,8 @@ export class GameManager {
       playerFactionFriendships,
       playerFieldUnlocksForFactions,
       playerFieldUnlocksForIds,
+      playerIntrigueCount,
+      playerCanStealIntrigues,
     };
   }
 
@@ -1217,6 +1226,7 @@ export class GameManager {
   private playerCanPayCosts(playerId: number, costs: Reward[]) {
     let canPayCosts = true;
     const player = this.playerManager.getPlayer(playerId);
+    let playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId);
     if (player) {
       for (let cost of costs) {
         const costType = cost.type;
@@ -1244,8 +1254,8 @@ export class GameManager {
             canPayCosts = false;
           }
         } else if (costType === 'intrigue-trash') {
-          player.intrigueCount -= 1;
-          if (player.intrigueCount < 0) {
+          playerIntrigueCount -= 1;
+          if (playerIntrigueCount < 0) {
             canPayCosts = false;
           }
         }
@@ -1396,7 +1406,7 @@ export class GameManager {
       aiInfo.techAgentsGainedThisTurn += agents;
     } else if (rewardType === 'intrigue') {
       this.audioManager.playSound('intrigue', reward.amount);
-      this.playerManager.addIntriguesToPlayer(playerId, reward.amount ?? 1);
+      this.intriguesService.drawPlayerIntriguesFromDeck(playerId, reward.amount ?? 1);
     } else if (rewardType === 'troop') {
       this.audioManager.playSound('troops', reward.amount);
       this.combatManager.addPlayerTroopsToGarrison(playerId, reward.amount ?? 1);
@@ -1468,7 +1478,20 @@ export class GameManager {
     } else if (costType === 'faction-influence-down-choice') {
       aiInfo.factionInfluenceDownChoiceAmount = 1;
     } else if (costType === 'intrigue' || costType === 'intrigue-trash') {
-      this.playerManager.removeIntriguesFromPlayer(playerId, cost.amount ?? 1);
+      const playerIntrigues = this.intriguesService.getPlayerIntrigues(playerId);
+      if (playerIntrigues && playerIntrigues.length > 0) {
+        const player = this.playerManager.getPlayer(playerId);
+        if (!player) {
+          return aiInfo;
+        }
+
+        const gameState = this.getGameState(player);
+
+        const intrigueToTrash = this.aIManager.getIntrigueToTrash(playerIntrigues, player, gameState);
+        if (intrigueToTrash) {
+          this.intriguesService.trashPlayerIntrigue(playerId, intrigueToTrash.id);
+        }
+      }
     } else if (costType === 'troop' || costType === 'loose-troop') {
       this.combatManager.removePlayerTroopsFromGarrisonOrCombat(playerId, cost.amount ?? 1);
     } else if (costType === 'dreadnought') {

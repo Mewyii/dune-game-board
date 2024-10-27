@@ -26,6 +26,22 @@
   </div>
   <ng-container *ngIf="playerRewardChoices">
     <div
+      class="rewards-choice"
+      *ngFor="let rewardsChoice of playerRewardChoices.rewardsChoices"
+      (click)="onRewardsChoiceClicked(rewardsChoice.id)"
+    >
+      <div *ngFor="let reward of rewardsChoice.choice">
+        <div class="reward-container">
+          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div
       class="reward-choice"
       *ngFor="let rewardChoice of playerRewardChoices.rewardChoices"
       (click)="onRewardChoiceClicked(rewardChoice.id)"

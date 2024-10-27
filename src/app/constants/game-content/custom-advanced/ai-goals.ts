@@ -234,7 +234,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
   },
   intrigues: {
     baseDesire: 0.25,
-    desireModifier: (player, gameState, goals, virtualResources) => -0.05 * player.intrigueCount,
+    desireModifier: (player, gameState, goals, virtualResources) => -0.05 * gameState.playerIntrigueCount,
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -254,8 +254,7 @@ export const aiGoalsCustomAdvanced: FieldsForGoals = {
   },
   'intrigue-steal': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals, virtualResources) =>
-      gameState.enemyPlayers.some((x) => x.intrigueCount > 3) ? 0.15 : 0,
+    desireModifier: (player, gameState, goals, virtualResources) => (gameState.playerCanStealIntrigues ? 0.25 : 0),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
       getResourceAmount(player, 'spice', virtualResources) > 1,
     reachedGoal: () => false,

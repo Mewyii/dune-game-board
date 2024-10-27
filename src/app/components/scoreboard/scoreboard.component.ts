@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Reward, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { PlayerManager } from 'src/app/services/player-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
@@ -22,7 +22,7 @@ export class ScoreboardComponent implements OnInit {
   public finaleTrigger = 9;
 
   constructor(
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     private settingsService: SettingsService
   ) {}

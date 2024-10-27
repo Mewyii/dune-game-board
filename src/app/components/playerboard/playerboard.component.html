@@ -89,6 +89,14 @@
         </div>
       </div>
     </div>
+    <div class="cards-area">
+      <div class="resource-display">
+        <img class="resource dark" [src]="getRewardTypePath('intrigue')" />
+        <div class="resource-amount">
+          <span>{{ getPlayerIntrigues(player.id)?.intrigues?.length }}</span>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="action-container" [style]="'padding-bottom: 48px'">
     <button *ngIf="!currentTurn" mat-fab color="accent" (click)="showSettingsDialog()" matTooltip="Settings">

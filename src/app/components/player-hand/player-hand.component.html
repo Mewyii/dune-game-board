@@ -1,6 +1,38 @@
 <ng-container>
   <div class="player-hand-container">
     <div class="player-cards-container">
+      <ng-container *ngIf="playerIntrigues && cardsShown === 'hand'">
+        <div
+          *ngFor="let intrigue of playerIntrigues"
+          [class]="'intrigue-container' + (showCards ? ' ' : ' hidden')"
+          (click)="setIntrigueActive(intrigue.id)"
+        >
+          <dune-intrigue-card
+            [card]="intrigue"
+            [class]="intrigue.id === activeIntrigueId ? 'active' : ''"
+          ></dune-intrigue-card>
+          <div class="intrigue-action-container" *ngIf="intrigue.id === activeIntrigueId">
+            <button
+              class="card-activate-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onPlayIntrigueClicked(intrigue)"
+              matTooltip="Play"
+            >
+              <mat-icon>check</mat-icon>
+            </button>
+            <button
+              class="card-remove-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onTrashIntrigueClicked(intrigue)"
+              matTooltip="Trash"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
       <ng-container *ngIf="playerHandCards && cardsShown === 'hand'">
         <div
           *ngFor="let handCard of playerHandCards.cards"

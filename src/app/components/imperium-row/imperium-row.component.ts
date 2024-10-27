@@ -6,7 +6,7 @@ import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { LoggingService } from 'src/app/services/log.service';
-import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
+import { Player, PlayersService, PlayerTurnState } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -26,7 +26,7 @@ export class ImperiumRowComponent implements OnInit {
   public playerCanCharm = false;
 
   constructor(
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     private gameManager: GameManager,
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,

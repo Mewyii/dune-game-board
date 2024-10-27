@@ -1,0 +1,19 @@
+<!-- <ng-container *ngIf="currentIntrigueSet && currentIntrigueSet.imagePath">
+  <div
+    class="intrigue-card"
+    [style.background-image]="'url(' + currentIntrigueSet.imagePath + ')'"
+    [style.background-size]="currentIntrigueSet.imageSize + 'px'"
+    [style.background-position-x]="currentCardCoordinates.x + 'px'"
+    [style.background-position-y]="currentCardCoordinates.y + 'px'"
+  ></div>
+</ng-container> -->
+<div
+  [class]="'intrigue-card background' + (hasIntrigueVision ? ' clickable' : '') + (intrigueStackIsActive ? ' active' : '')"
+  (click)="onSetIntrigueStackActiveClicked()"
+>
+  <div class="intrigue-action-container" *ngIf="hasIntrigueVision && intrigueStackIsActive">
+    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowNextIntrigueClicked()">
+      <mat-icon>visibility</mat-icon>
+    </button>
+  </div>
+</div>

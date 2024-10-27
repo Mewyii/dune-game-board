@@ -10,13 +10,14 @@ import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manage
 import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
 import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayerTechTile, TechTileCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
+import { IntriguesService } from 'src/app/services/intrigues.service';
 
 @Component({
   selector: 'dune-leaders',
@@ -42,6 +43,8 @@ export class LeadersComponent implements OnInit {
 
   public currentPlayerAvailableAgents: PlayerAgents | undefined;
 
+  public currentPlayerIntrigueCount: number | undefined;
+
   public houses: House[] = [];
   public playerHouses: PlayerHouse[] = [];
   public houseTitle: LanguageString = { de: 'haus', en: 'house' };
@@ -54,12 +57,13 @@ export class LeadersComponent implements OnInit {
     public leadersService: LeadersService,
     public translateService: TranslateService,
     public gameManager: GameManager,
-    public playerManager: PlayerManager,
+    public playerManager: PlayersService,
     public combatManager: CombatManager,
     public playerScoreManager: PlayerScoreManager,
     public minorHouseService: MinorHousesService,
     public techTilesService: TechTilesService,
     public cardsService: CardsService,
+    private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     public dialog: MatDialog
   ) {}
@@ -95,6 +99,8 @@ export class LeadersComponent implements OnInit {
       this.currentPlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
         (x) => x.playerId === this.activePlayerId
       );
+
+      this.currentPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
 
     this.playerManager.players$.subscribe((players) => {
@@ -125,6 +131,10 @@ export class LeadersComponent implements OnInit {
 
     this.gameManager.currentRound$.subscribe((currentTurn) => {
       this.currentTurn = currentTurn;
+    });
+
+    this.intriguesService.playerIntrigues$.subscribe(() => {
+      this.currentPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
   }
 
@@ -242,17 +252,9 @@ export class LeadersComponent implements OnInit {
 
   onAddIntrigueClicked(id: number) {
     this.audioManager.playSound('intrigue');
-    this.playerManager.addIntriguesToPlayer(id, 1);
+    this.intriguesService.drawPlayerIntriguesFromDeck(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onRemoveIntrigueClicked(id: number) {
-    this.audioManager.playSound('click-soft');
-    this.playerManager.removeIntriguesFromPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-    return false;
   }
 
   onAddSignetTokenClicked(id: number) {

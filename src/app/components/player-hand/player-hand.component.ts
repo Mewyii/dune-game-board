@@ -4,13 +4,15 @@ import { RewardType } from 'src/app/models';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, ImperiumDeckCard, PlayerCard, PlayerCardStack } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { LoggingService } from 'src/app/services/log.service';
 import { TranslateService } from 'src/app/services/translate-service';
+import { IntrigueDeckCard, IntriguesService, PlayerIntrigueStack } from 'src/app/services/intrigues.service';
+import { PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
 
 @Component({
   selector: 'dune-player-hand',
@@ -25,18 +27,23 @@ export class PlayerHandComponent implements OnInit {
   public activeCardId = '';
   public playedPlayerCardId: string | undefined;
 
+  public playerIntrigues: IntrigueDeckCard[] | undefined;
+  public activeIntrigueId = '';
+
   public showCards = false;
   public cardsShown: 'hand' | 'discard' | 'deck' = 'hand';
 
   constructor(
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     public gameManager: GameManager,
     private cardsService: CardsService,
+    private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     private settingsService: SettingsService,
     public dialog: MatDialog,
     private logService: LoggingService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private playerRewardChoicesService: PlayerRewardChoicesService
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +58,8 @@ export class PlayerHandComponent implements OnInit {
 
       this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
       this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
+
+      this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
@@ -63,6 +72,10 @@ export class PlayerHandComponent implements OnInit {
 
     this.cardsService.playedPlayerCards$.subscribe((playedPlayerCards) => {
       this.playedPlayerCardId = playedPlayerCards.find((x) => x.playerId === this.activePlayerId)?.cardId;
+    });
+
+    this.intriguesService.playerIntrigues$.subscribe((playerIntrigues) => {
+      this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
     });
   }
 
@@ -191,11 +204,28 @@ export class PlayerHandComponent implements OnInit {
     }
   }
 
+  onPlayIntrigueClicked(intrigue: IntrigueDeckCard) {
+    this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, intrigue.effects);
+    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
+  }
+
+  onTrashIntrigueClicked(intrigue: IntrigueDeckCard) {
+    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
+  }
+
   setCardActive(cardId: string) {
     if (this.activeCardId !== cardId) {
       this.activeCardId = cardId;
     } else {
       this.activeCardId = '';
+    }
+  }
+
+  setIntrigueActive(cardId: string) {
+    if (this.activeIntrigueId !== cardId) {
+      this.activeIntrigueId = cardId;
+    } else {
+      this.activeIntrigueId = '';
     }
   }
 

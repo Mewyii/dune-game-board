@@ -52,6 +52,10 @@ export class PlayerRewardChoicesComponent implements OnInit, AfterViewInit {
     this.playerRewardChoicesService.removePlayerRewardChoice(this.activePlayerId, id);
   }
 
+  onRewardsChoiceClicked(id: string) {
+    this.playerRewardChoicesService.removePlayerRewardsChoice(this.activePlayerId, id);
+  }
+
   onCustomChoiceClicked(id: string) {
     this.playerRewardChoicesService.removePlayerCustomChoice(this.activePlayerId, id);
   }

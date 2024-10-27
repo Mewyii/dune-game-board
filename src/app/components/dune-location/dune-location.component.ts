@@ -4,7 +4,7 @@ import { isResourceType } from 'src/app/helpers/resources';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 
@@ -36,7 +36,7 @@ export class DuneLocationComponent implements OnInit {
 
   constructor(
     private locationManager: LocationManager,
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     private leaderService: LeadersService,
     private audioManager: AudioManager,
     private gameManager: GameManager

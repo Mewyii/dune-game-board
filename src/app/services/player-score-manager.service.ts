@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Player, PlayerManager } from './player-manager.service';
+import { Player, PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
 import { ActionType, FactionType, Reward } from '../models';
 import { CombatManager } from './combat-manager.service';
@@ -38,7 +38,7 @@ export class PlayerScoreManager {
   public playerAlliances$ = this.playerAlliancesSubject.asObservable();
 
   constructor(
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     private combatManager: CombatManager,
     private settingsService: SettingsService
   ) {

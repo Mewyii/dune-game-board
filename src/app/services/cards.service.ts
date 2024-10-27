@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { shuffle } from '../helpers/common';
-import { PlayerManager } from './player-manager.service';
+import { PlayersService } from './players.service';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { ImperiumCard } from '../constants/imperium-cards';
 import { ActionType, FactionType } from '../models';
@@ -63,7 +63,7 @@ export class CardsService {
   public unlimitedCustomCards$ = this.unlimitedCustomCardsSubject.asObservable();
 
   constructor(
-    private playerManager: PlayerManager,
+    private playerManager: PlayersService,
     private cardConfiguratorService: CardConfiguratorService,
     private settingsService: SettingsService
   ) {

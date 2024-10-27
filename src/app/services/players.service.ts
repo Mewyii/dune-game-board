@@ -14,7 +14,6 @@ export interface Player {
   color: string;
   hasSwordmaster?: boolean;
   hasCouncilSeat?: boolean;
-  intrigueCount: number;
   signetTokenCount: number;
   focusTokens: number;
   cardsDrawnAtRoundStart: number;
@@ -28,7 +27,7 @@ export interface Player {
 @Injectable({
   providedIn: 'root',
 })
-export class PlayerManager {
+export class PlayersService {
   public maxPlayers = 4;
   private playersSubject = new BehaviorSubject<Player[]>([]);
   public players$ = this.playersSubject.asObservable();
@@ -96,7 +95,6 @@ export class PlayerManager {
         ],
         color: this.createPlayerColor(players.length + 1),
         focusTokens: 0,
-        intrigueCount: 0,
         signetTokenCount: 0,
         cardsDrawnAtRoundStart: 5,
         persuasionGainedThisRound: 0,
@@ -203,28 +201,6 @@ export class PlayerManager {
         ...player.resources[resourceIndex],
         amount: currentResourceAmount ? currentResourceAmount - amount : 0,
       };
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public addIntriguesToPlayer(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.intrigueCount = player.intrigueCount + amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public removeIntriguesFromPlayer(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.intrigueCount = player.intrigueCount - amount;
     }
 
     this.playersSubject.next(players);

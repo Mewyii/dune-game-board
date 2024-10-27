@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, isArray } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from './player-manager.service';
+import { Player } from './players.service';
 import { ActiveFactionType, FactionType, Reward } from '../models';
 
 export interface GameModifier {

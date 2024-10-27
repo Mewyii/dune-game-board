@@ -75,3 +75,21 @@
     height: 24px;
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
+
+.rewards-choice {
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    padding: 16px;
+    background: #232f42;
+    border-radius: 12px;
+    filter: drop-shadow(0px 0px 6px rgb(255, 170, 73));
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+    transition: .5s;
+    display: flex;
+    gap: 2px;
+}
+
+.rewards-choice:hover {
+    transform: scale(1.1);
+}

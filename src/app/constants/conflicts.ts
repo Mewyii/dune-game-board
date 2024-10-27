@@ -2,7 +2,7 @@ import { normalizeNumber } from '../helpers/common';
 import { isResourceType } from '../helpers/resources';
 import { LanguageString, ResourceType, Reward, RewardType } from '../models';
 import { GameState } from '../services/ai/models';
-import { Player } from '../services/player-manager.service';
+import { Player } from '../services/players.service';
 
 export interface Conflict {
   name: LanguageString;

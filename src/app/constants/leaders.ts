@@ -423,8 +423,8 @@ export const leaders: Leader[] = [
       de: 'ansprache an das volk',
     },
     signetDescription: {
-      en: '{resource:solari}',
-      de: '{resource:solari}',
+      en: '{resource:solari;amount:2}',
+      de: '{resource:solari;amount:2}',
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
@@ -666,8 +666,95 @@ export const leaders: Leader[] = [
       de: 'Unterdrückung',
     },
     signetDescription: {
-      en: '{resource:solari;amount:2}{resource:helper-or}Receive the bonus of all board spaces under your control.',
-      de: '{resource:solari;amount:2}{resource:helper-or}Erhalte den Bonus aller Felder unter deiner Kontrolle.',
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
+      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus aller Felder unter deiner Kontrolle.',
+    },
+    imageUrl: '/assets/images/leaders/rabban.png',
+    type: 'new',
+    playableByAI: true,
+  },
+  {
+    name: {
+      en: 'Archduke Armand Ecaz',
+      de: 'Erzherzog Armand Ecaz',
+    },
+    house: {
+      en: 'House Ecaz',
+      de: 'Haus Ecaz',
+    },
+    passiveName: {
+      en: 'Uncontrolled Aggression',
+      de: 'Unkontrollierte Agression',
+    },
+    passiveDescription: {
+      en: '<b>Round start</b>: Trash one of your handcards.',
+      de: '<b>Rundenbeginn</b>: Entsorge eine der Karten auf deiner Hand.',
+    },
+    signetName: {
+      en: 'Oppression',
+      de: 'Unterdrückung',
+    },
+    signetDescription: {
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
+      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus aller Felder unter deiner Kontrolle.',
+    },
+    imageUrl: '/assets/images/leaders/rabban.png',
+    type: 'new',
+    playableByAI: true,
+  },
+  {
+    name: {
+      en: 'Yuna Moritani',
+      de: 'Yuna Moritani',
+    },
+    house: {
+      en: 'House Moritani',
+      de: 'Haus Moritani',
+    },
+    passiveName: {
+      en: 'Uncontrolled Aggression',
+      de: 'In den Schatten',
+    },
+    passiveDescription: {
+      en: '<b>Round start</b>: Trash one of your handcards.',
+      de: 'Du beginnst das Spiel ohne Truppen. <br>Du kannst jederzeit: {resource:solari}{resource:helper-trade}gegnerische Agenten blockieren Felder in diesem Zug nicht.',
+    },
+    signetName: {
+      en: 'Oppression',
+      de: 'Erpressung',
+    },
+    signetDescription: {
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
+      de: '{resource:spice}',
+    },
+    imageUrl: '/assets/images/leaders/rabban.png',
+    type: 'new',
+    playableByAI: true,
+  },
+  {
+    name: {
+      en: 'Dara Moritani',
+      de: 'Dara Moritani',
+    },
+    house: {
+      en: 'House Moritani',
+      de: 'Haus Moritani',
+    },
+    passiveName: {
+      en: 'Uncontrolled Aggression',
+      de: 'Geächtete Gräfin',
+    },
+    passiveDescription: {
+      en: '<b>Round start</b>: Trash one of your handcards.',
+      de: 'Jedes Mal, wenn du Einfluss erhältst, zahle {resource:solari} oder {resource:faction-influence-down-choice}.',
+    },
+    signetName: {
+      en: 'Oppression',
+      de: 'Söldnerführerin',
+    },
+    signetDescription: {
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
+      de: '{resource:solari}{resource:helper-trade}{resource:troop}{resource:troop}{resource:helper-or}{resource:loose-troop}{resource:helper-trade}{resource:solari;amount:3}',
     },
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',

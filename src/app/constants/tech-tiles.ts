@@ -178,7 +178,7 @@ export const techTiles: TechTileCard[] = [
       0.01 * gameState.playerCardsTrashed +
       (player.hasSwordmaster ? 0.1 : 0.0) +
       (player.hasCouncilSeat ? 0.1 : 0.0) -
-      0.05 * player.intrigueCount,
+      0.05 * gameState.playerIntrigueCount,
   },
   {
     name: {

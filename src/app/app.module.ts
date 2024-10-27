@@ -71,6 +71,12 @@ import { TechTileEditorComponent } from './pages/tech-tile-configurator/tech-til
 import { ImperiumCardsPreviewDialogComponent } from './components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { PlayerRewardChoicesComponent } from './components/player-reward-choices/player-reward-choices.component';
 import { ConflictsPreviewDialogComponent } from './components/_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
+import { IntrigueEditorComponent } from './pages/intrigue-configurator/intrigue-editor/intrigue-editor.component';
+import { DialogIntrigueEditorComponent } from './pages/intrigue-configurator/dialog-intrigue-editor/dialog-intrigue-editor.component';
+import { IntrigueConfiguratorComponent } from './pages/intrigue-configurator/intrigue-configurator.component';
+import { IntrigueCardComponent } from './components/_common/intrigue-card/intrigue-card.component';
+import { IntriguesComponent } from './components/intrigues/intrigues.component';
+import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +133,12 @@ import { ConflictsPreviewDialogComponent } from './components/_common/dialogs/co
     ImperiumCardsPreviewDialogComponent,
     PlayerRewardChoicesComponent,
     ConflictsPreviewDialogComponent,
+    IntrigueConfiguratorComponent,
+    DialogIntrigueEditorComponent,
+    IntrigueEditorComponent,
+    IntrigueCardComponent,
+    IntriguesComponent,
+    IntriguesPreviewDialogComponent,
   ],
   imports: [
     BrowserModule,

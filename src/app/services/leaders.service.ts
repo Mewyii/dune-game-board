@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Leader, leaders } from '../constants/leaders';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from './player-manager.service';
+import { Player } from './players.service';
 import { cloneDeep } from 'lodash';
 import { shuffle } from '../helpers/common';
 import { LeaderImageOnly, leadersOld } from '../constants/leaders-old';

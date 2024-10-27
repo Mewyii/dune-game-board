@@ -2,7 +2,7 @@ import { clamp } from 'lodash';
 import { Resource, ResourceType, Reward, RewardType } from 'src/app/models';
 import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { Player } from 'src/app/services/player-manager.service';
+import { Player } from 'src/app/services/players.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
 
 export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
@@ -18,7 +18,7 @@ export function getResourceDesire(
   virtualResources: Resource[],
   baseDesire: number,
   influences: {
-    resource: ResourceType | 'tech-agents' | 'intrigues';
+    resource: ResourceType | 'tech-agents';
     amount: number;
     maxAmount?: number;
     negative?: boolean;
@@ -36,16 +36,10 @@ export function getResourceDesire(
   return clamp(desire, 0, 1);
 }
 
-export function getResourceAmount(
-  player: Player,
-  resourceType: ResourceType | 'tech-agents' | 'intrigues',
-  virtualResources: Resource[]
-) {
+export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech-agents', virtualResources: Resource[]) {
   switch (resourceType) {
     case 'tech-agents':
       return player.techAgents;
-    case 'intrigues':
-      return player.intrigueCount;
     default:
       const resource = player.resources.find((x) => x.type === resourceType);
       const virtualResource = virtualResources.find((x) => x.type === resourceType);

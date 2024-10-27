@@ -5,7 +5,7 @@ import { shuffle } from '../helpers/common';
 import { techTiles } from '../constants/tech-tiles';
 import { FactionType, LanguageString, Reward } from '../models';
 import { LanguageStringAndFontSize } from '../constants/imperium-cards';
-import { Player } from './player-manager.service';
+import { Player } from './players.service';
 import { GameState } from './ai/models';
 
 export interface TechTileCard {

@@ -97,14 +97,51 @@ dune-imperium-row-card.not-played {
     z-index: 3;
 }
 
-.card-activate-button {
-
+.intrigue-container {
+    transform: translate(0rem, -200px);
+    transition: .66s;
 }
 
-.card-discard-button {
-
+.intrigue-container:hover {
+    z-index: 1;
 }
 
-.card-remove-button {
+.intrigue-container.hidden {
+    transform: none;
+}
 
+.intrigue-action-container {
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    z-index: 3;
+}
+
+
+dune-intrigue-card {
+    transition: .66s;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+    display: block;
+    user-select: none;
+}
+
+dune-intrigue-card:hover,
+dune-intrigue-card.active {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    transform: scale(1.25) translate(0rem, -24px);
+    z-index: 3;
+    position: relative;
+}
+
+dune-intrigue-card.played {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73)) brightness(1.2) saturate(1.2);
+    transform: scale(1.25) translate(0rem, -24px);
+}
+
+dune-intrigue-card.not-played {
+    filter: brightness(0.8) saturate(0.8);
 }

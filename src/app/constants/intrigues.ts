@@ -1,0 +1,274 @@
+import { LanguageString, Reward } from '../models';
+
+export const intriguesTypes = ['complot', 'combat'] as const;
+export type IntrigueType = (typeof intriguesTypes)[number];
+
+export interface IntrigueCardBase {
+  name: LanguageString;
+  effects: Reward[];
+  type: IntrigueType;
+}
+
+export interface IntrigueCard extends IntrigueCardBase {
+  amount: number;
+}
+
+export const intrigues: IntrigueCard[] = [
+  {
+    name: {
+      en: 'Ambush',
+      de: 'Hinterhalt',
+    },
+    type: 'combat',
+    amount: 6,
+    effects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Betrayal',
+      de: 'Verrat',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Deceit',
+      de: 'Täuschung',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Flanking',
+      de: 'Flankieren',
+    },
+    type: 'combat',
+    amount: 6,
+    effects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Blackmail',
+      de: 'Erpressung',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Bribery',
+      de: 'Bestechung',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Deception',
+      de: 'Irreführung',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Exploitation',
+      de: 'Ausbeutung',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'agent-lift',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Mercenaries',
+      de: 'Söldner',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Smuggling',
+      de: 'Schmuggel',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'water',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Substances',
+      de: 'Substanzen',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'focus',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Traitors',
+      de: 'Verräter',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Treachery',
+      de: 'Betrug',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+  },
+];

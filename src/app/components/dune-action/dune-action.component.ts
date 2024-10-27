@@ -5,7 +5,7 @@ import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayerManager, PlayerTurnState } from 'src/app/services/player-manager.service';
+import { Player, PlayersService, PlayerTurnState } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
@@ -50,7 +50,7 @@ export class DuneActionComponent implements OnInit {
 
   constructor(
     public gameManager: GameManager,
-    public playerManager: PlayerManager,
+    public playerManager: PlayersService,
     public ts: TranslateService,
     private audioManager: AudioManager,
     private cardsService: CardsService,

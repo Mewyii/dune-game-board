@@ -4,7 +4,7 @@ import { boardSettings } from 'src/app/constants/board-settings';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayerManager } from 'src/app/services/player-manager.service';
+import { Player, PlayersService } from 'src/app/services/players.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SettingsService } from 'src/app/services/settings.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -39,7 +39,7 @@ export class DuneCombatComponent implements OnInit {
   constructor(
     public gameManager: GameManager,
     public combatManager: CombatManager,
-    public playerManager: PlayerManager,
+    public playerManager: PlayersService,
     public settingsService: SettingsService,
     private audioManager: AudioManager
   ) {}

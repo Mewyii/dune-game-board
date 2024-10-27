@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActionField } from 'src/app/models';
-import { PlayerManager } from 'src/app/services/player-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class TechboardComponent implements OnInit {
 
   public playerTechAgents: { playerId: number; techAgents: number }[] = [];
 
-  constructor(public playerManager: PlayerManager, public playerScoreManager: PlayerScoreManager) {}
+  constructor(public playerManager: PlayersService, public playerScoreManager: PlayerScoreManager) {}
 
   ngOnInit(): void {
     this.playerManager.players$.subscribe((players) => {

@@ -1,0 +1,54 @@
+<div class="cards-configurator">
+  <div class="cards-manager">
+    <div class="action-bar">
+      <div class="settings-container"></div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()" matTooltip="Add Card">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Cards">
+        <mat-icon>download</mat-icon>
+      </button>
+      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
+      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()" matTooltip="Export Cards">
+        <mat-icon>upload</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
+        <mat-icon>hide_source</mat-icon>
+      </button>
+      <div class="settings-container">
+        <mat-form-field>
+          <mat-label>Card Export Border Size</mat-label>
+          <input matInput type="number" [(ngModel)]="imagePadding" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="action-bar">
+      <div>Total {{ totalIntrigueAmount }} cards</div>
+    </div>
+    <div class="action-bar" [style.gap]="'32px'">
+      <div>sort by:</div>
+      <div class="sortable-category" (click)="onSortByNameClicked()">name</div>
+      <div class="sortable-category" (click)="onSortByTypeClicked()">type</div>
+    </div>
+    <div class="cards-preview-container">
+      <ng-container *ngFor="let card of intrigues">
+        <div class="card-container">
+          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
+            <dune-intrigue-card [card]="card"></dune-intrigue-card>
+          </div>
+          <div class="card-action-bar" *ngIf="showControls">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)" matTooltip="Edit">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)" matTooltip="Save">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
