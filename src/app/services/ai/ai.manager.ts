@@ -6,7 +6,7 @@ import { getNumberAverage, normalizeNumber, randomizeArray } from '../../helpers
 import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from './models';
 import { aiPersonalities } from './constants';
 import { SettingsService } from '../settings.service';
-import { PlayerCombatUnits } from '../combat-manager.service';
+import { PlayerCombatScore, PlayerCombatUnits } from '../combat-manager.service';
 import {
   ActionField,
   ActionType,
@@ -460,20 +460,19 @@ export class AIManager {
 
   public getAddAdditionalUnitsToCombatDecision(
     playerCombatUnits: PlayerCombatUnits,
-    enemyCombatUnits: PlayerCombatUnits[],
+    enemyCombatScores: PlayerCombatScore[],
     maxAddableUnits: number,
     playerHasAgentsLeft: boolean,
     playerHasIntrigues: boolean
   ) {
-    if (!playerCombatUnits || !enemyCombatUnits) {
+    if (!playerCombatUnits || !enemyCombatScores) {
       return 'none';
     }
 
     const playerCombatPower = getPlayerCombatPower(playerCombatUnits);
     const possibleAddedCombatPower = this.getMaxAddableCombatPower(playerCombatUnits, maxAddableUnits);
 
-    const enemyCombatPowers = enemyCombatUnits.map((x) => getPlayerCombatPower(x));
-    const highestEnemyCombatPower = Math.max(...enemyCombatPowers);
+    const highestEnemyCombatPower = Math.max(...enemyCombatScores.map((x) => x.score));
 
     if (playerCombatPower <= highestEnemyCombatPower) {
       if (

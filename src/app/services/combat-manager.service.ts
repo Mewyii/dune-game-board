@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Player, PlayersService } from './players.service';
+import { Player } from './players.service';
 import { SettingsService } from './settings.service';
 
 export interface PlayerCombatUnits {
@@ -12,6 +12,11 @@ export interface PlayerCombatUnits {
   shipsInGarrison: number;
   shipsInCombat: number;
   additionalCombatPower: number;
+}
+
+export interface PlayerCombatScore {
+  playerId: number;
+  score: number;
 }
 
 @Injectable({
@@ -369,6 +374,24 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
+  public getPlayerCombatScore(playerId: number) {
+    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
+    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+
+    const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    if (playerCombatUnits) {
+      if (playerCombatUnits.troopsInCombat > 0 || playerCombatUnits.shipsInCombat > 0) {
+        return (
+          playerCombatUnits.troopsInCombat * troopCombatStrength +
+          playerCombatUnits.shipsInCombat * dreadnoughtCombatStrength +
+          playerCombatUnits.additionalCombatPower
+        );
+      }
+    }
+
+    return 0;
+  }
+
   public getPlayerCombatScores() {
     const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
     const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
@@ -382,15 +405,35 @@ export class CombatManager {
     }));
   }
 
-  public getPlayerCombatScore(playerCombatUnits: PlayerCombatUnits) {
-    if (playerCombatUnits.troopsInCombat > 0 || playerCombatUnits.shipsInCombat > 0) {
-      return (
-        playerCombatUnits.troopsInCombat * this.settingsService.gameContent.troopCombatStrength +
-        playerCombatUnits.shipsInCombat * this.settingsService.gameContent.dreadnoughtCombatStrength +
-        playerCombatUnits.additionalCombatPower
-      );
+  public getEnemyCombatScores(playerId: number): PlayerCombatScore[] {
+    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
+    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+
+    return this.playerCombatUnits
+      .filter((x) => x.playerId !== playerId)
+      .map((x) => ({
+        playerId: x.playerId,
+        score:
+          x.troopsInCombat > 0 || x.shipsInCombat > 0
+            ? x.troopsInCombat * troopCombatStrength + x.shipsInCombat * dreadnoughtCombatStrength + x.additionalCombatPower
+            : 0,
+      }));
+  }
+
+  public getEnemyHighestCombatScores(playerId: number) {
+    const enemyCombatScores = this.getEnemyCombatScores(playerId);
+    if (enemyCombatScores.length > 0) {
+      enemyCombatScores.sort((a, b) => b.score - a.score);
+      return enemyCombatScores[0].score;
     } else {
       return 0;
     }
+  }
+
+  public getCombatScore(troopAmount: number, dreadnoughtAmount: number) {
+    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
+    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+
+    return troopAmount * troopCombatStrength + dreadnoughtAmount * dreadnoughtCombatStrength;
   }
 }

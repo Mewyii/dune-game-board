@@ -52,14 +52,14 @@ export class EffectsService {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentTurnState$.subscribe((state) => {
-      if (state === 'combat') {
+    this.gameManager.currentRoundPhase$.subscribe((phase) => {
+      if (phase === 'combat') {
         this.showCombatAnimation();
       }
-      if (state === 'agent-placement') {
+      if (phase === 'agent-placement') {
         this.showSpiceAnimation('runde ' + this.currentTurn);
       }
-      if (state === 'none') {
+      if (phase === 'none') {
         this.showWelcomeAnimation();
       }
     });

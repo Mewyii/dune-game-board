@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Resource, ResourceType } from '../models';
 import { SettingsService } from './settings.service';
 
-export type PlayerTurnState = 'agent-placement' | 'reveal' | 'done';
+export type PlayerTurnState = 'agent-placement' | 'reveal' | 'revealed' | 'conflict' | 'done';
 
 export interface Player {
   id: number;

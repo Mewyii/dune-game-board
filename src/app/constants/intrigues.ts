@@ -20,7 +20,7 @@ export const intrigues: IntrigueCard[] = [
       de: 'Hinterhalt',
     },
     type: 'combat',
-    amount: 6,
+    amount: 3,
     effects: [
       {
         type: 'sword',
@@ -76,16 +76,67 @@ export const intrigues: IntrigueCard[] = [
     amount: 3,
     effects: [
       {
-        type: 'loose-troop',
+        type: 'sword',
       },
       {
-        type: 'loose-troop',
+        type: 'sword',
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'spice',
+        amount: 2,
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Distraction',
+      de: 'Ablenkung',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Facedancers',
+      de: 'Gestaltwandler',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -95,7 +146,7 @@ export const intrigues: IntrigueCard[] = [
       de: 'Flankieren',
     },
     type: 'combat',
-    amount: 6,
+    amount: 3,
     effects: [
       {
         type: 'sword',
@@ -159,28 +210,6 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'card-draw',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Exploitation',
-      de: 'Ausbeutung',
-    },
-    type: 'complot',
-    amount: 3,
-    effects: [
-      {
-        type: 'faction-influence-down-choice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'agent-lift',
       },
     ],
   },
@@ -268,6 +297,28 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'faction-influence-up-choice',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Infiltration',
+      de: 'Infiltration',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
       },
     ],
   },

@@ -49,10 +49,7 @@ export class DuneCombatComponent implements OnInit {
 
     this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
       this.playerCombatUnits = playerCombatUnits.sort((a, b) => a.playerId - b.playerId);
-      this.combatScores = this.playerCombatUnits.map((x) => ({
-        playerId: x.playerId,
-        score: this.combatManager.getPlayerCombatScore(x),
-      }));
+      this.combatScores = this.combatManager.getPlayerCombatScores();
     });
 
     this.playerManager.players$.subscribe((players) => {
@@ -106,14 +103,11 @@ export class DuneCombatComponent implements OnInit {
   }
 
   public onCombatScoreMarkerDrop(event: CdkDragDrop<number[]>, score: number) {
-    const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === event.item.data);
-    if (playerCombatUnits) {
-      const currentScore = this.combatManager.getPlayerCombatScore(playerCombatUnits);
-      if (currentScore < score) {
-        this.combatManager.addAdditionalCombatPowerToPlayer(event.item.data, score - currentScore);
-      } else if (currentScore > score) {
-        this.combatManager.removeAdditionalCombatPowerFromPlayer(event.item.data, currentScore - score);
-      }
+    const playerCombatScore = this.combatManager.getPlayerCombatScore(event.item.data);
+    if (playerCombatScore < score) {
+      this.combatManager.addAdditionalCombatPowerToPlayer(event.item.data, score - playerCombatScore);
+    } else if (playerCombatScore > score) {
+      this.combatManager.removeAdditionalCombatPowerFromPlayer(event.item.data, playerCombatScore - score);
     }
   }
 

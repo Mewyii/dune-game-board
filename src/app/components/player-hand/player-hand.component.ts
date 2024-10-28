@@ -207,6 +207,7 @@ export class PlayerHandComponent implements OnInit {
   onPlayIntrigueClicked(intrigue: IntrigueDeckCard) {
     this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, intrigue.effects);
     this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
+    this.logService.logPlayerPlayedIntrigue(this.activePlayerId, this.translateService.translate(intrigue.name));
   }
 
   onTrashIntrigueClicked(intrigue: IntrigueDeckCard) {

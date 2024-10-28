@@ -6,8 +6,12 @@
       <ng-container *ngIf="logEntry.type === 'field-visit'">
         Player {{ logEntry.playerId }} sent an agent to field {{ logEntry.fieldName }}.
       </ng-container>
-      <ng-container *ngIf="logEntry.type === 'reward'">
+      <ng-container *ngIf="logEntry.type === 'reward-gain'">
         Player {{ logEntry.playerId }} got {{ logEntry.amount }}
+        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'reward-pay'">
+        Player {{ logEntry.playerId }} paid {{ logEntry.amount }}
         <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />.
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'card-buy'">
@@ -21,6 +25,9 @@
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'card-discard'">
         Player {{ logEntry.playerId }} discarded card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'intrigue-play'">
+        Player {{ logEntry.playerId }} played intrigue {{ logEntry.cardName }}.
       </ng-container>
     </div>
   </div>

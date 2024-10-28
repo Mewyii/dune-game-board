@@ -7,7 +7,7 @@ import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
+import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
 import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { Player, PlayersService } from 'src/app/services/players.service';
@@ -28,7 +28,9 @@ export class LeadersComponent implements OnInit {
   public leaders: (Leader | LeaderImageOnly)[] = [];
   public newLeaders: Leader[] = [];
 
-  public currentTurn = 0;
+  public currentRound = 0;
+
+  public currentRoundPhase: RoundPhaseType | undefined;
 
   public playerLeader: PlayerLeader | undefined;
   public activePlayerId: number = 0;
@@ -77,6 +79,10 @@ export class LeadersComponent implements OnInit {
 
       const activeLeaderName = this.playerLeader?.leaderName;
       this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
+    });
+
+    this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
+      this.currentRoundPhase = roundPhase;
     });
 
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
@@ -130,7 +136,7 @@ export class LeadersComponent implements OnInit {
     });
 
     this.gameManager.currentRound$.subscribe((currentTurn) => {
-      this.currentTurn = currentTurn;
+      this.currentRound = currentTurn;
     });
 
     this.intriguesService.playerIntrigues$.subscribe(() => {
@@ -368,7 +374,7 @@ export class LeadersComponent implements OnInit {
       const playerHand = this.cardsService.getPlayerHand(this.currentPlayer.id);
       if (playerHand && playerHand.cards) {
         this.cardsService.discardPlayerHandCards(this.currentPlayer.id);
-        this.playerManager.setTurnStateForPlayer(this.currentPlayer.id, 'done');
+        this.playerManager.setTurnStateForPlayer(this.currentPlayer.id, 'revealed');
       }
     }
     this.audioManager.playSound('click-soft');
@@ -377,6 +383,10 @@ export class LeadersComponent implements OnInit {
 
   public onAiActionClicked(playerId: number) {
     this.gameManager.doAIAction(playerId);
+  }
+
+  public onPassConflictClicked(playerId: number) {
+    this.gameManager.playerPassedConflict(playerId);
   }
 
   setTechTileActive(techTileId: string) {

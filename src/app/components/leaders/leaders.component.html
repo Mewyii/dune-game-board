@@ -20,13 +20,16 @@
       [color]="'accent'"
       (click)="onAiActionClicked(currentPlayer.id)"
       matTooltip="AI"
-      [disabled]="currentPlayer.turnState === 'done'"
+      [disabled]="
+        (currentRoundPhase === 'agent-placement' && currentPlayer.turnState === 'revealed') ||
+        (currentRoundPhase === 'combat' && currentPlayer.turnState === 'done')
+      "
       *ngIf="currentPlayer.isAI"
     >
       <mat-icon>hourglass_empty</mat-icon>
     </button>
     <button
-      *ngIf="currentTurn"
+      *ngIf="currentRound"
       mat-fab
       color="accent"
       (click)="onNextPlayerClicked()"
@@ -36,6 +39,7 @@
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
     <button
+      *ngIf="currentRoundPhase === 'agent-placement'"
       mat-fab
       [color]="'accent'"
       (click)="onRevealCardsClicked(currentPlayer.id)"
@@ -43,6 +47,16 @@
       [disabled]="currentPlayer.turnState !== 'agent-placement'"
     >
       <mat-icon>hdr_strong</mat-icon>
+    </button>
+    <button
+      *ngIf="currentRoundPhase === 'combat'"
+      mat-fab
+      [color]="'accent'"
+      (click)="onPassConflictClicked(currentPlayer.id)"
+      matTooltip="Pass"
+      [disabled]="currentPlayer.turnState === 'done'"
+    >
+      <mat-icon>fast_forward</mat-icon>
     </button>
   </div>
   <div class="control-bar" *ngIf="currentPlayer">

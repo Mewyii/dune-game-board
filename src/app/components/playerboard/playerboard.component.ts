@@ -59,8 +59,8 @@ export class PlayerboardComponent implements OnInit {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentTurnState$.subscribe((currentTurnState) => {
-      this.turnState = currentTurnState;
+    this.gameManager.currentRoundPhase$.subscribe((currentRoundPhase) => {
+      this.turnState = currentRoundPhase;
     });
 
     this.gameManager.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
@@ -123,7 +123,7 @@ export class PlayerboardComponent implements OnInit {
       const playerHand = this.cardsService.getPlayerHand(currentPlayer.id);
       if (playerHand && playerHand.cards) {
         this.cardsService.discardPlayerHandCards(currentPlayer.id);
-        this.playerManager.setTurnStateForPlayer(currentPlayer.id, 'done');
+        this.playerManager.setTurnStateForPlayer(currentPlayer.id, 'revealed');
       }
     }
     this.gameManager.setRoundState('combat');

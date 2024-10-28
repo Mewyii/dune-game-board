@@ -8,9 +8,16 @@ export interface FieldLog {
   visitedAmount: number;
 }
 
-export interface playerRewardLog {
+export interface playerRewardGainLog {
   playerId: number;
-  type: 'reward';
+  type: 'reward-gain';
+  rewardType: RewardType;
+  amount: number;
+}
+
+export interface playerRewardPayLog {
+  playerId: number;
+  type: 'reward-pay';
   rewardType: RewardType;
   amount: number;
 }
@@ -45,13 +52,21 @@ export interface PlayerCardTrashLog {
   cardName: string;
 }
 
+export interface PlayerIntriguePlayLog {
+  playerId: number;
+  type: 'intrigue-play';
+  cardName: string;
+}
+
 export type PlayerActionLog =
-  | playerRewardLog
+  | playerRewardGainLog
+  | playerRewardPayLog
   | PlayerFieldLog
   | PlayerCardBuyLog
   | PlayerCardPlayLog
   | PlayerCardTrashLog
-  | PlayerCardDiscardLog;
+  | PlayerCardDiscardLog
+  | PlayerIntriguePlayLog;
 
 @Injectable({
   providedIn: 'root',
@@ -118,7 +133,14 @@ export class LoggingService {
   logPlayerResourceGained(playerId: number, rewardType: RewardType, amount: number | undefined) {
     this.playerActionLogSubject.next([
       ...this.playerActionLog,
-      { playerId, type: 'reward', rewardType: rewardType, amount: amount ?? 1 },
+      { playerId, type: 'reward-gain', rewardType: rewardType, amount: amount ?? 1 },
+    ]);
+  }
+
+  logPlayerResourcePaid(playerId: number, rewardType: RewardType, amount: number | undefined) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLog,
+      { playerId, type: 'reward-pay', rewardType: rewardType, amount: amount ?? 1 },
     ]);
   }
 
@@ -140,6 +162,10 @@ export class LoggingService {
 
   logPlayerTrashedCard(playerId: number, cardName: string) {
     this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-trash', cardName: cardName }]);
+  }
+
+  logPlayerPlayedIntrigue(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'intrigue-play', cardName: cardName }]);
   }
 
   public printLogs() {
