@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { cloneDeep } from 'lodash';
-import { shuffle } from '../helpers/common';
-import { IntrigueCard, IntrigueCardBase } from '../constants/intrigues';
+import { cloneDeep, shuffle } from 'lodash';
+import { IntrigueCard, IntrigueCardBase, intriguesTypes, IntrigueType } from '../constants/intrigues';
 import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
 
 export interface IntrigueDeckCard extends IntrigueCardBase {
@@ -114,8 +113,12 @@ export class IntriguesService {
     this.intrigueDeckSubject.next([]);
   }
 
-  getPlayerIntrigues(playerId: number) {
-    return this.playerIntrigues.find((x) => x.playerId === playerId)?.intrigues;
+  getPlayerIntrigues(playerId: number, type?: IntrigueType) {
+    if (type) {
+      return this.playerIntrigues.find((x) => x.playerId === playerId)?.intrigues.filter((y) => y.type === type);
+    } else {
+      return this.playerIntrigues.find((x) => x.playerId === playerId)?.intrigues;
+    }
   }
 
   getEnemyIntrigues(playerId: number) {

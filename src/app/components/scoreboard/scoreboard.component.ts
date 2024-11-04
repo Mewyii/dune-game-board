@@ -35,11 +35,11 @@ export class ScoreboardComponent implements OnInit {
       }));
     });
 
-    this.settingsService.settings$.subscribe((x) => {
-      this.scoreArray = new Array(x.gameContent.maxVictoryPoints ?? 13);
-      this.victoryPointBoni = x.gameContent.victoryPointBoni;
-      if (x.gameContent.finaleTrigger) {
-        this.finaleTrigger = x.gameContent.finaleTrigger;
+    this.settingsService.gameContent$.subscribe((x) => {
+      this.scoreArray = new Array(x.maxVictoryPoints ?? 13);
+      this.victoryPointBoni = x.victoryPointBoni;
+      if (x.finaleTrigger) {
+        this.finaleTrigger = x.finaleTrigger;
       }
     });
   }

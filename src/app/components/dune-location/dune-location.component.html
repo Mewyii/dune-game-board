@@ -32,5 +32,11 @@
         <div class="border-remover" [style.background-color]="location.color"></div>
       </div>
     </div>
+    <ng-container *ngIf="canBuildupLocationChange">
+      <button class="location-change-button" mat-fab [color]="'accent'" (click)="onBuildUpLocationChangeClicked()">
+        <mat-icon>favorite_border</mat-icon>
+        {{ locationChangeBuildupAmount }}
+      </button>
+    </ng-container>
   </ng-container>
 </div>

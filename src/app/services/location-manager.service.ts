@@ -38,6 +38,10 @@ export class LocationManager {
     return this.ownedLocations.find((x) => x.locationId === locationId);
   }
 
+  public getEnemyLocations(playerId: number) {
+    return this.ownedLocations.filter((x) => x.playerId !== playerId);
+  }
+
   public locationOwnerId$(locationId: string) {
     return this.ownedLocations$.pipe(map((data) => data.find((x) => x.locationId === locationId)?.playerId));
   }

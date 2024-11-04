@@ -285,26 +285,21 @@ export function getCostAdjustedDesire(player: Player, resources: Resource[], des
       return 0;
     }
 
-    let resourceTypeModifier = 0.02 / desire;
+    let resourceTypeModifier = 0.015 / desire;
     if (resource.type === 'spice') {
-      resourceTypeModifier = 0.035 / desire;
+      resourceTypeModifier = 0.0225 / desire;
     } else if (resource.type === 'water') {
-      resourceTypeModifier = 0.04 / desire;
+      resourceTypeModifier = 0.03 / desire;
     }
 
-    const minDesireAdjustment = desire * 0.5;
-    const maxDesireAdjustment = desire * 1.5 <= 1.0 ? desire * 1.5 : 1.0;
-
-    desireAdjustment = clamp(
-      desireAdjustment - resourceTypeModifier * costs + (resourceTypeModifier / 2) * (playerResourceAmount - costs),
-      minDesireAdjustment,
-      maxDesireAdjustment
-    );
+    desireAdjustment -= resourceTypeModifier * costs - (resourceTypeModifier / 2) * (playerResourceAmount - costs);
 
     resourcesUsed.push(resource);
   }
+  const minDesireAdjustment = desire * 0.5;
+  const maxDesireAdjustment = desire * 1.5 <= 1.0 ? desire * 1.5 : 1.0;
 
-  return desire * desireAdjustment;
+  return desire * clamp(desireAdjustment, minDesireAdjustment, maxDesireAdjustment);
 }
 
 export function playerCanDrawCards(gameState: GameState, amount: number) {

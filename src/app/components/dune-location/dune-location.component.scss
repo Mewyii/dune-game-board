@@ -182,3 +182,10 @@
     border-right-width: 25px;
     border-top-width: 40px;
 }
+
+.location-change-button {
+    position: absolute;
+    z-index: 2;
+    right: -65px;
+    top: 55px;
+}

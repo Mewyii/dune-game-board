@@ -8,9 +8,14 @@
           (click)="setIntrigueActive(intrigue.id)"
         >
           <dune-intrigue-card
+            *ngIf="!currentPlayer?.isAI"
             [card]="intrigue"
             [class]="intrigue.id === activeIntrigueId ? 'active' : ''"
           ></dune-intrigue-card>
+          <div
+            *ngIf="currentPlayer?.isAI"
+            [class]="'intrigue-card background' + (intrigue.id === activeIntrigueId ? ' active' : '')"
+          ></div>
           <div class="intrigue-action-container" *ngIf="intrigue.id === activeIntrigueId">
             <button
               class="card-activate-button"

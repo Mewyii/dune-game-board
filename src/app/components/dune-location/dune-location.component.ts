@@ -7,6 +7,7 @@ import { LocationManager } from 'src/app/services/location-manager.service';
 import { Player, PlayersService } from 'src/app/services/players.service';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { GameModifiersService } from 'src/app/services/game-modifier.service';
 
 @Component({
   selector: 'app-dune-location',
@@ -31,6 +32,10 @@ export class DuneLocationComponent implements OnInit {
     },
   };
 
+  public activePlayerId = 0;
+  public canBuildupLocationChange = false;
+  public locationChangeBuildupAmount: number | undefined;
+
   public owner: Player | undefined;
   public leaderInitials = '';
 
@@ -39,7 +44,8 @@ export class DuneLocationComponent implements OnInit {
     private playerManager: PlayersService,
     private leaderService: LeadersService,
     private audioManager: AudioManager,
-    private gameManager: GameManager
+    private gameManager: GameManager,
+    private gameModifierService: GameModifiersService
   ) {}
 
   ngOnInit(): void {
@@ -54,17 +60,38 @@ export class DuneLocationComponent implements OnInit {
         this.leaderInitials = '';
       }
     });
+
+    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+      this.activePlayerId = activePlayerId;
+
+      this.canBuildupLocationChange = this.gameModifierService.playerHasCustomActionAvailable(
+        this.activePlayerId,
+        'location-change-buildup'
+      );
+
+      this.locationChangeBuildupAmount = this.gameModifierService.getPlayerLocationChangeBuildupModifier(
+        this.activePlayerId,
+        this.location.actionField.title.en
+      )?.changeAmount;
+    });
+
+    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+      this.canBuildupLocationChange = this.gameModifierService.playerHasCustomActionAvailable(
+        this.activePlayerId,
+        'location-change-buildup'
+      );
+
+      this.locationChangeBuildupAmount = this.gameModifierService.getPlayerLocationChangeBuildupModifier(
+        this.activePlayerId,
+        this.location.actionField.title.en
+      )?.changeAmount;
+    });
   }
 
   onOwnerIndicatorClicked() {
     this.audioManager.playSound('click-soft');
 
-    if (!this.playerManager.isLastPlayer(this.owner?.id)) {
-      const nextPlayerId = this.playerManager.getNextPlayerId(this.owner?.id);
-      this.gameManager.changeLocationOwner(this.location.actionField.title.en, nextPlayerId);
-    } else {
-      this.gameManager.changeLocationOwner(this.location.actionField.title.en);
-    }
+    this.gameManager.changeLocationOwner(this.location.actionField.title.en, this.gameManager.activePlayerId);
   }
 
   onActionFieldClicked(event: { playerId: number }) {
@@ -74,6 +101,10 @@ export class DuneLocationComponent implements OnInit {
     //     this.playerManager.addResourceToPlayer(this.owner.id, ownerReward.type, ownerReward.amount ?? 1);
     //   }
     // }
+  }
+
+  onBuildUpLocationChangeClicked() {
+    this.gameModifierService.increaseLocationChangeModifier(this.activePlayerId, this.location.actionField.title.en, 1);
   }
 
   public getRewardTypePath(rewardType: RewardType) {

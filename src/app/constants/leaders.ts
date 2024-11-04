@@ -31,16 +31,16 @@ export const leaders: Leader[] = [
       en: 'Naib of Sietch Tabr',
     },
     passiveDescription: {
-      de: 'Du beginnst das Spiel mit der Kontrolle über Sietch Tabr, 2 {faction:fremen}-Einfluss aber nur einem Trupp.',
-      en: 'You start the game controlling sietch tabr, with 2 {faction:fremen}-influence but only one troop.',
+      de: 'Du beginnst das Spiel mit 2 {faction:fremen}-Einfluss.',
+      en: 'You start the game with 2 {faction:fremen}-influence.',
     },
     signetName: {
       de: 'die wege der fremen',
       en: 'the fremen ways',
     },
     signetDescription: {
-      de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst ihn jederzeit entsorgen, um {resource:troop} zu erhalten und sie in den Konflikt zu senden.',
-      en: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. You may trash it at any time to get {resource:troop} and put it into the conflict.',
+      de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst ihn jederzeit entsorgen, um {resource:troop}{resource:troop} zu erhalten und sie in den Konflikt zu senden.',
+      en: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. You may trash it at any time to get {resource:troop}{resource:troop} and put it into the conflict.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
@@ -368,6 +368,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',
+    playableByAI: true,
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? 0.025 : 0.0,
@@ -400,6 +401,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
+    playableByAI: true,
   },
   {
     name: {
@@ -461,6 +463,7 @@ export const leaders: Leader[] = [
       en: 'If you receive {resource:solari}, {resource:spice} or {resource:water} this turn, you get +1 of each.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
+    playableByAI: true,
   },
   {
     name: {
@@ -473,11 +476,11 @@ export const leaders: Leader[] = [
     },
     passiveName: {
       en: 'Mentat Training',
-      de: 'Mentat Ausbildung',
+      de: 'Mentaten-Ausbildung',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: You may look at the top card of your deck or the intrigue deck.',
-      de: '<b>Rundenbeginn</b>: Du kannst dir die oberste Karte deines Decks oder des Intrigenstapels ansehen.',
+      en: 'Before your 2. turn you may: {resource:card-discard}{resource:helper-trade}{resource:agent-lift}',
+      de: 'Vor deinem 2. Zug kannst du: {resource:card-discard}{resource:helper-trade}{resource:agent-lift}',
     },
     signetName: {
       en: 'Dreams',
@@ -489,6 +492,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/paul_atreides.png',
     type: 'new',
+    playableByAI: true,
     gameModifiers: {
       customActions: [
         {
@@ -529,6 +533,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/paul_muaddib.png',
     type: 'new',
+    playableByAI: true,
     gameModifiers: {
       customActions: [
         {
@@ -643,6 +648,14 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/leto.png',
     type: 'new',
     playableByAI: true,
+    gameModifiers: {
+      customActions: [
+        {
+          id: 'leto-inspiring-loyalty',
+          action: 'location-change-buildup',
+        },
+      ],
+    },
   },
   {
     name: {
@@ -713,35 +726,6 @@ export const leaders: Leader[] = [
     },
     passiveName: {
       en: 'Uncontrolled Aggression',
-      de: 'In den Schatten',
-    },
-    passiveDescription: {
-      en: '<b>Round start</b>: Trash one of your handcards.',
-      de: 'Du beginnst das Spiel ohne Truppen. <br>Du kannst jederzeit: {resource:solari}{resource:helper-trade}gegnerische Agenten blockieren Felder in diesem Zug nicht.',
-    },
-    signetName: {
-      en: 'Oppression',
-      de: 'Erpressung',
-    },
-    signetDescription: {
-      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
-      de: '{resource:spice}',
-    },
-    imageUrl: '/assets/images/leaders/rabban.png',
-    type: 'new',
-    playableByAI: true,
-  },
-  {
-    name: {
-      en: 'Dara Moritani',
-      de: 'Dara Moritani',
-    },
-    house: {
-      en: 'House Moritani',
-      de: 'Haus Moritani',
-    },
-    passiveName: {
-      en: 'Uncontrolled Aggression',
       de: 'Geächtete Gräfin',
     },
     passiveDescription: {
@@ -756,7 +740,37 @@ export const leaders: Leader[] = [
       en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
       de: '{resource:solari}{resource:helper-trade}{resource:troop}{resource:troop}{resource:helper-or}{resource:loose-troop}{resource:helper-trade}{resource:solari;amount:3}',
     },
-    imageUrl: '/assets/images/leaders/rabban.png',
+
+    imageUrl: '/assets/images/leaders/yuna_2.png',
+    type: 'new',
+    playableByAI: true,
+  },
+  {
+    name: {
+      en: 'Dara Moritani',
+      de: 'Dara Moritani',
+    },
+    house: {
+      en: 'House Moritani',
+      de: 'Haus Moritani',
+    },
+    passiveName: {
+      en: 'Uncontrolled Aggression',
+      de: 'In den Schatten',
+    },
+    passiveDescription: {
+      en: '<b>Round start</b>: Trash one of your handcards.',
+      de: 'Du beginnst das Spiel ohne Truppen. <br>Du kannst jederzeit: {resource:solari}{resource:helper-trade}gegnerische Agenten blockieren Felder in diesem Zug nicht.',
+    },
+    signetName: {
+      en: 'Oppression',
+      de: 'Erpressung',
+    },
+    signetDescription: {
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
+      de: '{resource:spice}',
+    },
+    imageUrl: '/assets/images/leaders/dara_3.png',
     type: 'new',
     playableByAI: true,
   },

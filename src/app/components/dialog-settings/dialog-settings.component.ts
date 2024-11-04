@@ -11,6 +11,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 export class DialogSettingsComponent {
   public aiDifficulty: AIDIfficultyTypes | undefined;
+  public eventsEnabled: boolean = false;
   public gameContentName: string = '';
   public appMode: AppMode | undefined;
 
@@ -23,9 +24,14 @@ export class DialogSettingsComponent {
     this.aiManager.aiDifficulty$.subscribe((aiDifficulty) => {
       this.aiDifficulty = aiDifficulty;
     });
-    this.settingsService.settings$.subscribe((settings) => {
-      this.appMode = settings.mode;
-      this.gameContentName = settings.gameContent.name;
+    this.settingsService.gameContent$.subscribe((gameContent) => {
+      this.gameContentName = gameContent.name;
+    });
+    this.settingsService.mode$.subscribe((mode) => {
+      this.appMode = mode;
+    });
+    this.settingsService.eventsEnabled$.subscribe((eventsEnabled) => {
+      this.eventsEnabled = eventsEnabled;
     });
   }
 
@@ -43,6 +49,10 @@ export class DialogSettingsComponent {
     if (name !== this.gameContentName) {
       this.settingsService.setGameContent(name);
     }
+  }
+
+  enableEvents(value: boolean) {
+    this.settingsService.enableEvents(value);
   }
 
   setGameMode(mode: AppMode) {

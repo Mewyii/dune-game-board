@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { DuneEvent, duneEvents } from '../constants/events';
-import { shuffle } from '../helpers/common';
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Settings } from 'src/app/constants/board-settings';
+import { AppMode, Settings } from 'src/app/constants/board-settings';
 import { ImperiumCard } from 'src/app/constants/imperium-cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
@@ -18,7 +18,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./always-buyable-cards.component.scss'],
 })
 export class AlwaysBuyableCardsComponent {
-  public settings: Settings | undefined;
+  public mode: AppMode | undefined;
 
   public limitedCustomCards: ImperiumDeckCard[] = [];
   public shownLimitedCustomCard: ImperiumDeckCard | undefined;
@@ -44,8 +44,8 @@ export class AlwaysBuyableCardsComponent {
   ) {}
 
   ngOnInit(): void {
-    this.settingsService.settings$.subscribe((settings) => {
-      this.settings = settings;
+    this.settingsService.mode$.subscribe((mode) => {
+      this.mode = mode;
     });
 
     this.cardsService.limitedCustomCards$.subscribe((cards) => {

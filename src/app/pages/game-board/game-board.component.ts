@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameContent, Settings } from 'src/app/constants/board-settings';
+import { AppMode, GameContent, Settings } from 'src/app/constants/board-settings';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -12,8 +12,9 @@ import { loadSlim } from 'tsparticles-slim';
   styleUrls: ['./game-board.component.scss'],
 })
 export class GameBoardComponent {
-  public settings: Settings | undefined;
   public gameContent: GameContent | undefined;
+  public mode: AppMode | undefined;
+  public eventsEnabled: boolean | undefined;
 
   public stars = stars;
   public dust = dust;
@@ -21,9 +22,15 @@ export class GameBoardComponent {
   public ships = ships;
 
   constructor(public settingsService: SettingsService, public gameManager: GameManager) {
-    this.settingsService.settings$.subscribe((settings) => {
-      this.settings = settings;
-      this.gameContent = settings.gameContent;
+    this.settingsService.gameContent$.subscribe((gameContent) => {
+      this.gameContent = gameContent;
+    });
+
+    this.settingsService.mode$.subscribe((mode) => {
+      this.mode = mode;
+    });
+    this.settingsService.eventsEnabled$.subscribe((eventsEnabled) => {
+      this.eventsEnabled = eventsEnabled;
     });
   }
 

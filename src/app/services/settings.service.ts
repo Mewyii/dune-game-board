@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
 import { ActionField, FactionType, LanguageType } from '../models';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import {
   gameContentCustomAdvanced,
   gameContentCustomBeginner,
@@ -26,8 +26,23 @@ export class SettingsService {
   public unblockableFields: ActionField[] = [];
 
   private settingsSubject = new BehaviorSubject<Settings>(boardSettings);
-  public settings$ = this.settingsSubject.asObservable();
-  public settings: Settings = boardSettings;
+  private settings$ = this.settingsSubject.asObservable();
+  public gameContent$ = this.settings$.pipe(
+    map((x) => x.gameContent),
+    distinctUntilChanged((prev, next) => prev.name === next.name)
+  );
+  public mode$ = this.settings$.pipe(
+    map((x) => x.mode),
+    distinctUntilChanged()
+  );
+  public language$ = this.settings$.pipe(
+    map((x) => x.language),
+    distinctUntilChanged()
+  );
+  public eventsEnabled$ = this.settings$.pipe(
+    map((x) => x.eventsEnabled),
+    distinctUntilChanged()
+  );
 
   constructor() {
     const settingsString = localStorage.getItem('settings');
@@ -44,14 +59,29 @@ export class SettingsService {
     }
 
     this.settings$.subscribe((settings) => {
-      this.settings = cloneDeep(settings);
       this.setFields();
       localStorage.setItem('settings', JSON.stringify(settings));
     });
   }
 
+  private get settings() {
+    return cloneDeep(this.settingsSubject.value);
+  }
+
   public get gameContent() {
-    return this.settings.gameContent;
+    return cloneDeep(this.settingsSubject.value.gameContent);
+  }
+
+  public get mode() {
+    return cloneDeep(this.settingsSubject.value.mode);
+  }
+
+  public get language() {
+    return cloneDeep(this.settingsSubject.value.language);
+  }
+
+  public get eventsEnabled() {
+    return cloneDeep(this.settingsSubject.value.eventsEnabled);
   }
 
   public get boardFields() {
@@ -63,11 +93,11 @@ export class SettingsService {
   }
 
   public getBoardLocations() {
-    return cloneDeep(this.gameContent.locations);
+    return cloneDeep(this.settingsSubject.value.gameContent.locations);
   }
 
   public getBoardLocation(id: string) {
-    return cloneDeep(this.gameContent.locations.find((x) => x.actionField.title.en === id));
+    return cloneDeep(this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.title.en === id));
   }
 
   public setFields() {
@@ -110,6 +140,10 @@ export class SettingsService {
     if (gameContent) {
       this.settingsSubject.next({ ...this.settings, gameContent });
     }
+  }
+
+  enableEvents(value: boolean) {
+    this.settingsSubject.next({ ...this.settings, eventsEnabled: value });
   }
 
   setMode(mode: AppMode) {

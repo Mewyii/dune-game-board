@@ -62,7 +62,7 @@ interface FactionInfluenceLock {
   amount: number;
 }
 
-export interface AIAgentPlacementInfo {
+export interface AITurnInfo {
   unitsGainedThisTurn: number;
   techAgentsGainedThisTurn: number;
   canEnterCombat: boolean;
@@ -143,8 +143,8 @@ export class AIManager {
       localStorage.setItem('aiDifficulty', JSON.stringify(aiDifficulty));
     });
 
-    this.settingsService.settings$.subscribe((x) => {
-      this.aiGoals = x.gameContent.aiGoals;
+    this.settingsService.gameContent$.subscribe((x) => {
+      this.aiGoals = x.aiGoals;
     });
   }
 
@@ -640,8 +640,10 @@ export class AIManager {
 
     if (goal === 'enter-combat') {
       modifier = 0.5 + conflictEvaluation;
-    } else if (goal === 'troops' || goal === 'dreadnought') {
+    } else if (goal === 'troops') {
       modifier = (0.5 + conflictEvaluation + 2) / 3;
+    } else if (goal === 'dreadnought') {
+      modifier = (1.5 - conflictEvaluation + 1) / 2;
     } else if (goal === 'tech') {
       modifier = 0.5 + techEvaluation;
     } else if (goal === 'draw-cards' || goal === 'get-board-persuasion') {

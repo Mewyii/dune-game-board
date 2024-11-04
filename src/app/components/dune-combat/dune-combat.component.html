@@ -20,7 +20,7 @@
         (click)="setActiveGarrisonPlayerId(4)"
       ></div>
     </div>
-    <ng-container *ngIf="settingsService.settings.mode === 'game'">
+    <ng-container *ngIf="settingsService.mode === 'game'">
       <ng-container *ngFor="let combatUnits of playerCombatUnits; let i = index; trackBy: trackCombatUnits">
         <div
           class="units-in-timeout-container"
@@ -106,7 +106,7 @@
   <div class="lower-row" cdkDropListGroup>
     <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
       <div class="score">0</div>
-      <ng-container *ngIf="settingsService.settings.mode === 'game'">
+      <ng-container *ngIf="settingsService.mode === 'game'">
         <div class="score-container large">
           <ng-container *ngFor="let playerScore of combatScores; let i = index"
             ><div
@@ -125,7 +125,7 @@
       <ng-container *ngFor="let score of combatScoreArray; let scoreIndex = index; let last = last">
         <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, scoreIndex + 1)">
           <div class="score">{{ scoreIndex + 1 }}</div>
-          <ng-container *ngIf="settingsService.settings.mode === 'game'">
+          <ng-container *ngIf="settingsService.mode === 'game'">
             <div class="score-container">
               <ng-container *ngFor="let playerScore of combatScores; let i = index">
                 <div

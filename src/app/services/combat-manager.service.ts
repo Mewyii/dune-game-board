@@ -374,6 +374,24 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
+  public getPlayerTroopsTotal(playerId: number) {
+    const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    if (playerCombatUnits) {
+      return playerCombatUnits.troopsInCombat + playerCombatUnits.troopsInGarrison;
+    } else {
+      return 0;
+    }
+  }
+
+  public getPlayerTroopsInGarrison(playerId: number) {
+    const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    if (playerCombatUnits) {
+      return playerCombatUnits.troopsInGarrison;
+    } else {
+      return 0;
+    }
+  }
+
   public getPlayerCombatScore(playerId: number) {
     const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
     const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;

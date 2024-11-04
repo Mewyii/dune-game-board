@@ -18,7 +18,7 @@ export class AppComponent {
   }
 
   switchLanguage() {
-    if (this.settingsService.settings.language === 'de') {
+    if (this.settingsService.language === 'de') {
       this.settingsService.changeLanguage('en');
 
       let dialogRef = this.dialog.open(NotificationComponent, {

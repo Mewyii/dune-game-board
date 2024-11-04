@@ -14,6 +14,19 @@ export function getFactionScoreTypeFromReward(reward: Reward): PlayerFactionScor
   return undefined;
 }
 
+export function getFactionScoreTypeFromCost(reward: Reward): PlayerFactionScoreType | undefined {
+  if (reward.type === 'faction-influence-down-bene') {
+    return 'bene';
+  } else if (reward.type === 'faction-influence-down-fremen') {
+    return 'fremen';
+  } else if (reward.type === 'faction-influence-down-emperor') {
+    return 'emperor';
+  } else if (reward.type === 'faction-influence-down-guild') {
+    return 'guild';
+  }
+  return undefined;
+}
+
 export function isFactionScoreType(value: string): value is PlayerFactionScoreType {
   if (value === 'bene' || value === 'fremen' || value === 'emperor' || value === 'guild') {
     return true;

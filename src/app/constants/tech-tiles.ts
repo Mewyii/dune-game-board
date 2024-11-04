@@ -322,8 +322,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/carryall.png',
     buyEffects: [],
     customEffect: {
-      en: 'Harvesting spice costs you {resource:water} less.',
-      de: 'Spice zu sammeln kostet dich {resource:water} weniger.',
+      en: 'Access to {faction:spice} board spaces costs {resource:water} less.',
+      de: 'Der Zugang zu {faction:spice}-Feldern kostet {resource:water} weniger.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.8 - 0.125 * (gameState.currentRound - 1),

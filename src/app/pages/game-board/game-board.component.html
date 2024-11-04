@@ -1,49 +1,39 @@
-<div [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px'" *ngIf="settings && gameContent">
-  <app-playerboard *ngIf="settings.mode === 'game'"></app-playerboard>
+<div [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px'" *ngIf="mode && gameContent">
+  <app-playerboard *ngIf="mode === 'game'"></app-playerboard>
   <div class="board">
-    <ng-particles
-      *ngIf="settings.mode === 'game'"
-      [id]="'stars'"
-      [options]="stars"
-      [particlesInit]="initStars"
-    ></ng-particles>
-    <ng-particles
-      *ngIf="settings.mode === 'game'"
-      [id]="'ships'"
-      [options]="ships"
-      [particlesInit]="initShips"
-    ></ng-particles>
-    <ng-particles *ngIf="settings.mode === 'game'" [id]="'dust'" [options]="dust" [particlesInit]="initDust"></ng-particles>
-    <ng-particles *ngIf="settings.mode === 'game'" [id]="'sand'" [options]="sand" [particlesInit]="initSand"></ng-particles>
+    <ng-particles *ngIf="mode === 'game'" [id]="'stars'" [options]="stars" [particlesInit]="initStars"></ng-particles>
+    <ng-particles *ngIf="mode === 'game'" [id]="'ships'" [options]="ships" [particlesInit]="initShips"></ng-particles>
+    <ng-particles *ngIf="mode === 'game'" [id]="'dust'" [options]="dust" [particlesInit]="initDust"></ng-particles>
+    <ng-particles *ngIf="mode === 'game'" [id]="'sand'" [options]="sand" [particlesInit]="initSand"></ng-particles>
     <ng-container *ngFor="let faction of gameContent.factions">
-      <app-dune-faction [faction]="faction" [mode]="settings.mode"></app-dune-faction>
+      <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
     </ng-container>
     <ng-container *ngFor="let location of gameContent.locations">
       <app-dune-location [location]="location"></app-dune-location>
     </ng-container>
     <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
-    <app-scoreboard [mode]="settings.mode"></app-scoreboard>
+    <app-scoreboard [mode]="mode"></app-scoreboard>
     <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
     <app-card-areas></app-card-areas>
-    <dune-conflicts *ngIf="settings.mode === 'game'"></dune-conflicts>
-    <dune-intrigues *ngIf="settings.mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
-    <dune-tech-tiles *ngIf="settings.mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
+    <dune-conflicts *ngIf="mode === 'game'"></dune-conflicts>
+    <dune-intrigues *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
+    <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
     <dune-always-buyable-cards></dune-always-buyable-cards>
   </div>
   <dune-imperium-row></dune-imperium-row>
   <div class="sideboard-container">
-    <dune-game-manual *ngIf="settings.mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
-    <dune-events *ngIf="settings.mode === 'game'"></dune-events>
-    <!-- <dune-minor-houses *ngIf="settings.mode === 'game'"></dune-minor-houses> -->
-    <dune-leaders *ngIf="settings.mode === 'game'"></dune-leaders>
-    <dune-player-reward-choices *ngIf="settings.mode === 'game'"></dune-player-reward-choices>
-    <dune-ai-tile *ngIf="settings.mode === 'game' && gameManager.currentRound !== 0"></dune-ai-tile>
-    <dune-board-evaluation *ngIf="settings.mode === 'board'"></dune-board-evaluation>
+    <dune-game-manual *ngIf="mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
+    <dune-events *ngIf="mode === 'game' && eventsEnabled"></dune-events>
+    <!-- <dune-minor-houses *ngIf="mode=== 'game'"></dune-minor-houses> -->
+    <dune-leaders *ngIf="mode === 'game'"></dune-leaders>
+    <dune-player-reward-choices *ngIf="mode === 'game'"></dune-player-reward-choices>
+    <dune-ai-tile *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-ai-tile>
+    <dune-board-evaluation *ngIf="mode === 'board'"></dune-board-evaluation>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
-  <div *ngIf="settings.mode === 'game'" class="sideboard-container">
+  <div *ngIf="mode === 'game'" class="sideboard-container">
     <dune-audio-player></dune-audio-player>
   </div>
-  <dune-player-hand *ngIf="settings.mode === 'game'"></dune-player-hand>
+  <dune-player-hand *ngIf="mode === 'game'"></dune-player-hand>
 </div>
 <dune-particle-effects></dune-particle-effects>

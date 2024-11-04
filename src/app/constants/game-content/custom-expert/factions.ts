@@ -175,7 +175,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'schwertmeister', en: 'Swordmaster' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 9 }],
+        costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/ceremony_3.png',
         customWidth: '135px',
@@ -189,7 +189,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 7 }],
+        costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',

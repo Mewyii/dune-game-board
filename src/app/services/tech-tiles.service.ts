@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { cloneDeep } from 'lodash';
-import { shuffle } from '../helpers/common';
+import { cloneDeep, shuffle } from 'lodash';
 import { techTiles } from '../constants/tech-tiles';
 import { FactionType, LanguageString, Reward } from '../models';
 import { LanguageStringAndFontSize } from '../constants/imperium-cards';

@@ -27,6 +27,13 @@
       <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">Hard</mat-checkbox>
     </div>
   </div>
+  <div class="setting-container">
+    <div>Events</div>
+    <div class="options-container">
+      <mat-checkbox [checked]="eventsEnabled === false" (change)="enableEvents(false)">False</mat-checkbox>
+      <mat-checkbox [checked]="eventsEnabled === true" (change)="enableEvents(true)">True</mat-checkbox>
+    </div>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">Close</button>

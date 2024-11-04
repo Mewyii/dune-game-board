@@ -23,6 +23,12 @@ export const intrigues: IntrigueCard[] = [
     amount: 3,
     effects: [
       {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
         type: 'sword',
       },
       {
@@ -85,7 +91,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'spice',
+        type: 'troop',
         amount: 2,
       },
     ],
@@ -98,6 +104,18 @@ export const intrigues: IntrigueCard[] = [
     type: 'combat',
     amount: 3,
     effects: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
       {
         type: 'sword',
       },
@@ -142,6 +160,22 @@ export const intrigues: IntrigueCard[] = [
   },
   {
     name: {
+      en: 'Feint',
+      de: 'Finte',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'intrigue',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Flanking',
       de: 'Flankieren',
     },
@@ -161,6 +195,80 @@ export const intrigues: IntrigueCard[] = [
   },
   {
     name: {
+      en: 'Pincer',
+      de: 'Zange',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Raid',
+      de: 'Überfall',
+    },
+    type: 'combat',
+    amount: 3,
+    effects: [
+      {
+        type: 'tech',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Appropriation',
+      de: 'Aneignung',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'dreadnought',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Black Market',
+      de: 'Schwarzmarkt',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'tech-reduced-two',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Blackmail',
       de: 'Erpressung',
     },
@@ -168,7 +276,8 @@ export const intrigues: IntrigueCard[] = [
     amount: 3,
     effects: [
       {
-        type: 'spice',
+        type: 'solari',
+        amount: 2,
       },
     ],
   },
@@ -210,6 +319,28 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'card-draw',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Infiltration',
+      de: 'Infiltration',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
       },
     ],
   },
@@ -296,29 +427,10 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
+        type: 'solari',
+      },
+      {
         type: 'faction-influence-up-choice',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Infiltration',
-      de: 'Infiltration',
-    },
-    type: 'complot',
-    amount: 3,
-    effects: [
-      {
-        type: 'loose-troop',
-      },
-      {
-        type: 'loose-troop',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'location-control',
       },
     ],
   },

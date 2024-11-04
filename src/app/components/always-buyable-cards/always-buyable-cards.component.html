@@ -1,10 +1,10 @@
 <div class="cards-area two">
-  <div class="card-area large" *ngIf="settings?.mode === 'board' || unlimitedCard"></div>
-  <div class="card-area large" *ngIf="settings?.mode === 'board' || shownLimitedCustomCard"></div>
+  <div class="card-area large" *ngIf="mode === 'board' || unlimitedCard"></div>
+  <div class="card-area large" *ngIf="mode === 'board' || shownLimitedCustomCard"></div>
 </div>
 <div
   class="spice-must-flow-container"
-  *ngIf="settings?.mode === 'game' && unlimitedCard"
+  *ngIf="mode === 'game' && unlimitedCard"
   (click)="setCardActive(unlimitedCard.name.en)"
 >
   <dune-imperium-row-card
@@ -27,7 +27,7 @@
 </div>
 <div
   class="liason-container"
-  *ngIf="settings?.mode === 'game' && shownLimitedCustomCard"
+  *ngIf="mode === 'game' && shownLimitedCustomCard"
   (click)="setCardActive(shownLimitedCustomCard.id)"
 >
   <dune-imperium-row-card

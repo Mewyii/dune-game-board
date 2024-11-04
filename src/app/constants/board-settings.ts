@@ -31,10 +31,12 @@ export interface Settings {
   mode: AppMode;
   language: LanguageType;
   gameContent: GameContent;
+  eventsEnabled: boolean;
 }
 
 export const boardSettings: Settings = {
   mode: 'game',
   language: 'en',
   gameContent: gameContentCustomExpert,
+  eventsEnabled: true,
 };

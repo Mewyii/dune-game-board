@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, first, map } from 'rxjs';
 import { cloneDeep, random } from 'lodash';
 import { Conflict, conflicts } from '../constants/conflicts';
-import { shuffle } from '../helpers/common';
+import { shuffle } from 'lodash';
 import { Reward } from '../models';
 
 export interface ConflictSet {

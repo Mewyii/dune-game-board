@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { shuffle } from '../helpers/common';
+import { shuffle } from 'lodash';
 import { PlayersService } from './players.service';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { ImperiumCard } from '../constants/imperium-cards';

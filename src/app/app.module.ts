@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -77,6 +77,7 @@ import { IntrigueConfiguratorComponent } from './pages/intrigue-configurator/int
 import { IntrigueCardComponent } from './components/_common/intrigue-card/intrigue-card.component';
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -158,6 +159,12 @@ import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/in
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

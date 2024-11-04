@@ -24,11 +24,11 @@ import { normalizeNumber } from 'src/app/helpers/common';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
-    baseDesire: 0.65,
+    baseDesire: 0.7,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.015 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.025 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 6,
+      getResourceAmount(player, 'solari', virtualResources) > 7,
     reachedGoal: (player, gameState) => player.hasCouncilSeat || gameState.isFinale,
     desiredFields: (fields) => ({
       // Three because "amount" is used for the persuasion indicator
@@ -39,9 +39,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.01 * getResourceAmount(player, 'solari', virtualResources) - 0.035 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'solari', virtualResources),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 8,
+      getResourceAmount(player, 'solari', virtualResources) > 7,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', 0, 1),
@@ -65,30 +65,31 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.4,
+    baseDesire: 0.5,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0125 * getResourceAmount(player, 'spice', virtualResources) +
       0.033 * player.techAgents -
-      0.01 * (gameState.currentRound - 1),
+      0.0125 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 4,
+      getResourceAmount(player, 'solari', virtualResources) > 3,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'tech', 0, 4),
       ...getViableBoardFields(fields, 'tech-reduced', 0, 2),
+      ...getViableBoardFields(fields, 'tech-reduced-two', 0, 2),
       ...getViableBoardFields(fields, 'tech-reduced-three', 0, 1),
     }),
   },
   dreadnought: {
-    baseDesire: 0.4,
+    baseDesire: 0.5,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'solari', virtualResources) -
-      0.02 * (gameState.currentRound - 1) -
+      0.005 * (gameState.currentRound - 1) -
       0.025 * gameState.playerDreadnoughtCount +
       0.01 * (4 - gameState.playerCombatUnits.troopsInGarrison) +
       (gameState.isFinale ? 0.2 : 0.0),
     goalIsReachable: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 4,
+      getResourceAmount(player, 'solari', virtualResources) > 3,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', 0, 1),
@@ -361,6 +362,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         { type: 'draw-cards', modifier: 0.9 },
         { type: 'troops', modifier: 0.8 },
         { type: 'intrigues', modifier: 0.7 },
+        { type: 'tech', modifier: 0.5 },
       ];
 
       return getMaxDesireOfUnreachableGoals(player, gameState, goals, virtualResources, spiceDependentGoalTypes, maxDesire);
@@ -408,7 +410,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > (!player.hasSwordmaster ? 8 : 6),
+      getResourceAmount(player, 'solari', virtualResources) > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari', 0, 6),
       'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.5 : 0.2),
@@ -425,8 +427,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      getResourceAmount(player, 'solari', virtualResources) > 5 && !player.hasSwordmaster
-        ? 0.2 - 0.02 * (gameState.currentRound - 1)
+      getResourceAmount(player, 'solari', virtualResources) > 4 && !player.hasSwordmaster
+        ? 0.2 - 0.025 * (gameState.currentRound - 1)
         : 0,
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals, virtualResources) => player.hasSwordmaster || gameState.isFinale,

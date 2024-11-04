@@ -52,7 +52,7 @@ export function getCardCostModifier(card: ImperiumCard | ImperiumDeckCard, modif
   }
 
   for (const modifier of modifiers) {
-    if (modifier.factionType === card.faction) {
+    if (card.faction && modifier.factionType === card.faction) {
       result += modifier.persuasionAmount;
     } else if (isImperiumDeckCard(card) && modifier.cardId === card.id) {
       result += modifier.persuasionAmount;

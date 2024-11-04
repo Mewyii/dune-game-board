@@ -18,13 +18,13 @@ export class BoardEvaluationComponent implements OnInit {
   constructor(public settingsService: SettingsService) {}
 
   ngOnInit(): void {
-    this.settingsService.settings$.subscribe((x) => {
+    this.settingsService.gameContent$.subscribe((x) => {
       const actionFields: ActionField[] = [
-        ...x.gameContent.factions.map((x) => x.actionFields).flat(),
-        ...x.gameContent.locations.map((x) => x.actionField),
+        ...x.factions.map((x) => x.actionFields).flat(),
+        ...x.locations.map((x) => x.actionField),
       ];
-      if (x.gameContent.ix) {
-        actionFields.push(x.gameContent.ix);
+      if (x.ix) {
+        actionFields.push(x.ix);
       }
 
       this.fieldValues = [];

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, isArray } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { Player } from './players.service';
 import { ActiveFactionType, FactionType, Reward } from '../models';
 
@@ -23,7 +23,17 @@ export interface ImperiumRowModifier extends GameModifier {
   persuasionAmount: number;
 }
 
-export type CustomGameActionType = 'charm' | 'vision-conflict' | 'vision-deck' | 'vision-intrigues';
+export interface LocationChangeModifier extends GameModifier {
+  locationId: string;
+  changeAmount: number;
+}
+
+export type CustomGameActionType =
+  | 'charm'
+  | 'vision-conflict'
+  | 'vision-deck'
+  | 'vision-intrigues'
+  | 'location-change-buildup';
 
 export interface CustomGameActionModifier extends GameModifier {
   action: CustomGameActionType;
@@ -39,6 +49,7 @@ export interface GameModifiers {
   imperiumRowModifiers?: ImperiumRowModifier[];
   customActions?: CustomGameActionModifier[];
   fieldAccessModifiers?: FieldAccessModifier[];
+  locationChangeModifiers?: LocationChangeModifier[];
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
@@ -68,7 +79,7 @@ export class GameModifiersService {
   }
 
   public getPlayerGameModifiers(playerId: number) {
-    return this.playerGameModifiers.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playerGameModifiersSubject.value.find((x) => x.playerId === playerId));
   }
 
   public getPlayerImperiumRowModifiers(playerId: number) {
@@ -76,21 +87,23 @@ export class GameModifiersService {
   }
 
   public getPlayerFieldUnlocksForFactions(playerId: number): ActiveFactionType[] | undefined {
-    return this.playerGameModifiers
-      .find((x) => x.playerId === playerId)
+    return this.getPlayerGameModifiers(playerId)
       ?.fieldAccessModifiers?.map((x) => x.factionType)
       .filter((x) => x !== undefined) as ActiveFactionType[] | undefined;
   }
 
   public getPlayerFieldUnlocksForIds(playerId: number): string[] | undefined {
-    return this.playerGameModifiers
-      .find((x) => x.playerId === playerId)
+    return this.getPlayerGameModifiers(playerId)
       ?.fieldAccessModifiers?.map((x) => x.fieldId)
       .filter((x) => x !== undefined) as string[] | undefined;
   }
 
   public getPlayerCustomActionModifiers(playerId: number) {
     return this.playerGameModifiers.find((x) => x.playerId === playerId)?.customActions;
+  }
+
+  public getPlayerLocationChangeBuildupModifier(playerId: number, locationId: string) {
+    return this.getPlayerGameModifiers(playerId)?.locationChangeModifiers?.find((x) => x.locationId === locationId);
   }
 
   addPlayerGameModifiers(playerId: number, gameModifiers: GameModifiers) {
@@ -118,6 +131,36 @@ export class GameModifiersService {
       }
     } else {
       playerGameModifiers.push({ playerId, imperiumRowModifiers: [{ id: crypto.randomUUID(), ...content }] });
+    }
+
+    this.playerGameModifiersSubject.next(playerGameModifiers);
+  }
+
+  public increaseLocationChangeModifier(playerId: number, locationId: string, changeAmount = 1) {
+    const playerGameModifiers = this.playerGameModifiers;
+    const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
+    if (playerGameModifierIndex > -1) {
+      const playerModifiers = playerGameModifiers[playerGameModifierIndex];
+      const locationChangeModifiers = playerModifiers.locationChangeModifiers;
+      if (locationChangeModifiers) {
+        const currentLocationModifierIndex = locationChangeModifiers.findIndex((x) => x.locationId === locationId);
+        if (currentLocationModifierIndex > -1) {
+          const currentValue = locationChangeModifiers[currentLocationModifierIndex];
+          locationChangeModifiers[currentLocationModifierIndex] = {
+            ...currentValue,
+            changeAmount: currentValue.changeAmount + changeAmount,
+          };
+        } else {
+          locationChangeModifiers.push({ id: crypto.randomUUID(), locationId, changeAmount });
+        }
+      } else {
+        playerModifiers.locationChangeModifiers = [{ id: crypto.randomUUID(), locationId, changeAmount }];
+      }
+    } else {
+      playerGameModifiers.push({
+        playerId,
+        locationChangeModifiers: [{ id: crypto.randomUUID(), locationId, changeAmount }],
+      });
     }
 
     this.playerGameModifiersSubject.next(playerGameModifiers);
