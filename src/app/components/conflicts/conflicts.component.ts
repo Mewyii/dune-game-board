@@ -55,9 +55,7 @@ export class ConflictsComponent implements OnInit {
   }
 
   onSetConflictStackActiveClicked() {
-    if (this.hasConflictVision) {
-      this.conflictStackIsActive = !this.conflictStackIsActive;
-    }
+    this.conflictStackIsActive = !this.conflictStackIsActive;
   }
 
   onShowNextConflictClicked() {

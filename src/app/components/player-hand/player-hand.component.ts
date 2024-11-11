@@ -134,6 +134,30 @@ export class PlayerHandComponent implements OnInit {
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
+  onAITrashCardFromHandClicked() {
+    this.gameManager.aiTrashCardFromHand(this.activePlayerId);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+  }
+
+  onAITrashCardFromDiscardPileClicked() {
+    this.gameManager.aiTrashCardFromDiscardPile(this.activePlayerId);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+  }
+
+  onAIAddCardToHandFromDiscardPileClicked() {
+    this.gameManager.aiAddCardToHandFromDiscardPile(this.activePlayerId);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+  }
+
+  onAITrashIntrigueClicked() {
+    this.gameManager.aiTrashIntrigue(this.activePlayerId);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+  }
+
   onReturnDiscardedCardToHandClicked(card: ImperiumDeckCard) {
     if (this.currentPlayer) {
       this.cardsService.returnDiscardedPlayerCardToHand(this.activePlayerId, card);

@@ -29,6 +29,9 @@
       <ng-container *ngIf="logEntry.type === 'intrigue-play'">
         Player {{ logEntry.playerId }} played intrigue {{ logEntry.cardName }}.
       </ng-container>
+      <ng-container *ngIf="logEntry.type === 'intrigue-trash'">
+        Player {{ logEntry.playerId }} trashed intrigue {{ logEntry.cardName }}.
+      </ng-container>
     </div>
   </div>
   <ng-container *ngIf="playerRewardChoices">

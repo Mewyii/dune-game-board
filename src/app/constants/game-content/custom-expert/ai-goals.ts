@@ -65,7 +65,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.5,
+    baseDesire: 0.45,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.0125 * getResourceAmount(player, 'spice', virtualResources) +
       0.033 * player.techAgents -
@@ -81,7 +81,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   dreadnought: {
-    baseDesire: 0.5,
+    baseDesire: 0.45,
     desireModifier: (player, gameState, goals, virtualResources) =>
       0.01 * getResourceAmount(player, 'solari', virtualResources) -
       0.005 * (gameState.currentRound - 1) -
@@ -199,14 +199,20 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   troops: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals, virtualResources) =>
-      0.15 * (4 - gameState.playerCombatUnits.troopsInGarrison),
+      0.175 * (4 - gameState.playerCombatUnits.troopsInGarrison),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'troop', 0, 4),
       'Desert Equipment': (player, gameState, goals, virtualResources) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
-      'Desert Knowledge (card-draw)': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
-      'Desert Knowledge (card-destroy)': (player, gameState) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
+      'Desert Knowledge (card-draw)': (player, gameState, goals, virtualResources) =>
+        gameState.playerScore.fremen === 1
+          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.3, virtualResources)
+          : 0.0,
+      'Desert Knowledge (card-destroy)': (player, gameState, goals, virtualResources) =>
+        gameState.playerScore.fremen === 1
+          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.3, virtualResources)
+          : 0.0,
     }),
   },
   intrigues: {

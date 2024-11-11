@@ -58,6 +58,12 @@ export interface PlayerIntriguePlayLog {
   cardName: string;
 }
 
+export interface PlayerIntrigueTrashLog {
+  playerId: number;
+  type: 'intrigue-trash';
+  cardName: string;
+}
+
 export type PlayerActionLog =
   | playerRewardGainLog
   | playerRewardPayLog
@@ -66,7 +72,8 @@ export type PlayerActionLog =
   | PlayerCardPlayLog
   | PlayerCardTrashLog
   | PlayerCardDiscardLog
-  | PlayerIntriguePlayLog;
+  | PlayerIntriguePlayLog
+  | PlayerIntrigueTrashLog;
 
 @Injectable({
   providedIn: 'root',
@@ -162,6 +169,10 @@ export class LoggingService {
 
   logPlayerTrashedCard(playerId: number, cardName: string) {
     this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-trash', cardName: cardName }]);
+  }
+
+  logPlayerTrashedIntrigue(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'intrigue-trash', cardName: cardName }]);
   }
 
   logPlayerPlayedIntrigue(playerId: number, cardName: string) {

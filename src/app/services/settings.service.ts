@@ -22,7 +22,8 @@ export class SettingsService {
   ];
 
   private fields: ActionField[] = [];
-  public spiceAccumulationFields: ActionField[] = [];
+  public spiceAccumulationFields: string[] = [];
+  public controllableLocations: string[] = [];
   public unblockableFields: ActionField[] = [];
 
   private settingsSubject = new BehaviorSubject<Settings>(boardSettings);
@@ -116,7 +117,10 @@ export class SettingsService {
 
     this.fields = result;
     this.unblockableFields = this.fields.filter((x) => x.isNonBlockingField);
-    this.spiceAccumulationFields = this.fields.filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'));
+    this.spiceAccumulationFields = this.fields
+      .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
+      .map((x) => x.title.en);
+    this.controllableLocations = this.gameContent.locations.filter((x) => x.ownerReward).map((x) => x.actionField.title.en);
   }
 
   getFactionName(factionType: FactionType) {

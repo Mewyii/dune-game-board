@@ -22,7 +22,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   editMode = false;
 
-  factions = [...activeFactionTypes, ...passiveFactionTypes, ''].sort((a, b) => a.localeCompare(b));
+  factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b));
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes].sort((a, b) => a.localeCompare(b)); // Add other reward types
   fontSizes = ['medium', 'small'];

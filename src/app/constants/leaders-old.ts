@@ -107,31 +107,31 @@ export const leadersOld: LeaderImageOnly[] = [
   //   name: 'count hundro moritani',
   //   imageUrl: '/assets/images/leaders/old/hundro.jpg',
   // },
-  {
-    name: { de: '"prinzessin" yuna moritani', en: '"princess" yuna moritani' },
-    house: {
-      de: 'haus moritani',
-      en: 'house moritani',
-    },
-    type: 'old',
-    imageUrl: '/assets/images/leaders/old/yuna.jpg',
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'collect-solari', modifier: 0.05 }],
-    },
-  },
-  {
-    name: { de: 'erzherzog  armand ecaz', en: 'archduke armand ecaz' },
-    house: {
-      de: 'haus ecaz',
-      en: 'house ecaz',
-    },
-    type: 'old',
-    imageUrl: '/assets/images/leaders/old/armand.jpg',
-    aiAdjustments: {
-      fieldEvaluationModifier: (player, gameState, field) =>
-        field.actionType === 'town' || field.actionType === 'spice' || field.actionType === 'landsraad' ? 0.05 : 0.0,
-    },
-  },
+  // {
+  //   name: { de: '"prinzessin" yuna moritani', en: '"princess" yuna moritani' },
+  //   house: {
+  //     de: 'haus moritani',
+  //     en: 'house moritani',
+  //   },
+  //   type: 'old',
+  //   imageUrl: '/assets/images/leaders/old/yuna.jpg',
+  //   aiAdjustments: {
+  //     goalEvaluationModifier: () => [{ type: 'collect-solari', modifier: 0.05 }],
+  //   },
+  // },
+  // {
+  //   name: { de: 'erzherzog  armand ecaz', en: 'archduke armand ecaz' },
+  //   house: {
+  //     de: 'haus ecaz',
+  //     en: 'house ecaz',
+  //   },
+  //   type: 'old',
+  //   imageUrl: '/assets/images/leaders/old/armand.jpg',
+  //   aiAdjustments: {
+  //     fieldEvaluationModifier: (player, gameState, field) =>
+  //       field.actionType === 'town' || field.actionType === 'spice' || field.actionType === 'landsraad' ? 0.05 : 0.0,
+  //   },
+  // },
   // {
   //   name: 'ilesa ecaz',
   //   imageUrl: '/assets/images/leaders/old/ilesa.jpg',

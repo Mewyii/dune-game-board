@@ -4,7 +4,7 @@ import { CardConfiguratorService } from 'src/app/services/configurators/card-con
 import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
-import { ActionType, FactionType } from 'src/app/models';
+import { ActionType, ActiveFactionType } from 'src/app/models';
 import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
 
 @Component({
@@ -16,9 +16,7 @@ export class StartingCardConfiguratorComponent implements OnInit {
   public startingCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
-  public factions: { [type in FactionType]: number } = {
-    landsraad: 0,
-    choam: 0,
+  public factions: { [type in ActiveFactionType]: number } = {
     emperor: 0,
     guild: 0,
     bene: 0,

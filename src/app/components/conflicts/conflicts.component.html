@@ -7,13 +7,19 @@
     [style.background-position-y]="currentCardCoordinates.y + 'px'"
   ></div>
   <div
-    [class]="'conflict-card background' + (hasConflictVision ? ' clickable' : '') + (conflictStackIsActive ? ' active' : '')"
+    [class]="'conflict-card background clickable' + (conflictStackIsActive ? ' active' : '')"
     [style.background-image]="'url(' + currentConflictSet.imagePath + ')'"
     [style.background-size]="currentConflictSet.imageSize + 'px'"
     (click)="onSetConflictStackActiveClicked()"
   >
-    <div class="conflict-action-container" *ngIf="hasConflictVision && conflictStackIsActive">
-      <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowNextConflictClicked()">
+    <div class="conflict-action-container" *ngIf="conflictStackIsActive">
+      <button
+        class="card-buy-button"
+        mat-fab
+        [color]="'accent'"
+        (click)="onShowNextConflictClicked()"
+        matTooltip="Show top card"
+      >
         <mat-icon>visibility</mat-icon>
       </button>
     </div>

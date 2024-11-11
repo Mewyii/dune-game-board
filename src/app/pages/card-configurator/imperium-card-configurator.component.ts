@@ -5,7 +5,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
-import { ActionType, FactionType } from 'src/app/models';
+import { ActionType, ActiveFactionType } from 'src/app/models';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -17,14 +17,13 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   public imperiumCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
-  public factions: { [type in FactionType]: number } = {
-    landsraad: 0,
-    choam: 0,
+  public factions: { [type in ActiveFactionType]: number } = {
     emperor: 0,
     guild: 0,
     bene: 0,
     fremen: 0,
   };
+  public noFactions = 0;
 
   public fieldAccessess: { [type in ActionType]: number } = {
     landsraad: 0,
@@ -63,13 +62,12 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
 
       this.totalCardAmount = 0;
       this.factions = {
-        landsraad: 0,
-        choam: 0,
         emperor: 0,
         guild: 0,
         bene: 0,
         fremen: 0,
       };
+      this.noFactions = 0;
 
       this.fieldAccessess = {
         landsraad: 0,
@@ -99,6 +97,8 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
 
         if (card.faction) {
           this.factions[card.faction] += card.cardAmount ?? 1;
+        } else {
+          this.noFactions += card.cardAmount ?? 1;
         }
 
         if (card.fieldAccess) {

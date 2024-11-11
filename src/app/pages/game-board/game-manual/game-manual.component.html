@@ -1,5 +1,12 @@
 <div class="manual-container">
   <div class="about-container">
+    <h2>Fullscreen</h2>
+    <div>This app is best used in fullscreen mode.</div>
+    <br />
+    <button mat-raised-button [color]="'accent'" (click)="enableFullScreen()">
+      {{ isFullScreen ? 'Exit' : 'Enter' }} Fullscreen Mode
+    </button>
+    <br /><br />
     <h2>How to play</h2>
     <div>Prepare the intrigue deck from the board game.</div>
     <br />

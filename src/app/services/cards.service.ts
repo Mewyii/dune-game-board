@@ -316,8 +316,8 @@ export class CardsService {
       playerHand.cards.push(card);
       this.playerHandsSubject.next([...this.playerHands.filter((x) => x.playerId !== playerId), playerHand]);
     } else {
-      const newDiscardPile: PlayerCardStack = { playerId, cards: [card] };
-      this.playerHandsSubject.next([...this.playerDiscardPiles, newDiscardPile]);
+      const newPlayerHand: PlayerCardStack = { playerId, cards: [card] };
+      this.playerHandsSubject.next([...this.playerHands, newPlayerHand]);
     }
   }
 
@@ -371,6 +371,20 @@ export class CardsService {
       playerDiscardPiles[playerHandIndex].cards = playerDiscardPiles[playerHandIndex].cards.filter((x) => x.id !== card.id);
       this.playerDiscardPilesSubject.next(playerDiscardPiles);
       this.addCardToPlayerHand(playerId, card);
+    }
+  }
+
+  removeCardFromDiscardPile(playerId: number, card: ImperiumDeckCard) {
+    const playerDiscardPiles = this.playerDiscardPiles;
+    const playerDiscardPileIndex = playerDiscardPiles.findIndex((x) => x.playerId === playerId);
+    if (playerDiscardPileIndex > -1) {
+      const cardIndex = playerDiscardPiles[playerDiscardPileIndex].cards.findIndex((x) => x.id === card.id);
+      if (cardIndex > -1) {
+        playerDiscardPiles[playerDiscardPileIndex].cards = playerDiscardPiles[playerDiscardPileIndex].cards.filter(
+          (x) => x.id !== card.id
+        );
+        this.playerDiscardPilesSubject.next(playerDiscardPiles);
+      }
     }
   }
 

@@ -1,5 +1,13 @@
 <ng-container>
   <div class="player-hand-container">
+    <div
+      *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
+      class="draw-card-button"
+      (click)="onAITrashIntrigueClicked()"
+      matTooltip="AI trash intrigue"
+    >
+      <img class="draw-card-icon" [src]="getRewardTypePath('intrigue-trash')" />
+    </div>
     <div class="player-cards-container">
       <ng-container *ngIf="playerIntrigues && cardsShown === 'hand'">
         <div
@@ -142,6 +150,31 @@
     >
       <img class="draw-card-icon" [src]="getRewardTypePath('card-discard')" />
     </div>
+    <div
+      *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
+      class="draw-card-button"
+      (click)="onAITrashCardFromHandClicked()"
+      matTooltip="AI Trash card"
+    >
+      <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
+    </div>
+    <div
+      *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
+      class="draw-card-button"
+      (click)="onAITrashCardFromDiscardPileClicked()"
+      matTooltip="AI Trash card"
+    >
+      <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
+    </div>
+    <button
+      *ngIf="cardsShown === 'discard'"
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onAIAddCardToHandFromDiscardPileClicked()"
+      matTooltip="AI add card to hand"
+    >
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
     <button
       *ngIf="cardsShown === 'discard'"
       mat-mini-fab
@@ -190,8 +223,8 @@
     >
       <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
     </div>
-    <div [style.marginBottom]="'8px'">
-      <button mat-mini-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">
+    <div>
+      <button mat-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">
         <mat-icon *ngIf="!showCards">expand_less</mat-icon>
         <mat-icon *ngIf="showCards">expand_more</mat-icon>
       </button>

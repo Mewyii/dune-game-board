@@ -4,6 +4,7 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 
 @Component({
   selector: 'dune-intrigues',
@@ -15,6 +16,7 @@ export class IntriguesComponent {
     public intriguesService: IntriguesService,
     private gameManager: GameManager,
     private gameModifierService: GameModifiersService,
+    private audioManager: AudioManager,
     public dialog: MatDialog
   ) {}
 
@@ -42,10 +44,11 @@ export class IntriguesComponent {
     });
   }
 
-  onSetIntrigueStackActiveClicked() {
-    if (this.hasIntrigueVision) {
-      this.intrigueStackIsActive = !this.intrigueStackIsActive;
-    }
+  onDrawIntrigueClicked() {
+    this.audioManager.playSound('intrigue');
+    this.intriguesService.drawPlayerIntriguesFromDeck(this.activePlayerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onShowNextIntrigueClicked() {
@@ -58,5 +61,9 @@ export class IntriguesComponent {
         },
       });
     }
+  }
+
+  onSetIntrigueStackActiveClicked() {
+    this.intrigueStackIsActive = !this.intrigueStackIsActive;
   }
 }

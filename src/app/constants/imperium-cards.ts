@@ -1,4 +1,4 @@
-import { ActionType, FactionType, LanguageString, Reward } from '../models';
+import { ActionType, ActiveFactionType, LanguageString, Reward } from '../models';
 
 export interface LanguageStringAndFontSize extends LanguageString {
   fontSize?: 'medium' | 'small';
@@ -6,7 +6,7 @@ export interface LanguageStringAndFontSize extends LanguageString {
 
 export interface ImperiumCard {
   name: LanguageString;
-  faction?: FactionType;
+  faction?: ActiveFactionType;
   persuasionCosts?: number;
   fieldAccess?: ActionType[];
   agentEffects?: Reward[];
@@ -52,40 +52,10 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Smuggling Gang',
-      de: 'Schmugglerbande',
-    },
-    persuasionCosts: 1,
-    fieldAccess: ['spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/smugglers_8.png',
-    cardAmount: 2,
-    buyEffects: [
-      {
-        type: 'spice',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'tech-reduced',
-      },
-    ],
-    customAgentEffect: {
-      en: '{faction:guild} 2 Influence: {resource:solari}',
-      de: '{faction:guild} 2 Einfluss: {resource:solari}',
-      fontSize: 'medium',
-    },
-  },
-  {
-    name: {
       en: 'Spice Vision',
       de: 'Spice Visionen',
     },
+    faction: 'bene',
     persuasionCosts: 1,
     fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/vision.png',
@@ -230,6 +200,38 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Smuggling Gang',
+      de: 'Schmugglerbande',
+    },
+    faction: 'guild',
+    persuasionCosts: 1,
+    fieldAccess: ['spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/smugglers_8.png',
+    cardAmount: 2,
+    buyEffects: [
+      {
+        type: 'spice',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'tech-reduced',
+      },
+    ],
+    customAgentEffect: {
+      en: '{faction:guild} 2 Influence: {resource:solari}',
+      de: '{faction:guild} 2 Einfluss: {resource:solari}',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Guild Administrator',
       de: 'Gilden Verwalter',
     },
@@ -254,27 +256,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Supply Ambush',
-      de: 'Versorgungsüberfall',
-    },
-    persuasionCosts: 2,
-    fieldAccess: ['spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/fremen_warriors_4.png',
-    cardAmount: 2,
-    buyEffects: [],
-    customAgentEffect: {
-      en: 'Each opponent loses {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
-      de: 'Jeder Gegner verliert {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
-      fontSize: 'small',
-    },
-    customRevealEffect: {
-      en: '{resource:sword}{resource:sword}. Deploy up to <b>1</b> additional troop to the conflict.',
-      de: '{resource:sword}{resource:sword}. Setze bis zu <b>1</b> Trupp aus deiner Garnison im Konflikt ein.',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
       en: 'Suk Doctor',
       de: 'Suk-Arzt',
     },
@@ -296,24 +277,35 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Dr. Yueh, Suk Doctor',
-      de: 'Dr. Yueh, Suk-Arzt',
+      en: 'Yueh, Traitor',
+      de: 'Dr. Yueh, Verräter',
     },
-    persuasionCosts: 3,
-    fieldAccess: ['landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/yueh_2.png',
+    persuasionCosts: 2,
+    fieldAccess: [],
+    imageUrl: '/assets/images/action-backgrounds/yueh.png',
     cardAmount: 1,
     buyEffects: [],
-    customAgentEffect: {
-      en: 'You may put <b>1</b> of your cards in play back to your hand.',
-      de: 'Du kannst <b>1</b> Karte im Spiel zurück auf deine Hand nehmen.',
-      fontSize: 'small',
-    },
-    customRevealEffect: {
-      en: 'You may retreat up to <b>2</b> inserted troops after the combat phase.',
-      de: 'Du kannst nach der Kampf-Phase bis zu <b>2</b> eingesetzte Truppen zurückziehen.',
-      fontSize: 'small',
-    },
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'trash-self',
+      },
+    ],
   },
   {
     name: {
@@ -384,6 +376,28 @@ export const imperiumCards: ImperiumCard[] = [
       en: '{faction:emperor} -Connection: {resource:intrigue}',
       de: '{faction:emperor} -Verbindung: {resource:solari;amount:2}',
       fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Supply Ambush',
+      de: 'Versorgungsüberfall',
+    },
+    faction: 'fremen',
+    persuasionCosts: 2,
+    fieldAccess: ['spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/fremen_warriors_4.png',
+    cardAmount: 2,
+    buyEffects: [],
+    customAgentEffect: {
+      en: 'Each opponent loses {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
+      de: 'Jeder Gegner verliert {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
+      fontSize: 'small',
+    },
+    customRevealEffect: {
+      en: '{resource:sword}{resource:sword}. Deploy up to <b>1</b> additional troop to the conflict.',
+      de: '{resource:sword}{resource:sword}. Setze bis zu <b>1</b> Trupp aus deiner Garnison im Konflikt ein.',
+      fontSize: 'small',
     },
   },
   {
@@ -506,23 +520,24 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Yueh, Traitor',
-      de: 'Dr. Yueh, Verräter',
+      en: 'Dr. Yueh, Suk Doctor',
+      de: 'Dr. Yueh, Suk-Arzt',
     },
-    persuasionCosts: 2,
-    fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/yueh.png',
+    persuasionCosts: 3,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/yueh_2.png',
     cardAmount: 1,
     buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      { type: 'faction-influence-down-choice' },
-      { type: 'helper-trade' },
-      { type: 'location-control' },
-      { type: 'sword' },
-      { type: 'sword' },
-      { type: 'trash-self' },
-    ],
+    customAgentEffect: {
+      en: 'You may put <b>1</b> of your cards in play back to your hand.',
+      de: 'Du kannst <b>1</b> Karte im Spiel zurück auf deine Hand nehmen.',
+      fontSize: 'small',
+    },
+    customRevealEffect: {
+      en: 'You may retreat up to <b>2</b> inserted troops after the combat phase.',
+      de: 'Du kannst nach der Kampf-Phase bis zu <b>2</b> eingesetzte Truppen zurückziehen.',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -572,6 +587,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Promise of Stability',
       de: 'Stabilitätsversprechen',
     },
+    faction: 'bene',
     persuasionCosts: 3,
     fieldAccess: ['bene', 'guild'],
     imageUrl: '/assets/images/action-backgrounds/conspiracy_2.png',
@@ -599,37 +615,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'solari',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Display of Force',
-      de: 'Machtdemonstration',
-    },
-    persuasionCosts: 3,
-    fieldAccess: ['landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/harkonnen_ceremony.png',
-    cardAmount: 2,
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'faction-influence-up-choice',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 2,
       },
     ],
   },
@@ -687,6 +672,38 @@ export const imperiumCards: ImperiumCard[] = [
       de: '{faction:bene} -Verbindung: {resource:signet-ring}',
       fontSize: 'medium',
     },
+  },
+  {
+    name: {
+      en: 'Display of Force',
+      de: 'Machtdemonstration',
+    },
+    faction: 'emperor',
+    persuasionCosts: 3,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/harkonnen_ceremony.png',
+    cardAmount: 2,
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
   },
   {
     name: {
@@ -846,11 +863,21 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     agentEffects: [
-      { type: 'card-draw' },
-      { type: 'card-draw' },
-      { type: 'focus' },
-      { type: 'focus' },
-      { type: 'trash-self' },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'focus',
+      },
+      {
+        type: 'focus',
+      },
+      {
+        type: 'trash-self',
+      },
     ],
   },
   {
@@ -1132,6 +1159,39 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Insurgents',
+      de: 'Aufrührer',
+    },
+    faction: 'emperor',
+    persuasionCosts: 4,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/battle.png',
+    cardAmount: 2,
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'solari',
+        amount: 5,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Sardaukar Battle Rites',
       de: 'Sardaukar Kampfriten',
     },
@@ -1347,38 +1407,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Insurgents',
-      de: 'Aufrührer',
-    },
-    persuasionCosts: 4,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/battle.png',
-    cardAmount: 2,
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'solari',
-        amount: 5,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'location-control',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Honorable Reception',
       de: 'Ehrenvoller Empfang',
     },
@@ -1561,7 +1589,14 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     agentEffects: [],
-    revealEffects: [{ type: 'location-control' }, { type: 'trash-self' }],
+    revealEffects: [
+      {
+        type: 'location-control',
+      },
+      {
+        type: 'trash-self',
+      },
+    ],
   },
   {
     name: {
@@ -1786,12 +1821,24 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
-      { type: 'faction-influence-down-guild' },
-      { type: 'faction-influence-down-emperor' },
-      { type: 'helper-trade' },
-      { type: 'victory-point' },
-      { type: 'victory-point' },
-      { type: 'trash-self' },
+      {
+        type: 'faction-influence-down-guild',
+      },
+      {
+        type: 'faction-influence-down-emperor',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+      {
+        type: 'victory-point',
+      },
+      {
+        type: 'trash-self',
+      },
     ],
   },
   {
@@ -2179,6 +2226,39 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Mohiam, Reverend Mother',
+      de: 'Mohiam, Ehrwürdige Mutter',
+    },
+    faction: 'bene',
+    persuasionCosts: 8,
+    fieldAccess: ['bene', 'emperor', 'landsraad'],
+    imageUrl: '/assets/images/leaders/mohiam.png',
+    cardAmount: 1,
+    buyEffects: [
+      {
+        type: 'faction-influence-up-bene',
+      },
+      {
+        type: 'faction-influence-up-bene',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
+    customAgentEffect: {
+      en: '',
+      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Intervention of the Emperor',
       de: 'Eingriff des Imperators',
     },
@@ -2243,39 +2323,6 @@ export const imperiumCards: ImperiumCard[] = [
     customRevealEffect: {
       en: '{resource:persuasion;amount:2}<br>For each fremen card you have in play: {resource:sword}',
       de: '{resource:persuasion;amount:2}<br>Für jede Fremen-Karte, die du im Spiel hast: {resource:sword}',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Mohiam, Reverend Mother',
-      de: 'Mohiam, Ehrwürdige Mutter',
-    },
-    faction: 'bene',
-    persuasionCosts: 8,
-    fieldAccess: ['bene', 'emperor', 'landsraad'],
-    imageUrl: '/assets/images/leaders/mohiam.png',
-    cardAmount: 1,
-    buyEffects: [
-      {
-        type: 'faction-influence-up-bene',
-      },
-      {
-        type: 'faction-influence-up-bene',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 2,
-      },
-      {
-        type: 'intrigue',
-      },
-    ],
-    customAgentEffect: {
-      en: '',
-      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
       fontSize: 'small',
     },
   },

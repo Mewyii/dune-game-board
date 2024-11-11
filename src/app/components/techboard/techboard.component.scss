@@ -88,6 +88,13 @@
     height: 140px;
     box-sizing: border-box;
     margin-top: 16px;
+    transition: .66s;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+}
+
+.agent-area:hover {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    transform: scale(1.05);
 }
 
 .agent-container {

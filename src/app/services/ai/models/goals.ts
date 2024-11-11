@@ -9,6 +9,7 @@ import { Conflict } from 'src/app/constants/conflicts';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard } from '../../cards.service';
 import { TechTileCard } from '../../tech-tiles.service';
+import { IntrigueDeckCard } from '../../intrigues.service';
 
 export type AIGoals =
   | 'high-council'
@@ -55,8 +56,8 @@ export interface GameState {
   availableTechTiles: TechTileCard[];
   currentEvent: DuneEvent | undefined;
   playerDeckSizeTotal: number;
-  playerDeckCards?: ImperiumDeckCard[];
-  playerHandCards?: ImperiumDeckCard[];
+  playerDeckCards: ImperiumDeckCard[];
+  playerHandCards: ImperiumDeckCard[];
   playerDiscardPileCards?: ImperiumDeckCard[];
   playerTrashPileCards?: ImperiumDeckCard[];
   playerCardsBought: number;
@@ -66,8 +67,13 @@ export interface GameState {
   playerFactionFriendships: PlayerFactionScoreType[];
   playerFieldUnlocksForFactions?: ActiveFactionType[];
   playerFieldUnlocksForIds?: string[];
+  playerIntrigues: IntrigueDeckCard[];
+  playerCombatIntrigues: IntrigueDeckCard[];
   playerIntrigueCount: number;
+  playerCombatIntrigueCount: number;
   playerCanStealIntrigues: boolean;
+  freeLocations: string[];
+  occupiedLocations: string[];
 }
 
 export interface AIGoal {

@@ -521,10 +521,12 @@ export class AIManager {
     return preferredLocation;
   }
 
-  getCardToPlay(preferredField: ActionField, playerHandCards: ImperiumDeckCard[], player: Player, gameState: GameState) {
-    const usableCards = playerHandCards.filter((x) =>
-      x.fieldAccess?.some((accessType) => accessType === preferredField.actionType)
-    );
+  getCardToPlay(playerHandCards: ImperiumDeckCard[], player: Player, gameState: GameState, preferredField?: ActionField) {
+    let usableCards = playerHandCards;
+    if (preferredField) {
+      usableCards = usableCards.filter((x) => x.fieldAccess?.some((accessType) => accessType === preferredField.actionType));
+    }
+
     if (usableCards.length > 0) {
       const cardEvaluations = usableCards.map((card) => {
         const evaluation = this.getImperiumCardPlayEvaluation(card, player, gameState);
@@ -805,6 +807,75 @@ export class AIManager {
         card.agentEffects
       );
       if (!hasRewardOptions && !hasRewardConversion) {
+        evaluationValue += this.getRewardArrayEvaluationForTurnState(card.agentEffects, player, gameState);
+      } else if (hasRewardOptions) {
+        const leftSideRewards = card.agentEffects.slice(0, rewardOptionIndex);
+        const rightSideRewards = card.agentEffects.slice(rewardOptionIndex + 1);
+        const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(leftSideRewards, player, gameState);
+        const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(rightSideRewards, player, gameState);
+
+        evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+      } else if (hasRewardConversion) {
+        const costs = card.agentEffects.slice(0, rewardConversionIndex);
+        const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
+        const costsEvaluation = this.getCostsArrayEvaluationForTurnState(costs, player, gameState);
+        const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
+
+        evaluationValue += -costsEvaluation + rewardsEvaluation;
+      }
+    }
+    if (card.customAgentEffect) {
+      evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 0);
+    }
+
+    if (card.revealEffects) {
+      const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
+        card.revealEffects
+      );
+      if (!hasRewardOptions && !hasRewardConversion) {
+        evaluationValue -= this.getRewardArrayEvaluationForTurnState(card.revealEffects, player, gameState);
+      } else if (hasRewardOptions) {
+        const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
+        const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
+        const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(leftSideRewards, player, gameState);
+        const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(rightSideRewards, player, gameState);
+
+        evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+      } else if (hasRewardConversion) {
+        const costs = card.revealEffects.slice(0, rewardConversionIndex);
+        const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
+        const costsEvaluation = this.getCostsArrayEvaluationForTurnState(costs, player, gameState);
+        const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
+
+        evaluationValue -= -costsEvaluation + rewardsEvaluation;
+      }
+    }
+    if (card.customRevealEffect) {
+      evaluationValue -= 2 + 0.5 * (card.persuasionCosts ?? 0);
+    }
+
+    return evaluationValue;
+  }
+
+  private getImperiumCardBuyEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    if (card.persuasionCosts) {
+      evaluationValue += card.persuasionCosts * 0.1;
+    }
+    if (card.buyEffects) {
+      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        evaluationValue += this.getRewardArrayEvaluation(card.buyEffects, player, gameState);
+      }
+    }
+    if (card.fieldAccess) {
+      evaluationValue += card.fieldAccess.length * 1;
+    }
+    if (card.agentEffects) {
+      const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
+        card.agentEffects
+      );
+      if (!hasRewardOptions && !hasRewardConversion) {
         evaluationValue += this.getRewardArrayEvaluation(card.agentEffects, player, gameState);
       } else if (hasRewardOptions) {
         const leftSideRewards = card.agentEffects.slice(0, rewardOptionIndex);
@@ -825,93 +896,24 @@ export class AIManager {
     if (card.customAgentEffect) {
       evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 0);
     }
-
     if (card.revealEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
         card.revealEffects
       );
       if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects, player, gameState, true);
+        evaluationValue += this.getRewardArrayEvaluation(card.revealEffects, player, gameState);
       } else if (hasRewardOptions) {
         const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
         const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
-
-        evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-      } else if (hasRewardConversion) {
-        const costs = card.revealEffects.slice(0, rewardConversionIndex);
-        const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
-
-        evaluationValue -= -costsEvaluation + rewardsEvaluation;
-      }
-    }
-    if (card.customRevealEffect) {
-      evaluationValue -= 2 + 0.5 * (card.persuasionCosts ?? 0);
-    }
-
-    return evaluationValue;
-  }
-
-  private getImperiumCardBuyEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
-    let evaluationValue = 0;
-    if (card.persuasionCosts) {
-      evaluationValue += card.persuasionCosts * 0.1;
-    }
-    if (card.buyEffects) {
-      const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
-      if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue += this.getRewardArrayEvaluation(card.buyEffects, player, gameState, true);
-      }
-    }
-    if (card.fieldAccess) {
-      evaluationValue += card.fieldAccess.length * 1;
-    }
-    if (card.agentEffects) {
-      const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
-        card.agentEffects
-      );
-      if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue += this.getRewardArrayEvaluation(card.agentEffects, player, gameState, true);
-      } else if (hasRewardOptions) {
-        const leftSideRewards = card.agentEffects.slice(0, rewardOptionIndex);
-        const rightSideRewards = card.agentEffects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
-
-        evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-      } else if (hasRewardConversion) {
-        const costs = card.agentEffects.slice(0, rewardConversionIndex);
-        const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
-
-        evaluationValue += -costsEvaluation + rewardsEvaluation;
-      }
-    }
-    if (card.customAgentEffect) {
-      evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 0);
-    }
-    if (card.revealEffects) {
-      const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
-        card.revealEffects
-      );
-      if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue += this.getRewardArrayEvaluation(card.revealEffects, player, gameState, true);
-      } else if (hasRewardOptions) {
-        const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
-        const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
+        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState);
+        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState);
 
         evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
+        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue += -costsEvaluation + rewardsEvaluation;
       }
@@ -936,19 +938,19 @@ export class AIManager {
         card.agentEffects
       );
       if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue -= this.getRewardArrayEvaluation(card.agentEffects, player, gameState, true);
+        evaluationValue -= this.getRewardArrayEvaluation(card.agentEffects, player, gameState);
       } else if (hasRewardOptions) {
         const leftSideRewards = card.agentEffects.slice(0, rewardOptionIndex);
         const rightSideRewards = card.agentEffects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
+        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState);
+        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState);
 
         evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.agentEffects.slice(0, rewardConversionIndex);
         const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
+        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
@@ -962,19 +964,19 @@ export class AIManager {
         card.revealEffects
       );
       if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects, player, gameState, true);
+        evaluationValue -= this.getRewardArrayEvaluation(card.revealEffects, player, gameState);
       } else if (hasRewardOptions) {
         const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
         const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
+        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState);
+        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState);
 
         evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.revealEffects.slice(0, rewardConversionIndex);
         const rewards = card.revealEffects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
+        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
@@ -993,19 +995,19 @@ export class AIManager {
         card.effects
       );
       if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue -= this.getRewardArrayEvaluation(card.effects, player, gameState, true);
+        evaluationValue -= this.getRewardArrayEvaluation(card.effects, player, gameState);
       } else if (hasRewardOptions) {
         const leftSideRewards = card.effects.slice(0, rewardOptionIndex);
         const rightSideRewards = card.effects.slice(rewardOptionIndex + 1);
-        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState, true);
-        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState, true);
+        const leftSideEvaluation = this.getRewardArrayEvaluation(leftSideRewards, player, gameState);
+        const rightSideEvaluation = this.getRewardArrayEvaluation(rightSideRewards, player, gameState);
 
         evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
       } else if (hasRewardConversion) {
         const costs = card.effects.slice(0, rewardConversionIndex);
         const rewards = card.effects.slice(rewardConversionIndex + 1);
-        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState, true);
-        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState, true);
+        const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
+        const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
         evaluationValue -= -costsEvaluation + rewardsEvaluation;
       }
@@ -1014,19 +1016,35 @@ export class AIManager {
     return evaluationValue;
   }
 
-  public getRewardArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState, ignoreTurnState = false) {
+  public getRewardArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
-      evaluationValue += this.getEffectEvaluation(reward.type, player, gameState, ignoreTurnState) * (reward.amount ?? 1);
+      evaluationValue += this.getEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
     }
     return evaluationValue;
   }
 
-  public getCostsArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState, ignoreTurnState = false) {
+  public getCostsArrayEvaluation(rewards: Reward[], player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    for (const reward of rewards) {
+      evaluationValue += Math.abs(this.getEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1));
+    }
+    return evaluationValue;
+  }
+
+  public getRewardArrayEvaluationForTurnState(rewards: Reward[], player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    for (const reward of rewards) {
+      evaluationValue += this.getEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1);
+    }
+    return evaluationValue;
+  }
+
+  public getCostsArrayEvaluationForTurnState(rewards: Reward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
       evaluationValue += Math.abs(
-        this.getEffectEvaluation(reward.type, player, gameState, ignoreTurnState) * (reward.amount ?? 1)
+        this.getEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1)
       );
     }
     return evaluationValue;
@@ -1036,15 +1054,11 @@ export class AIManager {
     return normalizeNumber(this.getRewardArrayEvaluation(rewards, player, gameState), normalizeMax, 0);
   }
 
-  private getEffectEvaluation(rewardType: RewardType, player: Player, gameState: GameState, ignoreTurnState = false) {
-    const hasPlacedAgents = gameState.playerAgentsOnFields.length > 1;
-    const hasAgentsLeftToPlace = player.agents - gameState.playerAgentsOnFields.length > 0;
-
+  private getEffectEvaluation(rewardType: RewardType, player: Player, gameState: GameState) {
     switch (rewardType) {
       case 'water':
         return (
           3 -
-          0.4 * getResourceAmount(player, 'water', []) -
           (player.hasSwordmaster ? 0.1 : 0) -
           (player.hasCouncilSeat ? 0.1 : 0) -
           0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
@@ -1052,7 +1066,6 @@ export class AIManager {
       case 'spice':
         return (
           2.5 -
-          0.2 * getResourceAmount(player, 'spice', []) -
           (player.hasSwordmaster ? 0.2 : 0) -
           (player.hasCouncilSeat ? 0.2 : 0) -
           0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
@@ -1060,13 +1073,13 @@ export class AIManager {
       case 'solari':
         return (
           1.5 -
-          0.1 * getResourceAmount(player, 'solari', []) -
           (player.hasSwordmaster ? 0.3 : 0) -
           (player.hasCouncilSeat ? 0.3 : 0) -
-          0.15 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+          0.15 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
+          0.05 * (gameState.currentRound - 1)
         );
       case 'troop':
-        return 1.5 - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
+        return 1.5;
       case 'dreadnought':
         return getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 6 : 0;
       case 'card-draw':
@@ -1075,15 +1088,15 @@ export class AIManager {
         return -1.0 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
       case 'card-destroy':
       case 'focus':
-        return 2 + 0.1 * gameState.playerCardsBought - 0.2 * gameState.playerCardsTrashed;
+        return 2 + 0.15 * gameState.playerCardsBought - 0.3 * gameState.playerCardsTrashed;
       case 'card-draw-or-destroy':
         return 2 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed;
       case 'intrigue':
-        return 1.75 - 0.25 * gameState.playerIntrigueCount;
+        return 1.75 + 0.1 * (gameState.currentRound - 1);
       case 'persuasion':
-        return 1.75;
+        return 2.0 - 0.1 * (gameState.currentRound - 1);
       case 'foldspace':
-        return hasAgentsLeftToPlace || ignoreTurnState ? 1.75 : 1;
+        return 2.0 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed;
       case 'council-seat-small':
       case 'council-seat-large':
         return !player.hasCouncilSeat ? 3.5 : 0;
@@ -1094,15 +1107,15 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 9 + 0.5 * (gameState.currentRound - 1);
+        return 9 + 1.0 * (gameState.currentRound - 1);
       case 'sword':
-        return gameState.playerCombatUnits.troopsInCombat > 0 || ignoreTurnState ? 1 : 0.25;
+        return 1;
       case 'combat':
         return 1 + 0.25 * (gameState.currentRound - 1);
       case 'intrigue-trash':
         return -1;
       case 'intrigue-draw':
-        return 1.75;
+        return 1.5;
       case 'helper-trade-horizontal':
         return 0;
       case 'helper-trade':
@@ -1144,7 +1157,7 @@ export class AIManager {
       case 'agent':
         return 0;
       case 'agent-lift':
-        return (hasPlacedAgents || ignoreTurnState ? 3 : 0) + 0.25 * (gameState.currentRound - 1);
+        return 3 + 0.25 * (gameState.currentRound - 1);
       case 'buildup':
         return 0;
       case 'signet-token':
@@ -1159,6 +1172,118 @@ export class AIManager {
         return -1;
       default:
         return 0;
+    }
+  }
+
+  private getEffectEvaluationForTurnState(rewardType: RewardType, player: Player, gameState: GameState) {
+    const hasPlacedAgents = gameState.playerAgentsOnFields.length > 1;
+    const hasAgentsLeftToPlace = player.agents - gameState.playerAgentsOnFields.length > 0;
+
+    const value = this.getEffectEvaluation(rewardType, player, gameState);
+
+    switch (rewardType) {
+      case 'water':
+        return value - 0.4 * getResourceAmount(player, 'water', []);
+      case 'spice':
+        return value - 0.2 * getResourceAmount(player, 'spice', []);
+      case 'solari':
+        return value - 0.1 * getResourceAmount(player, 'solari', []);
+      case 'troop':
+        return value - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
+      case 'dreadnought':
+        return value;
+      case 'card-draw':
+        return gameState.playerDeckCards.length > 0 ? value : 0;
+      case 'card-discard':
+        return value;
+      case 'card-destroy':
+      case 'focus':
+        return gameState.playerDeckSizeTotal > 6 ? value : 0;
+      case 'card-draw-or-destroy':
+        return gameState.playerDeckCards.length > 0 || gameState.playerDeckSizeTotal > 6 ? value : 0;
+      case 'intrigue':
+        return value - 0.25 * gameState.playerIntrigueCount;
+      case 'persuasion':
+        return value;
+      case 'foldspace':
+        return hasAgentsLeftToPlace ? value : 0.5 * value;
+      case 'council-seat-small':
+      case 'council-seat-large':
+        return value;
+      case 'sword-master':
+        return value;
+      case 'mentat':
+        return value;
+      case 'spice-accumulation':
+        return value;
+      case 'victory-point':
+        return value;
+      case 'sword':
+        return gameState.playerCombatUnits.troopsInCombat > 0 ? (hasAgentsLeftToPlace ? value : 0.66 * value) : 0;
+      case 'combat':
+        return value;
+      case 'intrigue-trash':
+        return value;
+      case 'intrigue-draw':
+        return value;
+      case 'helper-trade-horizontal':
+        return value;
+      case 'helper-trade':
+        return value;
+      case 'placeholder':
+        return value;
+      case 'helper-or':
+        return value;
+      case 'helper-or-horizontal':
+        return value;
+      case 'tech':
+        return value + 0.33 * player.techAgents;
+      case 'tech-reduced':
+        return value + 0.33 * player.techAgents;
+      case 'tech-reduced-two':
+        return value + 0.33 * player.techAgents;
+      case 'tech-reduced-three':
+        return value + 0.33 * player.techAgents;
+      case 'card-round-start':
+        return value;
+      case 'shipping':
+        return value;
+      case 'faction-influence-up-choice':
+        return value;
+      case 'faction-influence-up-emperor':
+      case 'faction-influence-up-guild':
+      case 'faction-influence-up-bene':
+      case 'faction-influence-up-fremen':
+        return value;
+      case 'faction-influence-up-twice-choice':
+        return value;
+      case 'faction-influence-down-choice':
+        return value;
+      case 'faction-influence-down-emperor':
+      case 'faction-influence-down-guild':
+      case 'faction-influence-down-bene':
+      case 'faction-influence-down-fremen':
+        return value;
+      case 'agent':
+        return value;
+      case 'agent-lift':
+        return hasPlacedAgents ? value : 0;
+      case 'buildup':
+        return value;
+      case 'signet-token':
+        return value;
+      case 'signet-ring':
+        return value;
+      case 'location-control':
+        return gameState.freeLocations.length > 0 || gameState.playerCombatUnits.troopsInGarrison > 0
+          ? 6 + 0.25 * (gameState.currentRound - 1)
+          : 0;
+      case 'loose-troop':
+        return value;
+      case 'trash-self':
+        return value;
+      default:
+        return value;
     }
   }
 

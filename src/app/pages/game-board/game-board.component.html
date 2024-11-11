@@ -1,5 +1,5 @@
 <div [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px'" *ngIf="mode && gameContent">
-  <app-playerboard *ngIf="mode === 'game'"></app-playerboard>
+  <app-playerboard></app-playerboard>
   <div class="board">
     <ng-particles *ngIf="mode === 'game'" [id]="'stars'" [options]="stars" [particlesInit]="initStars"></ng-particles>
     <ng-particles *ngIf="mode === 'game'" [id]="'ships'" [options]="ships" [particlesInit]="initShips"></ng-particles>
@@ -20,7 +20,7 @@
     <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
     <dune-always-buyable-cards></dune-always-buyable-cards>
   </div>
-  <dune-imperium-row></dune-imperium-row>
+  <dune-imperium-row *ngIf="mode === 'game'"></dune-imperium-row>
   <div class="sideboard-container">
     <dune-game-manual *ngIf="mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
     <dune-events *ngIf="mode === 'game' && eventsEnabled"></dune-events>

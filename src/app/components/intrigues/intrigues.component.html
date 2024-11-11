@@ -1,18 +1,15 @@
-<!-- <ng-container *ngIf="currentIntrigueSet && currentIntrigueSet.imagePath">
-  <div
-    class="intrigue-card"
-    [style.background-image]="'url(' + currentIntrigueSet.imagePath + ')'"
-    [style.background-size]="currentIntrigueSet.imageSize + 'px'"
-    [style.background-position-x]="currentCardCoordinates.x + 'px'"
-    [style.background-position-y]="currentCardCoordinates.y + 'px'"
-  ></div>
-</ng-container> -->
 <div
-  [class]="'intrigue-card background' + (hasIntrigueVision ? ' clickable' : '') + (intrigueStackIsActive ? ' active' : '')"
+  [class]="'intrigue-card background clickable' + (intrigueStackIsActive ? ' active' : '')"
   (click)="onSetIntrigueStackActiveClicked()"
 >
-  <div class="intrigue-action-container" *ngIf="hasIntrigueVision && intrigueStackIsActive">
-    <button mat-fab [color]="'accent'" (click)="onShowNextIntrigueClicked()">
+  <div class="intrigue-action-container" *ngIf="intrigueStackIsActive">
+    <button mat-fab [color]="'accent'" (click)="onDrawIntrigueClicked()" matTooltip="Draw">
+      <mat-icon>done</mat-icon>
+    </button>
+    <button mat-fab [color]="'accent'" (click)="onShowNextIntrigueClicked()" matTooltip="Search">
+      <mat-icon>search</mat-icon>
+    </button>
+    <button mat-fab [color]="'accent'" (click)="onShowNextIntrigueClicked()" matTooltip="Show top card">
       <mat-icon>visibility</mat-icon>
     </button>
   </div>

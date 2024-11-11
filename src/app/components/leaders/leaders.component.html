@@ -65,18 +65,6 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerAgentClicked(currentPlayer.id)"
-            (contextmenu)="onRemovePlayerAgentClicked(currentPlayer.id)"
-          >
-            <div class="agents-icon-container">
-              <div class="agents-icon" [style.background-color]="currentPlayer.color"></div>
-            </div>
-            <div class="resource-amount on-background">
-              <span>{{ currentPlayerAvailableAgents?.agentAmount }}</span>
-            </div>
-          </div>
-          <div
-            class="resource-display"
             (click)="onAddSignetTokenClicked(currentPlayer.id)"
             (contextmenu)="onRemoveSignetTokenClicked(currentPlayer.id)"
           >
@@ -87,43 +75,17 @@
           </div>
         </div>
       </div>
-      <div class="info-container">
-        <div class="resource-container">
-          <div
-            class="resource-display"
-            [style]="'filter: saturate(0.25);'"
-            (click)="onAddPermanentPersuasionClicked(currentPlayer.id)"
-            (contextmenu)="onRemovePermanentPersuasionClicked(currentPlayer.id)"
-          >
-            <img class="resource" [src]="getRewardTypePath('persuasion')" />
-            <div class="resource-amount on-background">
-              <span>{{ currentPlayer.permanentPersuasion }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="resource-container">
-          <div
-            class="resource-display"
-            (click)="onAddPersuasionGainedThisRoundClicked(currentPlayer.id)"
-            (contextmenu)="onRemovePersuasionGainedThisRoundClicked(currentPlayer.id)"
-          >
-            <img class="resource" [src]="getRewardTypePath('persuasion')" />
-            <div class="resource-amount on-background">
-              <span>{{ currentPlayer.persuasionGainedThisRound }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="info-container"></div>
       <div class="info-container right">
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
-            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
+            (click)="onAddFocusTokenClicked(currentPlayer.id)"
+            (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
           >
-            <img class="resource dark" [src]="getRewardTypePath('victory-point')" />
+            <img class="resource dark" [src]="getRewardTypePath('focus')" />
             <div class="resource-amount on-background">
-              <span>{{ getPlayerScore('victoryPoints') }}</span>
+              <span>{{ currentPlayer.focusTokens }}</span>
             </div>
           </div>
         </div>
@@ -172,29 +134,45 @@
       </div>
       <div class="info-container right">
         <div class="resource-container">
-          <div class="resource-display" (click)="onAddIntrigueClicked(currentPlayer.id)" (contextmenu)="(false)">
-            <img class="resource intrigue" [src]="getRewardTypePath('intrigue')" />
+          <div
+            class="resource-display"
+            [style]="'filter: saturate(0.25);'"
+            (click)="onAddPermanentPersuasionClicked(currentPlayer.id)"
+            (contextmenu)="onRemovePermanentPersuasionClicked(currentPlayer.id)"
+          >
+            <img class="resource" [src]="getRewardTypePath('persuasion')" />
             <div class="resource-amount on-background">
-              <span>{{ currentPlayerIntrigueCount }}</span>
+              <span>{{ currentPlayer.permanentPersuasion }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="resource-container">
+          <div
+            class="resource-display"
+            (click)="onAddPersuasionGainedThisRoundClicked(currentPlayer.id)"
+            (contextmenu)="onRemovePersuasionGainedThisRoundClicked(currentPlayer.id)"
+          >
+            <img class="resource" [src]="getRewardTypePath('persuasion')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.persuasionGainedThisRound }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <div class="line">
       <div class="info-container left">
-        <div class="units-control-bar">
-          <div
-            class="resource-display"
-            (click)="onAddTechAgentClicked(currentPlayer.id)"
-            (contextmenu)="onRemoveTechAgentClicked(currentPlayer.id)"
-          >
-            <div class="tech-agent-marker">
-              <div class="tech-background-image"></div>
-            </div>
-            <div class="resource-amount on-background">
-              <span>{{ currentPlayer.techAgents }}</span>
-            </div>
+        <div
+          class="resource-display"
+          (click)="onAddPlayerAgentClicked(currentPlayer.id)"
+          (contextmenu)="onRemovePlayerAgentClicked(currentPlayer.id)"
+        >
+          <div class="agents-icon-container">
+            <div class="agents-icon" [style.background-color]="currentPlayer.color"></div>
+          </div>
+          <div class="resource-amount on-background">
+            <span>{{ currentPlayerAvailableAgents?.agentAmount }}</span>
           </div>
         </div>
       </div>
@@ -252,12 +230,12 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddFocusTokenClicked(currentPlayer.id)"
-            (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
+            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
+            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
           >
-            <img class="resource dark" [src]="getRewardTypePath('focus')" />
+            <img class="resource dark" [src]="getRewardTypePath('victory-point')" />
             <div class="resource-amount on-background">
-              <span>{{ currentPlayer.focusTokens }}</span>
+              <span>{{ getPlayerScore('victoryPoints') }}</span>
             </div>
           </div>
         </div>

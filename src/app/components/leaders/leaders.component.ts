@@ -189,21 +189,6 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddTechAgentClicked(id: number) {
-    this.audioManager.playSound('click-soft');
-    this.playerManager.addTechAgentsToPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
-  onRemoveTechAgentClicked(id: number) {
-    this.audioManager.playSound('click-soft');
-    this.playerManager.removeTechAgentsFromPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-    return false;
-  }
-
   public onAddTroopToGarrisonClicked(playerId: number) {
     this.audioManager.playSound('troops');
     this.combatManager.addPlayerTroopsToGarrison(playerId, 1);
@@ -256,15 +241,8 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddIntrigueClicked(id: number) {
-    this.audioManager.playSound('intrigue');
-    this.intriguesService.drawPlayerIntriguesFromDeck(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
   onAddSignetTokenClicked(id: number) {
-    this.audioManager.playSound('intrigue');
+    this.audioManager.playSound('click-soft');
     this.playerManager.addSignetTokensToPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
