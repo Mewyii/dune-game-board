@@ -1,5 +1,5 @@
 .leader-board {
-    background: #544132;
+    background: rgba(84, 67, 53, 0.8);
     display: flex;
     flex-wrap: wrap;
     max-width: 900px;
@@ -23,7 +23,7 @@
 }
 
 .leader-list {
-    background: #544132;
+    background: rgba(84, 67, 53, 0.8);
     display: grid;
     grid-gap: 16px;
     grid-area: 3 3;

@@ -1,4 +1,6 @@
 <router-outlet></router-outlet>
+<dune-audio-player></dune-audio-player>
+<dune-translation></dune-translation>
 <div class="navigation-container">
   <div class="navigation-element" [routerLink]="'game-board'">game board</div>
   <div class="navigation-element" [routerLink]="'starting-card-configurator'">starting-cards</div>
@@ -7,6 +9,5 @@
   <div class="navigation-element" [routerLink]="'leader-configurator'">leaders</div>
   <div class="navigation-element" [routerLink]="'intrigue-configurator'">intrigues</div>
   <div class="navigation-element" [routerLink]="'event-configurator'">events</div>
-  <div class="navigation-element" (click)="switchLanguage()">{{ settingsService.language }}</div>
   <div class="navigation-element" [routerLink]="'about'">about</div>
 </div>

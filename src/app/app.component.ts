@@ -11,25 +11,9 @@ import { DialogSettingsComponent } from './components/dialog-settings/dialog-set
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(private title: Title, public settingsService: SettingsService, public dialog: MatDialog) {}
+  constructor(private title: Title) {}
 
   ngOnInit(): void {
     this.title.setTitle('Dune Imperium: Alliances');
-  }
-
-  switchLanguage() {
-    if (this.settingsService.language === 'de') {
-      this.settingsService.changeLanguage('en');
-
-      let dialogRef = this.dialog.open(NotificationComponent, {
-        data: { title: 'Language changed', text: 'Please reload this page to apply changes...' },
-      });
-    } else {
-      this.settingsService.changeLanguage('de');
-
-      let dialogRef = this.dialog.open(NotificationComponent, {
-        data: { title: 'Sprache geändert', text: 'Bitte laden Sie diese Seite neu, um die Änderungen zu übernehmen...' },
-      });
-    }
   }
 }

@@ -902,6 +902,7 @@ export class GameManager {
     if (playerLocation) {
       if (playerLocation.playerId !== playerId) {
         if (this.playerCanPayCosts(playerId, [{ type: 'loose-troop' }])) {
+          this.audioManager.playSound('location-control');
           this.locationManager.setLocationOwner(locationId, playerId);
           this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' });
           this.payCostForPlayer(playerId, { type: 'loose-troop' });
@@ -909,6 +910,7 @@ export class GameManager {
         }
       }
     } else {
+      this.audioManager.playSound('location-control');
       this.locationManager.setLocationOwner(locationId, playerId);
       this.addRewardToPlayer(playerId, { type: 'victory-point' });
     }
@@ -1666,6 +1668,8 @@ export class GameManager {
     } else if (rewardType === 'shipping') {
       aiInfo.shippingAmount = 1;
     } else if (isFactionScoreRewardType(rewardType)) {
+      this.audioManager.playSound('influence');
+
       const scoreType = getFactionScoreTypeFromReward(reward);
       const factionInfluenceModifier = getFactionInfluenceModifier(playerGameModifier, scoreType);
       if (factionInfluenceModifier) {
@@ -1687,6 +1691,7 @@ export class GameManager {
         }
       }
     } else if (rewardType === 'faction-influence-up-choice') {
+      this.audioManager.playSound('influence');
       aiInfo.factionInfluenceUpChoiceAmount = 1;
     } else if (rewardType === 'faction-influence-up-twice-choice') {
       aiInfo.factionInfluenceUpChoiceTwiceAmount = 1;
@@ -1706,6 +1711,7 @@ export class GameManager {
           : rewardType === 'tech-reduced-three'
           ? 4
           : 0;
+      this.audioManager.playSound('tech-agent', agents);
       this.playerManager.addTechAgentsToPlayer(playerId, agents);
       aiInfo.canBuyTech = true;
       aiInfo.techAgentsGainedThisTurn += agents;
@@ -1728,6 +1734,7 @@ export class GameManager {
     } else if (rewardType == 'card-draw-or-destroy') {
       aiInfo.canDestroyOrDrawCard = true;
     } else if (rewardType === 'focus') {
+      this.audioManager.playSound('focus');
       this.playerManager.addFocusTokens(playerId, reward.amount ?? 1);
     } else if (rewardType == 'persuasion') {
       this.playerManager.addPersuasionGainedToPlayer(playerId, reward.amount ?? 1);
@@ -1756,6 +1763,7 @@ export class GameManager {
         this.cardsService.addCardToPlayerHand(playerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
       }
     } else if (rewardType === 'location-control') {
+      this.audioManager.playSound('location-control');
       aiInfo.locationControlAmount++;
     } else if (rewardType === 'signet-ring') {
       aiInfo.signetRingAmount++;

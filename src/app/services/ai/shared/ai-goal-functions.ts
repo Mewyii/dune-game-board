@@ -107,7 +107,7 @@ export function playerLikelyWinsCombat(gameState: GameState) {
 }
 
 export function getWinCombatDesireModifier(gameState: GameState) {
-  let desire = 0.4 + 0.1 * gameState.playerAgentCount;
+  let desire = 0.4 + 0.1 * gameState.playerAgentCount + 0.05 * gameState.playerCombatIntrigueCount;
 
   const playerStrength =
     getPlayerCombatStrength(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);

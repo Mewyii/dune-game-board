@@ -175,14 +175,14 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddFocusTokenClicked(id: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('focus');
     this.playerManager.addFocusTokens(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onRemoveFocusTokenClicked(id: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerManager.removeFocusTokens(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
@@ -197,7 +197,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRemoveTroopFromGarrisonClicked(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.combatManager.removePlayerTroopsFromGarrison(playerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(playerId);
@@ -212,7 +212,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRemoveShipFromGarrisonClicked(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(playerId);
@@ -234,7 +234,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onRemoveResourceClicked(id: number, type: ResourceType) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerManager.removeResourceFromPlayer(id, type, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
@@ -242,14 +242,14 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddSignetTokenClicked(id: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('signet');
     this.playerManager.addSignetTokensToPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
   }
 
   onRemoveSignetTokenClicked(id: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerManager.removeSignetTokensFromPlayer(id, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
@@ -257,10 +257,10 @@ export class LeadersComponent implements OnInit {
   }
 
   public onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
-    this.audioManager.playSound('click-soft');
-
     if (scoreType === 'victoryPoints') {
       this.audioManager.playSound('victory-point');
+    } else {
+      this.audioManager.playSound('influence');
     }
     this.playerScoreManager.addPlayerScore(id, scoreType, 1);
 
@@ -268,7 +268,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerScoreManager.removePlayerScore(id, scoreType, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
@@ -281,7 +281,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onRemovePlayerAgentClicked(id: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.gameManager.removeAgentFromPlayer(id);
     return false;
   }
@@ -321,7 +321,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRemovePermanentPersuasionClicked(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerManager.removePermanentPersuasionFromPlayer(playerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(playerId);
@@ -336,7 +336,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRemovePersuasionGainedThisRoundClicked(playerId: number) {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerManager.removePersuasionGainedFromPlayer(playerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(playerId);
@@ -344,6 +344,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onRevealCardsClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.gameManager.setPlayerRevealTurn(playerId);
   }
 
@@ -360,10 +361,12 @@ export class LeadersComponent implements OnInit {
   }
 
   public onAiActionClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.gameManager.doAIAction(playerId);
   }
 
   public onPassConflictClicked(playerId: number) {
+    this.audioManager.playSound('click-soft');
     this.gameManager.playerPassedConflict(playerId);
   }
 

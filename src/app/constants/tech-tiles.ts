@@ -89,7 +89,7 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     customEffect: {
       en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}.<br><br><b>Reveal turn:</b> <br>2 Spacing Guild cards: {resource:shipping}<br>3 Spacing Guild cards: {resource:shipping}{resource:shipping}<br>4+ Spacing Guild cards: {resource:victory-point}',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>2 Raumgilden-Karten: {resource:shipping}<br>3 Raumgilden-Karten: {resource:shipping}{resource:shipping}<br>4+ Raumgilden-Karten: {resource:victory-point}',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -131,7 +131,7 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     customEffect: {
       en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:card-draw}.<br><br><b>Reveal turn:</b> <br>2 Emperor cards: {resource:sword}{resource:sword}<br>3 Emperor cards: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Emperor cards: {resource:victory-point}',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>2 Imperator-Karten: {resource:sword}{resource:sword}<br>3 Imperator-Karten: {resource:sword}{resource:sword}{resource:intrigue}<br>4+ Imperator-Karten: {resource:victory-point}',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:card-draw}.<br><br><b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -191,7 +191,7 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     customEffect: {
       en: '{resource:tech-tile-flip}{resource:helper-trade}Pass your turn.<br><br><b>Aufdeckzug:</b> <br>2 Bene-Gesserit-cards: {resource:intrigue}<br>3 Bene-Gesserit-cards: {resource:faction-influence-up-choice}<br>4+ Bene-Gesserit-cards: {resource:victory-point}',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Passe deinen Zug.<br><br><b>Aufdeckzug:</b> <br>2 Bene-Gesserit-Karten: {resource:intrigue}<br>3 Bene-Gesserit-Karten: {resource:faction-influence-up-choice}<br>4+ Bene-Gesserit-Karten: {resource:victory-point}',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Passe deinen Zug.<br><br><b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>

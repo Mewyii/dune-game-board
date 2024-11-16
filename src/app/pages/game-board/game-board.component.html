@@ -1,4 +1,7 @@
-<div [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px'" *ngIf="mode && gameContent">
+<div
+  [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px; justify-content: center; min-width: 3550px'"
+  *ngIf="mode && gameContent"
+>
   <app-playerboard></app-playerboard>
   <div class="board">
     <ng-particles *ngIf="mode === 'game'" [id]="'stars'" [options]="stars" [particlesInit]="initStars"></ng-particles>
@@ -31,9 +34,7 @@
     <dune-board-evaluation *ngIf="mode === 'board'"></dune-board-evaluation>
     <!-- <dune-homeworld-tile></dune-homeworld-tile> -->
   </div>
-  <div *ngIf="mode === 'game'" class="sideboard-container">
-    <dune-audio-player></dune-audio-player>
-  </div>
+
   <dune-player-hand *ngIf="mode === 'game'"></dune-player-hand>
 </div>
 <dune-particle-effects></dune-particle-effects>

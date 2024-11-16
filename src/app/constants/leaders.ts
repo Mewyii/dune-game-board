@@ -447,8 +447,8 @@ export const leaders: Leader[] = [
       en: 'house metulli',
     },
     passiveName: {
-      de: 'untergehendes haus',
-      en: 'declining house',
+      de: 'bedrängtes haus',
+      en: 'struggling house',
     },
     passiveDescription: {
       de: '<b>Spielbeginn</b>: Entferne alle {resource:persuasion;amount:2}-Karten aus deinem Deck.',
@@ -459,7 +459,7 @@ export const leaders: Leader[] = [
       en: 'thorough approach',
     },
     signetDescription: {
-      de: 'Erhältst du in diesem Zug {resource:solari}, {resource:spice} oder {resource:water}, erhalte davon jeweils +1.',
+      de: 'Erhältst du in diesem Zug {resource:solari}, {resource:spice} oder {resource:water}, erhalte jeweils +1.',
       en: 'If you receive {resource:solari}, {resource:spice} or {resource:water} this turn, you get +1 of each.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',

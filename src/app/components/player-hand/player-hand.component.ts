@@ -94,6 +94,7 @@ export class PlayerHandComponent implements OnInit {
   onAddFoldspaceToHandClicked() {
     const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.name.en.toLocaleLowerCase() === 'foldspace');
     if (foldspaceCard) {
+      this.audioManager.playSound('card-draw');
       this.cardsService.addCardToPlayerHand(this.activePlayerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
     }
 
@@ -122,6 +123,7 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onDiscardCardClicked(card: ImperiumDeckCard) {
+    this.audioManager.playSound('card-discard');
     this.cardsService.discardPlayerHandCard(this.activePlayerId, card);
     this.activeCardId = '';
 
@@ -129,24 +131,28 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onAIDiscardCardClicked() {
+    this.audioManager.playSound('card-discard');
     this.gameManager.aiDiscardHandCard(this.activePlayerId);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAITrashCardFromHandClicked() {
+    this.audioManager.playSound('card-discard');
     this.gameManager.aiTrashCardFromHand(this.activePlayerId);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAITrashCardFromDiscardPileClicked() {
+    this.audioManager.playSound('card-discard');
     this.gameManager.aiTrashCardFromDiscardPile(this.activePlayerId);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAIAddCardToHandFromDiscardPileClicked() {
+    this.audioManager.playSound('card-discard');
     this.gameManager.aiAddCardToHandFromDiscardPile(this.activePlayerId);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);

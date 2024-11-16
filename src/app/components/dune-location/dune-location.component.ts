@@ -89,8 +89,6 @@ export class DuneLocationComponent implements OnInit {
   }
 
   onOwnerIndicatorClicked() {
-    this.audioManager.playSound('click-soft');
-
     this.gameManager.changeLocationOwner(this.location.actionField.title.en, this.gameManager.activePlayerId);
   }
 
@@ -104,6 +102,7 @@ export class DuneLocationComponent implements OnInit {
   }
 
   onBuildUpLocationChangeClicked() {
+    this.audioManager.playSound('click-soft');
     this.gameModifierService.increaseLocationChangeModifier(this.activePlayerId, this.location.actionField.title.en, 1);
   }
 

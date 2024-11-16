@@ -78,6 +78,7 @@ import { IntrigueCardComponent } from './components/_common/intrigue-card/intrig
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { TranslationComponent } from './components/translation/translation.component';
 
 @NgModule({
   declarations: [
@@ -140,6 +141,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     IntrigueCardComponent,
     IntriguesComponent,
     IntriguesPreviewDialogComponent,
+    TranslationComponent,
   ],
   imports: [
     BrowserModule,
@@ -163,7 +165,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
   providers: [],

@@ -35,14 +35,14 @@ export class TechboardComponent implements OnInit {
   }
 
   onAddTechAgentClicked() {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('tech-agent');
     this.playerManager.addTechAgentsToPlayer(this.activePlayerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onRemoveTechAgentClicked() {
-    this.audioManager.playSound('click-soft');
+    this.audioManager.playSound('click-reverse');
     this.playerManager.removeTechAgentsFromPlayer(this.activePlayerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
