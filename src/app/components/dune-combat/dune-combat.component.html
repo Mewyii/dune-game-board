@@ -54,7 +54,7 @@
           <div class="units-control-bar-container" *ngIf="activeGarrisonPlayerId === combatUnits.playerId">
             <div class="units-control-bar">
               <div
-                class="troop-marker combat-insert"
+                class="troop-button"
                 (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
                 (contextmenu)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
                 stopPropagationClick
@@ -62,7 +62,7 @@
             </div>
             <div class="units-control-bar">
               <div
-                class="ship-marker combat-insert"
+                class="ship-button"
                 (click)="onAddShipToCombatClicked(combatUnits.playerId)"
                 (contextmenu)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
                 stopPropagationClick
@@ -70,7 +70,7 @@
             </div>
             <div class="units-control-bar">
               <div
-                class="swords-marker combat-insert"
+                class="swords-button"
                 (click)="onAddAdditionalCombatPowerToPlayer(combatUnits.playerId)"
                 (contextmenu)="onRemoveAdditionalCombatPowerFromPlayer(combatUnits.playerId)"
                 stopPropagationClick
@@ -108,7 +108,7 @@
       <div class="score">0</div>
       <ng-container *ngIf="settingsService.mode === 'game'">
         <div class="score-container large">
-          <ng-container *ngFor="let playerScore of combatScores; let i = index"
+          <ng-container *ngFor="let playerScore of combatScores; let i = index; trackBy: trackPlayerScore"
             ><div
               *ngIf="playerScore.score === 0"
               class="score-marker"
@@ -127,7 +127,7 @@
           <div class="score">{{ scoreIndex + 1 }}</div>
           <ng-container *ngIf="settingsService.mode === 'game'">
             <div class="score-container">
-              <ng-container *ngFor="let playerScore of combatScores; let i = index">
+              <ng-container *ngFor="let playerScore of combatScores; let i = index; trackBy: trackPlayerScore">
                 <div
                   *ngIf="playerScore.score === scoreIndex + 1"
                   class="score-marker"

@@ -275,6 +275,9 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.7 - 0.075 * (gameState.currentRound - 1),
+    gameModifiers: {
+      fieldCost: [{ id: 'spice-refineries', costType: 'spice', amount: -1 }],
+    },
   },
   {
     name: {
@@ -307,8 +310,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>When you harvest spice:</b><br>{resource:spice}',
-      de: '<b>Wenn du Spice sammelst:</b><br>{resource:spice}',
+      en: '<b>When you place an agent on a {faction:spice}-field:</b><br>{resource:spice}',
+      de: '<b>Wenn du einen Agenten auf einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.8 - 0.125 * (gameState.currentRound - 1),
@@ -327,6 +330,9 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.8 - 0.125 * (gameState.currentRound - 1),
+    gameModifiers: {
+      fieldCost: [{ id: 'carryall-suspensors', actionType: 'spice', costType: 'water', amount: -1 }],
+    },
   },
   {
     name: {

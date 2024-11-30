@@ -130,4 +130,8 @@ export class DuneCombatComponent implements OnInit {
   public trackCount(index: number, player: Player) {
     return index;
   }
+
+  public trackPlayerScore(index: number, playerScore: CombatScore) {
+    return playerScore.playerId * 100 + playerScore.score;
+  }
 }

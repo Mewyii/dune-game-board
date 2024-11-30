@@ -57,26 +57,6 @@ interface ViableField {
   accessTrough: 'card' | 'influence';
 }
 
-interface FactionInfluenceLock {
-  type: ActiveFactionType;
-  amount: number;
-}
-
-export interface AITurnInfo {
-  unitsGainedThisTurn: number;
-  techAgentsGainedThisTurn: number;
-  canEnterCombat: boolean;
-  canDestroyOrDrawCard: boolean;
-  canBuyTech: boolean;
-  canLiftAgent: boolean;
-  factionInfluenceUpChoiceAmount: number;
-  factionInfluenceUpChoiceTwiceAmount: number;
-  factionInfluenceDownChoiceAmount: number;
-  shippingAmount: number;
-  locationControlAmount: number;
-  signetRingAmount: number;
-}
-
 export interface AIRewardArrayInfo {
   hasRewardOptions: boolean;
   hasRewardConversion: boolean;
@@ -240,8 +220,6 @@ export class AIManager {
     const fieldEvaluations: FieldEvaluation[] = [];
     const decisions: string[] = [];
 
-    const virtualResources = playerLeader.aiAdjustments?.fieldAccessModifier ?? [];
-
     const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 30);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
 
@@ -261,16 +239,16 @@ export class AIManager {
     }
 
     for (let [goalId, goal] of Object.entries(this.aiGoals)) {
-      if (!goal.reachedGoal(player, gameState, this.aiGoals, virtualResources)) {
+      if (!goal.reachedGoal(player, gameState, this.aiGoals)) {
         const aiGoalId = goalId as AIGoals;
 
-        const desireModifier = goal.desireModifier(player, gameState, this.aiGoals, virtualResources);
+        const desireModifier = goal.desireModifier(player, gameState, this.aiGoals);
         if (typeof desireModifier !== 'number') {
           decisions.push(desireModifier.name);
         }
 
         const goalDesire =
-          getDesire(goal, player, gameState, virtualResources, this.aiGoals) *
+          getDesire(goal, player, gameState, this.aiGoals) *
             (aiPlayer.personality[aiGoalId] ?? 1.0) *
             this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation) +
           this.getEventGoalModifier(aiGoalId, eventGoalModifiers) +
@@ -278,9 +256,9 @@ export class AIManager {
 
         let desireCanBeFullfilled = false;
 
-        if (goal.goalIsReachable(player, gameState, this.aiGoals, virtualResources) && goal.desiredFields) {
+        if (goal.goalIsReachable(player, gameState, this.aiGoals) && goal.desiredFields) {
           for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields(boardFields))) {
-            const fieldValue = getFieldValue(player, gameState, this.aiGoals, virtualResources) * goalDesire;
+            const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
 
             if (fieldValue > 0) {
               const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
@@ -297,7 +275,7 @@ export class AIManager {
 
         if (!desireCanBeFullfilled) {
           for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields(boardFields))) {
-            const fieldValue = getFieldValue(player, gameState, this.aiGoals, virtualResources) * goalDesire;
+            const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
 
             if (fieldValue > 0) {
               const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
@@ -1099,9 +1077,10 @@ export class AIManager {
         return 2.0 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed;
       case 'council-seat-small':
       case 'council-seat-large':
-        return !player.hasCouncilSeat ? 3.5 : 0;
+        return !player.hasCouncilSeat ? 12 - 1 * (gameState.currentRound - 1) : 0;
       case 'sword-master':
-        return !player.hasSwordmaster ? 15 : 0;
+      case 'agent':
+        return !player.hasSwordmaster ? 15 - 1 * (gameState.currentRound - 1) : 0;
       case 'mentat':
         return 3.5;
       case 'spice-accumulation':
@@ -1137,7 +1116,7 @@ export class AIManager {
       case 'card-round-start':
         return 1.5;
       case 'shipping':
-        return 2.5 - 0.1 * getResourceAmount(player, 'water', []) - 0.1 * getResourceAmount(player, 'spice', []);
+        return 2.5 - 0.1 * getResourceAmount(player, 'water') - 0.1 * getResourceAmount(player, 'spice');
       case 'faction-influence-up-choice':
         return 4;
       case 'faction-influence-up-emperor':
@@ -1154,8 +1133,6 @@ export class AIManager {
       case 'faction-influence-down-bene':
       case 'faction-influence-down-fremen':
         return -3;
-      case 'agent':
-        return 0;
       case 'agent-lift':
         return 3 + 0.25 * (gameState.currentRound - 1);
       case 'buildup':
@@ -1175,7 +1152,7 @@ export class AIManager {
     }
   }
 
-  private getEffectEvaluationForTurnState(rewardType: RewardType, player: Player, gameState: GameState) {
+  public getEffectEvaluationForTurnState(rewardType: RewardType, player: Player, gameState: GameState) {
     const hasPlacedAgents = gameState.playerAgentsOnFields.length > 1;
     const hasAgentsLeftToPlace = player.agents - gameState.playerAgentsOnFields.length > 0;
 
@@ -1183,11 +1160,11 @@ export class AIManager {
 
     switch (rewardType) {
       case 'water':
-        return value - 0.4 * getResourceAmount(player, 'water', []);
+        return value - 0.4 * getResourceAmount(player, 'water');
       case 'spice':
-        return value - 0.2 * getResourceAmount(player, 'spice', []);
+        return value - 0.2 * getResourceAmount(player, 'spice');
       case 'solari':
-        return value - 0.1 * getResourceAmount(player, 'solari', []);
+        return value - 0.1 * getResourceAmount(player, 'solari');
       case 'troop':
         return value - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'dreadnought':
@@ -1211,6 +1188,7 @@ export class AIManager {
       case 'council-seat-large':
         return value;
       case 'sword-master':
+      case 'agent':
         return value;
       case 'mentat':
         return value;
@@ -1263,8 +1241,6 @@ export class AIManager {
       case 'faction-influence-down-guild':
       case 'faction-influence-down-bene':
       case 'faction-influence-down-fremen':
-        return value;
-      case 'agent':
         return value;
       case 'agent-lift':
         return hasPlacedAgents ? value : 0;

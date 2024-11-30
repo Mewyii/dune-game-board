@@ -95,6 +95,17 @@ export class IntriguesService {
     }
   }
 
+  addPlayerIntrigue(playerId: number, stolenIntrigue: IntrigueDeckCard) {
+    const playerIntrigues = this.playerIntrigues;
+    const playerIndex = playerIntrigues.findIndex((x) => x.playerId === playerId);
+    if (playerIndex > -1) {
+      playerIntrigues[playerIndex].intrigues.push(stolenIntrigue);
+    } else {
+      playerIntrigues.push({ playerId, intrigues: [stolenIntrigue] });
+    }
+    this.playerIntriguesSubject.next(playerIntrigues);
+  }
+
   trashPlayerIntrigue(playerId: number, intrigueId: string) {
     const playerIntrigues = this.playerIntrigues;
     const playerIndex = playerIntrigues.findIndex((x) => x.playerId === playerId);

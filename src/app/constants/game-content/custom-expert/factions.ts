@@ -6,7 +6,7 @@ export const factionsCustomExpert: Faction[] = [
     type: 'fremen',
     position: {
       marginTop: 1670,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -43,7 +43,7 @@ export const factionsCustomExpert: Faction[] = [
     type: 'bene',
     position: {
       marginTop: 1170,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -80,7 +80,7 @@ export const factionsCustomExpert: Faction[] = [
     type: 'guild',
     position: {
       marginTop: 670,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -120,7 +120,7 @@ export const factionsCustomExpert: Faction[] = [
     type: 'emperor',
     position: {
       marginTop: 170,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -153,8 +153,8 @@ export const factionsCustomExpert: Faction[] = [
     type: 'landsraad',
     position: {
       marginTop: 170,
-      marginLeft: 580,
-      width: 660,
+      marginLeft: 575,
+      width: 662,
     },
     actionFields: [
       {
@@ -173,17 +173,17 @@ export const factionsCustomExpert: Faction[] = [
         noColumnGap: true,
       },
       {
-        title: { de: 'schwertmeister', en: 'Swordmaster' },
+        title: { de: 'Mentat', en: 'Mentat' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
-        pathToImage: 'assets/images/action-backgrounds/ceremony_3.png',
+        pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
         customWidth: '135px',
       },
       {
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        rewards: [{ type: 'solari' }, { type: 'persuasion', amount: 2 }],
+        rewards: [{ type: 'persuasion', amount: 1 }, { type: 'tech-reduced' }],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {

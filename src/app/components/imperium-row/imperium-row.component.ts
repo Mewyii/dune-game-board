@@ -57,32 +57,21 @@ export class ImperiumRowComponent implements OnInit {
       if (this.activePlayer) {
         this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
 
-        this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
+        this.activePlayerPersuasion = this.playerManager.getPlayerPersuasion(this.activePlayer.id);
 
-        this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
+        this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
         this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
       }
     });
 
     this.gameModifierService.playerGameModifiers$.subscribe(() => {
-      this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
+      this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
       this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
     });
   }
 
   onBuyCardClicked(card: ImperiumDeckCard) {
-    const costModifier = getCardCostModifier(card, this.imperiumRowModifiers);
-    if (card.persuasionCosts) {
-      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
-    }
-    if (card.buyEffects) {
-      for (const effect of card.buyEffects) {
-        this.gameManager.addRewardToPlayer(this.activePlayerId, effect);
-      }
-    }
-    this.cardsService.aquirePlayerCardFromImperiumDeck(this.activePlayerId, card);
-
-    this.logService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
+    this.gameManager.acquireImperiumRowCard(this.activePlayerId, card);
   }
 
   onRemoveCardClicked(card: ImperiumDeckCard) {
@@ -111,9 +100,5 @@ export class ImperiumRowComponent implements OnInit {
 
   getCardCostModifier(card: ImperiumDeckCard) {
     return getCardCostModifier(card, this.imperiumRowModifiers);
-  }
-
-  private getPlayerPersuasion(player: Player) {
-    return player.persuasionGainedThisRound + player.permanentPersuasion - player.persuasionSpentThisRound;
   }
 }

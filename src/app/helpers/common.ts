@@ -1,4 +1,4 @@
-import { cloneDeep, result } from 'lodash';
+import { cloneDeep, isArray, isBoolean, isNumber, isObject, result } from 'lodash';
 
 export function randomizeArray<T>(a: Array<T>, randomizeFactor: number) {
   const currentArray = cloneDeep(a);
@@ -22,6 +22,28 @@ export function randomizeArray<T>(a: Array<T>, randomizeFactor: number) {
     }
   }
   return resultArray;
+}
+
+export function getRandomElementFromArray<T>(array: Array<T>): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+export function mergeObjects<T>(existingModifiers: T, newModifiers: Partial<T>): T {
+  let result: T = existingModifiers;
+  for (const index in existingModifiers) {
+    const key = index as keyof T;
+
+    if (isArray(result[key]) && isArray(newModifiers[key])) {
+      result[key] = [...(result[key] as any), ...(newModifiers[key] as any)] as any;
+    } else if (isNumber(result[key]) && isNumber(newModifiers[key])) {
+      result[key] = ((result[key] as any) + newModifiers[key]) as any as any;
+    } else if (isBoolean(result[key]) && isBoolean(newModifiers[key])) {
+      result[key] = (result[key] || newModifiers[key]) as any;
+    } else if (isObject(result[key]) && isObject(newModifiers[key])) {
+      result[key] = { ...result[key], ...newModifiers[key] } as any;
+    }
+  }
+  return result;
 }
 
 export const normalizeNumber = (value: number, max: number, min: number) => (value - min) / (max - min);

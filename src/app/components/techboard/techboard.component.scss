@@ -1,13 +1,13 @@
 .faction-tile {
     background-color: rgb(46 45 25 / 72%);
     position: absolute;
-    padding: 16px;
+    padding: 20px;
     border: 1px solid #9f9f9f4a;
     box-shadow: inset 0px 0px 15px -3px #0000007a;
     border-radius: 30px 4px;
     top: 170px;
-    right: 16px;
-    width: 300px;
+    right: 10px;
+    width: 290px;
 }
 
 .faction-tile::after {

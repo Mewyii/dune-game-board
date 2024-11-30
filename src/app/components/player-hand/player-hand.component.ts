@@ -195,8 +195,7 @@ export class PlayerHandComponent implements OnInit {
         this.activeCardId = '';
 
         this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
-      }
-      if (this.currentPlayer.turnState === 'reveal' && this.currentPlayer.focusTokens > 0) {
+      } else if (this.currentPlayer.focusTokens > 0) {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
@@ -235,9 +234,7 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onPlayIntrigueClicked(intrigue: IntrigueDeckCard) {
-    this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, intrigue.effects);
-    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
-    this.logService.logPlayerPlayedIntrigue(this.activePlayerId, this.translateService.translate(intrigue.name));
+    this.gameManager.playIntrigue(this.activePlayerId, intrigue);
   }
 
   onTrashIntrigueClicked(intrigue: IntrigueDeckCard) {

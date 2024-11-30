@@ -65,7 +65,7 @@ export class AudioManager {
   private locationControlSound: Sound = { url: 'assets/audio/sounds/location-control.mp3', volume: 0.33 };
   private techAgentSound: Sound = { url: 'assets/audio/sounds/tech.mp3', volume: 0.5 };
   private clickReverseSound: Sound = { url: 'assets/audio/sounds/click-reverse.mp3', volume: 1.0 };
-  private influenceSound: Sound = { url: 'assets/audio/sounds/influence.mp3', volume: 0.4 };
+  private influenceSound: Sound = { url: 'assets/audio/sounds/influence.mp3', volume: 0.3 };
   private focusSound: Sound = { url: 'assets/audio/sounds/focus.mp3', volume: 0.33 };
 
   constructor() {}
@@ -102,7 +102,7 @@ export class AudioManager {
       this.play(this.victoryPointSound);
     } else if (sound === 'swordmaster') {
       this.play(this.swordmasterSound);
-      this.play(this.swordmaster2Sound);
+      // this.play(this.swordmaster2Sound);
     } else if (sound === 'troops') {
       this.play(this.troopsSound);
     } else if (sound === 'combat') {

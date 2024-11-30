@@ -72,7 +72,7 @@ export class PlayersService {
 
   getPlayerPersuasion(playerId: number) {
     const player = this.getPlayer(playerId);
-    return player ? player.permanentPersuasion + player.persuasionGainedThisRound : 0;
+    return player ? player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound : 0;
   }
 
   getPlayerFocusTokens(playerId: number) {

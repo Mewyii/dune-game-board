@@ -3,21 +3,21 @@ import { IParticlesProps } from 'ng-particles';
 export const ships: IParticlesProps = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { position: 'absolute', top: '700px', right: '450px', width: '700px', height: '650px' },
+  style: { position: 'absolute', top: '600px', right: '350px', width: '800px', height: '750px' },
   fullScreen: false,
   particles: {
     number: {
-      value: 3,
+      value: 6,
     },
     color: {
-      value: ['#bbbbbb', '#494949', '#696d79', '#676767'],
+      value: { r: { min: 25, max: 125 }, b: { min: 25, max: 125 }, g: { min: 25, max: 125 } },
     },
     opacity: {
       value: 0.66,
       anim: {
         enable: true,
-        speed: { min: 0.25, max: 1 },
-        opacity_min: 0.1,
+        speed: { min: 0.25, max: 0.75 },
+        opacity_min: 0.33,
         sync: false,
       },
     },
@@ -32,7 +32,7 @@ export const ships: IParticlesProps = {
     },
     move: {
       enable: true,
-      speed: { min: 0.25, max: 1.5 },
+      speed: { min: 0.2, max: 0.75 },
       direction: 'none',
       straight: false,
       out_mode: 'out',
@@ -42,12 +42,12 @@ export const ships: IParticlesProps = {
     life: {
       duration: {
         sync: false,
-        value: { min: 5, max: 10 },
+        value: { min: 5, max: 15 },
       },
       delay: {
         random: {
           enable: true,
-          minimumValue: 0.5,
+          minimumValue: 3,
         },
         value: 1,
       },

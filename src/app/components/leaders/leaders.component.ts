@@ -145,6 +145,7 @@ export class LeadersComponent implements OnInit {
   }
 
   setNextLeader() {
+    this.audioManager.playSound('click-soft');
     const leaderIndex = this.leaders.findIndex((x) => x.name === this.activeLeader?.name);
     if (leaderIndex > -1) {
       if (leaderIndex + 1 < this.leaders.length) {
@@ -158,6 +159,7 @@ export class LeadersComponent implements OnInit {
   }
 
   setPreviousLeader() {
+    this.audioManager.playSound('click-soft');
     const leaderIndex = this.leaders.findIndex((x) => x.name === this.activeLeader?.name);
     if (leaderIndex > -1) {
       if (leaderIndex > 0) {
@@ -171,6 +173,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onLockInLeaderClicked() {
+    this.audioManager.playSound('click');
     this.gameManager.lockInLeader(this.activePlayerId, this.activeLeader);
   }
 

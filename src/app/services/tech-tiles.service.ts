@@ -6,6 +6,7 @@ import { FactionType, LanguageString, Reward } from '../models';
 import { LanguageStringAndFontSize } from '../constants/imperium-cards';
 import { Player } from './players.service';
 import { GameState } from './ai/models';
+import { GameModifiers } from './game-modifier.service';
 
 export interface TechTileCard {
   name: LanguageString;
@@ -16,6 +17,7 @@ export interface TechTileCard {
   buyEffects?: Reward[];
   imageUrl?: string;
   aiEvaluation: (player: Player, gameState: GameState) => number;
+  gameModifiers?: GameModifiers;
 }
 
 export interface PlayerTechTile {

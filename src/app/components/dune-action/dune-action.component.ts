@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActionField, FactionType, RewardType } from 'src/app/models';
+import { ActionField, FactionType, Reward, RewardType } from 'src/app/models';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
@@ -9,9 +9,10 @@ import { Player, PlayersService, PlayerTurnState } from 'src/app/services/player
 import { TranslateService } from 'src/app/services/translate-service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
-import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
+import { GameModifiersService } from 'src/app/services/game-modifier.service';
 
 @Component({
   selector: 'app-dune-action',
@@ -19,7 +20,7 @@ import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/help
   styleUrls: ['./dune-action.component.scss'],
 })
 export class DuneActionComponent implements OnInit {
-  @Input() action: ActionField = {
+  @Input() actionField: ActionField = {
     title: { de: 'fremenkrieger', en: 'fremen warriors' },
     actionType: 'fremen',
     costs: [{ type: 'water', amount: 1 }],
@@ -48,21 +49,26 @@ export class DuneActionComponent implements OnInit {
 
   public isAccessibleByPlayer = false;
 
+  public actionCosts: Reward[] = [];
+  public costsModifier = 0;
+
   constructor(
     public gameManager: GameManager,
     public playerManager: PlayersService,
     public ts: TranslateService,
     private audioManager: AudioManager,
     private cardsService: CardsService,
-    private playerScoreManager: PlayerScoreManager
+    private playerScoreManager: PlayerScoreManager,
+    private gameModifierService: GameModifiersService
   ) {}
 
   ngOnInit(): void {
-    this.pathToActionType = getActionTypePath(this.action.actionType);
+    this.actionCosts = this.actionField.costs ?? [];
+    this.pathToActionType = getActionTypePath(this.actionField.actionType);
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
 
     this.gameManager.agentsOnFields$.subscribe((agentsOnFields) => {
-      const playerIds = agentsOnFields.filter((x) => x.fieldId === this.action.title.en).map((x) => x.playerId);
+      const playerIds = agentsOnFields.filter((x) => x.fieldId === this.actionField.title.en).map((x) => x.playerId);
       if (playerIds.length > 0) {
         const firstPlayerId = playerIds.shift()!;
         const players = this.playerManager.getPlayers();
@@ -87,6 +93,9 @@ export class DuneActionComponent implements OnInit {
       this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
 
       this.isAccessibleByPlayer = this.getPlayerAccessibility();
+
+      this.costsModifier = this.gameModifierService.getCostModifierForField(this.activePlayerId, this.actionField);
+      this.actionCosts = this.gameModifierService.getModifiedCostsForField(this.activePlayerId, this.actionField);
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
@@ -98,7 +107,7 @@ export class DuneActionComponent implements OnInit {
     });
 
     this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {
-      const spiceOnField = accumulatedSpice.find((x) => x.fieldId === this.action.title.en);
+      const spiceOnField = accumulatedSpice.find((x) => x.fieldId === this.actionField.title.en);
       this.accumulatedSpice = spiceOnField?.amount ?? 0;
     });
 
@@ -106,7 +115,12 @@ export class DuneActionComponent implements OnInit {
       this.isAccessibleByPlayer = this.getPlayerAccessibility();
     });
 
-    this.isHighCouncilField = this.action.rewards.some(
+    this.gameModifierService.playerGameModifiers$.subscribe((x) => {
+      this.costsModifier = this.gameModifierService.getCostModifierForField(this.activePlayerId, this.actionField);
+      this.actionCosts = this.gameModifierService.getModifiedCostsForField(this.activePlayerId, this.actionField);
+    });
+
+    this.isHighCouncilField = this.actionField.rewards.some(
       (x) => x.type === 'council-seat-small' || x.type === 'council-seat-large'
     );
     if (this.isHighCouncilField) {
@@ -123,7 +137,7 @@ export class DuneActionComponent implements OnInit {
       const playerAgentCount = this.gameManager.getAvailableAgentCountForPlayer(currentPlayerId);
 
       if (playerAgentCount > 0) {
-        this.gameManager.addAgentToField(this.action);
+        this.gameManager.addAgentToField(this.actionField);
         this.actionFieldClick.emit({ playerId: currentPlayerId });
         this.audioManager.playSound('click');
       }
@@ -168,23 +182,23 @@ export class DuneActionComponent implements OnInit {
   }
 
   private getPlayerAccessibility() {
-    const factionRequiredType = this.action.requiresInfluence?.type;
+    const factionRequiredType = this.actionField.requiresInfluence?.type;
     const playerHand = this.cardsService.getPlayerHand(this.activePlayerId);
     if (!playerHand) {
       return false;
     }
 
     if (!factionRequiredType || !isFactionScoreType(factionRequiredType)) {
-      return getCardsFieldAccess(playerHand.cards).includes(this.action.actionType);
+      return getCardsFieldAccess(playerHand.cards).includes(this.actionField.actionType);
     } else {
       const playerScore = this.playerScoreManager.getPlayerScore(this.activePlayerId);
       if (playerScore) {
         if (playerScore[factionRequiredType] > 1) {
-          return getCardsFieldAccess(playerHand.cards).includes(this.action.actionType);
+          return getCardsFieldAccess(playerHand.cards).includes(this.actionField.actionType);
         }
       }
       return getCardsFactionAndFieldAccess(playerHand.cards).some(
-        (x) => x.faction === factionRequiredType && x.actionType.includes(this.action.actionType)
+        (x) => x.faction === factionRequiredType && x.actionType.includes(this.actionField.actionType)
       );
     }
     return false;

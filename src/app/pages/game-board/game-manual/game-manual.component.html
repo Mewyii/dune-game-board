@@ -8,16 +8,14 @@
     </button>
     <br /><br />
     <h2>How to play</h2>
-    <div>Prepare the intrigue deck from the board game.</div>
-    <br />
     <div>Add up to four players here, select wether they should be AI-controlled and you're ready to go.</div>
-    <br /><br /><br />
+    <br /><br />
     <h4>AI</h4>
     <div>
       The AI will move on its own (depending on its goals and resources). You will be noticed about custom effects it is not
-      able to comprehend (yet) and resolve it for them. You will also need to draw and play intrigues for them for now.
+      able to comprehend (yet) and resolve it for them.
     </div>
-    <br /><br /><br />
+    <br /><br />
     <h4>New mechanics / symbols</h4>
     <div>
       <b>Locations</b> now have give the controlling player resources (on the left side) at their reveal turn. They also give
@@ -32,7 +30,14 @@
     <br />
     <div
       [innerHTML]="
-        '{resource:focus}: You get one focus. You keep this token until your reveal turn, then you have to use it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
+        '{resource:signet-token}: You get one signet token. You can use it indiviually for every leader.'
+          | duneSymbols : '24px'
+      "
+    ></div>
+    <br />
+    <div
+      [innerHTML]="
+        '{resource:focus}: You get one focus token. You keep this token until your reveal turn, then you have to use it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
           | duneSymbols : '24px'
       "
     ></div>

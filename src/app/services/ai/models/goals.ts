@@ -74,24 +74,20 @@ export interface GameState {
   playerCanStealIntrigues: boolean;
   freeLocations: string[];
   occupiedLocations: string[];
+  rival?: Player;
 }
 
 export interface AIGoal {
   baseDesire: number;
-  desireModifier: (
-    player: Player,
-    gameState: GameState,
-    goals: FieldsForGoals,
-    virtualResources: Resource[]
-  ) => number | DesireModifierDecisions;
+  desireModifier: (player: Player, gameState: GameState, goals: FieldsForGoals) => number | DesireModifierDecisions;
   maxDesire?: number;
-  goalIsReachable: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => boolean;
-  reachedGoal: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => boolean;
+  goalIsReachable: (player: Player, gameState: GameState, goals: FieldsForGoals) => boolean;
+  reachedGoal: (player: Player, gameState: GameState, goals: FieldsForGoals) => boolean;
   desiredFields?: (boardFields: ActionField[]) => {
-    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
+    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
   };
   viableFields: (boardFields: ActionField[]) => {
-    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals, virtualResources: Resource[]) => number;
+    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
   };
 }
 

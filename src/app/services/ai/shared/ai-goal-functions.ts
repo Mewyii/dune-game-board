@@ -15,7 +15,6 @@ export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
 
 export function getResourceDesire(
   player: Player,
-  virtualResources: Resource[],
   baseDesire: number,
   influences: {
     resource: ResourceType | 'tech-agents';
@@ -26,7 +25,7 @@ export function getResourceDesire(
 ) {
   let desire = baseDesire;
   for (const influence of influences) {
-    const resourceAmount = getResourceAmount(player, influence.resource, virtualResources);
+    const resourceAmount = getResourceAmount(player, influence.resource);
     if (!influence.negative) {
       desire = desire + clamp(resourceAmount * influence.amount, 0, influence.maxAmount ?? 1);
     } else {
@@ -36,15 +35,14 @@ export function getResourceDesire(
   return clamp(desire, 0, 1);
 }
 
-export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech-agents', virtualResources: Resource[]) {
+export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech-agents') {
   switch (resourceType) {
     case 'tech-agents':
       return player.techAgents;
     default:
       const resource = player.resources.find((x) => x.type === resourceType);
-      const virtualResource = virtualResources.find((x) => x.type === resourceType);
 
-      return (resource?.amount ?? 0) + (virtualResource?.amount ?? 0);
+      return resource?.amount ?? 0;
   }
 }
 
@@ -180,14 +178,8 @@ export function getParticipateInCombatDesireModifier(gameState: GameState) {
   return 0;
 }
 
-export function getDesire(
-  goal: AIGoal,
-  player: Player,
-  gameState: GameState,
-  virtualResources: Resource[],
-  goals: FieldsForGoals
-) {
-  const goalDesire = goal.desireModifier(player, gameState, goals, virtualResources);
+export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {
+  const goalDesire = goal.desireModifier(player, gameState, goals);
   if (typeof goalDesire === 'number') {
     return clamp(goal.baseDesire + goalDesire, 0, goal.maxDesire ?? 1);
   } else {
@@ -199,15 +191,14 @@ export function getMaxDesireOfUnreachableGoal(
   player: Player,
   gameState: GameState,
   goals: FieldsForGoals,
-  virtualResources: Resource[],
   goalType: { type: AIGoals; modifier: number }
 ) {
   const goal = goals[goalType.type];
   if (!goal) {
     return 0.0;
   }
-  if (!goal.reachedGoal(player, gameState, goals, virtualResources)) {
-    const goalDesire = getDesire(goal, player, gameState, virtualResources, goals);
+  if (!goal.reachedGoal(player, gameState, goals)) {
+    const goalDesire = getDesire(goal, player, gameState, goals);
 
     return goalDesire * goalType.modifier;
   } else {
@@ -219,12 +210,11 @@ export function getMaxDesireOfUnreachableGoals(
   player: Player,
   gameState: GameState,
   goals: FieldsForGoals,
-  virtualResources: Resource[],
   goalTypes: { type: AIGoals; modifier: number }[],
   currentDesire: number
 ) {
   for (const goalType of goalTypes) {
-    const goalDesire = getMaxDesireOfUnreachableGoal(player, gameState, goals, virtualResources, goalType);
+    const goalDesire = getMaxDesireOfUnreachableGoal(player, gameState, goals, goalType);
     if (goalDesire > currentDesire) {
       currentDesire = goalDesire;
     }
@@ -273,12 +263,12 @@ export function noOneHasMoreInfluence(player: Player, gameState: GameState, fact
   return !gameState.enemyScore.some((x) => x[faction] > playerScore);
 }
 
-export function getCostAdjustedDesire(player: Player, resources: Resource[], desire: number, virtualResources: Resource[]) {
+export function getCostAdjustedDesire(player: Player, resources: Resource[], desire: number) {
   let desireAdjustment = 1.0;
   let resourcesUsed: Resource[] = [];
   for (const resource of resources) {
     const costs = resource.amount ?? 1;
-    const playerResourceAmount = getResourceAmount(player, resource.type, virtualResources);
+    const playerResourceAmount = getResourceAmount(player, resource.type);
     const alreadyUsedResourceAmount = getResourceAmountFromArray(resourcesUsed, resource.type);
 
     if (costs > playerResourceAmount - alreadyUsedResourceAmount) {

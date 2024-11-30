@@ -83,29 +83,17 @@ export class AlwaysBuyableCardsComponent {
 
         this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
 
-        this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
+        this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
       }
     });
 
     this.gameModifierService.playerGameModifiers$.subscribe(() => {
-      this.imperiumRowModifiers = this.gameModifierService.getPlayerImperiumRowModifiers(this.activePlayerId);
+      this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
     });
   }
 
   onBuyAlwaysAvailableCardClicked(card: ImperiumCard) {
-    const costModifier = getCardCostModifier(card, this.imperiumRowModifiers);
-    if (card.persuasionCosts) {
-      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
-    }
-    if (card.buyEffects) {
-      for (const effect of card.buyEffects) {
-        this.gameManager.addRewardToPlayer(this.activePlayerId, effect);
-      }
-    }
-
-    this.cardsService.addCardToPlayerDiscardPile(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
-
-    this.logService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
+    this.gameManager.acquireCustomImperiumCard(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
   }
 
   onShowNextLimitedCustomCardClicked() {
@@ -127,20 +115,7 @@ export class AlwaysBuyableCardsComponent {
   }
 
   onBuyLimitedCustomCardClicked(card: ImperiumDeckCard) {
-    const costModifier = getCardCostModifier(card, this.imperiumRowModifiers);
-    if (card.persuasionCosts) {
-      this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
-    }
-    if (card.buyEffects) {
-      for (const effect of card.buyEffects) {
-        this.gameManager.addRewardToPlayer(this.activePlayerId, effect);
-      }
-    }
-    this.cardsService.removeCardFromLimitedCustomCards(card);
-
-    this.cardsService.addCardToPlayerDiscardPile(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
-
-    this.logService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
+    this.gameManager.acquireCustomImperiumCard(this.activePlayerId, card);
   }
 
   setCardActive(cardId: string) {

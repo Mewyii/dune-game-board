@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const dust: IParticlesProps = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { position: 'absolute', top: '650px', width: '100%', height: '875px' },
+  style: { position: 'absolute', top: '650px', width: '100%', height: '900px' },
   fullScreen: false,
   particles: {
     number: {
@@ -17,11 +17,12 @@ export const dust: IParticlesProps = {
       value: '#fff',
     },
     opacity: {
-      value: { min: 0.1, max: 1 },
+      value: { min: 0.2, max: 1 },
       anim: {
         enable: true,
         speed: { min: 0.25, max: 1 },
         sync: false,
+        mode: 'random',
       },
     },
     shape: {

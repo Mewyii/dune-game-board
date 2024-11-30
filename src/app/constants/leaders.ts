@@ -46,7 +46,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
     gameModifiers: {
-      fieldAccessModifiers: [
+      fieldAccess: [
         {
           id: 'stilgar-naib',
           fieldId: 'sietch tabr',
@@ -85,7 +85,7 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
     },
     gameModifiers: {
-      factionInfluenceModifiers: {
+      factionInfluence: {
         fremen: {
           id: 'liet',
           noInfluence: true,
@@ -94,7 +94,7 @@ export const leaders: Leader[] = [
           },
         },
       },
-      fieldAccessModifiers: [
+      fieldAccess: [
         {
           id: 'liet-fremen',
           factionType: 'fremen',
@@ -132,7 +132,7 @@ export const leaders: Leader[] = [
     playableByAI: true,
     type: 'new',
     gameModifiers: {
-      imperiumRowModifiers: [
+      imperiumRow: [
         {
           id: 'chani',
           factionType: 'fremen',
@@ -226,7 +226,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/irulan.png',
     playableByAI: true,
     gameModifiers: {
-      factionInfluenceModifiers: {
+      factionInfluence: {
         emperor: {
           id: 'irulan',
           noInfluence: true,
@@ -235,7 +235,7 @@ export const leaders: Leader[] = [
           },
         },
       },
-      fieldAccessModifiers: [
+      fieldAccess: [
         {
           id: 'irulan-emperor',
           factionType: 'emperor',
@@ -744,6 +744,9 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/yuna_2.png',
     type: 'new',
     playableByAI: true,
+    gameModifiers: {
+      fieldCost: [{ id: 'yuna-warlord', actionType: 'landsraad', costType: 'solari', amount: 1 }],
+    },
   },
   {
     name: {

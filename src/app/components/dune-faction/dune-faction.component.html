@@ -72,7 +72,7 @@
       [style.max-height]="faction.position.height + 'px'"
     >
       <ng-container *ngFor="let actionField of faction.actionFields">
-        <app-dune-action [action]="actionField" [backgroundColor]="faction.primaryColor"></app-dune-action>
+        <app-dune-action [actionField]="actionField" [backgroundColor]="faction.primaryColor"></app-dune-action>
       </ng-container>
     </div>
   </div>

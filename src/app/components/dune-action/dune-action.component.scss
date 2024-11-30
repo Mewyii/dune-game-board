@@ -135,6 +135,14 @@
     filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
+.costs.positive {
+    filter: drop-shadow(0px 2px 6px #5ff15f);
+}
+
+.costs.negative {
+    filter: drop-shadow(0px 2px 6px #f15f5f);
+}
+
 .costs.faction {
     max-width: 30px;
     filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.9)
@@ -156,6 +164,8 @@
     justify-content: center;
     align-items: center;
 }
+
+
 
 .costs-amount.faction {
     filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 1));
@@ -247,6 +257,6 @@
 
 @keyframes marker-anim {
     0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
-    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.75)}
+    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(2.0)}
     100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
   }

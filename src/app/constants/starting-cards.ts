@@ -155,20 +155,20 @@ export const startingCards: ImperiumCard[] = [
     ],
     agentEffects: [{ type: 'trash-self' }],
   },
-  {
-    name: {
-      en: 'Scouts',
-      de: 'Kundschafter',
-    },
-    fieldAccess: ['spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
-    cardAmount: 1,
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'sword',
-      },
-    ],
-  },
+  // {
+  //   name: {
+  //     en: 'Scouts',
+  //     de: 'Kundschafter',
+  //   },
+  //   fieldAccess: ['spice', 'town'],
+  //   imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
+  //   cardAmount: 1,
+  //   buyEffects: [],
+  //   agentEffects: [],
+  //   revealEffects: [
+  //     {
+  //       type: 'sword',
+  //     },
+  //   ],
+  // },
 ];

@@ -24,39 +24,36 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      de: 'sandstürme',
       en: 'sandstorms',
+      de: 'sandstürme',
     },
     description: {
-      de: 'Es kann kein Spice gesammelt werden. <br>Die Kampfstärke aller Einheiten ist auf 1 reduziert.',
-      en: 'Spice can not be harvested. <br>The combat strength of all units is reduced to 1.',
+      en: '{faction:spice}-fields are blocked.',
+      de: '{faction:spice}-Felder sind blockiert.',
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
     cardAmount: 2,
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'collect-spice', modifier: -1.0 }],
-    },
   },
   {
     title: {
-      de: 'spice-explosionen',
       en: 'spice explosions',
+      de: 'spice-explosionen',
     },
     description: {
-      de: '<b>Rundenbeginn</b>: +1 Bonus-Spice auf Spice-Feldern.',
-      en: '<b>Round start</b>: +1 bonus spice on spice fields.',
+      en: '<b>Round start</b>: +1 bonus spice on {faction:spice}-fields.',
+      de: '<b>Rundenbeginn</b>: +1 Bonus-Spice auf {faction:spice}-Feldern.',
     },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
-    cardAmount: 4,
+    cardAmount: 2,
   },
   {
     title: {
-      de: 'sandwürmer',
       en: 'sandworms',
+      de: 'sandwürmer',
     },
     description: {
-      de: 'Spice zu sammeln bringt -1 Spice ein.',
-      en: 'Spice fields yield -1 spice.',
+      en: '{faction:spice}-fields yield -1 spice.',
+      de: '{faction:spice}-Felder bringen -1 Spice ein.',
     },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
     cardAmount: 2,
@@ -126,12 +123,12 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      de: 'Pilger',
       en: 'Pilgrims',
+      de: 'Pilger',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>: Erhalte {resource:solari;amount:2} für jedes {faction:town}-Feld, auf dem sich einer deiner Agenten befindet.',
       en: '<b>Reveal turn (each player)</b>: Gain {resource:solari;amount:2} for each {faction:town}-field with one of your agents on it.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Erhalte {resource:solari;amount:2} für jedes {faction:town}-Feld, auf dem sich einer deiner Agenten befindet.',
     },
     imagePath: 'assets/images/action-backgrounds/faithful.png',
     cardAmount: 1,
@@ -180,12 +177,12 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      de: 'Verschwörer',
       en: 'Conspirators',
+      de: 'Verschwörer',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>: Verliere {resource:intrigue}{resource:intrigue}{resource:helper-or}{resource:victory-point}.',
       en: '<b>Reveal turn (each player)</b>: Lose {resource:intrigue}{resource:intrigue}{resource:helper-or}{resource:victory-point}.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Verliere {resource:intrigue}{resource:intrigue}{resource:helper-or}{resource:victory-point}.',
     },
     imagePath: 'assets/images/action-backgrounds/conspiracy.png',
     cardAmount: 1,
@@ -195,17 +192,29 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      de: 'Assassinen',
       en: 'Assassins',
+      de: 'Assassinen',
     },
     description: {
-      de: '<b>Aufdeckzug (jeder Spieler)</b>: Verliere {resource:troop}{resource:troop}{resource:helper-or}{resource:victory-point}.',
       en: '<b>Reveal turn (each player)</b>: Lose {resource:troop}{resource:troop}{resource:helper-or}{resource:victory-point}.',
+      de: '<b>Aufdeckzug (jeder Spieler)</b>: Verliere {resource:troop}{resource:troop}{resource:helper-or}{resource:victory-point}.',
     },
     imagePath: 'assets/images/action-backgrounds/bene_gesserit.png',
     cardAmount: 1,
     aiAdjustments: {
       goalEvaluationModifier: () => [{ type: 'troops', modifier: 0.1 }],
     },
+  },
+  {
+    title: {
+      en: 'Spice Visions',
+      de: 'Spice Visionen',
+    },
+    description: {
+      en: '<b>Round start (each player)</b>: Take a look at the top card of your deck, the conflict deck or the intrigue deck.',
+      de: '<b>Rundenbeginn(jeder Spieler)</b>: Sieh dir die oberste Karte deines Decks, des Konflikt-Stapels oder des Intrigen-Stapels an.',
+    },
+    imagePath: '/assets/images/action-backgrounds/vision.png',
+    cardAmount: 2,
   },
 ];

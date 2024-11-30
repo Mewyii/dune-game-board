@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const sand: IParticlesProps = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { position: 'absolute', bottom: '0px', width: '100%', height: '590px' },
+  style: { position: 'absolute', bottom: '0px', width: '100%', height: '680px' },
   fullScreen: false,
   particles: {
     number: {

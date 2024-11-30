@@ -71,8 +71,7 @@ export class DuneEventsManager {
         });
       }
     }
-    shuffle(newEvents);
-    this.gameEventsSubject.next(newEvents);
+    this.gameEventsSubject.next(shuffle(newEvents));
   }
 
   public resetGameEvents() {

@@ -1,6 +1,6 @@
 .event-card {
     width: 720px;
-    height: 420px;
+    height: 500px;
     border-radius: 8px;
     position: relative;
     background-size: cover;
@@ -28,9 +28,9 @@
     font-size: x-large;
     position: absolute;
     bottom: 0px;
-    padding: 16px;
+    padding: 32px;
     background: rgba(44, 32, 10, 0.59);
-    width: calc(100% - 32px);
+    width: calc(100% - 64px);
     border-top: 1px solid rgba(255, 165, 0, 0.33);
     border-radius: 0px 0px 6px 6px;
 }

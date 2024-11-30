@@ -8,10 +8,10 @@ export function hasFactionInfluenceModifier(
   playerGameModifier: PlayerGameModifiers | undefined,
   factionType: FactionType | undefined
 ) {
-  if (!playerGameModifier || !playerGameModifier.factionInfluenceModifiers || !factionType) {
+  if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
   } else {
-    return !!playerGameModifier.factionInfluenceModifiers[factionType];
+    return !!playerGameModifier.factionInfluence[factionType];
   }
 }
 
@@ -19,10 +19,10 @@ export function getFactionInfluenceModifier(
   playerGameModifier: PlayerGameModifiers | undefined,
   factionType: FactionType | undefined
 ) {
-  if (!playerGameModifier || !playerGameModifier.factionInfluenceModifiers || !factionType) {
+  if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
   } else {
-    return playerGameModifier.factionInfluenceModifiers[factionType];
+    return playerGameModifier.factionInfluence[factionType];
   }
 }
 
