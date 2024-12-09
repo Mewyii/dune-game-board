@@ -79,6 +79,7 @@ import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { TranslationComponent } from './components/translation/translation.component';
+import { RewardArrayComponent } from './components/_common/reward-array/reward-array.component';
 
 @NgModule({
   declarations: [
@@ -142,6 +143,7 @@ import { TranslationComponent } from './components/translation/translation.compo
     IntriguesComponent,
     IntriguesPreviewDialogComponent,
     TranslationComponent,
+    RewardArrayComponent,
   ],
   imports: [
     BrowserModule,

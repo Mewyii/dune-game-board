@@ -1,21 +1,10 @@
 <div class="intrigue-card">
-  <div class="card-header">
+  <div class="card-header font-medieval">
     <span>
-      {{ translateService.translate(card.name).toLocaleLowerCase() }}
+      {{ translateService.translate(card.name).toUpperCase() }}
     </span>
   </div>
   <div [class]="'card-content ' + card.type">
-    <div class="card-effects-container">
-      <ng-container *ngFor="let reward of card.effects">
-        <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
-          <ng-container *ngIf="reward.amount">
-            <div class="reward-amount">
-              {{ reward.amount }}
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-    </div>
+    <dune-reward-array [rewards]="card.effects" [size]="'36px'"></dune-reward-array>
   </div>
 </div>

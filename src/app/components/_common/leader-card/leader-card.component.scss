@@ -5,7 +5,6 @@
     position: relative;
     background-size: 100%;
     color: #fffcfa;
-    font-size: small;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
     background-position-y: 16px;
 }
@@ -22,8 +21,8 @@
 
 .leader-title {
     padding: 12px 12px 5px 16px;
-    font-size: x-large;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+    font-size: 28px;
 }
 
 .underline {
@@ -34,7 +33,7 @@
 }
 
 .leader-house {
-    padding: 0px 18px;
+    padding: 2px 18px;
     color: #878787;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
@@ -98,10 +97,15 @@
 
 .leader-passive-name,
 .leader-signet-name {
-    font-size: 10px;
-    margin-bottom: 2px;
+    font-size: 12px;
+    margin-bottom: 1px;
     margin-left: 4px;
 }
+
+.leader-signet-name {
+    color: #e1c0ba;
+}
+
 
 .leader-passive-description-container,
 .leader-signet-description-container {
@@ -109,11 +113,11 @@
     display: flex;
     align-items: center;
     padding: 4px;
+    font-size: small;
 }
 
 .leader-passive-description,
 .leader-signet-description {
-    font-family: "Roboto", "Verdana";
     font-weight: initial;
     color: #e1e1e1;
     white-space: pre-wrap;

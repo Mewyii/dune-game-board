@@ -2,7 +2,7 @@ import { Faction } from '../../../models';
 
 export const factionsCustomExpert: Faction[] = [
   {
-    title: { de: 'fremen', en: 'fremen' },
+    title: { de: 'Fremen', en: 'Fremen' },
     type: 'fremen',
     position: {
       marginTop: 1670,
@@ -39,7 +39,7 @@ export const factionsCustomExpert: Faction[] = [
     ],
   },
   {
-    title: { de: 'bene gesserit', en: 'bene gesserit' },
+    title: { de: 'Bene Gesserit', en: 'Bene Gesserit' },
     type: 'bene',
     position: {
       marginTop: 1170,
@@ -76,7 +76,7 @@ export const factionsCustomExpert: Faction[] = [
     ],
   },
   {
-    title: { de: 'raumgilde', en: 'spacing guild' },
+    title: { de: 'Raumgilde', en: 'Spacing Guild' },
     type: 'guild',
     position: {
       marginTop: 670,
@@ -116,7 +116,7 @@ export const factionsCustomExpert: Faction[] = [
     ],
   },
   {
-    title: { de: 'imperator', en: 'emperor' },
+    title: { de: 'Imperator', en: 'Emperor' },
     type: 'emperor',
     position: {
       marginTop: 170,
@@ -149,7 +149,7 @@ export const factionsCustomExpert: Faction[] = [
     ],
   },
   {
-    title: { de: 'landsraad', en: 'landsraad' },
+    title: { de: 'Landsraad', en: 'Landsraad' },
     type: 'landsraad',
     position: {
       marginTop: 170,
@@ -200,7 +200,7 @@ export const factionsCustomExpert: Faction[] = [
     secondaryColor: '#192e19b8',
   },
   {
-    title: { de: 'mafea', en: 'choam' },
+    title: { de: 'MAFEA', en: 'CHOAM' },
     type: 'choam',
     position: {
       marginTop: 170,

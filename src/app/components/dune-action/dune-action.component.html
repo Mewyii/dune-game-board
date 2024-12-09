@@ -1,6 +1,6 @@
 <div [class]="'action-field' + (activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer ? ' highlighted' : '')">
-  <div class="heading" [style.background-color]="backgroundColor">
-    <span class="title">{{ ts.translate(actionField.title).toLocaleLowerCase() }}</span>
+  <div class="heading font-medieval" [style.background-color]="backgroundColor">
+    <span class="title">{{ ts.translate(actionField.title).toUpperCase() }}</span>
     <div class="border-remover" [style.background-color]="backgroundColor"></div>
   </div>
   <div class="actionTypeIcon" [style.background-image]="'url(' + pathToActionType + ')'"></div>

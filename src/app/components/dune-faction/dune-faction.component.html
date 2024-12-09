@@ -4,8 +4,8 @@
   [style.left]="faction.position.marginLeft + 'px'"
   [style.backgroundColor]="faction.secondaryColor"
 >
-  <div class="title-container" [style.color]="getTitleColor(faction.primaryColor)">
-    <span class="title">{{ translateService.translate(faction.title) }} </span>
+  <div class="title-container font-scifi" [style.color]="getTitleColor(faction.primaryColor)">
+    <span class="title">{{ translateService.translate(faction.title).toLocaleUpperCase() }} </span>
   </div>
   <div class="content">
     <div *ngIf="faction.hasScoreBoard" class="scoreboard">

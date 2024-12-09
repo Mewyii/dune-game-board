@@ -72,8 +72,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:shipping}.<br><br><b>Reveal turn:</b> <br>{resource:tech}',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:shipping}.<br><br><b>Aufdeckzug:</b> <br>{resource:tech}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:shipping}<br><br><b>Reveal turn:</b> <br>{resource:tech}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:shipping}<br><br><b>Aufdeckzug:</b> <br>{resource:tech}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.5 - 0.05 * (gameState.currentRound - 1),
@@ -88,8 +88,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/port.png',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}.<br><br><b>Reveal turn:</b> <br>2 Spacing Guild cards: {resource:shipping}<br>3 Spacing Guild cards: {resource:shipping}{resource:shipping}<br>4+ Spacing Guild cards: {resource:victory-point}',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}.<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>2 Spacing Guild cards: {resource:shipping}<br>3 Spacing Guild cards: {resource:shipping}{resource:shipping}<br>4+ Spacing Guild cards: {resource:victory-point}',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -470,6 +470,22 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}{resource:sword}{resource:sword}<br><br><b>',
       de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}{resource:sword}{resource:sword}<br><br><b>',
+      fontSize: 'medium',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.7 + 0.05 * gameState.playerDreadnoughtCount - 0.025 * (gameState.currentRound - 1),
+  },
+  {
+    name: {
+      en: 'Gunship',
+      de: 'Panzerschiff',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/dreadnought.png',
+    buyEffects: [],
+    customEffect: {
+      en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Remove control of a location of your choice.',
+      de: '<b>Aufdeckzug</b>:<br>{resource:sword}{resource:sword}{resource:helper-or}Entferne die Kontrolle über einen Ort deiner Wahl.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>

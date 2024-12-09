@@ -12,8 +12,8 @@ export interface DuneEvent {
 export const duneEvents: DuneEvent[] = [
   {
     title: {
-      en: 'clear sky',
-      de: 'klarer himmel',
+      en: 'Clear Sky',
+      de: 'Klarer Himmel',
     },
     description: {
       en: 'No effect.',
@@ -24,8 +24,8 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'sandstorms',
-      de: 'sandstürme',
+      en: 'Sandstorms',
+      de: 'Sandstürme',
     },
     description: {
       en: '{faction:spice}-fields are blocked.',
@@ -36,8 +36,8 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'spice explosions',
-      de: 'spice-explosionen',
+      en: 'Spice Explosions',
+      de: 'Spice-Explosionen',
     },
     description: {
       en: '<b>Round start</b>: +1 bonus spice on {faction:spice}-fields.',
@@ -48,8 +48,8 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'sandworms',
-      de: 'sandwürmer',
+      en: 'Sandworms',
+      de: 'Sandwürmer',
     },
     description: {
       en: '{faction:spice}-fields yield -1 spice.',
@@ -108,7 +108,7 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      de: 'abgefallene fremen',
+      de: 'Abgefallene Fremen',
       en: 'Renegade Fremen',
     },
     description: {
@@ -151,7 +151,7 @@ export const duneEvents: DuneEvent[] = [
   {
     title: {
       de: 'Landraad-Abgeordnete',
-      en: 'Landsraad representatives',
+      en: 'Landsraad Representatives',
     },
     description: {
       de: 'Jedes mal, wenn du einen Agenten auf einem {faction:landsraad}-Feld <br>platzierst: {resource:card-draw}',

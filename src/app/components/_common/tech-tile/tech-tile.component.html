@@ -1,12 +1,12 @@
-<div class="imperium-card">
-  <div class="card-header">
+<div class="tech-tile">
+  <div class="card-header font-medieval">
     <div
       *ngIf="card.faction"
       class="faction-type-icon"
       [style.background-image]="'url(' + getFactionTypePath(card.faction) + ')'"
     ></div>
     <span>
-      {{ translateService.translate(card.name).toLocaleLowerCase() }}
+      {{ translateService.translate(card.name).toUpperCase() }}
     </span>
   </div>
   <div class="card-img" [style.background-image]="'url(' + card.imageUrl + ')'">
@@ -17,7 +17,10 @@
     >
       {{ getFactionName(card.faction) }}
     </div> -->
-    <div class="card-agent-effect-container" *ngIf="card.customEffect || (card.effects && card.effects.length > 0)">
+    <div
+      class="card-agent-effect-container font-text"
+      *ngIf="card.customEffect || (card.effects && card.effects.length > 0)"
+    >
       <div class="card-agent-effect-custom" *ngIf="card.customEffect">
         <div
           *ngIf="!card.customEffect.fontSize || card.customEffect.fontSize == 'small'"
@@ -45,18 +48,7 @@
     </div>
   </div>
   <div class="card-aquire-effect-container" *ngIf="card.buyEffects && card.buyEffects.length">
-    <div class="card-aquire-effect">
-      <ng-container *ngFor="let reward of card.buyEffects">
-        <div class="reward-container">
-          <img class="reward aquire" [src]="getRewardTypePath(reward.type)" />
-          <ng-container *ngIf="reward.amount">
-            <div class="reward-amount aquire">
-              {{ reward.amount }}
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-    </div>
+    <dune-reward-array *ngIf="card.buyEffects" [rewards]="card.buyEffects" [size]="'24px'"></dune-reward-array>
   </div>
   <div
     [class]="'card-aquire-costs-container' + (card.buyEffects && card.buyEffects.length > 0 ? ' highlighted' : '')"

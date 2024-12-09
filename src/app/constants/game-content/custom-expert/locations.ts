@@ -2,7 +2,7 @@ import { DuneLocation } from '../../../models';
 
 export const locationsCustomExpert: DuneLocation[] = [
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(81 67 54)',
     position: {
       marginTop: 880,
       marginLeft: 1430,
@@ -16,7 +16,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(183 153 114)',
     position: {
       marginTop: 1310,
       marginLeft: 1160,
@@ -32,7 +32,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'spice' },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(81 67 54)',
     position: {
       marginTop: 890,
       marginLeft: 1010,
@@ -46,7 +46,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(81 67 54)',
     position: {
       marginTop: 670,
       marginLeft: 1250,
@@ -60,7 +60,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'solari', amount: 2 },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(81 67 54)',
     position: {
       marginTop: 810,
       marginLeft: 600,
@@ -76,7 +76,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'troop' },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(183 153 114)',
     position: {
       marginTop: 1100,
       marginLeft: 1230,
@@ -89,7 +89,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(183 153 114)',
     position: {
       marginTop: 1070,
       marginLeft: 800,
@@ -103,7 +103,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(183 153 114)',
     position: {
       marginTop: 1280,
       marginLeft: 620,
@@ -118,7 +118,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   },
   // 5-6Player Stuff
   // {
-  //   color: 'rgb(87, 69, 52)',
+  //   color: 'rgb(81 67 54)',
   //   position: {
   //     marginTop: 635,
   //     marginLeft: 1375,
@@ -144,7 +144,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   //   },
   // },
   // {
-  //   color: 'rgb(87, 69, 52)',
+  //   color: 'rgb(81 67 54)',
   //   position: {
   //     marginTop: 1000,
   //     marginLeft: 1444,

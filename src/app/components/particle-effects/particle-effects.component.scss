@@ -25,6 +25,16 @@
     left: 0;
     top: calc(50% - 33px);
     color: white;
+    font-size: 128px;
+    letter-spacing: 32px;
+}
+
+.effect-title.red {
+    color: rgb(237, 80, 80);
+}
+
+.effect-title.gold {
+    color: rgb(237, 172, 80);
 }
 
 @keyframes combat-anim {

@@ -1,14 +1,14 @@
 <div class="imperium-card">
-  <div class="card-header">
-    {{ translateService.translate(card.name).toLocaleLowerCase() }}
+  <div class="card-header font-scifi">
+    {{ translateService.translate(card.name) }}
   </div>
   <div class="card-img" [style.background-image]="'url(' + card.imageUrl + ')'">
     <div
-      class="faction-container"
+      class="faction-container font-medieval"
       *ngIf="card.faction"
       [style.background]="'linear-gradient(90deg, ' + getFactionColor(card.faction) + ', rgb(90 90 90 / 50%))'"
     >
-      {{ getFactionName(card.faction) }}
+      {{ getFactionName(card.faction).toUpperCase() }}
     </div>
     <div class="field-access-container">
       <ng-container *ngFor="let access of card.fieldAccess">
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div
-    class="card-agent-effect-container"
+    class="card-agent-effect-container font-text"
     *ngIf="card.customAgentEffect || (card.agentEffects && card.agentEffects.length > 0)"
   >
     <div class="card-agent-effect-custom" *ngIf="card.customAgentEffect">
@@ -34,24 +34,13 @@
         [innerHTML]="translateService.translate(card.customAgentEffect) | duneSymbols : '20px'"
       ></div>
     </div>
-    <div class="card-agent-effect" *ngIf="card.agentEffects">
-      <ng-container *ngFor="let reward of card.agentEffects">
-        <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
-          <ng-container *ngIf="reward.amount">
-            <div class="reward-amount">
-              {{ reward.amount }}
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-    </div>
+    <dune-reward-array *ngIf="card.agentEffects" [rewards]="card.agentEffects"></dune-reward-array>
   </div>
   <div
     class="card-agent-effect-separator"
     *ngIf="!card.customAgentEffect && (!card.agentEffects || card.agentEffects.length === 0)"
   ></div>
-  <div class="card-reveal-effect-container">
+  <div class="card-reveal-effect-container font-text">
     <div class="card-reveal-effect-custom" *ngIf="card.customRevealEffect">
       <div
         *ngIf="!card.customRevealEffect.fontSize || card.customRevealEffect.fontSize == 'small'"
@@ -64,32 +53,10 @@
         [innerHTML]="translateService.translate(card.customRevealEffect) | duneSymbols : '20px'"
       ></div>
     </div>
-    <div class="card-reveal-effect" *ngIf="card.revealEffects">
-      <ng-container *ngFor="let reward of card.revealEffects">
-        <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
-          <ng-container *ngIf="reward.amount">
-            <div class="reward-amount">
-              {{ reward.amount }}
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-    </div>
+    <dune-reward-array *ngIf="card.revealEffects" [rewards]="card.revealEffects"></dune-reward-array>
   </div>
   <div class="card-aquire-effect-container" *ngIf="card.buyEffects && card.buyEffects.length">
-    <div class="card-aquire-effect">
-      <ng-container *ngFor="let reward of card.buyEffects">
-        <div class="reward-container">
-          <img class="reward aquire" [src]="getRewardTypePath(reward.type)" />
-          <ng-container *ngIf="reward.amount">
-            <div class="reward-amount aquire">
-              {{ reward.amount }}
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-    </div>
+    <dune-reward-array *ngIf="card.buyEffects" [rewards]="card.buyEffects" [size]="'24px'"></dune-reward-array>
   </div>
   <div
     [class]="

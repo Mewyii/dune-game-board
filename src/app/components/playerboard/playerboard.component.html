@@ -1,6 +1,8 @@
 <div class="player-board-container">
   <div class="heading">
-    <div *ngIf="gameManager.currentRound == 0">{{ translateService.translate(playersString).toLocaleLowerCase() }}</div>
+    <div class="font-scifi" *ngIf="gameManager.currentRound == 0">
+      {{ translateService.translate(playersString) }}
+    </div>
     <div *ngIf="gameManager.currentRound == 0">
       <button
         mat-mini-fab
@@ -21,23 +23,23 @@
       </button>
     </div>
     <div *ngIf="currentTurn" class="turn-area">
-      <div *ngIf="currentTurn">
-        {{ translateService.translate(roundString).toLocaleLowerCase() }} <span class="turn">{{ currentTurn }}</span>
+      <div class="font-scifi" *ngIf="currentTurn">
+        {{ translateService.translate(roundString) }} <span class="turn">{{ currentTurn }}</span>
       </div>
-      <div class="turn-state">{{ turnState }}</div>
+      <div class="turn-state font-medieval">{{ turnState.toUpperCase() }}</div>
     </div>
   </div>
   <div class="player-container" *ngFor="let player of players">
-    <div class="player-heading">
+    <div class="player-heading font-medieval">
       <div
         class="player-name {{ player.id === gameManager.activePlayerId ? 'highlighted' : '' }}"
         [style.color]="player.color"
       >
         <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
-        {{ translateService.translate(getPlayerLeaderName(player.id)).toLocaleLowerCase() }}
+        {{ translateService.translate(getPlayerLeaderName(player.id)).toUpperCase() }}
       </div>
     </div>
-    <div class="ai-area">
+    <div class="ai-area font-medieval">
       <mat-slide-toggle
         *ngIf="gameManager.currentRound == 0"
         [color]="'accent'"
@@ -46,7 +48,7 @@
         [disabled]="currentTurn > 0"
         >AI</mat-slide-toggle
       >
-      <div *ngIf="gameManager.currentRound != 0 && player.isAI" class="ai-label">ai</div>
+      <div *ngIf="gameManager.currentRound != 0 && player.isAI" class="ai-label">AI</div>
     </div>
     <div class="agent-area">
       <ng-container *ngFor="let object of player.agents + 1 | numberToArray; let i = index">

@@ -161,7 +161,7 @@
   </div>
   <div class="absolute-scores">
     <ng-container *ngFor="let combatScore of combatScores">
-      <div *ngIf="combatScore.score > 22" [style.color]="getPlayerColor(combatScore.playerId)">
+      <div *ngIf="combatScore.score > 22" [style.color]="getPlayerColor(combatScore.playerId)" [style.padding]="'6px'">
         {{ combatScore.score }}
       </div>
     </ng-container>

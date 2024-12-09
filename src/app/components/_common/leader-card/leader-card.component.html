@@ -1,17 +1,17 @@
 <div class="leader-card" [style.background-image]="'url(' + leader.imageUrl + ')'">
   <div class="leader-frame">
     <div class="leader-header">
-      <div class="leader-title">
-        {{ translateService.translate(leader.name).toLocaleLowerCase() }}
+      <div class="leader-title font-scifi">
+        {{ translateService.translate(leader.name) }}
       </div>
       <div class="underline"></div>
-      <div class="leader-house">{{ translateService.translate(leader.house).toLocaleLowerCase() }}</div>
+      <div class="leader-house font-medieval">{{ translateService.translate(leader.house).toUpperCase() }}</div>
     </div>
     <div class="leader-passive-container">
-      <div class="leader-passive-name">
-        {{ translateService.translate(leader.passiveName).toLocaleLowerCase() }}
+      <div class="leader-passive-name font-scifi">
+        {{ translateService.translate(leader.passiveName) }}
       </div>
-      <div class="leader-signet-description-container">
+      <div class="leader-signet-description-container font-text">
         <div
           class="leader-passive-description"
           [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
@@ -19,11 +19,11 @@
       </div>
     </div>
     <div class="leader-signet-container">
-      <div class="leader-signet-name">
+      <div class="leader-signet-name font-scifi">
         <!-- <img class="signet-ring" src="/assets/images/reward-markers/marker_signet_ring.png" /> -->
-        {{ translateService.translate(leader.signetName).toLocaleLowerCase() }}
+        {{ translateService.translate(leader.signetName) }}
       </div>
-      <div class="leader-signet-description-container">
+      <div class="leader-signet-description-container font-text">
         <div
           class="leader-signet-description"
           [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"

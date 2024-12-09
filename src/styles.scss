@@ -1,28 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
 @font-face {
-    font-family: 'Sci-Fi';
-    src: url('assets/fonts/Arkitech Medium.ttf') format('truetype');
+    font-family: 'scifi';
+    src: url('assets/fonts/Orbitron-Regular.ttf');
+    
 }
 
 @font-face {
-    font-family: 'Medieval';
-    src: url('assets/fonts/Malatestian.ttf');
-}
-
-@font-face {
-    font-family: 'Mixed';
-    src: url('assets/fonts/Obelisk-MMXV.ttf');
+    font-family: 'medieval';
+    src: url('assets/fonts/Sansation-Light.ttf');
 }
 
 body {
-    font-family: "Medieval";
-    font-weight:bold;
+    font-family: "Roboto", "Verdana";
     cursor: url("assets/images/cursors/auto.png") 6 6, auto;
     background-color: #0c0d0e;
     background: url(assets/images/homeworld-background.png);
     background-size: auto;
     background-repeat: repeat;
 }
+
+.font-scifi {
+    font-family: 'scifi';
+    letter-spacing: 1px;
+}
+
+.font-medieval {
+    font-family: 'medieval';
+    letter-spacing: 0.5px;
+}
+
+.font-text {
+    font-family: "Roboto", "Verdana";
+}
+
 html, body { 
     // height: 100%; 
 }

@@ -519,49 +519,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Mercenary Dreadnought',
-      de: 'Söldner Schlachtschiff',
-    },
-    persuasionCosts: 3,
-    fieldAccess: ['landsraad', 'spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/dreadnought.png',
-    cardAmount: 1,
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'solari',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'shipping',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'solari',
-        amount: 2,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Promise of Stability',
       de: 'Stabilitätsversprechen',
     },
@@ -1425,7 +1382,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: {
       en: 'Duncan Idaho, Fremen Ambassador',
-      de: 'Duncan Idaho, Fremen Kundschafter',
+      de: 'Duncan Idaho, Fremenkundschafter',
     },
     persuasionCosts: 5,
     fieldAccess: ['fremen', 'spice', 'town'],
@@ -1775,7 +1732,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Duncan, Swordmaster',
       de: 'Duncan Idaho, Schwertmeister',
     },
-    persuasionCosts: 6,
+    persuasionCosts: 7,
     fieldAccess: ['landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/duncan.png',
     cardAmount: 1,
@@ -2036,7 +1993,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Piter De Vries, Twisted Mentat',
       de: 'Piter De Vries, Verderbter Mentat',
     },
-    persuasionCosts: 7,
+    persuasionCosts: 8,
     fieldAccess: ['emperor', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/piter.png',
     cardAmount: 1,

@@ -167,7 +167,7 @@
       <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
     </div>
     <button
-      *ngIf="cardsShown === 'discard'"
+      *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
       mat-mini-fab
       [color]="'accent'"
       (click)="onAIAddCardToHandFromDiscardPileClicked()"

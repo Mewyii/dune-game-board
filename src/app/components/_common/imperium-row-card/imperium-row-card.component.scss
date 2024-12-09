@@ -9,11 +9,8 @@
     border-radius: 8px;
     position: relative;
     color: #fffcfa;
-    font-size: x-small;
     background-color: #151515;
     filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    font-family: "Medieval";
-    font-weight: bold;
     line-height: initial;
 }
 
@@ -21,10 +18,11 @@
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 4px;
-    padding-right: 36px;
+    padding-right: 40px;
     background-image: url(/assets/images/card-backgrounds/heading.png);
     background-size: cover;
     border-radius: 4px 4px 0px 0px;
+    font-size: 14px;
 }
 
 .card-img {
@@ -35,15 +33,8 @@
     background-position: center;
 }
 
-.card-title {
-    padding: 4px;
-    font-size: large;
-    text-align: center;
-}
-
 .card-reveal-effect-container {
     display: flex;
-    font-family: "Roboto", "Verdana";
     font-weight: initial;
     font-size: small;
     color: #e1e1e1;
@@ -58,7 +49,6 @@
 
 .card-agent-effect-container {
     display: flex;
-    font-family: "Roboto", "Verdana";
     font-weight: initial;
     font-size: small;
     color: #e1e1e1;
@@ -98,8 +88,7 @@
     font-size: medium;
 }
 
-.card-reveal-effect,
-.card-agent-effect {
+dune-reward-array {
     width: 100%;
     display: flex;
     gap: 6px;
@@ -120,30 +109,9 @@
 
 .card-aquire-costs {
     font-size: x-large;
-    padding-top: 3px;
-    padding-left: 19px;
+    padding-top: 7px;
+    padding-left: 20px;
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 1));
-}
-
-.reward-container {
-    position: relative;
-    width: min-content;
-}
-
-.reward {
-    height: 32px;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
-}
-
-.reward-amount {
-    position: absolute;
-    top: 5px;
-    right: 0px;
-    width: 100%;
-    color: white;
-    font-size: large;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
-    text-align: center;
 }
 
 .field-access-container {
@@ -176,8 +144,8 @@
 
 .faction-container {
     width: -webkit-fill-available;
-    padding: 1px 32px 2px 4px;
-    font-size: xx-small;
+    padding: 2px 32px 2px 4px;
+    font-size: x-small;
     text-wrap: nowrap;
     clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
 }
@@ -196,7 +164,7 @@
 
 .card-aquire-effect-container {
     position: absolute;
-    top: 24px;
+    top: 20px;
     right: 3px;
     width: 28px;
     padding-top: 29px;
@@ -208,26 +176,6 @@
     background-image: url(/assets/images/card-backgrounds/aquire-effect.png);
     background-size: cover;
     background-position-y: bottom;
-}
-
-.card-aquire-effect {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    padding: 2px;
-    gap: 2px;
-    justify-content: center;
-    align-items: center;
-}
-
-.reward.aquire {
-    height: fit-content;
-    max-width: 24px;
-    max-height: 24px;
-}
-
-.reward-amount.aquire {
-    top: 1px;
 }
 
 .imperium-card ::ng-deep br {
