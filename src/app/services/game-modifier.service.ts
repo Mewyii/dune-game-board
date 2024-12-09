@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, isArray, sum } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
-import { Player } from './players.service';
 import { ActionField, ActionType, ActiveFactionType, FactionType, Resource, ResourceType, Reward } from '../models';
 import { mergeObjects } from '../helpers/common';
+import { Player } from '../models/player';
 
 export interface GameModifier {
   id: string;

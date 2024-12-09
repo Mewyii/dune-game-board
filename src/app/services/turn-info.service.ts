@@ -2,22 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { mergeObjects } from '../helpers/common';
 import { cloneDeep } from 'lodash';
-
-export interface TurnInfo {
-  playerId: number;
-  unitsGainedThisTurn: number;
-  agentPlacedOnFieldId: string;
-  techBuyOptionsWithAgents: number[];
-  canEnterCombat: boolean;
-  cardDrawOrDestroyAmount: number;
-  canLiftAgent: boolean;
-  factionInfluenceUpChoiceAmount: number;
-  factionInfluenceUpChoiceTwiceAmount: number;
-  factionInfluenceDownChoiceAmount: number;
-  shippingAmount: number;
-  locationControlAmount: number;
-  signetRingAmount: number;
-}
+import { TurnInfo } from '../models/turn-info';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +44,19 @@ export class TurnInfoService {
     }
   }
 
+  setPlayerTurnInfo(playerId: number, turnInfo: Partial<TurnInfo>) {
+    const currentTurnInfos = this.turnInfosSubject.value;
+    const turnInfoIndex = currentTurnInfos.findIndex((x) => x.playerId === playerId);
+    if (turnInfoIndex > -1) {
+      currentTurnInfos[turnInfoIndex] = { ...currentTurnInfos[turnInfoIndex], ...turnInfo };
+      this.turnInfosSubject.next(currentTurnInfos);
+    } else {
+      const newTurnInfo = { ...this.getInitialTurnInfo(playerId), ...turnInfo };
+      currentTurnInfos.push(newTurnInfo);
+      this.turnInfosSubject.next(currentTurnInfos);
+    }
+  }
+
   clearPlayerTurnInfo(playerId: number) {
     this.turnInfosSubject.next(this.turnInfosSubject.value.filter((x) => x.playerId !== playerId));
   }
@@ -67,34 +65,31 @@ export class TurnInfoService {
     this.turnInfosSubject.next([]);
   }
 
-  // mergeTurnInfos(aiAgentPlacementInfo: TurnInfo, aiInfo: Partial<TurnInfo>): TurnInfo {
-  //   return {
-  //     playerId: aiAgentPlacementInfo.playerId,
-  //     unitsGainedThisTurn: aiAgentPlacementInfo.unitsGainedThisTurn + aiInfo.unitsGainedThisTurn,
-  //     techAgentsGainedThisTurn: aiAgentPlacementInfo.techAgentsGainedThisTurn + aiInfo.techAgentsGainedThisTurn,
-  //     canDestroyOrDrawCard: aiAgentPlacementInfo.canDestroyOrDrawCard || aiInfo.canDestroyOrDrawCard,
-  //     canBuyTech: aiAgentPlacementInfo.canBuyTech || aiInfo.canBuyTech,
-  //     canEnterCombat: aiAgentPlacementInfo.canEnterCombat || aiInfo.canEnterCombat,
-  //     canLiftAgent: aiAgentPlacementInfo.canLiftAgent || aiInfo.canLiftAgent,
-  //     factionInfluenceUpChoiceAmount:
-  //       aiAgentPlacementInfo.factionInfluenceUpChoiceAmount + aiInfo.factionInfluenceUpChoiceAmount,
-  //     factionInfluenceUpChoiceTwiceAmount:
-  //       aiAgentPlacementInfo.factionInfluenceUpChoiceTwiceAmount + aiInfo.factionInfluenceUpChoiceTwiceAmount,
-  //     shippingAmount: aiAgentPlacementInfo.shippingAmount + aiInfo.shippingAmount,
-  //     factionInfluenceDownChoiceAmount:
-  //       aiAgentPlacementInfo.factionInfluenceDownChoiceAmount + aiInfo.factionInfluenceDownChoiceAmount,
-  //     locationControlAmount: aiAgentPlacementInfo.locationControlAmount + aiInfo.locationControlAmount,
-  //     signetRingAmount: aiAgentPlacementInfo.signetRingAmount + aiInfo.signetRingAmount,
-  //   };
-  // }
+  getDeployablePlayerUnits(playerId: number) {
+    const turnInfo = this.getPlayerTurnInfo(playerId);
+    if (!turnInfo || !turnInfo.canEnterCombat) {
+      return undefined;
+    } else {
+      const unitAmount = turnInfo.deployableUnits - turnInfo.deployedUnitsThisTurn;
+      const troopAmount = turnInfo.troopsGainedThisTurn - turnInfo.deployedTroopsThisTurn;
+      const dreadnoughtamount = turnInfo.dreadnoughtsGainedThisTurn - turnInfo.deployedDreadnoughtsThisTurn;
+
+      return { unitAmount, troopAmount, dreadnoughtamount };
+    }
+  }
 
   private getInitialTurnInfo(playerId = 0): TurnInfo {
     return {
       playerId,
-      unitsGainedThisTurn: 0,
       agentPlacedOnFieldId: '',
       techBuyOptionsWithAgents: [],
       canEnterCombat: false,
+      deployableUnits: 0,
+      troopsGainedThisTurn: 0,
+      dreadnoughtsGainedThisTurn: 0,
+      deployedUnitsThisTurn: 0,
+      deployedTroopsThisTurn: 0,
+      deployedDreadnoughtsThisTurn: 0,
       cardDrawOrDestroyAmount: 0,
       canLiftAgent: false,
       factionInfluenceUpChoiceAmount: 0,

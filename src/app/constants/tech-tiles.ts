@@ -1,4 +1,4 @@
-import { TechTileCard } from '../services/tech-tiles.service';
+import { TechTileCard } from '../models/tech-tile';
 
 export const techTiles: TechTileCard[] = [
   {

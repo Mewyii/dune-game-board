@@ -3,26 +3,7 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Resource, ResourceType } from '../models';
 import { SettingsService } from './settings.service';
-
-export type PlayerTurnState = 'agent-placement' | 'reveal' | 'revealed' | 'conflict' | 'done';
-
-export interface Player {
-  id: number;
-  agents: number;
-  turnState: PlayerTurnState;
-  resources: Resource[];
-  color: string;
-  hasSwordmaster?: boolean;
-  hasCouncilSeat?: boolean;
-  signetTokenCount: number;
-  focusTokens: number;
-  cardsDrawnAtRoundStart: number;
-  techAgents: number;
-  persuasionGainedThisRound: number;
-  persuasionSpentThisRound: number;
-  permanentPersuasion: number;
-  isAI?: boolean;
-}
+import { Player, PlayerTurnState } from '../models/player';
 
 @Injectable({
   providedIn: 'root',

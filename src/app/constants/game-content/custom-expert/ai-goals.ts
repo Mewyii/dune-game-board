@@ -17,10 +17,10 @@ import {
 } from 'src/app/services/ai/shared';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { ActionField } from 'src/app/models/location';
-import { Player } from 'src/app/services/players.service';
 import { FactionType, Resource, RewardType } from '../../../models';
 import { isResourceArray } from 'src/app/helpers/resources';
 import { normalizeNumber } from 'src/app/helpers/common';
+import { Player } from 'src/app/models/player';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
@@ -166,6 +166,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       // console.log('conflict: win ' + winCombatDesire * 3);
       // console.log('conflict: participate ' + participateInCombatDesire);
 
+      if (gameState.playerTurnInfos?.canEnterCombat) {
+        return { name, modifier: 0 };
+      }
+
       return {
         name,
         modifier,
@@ -189,7 +193,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   },
   troops: {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals) => 0.175 * (4 - gameState.playerCombatUnits.troopsInGarrison),
+    desireModifier: (player, gameState, goals) =>
+      0.175 * (4 - gameState.playerCombatUnits.troopsInGarrison) + (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({

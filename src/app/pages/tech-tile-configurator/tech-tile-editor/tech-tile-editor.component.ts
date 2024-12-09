@@ -8,7 +8,7 @@ import {
   resourceTypes,
   rewardTypes,
 } from 'src/app/models';
-import { TechTileCard } from 'src/app/services/tech-tiles.service';
+import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Component({
   selector: 'dune-tech-tile-editor',

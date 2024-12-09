@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
+import { ImperiumCard } from 'src/app/models/imperium-card';
 
 @Component({
   selector: 'dune-imperium-cards-preview-dialog',

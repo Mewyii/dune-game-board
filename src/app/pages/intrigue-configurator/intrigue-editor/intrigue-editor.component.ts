@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { IntrigueCard, intriguesTypes } from 'src/app/constants/intrigues';
 import { combatUnitTypes, resourceTypes, rewardTypes } from 'src/app/models';
+import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
 
 @Component({
   selector: 'dune-intrigue-editor',

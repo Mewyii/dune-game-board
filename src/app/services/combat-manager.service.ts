@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from './players.service';
 import { SettingsService } from './settings.service';
+import { Player } from '../models/player';
 
 export interface PlayerCombatUnits {
   playerId: number;
@@ -197,20 +197,64 @@ export class CombatManager {
     }
   }
 
-  public addAllPossibleUnitsToCombat(playerId: number, unitsGainedThisTurn: number) {
+  public addAllPossibleTroopsToCombat(playerId: number, troopsGainedThisTurn: number) {
     const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
     if (!combatUnits) {
-      return;
+      return 0;
     }
-    let unitsAllowedToEnterCombat = 2 + unitsGainedThisTurn;
-    if (combatUnits.shipsInGarrison > 0) {
-      this.addPlayerShipsToCombat(playerId, 1);
-      unitsAllowedToEnterCombat -= 1;
-    }
-    const troopsToAdd =
-      combatUnits.troopsInGarrison <= unitsAllowedToEnterCombat ? combatUnits.troopsInGarrison : unitsAllowedToEnterCombat;
 
-    this.addPlayerTroopsToCombat(playerId, troopsToAdd);
+    if (combatUnits.troopsInGarrison > 0) {
+      const troopsToAdd =
+        combatUnits.troopsInGarrison <= troopsGainedThisTurn ? combatUnits.troopsInGarrison : troopsGainedThisTurn;
+
+      this.addPlayerTroopsToCombat(playerId, troopsToAdd);
+
+      return troopsToAdd;
+    } else {
+      return 0;
+    }
+  }
+
+  public addAllPossibleDreadnoughtsToCombat(playerId: number, dreadnoughtsGainedThisTurn: number) {
+    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    if (!combatUnits) {
+      return 0;
+    }
+    if (combatUnits.shipsInGarrison > 0) {
+      const shipsToAdd =
+        combatUnits.shipsInGarrison <= dreadnoughtsGainedThisTurn ? combatUnits.shipsInGarrison : dreadnoughtsGainedThisTurn;
+
+      this.addPlayerShipsToCombat(playerId, shipsToAdd);
+      return shipsToAdd;
+    } else {
+      return 0;
+    }
+  }
+
+  public addAllPossibleUnitsToCombat(playerId: number, deployableUnitAmount: number) {
+    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    if (!combatUnits) {
+      return 0;
+    }
+    let addedUnits = 0;
+
+    let unitsAllowedToEnterCombat = deployableUnitAmount;
+    if (combatUnits.shipsInGarrison > 0) {
+      const shipsToAdd =
+        combatUnits.shipsInGarrison <= unitsAllowedToEnterCombat ? combatUnits.shipsInGarrison : unitsAllowedToEnterCombat;
+
+      this.addPlayerShipsToCombat(playerId, shipsToAdd);
+      unitsAllowedToEnterCombat -= shipsToAdd;
+      addedUnits += shipsToAdd;
+    }
+    if (combatUnits.troopsInGarrison > 0) {
+      const troopsToAdd =
+        combatUnits.troopsInGarrison <= unitsAllowedToEnterCombat ? combatUnits.troopsInGarrison : unitsAllowedToEnterCombat;
+
+      this.addPlayerTroopsToCombat(playerId, troopsToAdd);
+      addedUnits += troopsToAdd;
+    }
+    return addedUnits;
   }
 
   public setPlayerShipsInCombat(playerId: number, ships: number) {

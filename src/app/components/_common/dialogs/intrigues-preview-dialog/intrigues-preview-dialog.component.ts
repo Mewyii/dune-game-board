@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { IntrigueDeckCard } from 'src/app/services/intrigues.service';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
 
 @Component({
   selector: 'dune-intrigues-preview-dialog',

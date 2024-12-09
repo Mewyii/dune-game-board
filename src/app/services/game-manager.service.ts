@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isResource, isResourceType } from '../helpers/resources';
 import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
 import { LoggingService } from './log.service';
-import { Player, PlayersService } from './players.service';
+import { PlayersService } from './players.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
@@ -13,7 +13,7 @@ import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
 import { MinorHousesService } from './minor-houses.service';
-import { TechTileCard, TechTilesService } from './tech-tiles.service';
+import { TechTilesService } from './tech-tiles.service';
 import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
@@ -29,8 +29,11 @@ import { getCardCostModifier, getFactionInfluenceModifier, hasFactionInfluenceMo
 import { isFactionType } from '../helpers/faction-types';
 import { PlayerRewardChoicesService } from './player-reward-choices.service';
 import { TranslateService } from './translate-service';
-import { IntrigueDeckCard, IntriguesService } from './intrigues.service';
-import { TurnInfo, TurnInfoService } from './turn-info.service';
+import { IntriguesService } from './intrigues.service';
+import { TurnInfoService } from './turn-info.service';
+import { IntrigueDeckCard } from '../models/intrigue';
+import { Player } from '../models/player';
+import { TechTileCard } from '../models/tech-tile';
 
 export interface AgentOnField {
   fieldId: string;
@@ -448,6 +451,8 @@ export class GameManager {
             for (const reward of card.revealEffects) {
               this.addRewardToPlayer(player, reward, card);
             }
+          } else if (!player.isAI && (hasRewardOptions || hasRewardConversion)) {
+            this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, card.revealEffects);
           } else if (player.isAI && hasRewardOptions) {
             const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
             const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
@@ -753,9 +758,39 @@ export class GameManager {
     this.availablePlayerAgentsSubject.next(availablePlayerAgents);
   }
 
-  public setNextPlayerActive(turnPhase: RoundPhaseType) {
-    if (turnPhase === 'agent-placement') {
-      this.cardsService.discardPlayedPlayerCard(this.activePlayerId);
+  public addTroopsToPlayer(playerId: number, amount: number) {
+    this.audioManager.playSound('troops');
+    this.combatManager.addPlayerTroopsToGarrison(playerId, amount);
+    this.turnInfoService.updatePlayerTurnInfo(playerId, { troopsGainedThisTurn: amount });
+
+    this.setPreferredFieldsForAIPlayer(playerId);
+  }
+
+  public addDreadnoughtToPlayer(playerId: number) {
+    this.audioManager.playSound('dreadnought');
+    this.combatManager.addPlayerShipsToGarrison(playerId, 1);
+    this.turnInfoService.updatePlayerTurnInfo(playerId, { dreadnoughtsGainedThisTurn: 1 });
+
+    this.setPreferredFieldsForAIPlayer(playerId);
+  }
+
+  public endPlayerTurn(playerId: number) {
+    const player = this.playerManager.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+    const roundPhase = this.currentRoundPhase;
+
+    if (roundPhase === 'agent-placement') {
+      if (player.turnState === 'agent-placement') {
+        this.cardsService.discardPlayedPlayerCard(this.activePlayerId);
+      } else if (player.turnState === 'reveal') {
+        const playerHand = this.cardsService.getPlayerHand(player.id);
+        if (playerHand && playerHand.cards) {
+          this.cardsService.discardPlayerHandCards(player.id);
+          this.playerManager.setTurnStateForPlayer(player.id, 'revealed');
+        }
+      }
 
       const players = this.playerManager.getPlayers();
       const nextPlayer = players.find((x) => x.id > this.activePlayerId) ?? players[0];
@@ -767,11 +802,11 @@ export class GameManager {
           this.setPreferredFieldsForAIPlayer(nextPlayer.id);
         }
       }
-    }
-    if (turnPhase === 'combat') {
+    } else if (roundPhase === 'combat') {
       const nextPlayerId = this.playerManager.getNextPlayerId(this.activeCombatPlayerId);
       this.activeCombatPlayerId = nextPlayerId;
     }
+    this.turnInfoService.clearPlayerTurnInfo(playerId);
   }
 
   public setRoundState(turnPhase: RoundPhaseType) {
@@ -1236,8 +1271,6 @@ export class GameManager {
       return;
     }
 
-    this.turnInfoService.clearPlayerTurnInfo(player.id);
-
     const gameState = this.getGameState(player);
 
     if (turnInfo.cardDrawOrDestroyAmount > 0) {
@@ -1252,6 +1285,7 @@ export class GameManager {
           this.playerManager.addFocusTokens(player.id, 1);
         }
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 0 });
     }
 
     if (turnInfo.shippingAmount > 0) {
@@ -1264,6 +1298,7 @@ export class GameManager {
         this.playerManager.addFocusTokens(player.id, 1);
         this.addRewardToPlayer(player, { type: 'water', amount: turnInfo.shippingAmount });
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { shippingAmount: 0 });
     }
     if (turnInfo.locationControlAmount > 0) {
       const gameState = this.getGameState(player);
@@ -1271,15 +1306,19 @@ export class GameManager {
       for (let i = 0; i < turnInfo.locationControlAmount; i++) {
         this.aiControlLocation(player, gameState);
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { locationControlAmount: 0 });
     }
     if (turnInfo.factionInfluenceUpChoiceAmount > 0) {
       this.aiAddFactionInfluenceUpChoice(player, turnInfo.factionInfluenceUpChoiceAmount);
+      this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 0 });
     }
     if (turnInfo.factionInfluenceUpChoiceTwiceAmount > 0) {
       this.aiAddFactionInfluenceUpChoiceTwice(player, turnInfo.factionInfluenceUpChoiceTwiceAmount);
+      this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceUpChoiceTwiceAmount: 0 });
     }
     if (turnInfo.factionInfluenceDownChoiceAmount > 0) {
       this.addFactionInfluenceDownChoiceForAI(player.id, turnInfo.factionInfluenceDownChoiceAmount);
+      this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 0 });
     }
     if (turnInfo.signetRingAmount > 0) {
       for (let i = 0; i < turnInfo.signetRingAmount; i++) {
@@ -1287,6 +1326,7 @@ export class GameManager {
           type: 'signet-ring',
         });
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
     if (turnInfo.canLiftAgent) {
       const playerAgentsOnOtherFields = this.agentsOnFields.filter(
@@ -1296,10 +1336,16 @@ export class GameManager {
         shuffle(playerAgentsOnOtherFields);
         this.removePlayerAgentFromField(player.id, playerAgentsOnOtherFields[0].fieldId);
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { canLiftAgent: false });
     }
     if (turnInfo.canEnterCombat) {
       const aiPlayer = this.aIManager.getAIPlayer(player.id);
       if (!aiPlayer) {
+        return;
+      }
+
+      const deployableUnits = this.turnInfoService.getDeployablePlayerUnits(player.id);
+      if (!deployableUnits) {
         return;
       }
 
@@ -1312,19 +1358,39 @@ export class GameManager {
 
       if (combatDecision) {
         if (this.isFinale) {
-          this.combatManager.addAllPossibleUnitsToCombat(player.id, turnInfo.unitsGainedThisTurn);
+          const troopsAdded = this.combatManager.addAllPossibleTroopsToCombat(player.id, turnInfo.troopsGainedThisTurn);
+          const dreadnoughtsAdded = this.combatManager.addAllPossibleDreadnoughtsToCombat(
+            player.id,
+            turnInfo.dreadnoughtsGainedThisTurn
+          );
+          const unitsAdded = this.combatManager.addAllPossibleUnitsToCombat(player.id, turnInfo.deployableUnits);
+          this.turnInfoService.updatePlayerTurnInfo(player.id, {
+            deployedUnitsThisTurn: unitsAdded,
+            deployedTroopsThisTurn: troopsAdded,
+            deployedDreadnoughtsThisTurn: dreadnoughtsAdded,
+          });
         } else if (combatDecision.includes('win')) {
           if (playerCombatUnits && enemyCombatScores) {
             const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
               playerCombatUnits,
               enemyCombatScores,
-              turnInfo.unitsGainedThisTurn + 2,
+              turnInfo.deployableUnits + turnInfo.troopsGainedThisTurn + turnInfo.dreadnoughtsGainedThisTurn,
               playerHasAgentsLeft,
               playerIntrigueCount > 2
             );
 
             if (addUnitsDecision === 'all') {
-              this.combatManager.addAllPossibleUnitsToCombat(player.id, turnInfo.unitsGainedThisTurn);
+              const troopsAdded = this.combatManager.addAllPossibleTroopsToCombat(player.id, turnInfo.troopsGainedThisTurn);
+              const dreadnoughtsAdded = this.combatManager.addAllPossibleDreadnoughtsToCombat(
+                player.id,
+                turnInfo.dreadnoughtsGainedThisTurn
+              );
+              const unitsAdded = this.combatManager.addAllPossibleUnitsToCombat(player.id, turnInfo.deployableUnits);
+              this.turnInfoService.updatePlayerTurnInfo(player.id, {
+                deployedUnitsThisTurn: unitsAdded,
+                deployedTroopsThisTurn: troopsAdded,
+                deployedDreadnoughtsThisTurn: dreadnoughtsAdded,
+              });
             } else if (addUnitsDecision === 'minimum') {
               this.addMinimumUnitsToCombat(player.id, playerCombatUnits, enemyCombatScores, playerHasAgentsLeft);
             }
@@ -1338,6 +1404,7 @@ export class GameManager {
     }
     if (turnInfo.techBuyOptionsWithAgents) {
       for (const techBuyOption of turnInfo.techBuyOptionsWithAgents) {
+        this.turnInfoService.setPlayerTurnInfo(player.id, { techBuyOptionsWithAgents: [] });
         this.aiBuyTechOrStackTechAgents(player.id, techBuyOption);
       }
     }
@@ -1570,6 +1637,8 @@ export class GameManager {
     const rivalId = enemyScore.sort((a, b) => b.victoryPoints - a.victoryPoints)[0];
     const rival = this.playerManager.getPlayer(rivalId.playerId);
 
+    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(player.id);
+
     return {
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
@@ -1609,6 +1678,7 @@ export class GameManager {
       occupiedLocations,
       freeLocations,
       rival,
+      playerTurnInfos,
     };
   }
 
@@ -1902,11 +1972,11 @@ export class GameManager {
     } else if (rewardType === 'troop') {
       this.audioManager.playSound('troops', reward.amount);
       this.combatManager.addPlayerTroopsToGarrison(player.id, reward.amount ?? 1);
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { unitsGainedThisTurn: reward.amount ?? 1 });
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { troopsGainedThisTurn: reward.amount ?? 1 });
     } else if (rewardType === 'dreadnought') {
       this.audioManager.playSound('dreadnought');
       this.combatManager.addPlayerShipsToGarrison(player.id, 1);
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { unitsGainedThisTurn: reward.amount ?? 1 });
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { troopsGainedThisTurn: reward.amount ?? 1 });
     } else if (rewardType === 'card-draw') {
       this.audioManager.playSound('card-draw');
       this.cardsService.drawPlayerCardsFromDeck(player.id, reward.amount ?? 1);
@@ -1957,7 +2027,7 @@ export class GameManager {
       this.loggingService.logPlayerTrashedCard(player.id, this.translateService.translate(card.name));
     } else if (reward.type === 'combat') {
       this.audioManager.playSound('combat');
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { canEnterCombat: true });
+      this.turnInfoService.setPlayerTurnInfo(player.id, { canEnterCombat: true, deployableUnits: 2 });
     } else if (reward.type === 'intrigue-draw') {
       const enemiesIntrigues = this.intriguesService.getEnemyIntrigues(player.id).filter((x) => x.intrigues.length > 3);
       for (const enemyIntrigues of enemiesIntrigues) {

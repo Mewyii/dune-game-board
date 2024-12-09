@@ -1,17 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
-import { IntrigueCard, IntrigueCardBase, intriguesTypes, IntrigueType } from '../constants/intrigues';
 import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
-
-export interface IntrigueDeckCard extends IntrigueCardBase {
-  id: string;
-}
-
-export interface PlayerIntrigueStack {
-  playerId: number;
-  intrigues: IntrigueDeckCard[];
-}
+import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
 
 @Injectable({
   providedIn: 'root',

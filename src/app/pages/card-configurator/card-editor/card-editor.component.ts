@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
 import {
   activeFactionTypes,
   combatUnitTypes,
@@ -9,6 +8,7 @@ import {
   resourceTypes,
   rewardTypes,
 } from 'src/app/models';
+import { ImperiumCard } from 'src/app/models/imperium-card';
 
 @Component({
   selector: 'dune-card-editor',

@@ -1,5 +1,5 @@
-import { ImperiumCard } from '../constants/imperium-cards';
 import { ActionType } from '../models';
+import { ImperiumCard } from '../models/imperium-card';
 import { CardFactionAndFieldAccess, ImperiumDeckCard } from '../services/cards.service';
 
 export function getCardsFieldAccess(cards: ImperiumDeckCard[]): ActionType[] {

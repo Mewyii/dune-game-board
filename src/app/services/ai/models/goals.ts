@@ -1,15 +1,16 @@
 import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
-import { Player } from '../../players.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
 import { ActionField, ActiveFactionType, Resource } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { Conflict } from 'src/app/constants/conflicts';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard } from '../../cards.service';
-import { TechTileCard } from '../../tech-tiles.service';
-import { IntrigueDeckCard } from '../../intrigues.service';
+import { TurnInfo } from 'src/app/models/turn-info';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { Player } from 'src/app/models/player';
+import { TechTileCard } from 'src/app/models/tech-tile';
 
 export type AIGoals =
   | 'high-council'
@@ -75,6 +76,7 @@ export interface GameState {
   freeLocations: string[];
   occupiedLocations: string[];
   rival?: Player;
+  playerTurnInfos?: TurnInfo;
 }
 
 export interface AIGoal {

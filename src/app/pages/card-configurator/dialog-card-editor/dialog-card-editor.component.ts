@@ -1,7 +1,7 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CardEditorComponent } from '../card-editor/card-editor.component';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
+import { ImperiumCard } from 'src/app/models/imperium-card';
 
 @Component({
   selector: 'dune-dialog-card-editor',

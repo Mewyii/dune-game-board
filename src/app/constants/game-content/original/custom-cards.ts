@@ -1,4 +1,4 @@
-import { CustomCard } from 'src/app/services/cards.service';
+import { CustomCard } from 'src/app/models/imperium-card';
 
 export const customCardsOriginal: CustomCard[] = [
   {

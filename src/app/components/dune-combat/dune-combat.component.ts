@@ -4,10 +4,11 @@ import { boardSettings } from 'src/app/constants/board-settings';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayersService } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SettingsService } from 'src/app/services/settings.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { Player } from 'src/app/models/player';
 
 export interface CombatScore {
   playerId: number;

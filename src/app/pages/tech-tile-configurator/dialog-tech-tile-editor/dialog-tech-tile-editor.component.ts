@@ -1,7 +1,7 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TechTileCard } from 'src/app/services/tech-tiles.service';
 import { TechTileEditorComponent } from '../tech-tile-editor/tech-tile-editor.component';
+import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Component({
   selector: 'dune-dialog-tech-tile-editor',

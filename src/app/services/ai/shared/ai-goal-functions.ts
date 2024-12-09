@@ -1,8 +1,8 @@
 import { clamp } from 'lodash';
 import { Resource, ResourceType, Reward, RewardType } from 'src/app/models';
+import { Player } from 'src/app/models/player';
 import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { Player } from 'src/app/services/players.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
 
 export function getAccumulatedSpice(gameState: GameState, fieldId: string) {

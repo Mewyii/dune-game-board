@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DuneLocation, RewardType } from 'src/app/models';
-import { isResourceType } from 'src/app/helpers/resources';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
-import { Player, PlayersService } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'app-dune-location',

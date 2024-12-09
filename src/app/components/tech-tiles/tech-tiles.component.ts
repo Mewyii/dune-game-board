@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { FactionType, LanguageString, RewardType } from 'src/app/models';
+import { TechTileCard } from 'src/app/models/tech-tile';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { TechTileCard, TechTilesService } from 'src/app/services/tech-tiles.service';
+import { TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({

@@ -1,5 +1,5 @@
-import { ImperiumCard } from '../constants/imperium-cards';
 import { FactionType } from '../models';
+import { ImperiumCard } from '../models/imperium-card';
 import { ImperiumDeckCard } from '../services/cards.service';
 import { ImperiumRowModifier, PlayerGameModifiers } from '../services/game-modifier.service';
 import { isImperiumDeckCard } from './cards';

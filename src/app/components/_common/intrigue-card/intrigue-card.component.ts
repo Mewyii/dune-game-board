@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { IntrigueCard } from 'src/app/constants/intrigues';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { ActionType, FactionType, RewardType } from 'src/app/models';
-import { IntrigueDeckCard } from 'src/app/services/intrigues.service';
+import { IntrigueCard, IntrigueDeckCard } from 'src/app/models/intrigue';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 

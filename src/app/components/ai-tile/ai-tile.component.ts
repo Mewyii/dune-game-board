@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AIDIfficultyTypes, AIManager, AIPlayer, AIVariableValues, AIVariables } from 'src/app/services/ai/ai.manager';
+import { Player } from 'src/app/models/player';
+import { AIManager, AIPlayer, AIVariableValues, AIVariables } from 'src/app/services/ai/ai.manager';
 import { aiPersonalities } from 'src/app/services/ai/constants';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayersService } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({

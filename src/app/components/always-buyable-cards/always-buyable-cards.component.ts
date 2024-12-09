@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { AppMode, Settings } from 'src/app/constants/board-settings';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
+import { AppMode } from 'src/app/constants/board-settings';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { RewardType } from 'src/app/models';
+import { ImperiumCard } from 'src/app/models/imperium-card';
+import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { LoggingService } from 'src/app/services/log.service';
-import { Player, PlayersService, PlayerTurnState } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 

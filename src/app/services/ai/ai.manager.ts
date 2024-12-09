@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from '../players.service';
 import { getNumberAverage, normalizeNumber, randomizeArray } from '../../helpers/common';
 import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from './models';
 import { aiPersonalities } from './constants';
@@ -10,7 +9,6 @@ import { PlayerCombatScore, PlayerCombatUnits } from '../combat-manager.service'
 import {
   ActionField,
   ActionType,
-  ActiveFactionType,
   activeFactionTypes,
   DuneLocation,
   FactionInfluence,
@@ -20,12 +18,12 @@ import {
 import { getDesire, getResourceAmount } from './shared/ai-goal-functions';
 import { ImperiumDeckCard } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
-import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { ImperiumRowModifier } from '../game-modifier.service';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
-import { IntrigueDeckCard } from '../intrigues.service';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { Player } from 'src/app/models/player';
 
 export interface AIPlayer {
   playerId: number;

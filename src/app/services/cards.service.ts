@@ -4,15 +4,9 @@ import { cloneDeep } from 'lodash';
 import { shuffle } from 'lodash';
 import { PlayersService } from './players.service';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
-import { ImperiumCard } from '../constants/imperium-cards';
 import { ActionType, FactionType } from '../models';
 import { SettingsService } from './settings.service';
-
-export type CustomCardType = 'other' | 'unlimited' | 'limited';
-
-export interface CustomCard extends ImperiumCard {
-  type: CustomCardType;
-}
+import { ImperiumCard } from '../models/imperium-card';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;

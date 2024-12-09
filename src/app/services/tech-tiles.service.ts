@@ -2,23 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
 import { techTiles } from '../constants/tech-tiles';
-import { FactionType, LanguageString, Reward } from '../models';
-import { LanguageStringAndFontSize } from '../constants/imperium-cards';
-import { Player } from './players.service';
-import { GameState } from './ai/models';
-import { GameModifiers } from './game-modifier.service';
-
-export interface TechTileCard {
-  name: LanguageString;
-  faction?: FactionType;
-  costs: number;
-  effects?: Reward[];
-  customEffect?: LanguageStringAndFontSize;
-  buyEffects?: Reward[];
-  imageUrl?: string;
-  aiEvaluation: (player: Player, gameState: GameState) => number;
-  gameModifiers?: GameModifiers;
-}
+import { TechTileCard } from '../models/tech-tile';
 
 export interface PlayerTechTile {
   playerId: number;

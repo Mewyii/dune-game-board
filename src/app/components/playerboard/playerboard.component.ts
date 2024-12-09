@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
-import { cloneDeep } from 'lodash';
-import { Player, PlayersService } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -14,7 +13,9 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
-import { IntriguesService, PlayerIntrigueStack } from 'src/app/services/intrigues.service';
+import { IntriguesService } from 'src/app/services/intrigues.service';
+import { PlayerIntrigueStack } from 'src/app/models/intrigue';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'app-playerboard',

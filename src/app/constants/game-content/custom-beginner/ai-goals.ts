@@ -17,10 +17,10 @@ import {
 } from 'src/app/services/ai/shared';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { ActionField } from 'src/app/models/location';
-import { Player } from 'src/app/services/players.service';
 import { FactionType, Resource, RewardType } from '../../../models';
 import { isResourceArray } from 'src/app/helpers/resources';
 import { normalizeNumber } from 'src/app/helpers/common';
+import { Player } from 'src/app/models/player';
 
 export const aiGoalsCustomBeginner: FieldsForGoals = {
   'high-council': {

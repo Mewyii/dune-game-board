@@ -5,7 +5,6 @@ import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayersService, PlayerTurnState } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
@@ -13,6 +12,8 @@ import { PlayerScoreManager } from 'src/app/services/player-score-manager.servic
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { Player, PlayerTurnState } from 'src/app/models/player';
+import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
   selector: 'app-dune-action',

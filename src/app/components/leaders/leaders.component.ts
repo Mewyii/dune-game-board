@@ -10,14 +10,16 @@ import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manage
 import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
 import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
-import { Player, PlayersService } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
-import { PlayerTechTile, TechTileCard, TechTilesService } from 'src/app/services/tech-tiles.service';
+import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
+import { Player } from 'src/app/models/player';
+import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Component({
   selector: 'dune-leaders',
@@ -193,10 +195,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onAddTroopToGarrisonClicked(playerId: number) {
-    this.audioManager.playSound('troops');
-    this.combatManager.addPlayerTroopsToGarrison(playerId, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.gameManager.addTroopsToPlayer(playerId, 1);
   }
 
   public onRemoveTroopFromGarrisonClicked(playerId: number) {
@@ -208,10 +207,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public onAddShipToGarrisonClicked(playerId: number) {
-    this.audioManager.playSound('dreadnought');
-    this.combatManager.addPlayerShipsToGarrison(playerId, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.gameManager.addDreadnoughtToPlayer(playerId);
   }
 
   public onRemoveShipFromGarrisonClicked(playerId: number) {
@@ -351,16 +347,9 @@ export class LeadersComponent implements OnInit {
     this.gameManager.setPlayerRevealTurn(playerId);
   }
 
-  public onNextPlayerClicked() {
-    if (this.currentPlayer && this.currentPlayer.turnState === 'reveal') {
-      const playerHand = this.cardsService.getPlayerHand(this.currentPlayer.id);
-      if (playerHand && playerHand.cards) {
-        this.cardsService.discardPlayerHandCards(this.currentPlayer.id);
-        this.playerManager.setTurnStateForPlayer(this.currentPlayer.id, 'revealed');
-      }
-    }
+  public onEndTurnClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
-    this.gameManager.setNextPlayerActive('agent-placement');
+    this.gameManager.endPlayerTurn(playerId);
   }
 
   public onAiActionClicked(playerId: number) {

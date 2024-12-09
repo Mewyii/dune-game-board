@@ -1,7 +1,7 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IntrigueEditorComponent } from '../intrigue-editor/intrigue-editor.component';
-import { IntrigueCard } from 'src/app/constants/intrigues';
+import { IntrigueCard } from 'src/app/models/intrigue';
 
 @Component({
   selector: 'dune-dialog-intrigue-editor',

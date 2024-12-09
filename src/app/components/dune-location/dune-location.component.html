@@ -15,7 +15,7 @@
         [style.border-color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
       >
-        <span *ngIf="owner" class="location-owner-name">{{ leaderInitials }}</span>
+        <span *ngIf="owner" class="location-owner-name font-medieval">{{ leaderInitials.toUpperCase() }}</span>
       </div>
       <div class="location-owner-reward-area">
         <div class="location-owner-game-reward-area" [style.background-color]="location.color">

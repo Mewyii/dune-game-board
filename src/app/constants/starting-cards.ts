@@ -1,4 +1,4 @@
-import { ImperiumCard } from './imperium-cards';
+import { ImperiumCard } from '../models/imperium-card';
 
 export const startingCards: ImperiumCard[] = [
   {

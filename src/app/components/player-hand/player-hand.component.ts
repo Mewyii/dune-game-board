@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { RewardType } from 'src/app/models';
 import { AudioManager } from 'src/app/services/audio-manager.service';
-import { CardsService, ImperiumDeckCard, PlayerCard, PlayerCardStack } from 'src/app/services/cards.service';
+import { CardsService, ImperiumDeckCard, PlayerCardStack } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { Player, PlayersService } from 'src/app/services/players.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { LoggingService } from 'src/app/services/log.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { IntrigueDeckCard, IntriguesService, PlayerIntrigueStack } from 'src/app/services/intrigues.service';
+import { IntriguesService } from 'src/app/services/intrigues.service';
 import { PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { Player } from 'src/app/models/player';
 
 @Component({
   selector: 'dune-player-hand',

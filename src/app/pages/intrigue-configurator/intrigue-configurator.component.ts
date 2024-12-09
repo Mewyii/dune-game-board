@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-intrigue-editor.component';
 import { IntrigueConfiguratorService } from 'src/app/services/configurators/intrigue-configurator.service';
-import { IntrigueCard } from 'src/app/constants/intrigues';
+import { IntrigueCard } from 'src/app/models/intrigue';
 
 @Component({
   selector: 'dune-intrigue-configurator',

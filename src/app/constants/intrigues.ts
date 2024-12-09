@@ -1,17 +1,4 @@
-import { LanguageString, Reward } from '../models';
-
-export const intriguesTypes = ['complot', 'combat'] as const;
-export type IntrigueType = (typeof intriguesTypes)[number];
-
-export interface IntrigueCardBase {
-  name: LanguageString;
-  effects: Reward[];
-  type: IntrigueType;
-}
-
-export interface IntrigueCard extends IntrigueCardBase {
-  amount: number;
-}
+import { IntrigueCard } from '../models/intrigue';
 
 export const intrigues: IntrigueCard[] = [
   {
@@ -381,14 +368,14 @@ export const intrigues: IntrigueCard[] = [
   },
   {
     name: {
-      en: 'Substances',
-      de: 'Substanzen',
+      en: 'Deployment',
+      de: 'Aufmarsch',
     },
     type: 'complot',
     amount: 3,
     effects: [
       {
-        type: 'focus',
+        type: 'combat',
       },
     ],
   },

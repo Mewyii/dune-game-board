@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
 import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
@@ -7,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ActionType, ActiveFactionType } from 'src/app/models';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { ImperiumCard } from 'src/app/models/imperium-card';
 
 @Component({
   selector: 'dune-card-configurator',

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Leader, leaders } from '../constants/leaders';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from './players.service';
 import { cloneDeep, shuffle } from 'lodash';
 import { LeaderImageOnly, leadersOld } from '../constants/leaders-old';
+import { Player } from '../models/player';
 
 export interface PlayerLeader {
   playerId: number;

@@ -1,22 +1,4 @@
-import { ActionType, ActiveFactionType, LanguageString, Reward } from '../models';
-
-export interface LanguageStringAndFontSize extends LanguageString {
-  fontSize?: 'medium' | 'small';
-}
-
-export interface ImperiumCard {
-  name: LanguageString;
-  faction?: ActiveFactionType;
-  persuasionCosts?: number;
-  fieldAccess?: ActionType[];
-  agentEffects?: Reward[];
-  customAgentEffect?: LanguageStringAndFontSize;
-  revealEffects?: Reward[];
-  customRevealEffect?: LanguageStringAndFontSize;
-  buyEffects?: Reward[];
-  imageUrl?: string;
-  cardAmount?: number;
-}
+import { ImperiumCard } from '../models/imperium-card';
 
 export const imperiumCards: ImperiumCard[] = [
   {

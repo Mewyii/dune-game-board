@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
-import { TechTileCard, TechTilesService } from 'src/app/services/tech-tiles.service';
+import { TechTilesService } from 'src/app/services/tech-tiles.service';
 import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-tech-tile-editor.component';
+import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Component({
   selector: 'dune-tech-tile-configurator',

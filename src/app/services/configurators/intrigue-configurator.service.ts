@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { IntrigueCard, intrigues } from 'src/app/constants/intrigues';
+import { intrigues } from 'src/app/constants/intrigues';
+import { IntrigueCard } from 'src/app/models/intrigue';
 
 @Injectable({
   providedIn: 'root',

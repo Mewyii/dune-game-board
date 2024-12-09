@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { TranslateService } from '../translate-service';
-import { ImperiumCard, imperiumCards } from 'src/app/constants/imperium-cards';
 import { startingCards } from 'src/app/constants/starting-cards';
+import { ImperiumCard } from 'src/app/models/imperium-card';
+import { imperiumCards } from 'src/app/constants/imperium-cards';
 
 export interface Log {
   fieldId: string;

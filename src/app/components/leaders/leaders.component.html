@@ -32,7 +32,7 @@
       *ngIf="currentRound"
       mat-fab
       color="accent"
-      (click)="onNextPlayerClicked()"
+      (click)="onEndTurnClicked(currentPlayer.id)"
       matTooltip="End Turn"
       [disabled]="currentPlayer.isAI && currentPlayer.turnState === 'reveal'"
     >

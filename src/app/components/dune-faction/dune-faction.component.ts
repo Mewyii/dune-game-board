@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Faction, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { Player, PlayersService } from 'src/app/services/players.service';
-import { PlayerScore, PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { SettingsService } from 'src/app/services/settings.service';
 import { AppMode } from 'src/app/constants/board-settings';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 

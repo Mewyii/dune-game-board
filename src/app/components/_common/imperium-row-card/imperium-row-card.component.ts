@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { ImperiumCard } from 'src/app/constants/imperium-cards';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { ActionType, FactionType, RewardType } from 'src/app/models';
+import { ImperiumCard } from 'src/app/models/imperium-card';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
