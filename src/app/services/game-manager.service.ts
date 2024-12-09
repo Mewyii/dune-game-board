@@ -930,7 +930,7 @@ export class GameManager {
           this.aiBuyCardsFromImperiumRow(playerId, playerPersuasionAvailable);
 
           const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
-          this.aiTrashCardsFromHandAndDiscardPile(playerId, playerFocusTokens);
+          this.aiUseFocusTokens(playerId, playerFocusTokens);
 
           this.playerManager.setTurnStateForPlayer(playerId, 'revealed');
         }
@@ -1500,15 +1500,20 @@ export class GameManager {
     }
   }
 
-  private aiTrashCardsFromHandAndDiscardPile(playerId: number, focusTokens: number) {
+  private aiUseFocusTokens(playerId: number, focusTokens: number) {
     const cards: ImperiumDeckCard[] = [];
-    const playerHand = this.cardsService.getPlayerHand(playerId);
-    if (playerHand) {
-      cards.push(...playerHand.cards);
+    const playerHandCards = this.cardsService.getPlayerHand(playerId)?.cards;
+    if (playerHandCards) {
+      cards.push(...playerHandCards);
     }
-    const playerDiscardPile = this.cardsService.getPlayerDiscardPile(playerId);
-    if (playerDiscardPile) {
-      cards.push(...playerDiscardPile.cards);
+    const playerDiscardPileCards = this.cardsService.getPlayerDiscardPile(playerId)?.cards;
+    if (playerDiscardPileCards) {
+      cards.push(...playerDiscardPileCards);
+    }
+
+    const playerDeckCards = this.cardsService.getPlayerDeck(playerId)?.cards;
+    if ((playerDeckCards?.length ?? 0) + (playerHandCards?.length ?? 0) + (playerDiscardPileCards?.length ?? 0) < 8) {
+      return;
     }
 
     const player = this.playerManager.getPlayer(playerId);
@@ -1528,7 +1533,7 @@ export class GameManager {
       this.loggingService.logPlayerTrashedCard(playerId, this.translateService.translate(cardToTrash.name));
 
       if (focusTokens > 1) {
-        this.aiTrashCardsFromHandAndDiscardPile(playerId, focusTokens - 1);
+        this.aiUseFocusTokens(playerId, focusTokens - 1);
       }
     }
   }
