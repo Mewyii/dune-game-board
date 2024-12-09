@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { AppMode, GameContent, Settings } from 'src/app/constants/board-settings';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -11,7 +11,7 @@ import { loadSlim } from 'tsparticles-slim';
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.scss'],
 })
-export class GameBoardComponent {
+export class GameBoardComponent implements AfterViewInit {
   public gameContent: GameContent | undefined;
   public mode: AppMode | undefined;
   public eventsEnabled: boolean | undefined;
@@ -20,6 +20,8 @@ export class GameBoardComponent {
   public dust = dust;
   public sand = sand;
   public ships = ships;
+
+  public viewInitialized = false;
 
   constructor(public settingsService: SettingsService, public gameManager: GameManager) {
     this.settingsService.gameContent$.subscribe((gameContent) => {
@@ -32,6 +34,11 @@ export class GameBoardComponent {
     this.settingsService.eventsEnabled$.subscribe((eventsEnabled) => {
       this.eventsEnabled = eventsEnabled;
     });
+  }
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.viewInitialized = true;
+    }, 5000);
   }
 
   async initStars(engine: Engine) {

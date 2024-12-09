@@ -4,10 +4,30 @@
 >
   <app-playerboard></app-playerboard>
   <div class="board">
-    <ng-particles *ngIf="mode === 'game'" [id]="'stars'" [options]="stars" [particlesInit]="initStars"></ng-particles>
-    <ng-particles *ngIf="mode === 'game'" [id]="'ships'" [options]="ships" [particlesInit]="initShips"></ng-particles>
-    <ng-particles *ngIf="mode === 'game'" [id]="'dust'" [options]="dust" [particlesInit]="initDust"></ng-particles>
-    <ng-particles *ngIf="mode === 'game'" [id]="'sand'" [options]="sand" [particlesInit]="initSand"></ng-particles>
+    <ng-particles
+      *ngIf="viewInitialized && mode === 'game'"
+      [id]="'stars'"
+      [options]="stars"
+      [particlesInit]="initStars"
+    ></ng-particles>
+    <ng-particles
+      *ngIf="viewInitialized && mode === 'game'"
+      [id]="'ships'"
+      [options]="ships"
+      [particlesInit]="initShips"
+    ></ng-particles>
+    <ng-particles
+      *ngIf="viewInitialized && mode === 'game'"
+      [id]="'dust'"
+      [options]="dust"
+      [particlesInit]="initDust"
+    ></ng-particles>
+    <ng-particles
+      *ngIf="viewInitialized && mode === 'game'"
+      [id]="'sand'"
+      [options]="sand"
+      [particlesInit]="initSand"
+    ></ng-particles>
     <ng-container *ngFor="let faction of gameContent.factions">
       <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
     </ng-container>
