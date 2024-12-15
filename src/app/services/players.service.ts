@@ -98,7 +98,7 @@ export class PlayersService {
   }
 
   public resetPlayers() {
-    const playerStartingResources = this.settingsService.gameContent.startingResources;
+    const playerStartingResources = this.settingsService.getStartingResources();
     const playerStartingSolari = playerStartingResources.find((x) => x.type === 'solari')?.amount ?? 0;
     const playerStartingSpice = playerStartingResources.find((x) => x.type === 'spice')?.amount ?? 0;
     const playerStartingWater = playerStartingResources.find((x) => x.type === 'water')?.amount ?? 0;
@@ -271,7 +271,7 @@ export class PlayersService {
     players[playerIndex] = {
       ...player,
       hasCouncilSeat: true,
-      permanentPersuasion: player.permanentPersuasion + this.settingsService.gameContent.highCouncilPersuasion,
+      permanentPersuasion: player.permanentPersuasion + this.settingsService.getHighCouncilPersuasionAmount(),
     };
 
     this.playersSubject.next(players);

@@ -28,19 +28,26 @@ export function getRandomElementFromArray<T>(array: Array<T>): T {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-export function mergeObjects<T>(existingModifiers: T, newModifiers: Partial<T>): T {
-  let result: T = existingModifiers;
-  for (const index in existingModifiers) {
+export function mergeObjects<T>(existingObject: T, newObject: Partial<T>): T {
+  let result: T = existingObject;
+  for (const index in existingObject) {
     const key = index as keyof T;
 
-    if (isArray(result[key]) && isArray(newModifiers[key])) {
-      result[key] = [...(result[key] as any), ...(newModifiers[key] as any)] as any;
-    } else if (isNumber(result[key]) && isNumber(newModifiers[key])) {
-      result[key] = ((result[key] as any) + newModifiers[key]) as any as any;
-    } else if (isBoolean(result[key]) && isBoolean(newModifiers[key])) {
-      result[key] = (result[key] || newModifiers[key]) as any;
-    } else if (isObject(result[key]) && isObject(newModifiers[key])) {
-      result[key] = { ...result[key], ...newModifiers[key] } as any;
+    if (isArray(result[key]) && isArray(newObject[key])) {
+      result[key] = [...(result[key] as any), ...(newObject[key] as any)] as any;
+    } else if (isNumber(result[key]) && isNumber(newObject[key])) {
+      result[key] = ((result[key] as any) + newObject[key]) as any as any;
+    } else if (isBoolean(result[key]) && isBoolean(newObject[key])) {
+      result[key] = (result[key] || newObject[key]) as any;
+    } else if (isObject(result[key]) && isObject(newObject[key])) {
+      result[key] = { ...result[key], ...newObject[key] } as any;
+    }
+  }
+  for (const index in newObject) {
+    const key = index as keyof T;
+
+    if (result[key] === undefined) {
+      result[key] = newObject[key] as any;
     }
   }
   return result;

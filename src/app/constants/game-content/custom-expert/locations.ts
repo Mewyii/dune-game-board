@@ -68,8 +68,8 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
-      costs: [{ type: 'water' }],
-      rewards: [{ type: 'troop', amount: 3 }, { type: 'combat' }],
+      costs: [{ type: 'water' }, { type: 'water' }],
+      rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
     },

@@ -11,7 +11,7 @@ import { CardsService } from 'src/app/services/cards.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
-import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { PlayersService } from 'src/app/services/players.service';
 
@@ -50,8 +50,9 @@ export class DuneActionComponent implements OnInit {
 
   public isAccessibleByPlayer = false;
 
-  public actionCosts: Reward[] = [];
-  public costsModifier = 0;
+  public actionCosts: RewardWithModifier[] = [];
+
+  public actionRewards: RewardWithModifier[] = [];
 
   constructor(
     public gameManager: GameManager,
@@ -65,6 +66,7 @@ export class DuneActionComponent implements OnInit {
 
   ngOnInit(): void {
     this.actionCosts = this.actionField.costs ?? [];
+    this.actionRewards = this.actionField.rewards ?? [];
     this.pathToActionType = getActionTypePath(this.actionField.actionType);
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
 
@@ -95,8 +97,8 @@ export class DuneActionComponent implements OnInit {
 
       this.isAccessibleByPlayer = this.getPlayerAccessibility();
 
-      this.costsModifier = this.gameModifierService.getCostModifierForField(this.activePlayerId, this.actionField);
       this.actionCosts = this.gameModifierService.getModifiedCostsForField(this.activePlayerId, this.actionField);
+      this.actionRewards = this.gameModifierService.getModifiedRewardsForField(this.activePlayerId, this.actionField);
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
@@ -117,8 +119,8 @@ export class DuneActionComponent implements OnInit {
     });
 
     this.gameModifierService.playerGameModifiers$.subscribe((x) => {
-      this.costsModifier = this.gameModifierService.getCostModifierForField(this.activePlayerId, this.actionField);
       this.actionCosts = this.gameModifierService.getModifiedCostsForField(this.activePlayerId, this.actionField);
+      this.actionRewards = this.gameModifierService.getModifiedRewardsForField(this.activePlayerId, this.actionField);
     });
 
     this.isHighCouncilField = this.actionField.rewards.some(

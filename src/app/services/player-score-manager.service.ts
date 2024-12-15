@@ -118,14 +118,14 @@ export class PlayerScoreManager {
         this.playerScoresSubject.next(playerScores);
 
         if (newScore === this.factionFriendshipTreshold) {
-          const faction = this.settingsService.gameContent.factions.find((x) => x.type === actionType);
+          const faction = this.settingsService.getFactions().find((x) => x.type === actionType);
           if (faction && faction.levelTwoReward) {
             factionRewards = faction.levelTwoReward;
           }
         }
 
         if (newScore === this.factionAllianceTreshold) {
-          const faction = this.settingsService.gameContent.factions.find((x) => x.type === actionType);
+          const faction = this.settingsService.getFactions().find((x) => x.type === actionType);
           if (faction && faction.levelFourReward) {
             factionRewards = faction.levelFourReward;
           }
@@ -152,7 +152,7 @@ export class PlayerScoreManager {
       };
 
       if (scoreType === 'victoryPoints') {
-        const vpReward = this.settingsService.gameContent.victoryPointBoni?.find((x) => x.score === newPlayerScore)?.reward;
+        const vpReward = this.settingsService.getVictoryPointsBoni()?.find((x) => x.score === newPlayerScore)?.reward;
 
         if (vpReward) {
           if (vpReward.type === 'solari' || vpReward.type === 'spice' || vpReward.type === 'water') {
@@ -198,9 +198,9 @@ export class PlayerScoreManager {
       }
 
       if (scoreType === 'victoryPoints') {
-        const vpReward = this.settingsService.gameContent.victoryPointBoni?.find(
-          (x) => x.score === playerScore[scoreType]
-        )?.reward;
+        const vpReward = this.settingsService
+          .getVictoryPointsBoni()
+          ?.find((x) => x.score === playerScore[scoreType])?.reward;
 
         if (vpReward) {
           if (vpReward.type === 'persuasion') {

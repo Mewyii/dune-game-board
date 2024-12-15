@@ -110,6 +110,14 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_focus.png';
     case 'trash-self':
       return 'assets/images/reward-markers/marker_card_trash_self.png';
+    case 'recruitment-emperor':
+      return 'assets/images/reward-markers/marker_recruitment_emperor.png';
+    case 'recruitment-fremen':
+      return 'assets/images/reward-markers/marker_recruitment_fremen.png';
+    case 'recruitment-bene':
+      return 'assets/images/reward-markers/marker_recruitment_bene.png';
+    case 'recruitment-guild':
+      return 'assets/images/reward-markers/marker_recruitment_guild.png';
     default:
       return '';
   }

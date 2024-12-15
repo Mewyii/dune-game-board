@@ -437,8 +437,8 @@ export class CombatManager {
   }
 
   public getPlayerCombatScore(playerId: number) {
-    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
-    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+    const troopCombatStrength = this.settingsService.getTroopStrength();
+    const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
     const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
     if (playerCombatUnits) {
@@ -455,8 +455,8 @@ export class CombatManager {
   }
 
   public getPlayerCombatScores() {
-    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
-    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+    const troopCombatStrength = this.settingsService.getTroopStrength();
+    const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
     return this.playerCombatUnits.map((x) => ({
       playerId: x.playerId,
@@ -468,8 +468,8 @@ export class CombatManager {
   }
 
   public getEnemyCombatScores(playerId: number): PlayerCombatScore[] {
-    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
-    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+    const troopCombatStrength = this.settingsService.getTroopStrength();
+    const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
     return this.playerCombatUnits
       .filter((x) => x.playerId !== playerId)
@@ -493,8 +493,8 @@ export class CombatManager {
   }
 
   public getCombatScore(troopAmount: number, dreadnoughtAmount: number) {
-    const troopCombatStrength = this.settingsService.gameContent.troopCombatStrength;
-    const dreadnoughtCombatStrength = this.settingsService.gameContent.dreadnoughtCombatStrength;
+    const troopCombatStrength = this.settingsService.getTroopStrength();
+    const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
     return troopAmount * troopCombatStrength + dreadnoughtAmount * dreadnoughtCombatStrength;
   }

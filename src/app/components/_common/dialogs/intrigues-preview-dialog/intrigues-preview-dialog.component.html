@@ -1,6 +1,8 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  <dune-intrigue-card [card]="data.intrigue"></dune-intrigue-card>
+  <div class="intrigues-container">
+    <dune-intrigue-card *ngFor="let intrigue of data.intrigues" [card]="intrigue"></dune-intrigue-card>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>

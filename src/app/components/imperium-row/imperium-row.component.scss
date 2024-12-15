@@ -1,7 +1,4 @@
 .imperium-row-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     width: 250px;
     height: calc(100% - 32px);
     padding: 16px;
@@ -22,7 +19,13 @@
 .cards-container {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    gap: 108px;
+    margin-top: 32px;
+}
+
+.card-container {
     position: relative;
 }
 
@@ -38,6 +41,10 @@ dune-imperium-row-card {
 
 dune-imperium-row-card.desaturated {
     filter: saturate(0.75) brightness(0.75);
+}
+
+dune-imperium-row-card.leaving {
+    filter: drop-shadow(0px 0px 10px rgb(163, 49, 49));
 }
 
 dune-imperium-row-card.buyable {
@@ -113,4 +120,36 @@ dune-imperium-row-card.active {
     justify-content: center;
     align-items: center;
     font-size: larger;
+}
+
+.imperium-deck {
+    height: 171px;
+    width: 115px;
+    border: 6px solid #151515;;
+    border-radius: 8px;
+    position: relative;
+    color: #fffcfa;
+    background-image: url("/assets/images/card-backgrounds/_backside.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+    transition: .66s;
+    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+}
+
+
+.imperium-deck:hover,
+.imperium-deck.active {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    transform: scale(1.1);
+}
+
+.imperium-deck-action-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    z-index: 3;
 }

@@ -1,3 +1,5 @@
+import { ActiveFactionType } from './faction';
+
 export interface TurnInfo {
   playerId: number;
   agentPlacedOnFieldId: string;
@@ -17,4 +19,5 @@ export interface TurnInfo {
   shippingAmount: number;
   locationControlAmount: number;
   signetRingAmount: number;
+  factionRecruitment: ActiveFactionType[];
 }

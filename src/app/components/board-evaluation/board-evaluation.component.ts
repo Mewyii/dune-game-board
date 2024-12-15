@@ -96,9 +96,9 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'dreadnought':
           if (rewards.some((x) => x.type === 'combat')) {
-            value += 8 * amount;
+            value += 9 * amount;
           } else {
-            value += 6 * amount;
+            value += 7 * amount;
           }
           break;
         case 'card-draw':
@@ -180,10 +180,10 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'agent-lift':
         case 'mentat':
-          value += 3.5 * amount;
+          value += 4 * amount;
           break;
         case 'victory-point':
-          value += 6 * amount;
+          value += 10 * amount;
           break;
         case 'signet-ring':
           value += 2 * amount;

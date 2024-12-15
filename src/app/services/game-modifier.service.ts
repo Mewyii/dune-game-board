@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, isArray, sum } from 'lodash';
-import { BehaviorSubject, map } from 'rxjs';
-import { ActionField, ActionType, ActiveFactionType, FactionType, Resource, ResourceType, Reward } from '../models';
+import { cloneDeep, sum } from 'lodash';
+import { BehaviorSubject } from 'rxjs';
+import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, Reward } from '../models';
 import { mergeObjects } from '../helpers/common';
 import { Player } from '../models/player';
 
 export interface GameModifier {
   id: string;
+  currentRoundOnly?: boolean;
 }
 
 export interface FactionInfluenceModifier extends GameModifier {
@@ -52,6 +53,18 @@ export interface FieldCostsModifier extends GameModifier {
   amount: number;
 }
 
+export interface FieldRewardsModifier extends GameModifier {
+  fieldId?: string;
+  actionType?: ActionType;
+  rewardType: ResourceType;
+  amount: number;
+}
+
+export interface FieldBlockedModifier extends GameModifier {
+  fieldId?: string;
+  actionType?: ActionType;
+}
+
 export interface GameModifiers {
   factionInfluence?: FactionInfluenceModifiers;
   imperiumRow?: ImperiumRowModifier[];
@@ -59,10 +72,16 @@ export interface GameModifiers {
   fieldAccess?: FieldAccessModifier[];
   locationChange?: LocationChangeModifier[];
   fieldCost?: FieldCostsModifier[];
+  fieldReward?: FieldRewardsModifier[];
+  fieldBlocked?: FieldBlockedModifier[];
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
   playerId: number;
+}
+
+export interface RewardWithModifier extends Reward {
+  modifier?: 'positive' | 'negative';
 }
 
 @Injectable({
@@ -205,28 +224,7 @@ export class GameModifiersService {
       ?.customActions?.some((x) => x.action === actionType);
   }
 
-  public getCostModifierForField(playerId: number, actionField: ActionField) {
-    const fieldCostModifiers = this.getPlayerGameModifier(playerId, 'fieldCost');
-    if (fieldCostModifiers && actionField.costs) {
-      const actionCosts = cloneDeep(actionField.costs);
-      const fieldCostsType = actionCosts[0].type;
-
-      return sum(
-        fieldCostModifiers
-          .filter(
-            (x) =>
-              x.costType === fieldCostsType &&
-              (!x.actionType || x.actionType === actionField.actionType) &&
-              (!x.fieldId || x.fieldId === actionField.title.en)
-          )
-          .map((x) => x.amount)
-      );
-    } else {
-      return 0;
-    }
-  }
-
-  public getModifiedCostsForField(playerId: number, actionField: ActionField) {
+  public getModifiedCostsForField(playerId: number, actionField: ActionField): RewardWithModifier[] {
     const fieldCostModifiers = this.getPlayerGameModifier(playerId, 'fieldCost');
     if (fieldCostModifiers && actionField.costs) {
       const actionCosts = cloneDeep(actionField.costs);
@@ -245,11 +243,12 @@ export class GameModifiersService {
 
       let remainingCostModifier = costsModifier;
 
-      for (const costs of actionCosts) {
+      for (const costs of actionCosts as RewardWithModifier[]) {
         let costAmount = costs.amount ?? 1;
 
         if (remainingCostModifier > 0) {
           costs.amount = costAmount + remainingCostModifier;
+          costs.modifier = 'negative';
           break;
         } else if (remainingCostModifier < 0) {
           if (Math.abs(remainingCostModifier) >= costAmount) {
@@ -257,6 +256,7 @@ export class GameModifiersService {
             remainingCostModifier -= costAmount;
           } else {
             costs.amount = costAmount - remainingCostModifier;
+            costs.modifier = 'positive';
             break;
           }
         }
@@ -264,6 +264,49 @@ export class GameModifiersService {
       return actionCosts;
     } else {
       return actionField.costs ?? [];
+    }
+  }
+
+  public getModifiedRewardsForField(playerId: number, actionField: ActionField): RewardWithModifier[] {
+    const fieldCostModifiers = this.getPlayerGameModifier(playerId, 'fieldReward');
+    if (fieldCostModifiers && actionField.rewards) {
+      const actionRewards = cloneDeep(actionField.rewards);
+      const fieldCostsType = actionRewards[0].type;
+
+      const rewardModifier = sum(
+        fieldCostModifiers
+          .filter(
+            (x) =>
+              x.rewardType === fieldCostsType &&
+              (!x.actionType || x.actionType === actionField.actionType) &&
+              (!x.fieldId || x.fieldId === actionField.title.en)
+          )
+          .map((x) => x.amount)
+      );
+
+      let remainingReward = rewardModifier;
+
+      for (const reward of actionRewards as RewardWithModifier[]) {
+        let costAmount = reward.amount ?? 1;
+
+        if (remainingReward > 0) {
+          reward.amount = costAmount + remainingReward;
+          reward.modifier = 'positive';
+          break;
+        } else if (remainingReward < 0) {
+          if (Math.abs(remainingReward) >= costAmount) {
+            actionRewards.shift();
+            remainingReward -= costAmount;
+          } else {
+            reward.amount = costAmount - remainingReward;
+            reward.modifier = 'negative';
+            break;
+          }
+        }
+      }
+      return actionRewards;
+    } else {
+      return actionField.rewards ?? [];
     }
   }
 }

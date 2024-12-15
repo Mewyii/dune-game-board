@@ -249,12 +249,12 @@ dune-leader-card {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: larger;
+    font-size: 22px;
 }
 
 .resource-amount.on-background {
     position: absolute;
-    top: -2px;
+    top: 0;
     left: 0;
 }
 

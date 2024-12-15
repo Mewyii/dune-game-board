@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { RewardType } from 'src/app/models';
+import { ActiveFactionType, RewardType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
-import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
+import { CardsService, ImperiumRowCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
-import { LoggingService } from 'src/app/services/log.service';
 import { PlayersService } from 'src/app/services/players.service';
-import { TranslateService } from 'src/app/services/translate-service';
+import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'dune-imperium-row',
@@ -16,7 +18,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./imperium-row.component.scss'],
 })
 export class ImperiumRowComponent implements OnInit {
-  public imperiumRowCards: ImperiumDeckCard[] = [];
+  public imperiumRowCards: ImperiumRowCard[] = [];
   public activeCardId = '';
 
   public activePlayerId: number = 0;
@@ -25,14 +27,16 @@ export class ImperiumRowComponent implements OnInit {
   public activePlayerTurnState: PlayerTurnState | undefined;
   public imperiumRowModifiers: ImperiumRowModifier[] | undefined;
   public playerCanCharm = false;
+  public factionRecruitment: ActiveFactionType[] = [];
 
   constructor(
     private playerManager: PlayersService,
     private gameManager: GameManager,
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,
-    private logService: LoggingService,
-    private translateService: TranslateService
+    public dialog: MatDialog,
+    private turnInfoService: TurnInfoService,
+    private settingsService: SettingsService
   ) {}
 
   ngOnInit(): void {
@@ -69,21 +73,65 @@ export class ImperiumRowComponent implements OnInit {
       this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
       this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
     });
+
+    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+      const playerTurnInfo = turnInfos.find((x) => x.playerId === this.activePlayerId);
+      if (playerTurnInfo) {
+        this.factionRecruitment = playerTurnInfo.factionRecruitment;
+      }
+    });
   }
 
-  onBuyCardClicked(card: ImperiumDeckCard) {
+  onBuyCardClicked(card: ImperiumRowCard) {
     this.gameManager.acquireImperiumRowCard(this.activePlayerId, card);
   }
 
-  onRemoveCardClicked(card: ImperiumDeckCard) {
+  onRemoveCardClicked(card: ImperiumRowCard) {
     this.cardsService.removeCardFromImperiumDeck(card);
   }
 
-  onCharmCardClicked(card: ImperiumDeckCard) {
+  onCharmCardClicked(card: ImperiumRowCard) {
     this.gameModifierService.addPlayerImperiumRowModifier(this.activePlayerId, { cardId: card.id, persuasionAmount: -1 });
     const enemyPlayers = this.playerManager.getEnemyPlayers(this.activePlayerId);
     for (const player of enemyPlayers) {
       this.gameModifierService.addPlayerImperiumRowModifier(player.id, { cardId: card.id, persuasionAmount: 1 });
+    }
+  }
+
+  onSearchImperiumDeckClicked() {
+    const imperiumDeck = this.cardsService.imperiumDeck;
+    if (imperiumDeck) {
+      const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
+        data: {
+          title: 'Imperium Deck',
+          imperiumCards: imperiumDeck,
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.cardsService.shuffleImperiumDeck();
+      });
+    }
+  }
+
+  onRecruitFromImperiumRowClicked() {
+    const recruitmentCardAmount = this.settingsService.getRecruitmentCardAmount();
+
+    const recruitableCards = this.cardsService.imperiumDeck.slice(0, recruitmentCardAmount);
+    if (recruitableCards) {
+      const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
+        data: {
+          title: 'Imperium Deck Recruitment',
+          playerId: this.activePlayerId,
+          imperiumCards: recruitableCards,
+          canAquireCards: true,
+          aquirableFactionTypes: this.factionRecruitment,
+        },
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        this.cardsService.shuffleImperiumDeck();
+        this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, { factionRecruitment: [] });
+      });
     }
   }
 
@@ -99,7 +147,7 @@ export class ImperiumRowComponent implements OnInit {
     return getRewardTypePath(rewardType);
   }
 
-  getCardCostModifier(card: ImperiumDeckCard) {
+  getCardCostModifier(card: ImperiumRowCard) {
     return getCardCostModifier(card, this.imperiumRowModifiers);
   }
 }

@@ -16,13 +16,14 @@ export interface GameContent {
   useTechTiles: boolean;
   victoryPointBoni?: VictoryPointReward[];
   maxVictoryPoints?: number;
-  finaleTrigger?: number;
+  finaleTrigger: number;
   troopCombatStrength: number;
   dreadnoughtCombatStrength: number;
   highCouncilPersuasion: number;
   startingResources: Reward[];
   aiGoals?: FieldsForGoals;
   customCards?: CustomCard[];
+  recruitmentCardAmount: number;
 }
 
 export type AppMode = 'board' | 'game';

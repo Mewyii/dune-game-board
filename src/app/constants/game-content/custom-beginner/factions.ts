@@ -2,11 +2,11 @@ import { Faction } from '../../../models';
 
 export const factionsCustomBeginner: Faction[] = [
   {
-    title: { de: 'fremen', en: 'fremen' },
+    title: { de: 'Fremen', en: 'Fremen' },
     type: 'fremen',
     position: {
       marginTop: 1670,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -39,11 +39,11 @@ export const factionsCustomBeginner: Faction[] = [
     ],
   },
   {
-    title: { de: 'bene gesserit', en: 'bene gesserit' },
+    title: { de: 'Bene Gesserit', en: 'Bene Gesserit' },
     type: 'bene',
     position: {
       marginTop: 1170,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -76,11 +76,11 @@ export const factionsCustomBeginner: Faction[] = [
     ],
   },
   {
-    title: { de: 'raumgilde', en: 'spacing guild' },
+    title: { de: 'Raumgilde', en: 'Spacing Guild' },
     type: 'guild',
     position: {
       marginTop: 670,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -116,11 +116,11 @@ export const factionsCustomBeginner: Faction[] = [
     ],
   },
   {
-    title: { de: 'imperator', en: 'emperor' },
+    title: { de: 'Imperator', en: 'Emperor' },
     type: 'emperor',
     position: {
       marginTop: 170,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -149,50 +149,45 @@ export const factionsCustomBeginner: Faction[] = [
     ],
   },
   {
-    title: { de: 'landsraad', en: 'landsraad' },
+    title: { de: 'Landsraad', en: 'Landsraad' },
     type: 'landsraad',
     position: {
       marginTop: 170,
-      marginLeft: 580,
-      width: 660,
+      marginLeft: 575,
+      width: 662,
     },
     actionFields: [
       {
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
-        rewards: [
-          { type: 'troop', amount: 3 },
-          { type: 'helper-or' },
-          { type: 'card-draw', amount: 2 },
-          { type: 'persuasion', amount: 1 },
-        ],
+        costs: [{ type: 'solari', amount: 2 }],
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'troop' }],
         requiresInfluence: { type: 'bene' },
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
-        customWidth: '130px',
-        noColumnGap: true,
-      },
-      {
-        title: { de: 'schwertmeister', en: 'Swordmaster' },
-        actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 9 }],
-        rewards: [{ type: 'sword-master', iconHeight: 60 }],
-        pathToImage: 'assets/images/action-backgrounds/ceremony_3.png',
-        customWidth: '135px',
-      },
-      {
-        title: { de: 'Propaganda', en: 'Propaganda' },
-        actionType: 'landsraad',
-        rewards: [{ type: 'solari' }, { type: 'persuasion', amount: 2 }],
-        pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 7 }],
+        costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
+      },
+      {
+        title: { de: 'Propaganda', en: 'Propaganda' },
+        actionType: 'landsraad',
+        rewards: [{ type: 'persuasion', amount: 2 }, { type: 'helper-or' }, { type: 'troop', amount: 2 }],
+        pathToImage: 'assets/images/action-backgrounds/troops_2.png',
+        customWidth: '130px',
+        noColumnGap: true,
+      },
+      {
+        title: { de: 'Mentat', en: 'Mentat' },
+        actionType: 'landsraad',
+        costs: [{ type: 'solari', amount: 8 }],
+        rewards: [{ type: 'sword-master', iconHeight: 60 }],
+        pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
+        customWidth: '135px',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
@@ -200,7 +195,7 @@ export const factionsCustomBeginner: Faction[] = [
     secondaryColor: '#192e19b8',
   },
   {
-    title: { de: 'mafea', en: 'choam' },
+    title: { de: 'MAFEA', en: 'CHOAM' },
     type: 'choam',
     position: {
       marginTop: 170,
@@ -235,7 +230,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 2 }],
+        costs: [{ type: 'solari', amount: 3 }],
         rewards: [{ type: 'water' }, { type: 'water' }, { type: 'troop' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         requiresInfluence: { type: 'emperor' },

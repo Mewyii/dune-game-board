@@ -445,7 +445,7 @@ export class AIManager {
       return 'none';
     }
 
-    const playerCombatPower = getPlayerCombatPower(playerCombatUnits);
+    const playerCombatPower = this.getPlayerCombatPower(playerCombatUnits);
     const possibleAddedCombatPower = this.getMaxAddableCombatPower(playerCombatUnits, maxAddableUnits);
 
     const highestEnemyCombatPower = Math.max(...enemyCombatScores.map((x) => x.score));
@@ -651,13 +651,13 @@ export class AIManager {
     let combatPower = 0;
 
     addableUnits -= playerCombatUnits.shipsInGarrison;
-    combatPower += playerCombatUnits.shipsInGarrison * this.settingsService.gameContent.dreadnoughtCombatStrength;
+    combatPower += playerCombatUnits.shipsInGarrison * this.settingsService.getDreadnoughtStrength();
 
     if (addableUnits > 0) {
       if (addableUnits < playerCombatUnits.troopsInGarrison) {
-        combatPower += addableUnits * this.settingsService.gameContent.troopCombatStrength;
+        combatPower += addableUnits * this.settingsService.getTroopStrength();
       } else {
-        combatPower += playerCombatUnits.troopsInGarrison * this.settingsService.gameContent.troopCombatStrength;
+        combatPower += playerCombatUnits.troopsInGarrison * this.settingsService.getTroopStrength();
       }
     }
     return combatPower;
@@ -1088,11 +1088,11 @@ export class AIManager {
       case 'sword':
         return 1;
       case 'combat':
-        return 1 + 0.25 * (gameState.currentRound - 1);
+        return 1 + 0.2 * (gameState.currentRound - 1);
       case 'intrigue-trash':
         return -1;
       case 'intrigue-draw':
-        return 1.5;
+        return 0.25;
       case 'helper-trade-horizontal':
         return 0;
       case 'helper-trade':
@@ -1142,7 +1142,7 @@ export class AIManager {
       case 'location-control':
         return 6 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
-        return -1 + 0.1 * (gameState.currentRound - 1);
+        return -1.5 + 0.1 * (gameState.currentRound - 1);
       case 'trash-self':
         return -1;
       default:
@@ -1197,11 +1197,13 @@ export class AIManager {
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 ? (hasAgentsLeftToPlace ? value : 0.66 * value) : 0;
       case 'combat':
-        return value;
+        return (
+          value + 0.5 * gameState.playerCombatUnits.troopsInGarrison + 0.5 * gameState.playerCombatUnits.shipsInGarrison
+        );
       case 'intrigue-trash':
         return value;
       case 'intrigue-draw':
-        return value;
+        return value + 2 * gameState.playerIntrigueStealAmount;
       case 'helper-trade-horizontal':
         return value;
       case 'helper-trade':
@@ -1253,7 +1255,7 @@ export class AIManager {
           ? 6 + 0.25 * (gameState.currentRound - 1)
           : 0;
       case 'loose-troop':
-        return value;
+        return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':
         return value;
       default:
@@ -1271,10 +1273,13 @@ export class AIManager {
     const hasRewardConversion = rewardConversionIndex > -1;
     return { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex };
   }
-}
 
-function getPlayerCombatPower(player: PlayerCombatUnits) {
-  return player.troopsInCombat * 2 + player.shipsInCombat * 3;
+  private getPlayerCombatPower(player: PlayerCombatUnits) {
+    return (
+      player.troopsInCombat * this.settingsService.getTroopStrength() +
+      player.shipsInCombat * this.settingsService.getDreadnoughtStrength()
+    );
+  }
 }
 
 function getRandomInt(max: number) {

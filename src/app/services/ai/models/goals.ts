@@ -72,7 +72,7 @@ export interface GameState {
   playerCombatIntrigues: IntrigueDeckCard[];
   playerIntrigueCount: number;
   playerCombatIntrigueCount: number;
-  playerCanStealIntrigues: boolean;
+  playerIntrigueStealAmount: number;
   freeLocations: string[];
   occupiedLocations: string[];
   rival?: Player;

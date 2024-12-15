@@ -10,7 +10,7 @@ import { IntrigueDeckCard } from 'src/app/models/intrigue';
 export class IntriguesPreviewDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<IntriguesPreviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; intrigue: IntrigueDeckCard }
+    @Inject(MAT_DIALOG_DATA) public data: { title: string; intrigues: IntrigueDeckCard[]; canAquireCards: boolean }
   ) {}
 
   onClose() {

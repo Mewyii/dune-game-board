@@ -202,7 +202,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   },
   'intrigue-steal': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals) => (gameState.playerCanStealIntrigues ? 0.25 : 0),
+    desireModifier: (player, gameState, goals) => gameState.playerIntrigueStealAmount * 0.25,
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({

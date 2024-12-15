@@ -50,6 +50,10 @@ export const rewardTypes = [
   'tech-tile-flip',
   'victory-point',
   'trash-self',
+  'recruitment-emperor',
+  'recruitment-fremen',
+  'recruitment-bene',
+  'recruitment-guild',
 ] as const;
 
 export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];

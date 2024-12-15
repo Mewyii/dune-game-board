@@ -80,6 +80,7 @@ import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/in
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { TranslationComponent } from './components/translation/translation.component';
 import { RewardArrayComponent } from './components/_common/reward-array/reward-array.component';
+import { MarkerComponent } from './components/_common/marker/marker.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +145,7 @@ import { RewardArrayComponent } from './components/_common/reward-array/reward-a
     IntriguesPreviewDialogComponent,
     TranslationComponent,
     RewardArrayComponent,
+    MarkerComponent,
   ],
   imports: [
     BrowserModule,

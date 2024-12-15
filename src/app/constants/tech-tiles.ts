@@ -206,8 +206,8 @@ export const techTiles: TechTileCard[] = [
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:spice}{resource:helper-trade}{resource:faction-influence-up-choice}',
-      de: '<b>Rundenbeginn:</b><br>{resource:spice}{resource:helper-trade}{resource:faction-influence-up-choice}',
+      en: '<b>Round start:</b><br>{resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
+      de: '<b>Rundenbeginn:</b><br>{resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.7,
@@ -315,6 +315,9 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.8 - 0.125 * (gameState.currentRound - 1),
+    gameModifiers: {
+      fieldReward: [{ id: 'sandcrawler-engines', actionType: 'spice', rewardType: 'spice', amount: 1 }],
+    },
   },
   {
     name: {

@@ -31,4 +31,5 @@ export const gameContentCustomAdvanced: GameContent = {
   highCouncilPersuasion: 3,
   startingResources: [{ type: 'water', amount: 1 }],
   aiGoals: aiGoalsCustomAdvanced,
+  recruitmentCardAmount: 5,
 };

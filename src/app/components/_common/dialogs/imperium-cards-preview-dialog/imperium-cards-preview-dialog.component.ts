@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ImperiumCard } from 'src/app/models/imperium-card';
+import { ImperiumDeckCard } from 'src/app/services/cards.service';
+import { GameManager } from 'src/app/services/game-manager.service';
 
 @Component({
   selector: 'dune-imperium-cards-preview-dialog',
@@ -9,11 +10,26 @@ import { ImperiumCard } from 'src/app/models/imperium-card';
 })
 export class ImperiumCardsPreviewDialogComponent {
   constructor(
+    public gameManager: GameManager,
     public dialogRef: MatDialogRef<ImperiumCardsPreviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; imperiumCards: ImperiumCard[] }
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      title: string;
+      imperiumCards: ImperiumDeckCard[];
+      playerId: number;
+      canAquireCards: boolean;
+      aquirableFactionTypes: string[];
+    }
   ) {}
 
   onClose() {
     this.dialogRef.close();
+  }
+
+  onBuyCardClicked(card: ImperiumDeckCard) {
+    const couldBuyCard = this.gameManager.acquireImperiumDeckCard(this.data.playerId, card);
+    if (couldBuyCard) {
+      this.data.imperiumCards = this.data.imperiumCards.filter((x) => x.id !== card.id);
+    }
   }
 }

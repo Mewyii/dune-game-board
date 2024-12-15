@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { shuffle } from 'lodash';
 import { PlayersService } from './players.service';
@@ -10,6 +10,10 @@ import { ImperiumCard } from '../models/imperium-card';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
+}
+
+export interface ImperiumRowCard extends ImperiumDeckCard {
+  status: 'just-arrived' | 'present' | 'leaving';
 }
 
 export interface PlayerCardStack {
@@ -33,7 +37,9 @@ export interface CardFactionAndFieldAccess {
 export class CardsService {
   private imperiumDeckSubject = new BehaviorSubject<ImperiumDeckCard[]>([]);
   public imperiumDeck$ = this.imperiumDeckSubject.asObservable();
-  public imperiumRow$ = this.imperiumDeck$.pipe(map((x) => x.slice(0, 6)));
+
+  private imperiumRowSubject = new BehaviorSubject<ImperiumRowCard[]>([]);
+  public imperiumRow$ = this.imperiumRowSubject.asObservable();
 
   private playerDecksSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerDecks$ = this.playerDecksSubject.asObservable();
@@ -70,6 +76,17 @@ export class CardsService {
 
     this.imperiumDeck$.subscribe((imperiumDeck) => {
       localStorage.setItem('imperiumDeck', JSON.stringify(imperiumDeck));
+    });
+
+    const imperiumRowString = localStorage.getItem('imperiumRow');
+    if (imperiumRowString) {
+      const imperiumRow = JSON.parse(imperiumRowString) as ImperiumRowCard[];
+
+      this.imperiumRowSubject.next(imperiumRow);
+    }
+
+    this.imperiumRow$.subscribe((imperiumRow) => {
+      localStorage.setItem('imperiumRow', JSON.stringify(imperiumRow));
     });
 
     const playerDecksString = localStorage.getItem('playerDecks');
@@ -148,7 +165,7 @@ export class CardsService {
   }
 
   public get imperiumRow() {
-    return cloneDeep(this.imperiumDeck.slice(0, 6));
+    return cloneDeep(this.imperiumRowSubject.value);
   }
 
   public get playerDecks() {
@@ -179,6 +196,10 @@ export class CardsService {
     return cloneDeep(this.unlimitedCustomCardsSubject.value);
   }
 
+  getTopDeckCards(amount: number) {
+    return cloneDeep(this.imperiumDeck.slice(0, amount));
+  }
+
   getPlayerHand(playerId: number) {
     return this.playerHands.find((x) => x.playerId === playerId);
   }
@@ -204,15 +225,19 @@ export class CardsService {
   }
 
   setImperiumDeck() {
-    const imperiumDeck: ImperiumDeckCard[] = [];
+    const imperiumDeckCards: ImperiumDeckCard[] = [];
     const imperiumCards = this.cardConfiguratorService.imperiumCards;
     for (const imperiumCard of imperiumCards) {
       for (let i = 0; i < (imperiumCard.cardAmount ?? 1); i++) {
-        imperiumDeck.push(this.instantiateImperiumCard(imperiumCard));
+        imperiumDeckCards.push(this.instantiateImperiumCard(imperiumCard));
       }
     }
 
-    this.imperiumDeckSubject.next(shuffle(imperiumDeck));
+    const imperiumDeck = shuffle(imperiumDeckCards);
+    const imperiumRow: ImperiumRowCard[] = imperiumDeck.slice(0, 5).map((x) => ({ ...x, status: 'present' }));
+
+    this.imperiumRowSubject.next(imperiumRow);
+    this.imperiumDeckSubject.next(imperiumDeck.splice(5));
   }
 
   setLimitedCustomCards() {
@@ -245,6 +270,10 @@ export class CardsService {
     }
 
     this.unlimitedCustomCardsSubject.next(customCardStack);
+  }
+
+  shuffleImperiumDeck() {
+    this.imperiumDeckSubject.next(shuffle(this.imperiumDeck));
   }
 
   removeCardFromImperiumDeck(card: ImperiumDeckCard) {
@@ -454,6 +483,42 @@ export class CardsService {
       playerDecks[playerDeckIndex].cards = [...shuffle(playerDeckCards)];
       this.playerDecksSubject.next(playerDecks);
     }
+  }
+
+  churnImperiumRow() {
+    const imperiumRow = this.imperiumRow;
+    const imperiumDeck = this.imperiumDeck;
+
+    const newImperiumRow: ImperiumRowCard[] = [];
+    for (const imperiumCard of imperiumRow) {
+      if (imperiumCard.status === 'just-arrived') {
+        imperiumCard.status = 'present';
+        newImperiumRow.push(imperiumCard);
+      } else if (imperiumCard.status === 'present') {
+        imperiumCard.status = 'leaving';
+        newImperiumRow.push(imperiumCard);
+      } else if (imperiumCard.status === 'leaving') {
+        const nextCard = imperiumDeck.shift();
+        if (nextCard) {
+          newImperiumRow.push({ ...nextCard, status: 'present' });
+        }
+      }
+    }
+
+    this.imperiumRowSubject.next(newImperiumRow);
+    this.imperiumDeckSubject.next(imperiumDeck);
+  }
+
+  aquirePlayerCardFromImperiumRow(playerId: number, card: ImperiumDeckCard) {
+    const imperiumDeck = this.imperiumDeck;
+    const nextCard = imperiumDeck.shift();
+    if (nextCard) {
+      const imperiumRow = this.imperiumRow.filter((x) => x.id !== card.id);
+      imperiumRow.push({ ...nextCard, status: 'just-arrived' });
+      this.imperiumRowSubject.next(imperiumRow);
+      this.imperiumDeckSubject.next(imperiumDeck);
+    }
+    this.addCardToPlayerDiscardPile(playerId, card);
   }
 
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {

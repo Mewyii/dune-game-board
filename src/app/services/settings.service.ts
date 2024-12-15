@@ -69,7 +69,7 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value);
   }
 
-  public get gameContent() {
+  private get gameContent() {
     return cloneDeep(this.settingsSubject.value.gameContent);
   }
 
@@ -99,6 +99,34 @@ export class SettingsService {
 
   public getBoardLocation(id: string) {
     return cloneDeep(this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.title.en === id));
+  }
+
+  public getStartingResources() {
+    return cloneDeep(this.settingsSubject.value.gameContent.startingResources);
+  }
+
+  public getHighCouncilPersuasionAmount() {
+    return cloneDeep(this.settingsSubject.value.gameContent.highCouncilPersuasion);
+  }
+
+  public getTroopStrength() {
+    return cloneDeep(this.settingsSubject.value.gameContent.troopCombatStrength);
+  }
+
+  public getDreadnoughtStrength() {
+    return cloneDeep(this.settingsSubject.value.gameContent.dreadnoughtCombatStrength);
+  }
+
+  public getFactions() {
+    return cloneDeep(this.settingsSubject.value.gameContent.factions);
+  }
+
+  public getVictoryPointsBoni() {
+    return cloneDeep(this.settingsSubject.value.gameContent.victoryPointBoni);
+  }
+
+  public getRecruitmentCardAmount() {
+    return cloneDeep(this.settingsSubject.value.gameContent.recruitmentCardAmount);
   }
 
   public setFields() {

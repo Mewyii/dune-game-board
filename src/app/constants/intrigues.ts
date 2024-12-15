@@ -39,9 +39,13 @@ export const intrigues: IntrigueCard[] = [
     effects: [
       {
         type: 'spice',
+        amount: 2,
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -124,9 +128,6 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -256,20 +257,6 @@ export const intrigues: IntrigueCard[] = [
   },
   {
     name: {
-      en: 'Blackmail',
-      de: 'Erpressung',
-    },
-    type: 'complot',
-    amount: 3,
-    effects: [
-      {
-        type: 'solari',
-        amount: 2,
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Bribery',
       de: 'Bestechung',
     },
@@ -296,7 +283,7 @@ export const intrigues: IntrigueCard[] = [
     amount: 3,
     effects: [
       {
-        type: 'card-discard',
+        type: 'water',
       },
       {
         type: 'helper-trade',
@@ -362,7 +349,16 @@ export const intrigues: IntrigueCard[] = [
     amount: 3,
     effects: [
       {
-        type: 'water',
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'shipping',
+      },
+      {
+        type: 'shipping',
       },
     ],
   },
@@ -374,6 +370,15 @@ export const intrigues: IntrigueCard[] = [
     type: 'complot',
     amount: 3,
     effects: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
       {
         type: 'combat',
       },
@@ -418,6 +423,25 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'faction-influence-up-choice',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Expedition',
+      de: 'Expedition',
+    },
+    type: 'complot',
+    amount: 3,
+    effects: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'agent-lift',
       },
     ],
   },

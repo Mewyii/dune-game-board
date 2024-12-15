@@ -13,4 +13,6 @@ export const gameContentOriginal: GameContent = {
   highCouncilPersuasion: 2,
   startingResources: [{ type: 'water', amount: 1 }],
   customCards: customCardsOriginal,
+  recruitmentCardAmount: 5,
+  finaleTrigger: 8,
 };

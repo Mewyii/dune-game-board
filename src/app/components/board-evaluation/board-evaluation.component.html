@@ -2,7 +2,7 @@
   <h3>Board Evaluation</h3>
   <div class="field-evaluation-container">
     <div *ngFor="let fieldValue of fieldValues" class="field-value">
-      {{ fieldValue.fieldId.toLocaleLowerCase() }} {{ fieldValue.value }}
+      {{ fieldValue.fieldId.toUpperCase() }} {{ fieldValue.value }}
     </div>
   </div>
 </div>

@@ -26,24 +26,6 @@ export function getFactionInfluenceModifier(
   }
 }
 
-// export function getPlayerImperiumRowModifiers(playerId: number, modifiers: PlayerGameModifiers[]) {
-//   const playerModifiers = modifiers.find((x) => x.playerId === playerId);
-//   if (playerModifiers && playerModifiers.imperiumRowModifiers) {
-//     return playerModifiers.imperiumRowModifiers;
-//   } else {
-//     return [];
-//   }
-// }
-
-// export function getPlayerCustomActions(playerId: number, modifiers: PlayerGameModifiers[]) {
-//   const playerModifiers = modifiers.find((x) => x.playerId === playerId);
-//   if (playerModifiers && playerModifiers.customActions) {
-//     return playerModifiers.customActions;
-//   } else {
-//     return [];
-//   }
-// }
-
 export function getCardCostModifier(card: ImperiumCard | ImperiumDeckCard, modifiers?: ImperiumRowModifier[]) {
   let result = 0;
 

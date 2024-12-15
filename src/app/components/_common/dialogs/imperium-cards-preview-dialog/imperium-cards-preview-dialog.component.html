@@ -1,8 +1,18 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  <ng-container *ngFor="let card of data.imperiumCards">
-    <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
-  </ng-container>
+  <div class="cards-container">
+    <div class="card-container" *ngFor="let card of data.imperiumCards">
+      <dune-imperium-row-card [card]="card"> </dune-imperium-row-card>
+      <div
+        class="card-action-container"
+        *ngIf="data.canAquireCards && data.aquirableFactionTypes.includes(card.faction ?? '')"
+      >
+        <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>
