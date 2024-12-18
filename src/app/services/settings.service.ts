@@ -1,30 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
-import { ActionField, FactionType, LanguageType } from '../models';
+import { ActionField, FactionInfluenceReward, FactionType, LanguageType } from '../models';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import {
-  gameContentCustomAdvanced,
-  gameContentCustomBeginner,
-  gameContentCustomExpert,
-  gameContentOriginal,
-} from '../constants/game-content';
+import { gameContentCustomBeginner, gameContentCustomExpert, gameContentOriginal } from '../constants/game-content';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
-  private gameContents: GameContent[] = [
-    gameContentOriginal,
-    gameContentCustomAdvanced,
-    gameContentCustomBeginner,
-    gameContentCustomExpert,
-  ];
+  private gameContents: GameContent[] = [gameContentOriginal, gameContentCustomBeginner, gameContentCustomExpert];
 
   private fields: ActionField[] = [];
   public spiceAccumulationFields: string[] = [];
   public controllableLocations: string[] = [];
   public unblockableFields: ActionField[] = [];
+
+  public factionInfluenceRewards: { factionId: FactionType; rewards: FactionInfluenceReward }[] = [];
 
   private settingsSubject = new BehaviorSubject<Settings>(boardSettings);
   private settings$ = this.settingsSubject.asObservable();
@@ -125,22 +117,27 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.victoryPointBoni);
   }
 
+  public getFinaleTrigger() {
+    return cloneDeep(this.settingsSubject.value.gameContent.finaleTrigger);
+  }
+
   public getRecruitmentCardAmount() {
     return cloneDeep(this.settingsSubject.value.gameContent.recruitmentCardAmount);
   }
 
   public setFields() {
+    const gameContent = this.gameContent;
     const result: ActionField[] = [];
-    for (const faction of this.gameContent.factions) {
+    for (const faction of gameContent.factions) {
       for (const field of faction.actionFields) {
         result.push(field);
       }
     }
-    for (const location of this.gameContent.locations) {
+    for (const location of gameContent.locations) {
       result.push(location.actionField);
     }
-    if (this.gameContent.ix) {
-      result.push(this.gameContent.ix);
+    if (gameContent.ix) {
+      result.push(gameContent.ix);
     }
 
     this.fields = result;
@@ -149,6 +146,10 @@ export class SettingsService {
       .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
       .map((x) => x.title.en);
     this.controllableLocations = this.gameContent.locations.filter((x) => x.ownerReward).map((x) => x.actionField.title.en);
+
+    this.factionInfluenceRewards = gameContent.factions
+      .filter((x) => x.influenceRewards)
+      .map((x) => ({ factionId: x.type, rewards: x.influenceRewards! }));
   }
 
   getFactionName(factionType: FactionType) {

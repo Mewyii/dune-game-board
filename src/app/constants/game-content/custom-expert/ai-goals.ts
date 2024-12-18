@@ -5,7 +5,6 @@ import {
   getCostAdjustedDesire,
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesireModifier,
-  getPlayerGarrisonStrength,
   getResourceAmount,
   getRewardAmountFromArray,
   getWinCombatDesireModifier,
@@ -23,10 +22,21 @@ import { normalizeNumber } from 'src/app/helpers/common';
 import { Player } from 'src/app/models/player';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
+  'get-victory-points': {
+    baseDesire: 0.5,
+    desireModifier: (player, gameState, goals) => 0.033 * (gameState.currentRound - 1),
+    goalIsReachable: () => false,
+    reachedGoal: () => false,
+    viableFields: (fields) => ({
+      ...getViableBoardFields(fields, 'victory-point', 0, 1),
+    }),
+  },
   'high-council': {
     baseDesire: 0.7,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') - 0.025 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'solari') -
+      0.0175 * (gameState.currentRound - 1) +
+      (getResourceAmount(player, 'solari') > 7 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 7,
     reachedGoal: (player, gameState) => player.hasCouncilSeat || gameState.isFinale,
     desiredFields: (fields) => ({
@@ -37,26 +47,15 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   },
   swordmaster: {
     baseDesire: 0.8,
-    desireModifier: (player, gameState, goals) => 0.01 * getResourceAmount(player, 'solari'),
+    desireModifier: (player, gameState, goals) =>
+      0.01 * getResourceAmount(player, 'solari') -
+      0.025 * (gameState.currentRound - 1) +
+      (getResourceAmount(player, 'solari') > 7 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 7,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', 0, 1),
-    }),
-    viableFields: () => ({}),
-  },
-  mentat: {
-    baseDesire: 0.0,
-    desireModifier: (player, gameState, goals) =>
-      (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
-      (0.1 +
-        0.01 * getResourceAmount(player, 'spice') +
-        0.025 * (gameState.currentRound - 1) +
-        0.02 * gameState.playerCardsBought),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'spice') > 1,
-    reachedGoal: () => false,
-    desiredFields: (fields) => ({
-      ...getViableBoardFields(fields, 'agent-lift', 0, 1),
+      ...getViableBoardFields(fields, 'agent', 0, 1),
     }),
     viableFields: () => ({}),
   },
@@ -88,9 +87,24 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
     viableFields: () => ({}),
   },
+  mentat: {
+    baseDesire: 0.0,
+    desireModifier: (player, gameState, goals) =>
+      (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
+      (0.15 +
+        0.01 * getResourceAmount(player, 'spice') +
+        0.02 * (gameState.currentRound - 1) +
+        0.02 * gameState.playerCardsBought),
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'spice') > 1,
+    reachedGoal: () => false,
+    desiredFields: (fields) => ({
+      ...getViableBoardFields(fields, 'agent-lift', 0, 1),
+    }),
+    viableFields: () => ({}),
+  },
   'fremen-friendship': {
     baseDesire: 0.1,
-    desireModifier: (player, gameState, goals) => 0.025 * gameState.playerScore.fremen + 0.02 * (gameState.currentRound - 1),
+    desireModifier: (player, gameState, goals) => 0.025 * gameState.playerScore.fremen + 0.01 * (gameState.currentRound - 1),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerScore.fremen > 1 || gameState.isFinale,
     viableFields: (fields) => ({
@@ -101,7 +115,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetVictoryPointThisTurn(player, gameState, 'fremen') ? 0.1 : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
@@ -115,7 +128,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetVictoryPointThisTurn(player, gameState, 'bene') ? 0.1 : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
@@ -129,7 +141,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetVictoryPointThisTurn(player, gameState, 'guild') ? 0.1 : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
@@ -143,7 +154,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
-      (playerCanGetVictoryPointThisTurn(player, gameState, 'emperor') ? 0.1 : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
       (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.01 * gameState.currentRound : 0),
     goalIsReachable: () => false,
@@ -156,14 +166,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'enter-combat': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) => {
-      const alwaysTryToWinCombat = gameState.isFinale || getPlayerGarrisonStrength(gameState.playerCombatUnits) > 10;
-      const winCombatDesire = 0.33 * getWinCombatDesireModifier(gameState);
-      const participateInCombatDesire = !alwaysTryToWinCombat ? getParticipateInCombatDesireModifier(gameState) : 0;
+      const winCombatDesire = getWinCombatDesireModifier(gameState);
+      const participateInCombatDesire = getParticipateInCombatDesireModifier(gameState);
 
       const modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
-      const name = winCombatDesire * 3 > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
+      const name = winCombatDesire > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
 
-      // console.log('conflict: win ' + winCombatDesire * 3);
+      // console.log('conflict: win ' + winCombatDesire);
       // console.log('conflict: participate ' + participateInCombatDesire);
 
       if (gameState.playerTurnInfos?.canEnterCombat) {
@@ -181,14 +190,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       // Influenced by troops, intrigues and dreadnoughts
       // Custom amounts generated by ai manager
       ...getViableBoardFields(fields, 'combat', 0, 1),
-      'Desert Knowledge (card-draw)': (player, gameState, goals) =>
-        gameState.playerScore.fremen === 1
-          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.6)
-          : getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.4),
-      'Desert Knowledge (card-destroy)': (player, gameState, goals) =>
-        gameState.playerScore.fremen === 1
-          ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.6)
-          : getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.4),
     }),
   },
   troops: {
@@ -199,11 +200,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'troop', 0, 4),
-      'Desert Equipment': (player, gameState, goals) => (gameState.playerScore.fremen === 1 ? 0.3 : 0.0),
-      'Desert Knowledge (card-draw)': (player, gameState, goals) =>
-        gameState.playerScore.fremen === 1 ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.3) : 0.0,
-      'Desert Knowledge (card-destroy)': (player, gameState, goals) =>
-        gameState.playerScore.fremen === 1 ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 1 }], 0.3) : 0.0,
     }),
   },
   intrigues: {
@@ -214,9 +210,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState) => gameState.playerIntrigueCount > 2,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'intrigue', 0, 2),
-      'Mind Training': (player, gameState) => (gameState.playerScore.bene === 1 ? 0.5 : 0.0),
-      Truthsay: (player, gameState, goals) =>
-        getCostAdjustedDesire(player, [{ type: 'spice', amount: 2 }], gameState.playerScore.bene === 1 ? 0.5 : 0.0),
     }),
   },
   'intrigue-steal': {
@@ -232,19 +225,16 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.15,
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.2 : 0) -
-      0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + player.focusTokens),
+      0.0125 * gameState.playerCardsBought -
+      0.0125 * (gameState.playerCardsTrashed + player.focusTokens),
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'foldspace', 0, 2),
-      Heighliner: (player, gameState, goals) =>
-        gameState.playerScore.guild === 1 ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.5) : 0,
-      'Guild Contract': (player, gameState) => (gameState.playerScore.guild === 1 ? 0.5 : 0),
     }),
   },
   'get-board-persuasion': {
-    baseDesire: 0.5,
+    baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
       -0.01 * gameState.playerCardsBought -
       0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
@@ -399,9 +389,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari', 0, 6),
-      'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 0.5 : 0.2),
-      Conspiracy: (player, gameState, goals) =>
-        gameState.playerScore.emperor === 1 ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 3 }], 0.35) : 0,
       'Spice Trade': (player, gameState, goals) =>
         getResourceAmount(player, 'spice') > 0 ? 1.0 - 0.02 * getResourceAmount(player, 'solari') : 0,
     }),

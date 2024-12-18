@@ -1,5 +1,5 @@
 <div class="intrigue-card">
-  <div class="card-header font-medieval">
+  <div [class]="'card-header font-medieval ' + card.type">
     <span>
       {{ translateService.translate(card.name).toUpperCase() }}
     </span>

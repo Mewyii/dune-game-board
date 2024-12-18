@@ -16,36 +16,23 @@
           [class.finale]="i > favorScoreArray.length - 4"
           [class.last]="last"
           [style.backgroundColor]="i > favorScoreArray.length - 4 ? faction.primaryColor : ''"
-        ></div>
+        >
+          <ng-container *ngIf="faction.influenceRewards && faction.influenceRewards[i]">
+            <div class="reward-area">
+              <ng-container *ngFor="let reward of faction.influenceRewards[i]">
+                <div class="reward-container">
+                  <img class="reward" [src]="getRewardTypePath(reward.type)" />
+                  <ng-container *ngIf="reward.amount">
+                    <div class="reward-amount">
+                      {{ reward.amount }}
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
         <div *ngIf="!last" class="divider" [class.first]="i === 0" [class.finale]="i === favorScoreArray.length - 4"></div>
-      </ng-container>
-      <ng-container *ngIf="faction.levelTwoReward">
-        <div class="reward-area two">
-          <ng-container *ngFor="let reward of faction.levelTwoReward">
-            <div class="reward-container">
-              <img class="reward" [src]="getRewardTypePath(reward.type)" />
-              <ng-container *ngIf="reward.amount">
-                <div class="reward-amount">
-                  {{ reward.amount }}
-                </div>
-              </ng-container>
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="faction.levelFourReward">
-        <div class="reward-area four">
-          <ng-container *ngFor="let reward of faction.levelFourReward">
-            <div class="reward-container">
-              <img class="reward" [src]="getRewardTypePath(reward.type)" />
-              <ng-container *ngIf="reward.amount">
-                <div class="reward-amount">
-                  {{ reward.amount }}
-                </div>
-              </ng-container>
-            </div>
-          </ng-container>
-        </div>
       </ng-container>
       <div class="alliance-element" [style.background-image]="'url(' + faction.pathToSymbol + ')'"></div>
       <ng-container *ngIf="mode === 'game'">

@@ -8,6 +8,8 @@ export type PassiveFactionType = (typeof passiveFactionTypes)[number];
 export type ActiveFactionType = (typeof activeFactionTypes)[number];
 export type FactionType = PassiveFactionType | ActiveFactionType;
 
+export type FactionInfluenceReward = { [key: number]: Reward[] };
+
 export interface Faction {
   title: LanguageString;
   type: FactionType;
@@ -22,8 +24,7 @@ export interface Faction {
   secondaryColor: string;
   pathToSymbol: string;
   hasScoreBoard?: boolean;
-  levelTwoReward?: Reward[];
-  levelFourReward?: Reward[];
+  influenceRewards?: FactionInfluenceReward;
 }
 
 export interface FactionInfluence {

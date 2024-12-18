@@ -1,30 +1,37 @@
+dune-conflict-card,
 .conflict-card {
     position: absolute;
     bottom: 295px;
     right: 200px;
     border-radius: 10px;
-    background-size: 1000px;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+}
+
+.conflict-card.backside {
+    right: 10px;
+    background-position: center;
+    background-size: cover;
     height: 255px;
     width: 170px;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    border: 0px solid #2d0505;
-    border-right: 2px solid #2d0505;
-    border-top: 2px solid #2d0505;
 }
 
-.conflict-card.background {
+.conflict-card.backside.one {
     right: 10px;
-    background-position-x: 168px;
-    background-position-y: 255px;
+    background-image: url("/assets/images/conflicts/_backside_lvl1.jpg")
 }
 
-.conflict-card.background.clickable {
+.conflict-card.backside.two {
+    right: 10px;
+    background-image: url("/assets/images/conflicts/_backside_lvl2.png")
+}
+
+.conflict-card.backside.clickable {
     transition: .66s;
     cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
 }
 
-.conflict-card.background.clickable:hover,
-.conflict-card.background.clickable.active {
+.conflict-card.backside.clickable:hover,
+.conflict-card.backside.clickable.active {
     filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
     transform: scale(1.1);
 }

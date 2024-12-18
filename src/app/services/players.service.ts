@@ -25,7 +25,7 @@ export class PlayersService {
     });
   }
 
-  /** Use with care. Players object gets cloned everytime it is used but is immutable. */
+  /** Use with care. Players object gets cloned eachtime it is used but is immutable. */
   public getPlayers() {
     return cloneDeep(this.playersSubject.value);
   }

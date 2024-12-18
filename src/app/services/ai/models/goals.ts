@@ -2,15 +2,15 @@ import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
-import { ActionField, ActiveFactionType, Resource } from 'src/app/models';
+import { ActionField, ActiveFactionType } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
-import { Conflict } from 'src/app/constants/conflicts';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard } from '../../cards.service';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TechTileCard } from 'src/app/models/tech-tile';
+import { Conflict } from 'src/app/models/conflict';
 
 export type AIGoals =
   | 'high-council'
@@ -36,7 +36,8 @@ export type AIGoals =
   | 'harvest-accumulated-spice-basin'
   | 'harvest-accumulated-spice-flat'
   | 'swordmaster-helper'
-  | 'get-board-persuasion';
+  | 'get-board-persuasion'
+  | 'get-victory-points';
 
 export interface GameState {
   playerScore: PlayerScore;

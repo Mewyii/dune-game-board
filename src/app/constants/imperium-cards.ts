@@ -1221,7 +1221,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     buyEffects: [],
     customAgentEffect: {
-      en: 'Every opponent retreats two units.',
+      en: 'Each opponent retreats two units.',
       de: 'Jeder Gegner zieht zwei Einheiten zurück.',
       fontSize: 'small',
     },

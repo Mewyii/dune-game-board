@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActionField, FactionType, Reward, RewardType } from 'src/app/models';
+import { ActionField, FactionType, RewardType } from 'src/app/models';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
@@ -34,6 +34,7 @@ export class DuneActionComponent implements OnInit {
   @Output() actionFieldClick = new EventEmitter<{ playerId: number }>();
 
   public transparentBackgroundColor: string = '';
+  public backgroundGradient: string = '';
   public pathToActionType = '';
   public boardSettings = boardSettings;
 
@@ -69,6 +70,11 @@ export class DuneActionComponent implements OnInit {
     this.actionRewards = this.actionField.rewards ?? [];
     this.pathToActionType = getActionTypePath(this.actionField.actionType);
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
+    const gradientColor1 = this.adjustRGBColor(this.backgroundColor, -15);
+    const gradientColor2 = this.adjustRGBColor(this.backgroundColor, -20);
+    const gradientColor3 = this.adjustRGBColor(this.backgroundColor, -30);
+    this.backgroundGradient =
+      'linear-gradient(' + gradientColor1 + ', 5%, ' + gradientColor2 + ', 70%, ' + gradientColor3 + ')';
 
     this.gameManager.agentsOnFields$.subscribe((agentsOnFields) => {
       const playerIds = agentsOnFields.filter((x) => x.fieldId === this.actionField.title.en).map((x) => x.playerId);
@@ -205,5 +211,24 @@ export class DuneActionComponent implements OnInit {
       );
     }
     return false;
+  }
+
+  private adjustRGBColor(rgb: string, amount: number) {
+    const regex = /rgb\((\d+), (\d+), (\d+)\)/;
+    const match = rgb.match(regex);
+
+    if (match) {
+      let r = parseInt(match[1], 10);
+      let g = parseInt(match[2], 10);
+      let b = parseInt(match[3], 10);
+
+      r = Math.max(0, r + amount);
+      g = Math.max(0, g + amount);
+      b = Math.max(0, b + amount);
+
+      return `rgb(${r}, ${g}, ${b})`;
+    } else {
+      return rgb;
+    }
   }
 }

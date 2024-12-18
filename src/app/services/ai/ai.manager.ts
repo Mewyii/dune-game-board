@@ -24,6 +24,8 @@ import { ImperiumRowModifier } from '../game-modifier.service';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
+import { isFactionType } from 'src/app/helpers/faction-types';
+import { isFactionScoreType } from 'src/app/helpers/faction-score';
 
 export interface AIPlayer {
   playerId: number;
@@ -204,7 +206,10 @@ export class AIManager {
   }
 
   public setPreferredFieldsForAIPlayer(player: Player, gameState: GameState) {
-    const boardFields = this.getFieldsWithCombatAdjustments(this.getFieldsWithChoices(this.settingsService.boardFields));
+    const boardFields = this.getFieldsWithCombatAndFactionAdjustments(
+      gameState,
+      this.getFieldsWithChoices(this.settingsService.boardFields)
+    );
     const aiPlayers = this.aiPlayers;
     const aiPlayer = aiPlayers.find((x) => x.playerId === player.id);
 
@@ -218,7 +223,7 @@ export class AIManager {
     const fieldEvaluations: FieldEvaluation[] = [];
     const decisions: string[] = [];
 
-    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 30);
+    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 20);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
 
     const evaluatedImperiumRowCards = gameState.imperiumRowCards.map((x) =>
@@ -707,8 +712,25 @@ export class AIManager {
     return result;
   }
 
-  getFieldsWithCombatAdjustments(fields: ActionField[]) {
+  getFieldsWithCombatAndFactionAdjustments(gameState: GameState, fields: ActionField[]) {
     return fields.map((field) => {
+      // Faction adjustments
+      if (isFactionScoreType(field.actionType)) {
+        const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
+          (x) => x.factionId === field.actionType
+        )?.rewards;
+        if (factionInfluenceRewards) {
+          const nextFactionScore = gameState.playerScore[field.actionType] + 1;
+          const nextFactionInfluenceRewards = factionInfluenceRewards[nextFactionScore];
+          if (nextFactionInfluenceRewards) {
+            for (const reward of nextFactionInfluenceRewards) {
+              field.rewards.push(reward);
+            }
+          }
+        }
+      }
+
+      // Combat Adjustments
       const combatRewardIndex = field.rewards.findIndex((x) => x.type === 'combat');
 
       if (combatRewardIndex > -1) {
@@ -1055,7 +1077,7 @@ export class AIManager {
           0.05 * (gameState.currentRound - 1)
         );
       case 'troop':
-        return 1.5;
+        return 1.75;
       case 'dreadnought':
         return getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 6 : 0;
       case 'card-draw':

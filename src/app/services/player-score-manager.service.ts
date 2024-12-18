@@ -29,7 +29,6 @@ export type PlayerFactionScoreType = keyof Omit<PlayerScore, 'playerId' | 'victo
   providedIn: 'root',
 })
 export class PlayerScoreManager {
-  public factionFriendshipTreshold = 2;
   public factionAllianceTreshold = 4;
 
   private playerScoresSubject = new BehaviorSubject<PlayerScore[]>([]);
@@ -117,17 +116,13 @@ export class PlayerScoreManager {
 
         this.playerScoresSubject.next(playerScores);
 
-        if (newScore === this.factionFriendshipTreshold) {
-          const faction = this.settingsService.getFactions().find((x) => x.type === actionType);
-          if (faction && faction.levelTwoReward) {
-            factionRewards = faction.levelTwoReward;
-          }
-        }
-
-        if (newScore === this.factionAllianceTreshold) {
-          const faction = this.settingsService.getFactions().find((x) => x.type === actionType);
-          if (faction && faction.levelFourReward) {
-            factionRewards = faction.levelFourReward;
+        const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
+          (x) => x.factionId === actionType
+        )?.rewards;
+        if (factionInfluenceRewards) {
+          const factionScoreRewards = factionInfluenceRewards[newScore];
+          if (factionScoreRewards) {
+            factionRewards = factionScoreRewards;
           }
         }
 

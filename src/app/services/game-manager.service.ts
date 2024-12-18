@@ -580,8 +580,8 @@ export class GameManager {
 
         if (reward.type === 'spice-accumulation' && this.fieldHasAccumulatedSpice(field.title.en)) {
           const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
-          this.audioManager.playSound('spice', accumulatedSpice);
-          this.playerManager.addResourceToPlayer(activePlayer.id, 'spice', accumulatedSpice);
+          this.addRewardToPlayer(activePlayer, { type: 'spice', amount: accumulatedSpice });
+          this.resetAccumulatedSpiceOnField(field.title.en);
         }
       }
     }
@@ -1750,7 +1750,7 @@ export class GameManager {
     this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
   }
 
-  public decreaseAccumulatedSpiceOnField(fieldId: string) {
+  public decreaseAccumulatedSpiceOnField(fieldId: string, amount = 1) {
     const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
 
     const index = accumulatedSpiceOnFields.findIndex((x) => x.fieldId === fieldId && x.amount > 0);
@@ -1758,7 +1758,22 @@ export class GameManager {
       const element = accumulatedSpiceOnFields[index];
       accumulatedSpiceOnFields[index] = {
         ...element,
-        amount: element.amount - 1,
+        amount: element.amount - amount,
+      };
+    }
+
+    this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
+  }
+
+  public resetAccumulatedSpiceOnField(fieldId: string) {
+    const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
+
+    const index = accumulatedSpiceOnFields.findIndex((x) => x.fieldId === fieldId && x.amount > 0);
+    if (index > -1) {
+      const element = accumulatedSpiceOnFields[index];
+      accumulatedSpiceOnFields[index] = {
+        ...element,
+        amount: 0,
       };
     }
 
@@ -1945,10 +1960,11 @@ export class GameManager {
 
   private shouldTriggerFinale() {
     const playerScores = this.playerScoreManager.playerScores;
+    const finaleTrigger = this.settingsService.getFinaleTrigger();
     if (playerScores.length < 4) {
-      return playerScores.some((x) => x.victoryPoints > 7);
+      return playerScores.some((x) => x.victoryPoints > finaleTrigger);
     } else {
-      return playerScores.some((x) => x.victoryPoints > 6);
+      return playerScores.some((x) => x.victoryPoints > finaleTrigger - 1);
     }
   }
 

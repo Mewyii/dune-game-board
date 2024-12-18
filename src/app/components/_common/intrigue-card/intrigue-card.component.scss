@@ -19,12 +19,19 @@
     padding-right: 4px;
     border-radius: 8px 8px 0px 0px;
     color: #f3f5de;
-    background-image: url(/assets/images/tech-tile-backgrounds/heading.png);
     background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+}
+
+.card-header.complot {
+    background-image: url(/assets/images/intrigues/heading_complot.png);
+}
+
+.card-header.combat {
+    background-image: url(/assets/images/intrigues/heading_combat.png);
 }
 
 .card-content {
@@ -38,13 +45,13 @@
 }
 
 .card-content.complot {
-    border-top: 2px solid #93743a;
-    background-image: linear-gradient(#b38229, 5%, #8a6b31, 70%, #53411e);
+    border-top: 2px solid #fbb83c;
+    background-image: linear-gradient(#eba92f, 5%, #806536, 70%, #473a21);
 }
 
 .card-content.combat {
-    border-top: 2px solid #8c2525;
-    background-image: linear-gradient(#a01313, 5%, #7a2323, 70%, #591818);
+    border-top: 2px solid #ff3434;
+    background-image: linear-gradient(#e42424, 5%, #852929, 70%, #481919);
 }
 
 .card-title {

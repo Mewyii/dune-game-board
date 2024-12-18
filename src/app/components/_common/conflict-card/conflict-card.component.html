@@ -1,0 +1,13 @@
+<div class="conflict-card">
+  <div class="card-header font-medieval">
+    <span>
+      {{ translateService.translate(conflict.name).toUpperCase() }}
+    </span>
+  </div>
+  <div [class]="'card-content'">
+    <div class="conflict-reward-container" *ngFor="let rewards of conflict.rewards; let i = index">
+      <div [class]="'conflict-rank ' + (i === 0 ? 'first' : '')">{{ i + 1 }}.</div>
+      <dune-reward-array [rewards]="rewards" [size]="'36px'"></dune-reward-array>
+    </div>
+  </div>
+</div>

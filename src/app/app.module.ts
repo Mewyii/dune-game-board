@@ -81,6 +81,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { TranslationComponent } from './components/translation/translation.component';
 import { RewardArrayComponent } from './components/_common/reward-array/reward-array.component';
 import { MarkerComponent } from './components/_common/marker/marker.component';
+import { ConflictCardComponent } from './components/_common/conflict-card/conflict-card.component';
 
 @NgModule({
   declarations: [
@@ -146,6 +147,7 @@ import { MarkerComponent } from './components/_common/marker/marker.component';
     TranslationComponent,
     RewardArrayComponent,
     MarkerComponent,
+    ConflictCardComponent,
   ],
   imports: [
     BrowserModule,

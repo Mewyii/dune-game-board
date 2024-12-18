@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Faction, RewardType } from 'src/app/models';
+import { Faction, Reward, RewardType } from 'src/app/models';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';

@@ -40,6 +40,7 @@
       [style.max-width]="actionField.customWidth"
       [style.row-gap]="actionField.noRowGap ? '0px' : ''"
       [style.column-gap]="actionField.noColumnGap ? '0px' : ''"
+      [style.backgroundImage]="backgroundGradient"
     >
       <ng-container *ngFor="let rewardType of actionRewards">
         <div

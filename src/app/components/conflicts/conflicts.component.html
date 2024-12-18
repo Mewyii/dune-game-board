@@ -1,15 +1,11 @@
-<ng-container *ngIf="currentConflictSet && currentConflictSet.imagePath">
+<ng-container *ngIf="currentConflict">
+  <dune-conflict-card [conflict]="currentConflict"></dune-conflict-card>
   <div
-    class="conflict-card"
-    [style.background-image]="'url(' + currentConflictSet.imagePath + ')'"
-    [style.background-size]="currentConflictSet.imageSize + 'px'"
-    [style.background-position-x]="currentCardCoordinates.x + 'px'"
-    [style.background-position-y]="currentCardCoordinates.y + 'px'"
-  ></div>
-  <div
-    [class]="'conflict-card background clickable' + (conflictStackIsActive ? ' active' : '')"
-    [style.background-image]="'url(' + currentConflictSet.imagePath + ')'"
-    [style.background-size]="currentConflictSet.imageSize + 'px'"
+    [class]="
+      'conflict-card backside clickable ' +
+      (conflictStackIsActive ? 'active ' : '') +
+      (currentConflict.lvl === 1 ? 'one' : 'two')
+    "
     (click)="onSetConflictStackActiveClicked()"
   >
     <div class="conflict-action-container" *ngIf="conflictStackIsActive">

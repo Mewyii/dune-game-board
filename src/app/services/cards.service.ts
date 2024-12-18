@@ -277,11 +277,22 @@ export class CardsService {
   }
 
   removeCardFromImperiumDeck(card: ImperiumDeckCard) {
-    this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x, index) => x.id !== card.id)]);
+    this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
+  }
+
+  removeCardFromImperiumRow(card: ImperiumRowCard) {
+    const imperiumDeck = this.imperiumDeck;
+    const nextCard = imperiumDeck.shift();
+    if (nextCard) {
+      const imperiumRow = this.imperiumRow.filter((x) => x.id !== card.id);
+      imperiumRow.push({ ...nextCard, status: 'just-arrived' });
+      this.imperiumRowSubject.next(imperiumRow);
+      this.imperiumDeckSubject.next(imperiumDeck);
+    }
   }
 
   removeCardFromLimitedCustomCards(card: ImperiumDeckCard) {
-    this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x, index) => x.id !== card.id)]);
+    this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x) => x.id !== card.id)]);
   }
 
   setInitialPlayerDecks() {

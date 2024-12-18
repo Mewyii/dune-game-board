@@ -87,7 +87,7 @@ export class ImperiumRowComponent implements OnInit {
   }
 
   onRemoveCardClicked(card: ImperiumRowCard) {
-    this.cardsService.removeCardFromImperiumDeck(card);
+    this.cardsService.removeCardFromImperiumRow(card);
   }
 
   onCharmCardClicked(card: ImperiumRowCard) {

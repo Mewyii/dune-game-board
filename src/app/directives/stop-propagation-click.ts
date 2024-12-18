@@ -8,6 +8,5 @@ export class StopPropagationClickDirective {
 
   @HostListener('click', ['$event']) onClick(event: any): void {
     event.stopPropagation();
-    console.log('Hi');
   }
 }

@@ -27,16 +27,19 @@ export const factionsCustomExpert: Faction[] = [
     primaryColor: 'rgb(52, 86, 153)',
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'troop',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'troop',
+          amount: 2,
+        },
+      ],
+      4: [
+        {
+          type: 'victory-point',
+        },
+      ],
+    },
   },
   {
     title: { de: 'Bene Gesserit', en: 'Bene Gesserit' },
@@ -64,16 +67,21 @@ export const factionsCustomExpert: Faction[] = [
     primaryColor: 'rgb(102, 90, 125)',
     secondaryColor: '#1f192eb8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'intrigue',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'intrigue',
+        },
+        {
+          type: 'intrigue-draw',
+        },
+      ],
+      4: [
+        {
+          type: 'victory-point',
+        },
+      ],
+    },
   },
   {
     title: { de: 'Raumgilde', en: 'Spacing Guild' },
@@ -101,16 +109,18 @@ export const factionsCustomExpert: Faction[] = [
     primaryColor: 'rgb(135, 36, 36)',
     secondaryColor: '#2e1919b8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'foldspace',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'foldspace',
+        },
+      ],
+      4: [
+        {
+          type: 'victory-point',
+        },
+      ],
+    },
   },
   {
     title: { de: 'Imperator', en: 'Emperor' },
@@ -135,15 +145,22 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(85 85 85)',
+    primaryColor: 'rgb(85, 85, 85)',
     secondaryColor: '#262626b8',
     hasScoreBoard: true,
-    levelTwoReward: [{ type: 'solari', amount: 2 }],
-    levelFourReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'solari',
+          amount: 2,
+        },
+      ],
+      4: [
+        {
+          type: 'victory-point',
+        },
+      ],
+    },
   },
   {
     title: { de: 'Landsraad', en: 'Landsraad' },
@@ -158,7 +175,10 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 3 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'troop' }, { type: 'tech' }],
+        rewards: [
+          { type: 'card-draw', amount: 2 },
+          { type: 'troop', amount: 2 },
+        ],
         requiresInfluence: { type: 'bene' },
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
       },

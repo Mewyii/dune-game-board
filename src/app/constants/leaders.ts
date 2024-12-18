@@ -191,7 +191,7 @@ export const leaders: Leader[] = [
       de: 'Anklagender Prophet',
     },
     signetDescription: {
-      en: 'Every player: {resource:card-discard}',
+      en: 'Each player: {resource:card-discard}',
       de: 'Jeder Spieler: {resource:card-discard}',
     },
     imageUrl: '/assets/images/leaders/preacher.png',
@@ -451,16 +451,16 @@ export const leaders: Leader[] = [
       en: 'Struggling house',
     },
     passiveDescription: {
-      de: '<b>Spielbeginn</b>: Entferne alle {resource:persuasion;amount:2}-Karten aus deinem Deck.',
-      en: '<b>Game start</b>: Remove all {resource:persuasion;amount:2}-cards from your deck.',
+      de: '<b>Spielbeginn</b>: {resource:signet-token}. Entferne alle {resource:persuasion;amount:2}-Karten aus deinem Deck.',
+      en: '<b>Game start</b>: {resource:signet-token}. Remove all {resource:persuasion;amount:2}-cards from your deck.',
     },
     signetName: {
       de: 'Sorgfältiges Vorgehen',
       en: 'Thorough approach',
     },
     signetDescription: {
-      de: 'Erhältst du in diesem Zug {resource:solari}, {resource:spice} oder {resource:water}, erhalte jeweils +1.',
-      en: 'If you receive {resource:solari}, {resource:spice} or {resource:water} this turn, you get +1 of each.',
+      de: '{resource:signet-token}. Du kannst ihn entsorgen, wenn du {resource:solari}, {resource:spice} oder {resource:water} erhältst, um davon 1 mehr zu erhalten.',
+      en: '{resource:signet-token}. You may trash it when you receive {resource:solari}, {resource:spice} or {resource:water} to get +1 of it.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     playableByAI: true,
@@ -729,8 +729,8 @@ export const leaders: Leader[] = [
       de: 'Geächtete Kriegsherrin',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: Trash one of your handcards.',
-      de: 'Alle {faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
     },
     signetName: {
       en: 'Pillage',
@@ -762,15 +762,15 @@ export const leaders: Leader[] = [
       de: 'In den Schatten',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: Trash one of your handcards.',
-      de: 'Du beginnst das Spiel ohne Einheiten. <br><br>Gegnerische Agenten blockieren Felder für dich nicht.',
+      en: 'You begin the game without troops. <br><br>Enemy agents dont block board spaces for you.',
+      de: 'Du beginnst das Spiel ohne Truppen. <br><br>Gegnerische Agenten blockieren Felder für dich nicht.',
     },
     signetName: {
       en: 'Oppression',
       de: 'Erpressung',
     },
     signetDescription: {
-      en: '{resource:spice}',
+      en: 'If there is an enemy agent on this board space: {resource:spice}',
       de: 'Wenn sich auf diesem Feld ein gegnerischer Agent befindet: {resource:spice}',
     },
     imageUrl: '/assets/images/leaders/dara.png',

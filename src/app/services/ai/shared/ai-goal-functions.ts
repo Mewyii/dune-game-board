@@ -60,7 +60,8 @@ export function enemyCanContestPlayer(
   gameState: GameState,
   countEnemiesNotInCombat?: boolean
 ) {
-  const combatPowerTreshold = 3 + Math.random() * 2 + (gameState.currentRound - 1) * 0.5;
+  const playerAgentCount = gameState.playerAgentCount;
+  const combatPowerTreshold = 3 * (playerAgentCount + Math.random() + (gameState.currentRound - 1) * 0.5);
 
   const playerCombatPower = getPlayerCombatStrength(player);
 
@@ -105,77 +106,81 @@ export function playerLikelyWinsCombat(gameState: GameState) {
 }
 
 export function getWinCombatDesireModifier(gameState: GameState) {
-  let desire = 0.4 + 0.1 * gameState.playerAgentCount + 0.05 * gameState.playerCombatIntrigueCount;
-
-  const playerStrength =
-    getPlayerCombatStrength(gameState.playerCombatUnits) + getPlayerGarrisonStrength(gameState.playerCombatUnits);
-
-  desire = desire + 0.075 * playerStrength;
+  let desire =
+    0.0 +
+    0.2 * gameState.playerAgentCount +
+    0.125 * gameState.playerCombatIntrigueCount +
+    0.05 * getPlayerGarrisonStrength(gameState.playerCombatUnits) +
+    0.075 * getPlayerCombatStrength(gameState.playerCombatUnits);
 
   let strengthOfStrongestEnemy = 0;
-  let garrisonStrengthOfEnemiesNotInCombat = 0;
   for (const enemy of gameState.enemyCombatUnits) {
     const enemyCombatPower = getPlayerCombatStrength(enemy);
 
     if (enemyCombatPower > 0) {
-      if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState)) {
-        desire = desire - 0.1;
-      }
+      desire -= 0.05;
 
       if (!playerCanContestEnemy(gameState.playerCombatUnits, enemy, gameState)) {
-        desire = desire - 0.4;
+        desire = desire - 0.33;
       }
 
       const enemyStrength = enemyCombatPower + 0.2 * getPlayerGarrisonStrength(enemy);
+
+      desire -= 0.005 * enemyStrength;
 
       if (enemyStrength > strengthOfStrongestEnemy) {
         strengthOfStrongestEnemy = enemyStrength;
       }
     } else {
-      if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState, true)) {
-        desire = desire - 0.075;
+      const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
+      if (enemyAgentCount < 1) {
+        desire += 0.1;
       }
-
-      garrisonStrengthOfEnemiesNotInCombat += getPlayerGarrisonStrength(enemy);
+      if (enemyCanContestPlayer(gameState.playerCombatUnits, enemy, gameState, true)) {
+        desire -= 0.025;
+      }
     }
   }
 
-  desire = desire - 0.025 * strengthOfStrongestEnemy;
-  desire = desire - 0.0025 * garrisonStrengthOfEnemiesNotInCombat;
+  desire -= 0.02 * strengthOfStrongestEnemy;
 
   if (playerLikelyWinsCombat(gameState)) {
     desire = desire * 0.1;
   }
 
-  return clamp(desire, 0.0, 1.0);
+  return clamp(desire, 0.1, 0.9);
 }
 
 export function getParticipateInCombatDesireModifier(gameState: GameState) {
-  let desire = 0.1 + 0.01 * (gameState.currentRound - 1);
+  const garrisonStrength = getPlayerGarrisonStrength(gameState.playerCombatUnits);
+
+  let desire = 0.1 + 0.01 * (gameState.currentRound - 1) + 0.025 * garrisonStrength;
+  if (getPlayerCombatStrength(gameState.playerCombatUnits) > 0) {
+    return desire;
+  }
 
   let enemiesInCombat = 0;
   let garrisonStrengthOfEnemiesNotInCombat = 0;
   for (const enemy of gameState.enemyCombatUnits) {
-    if (enemy.troopsInCombat > 0) {
+    const enemyCombatStrength = getPlayerCombatStrength(enemy);
+    if (enemyCombatStrength > 0) {
       enemiesInCombat++;
 
-      desire = desire - 0.05;
+      desire -= 0.01 * getPlayerCombatStrength(enemy);
     } else {
-      garrisonStrengthOfEnemiesNotInCombat += getPlayerGarrisonStrength(enemy);
+      const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
+      if (enemyAgentCount < 1) {
+        desire += 0.1;
+      } else {
+        garrisonStrengthOfEnemiesNotInCombat += getPlayerGarrisonStrength(enemy);
+      }
     }
   }
 
-  const garrisonStrength = getPlayerGarrisonStrength(gameState.playerCombatUnits);
+  desire += 0.025 * garrisonStrength;
+  desire -= 0.005 * garrisonStrengthOfEnemiesNotInCombat;
 
-  if (garrisonStrength > 0 && enemiesInCombat < 3) {
-    desire = desire + 0.05 * getInactiveEnemyCount(gameState);
-    desire = desire + 0.05 * garrisonStrength;
-    desire = desire - 0.0025 * garrisonStrengthOfEnemiesNotInCombat;
-
-    return clamp(desire, 0.0, 0.75);
-  }
-
-  return 0;
+  return clamp(desire, 0.1, 0.6);
 }
 
 export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {

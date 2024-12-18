@@ -27,16 +27,18 @@ export const factionsOriginal: Faction[] = [
     primaryColor: 'rgb(52, 86, 153)',
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'water',
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'victory-point',
+        },
+      ],
+      4: [
+        {
+          type: 'water',
+        },
+      ],
+    },
   },
   {
     title: { de: 'bene gesserit', en: 'bene gesserit' },
@@ -64,16 +66,18 @@ export const factionsOriginal: Faction[] = [
     primaryColor: 'rgb(102, 90, 125)',
     secondaryColor: '#1f192eb8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'intrigue',
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'victory-point',
+        },
+      ],
+      4: [
+        {
+          type: 'intrigue',
+        },
+      ],
+    },
   },
   {
     title: { de: 'raumgilde', en: 'spacing guild' },
@@ -101,17 +105,19 @@ export const factionsOriginal: Faction[] = [
     primaryColor: 'rgb(135, 36, 36)',
     secondaryColor: '#2e1919b8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'solari',
-        amount: 3,
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'victory-point',
+        },
+      ],
+      4: [
+        {
+          type: 'solari',
+          amount: 3,
+        },
+      ],
+    },
   },
   {
     title: { de: 'imperator', en: 'emperor' },
@@ -136,20 +142,22 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(85 85 85)',
+    primaryColor: 'rgb(85, 85, 85)',
     secondaryColor: '#262626b8',
     hasScoreBoard: true,
-    levelTwoReward: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    levelFourReward: [
-      {
-        type: 'troop',
-        amount: 2,
-      },
-    ],
+    influenceRewards: {
+      2: [
+        {
+          type: 'victory-point',
+        },
+      ],
+      4: [
+        {
+          type: 'troop',
+          amount: 2,
+        },
+      ],
+    },
   },
   {
     title: { de: 'landsraad', en: 'landsraad' },
