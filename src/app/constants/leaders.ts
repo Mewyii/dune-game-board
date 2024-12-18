@@ -68,8 +68,8 @@ export const leaders: Leader[] = [
       de: 'Anführer der Fremen',
     },
     passiveDescription: {
-      en: 'Dont put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:water}<br>Ignore all {faction:fremen} -requirements.',
-      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
+      en: 'Dont put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:card-draw}<br>Ignore all {faction:fremen} -requirements.',
+      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:card-draw}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
     },
     signetName: {
       en: 'Planting the paradise',
@@ -219,8 +219,8 @@ export const leaders: Leader[] = [
       en: 'Chronicler',
     },
     signetDescription: {
-      de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Du kannst es entsorgen wenn du einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
-      en: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. You may trash it when you place an agent to get {resource:card-draw}{resource:card-draw}.',
+      en: 'Place {resource:signet-token} on this board space. Trash it when you place an agent there the next time to get {resource:card-draw}{resource:card-draw}.',
+      de: 'Lege {resource:signet-token} auf dieses Feld. Entsorge es wenn du dort das nächste Mal einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
@@ -425,8 +425,8 @@ export const leaders: Leader[] = [
       de: 'Manipulator',
     },
     signetDescription: {
-      en: 'You may choose any card in play and pay {resource:signet-token} equal to its {resource:persuasion} cost. Activate its agent effect.',
-      de: 'Du kannst eine beliebige Karte im Spiel wählen und {resource:signet-token} entsprechend ihrer {resource:persuasion}-Kosten bezahlen. Aktiviere ihren Agenten-Effekt.',
+      en: 'You may choose any card in play or in the imperium row and pay {resource:signet-token} equal to its {resource:persuasion} cost. Activate its agent effect.',
+      de: 'Wähle eine beliebige Karte im Spiel oder in der Imperium-Reihe. Zahle {resource:signet-token} entsprechend ihrer {resource:persuasion}-Kosten, um ihren Agenten-Effekt zu aktivieren.',
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
