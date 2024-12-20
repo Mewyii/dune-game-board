@@ -60,6 +60,28 @@
           </div>
         </div>
       </ng-container>
+      <div class="conversions-container" *ngIf="actionField.conversionOptions">
+        <div class="conversion-container" *ngFor="let conversion of actionField.conversionOptions">
+          <ng-container *ngFor="let rewardType of conversion">
+            <div
+              [class]="'reward-container ' + rewardType.type"
+              [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+            >
+              <img
+                [class]="'reward '"
+                [src]="getRewardTypePath(rewardType.type)"
+                [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+                [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
+                (click)="onRewardClicked(actionField.title.en, rewardType.type)"
+                (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
+              />
+              <div *ngIf="rewardType.amount" class="reward-amount">
+                <span>{{ rewardType.amount }}</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
   <div
@@ -85,4 +107,16 @@
       <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
     </ng-container>
   </div>
+  <ng-container *ngIf="canWriteFieldHistory">
+    <button
+      class="field-history-button"
+      mat-fab
+      [color]="'accent'"
+      (click)="onFieldHistoryChangeClicked(1)"
+      (contextmenu)="onFieldHistoryChangeClicked(-1)"
+    >
+      <mat-icon>menu_book</mat-icon>
+      {{ fieldHistoryAmount }}
+    </button>
+  </ng-container>
 </div>

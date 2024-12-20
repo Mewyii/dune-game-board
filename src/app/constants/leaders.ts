@@ -90,7 +90,7 @@ export const leaders: Leader[] = [
           id: 'liet',
           noInfluence: true,
           alternateReward: {
-            type: 'water',
+            type: 'card-draw',
           },
         },
       },
@@ -117,8 +117,8 @@ export const leaders: Leader[] = [
       de: 'Fremenbande',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: Fremen cards cost {resource:persuasion;amount:1} less to acquire .',
-      de: '<b>Aufdeckzug</b>: Du kannst Fremen-Karten für {resource:persuasion;amount:1} weniger erwerben.',
+      en: '<b>Reveal turn</b>: Fremen cards cost {resource:persuasion;amount:1} less to acquire (min. 1).',
+      de: '<b>Aufdeckzug</b>: Du kannst Fremen-Karten für {resource:persuasion;amount:1} weniger erwerben (min. 1).',
     },
     signetName: {
       en: 'Child of the desert',
@@ -137,6 +137,7 @@ export const leaders: Leader[] = [
           id: 'chani',
           factionType: 'fremen',
           persuasionAmount: -1,
+          minCosts: 1,
         },
       ],
     },
@@ -241,6 +242,7 @@ export const leaders: Leader[] = [
           factionType: 'emperor',
         },
       ],
+      customActions: [{ id: 'irulan-field-history', action: 'field-history' }],
     },
   },
   {
@@ -642,8 +644,8 @@ export const leaders: Leader[] = [
       de: 'Loyalität Inspirierend',
     },
     signetDescription: {
-      en: 'Place {resource:signet-token} on this location. If there are 3 or more {resource:signet-token}, take control of it.',
-      de: 'Lege {resource:signet-token} auf diesen Ort. Sind dort 3 oder mehr {resource:signet-token}, übernimm die Kontrolle über ihn.',
+      en: 'Place {resource:signet-token} on this location. If there are 2 or more {resource:signet-token}, take control of it.',
+      de: 'Lege {resource:signet-token} auf diesen Ort. Sind dort 2 oder mehr {resource:signet-token}, übernimm die Kontrolle über ihn.',
     },
     imageUrl: '/assets/images/leaders/leto.png',
     type: 'new',
@@ -729,7 +731,7 @@ export const leaders: Leader[] = [
       de: 'Geächtete Kriegsherrin',
     },
     passiveDescription: {
-      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Reveal turn:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
       de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
     },
     signetName: {

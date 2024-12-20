@@ -1,11 +1,13 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import {
   activeFactionTypes,
   combatUnitTypes,
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
+  RewardType,
   rewardTypes,
 } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
@@ -294,5 +296,9 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
       this.imperiumCardForm.removeControl('customRevealEffect');
     }
+  }
+
+  public getRewardTypePath(rewardType: RewardType) {
+    return getRewardTypePath(rewardType);
   }
 }

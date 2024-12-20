@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActionField, FactionType, RewardType } from 'src/app/models';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { boardSettings } from 'src/app/constants/board-settings';
@@ -14,13 +14,14 @@ import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/help
 import { GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { PlayersService } from 'src/app/services/players.service';
+import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 
 @Component({
   selector: 'app-dune-action',
   templateUrl: './dune-action.component.html',
   styleUrls: ['./dune-action.component.scss'],
 })
-export class DuneActionComponent implements OnInit {
+export class DuneActionComponent implements OnInit, OnChanges {
   @Input() actionField: ActionField = {
     title: { de: 'fremenkrieger', en: 'fremen warriors' },
     actionType: 'fremen',
@@ -54,6 +55,9 @@ export class DuneActionComponent implements OnInit {
   public actionCosts: RewardWithModifier[] = [];
 
   public actionRewards: RewardWithModifier[] = [];
+
+  public canWriteFieldHistory = false;
+  public fieldHistoryAmount: number | undefined;
 
   constructor(
     public gameManager: GameManager,
@@ -103,8 +107,20 @@ export class DuneActionComponent implements OnInit {
 
       this.isAccessibleByPlayer = this.getPlayerAccessibility();
 
-      this.actionCosts = this.gameModifierService.getModifiedCostsForField(this.activePlayerId, this.actionField);
-      this.actionRewards = this.gameModifierService.getModifiedRewardsForField(this.activePlayerId, this.actionField);
+      const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
+      this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
+
+      const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
+      this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
+
+      this.canWriteFieldHistory = this.gameModifierService.playerHasCustomActionAvailable(
+        this.activePlayerId,
+        'field-history'
+      );
+      this.fieldHistoryAmount = this.gameModifierService.getPlayerFieldHistoryModifier(
+        this.activePlayerId,
+        this.actionField.title.en
+      )?.changeAmount;
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
@@ -125,8 +141,20 @@ export class DuneActionComponent implements OnInit {
     });
 
     this.gameModifierService.playerGameModifiers$.subscribe((x) => {
-      this.actionCosts = this.gameModifierService.getModifiedCostsForField(this.activePlayerId, this.actionField);
-      this.actionRewards = this.gameModifierService.getModifiedRewardsForField(this.activePlayerId, this.actionField);
+      const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
+      this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
+
+      const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
+      this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
+
+      this.canWriteFieldHistory = this.gameModifierService.playerHasCustomActionAvailable(
+        this.activePlayerId,
+        'field-history'
+      );
+      this.fieldHistoryAmount = this.gameModifierService.getPlayerFieldHistoryModifier(
+        this.activePlayerId,
+        this.actionField.title.en
+      )?.changeAmount;
     });
 
     this.isHighCouncilField = this.actionField.rewards.some(
@@ -137,6 +165,11 @@ export class DuneActionComponent implements OnInit {
         this.highCouncilSeats = players.filter((x) => x.hasCouncilSeat).map((x) => x.color);
       });
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.actionCosts = this.actionField.costs ?? [];
+    this.actionRewards = this.actionField.rewards ?? [];
   }
 
   public onActionFieldClicked() {
@@ -188,6 +221,13 @@ export class DuneActionComponent implements OnInit {
 
   public trackSpiceOnField(index: number, spiceOnField: number) {
     return spiceOnField;
+  }
+
+  public onFieldHistoryChangeClicked(changeAmount: number) {
+    this.audioManager.playSound('click-soft');
+    this.gameModifierService.changeFieldHistoryModifier(this.activePlayerId, this.actionField.title.en, changeAmount);
+
+    return false;
   }
 
   private getPlayerAccessibility() {

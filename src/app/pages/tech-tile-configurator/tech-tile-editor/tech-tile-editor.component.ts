@@ -1,11 +1,13 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import {
   activeFactionTypes,
   combatUnitTypes,
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
+  RewardType,
   rewardTypes,
 } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
@@ -204,5 +206,9 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
 
       this.techTileForm.removeControl('customEffect');
     }
+  }
+
+  public getRewardTypePath(rewardType: RewardType) {
+    return getRewardTypePath(rewardType);
   }
 }

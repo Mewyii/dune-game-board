@@ -15,6 +15,7 @@ export interface ActionField {
   actionType: ActionType;
   costs?: Reward[];
   rewards: Reward[];
+  conversionOptions?: Reward[][];
   pathToImage: string;
   isBattlefield?: boolean;
   isNonBlockingField?: boolean;
@@ -22,12 +23,6 @@ export interface ActionField {
   customWidth?: string;
   noRowGap?: boolean;
   noColumnGap?: boolean;
-  tradeOptionField?: {
-    from: RewardType;
-    to: RewardType;
-    tradeFormula: (tradeAmount: number) => number;
-    maxTradeAmount: number;
-  };
 }
 
 export const nonFactionActionTypes = ['town', 'spice'] as const;

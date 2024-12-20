@@ -48,7 +48,7 @@
         *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first"
         [class]="'field ' + (i < 3 ? 'good ' : i < 6 ? 'medium ' : 'bad ') + (isFirst ? 'first' : '')"
       >
-        {{ field.fieldId.toLocaleLowerCase() }} <span *ngIf="showDetails"> {{ field.value }}</span>
+        {{ field.fieldId }} <span *ngIf="showDetails"> {{ field.value }}</span>
       </div>
     </div>
     <div class="ai-strategy-container">

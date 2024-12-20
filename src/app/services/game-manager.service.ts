@@ -8,7 +8,7 @@ import { PlayersService } from './players.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
-import { ActionField, DuneLocation, Reward, RewardType } from '../models';
+import { ActionField, ActiveFactionType, DuneLocation, Reward, RewardType } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
@@ -17,7 +17,7 @@ import { TechTilesService } from './tech-tiles.service';
 import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
-import { GameState } from './ai/models';
+import { GameState, PlayerCardsFactions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
 import { CardsService, ImperiumDeckCard } from './cards.service';
 import { isFactionScoreCostType, isFactionScoreRewardType } from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
@@ -25,7 +25,14 @@ import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { Leader } from '../constants/leaders';
 import { LeaderImageOnly } from '../constants/leaders-old';
 import { GameModifiersService } from './game-modifier.service';
-import { getCardCostModifier, getFactionInfluenceModifier, hasFactionInfluenceModifier } from '../helpers/game-modifiers';
+import {
+  getCardCostModifier,
+  getFactionInfluenceModifier,
+  getModifiedCostsForField,
+  getModifiedRewardsForField,
+  getTechTileCostModifier,
+  hasFactionInfluenceModifier,
+} from '../helpers/game-modifiers';
 import { isFactionType } from '../helpers/faction-types';
 import { PlayerRewardChoicesService } from './player-reward-choices.service';
 import { TranslateService } from './translate-service';
@@ -539,7 +546,7 @@ export class GameManager {
 
     const gameModifiers = this.gameModifiersService.getPlayerGameModifiers(activePlayer.id);
 
-    const fieldCosts = this.gameModifiersService.getModifiedCostsForField(activePlayer.id, field);
+    const fieldCosts = getModifiedCostsForField(field, gameModifiers?.fieldCost);
 
     if (fieldCosts) {
       if (!this.playerCanPayCosts(activePlayer.id, fieldCosts)) {
@@ -555,34 +562,32 @@ export class GameManager {
 
     this.setPlayerOnField(activePlayer.id, field);
 
-    const fieldRewards = this.gameModifiersService.getModifiedRewardsForField(activePlayer.id, field);
+    const fieldRewards = getModifiedRewardsForField(field, gameModifiers?.fieldReward);
 
     const { rewardOptionIndex, hasRewardOptions } = this.aIManager.getRewardArrayAIInfos(fieldRewards);
     let rewards: Reward[] = [];
     const option: Reward[] = [];
 
-    if (!field.tradeOptionField) {
-      if (hasRewardOptions) {
-        for (const [index, reward] of fieldRewards.entries()) {
-          const isRewardOption = hasRewardOptions && (index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1);
-          if (isRewardOption || index === rewardOptionIndex) {
-            option.push(reward);
-          } else {
-            rewards.push(reward);
-          }
+    if (hasRewardOptions) {
+      for (const [index, reward] of fieldRewards.entries()) {
+        const isRewardOption = hasRewardOptions && (index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1);
+        if (isRewardOption || index === rewardOptionIndex) {
+          option.push(reward);
+        } else {
+          rewards.push(reward);
         }
-      } else {
-        rewards = fieldRewards;
       }
+    } else {
+      rewards = fieldRewards;
+    }
 
-      for (const reward of rewards) {
-        this.addRewardToPlayer(activePlayer, reward);
+    for (const reward of rewards) {
+      this.addRewardToPlayer(activePlayer, reward);
 
-        if (reward.type === 'spice-accumulation' && this.fieldHasAccumulatedSpice(field.title.en)) {
-          const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
-          this.addRewardToPlayer(activePlayer, { type: 'spice', amount: accumulatedSpice });
-          this.resetAccumulatedSpiceOnField(field.title.en);
-        }
+      if (reward.type === 'spice-accumulation' && this.fieldHasAccumulatedSpice(field.title.en)) {
+        const accumulatedSpice = this.getAccumulatedSpiceForField(field.title.en);
+        this.addRewardToPlayer(activePlayer, { type: 'spice', amount: accumulatedSpice });
+        this.resetAccumulatedSpiceOnField(field.title.en);
       }
     }
 
@@ -612,6 +617,11 @@ export class GameManager {
       if (hasRewardOptions) {
         this.playerRewardChoicesService.addPlayerRewardsChoice(activePlayer.id, option);
       }
+      if (field.conversionOptions) {
+        for (const option of field.conversionOptions) {
+          this.playerRewardChoicesService.addPlayerRewardsChoice(activePlayer.id, option);
+        }
+      }
 
       this.showPlayerRewardChoices(activePlayer);
     } else if (activePlayer.isAI) {
@@ -626,21 +636,42 @@ export class GameManager {
             this.addRewardToPlayer(activePlayer, reward);
           }
         }
-        this.aiResolveRewardChoices(activePlayer);
 
-        if (field.tradeOptionField) {
-          const tradeOption = field.tradeOptionField;
-          const sellSpiceAmount = this.aIManager.getDesiredSpiceToSell(
-            activePlayer,
-            tradeOption.tradeFormula,
-            tradeOption.maxTradeAmount
-          );
-          const solariFromSpiceSale = tradeOption.tradeFormula(sellSpiceAmount);
+        if (field.conversionOptions) {
+          const gameState = this.getGameState(activePlayer);
 
-          this.audioManager.playSound('solari', solariFromSpiceSale);
-          this.playerManager.removeResourceFromPlayer(activePlayer.id, 'spice', sellSpiceAmount);
-          this.playerManager.addResourceToPlayer(activePlayer.id, 'solari', solariFromSpiceSale);
+          let favoredConversionValue = 0;
+          let favoredConversion: { costs: Reward[]; rewards: Reward[] } | undefined;
+
+          for (const conversionOption of field.conversionOptions) {
+            const { hasRewardConversion, rewardConversionIndex } = this.aIManager.getRewardArrayAIInfos(conversionOption);
+            if (hasRewardConversion) {
+              const costs = conversionOption.slice(0, rewardConversionIndex);
+              const rewards = conversionOption.slice(rewardConversionIndex + 1);
+              if (this.playerCanPayCosts(activePlayer.id, costs)) {
+                const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, activePlayer, gameState);
+                const conversionValue =
+                  this.aIManager.getRewardArrayEvaluationForTurnState(rewards, activePlayer, gameState) - costsEvaluation;
+
+                if (conversionValue > favoredConversionValue) {
+                  favoredConversionValue = conversionValue;
+                  favoredConversion = { costs, rewards };
+                }
+              }
+            }
+          }
+
+          if (favoredConversion) {
+            for (const cost of favoredConversion.costs) {
+              this.payCostForPlayer(activePlayer.id, cost);
+            }
+            for (const reward of favoredConversion.rewards) {
+              this.addRewardToPlayer(activePlayer, reward);
+            }
+          }
         }
+
+        this.aiResolveRewardChoices(activePlayer);
       }
     }
 
@@ -1288,7 +1319,7 @@ export class GameManager {
       const spiceEvaluation = this.aIManager.getEffectEvaluationForTurnState('spice', player, gameState);
       const waterEvaluation = this.aIManager.getEffectEvaluationForTurnState('water', player, gameState);
 
-      if (spiceEvaluation > waterEvaluation) {
+      if (spiceEvaluation >= waterEvaluation) {
         this.addRewardToPlayer(player, { type: 'spice', amount: turnInfo.shippingAmount });
       } else {
         this.playerManager.addFocusTokens(player.id, 1);
@@ -1497,7 +1528,7 @@ export class GameManager {
         this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, cardToBuy);
       } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
-      } else {
+      } else if (imperiumRow.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromImperiumRow(playerId, cardToBuy);
       }
 
@@ -1555,8 +1586,9 @@ export class GameManager {
     const costModifier = getCardCostModifier(card, costModifiers);
 
     const availablePersuasion = this.playerManager.getPlayerPersuasion(playerId);
+    const playerCanAffordCard = !card.persuasionCosts || availablePersuasion >= card.persuasionCosts + costModifier;
 
-    if (!card.persuasionCosts || availablePersuasion >= card.persuasionCosts) {
+    if (playerCanAffordCard) {
       if (card.persuasionCosts) {
         this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
       }
@@ -1581,8 +1613,9 @@ export class GameManager {
     const costModifier = getCardCostModifier(card, costModifiers);
 
     const availablePersuasion = this.playerManager.getPlayerPersuasion(playerId);
+    const playerCanAffordCard = !card.persuasionCosts || availablePersuasion >= card.persuasionCosts + costModifier;
 
-    if (!card.persuasionCosts || availablePersuasion >= card.persuasionCosts) {
+    if (playerCanAffordCard) {
       if (card.persuasionCosts) {
         this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
       }
@@ -1610,8 +1643,9 @@ export class GameManager {
     const costModifier = getCardCostModifier(card, costModifiers);
 
     const availablePersuasion = this.playerManager.getPlayerPersuasion(playerId);
+    const playerCanAffordCard = !card.persuasionCosts || availablePersuasion >= card.persuasionCosts + costModifier;
 
-    if (!card.persuasionCosts || availablePersuasion >= card.persuasionCosts) {
+    if (playerCanAffordCard) {
       if (card.persuasionCosts) {
         this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
       }
@@ -1634,9 +1668,12 @@ export class GameManager {
       return;
     }
 
+    const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
+    const costModifier = getTechTileCostModifier(techTile, costModifiers);
+
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTechAgents = player.techAgents;
-    const playerCanAffordTechTile = techTile.costs <= availablePlayerSpice + availablePlayerTechAgents;
+    const playerCanAffordTechTile = techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTechAgents;
 
     if (playerCanAffordTechTile) {
       this.buyTechTileForPlayer(player, techTile, availablePlayerTechAgents, 0);
@@ -1646,9 +1683,42 @@ export class GameManager {
   private getGameState(player: Player): GameState {
     const playerDeckCards = this.cardsService.getPlayerDeck(player.id)?.cards ?? [];
     const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards ?? [];
-    const playerDiscardPileCards = this.cardsService.getPlayerDiscardPile(player.id)?.cards;
+    const playerDiscardPileCards = this.cardsService.getPlayerDiscardPile(player.id)?.cards ?? [];
     const playerTrashPileCards = this.cardsService.getPlayerTrashPile(player.id)?.cards;
     const playerCardsTrashed = playerTrashPileCards?.length ?? 0;
+
+    const playerCards = [...playerDeckCards, ...playerHandCards, ...playerDiscardPileCards];
+
+    const playerCardsFactions = this.getInitialPlayerCardsFactions();
+    const playerCardsFieldAccess = this.getInitialPlayerCardsFieldAccess();
+    const playerCardsRewards = this.getInitialPlayerCardsRewards();
+
+    for (const playerCard of playerCards) {
+      if (playerCard.faction) {
+        playerCardsFactions[playerCard.faction] += 1;
+      }
+      if (playerCard.fieldAccess) {
+        for (const access of playerCard.fieldAccess) {
+          playerCardsFieldAccess[access] += 1;
+        }
+      }
+      if (playerCard.agentEffects) {
+        const { hasRewardOptions, hasRewardConversion } = this.aIManager.getRewardArrayAIInfos(playerCard.agentEffects);
+        if (!hasRewardOptions && !hasRewardConversion) {
+          for (const reward of playerCard.agentEffects) {
+            playerCardsRewards[reward.type] += reward.amount ?? 1;
+          }
+        }
+      }
+      if (playerCard.revealEffects) {
+        const { hasRewardOptions, hasRewardConversion } = this.aIManager.getRewardArrayAIInfos(playerCard.revealEffects);
+        if (!hasRewardOptions && !hasRewardConversion) {
+          for (const reward of playerCard.revealEffects) {
+            playerCardsRewards[reward.type] += reward.amount ?? 1;
+          }
+        }
+      }
+    }
 
     const playerCardsBought =
       (playerDeckCards?.filter((x) => x.persuasionCosts).length ?? 0) +
@@ -1722,6 +1792,9 @@ export class GameManager {
       freeLocations,
       rival,
       playerTurnInfos,
+      playerCardsFactions,
+      playerCardsFieldAccess,
+      playerCardsRewards,
     };
   }
 
@@ -1886,12 +1959,15 @@ export class GameManager {
     if (!player) {
       return;
     }
+    const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
 
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTechAgents = player.techAgents;
     const affordableTechTiles = buyableTechTiles.filter(
-      (x) => x.costs - techDiscount <= availablePlayerTechAgents + availablePlayerSpice
+      (x) =>
+        x.costs - techDiscount + getTechTileCostModifier(x, costModifiers) <=
+        availablePlayerTechAgents + availablePlayerSpice
     );
 
     if (affordableTechTiles.length > 0) {
@@ -1907,9 +1983,11 @@ export class GameManager {
         affordableTechTiles.some((x) => x.name.en === mostDesiredTechTile.name.en) &&
         (desire > 0.25 || effectiveCosts < 1)
       ) {
-        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, techDiscount);
+        const costModifier = getTechTileCostModifier(mostDesiredTechTile, costModifiers);
+        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, techDiscount + costModifier);
       } else if (this.isFinale) {
-        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTechAgents, techDiscount);
+        const costModifier = getTechTileCostModifier(affordableTechTiles[0], costModifiers);
+        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTechAgents, techDiscount + costModifier);
       } else {
         this.playerManager.addTechAgentsToPlayer(player.id, techDiscount + 1);
       }
@@ -2278,5 +2356,90 @@ export class GameManager {
       }
     }
     return result;
+  }
+
+  private getInitialPlayerCardsFactions(): PlayerCardsFactions {
+    return {
+      bene: 0,
+      emperor: 0,
+      fremen: 0,
+      guild: 0,
+    };
+  }
+
+  private getInitialPlayerCardsFieldAccess(): PlayerCardsFieldAccess {
+    return {
+      fremen: 0,
+      bene: 0,
+      guild: 0,
+      emperor: 0,
+      spice: 0,
+      landsraad: 0,
+      choam: 0,
+      town: 0,
+    };
+  }
+
+  private getInitialPlayerCardsRewards(): PlayerCardsRewards {
+    return {
+      water: 0,
+      spice: 0,
+      solari: 0,
+      troop: 0,
+      dreadnought: 0,
+      agent: 0,
+      'agent-lift': 0,
+      buildup: 0,
+      'card-destroy': 0,
+      'card-discard': 0,
+      'card-draw': 0,
+      'card-draw-or-destroy': 0,
+      'card-round-start': 0,
+      combat: 0,
+      'council-seat-large': 0,
+      'council-seat-small': 0,
+      'faction-influence-down-bene': 0,
+      'faction-influence-down-choice': 0,
+      'faction-influence-down-emperor': 0,
+      'faction-influence-down-fremen': 0,
+      'faction-influence-down-guild': 0,
+      'faction-influence-up-bene': 0,
+      'faction-influence-up-choice': 0,
+      'faction-influence-up-emperor': 0,
+      'faction-influence-up-fremen': 0,
+      'faction-influence-up-guild': 0,
+      'faction-influence-up-twice-choice': 0,
+      focus: 0,
+      foldspace: 0,
+      'helper-or': 0,
+      'helper-or-horizontal': 0,
+      'helper-trade': 0,
+      'helper-trade-horizontal': 0,
+      intrigue: 0,
+      'intrigue-draw': 0,
+      'intrigue-trash': 0,
+      'location-control': 0,
+      'loose-troop': 0,
+      mentat: 0,
+      persuasion: 0,
+      placeholder: 0,
+      shipping: 0,
+      'signet-ring': 0,
+      'signet-token': 0,
+      'spice-accumulation': 0,
+      sword: 0,
+      'sword-master': 0,
+      tech: 0,
+      'tech-reduced': 0,
+      'tech-reduced-three': 0,
+      'tech-reduced-two': 0,
+      'tech-tile-flip': 0,
+      'victory-point': 0,
+      'trash-self': 0,
+      'recruitment-emperor': 0,
+      'recruitment-fremen': 0,
+      'recruitment-bene': 0,
+      'recruitment-guild': 0,
+    };
   }
 }

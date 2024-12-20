@@ -61,7 +61,7 @@ export function enemyCanContestPlayer(
   countEnemiesNotInCombat?: boolean
 ) {
   const playerAgentCount = gameState.playerAgentCount;
-  const combatPowerTreshold = 3 * (playerAgentCount + Math.random() + (gameState.currentRound - 1) * 0.5);
+  const combatPowerTreshold = 3 * (playerAgentCount + Math.random()) + 0.5 * (gameState.currentRound - 1);
 
   const playerCombatPower = getPlayerCombatStrength(player);
 

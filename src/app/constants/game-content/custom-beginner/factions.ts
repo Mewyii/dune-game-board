@@ -223,26 +223,27 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Spice Handel', en: 'Spice Trade' },
         actionType: 'landsraad',
-        rewards: [
-          { type: 'spice', amount: 1, width: 45 },
-          { type: 'spice', amount: 2, width: 45 },
-          { type: 'spice', amount: 3, width: 45 },
-          { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-          { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-          { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-          { type: 'solari', amount: 5, width: 45 },
-          { type: 'solari', amount: 7, width: 45 },
-          { type: 'solari', amount: 9, width: 45 },
+        rewards: [],
+        conversionOptions: [
+          [
+            { type: 'spice', amount: 1, width: 45 },
+            { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
+            { type: 'solari', amount: 5, width: 45 },
+          ],
+          [
+            { type: 'spice', amount: 2, width: 45 },
+            { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
+            { type: 'solari', amount: 7, width: 45 },
+          ],
+          [
+            { type: 'spice', amount: 3, width: 45 },
+            { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
+            { type: 'solari', amount: 9, width: 45 },
+          ],
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
         customWidth: '150px',
         noRowGap: true,
-        tradeOptionField: {
-          from: 'spice',
-          to: 'solari',
-          tradeFormula: (tradeAmount) => 3 + 2 * tradeAmount,
-          maxTradeAmount: 3,
-        },
       },
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },

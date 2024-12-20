@@ -73,11 +73,10 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   dreadnought: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') -
-      0.02 * (gameState.currentRound - 1) -
-      0.025 * gameState.playerDreadnoughtCount +
-      0.01 * (4 - gameState.playerCombatUnits.troopsInGarrison) +
-      (gameState.isFinale ? 0.2 : 0.0),
+      0.01 * getResourceAmount(player, 'solari') +
+      0.01 * gameState.playerDreadnoughtCount +
+      0.005 * (gameState.currentRound - 1) -
+      0.01 * gameState.playerCombatUnits.troopsInGarrison,
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 4,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1,
     desiredFields: (fields) => ({
@@ -331,25 +330,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'spice') > 3,
     viableFields: (fields) => ({
-      "Tuek's Sietch": (player, gameState, goals) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'water', amount: 2 }],
-          0.0 + 0.3 * getAccumulatedSpice(gameState, "Tuek's Sietch")
-        ),
-      'Imperial Basin': (player, gameState) => 0.4 + 0.4 * getAccumulatedSpice(gameState, 'Imperial Basin'),
-      'Hagga Basin': (player, gameState, goals) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'water', amount: 1 }],
-          0.7 + 0.3 * getAccumulatedSpice(gameState, 'Hagga Basin')
-        ),
-      'The Great Flat': (player, gameState, goals) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'water', amount: 2 }],
-          0.9 + 0.2 * getAccumulatedSpice(gameState, 'The Great Flat')
-        ),
+      ...getViableBoardFields(fields, 'spice', 0, 3),
     }),
   },
   'collect-solari': {
@@ -370,8 +351,6 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'solari') > (!player.hasSwordmaster ? 8 : 6),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari', 0, 6),
-      'Spice Trade': (player, gameState, goals) =>
-        getResourceAmount(player, 'spice') > 0 ? 1.0 - 0.02 * getResourceAmount(player, 'solari') : 0,
     }),
   },
   'swordmaster-helper': {
@@ -381,13 +360,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
-      'Imperial Favor': (player, gameState) => (gameState.playerScore.emperor === 1 ? 1.0 : 0.5),
-      'Guild Contract': () => 0.75,
-      'Space Port': () => 0.5,
-      'Spice Trade': (player, gameState, goals) => (getResourceAmount(player, 'spice') > 0 ? 0.5 : 0),
-      Conspiracy: (player, gameState, goals) =>
-        gameState.playerScore.emperor === 1 ? getCostAdjustedDesire(player, [{ type: 'spice', amount: 4 }], 0.75) : 0,
-      Propaganda: () => 0.5,
+      ...getViableBoardFields(fields, 'solari', 0, 6),
     }),
   },
 };

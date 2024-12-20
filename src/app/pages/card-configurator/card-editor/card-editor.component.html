@@ -44,7 +44,18 @@
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getBuyEffectTypeControl(i)">
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getRewardTypePath(getBuyEffectTypeControl(i).value)" />
+                <span class="reward-label">{{ getBuyEffectTypeControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">
+              <div class="reward-container">
+                <img class="reward" [src]="getRewardTypePath(rewardType)" />
+                <span class="reward-label">{{ rewardType }}</span>
+              </div>
+            </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
@@ -82,7 +93,18 @@
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getAgentEffectTypeControl(i)">
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getRewardTypePath(getAgentEffectTypeControl(i).value)" />
+                <span class="reward-label">{{ getAgentEffectTypeControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType"
+              ><div class="reward-container">
+                <img class="reward" [src]="getRewardTypePath(rewardType)" />
+                <span class="reward-label">{{ rewardType }}</span>
+              </div></mat-option
+            >
           </mat-select>
         </mat-form-field>
         <mat-form-field>
@@ -136,7 +158,18 @@
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getRevealEffectTypeControl(i)">
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getRewardTypePath(getRevealEffectTypeControl(i).value)" />
+                <span class="reward-label">{{ getRevealEffectTypeControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType"
+              ><div class="reward-container">
+                <img class="reward" [src]="getRewardTypePath(rewardType)" />
+                <span class="reward-label">{{ rewardType }}</span>
+              </div></mat-option
+            >
           </mat-select>
         </mat-form-field>
         <mat-form-field>

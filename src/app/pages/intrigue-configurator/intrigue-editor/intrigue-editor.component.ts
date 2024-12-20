@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { combatUnitTypes, resourceTypes, rewardTypes } from 'src/app/models';
+import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { combatUnitTypes, resourceTypes, RewardType, rewardTypes } from 'src/app/models';
 import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
 
 @Component({
@@ -104,5 +105,9 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
 
   onRemoveEffectClicked(index: number) {
     this.effects.removeAt(index);
+  }
+
+  public getRewardTypePath(rewardType: RewardType) {
+    return getRewardTypePath(rewardType);
   }
 }

@@ -14,6 +14,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 })
 export class TechTileComponent {
   @Input() card!: TechTileCard;
+  @Input() costModifier = 0;
 
   constructor(public translateService: TranslateService, public settingsService: SettingsService) {}
 

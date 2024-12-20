@@ -51,9 +51,13 @@
     <dune-reward-array *ngIf="card.buyEffects" [rewards]="card.buyEffects" [size]="'24px'"></dune-reward-array>
   </div>
   <div
-    [class]="'card-aquire-costs-container' + (card.buyEffects && card.buyEffects.length > 0 ? ' highlighted' : '')"
+    [class]="
+      'card-aquire-costs-container ' +
+      (card.buyEffects && card.buyEffects.length > 0 ? 'highlighted ' : '') +
+      (costModifier ? (costModifier > 0 ? ' negative ' : ' positive ') : '')
+    "
     *ngIf="card.costs"
   >
-    <div class="card-aquire-costs">{{ card.costs }}</div>
+    <div class="card-aquire-costs">{{ card.costs + costModifier }}</div>
   </div>
 </div>

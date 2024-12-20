@@ -16,7 +16,7 @@ form {
 }
 
 .big-text-field {
-    width: 300px;
+    width: 400px;
 }
 
 .large-text-field {
@@ -44,4 +44,19 @@ form {
 
 .card-effect-title {
     margin-right: 16px;
+}
+
+.reward-container {
+    display: flex;
+    align-items: center;
+}
+
+.reward {
+    position: absolute;
+    height: 24px;
+    max-width: 36px;
+}
+
+.reward-label {
+    margin-left: 44px;
 }

@@ -2,7 +2,7 @@ import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
-import { ActionField, ActiveFactionType } from 'src/app/models';
+import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, RewardType } from 'src/app/models';
 import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard } from '../../cards.service';
@@ -38,6 +38,10 @@ export type AIGoals =
   | 'swordmaster-helper'
   | 'get-board-persuasion'
   | 'get-victory-points';
+
+export type PlayerCardsRewards = { [key in RewardType]: number };
+export type PlayerCardsFactions = { [key in ActiveFactionType]: number };
+export type PlayerCardsFieldAccess = { [key in ActionType]: number };
 
 export interface GameState {
   playerScore: PlayerScore;
@@ -78,6 +82,9 @@ export interface GameState {
   occupiedLocations: string[];
   rival?: Player;
   playerTurnInfos?: TurnInfo;
+  playerCardsFactions: PlayerCardsFactions;
+  playerCardsRewards: PlayerCardsRewards;
+  playerCardsFieldAccess: PlayerCardsFieldAccess;
 }
 
 export interface AIGoal {

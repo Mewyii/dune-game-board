@@ -15,7 +15,7 @@ import {
   Reward,
   RewardType,
 } from 'src/app/models';
-import { getDesire, getResourceAmount } from './shared/ai-goal-functions';
+import { getAccumulatedSpice, getDesire, getResourceAmount } from './shared/ai-goal-functions';
 import { ImperiumDeckCard } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
@@ -206,7 +206,7 @@ export class AIManager {
   }
 
   public setPreferredFieldsForAIPlayer(player: Player, gameState: GameState) {
-    const boardFields = this.getFieldsWithCombatAndFactionAdjustments(
+    const boardFields = this.getFieldsWithAdjustedRewards(
       gameState,
       this.getFieldsWithChoices(this.settingsService.boardFields)
     );
@@ -223,13 +223,13 @@ export class AIManager {
     const fieldEvaluations: FieldEvaluation[] = [];
     const decisions: string[] = [];
 
-    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 20);
+    const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 24);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
 
     const evaluatedImperiumRowCards = gameState.imperiumRowCards.map((x) =>
       this.getImperiumCardBuyEvaluation(x, player, gameState)
     );
-    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 15, 5);
+    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 16, 5);
 
     let eventGoalModifiers: GoalModifier[] = [];
     if (gameEvent && gameEvent.aiAdjustments && gameEvent.aiAdjustments.goalEvaluationModifier) {
@@ -705,6 +705,22 @@ export class AIManager {
 
         result.push(cloneDeep(leftOptionField));
         result.push(cloneDeep(rightOptionField));
+      } else if (field.conversionOptions) {
+        for (const conversionOption of field.conversionOptions) {
+          const { hasRewardConversion, rewardConversionIndex } = this.getRewardArrayAIInfos(conversionOption);
+          if (hasRewardConversion) {
+            const costs = conversionOption.slice(0, rewardConversionIndex);
+            const rewards = conversionOption.slice(rewardConversionIndex + 1);
+
+            const conversionField = {
+              ...field,
+              title: { ...field.title, en: field.title.en + ' (' + costs[0].amount + ')' },
+              costs: costs,
+              rewards: rewards,
+            };
+            result.push(cloneDeep(conversionField));
+          }
+        }
       } else {
         result.push(cloneDeep(field));
       }
@@ -712,7 +728,7 @@ export class AIManager {
     return result;
   }
 
-  getFieldsWithCombatAndFactionAdjustments(gameState: GameState, fields: ActionField[]) {
+  getFieldsWithAdjustedRewards(gameState: GameState, fields: ActionField[]) {
     return fields.map((field) => {
       // Faction adjustments
       if (isFactionScoreType(field.actionType)) {
@@ -730,6 +746,20 @@ export class AIManager {
         }
       }
 
+      // Spice Adjustments
+      if (field.rewards.some((x) => x.type === 'spice-accumulation')) {
+        const accumulatedSpice = getAccumulatedSpice(gameState, field.title.en);
+        if (accumulatedSpice > 0) {
+          const spiceIndex = field.rewards.findIndex((x) => x.type === 'spice');
+          if (spiceIndex > -1) {
+            const spiceAmount = field.rewards[spiceIndex].amount ?? 1;
+            field.rewards[spiceIndex].amount = spiceAmount + accumulatedSpice;
+          } else {
+            field.rewards.push({ type: 'spice', amount: accumulatedSpice });
+          }
+        }
+      }
+
       // Combat Adjustments
       const combatRewardIndex = field.rewards.findIndex((x) => x.type === 'combat');
 
@@ -742,7 +772,7 @@ export class AIManager {
         }
         const dreadnoughtRewards = field.rewards.find((x) => x.type === 'dreadnought');
         if (dreadnoughtRewards) {
-          modifier = modifier + 0.35 * (dreadnoughtRewards.amount ?? 1);
+          modifier = modifier + 0.3 * (dreadnoughtRewards.amount ?? 1);
         }
         const intrigueRewards = field.rewards.find((x) => x.type === 'intrigue');
         if (intrigueRewards) {
@@ -797,6 +827,9 @@ export class AIManager {
 
   private getImperiumCardPlayEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
+    if (card.faction) {
+      evaluationValue += 0.5 * gameState.playerCardsFactions[card.faction];
+    }
     if (card.fieldAccess) {
       evaluationValue -= card.fieldAccess.length * 0.1;
     }
@@ -857,6 +890,9 @@ export class AIManager {
 
   private getImperiumCardBuyEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
+    if (card.faction) {
+      evaluationValue += 1 * gameState.playerCardsFactions[card.faction];
+    }
     if (card.persuasionCosts) {
       evaluationValue += card.persuasionCosts * 0.1;
     }
@@ -867,7 +903,9 @@ export class AIManager {
       }
     }
     if (card.fieldAccess) {
-      evaluationValue += card.fieldAccess.length * 1;
+      for (const access of card.fieldAccess) {
+        evaluationValue += gameState.playerCardsFieldAccess[access] < 2 ? 1.5 : 0.75;
+      }
     }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
@@ -925,11 +963,16 @@ export class AIManager {
 
   private getImperiumCardTrashEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
+    if (card.faction) {
+      evaluationValue -= 0.5 * gameState.playerCardsFactions[card.faction];
+    }
     if (card.persuasionCosts) {
       evaluationValue -= card.persuasionCosts * 0.1;
     }
     if (card.fieldAccess) {
-      evaluationValue -= card.fieldAccess.length * 1;
+      for (const access of card.fieldAccess) {
+        evaluationValue -= gameState.playerCardsFieldAccess[access] < 2 ? 1.5 : 0.75;
+      }
     }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
