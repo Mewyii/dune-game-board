@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, min, sum } from 'lodash';
+import { cloneDeep, compact, flatten, min, sum } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, Reward } from '../models';
 import { mergeObjects } from '../helpers/common';
@@ -54,9 +54,19 @@ export interface CustomGameActionModifier extends GameModifier {
   action: CustomGameActionType;
 }
 
+export interface FieldFactionAccessModifier extends GameModifier {
+  fieldId?: string;
+  factionType?: ActiveFactionType;
+}
+
+export interface FieldEnemyAgentsAccessModifier extends GameModifier {
+  fieldId?: string;
+  actionTypes?: ActionType[];
+}
 export interface FieldAccessModifier extends GameModifier {
   fieldId?: string;
   factionType?: ActiveFactionType;
+  type: 'faction-requirement' | 'enemy-agents';
 }
 
 export interface FieldCostsModifier extends GameModifier {
@@ -74,7 +84,7 @@ export interface FieldRewardsModifier extends GameModifier {
   amount: number;
 }
 
-export interface FieldBlockedModifier extends GameModifier {
+export interface FieldBlockModifier extends GameModifier {
   fieldId?: string;
   actionType?: ActionType;
 }
@@ -84,12 +94,13 @@ export interface GameModifiers {
   imperiumRow?: ImperiumRowModifier[];
   techTiles?: TechTileModifier[];
   customActions?: CustomGameActionModifier[];
-  fieldAccess?: FieldAccessModifier[];
+  fieldFactionAccess?: FieldFactionAccessModifier[];
+  fieldEnemyAgentAccess?: FieldEnemyAgentsAccessModifier[];
   locationChange?: LocationChangeModifier[];
   fieldHistory?: FieldHistoryModifier[];
   fieldCost?: FieldCostsModifier[];
   fieldReward?: FieldRewardsModifier[];
-  fieldBlocked?: FieldBlockedModifier[];
+  fieldBlock?: FieldBlockModifier[];
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
@@ -136,15 +147,48 @@ export class GameModifiersService {
   }
 
   public getPlayerFieldUnlocksForFactions(playerId: number): ActiveFactionType[] | undefined {
-    return this.getPlayerGameModifiers(playerId)
-      ?.fieldAccess?.map((x) => x.factionType)
-      .filter((x) => x !== undefined) as ActiveFactionType[] | undefined;
+    const modifiers = this.getPlayerGameModifiers(playerId);
+    if (modifiers && modifiers.fieldFactionAccess) {
+      return compact(modifiers.fieldFactionAccess.map((x) => x.factionType));
+    } else {
+      return undefined;
+    }
   }
 
   public getPlayerFieldUnlocksForIds(playerId: number): string[] | undefined {
-    return this.getPlayerGameModifiers(playerId)
-      ?.fieldAccess?.map((x) => x.fieldId)
-      .filter((x) => x !== undefined) as string[] | undefined;
+    const modifiers = this.getPlayerGameModifiers(playerId);
+    if (modifiers && modifiers.fieldFactionAccess) {
+      return compact(modifiers.fieldFactionAccess.map((x) => x.fieldId));
+    } else {
+      return undefined;
+    }
+  }
+
+  public getPlayerFieldEnemyAcessForActionTypes(playerId: number): ActionType[] | undefined {
+    const modifiers = this.getPlayerGameModifiers(playerId);
+    if (modifiers && modifiers.fieldEnemyAgentAccess) {
+      return compact(flatten(modifiers.fieldEnemyAgentAccess.map((x) => x.actionTypes)));
+    } else {
+      return undefined;
+    }
+  }
+
+  public getPlayerBlockedFieldsForActionTypes(playerId: number): ActionType[] | undefined {
+    const modifiers = this.getPlayerGameModifiers(playerId);
+    if (modifiers && modifiers.fieldBlock) {
+      return compact(modifiers.fieldBlock.map((x) => x.actionType));
+    } else {
+      return undefined;
+    }
+  }
+
+  public getPlayerBlockedFieldsForIds(playerId: number): string[] | undefined {
+    const modifiers = this.getPlayerGameModifiers(playerId);
+    if (modifiers && modifiers.fieldBlock) {
+      return compact(modifiers.fieldBlock.map((x) => x.fieldId));
+    } else {
+      return undefined;
+    }
   }
 
   public getPlayerCustomActionModifiers(playerId: number) {

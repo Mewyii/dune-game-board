@@ -1807,7 +1807,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Verrat',
     },
     faction: 'emperor',
-    persuasionCosts: 6,
+    persuasionCosts: 7,
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/battle_3.png',
     cardAmount: 2,

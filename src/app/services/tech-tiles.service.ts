@@ -22,8 +22,8 @@ export class TechTilesService {
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
   public playerTechTiles$ = this.playerTechTilesSubject.asObservable();
 
-  private newTechTilesSubject = new BehaviorSubject<TechTileCard[]>(techTiles);
-  public newTechTiles$ = this.newTechTilesSubject.asObservable();
+  private techTilesSubject = new BehaviorSubject<TechTileCard[]>(techTiles);
+  public techTiles$ = this.techTilesSubject.asObservable();
 
   constructor() {
     const availableTechTilesString = localStorage.getItem('availableTechTiles');
@@ -32,7 +32,7 @@ export class TechTilesService {
 
       // Workaround for local storage not being able to store functions
       const realTechTiles = availableTechTiles.map((x) => {
-        const techTile = this.newTechTiles.find((y) => y.name.en === x.name.en);
+        const techTile = this.techTiles.find((y) => y.name.en === x.name.en);
         return techTile ?? x;
       });
 
@@ -53,14 +53,14 @@ export class TechTilesService {
       localStorage.setItem('playerTechTiles', JSON.stringify(playerTechTiles));
     });
 
-    const newTechTilesString = localStorage.getItem('newTechTiles');
-    if (newTechTilesString) {
-      const newTechTiles = JSON.parse(newTechTilesString) as TechTileCard[];
-      this.newTechTilesSubject.next(newTechTiles);
+    const techTilesString = localStorage.getItem('techTiles');
+    if (techTilesString) {
+      const techTiles = JSON.parse(techTilesString) as TechTileCard[];
+      this.techTilesSubject.next(techTiles);
     }
 
-    this.newTechTiles$.subscribe((newTechTiles) => {
-      localStorage.setItem('newTechTiles', JSON.stringify(newTechTiles));
+    this.techTiles$.subscribe((techTiles) => {
+      localStorage.setItem('techTiles', JSON.stringify(techTiles));
     });
   }
 
@@ -76,8 +76,8 @@ export class TechTilesService {
     return cloneDeep(this.playerTechTilesSubject.value);
   }
 
-  public get newTechTiles() {
-    return cloneDeep(this.newTechTilesSubject.value);
+  public getTechTiles() {
+    return cloneDeep(this.techTilesSubject.value);
   }
 
   setInitialAvailableTechTiles() {
@@ -149,22 +149,22 @@ export class TechTilesService {
   }
 
   addTechTile(card: TechTileCard) {
-    this.newTechTilesSubject.next([...this.newTechTiles, card]);
+    this.techTilesSubject.next([...this.techTiles, card]);
   }
 
   editTechTile(card: TechTileCard) {
     const cardId = card.name.en;
 
-    const newTechTiles = this.newTechTiles;
-    const cardIndex = newTechTiles.findIndex((x) => x.name.en === cardId);
-    newTechTiles[cardIndex] = card;
+    const techTiles = this.techTiles;
+    const cardIndex = techTiles.findIndex((x) => x.name.en === cardId);
+    techTiles[cardIndex] = card;
 
-    this.newTechTilesSubject.next(newTechTiles);
+    this.techTilesSubject.next(techTiles);
   }
 
   sortTechTiles(category: keyof TechTileCard, order: 'asc' | 'desc') {
     if (category === 'costs') {
-      const orderedTechTiles = this.newTechTiles.sort((a, b) => {
+      const orderedTechTiles = this.techTiles.sort((a, b) => {
         const aCosts = a.costs ?? 0;
         const bCosts = b.costs ?? 0;
         if (order === 'asc') {
@@ -174,11 +174,11 @@ export class TechTilesService {
         }
         return 0;
       });
-      this.newTechTilesSubject.next(orderedTechTiles);
+      this.techTilesSubject.next(orderedTechTiles);
     }
   }
 
   deleteTechTile(id: string) {
-    this.newTechTilesSubject.next(this.newTechTiles.filter((x) => x.name.en !== id));
+    this.techTilesSubject.next(this.techTiles.filter((x) => x.name.en !== id));
   }
 }

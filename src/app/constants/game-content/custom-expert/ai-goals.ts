@@ -62,13 +62,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   tech: {
     baseDesire: 0.45,
     desireModifier: (player, gameState, goals) =>
-      0.0125 * getResourceAmount(player, 'spice') + 0.033 * player.techAgents - 0.01 * (gameState.currentRound - 1),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 3,
+      0.01 * getResourceAmount(player, 'spice') + 0.033 * player.techAgents - 0.01 * (gameState.currentRound - 1),
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'tech', 0, 4),
       ...getViableBoardFields(fields, 'tech-reduced', 0, 2),
-      ...getViableBoardFields(fields, 'tech-reduced-two', 0, 1.5),
+      ...getViableBoardFields(fields, 'tech-reduced-two', 0, 1.33),
       ...getViableBoardFields(fields, 'tech-reduced-three', 0, 1),
     }),
   },
@@ -77,9 +77,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') +
       0.01 * gameState.playerDreadnoughtCount +
-      0.005 * (gameState.currentRound - 1) -
+      0.0075 * (gameState.currentRound - 1) -
       0.01 * gameState.playerCombatUnits.troopsInGarrison,
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 3,
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 5,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1 || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', 0, 1),

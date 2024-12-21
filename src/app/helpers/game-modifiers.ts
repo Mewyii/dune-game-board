@@ -130,7 +130,7 @@ export function getModifiedRewardsForField(
   actionField: ActionField,
   modifiers?: FieldRewardsModifier[]
 ): RewardWithModifier[] {
-  if (modifiers && actionField.rewards) {
+  if (modifiers && actionField.rewards.length > 0) {
     const actionRewards = cloneDeep(actionField.rewards);
     const fieldCostsType = actionRewards[0].type;
 

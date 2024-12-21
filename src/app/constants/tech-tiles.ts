@@ -548,9 +548,12 @@ export const techTiles: TechTileCard[] = [
       en: 'Flagship',
       de: 'Flaggschiff',
     },
-    costs: 7,
+    costs: 8,
     imageUrl: '/assets/images/action-backgrounds/lighter.png',
     buyEffects: [
+      {
+        type: 'troop',
+      },
       {
         type: 'troop',
       },

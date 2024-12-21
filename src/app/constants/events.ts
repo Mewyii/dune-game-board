@@ -1,5 +1,6 @@
 import { LanguageString } from '../models';
 import { AIAdjustments } from '../services/ai/models';
+import { GameModifiers } from '../services/game-modifier.service';
 
 export interface DuneEvent {
   title: LanguageString;
@@ -7,6 +8,7 @@ export interface DuneEvent {
   imagePath: string;
   cardAmount?: number;
   aiAdjustments?: AIAdjustments;
+  gameModifiers?: GameModifiers;
 }
 
 export const duneEvents: DuneEvent[] = [
@@ -33,6 +35,15 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
     cardAmount: 2,
+    gameModifiers: {
+      fieldBlock: [
+        {
+          id: 'sandstorms-field-block',
+          actionType: 'spice',
+          currentRoundOnly: true,
+        },
+      ],
+    },
   },
   {
     title: {
@@ -57,8 +68,16 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
     cardAmount: 2,
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'collect-spice', modifier: -0.25 }],
+    gameModifiers: {
+      fieldReward: [
+        {
+          id: 'sandworms-recued-spice',
+          actionType: 'spice',
+          rewardType: 'spice',
+          amount: -1,
+          currentRoundOnly: true,
+        },
+      ],
     },
   },
   {

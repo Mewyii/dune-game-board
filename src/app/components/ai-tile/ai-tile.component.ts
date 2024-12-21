@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from 'src/app/models/player';
-import { AIManager, AIPlayer, AIVariableValues, AIVariables } from 'src/app/services/ai/ai.manager';
+import { AIManager, AIPlayer } from 'src/app/services/ai/ai.manager';
 import { aiPersonalities } from 'src/app/services/ai/constants';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -15,7 +15,6 @@ export class AITileComponent implements OnInit {
   public currentAIPlayerId: number = 0;
   public currentPlayer: Player | undefined;
   public currentAIPlayer: AIPlayer | undefined;
-  public aiVariables: AIVariables | undefined;
 
   public showDetails = false;
 
@@ -38,23 +37,9 @@ export class AITileComponent implements OnInit {
       this.currentAIPlayer = aiPlayers.find((x) => x.playerId === this.currentPlayer?.id);
     });
 
-    this.aiManager.aiVariables$.subscribe((aiVariables) => {
-      this.aiVariables = aiVariables;
-    });
-
     this.playerManager.players$.subscribe((players) => {
       this.currentPlayer = players.find((x) => x.id === this.currentAIPlayerId);
     });
-  }
-
-  getAIVariable(variableType: keyof AIVariables) {
-    return this.aiVariables ? this.aiVariables[variableType] : undefined;
-  }
-
-  setAIVariable(variableType: keyof AIVariables, value: AIVariableValues) {
-    this.aiManager.setAIVariable(variableType, value);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(this.currentAIPlayerId);
   }
 
   onChangeFieldAccessClicked(canAccessBlockedFields: boolean) {

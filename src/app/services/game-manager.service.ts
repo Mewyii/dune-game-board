@@ -146,7 +146,7 @@ export class GameManager {
       this.agentsOnFieldsSubject.next(agentsOnFields);
     }
 
-    const activePlayerIdString = localStorage.getItem('activeAgentPlacementPlayerId');
+    const activePlayerIdString = localStorage.getItem('activePlayerId');
     if (activePlayerIdString) {
       const activePlayerId = JSON.parse(activePlayerIdString) as number;
       this.activePlayerIdSubject.next(activePlayerId);
@@ -183,7 +183,7 @@ export class GameManager {
     });
 
     this.activePlayerId$.subscribe((activePlayerId) => {
-      localStorage.setItem('activeAgentPlacementPlayerId', JSON.stringify(activePlayerId));
+      localStorage.setItem('activePlayerId', JSON.stringify(activePlayerId));
 
       // if (this.autoPlayAI) {
       //   const activePlayerAgentCount = this.getAvailableAgentCountForPlayer(activePlayerId);
@@ -258,7 +258,7 @@ export class GameManager {
     this.playerRewardChoicesService.resetPlayerRewardChoices();
 
     if (this.settingsService.eventsEnabled) {
-      this.duneEventsManager.setGameEvents();
+      this.duneEventsManager.seteventDeck();
     }
 
     this.playerScoreManager.resetPlayersScores(newPlayers);
@@ -417,7 +417,7 @@ export class GameManager {
     this.currentRoundPhaseSubject.next('none');
     this.startingPlayerIdSubject.next(0);
     this.activePlayerIdSubject.next(0);
-    this.duneEventsManager.resetGameEvents();
+    this.duneEventsManager.reseteventDeck();
     this.leadersService.resetLeaders();
     this.conflictsService.resetConflicts();
 
@@ -971,7 +971,8 @@ export class GameManager {
         if (!playerCombatIntrigues || playerCombatIntrigues.length < 1 || playerCombatScore < 1) {
           this.playerManager.setTurnStateForPlayer(playerId, 'done');
         } else {
-          const highestEnemyCombatScore = this.combatManager.getEnemyHighestCombatScores(playerId);
+          const enemyCombatScores = this.combatManager.getEnemyCombatScores(playerId).map((x) => x.score);
+          const highestEnemyCombatScore = enemyCombatScores[0] ?? 0;
           if (highestEnemyCombatScore >= playerCombatScore) {
             const intriguesWithCombatScores: { intrigue: IntrigueDeckCard; score: number }[] = [];
             const intriguesWithoutCombatScores: IntrigueDeckCard[] = [];
@@ -1002,7 +1003,8 @@ export class GameManager {
             }
 
             const maxAdditionalCombatScore = sum(intriguesWithCombatScores.map((x) => x.score));
-            if (playerCombatScore + maxAdditionalCombatScore > highestEnemyCombatScore) {
+            const playerCanWinCombat = playerCombatScore + maxAdditionalCombatScore > highestEnemyCombatScore;
+            if (playerCanWinCombat || this.isFinale) {
               let playerCurrentCombatScore = playerCombatScore;
 
               for (const intrigueWithCombatScore of intriguesWithCombatScores) {
@@ -1013,6 +1015,24 @@ export class GameManager {
                 playerCurrentCombatScore += swordAmount;
                 if (playerCurrentCombatScore > highestEnemyCombatScore) {
                   break;
+                }
+              }
+            } else if (intriguesWithCombatScores.length > 0 && Math.random() < 0.15 * intriguesWithCombatScores.length) {
+              const beatableCombatScore = enemyCombatScores.find(
+                (x) => x >= playerCombatScore && x < playerCombatScore + maxAdditionalCombatScore
+              );
+              if (beatableCombatScore) {
+                let playerCurrentCombatScore = playerCombatScore;
+
+                for (const intrigueWithCombatScore of intriguesWithCombatScores) {
+                  const intrigue = intrigueWithCombatScore.intrigue;
+                  this.aiPlayIntrigue(player, intrigue);
+
+                  const swordAmount = intrigue.effects.filter((x) => x.type === 'sword').length;
+                  playerCurrentCombatScore += swordAmount;
+                  if (playerCurrentCombatScore > beatableCombatScore) {
+                    break;
+                  }
                 }
               }
             } else {
@@ -1731,8 +1751,13 @@ export class GameManager {
 
     const playerScore = this.playerScoreManager.getPlayerScore(player.id)!;
     const playerFactionFriendships = this.getFactionFriendships(playerScore);
-    const playerFieldUnlocksForFactions = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id);
-    const playerFieldUnlocksForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id);
+    const playerFieldUnlocksForFactions = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id) ?? [];
+    const playerFieldUnlocksForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id) ?? [];
+    const playerFieldEnemyAccessForActionTypes =
+      this.gameModifiersService.getPlayerFieldEnemyAcessForActionTypes(player.id) ?? [];
+
+    const playerBlockedFieldsForActionTypes = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id) ?? [];
+    const playerBlockedFieldsForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id) ?? [];
 
     const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id) ?? [];
     const playerCombatIntrigues = playerIntrigues.filter((x) => x.type === 'combat');
@@ -1769,7 +1794,7 @@ export class GameManager {
       playerLeader: this.leadersService.getLeader(player.id)!,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.buyableTechTiles,
-      currentEvent: this.duneEventsManager.gameEvents[this.currentRound - 1],
+      currentEvent: this.duneEventsManager.eventDeck[this.currentRound - 1],
       playerDeckSizeTotal:
         (playerDeckCards?.length ?? 0) + (playerHandCards?.length ?? 0) + (playerDiscardPileCards?.length ?? 0),
       playerHandCards,
@@ -1783,6 +1808,9 @@ export class GameManager {
       playerFactionFriendships,
       playerFieldUnlocksForFactions,
       playerFieldUnlocksForIds,
+      playerFieldEnemyAccessForActionTypes,
+      blockedFieldsForActionTypes: playerBlockedFieldsForActionTypes,
+      blockedFieldsForIds: playerBlockedFieldsForIds,
       playerIntrigues,
       playerCombatIntrigues,
       playerIntrigueCount,

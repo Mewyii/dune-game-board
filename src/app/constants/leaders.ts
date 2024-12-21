@@ -45,14 +45,6 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
-    gameModifiers: {
-      fieldAccess: [
-        {
-          id: 'stilgar-naib',
-          fieldId: 'sietch tabr',
-        },
-      ],
-    },
   },
   {
     name: {
@@ -94,7 +86,7 @@ export const leaders: Leader[] = [
           },
         },
       },
-      fieldAccess: [
+      fieldFactionAccess: [
         {
           id: 'liet-fremen',
           factionType: 'fremen',
@@ -236,7 +228,7 @@ export const leaders: Leader[] = [
           },
         },
       },
-      fieldAccess: [
+      fieldFactionAccess: [
         {
           id: 'irulan-emperor',
           factionType: 'emperor',
@@ -778,5 +770,13 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/dara.png',
     type: 'new',
     playableByAI: true,
+    gameModifiers: {
+      fieldEnemyAgentAccess: [
+        {
+          id: 'dara-enemy-access',
+          actionTypes: ['bene', 'choam', 'emperor', 'fremen', 'guild', 'landsraad', 'spice', 'town'],
+        },
+      ],
+    },
   },
 ];

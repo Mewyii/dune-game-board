@@ -28,7 +28,7 @@ export class EventsComponent implements OnInit {
       }
     });
 
-    this.duneEventsManager.gameEvents$.subscribe((x) => {
+    this.duneEventsManager.eventDeck$.subscribe((x) => {
       this.events = x;
     });
   }

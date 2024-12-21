@@ -37,7 +37,7 @@ export class TechTileConfiguratorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.techTilesService.newTechTiles$.subscribe((newTechTiles) => {
+    this.techTilesService.techTiles$.subscribe((techTiles) => {
       this.totalTechTileAmount = 0;
 
       this.costs = {
@@ -52,9 +52,9 @@ export class TechTileConfiguratorComponent implements OnInit {
         9: 0,
       };
 
-      this.techTiles = newTechTiles;
+      this.techTiles = techTiles;
 
-      for (const techTile of newTechTiles) {
+      for (const techTile of techTiles) {
         this.totalTechTileAmount++;
 
         this.costs[techTile.costs]++;

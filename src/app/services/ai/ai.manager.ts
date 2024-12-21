@@ -40,10 +40,6 @@ export type AIVariableValues = 'good' | 'okay' | 'bad';
 
 export type AIDIfficultyTypes = 'easy' | 'medium' | 'hard';
 
-export interface AIVariables {
-  imperiumRow: AIVariableValues;
-}
-
 interface FieldEvaluation {
   fieldId: string;
   value: number;
@@ -54,7 +50,7 @@ interface ViableField {
   value: number;
   actionType: ActionType;
   requiresInfluence: FactionInfluence | undefined;
-  accessTrough: 'card' | 'influence';
+  accessTrough: 'card' | 'other';
 }
 
 export interface AIRewardArrayInfo {
@@ -68,9 +64,6 @@ export interface AIRewardArrayInfo {
   providedIn: 'root',
 })
 export class AIManager {
-  private aiVariablesSubject = new BehaviorSubject<AIVariables>({ imperiumRow: 'okay' });
-  public aiVariables$ = this.aiVariablesSubject.asObservable();
-
   private aiPlayersSubject = new BehaviorSubject<AIPlayer[]>([]);
   public aiPlayers$ = this.aiPlayersSubject.asObservable();
 
@@ -91,16 +84,6 @@ export class AIManager {
 
     this.aiPlayers$.subscribe((aiPlayers) => {
       localStorage.setItem('aiPlayers', JSON.stringify(aiPlayers));
-    });
-
-    const aiVariablesString = localStorage.getItem('aiVariables');
-    if (aiVariablesString) {
-      const aiVariables = JSON.parse(aiVariablesString) as AIVariables;
-      this.aiVariablesSubject.next(aiVariables);
-    }
-
-    this.aiVariables$.subscribe((aiVariables) => {
-      localStorage.setItem('aiVariables', JSON.stringify(aiVariables));
     });
 
     const currentAIPlayerIdString = localStorage.getItem('currentAIPlayerId');
@@ -130,10 +113,6 @@ export class AIManager {
 
   public get aiPlayers() {
     return cloneDeep(this.aiPlayersSubject.value);
-  }
-
-  public get aiVariables() {
-    return cloneDeep(this.aiVariablesSubject.value);
   }
 
   public get aiDifficulty() {
@@ -191,14 +170,6 @@ export class AIManager {
 
   public setCurrentAIPlayerId(id: number) {
     this.currentAIPlayerIdSubject.next(id);
-  }
-
-  public setAIVariable(type: keyof AIVariables, value: AIVariableValues) {
-    const aiVariables = this.aiVariables;
-
-    aiVariables[type] = value;
-
-    this.aiVariablesSubject.next(aiVariables);
   }
 
   public setAIDifficulty(value: AIDIfficultyTypes) {
@@ -293,55 +264,7 @@ export class AIManager {
       }
     }
 
-    const blockedFieldIds = gameState.agentsOnFields.map((x) => x.fieldId);
-
-    const nonBlockedFields = aiPlayer.canAccessBlockedFields
-      ? fieldEvaluations
-      : fieldEvaluations.filter((viableField) => !blockedFieldIds.some((fieldId) => viableField.fieldId.includes(fieldId)));
-
-    const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
-    const factionAndFieldAccessFromCards = getCardsFactionAndFieldAccess(gameState.playerHandCards);
-
-    const accessibleFields = boardFields
-      .map((x) => {
-        let accessTrough: 'card' | 'influence' | undefined;
-
-        const nonBlockedField = nonBlockedFields.find((y) => y.fieldId === x.title.en);
-        if (nonBlockedField) {
-          const hasCardActionType = fieldAccessFromCards.some((actionType) => x.actionType === actionType);
-          if (hasCardActionType) {
-            if (!x.requiresInfluence) {
-              accessTrough = 'card';
-            } else {
-              const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
-                (y) => y === x.requiresInfluence!.type
-              );
-
-              const hasDirectAccess =
-                gameState.playerFieldUnlocksForFactions?.some((y) => y === x.requiresInfluence!.type) ||
-                gameState.playerFieldUnlocksForIds?.some((y) => y.toLocaleLowerCase() === x.title.en.toLocaleLowerCase());
-
-              if (hasEnoughFactionInfluence || hasDirectAccess) {
-                accessTrough = 'influence';
-              } else {
-                const hasFactionAccessViaCard = factionAndFieldAccessFromCards.some(
-                  (y) => y.actionType.includes(x.actionType) && y.faction === x.requiresInfluence!.type
-                );
-
-                if (hasFactionAccessViaCard) {
-                  accessTrough = 'card';
-                }
-              }
-            }
-          }
-          return { ...nonBlockedField, actionType: x.actionType, requiresInfluence: x.requiresInfluence, accessTrough };
-        }
-
-        return undefined;
-      })
-      .filter((x) => x && x.accessTrough) as ViableField[];
-
-    accessibleFields.sort((a, b) => b.value - a.value);
+    const accessibleFields = this.getAccessibleFields(boardFields, fieldEvaluations, gameState, aiPlayer);
 
     const randomFactor = gameState.isOpeningTurn
       ? 0.66
@@ -356,6 +279,84 @@ export class AIManager {
     aiPlayer.decisions = decisions;
 
     this.aiPlayersSubject.next(aiPlayers);
+  }
+
+  private getAccessibleFields(
+    boardFields: ActionField[],
+    fieldEvaluations: FieldEvaluation[],
+    gameState: GameState,
+    aiPlayer: AIPlayer
+  ) {
+    const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
+    const factionAndFieldAccessFromCards = getCardsFactionAndFieldAccess(gameState.playerHandCards);
+
+    const accessibleFields = boardFields
+      .map((x) => {
+        const isBlockedField =
+          gameState.blockedFieldsForActionTypes.some((y) => y === x.actionType) ||
+          gameState.blockedFieldsForIds.some((y) => y.includes(x.title.en));
+
+        if (isBlockedField) {
+          return undefined;
+        }
+
+        const hasOwnAgentOnField = gameState.agentsOnFields.some(
+          (y) => x.title.en.includes(y.fieldId) && y.playerId === aiPlayer.playerId
+        );
+        const hasEnemyAgentOnField = gameState.agentsOnFields.some(
+          (y) => x.title.en.includes(y.fieldId) && y.playerId !== aiPlayer.playerId
+        );
+
+        const hasEnemyAcess = gameState.playerFieldEnemyAccessForActionTypes.some((y) => y === x.actionType);
+
+        if (hasOwnAgentOnField || (hasEnemyAgentOnField && !hasEnemyAcess)) {
+          return undefined;
+        }
+
+        const fieldEvaluation = fieldEvaluations.find((y) => y.fieldId === x.title.en);
+        if (fieldEvaluation) {
+          let accessTrough: 'card' | 'influence' | 'other' | undefined;
+
+          const hasCardActionType = fieldAccessFromCards.some((actionType) => x.actionType === actionType);
+          if (hasCardActionType) {
+            if (!x.requiresInfluence) {
+              accessTrough = 'card';
+            } else {
+              const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
+                (y) => y === x.requiresInfluence!.type
+              );
+
+              if (hasEnoughFactionInfluence) {
+                accessTrough = 'influence';
+              } else {
+                const hasOtherAccess =
+                  gameState.playerFieldUnlocksForFactions.some((y) => y === x.requiresInfluence!.type) ||
+                  gameState.playerFieldUnlocksForIds.some((y) => x.title.en.includes(y));
+
+                if (hasOtherAccess) {
+                  accessTrough = 'other';
+                } else {
+                  const hasFactionAccessViaCard = factionAndFieldAccessFromCards.some(
+                    (y) => y.actionType.includes(x.actionType) && y.faction === x.requiresInfluence!.type
+                  );
+
+                  if (hasFactionAccessViaCard) {
+                    accessTrough = 'card';
+                  }
+                }
+              }
+            }
+          }
+          return { ...fieldEvaluation, actionType: x.actionType, requiresInfluence: x.requiresInfluence, accessTrough };
+        }
+
+        return undefined;
+      })
+      .filter((x) => x && x.accessTrough) as ViableField[];
+
+    accessibleFields.sort((a, b) => b.value - a.value);
+
+    return accessibleFields;
   }
 
   public getPreferredFieldForPlayer(playerId: number) {
@@ -1122,7 +1123,7 @@ export class AIManager {
       case 'troop':
         return 1.75;
       case 'dreadnought':
-        return getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 6 : 0;
+        return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 7 : 0) + 0.25 * (gameState.currentRound - 1);
       case 'card-draw':
         return 1.5 + 0.1 * gameState.playerCardsBought + 0.1 * gameState.playerCardsTrashed;
       case 'card-discard':
@@ -1171,9 +1172,9 @@ export class AIManager {
       case 'tech':
         return 1;
       case 'tech-reduced':
-        return 2.25;
+        return 2.75;
       case 'tech-reduced-two':
-        return 4.5;
+        return 4.75;
       case 'tech-reduced-three':
         return 6.75;
       case 'card-round-start':
@@ -1231,7 +1232,7 @@ export class AIManager {
       case 'troop':
         return value - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'dreadnought':
-        return value;
+        return value + 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'card-draw':
         return gameState.playerDeckCards.length > 0 ? value : 0;
       case 'card-discard':

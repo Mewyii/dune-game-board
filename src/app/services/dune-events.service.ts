@@ -10,8 +10,8 @@ export class DuneEventsManager {
   private eventsSubject = new BehaviorSubject<DuneEvent[]>(duneEvents);
   public events$ = this.eventsSubject.asObservable();
 
-  private gameEventsSubject = new BehaviorSubject<Omit<DuneEvent, 'cardAmount'>[]>([]);
-  public gameEvents$ = this.gameEventsSubject.asObservable();
+  private eventDeckSubject = new BehaviorSubject<Omit<DuneEvent, 'cardAmount'>[]>([]);
+  public eventDeck$ = this.eventDeckSubject.asObservable();
 
   constructor() {
     const eventsString = localStorage.getItem('events');
@@ -32,22 +32,22 @@ export class DuneEventsManager {
       localStorage.setItem('events', JSON.stringify(events));
     });
 
-    const gameEventsString = localStorage.getItem('gameEvents');
-    if (gameEventsString) {
-      const gameEvents = JSON.parse(gameEventsString) as Omit<DuneEvent, 'cardAmount'>[];
+    const eventDeckString = localStorage.getItem('eventDeck');
+    if (eventDeckString) {
+      const eventDeck = JSON.parse(eventDeckString) as Omit<DuneEvent, 'cardAmount'>[];
 
       // Workaround for local storage not being able to store functions
-      const realEvents = gameEvents.map((x) => {
+      const realEvents = eventDeck.map((x) => {
         const techTile = duneEvents.find((y) => y.title.en === x.title.en);
         return techTile ?? x;
       });
 
-      this.gameEventsSubject.next(realEvents);
+      this.eventDeckSubject.next(realEvents);
     } else {
     }
 
-    this.gameEvents$.subscribe((gameEvents) => {
-      localStorage.setItem('gameEvents', JSON.stringify(gameEvents));
+    this.eventDeck$.subscribe((eventDeck) => {
+      localStorage.setItem('eventDeck', JSON.stringify(eventDeck));
     });
   }
 
@@ -55,11 +55,11 @@ export class DuneEventsManager {
     return cloneDeep(this.eventsSubject.value);
   }
 
-  public get gameEvents() {
-    return cloneDeep(this.gameEventsSubject.value);
+  public get eventDeck() {
+    return cloneDeep(this.eventDeckSubject.value);
   }
 
-  public setGameEvents() {
+  public seteventDeck() {
     const newEvents: Omit<DuneEvent, 'cardAmount'>[] = [];
     for (let event of this.events) {
       for (let i = 0; i < (event.cardAmount ?? 1); i++) {
@@ -71,11 +71,11 @@ export class DuneEventsManager {
         });
       }
     }
-    this.gameEventsSubject.next(shuffle(newEvents));
+    this.eventDeckSubject.next(shuffle(newEvents));
   }
 
-  public resetGameEvents() {
-    this.gameEventsSubject.next([]);
+  public reseteventDeck() {
+    this.eventDeckSubject.next([]);
   }
 
   public setEvents(events: DuneEvent[]) {

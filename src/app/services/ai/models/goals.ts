@@ -71,8 +71,11 @@ export interface GameState {
   playerDreadnoughtCount: number;
   imperiumRowCards: ImperiumDeckCard[];
   playerFactionFriendships: PlayerFactionScoreType[];
-  playerFieldUnlocksForFactions?: ActiveFactionType[];
-  playerFieldUnlocksForIds?: string[];
+  playerFieldUnlocksForFactions: ActiveFactionType[];
+  playerFieldUnlocksForIds: string[];
+  playerFieldEnemyAccessForActionTypes: ActionType[];
+  blockedFieldsForIds: string[];
+  blockedFieldsForActionTypes: ActionType[];
   playerIntrigues: IntrigueDeckCard[];
   playerCombatIntrigues: IntrigueDeckCard[];
   playerIntrigueCount: number;

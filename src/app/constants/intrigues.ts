@@ -226,7 +226,7 @@ export const intrigues: IntrigueCard[] = [
     effects: [
       {
         type: 'spice',
-        amount: 2,
+        amount: 3,
       },
       {
         type: 'helper-trade',
