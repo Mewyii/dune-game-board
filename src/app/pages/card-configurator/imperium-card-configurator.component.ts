@@ -51,7 +51,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   public totalCardAmount = 0;
 
   constructor(
-    public translateService: TranslateService,
+    public t: TranslateService,
     public cardConfiguratorService: CardConfiguratorService,
     public dialog: MatDialog
   ) {}

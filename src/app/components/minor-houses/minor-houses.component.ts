@@ -18,11 +18,7 @@ export class MinorHousesComponent implements OnInit {
   public activeMinorHouses: House[] = [];
   public title: LanguageString = { de: 'haus', en: 'house' };
 
-  constructor(
-    public gameManager: GameManager,
-    public minorHousesService: MinorHousesService,
-    public translateService: TranslateService
-  ) {}
+  constructor(public gameManager: GameManager, public minorHousesService: MinorHousesService, public t: TranslateService) {}
 
   ngOnInit(): void {
     this.minorHousesService.currentAvailableHouses$.subscribe((houses) => {

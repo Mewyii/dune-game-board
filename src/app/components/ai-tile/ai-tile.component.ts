@@ -19,7 +19,7 @@ export class AITileComponent implements OnInit {
   public showDetails = false;
 
   constructor(
-    public translateService: TranslateService,
+    public t: TranslateService,
     public gameManager: GameManager,
     public playerManager: PlayersService,
     public aiManager: AIManager

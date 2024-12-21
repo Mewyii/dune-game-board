@@ -41,7 +41,7 @@ export class AlwaysBuyableCardsComponent {
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,
     private logService: LoggingService,
-    private translateService: TranslateService
+    private t: TranslateService
   ) {}
 
   ngOnInit(): void {

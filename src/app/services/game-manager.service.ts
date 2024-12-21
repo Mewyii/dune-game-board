@@ -106,7 +106,7 @@ export class GameManager {
     private cardsService: CardsService,
     private gameModifiersService: GameModifiersService,
     private playerRewardChoicesService: PlayerRewardChoicesService,
-    private translateService: TranslateService,
+    private t: TranslateService,
     private intriguesService: IntriguesService,
     private turnInfoService: TurnInfoService
   ) {
@@ -257,10 +257,6 @@ export class GameManager {
     this.locationManager.resetLocationOwners();
     this.playerRewardChoicesService.resetPlayerRewardChoices();
 
-    if (this.settingsService.eventsEnabled) {
-      this.duneEventsManager.seteventDeck();
-    }
-
     this.playerScoreManager.resetPlayersScores(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
     this.removePlayerAgentsFromBoard();
@@ -294,6 +290,17 @@ export class GameManager {
     }
 
     this.turnInfoService.resetTurnInfos();
+
+    if (this.settingsService.eventsEnabled) {
+      this.duneEventsManager.setEventDeck();
+
+      const event = this.duneEventsManager.getCurrentEvent();
+      if (event && event.gameModifiers) {
+        for (const player of this.playerManager.getPlayers()) {
+          this.gameModifiersService.addPlayerGameModifiers(player.id, event.gameModifiers);
+        }
+      }
+    }
   }
 
   public resolveConflict() {
@@ -369,6 +376,8 @@ export class GameManager {
 
   public setNextRound() {
     this.audioManager.playSound('ping');
+    this.gameModifiersService.removeTemporaryGameModifiers();
+
     this.accumulateSpiceOnFields();
     this.removePlayerAgentsFromBoard();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
@@ -406,6 +415,13 @@ export class GameManager {
     }
 
     this.techTilesService.unFlipTechTiles();
+
+    const nextEvent = this.duneEventsManager.setNextEvent();
+    if (nextEvent && nextEvent.gameModifiers) {
+      for (const player of this.playerManager.getPlayers()) {
+        this.gameModifiersService.addPlayerGameModifiers(player.id, nextEvent.gameModifiers);
+      }
+    }
   }
 
   public finishGame() {
@@ -417,7 +433,7 @@ export class GameManager {
     this.currentRoundPhaseSubject.next('none');
     this.startingPlayerIdSubject.next(0);
     this.activePlayerIdSubject.next(0);
-    this.duneEventsManager.reseteventDeck();
+    this.duneEventsManager.resetEventDeck();
     this.leadersService.resetLeaders();
     this.conflictsService.resetConflicts();
 
@@ -497,7 +513,7 @@ export class GameManager {
           }
         }
         if (card.customRevealEffect) {
-          const localizedString = this.translateService.translate(card.customRevealEffect);
+          const localizedString = this.t.translateLS(card.customRevealEffect);
           const { rewards, restString } = this.getExtractedRewardsFromCustomAgentEffect(localizedString);
           for (const reward of rewards) {
             this.addRewardToPlayer(player, reward);
@@ -731,7 +747,7 @@ export class GameManager {
           }
         }
         if (card.customAgentEffect) {
-          const localizedString = this.translateService.translate(card.customAgentEffect);
+          const localizedString = this.t.translateLS(card.customAgentEffect);
           const { rewards, restString } = this.getExtractedRewardsFromCustomAgentEffect(localizedString);
           for (const reward of rewards) {
             this.addRewardToPlayer(player, reward);
@@ -760,7 +776,7 @@ export class GameManager {
 
     this.turnInfoService.updatePlayerTurnInfo(playerId, { agentPlacedOnFieldId: field.title.en });
 
-    this.loggingService.logPlayerSentAgentToField(playerId, this.translateService.translate(field.title));
+    this.loggingService.logPlayerSentAgentToField(playerId, this.t.translateLS(field.title));
   }
 
   public addAgentToPlayer(playerId: number) {
@@ -905,7 +921,7 @@ export class GameManager {
       }
     }
     this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
-    this.loggingService.logPlayerPlayedIntrigue(this.activePlayerId, this.translateService.translate(intrigue.name));
+    this.loggingService.logPlayerPlayedIntrigue(this.activePlayerId, this.t.translateLS(intrigue.name));
   }
 
   public doAIAction(playerId: number) {
@@ -939,10 +955,7 @@ export class GameManager {
             );
             if (boardField && cardAndField) {
               this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
-              this.loggingService.logPlayerPlayedCard(
-                playerId,
-                this.translateService.translate(cardAndField.cardToPlay.name)
-              );
+              this.loggingService.logPlayerPlayedCard(playerId, this.t.translateLS(cardAndField.cardToPlay.name));
               this.addAgentToField(boardField);
 
               couldPlaceAgent = true;
@@ -1051,7 +1064,7 @@ export class GameManager {
   aiPlayIntrigue(player: Player, intrigue: IntrigueDeckCard) {
     const intrigueEffects = intrigue.effects;
 
-    this.loggingService.logPlayerPlayedIntrigue(player.id, this.translateService.translate(intrigue.name));
+    this.loggingService.logPlayerPlayedIntrigue(player.id, this.t.translateLS(intrigue.name));
 
     const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } =
       this.aIManager.getRewardArrayAIInfos(intrigueEffects);
@@ -1125,7 +1138,7 @@ export class GameManager {
       if (cardToDiscard) {
         this.cardsService.discardPlayerHandCard(playerId, cardToDiscard);
 
-        this.loggingService.logPlayerDiscardedCard(playerId, this.translateService.translate(cardToDiscard.name));
+        this.loggingService.logPlayerDiscardedCard(playerId, this.t.translateLS(cardToDiscard.name));
       }
     }
   }
@@ -1146,7 +1159,7 @@ export class GameManager {
       if (cardToTrash) {
         this.cardsService.trashPlayerHandCard(playerId, cardToTrash);
 
-        this.loggingService.logPlayerTrashedCard(playerId, this.translateService.translate(cardToTrash.name));
+        this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(cardToTrash.name));
       }
     }
   }
@@ -1164,7 +1177,7 @@ export class GameManager {
       if (cardToTrash) {
         this.cardsService.trashDiscardedPlayerCard(playerId, cardToTrash);
 
-        this.loggingService.logPlayerTrashedCard(playerId, this.translateService.translate(cardToTrash.name));
+        this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(cardToTrash.name));
       }
     }
   }
@@ -1200,7 +1213,7 @@ export class GameManager {
       if (intrigueToTrash) {
         this.intriguesService.trashPlayerIntrigue(playerId, intrigueToTrash.id);
 
-        this.loggingService.logPlayerTrashedIntrigue(playerId, this.translateService.translate(intrigueToTrash.name));
+        this.loggingService.logPlayerTrashedIntrigue(playerId, this.t.translateLS(intrigueToTrash.name));
       }
     }
   }
@@ -1552,7 +1565,7 @@ export class GameManager {
         this.cardsService.aquirePlayerCardFromImperiumRow(playerId, cardToBuy);
       }
 
-      this.loggingService.logPlayerBoughtCard(playerId, this.translateService.translate(cardToBuy.name));
+      this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(cardToBuy.name));
 
       this.aiBuyImperiumCards(playerId, availablePersuasion - ((cardToBuy.persuasionCosts ?? 0) + costModifier));
     }
@@ -1588,7 +1601,7 @@ export class GameManager {
 
       this.playerManager.removeFocusTokens(playerId, 1);
 
-      this.loggingService.logPlayerTrashedCard(playerId, this.translateService.translate(cardToTrash.name));
+      this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(cardToTrash.name));
 
       if (focusTokens > 1) {
         this.aiUseFocusTokens(playerId, focusTokens - 1);
@@ -1619,7 +1632,7 @@ export class GameManager {
       }
       this.cardsService.aquirePlayerCardFromImperiumRow(this.activePlayerId, card);
 
-      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
+      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
     }
   }
 
@@ -1646,7 +1659,7 @@ export class GameManager {
       }
       this.cardsService.aquirePlayerCardFromImperiumDeck(this.activePlayerId, card);
 
-      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
+      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
       return true;
     } else {
       return false;
@@ -1678,7 +1691,7 @@ export class GameManager {
 
       this.cardsService.addCardToPlayerDiscardPile(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
 
-      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.translateService.translate(card.name));
+      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
     }
   }
 
@@ -1756,8 +1769,9 @@ export class GameManager {
     const playerFieldEnemyAccessForActionTypes =
       this.gameModifiersService.getPlayerFieldEnemyAcessForActionTypes(player.id) ?? [];
 
-    const playerBlockedFieldsForActionTypes = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id) ?? [];
-    const playerBlockedFieldsForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id) ?? [];
+    const playerBlockedFieldsForActionTypes =
+      this.gameModifiersService.getPlayerBlockedFieldsForActionTypes(player.id) ?? [];
+    const playerBlockedFieldsForIds = this.gameModifiersService.getPlayerBlockedFieldsForIds(player.id) ?? [];
 
     const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id) ?? [];
     const playerCombatIntrigues = playerIntrigues.filter((x) => x.type === 'combat');
@@ -2189,7 +2203,7 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { signetRingAmount: 1 });
     } else if (rewardType === 'trash-self' && card) {
       this.cardsService.trashPlayerHandCard(player.id, card);
-      this.loggingService.logPlayerTrashedCard(player.id, this.translateService.translate(card.name));
+      this.loggingService.logPlayerTrashedCard(player.id, this.t.translateLS(card.name));
     } else if (reward.type === 'combat') {
       this.audioManager.playSound('combat');
       this.turnInfoService.setPlayerTurnInfo(player.id, { canEnterCombat: true, deployableUnits: 2 });

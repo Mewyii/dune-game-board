@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DuneEvent, duneEvents } from 'src/app/constants/events';
+import { DuneEvent } from 'src/app/constants/events';
 import { DuneEventsManager } from 'src/app/services/dune-events.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -10,26 +10,14 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./events.component.scss'],
 })
 export class EventsComponent implements OnInit {
-  public events: Omit<DuneEvent, 'cardAmount'>[] = [];
+  public event: Omit<DuneEvent, 'cardAmount'> | undefined;
   public currentEventIndex = 0;
 
-  constructor(
-    public translateService: TranslateService,
-    public gameManager: GameManager,
-    public duneEventsManager: DuneEventsManager
-  ) {}
+  constructor(public t: TranslateService, public gameManager: GameManager, public duneEventsManager: DuneEventsManager) {}
 
   ngOnInit(): void {
-    this.gameManager.currentRound$.subscribe((turn) => {
-      if (turn > 0) {
-        this.currentEventIndex = turn - 1;
-      } else {
-        this.currentEventIndex = 0;
-      }
-    });
-
-    this.duneEventsManager.eventDeck$.subscribe((x) => {
-      this.events = x;
+    this.duneEventsManager.currentEvent$.subscribe((x) => {
+      this.event = x;
     });
   }
 }

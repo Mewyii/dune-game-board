@@ -24,7 +24,7 @@ export class TechTilesComponent {
   constructor(
     public gameManager: GameManager,
     public techTilesService: TechTilesService,
-    public translateService: TranslateService,
+    public t: TranslateService,
     private gameModifierService: GameModifiersService
   ) {}
 

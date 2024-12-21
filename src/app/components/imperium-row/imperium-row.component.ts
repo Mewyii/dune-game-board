@@ -11,6 +11,7 @@ import { PlayersService } from 'src/app/services/players.service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-imperium-row',
@@ -36,7 +37,8 @@ export class ImperiumRowComponent implements OnInit {
     private gameModifierService: GameModifiersService,
     public dialog: MatDialog,
     private turnInfoService: TurnInfoService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    public t: TranslateService
   ) {}
 
   ngOnInit(): void {

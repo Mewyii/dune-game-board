@@ -16,7 +16,7 @@ export class TechTileComponent {
   @Input() card!: TechTileCard;
   @Input() costModifier = 0;
 
-  constructor(public translateService: TranslateService, public settingsService: SettingsService) {}
+  constructor(public t: TranslateService, public settingsService: SettingsService) {}
 
   getFactionType(faction: FactionType) {
     return '';
@@ -37,7 +37,7 @@ export class TechTileComponent {
   public getFactionName(factionType: FactionType) {
     const factionName = this.settingsService.getFactionName(factionType);
     if (factionName) {
-      return this.translateService.translate(factionName);
+      return this.t.translateLS(factionName);
     }
     return '';
   }

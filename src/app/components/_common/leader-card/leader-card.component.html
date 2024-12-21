@@ -2,35 +2,29 @@
   <div class="leader-frame">
     <div class="leader-header">
       <div class="leader-title font-scifi">
-        {{ translateService.translate(leader.name) }}
+        {{ t.translateLS(leader.name) }}
       </div>
       <div class="underline"></div>
-      <div class="leader-house font-medieval">{{ translateService.translate(leader.house).toUpperCase() }}</div>
+      <div class="leader-house font-medieval">{{ t.translateLS(leader.house).toUpperCase() }}</div>
     </div>
     <div class="leader-passive-container">
       <div class="leader-passive-name font-scifi">
-        {{ translateService.translate(leader.passiveName) }}
+        {{ t.translateLS(leader.passiveName) }}
       </div>
       <div class="leader-signet-description-container font-text">
-        <div
-          class="leader-passive-description"
-          [innerHTML]="translateService.translate(leader.passiveDescription) | duneSymbols"
-        ></div>
+        <div class="leader-passive-description" [innerHTML]="t.translateLS(leader.passiveDescription) | duneSymbols"></div>
       </div>
     </div>
     <div class="leader-signet-container">
       <div class="leader-signet-name font-scifi">
         <!-- <img class="signet-ring" src="/assets/images/reward-markers/marker_signet_ring.png" /> -->
-        {{ translateService.translate(leader.signetName) }}
+        {{ t.translateLS(leader.signetName) }}
       </div>
       <div class="leader-signet-description-container font-text">
-        <div
-          class="leader-signet-description"
-          [innerHTML]="translateService.translate(leader.signetDescription) | duneSymbols"
-        ></div>
+        <div class="leader-signet-description" [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols"></div>
       </div>
     </div>
-    <!-- <div class="deck-indicator">{{ translateService.translate(deckName) }}</div>
-    <div class="discard-indicator">{{ translateService.translate(discardName) }}</div> -->
+    <!-- <div class="deck-indicator">{{ t.translateLS(deckName) }}</div>
+    <div class="discard-indicator">{{ t.translateLS(discardName) }}</div> -->
   </div>
 </div>

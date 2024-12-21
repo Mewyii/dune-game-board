@@ -14,7 +14,7 @@ export class MinorHouseCardComponent {
 
   public title: LanguageString = { de: 'haus', en: 'house' };
 
-  constructor(public translateService: TranslateService) {}
+  constructor(public t: TranslateService) {}
 
   public getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);

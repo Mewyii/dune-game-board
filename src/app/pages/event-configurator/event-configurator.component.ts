@@ -16,11 +16,7 @@ export class EventConfiguratorComponent {
   public showControls = true;
   public imagePadding = 0;
 
-  constructor(
-    public translateService: TranslateService,
-    public eventsService: DuneEventsManager,
-    public dialog: MatDialog
-  ) {}
+  constructor(public t: TranslateService, public eventsService: DuneEventsManager, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.eventsService.events$.subscribe((events) => {

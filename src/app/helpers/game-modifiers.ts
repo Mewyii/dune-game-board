@@ -4,6 +4,7 @@ import { ImperiumCard } from '../models/imperium-card';
 import { TechTileCard } from '../models/tech-tile';
 import { ImperiumDeckCard } from '../services/cards.service';
 import {
+  FieldBlockModifier,
   FieldCostsModifier,
   FieldRewardsModifier,
   ImperiumRowModifier,
@@ -80,93 +81,102 @@ export function getTechTileCostModifier(card: TechTileCard, modifiers?: TechTile
 }
 
 export function getModifiedCostsForField(actionField: ActionField, modifiers?: FieldCostsModifier[]): RewardWithModifier[] {
-  if (modifiers && actionField.costs) {
-    const actionCosts = cloneDeep(actionField.costs);
-    const fieldCostsType = actionCosts[0].type;
-
-    const filteredModifiers = modifiers.filter(
-      (x) =>
-        x.costType === fieldCostsType &&
-        (!x.actionType || x.actionType === actionField.actionType) &&
-        (!x.fieldId || x.fieldId === actionField.title.en)
-    );
-
-    const costsModifier = sum(filteredModifiers.map((x) => x.amount));
-    const minCostAmount = min(filteredModifiers.filter((x) => x.minCosts !== undefined).map((x) => x.minCosts));
-
-    let remainingCostModifier = costsModifier;
-
-    for (const costs of actionCosts as RewardWithModifier[]) {
-      let costAmount = costs.amount ?? 1;
-
-      if (remainingCostModifier > 0) {
-        costs.amount = costAmount + remainingCostModifier;
-        costs.modifier = 'negative';
-        break;
-      } else if (remainingCostModifier < 0) {
-        if (Math.abs(remainingCostModifier) >= costAmount) {
-          if (!minCostAmount) {
-            actionCosts.shift();
-            remainingCostModifier -= costAmount;
-          }
-        } else {
-          if (minCostAmount && minCostAmount >= costAmount + remainingCostModifier) {
-            costs.amount = minCostAmount;
-          } else {
-            costs.amount = costAmount + remainingCostModifier;
-            costs.modifier = 'positive';
-          }
-          break;
-        }
-      }
-    }
-    return actionCosts;
-  } else {
+  if (!modifiers || !actionField.costs || actionField.costs.length < 1) {
     return actionField.costs ?? [];
   }
+
+  const actionCosts = cloneDeep(actionField.costs);
+  const fieldCostsType = actionCosts[0].type;
+
+  const filteredModifiers = modifiers.filter(
+    (x) =>
+      x.costType === fieldCostsType &&
+      (!x.actionType || x.actionType === actionField.actionType) &&
+      (!x.fieldId || x.fieldId === actionField.title.en)
+  );
+
+  const costsModifier = sum(filteredModifiers.map((x) => x.amount));
+  const minCostAmount = min(filteredModifiers.filter((x) => x.minCosts !== undefined).map((x) => x.minCosts));
+
+  let remainingCostModifier = costsModifier;
+
+  for (const costs of actionCosts as RewardWithModifier[]) {
+    let costAmount = costs.amount ?? 1;
+
+    if (remainingCostModifier > 0) {
+      costs.amount = costAmount + remainingCostModifier;
+      costs.modifier = 'negative';
+      break;
+    } else if (remainingCostModifier < 0) {
+      if (Math.abs(remainingCostModifier) >= costAmount) {
+        if (!minCostAmount) {
+          actionCosts.shift();
+          remainingCostModifier -= costAmount;
+        }
+      } else {
+        if (minCostAmount && minCostAmount >= costAmount + remainingCostModifier) {
+          costs.amount = minCostAmount;
+        } else {
+          costs.amount = costAmount + remainingCostModifier;
+          costs.modifier = 'positive';
+        }
+        break;
+      }
+    }
+  }
+  return actionCosts;
 }
 
 export function getModifiedRewardsForField(
   actionField: ActionField,
   modifiers?: FieldRewardsModifier[]
 ): RewardWithModifier[] {
-  if (modifiers && actionField.rewards.length > 0) {
-    const actionRewards = cloneDeep(actionField.rewards);
-    const fieldCostsType = actionRewards[0].type;
+  if (!modifiers || actionField.rewards.length < 1) {
+    return actionField.rewards;
+  }
 
-    const rewardModifier = sum(
-      modifiers
-        .filter(
-          (x) =>
-            x.rewardType === fieldCostsType &&
-            (!x.actionType || x.actionType === actionField.actionType) &&
-            (!x.fieldId || x.fieldId === actionField.title.en)
-        )
-        .map((x) => x.amount)
-    );
+  const actionRewards = cloneDeep(actionField.rewards);
 
-    let remainingReward = rewardModifier;
+  const filteredModifiers = modifiers.filter(
+    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
+  );
+
+  for (const modifier of filteredModifiers) {
+    let remainingRewardModifier = modifier.amount;
 
     for (const reward of actionRewards as RewardWithModifier[]) {
-      let costAmount = reward.amount ?? 1;
+      if (reward.type === modifier.rewardType) {
+        let costAmount = reward.amount ?? 1;
 
-      if (remainingReward > 0) {
-        reward.amount = costAmount + remainingReward;
-        reward.modifier = 'positive';
-        break;
-      } else if (remainingReward < 0) {
-        if (Math.abs(remainingReward) >= costAmount) {
-          actionRewards.shift();
-          remainingReward -= costAmount;
-        } else {
-          reward.amount = costAmount - remainingReward;
-          reward.modifier = 'negative';
+        if (remainingRewardModifier > 0) {
+          reward.amount = costAmount + remainingRewardModifier;
+          reward.modifier = 'positive';
           break;
+        } else if (remainingRewardModifier < 0) {
+          if (Math.abs(remainingRewardModifier) >= costAmount) {
+            actionRewards.shift();
+            remainingRewardModifier -= costAmount;
+          } else {
+            reward.amount = costAmount + remainingRewardModifier;
+            reward.modifier = 'negative';
+            break;
+          }
         }
       }
     }
-    return actionRewards;
-  } else {
-    return actionField.rewards ?? [];
   }
+
+  return actionRewards;
+}
+
+export function getFieldIsBlocked(actionField: ActionField, modifiers?: FieldBlockModifier[]) {
+  if (!modifiers) {
+    return false;
+  }
+
+  const filteredModifiers = modifiers.filter(
+    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
+  );
+
+  return filteredModifiers.length > 0;
 }

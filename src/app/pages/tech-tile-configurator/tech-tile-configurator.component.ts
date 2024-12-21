@@ -30,11 +30,7 @@ export class TechTileConfiguratorComponent implements OnInit {
     9: 0,
   };
 
-  constructor(
-    public translateService: TranslateService,
-    public techTilesService: TechTilesService,
-    public dialog: MatDialog
-  ) {}
+  constructor(public t: TranslateService, public techTilesService: TechTilesService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.techTilesService.techTiles$.subscribe((techTiles) => {

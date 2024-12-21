@@ -1,10 +1,10 @@
 <div class="house-card" *ngIf="house">
   <div class="house-header" [style.color]="house.colorPrimary">
     <div [style]="'padding-top: 15px'">
-      {{ translateService.translate(title) }}
+      {{ t.translateLS(title) }}
     </div>
     <div class="house-title">
-      {{ translateService.translate(house.name) }}
+      {{ t.translateLS(house.name) }}
     </div>
   </div>
   <div
@@ -13,10 +13,7 @@
     [style.borderColor]="getTransparentColor(house.colorSecondary, 0.5)"
   >
     <div class="card-effect-custom requirement" *ngIf="house.customAllianceRequirement">
-      <div
-        class="card-effect-custom-text"
-        [innerHTML]="translateService.translate(house.customAllianceRequirement) | duneSymbols"
-      ></div>
+      <div class="card-effect-custom-text" [innerHTML]="t.translateLS(house.customAllianceRequirement) | duneSymbols"></div>
     </div>
     <div class="card-effect requirement" *ngIf="house.allianceRequirement">
       <ng-container *ngFor="let reward of house.allianceRequirement">
@@ -31,10 +28,7 @@
       </ng-container>
     </div>
     <div class="card-effect-custom price" *ngIf="house.customAllianceReward">
-      <div
-        class="card-effect-custom-text"
-        [innerHTML]="translateService.translate(house.customAllianceReward) | duneSymbols"
-      ></div>
+      <div class="card-effect-custom-text" [innerHTML]="t.translateLS(house.customAllianceReward) | duneSymbols"></div>
     </div>
     <div class="card-effect price" *ngIf="house.allianceReward">
       <ng-container *ngFor="let reward of house.allianceReward">
@@ -53,7 +47,7 @@
     <div class="card-effect-custom requirement" *ngIf="house.customFriendshipRequirement">
       <div
         class="card-effect-custom-text"
-        [innerHTML]="translateService.translate(house.customFriendshipRequirement) | duneSymbols"
+        [innerHTML]="t.translateLS(house.customFriendshipRequirement) | duneSymbols"
       ></div>
     </div>
     <div class="card-effect requirement" *ngIf="house.friendshipRequirement">
@@ -69,10 +63,7 @@
       </ng-container>
     </div>
     <div class="card-effect-custom price" *ngIf="house.customFriendshipReward">
-      <div
-        class="card-effect-custom-text"
-        [innerHTML]="translateService.translate(house.customFriendshipReward) | duneSymbols"
-      ></div>
+      <div class="card-effect-custom-text" [innerHTML]="t.translateLS(house.customFriendshipReward) | duneSymbols"></div>
     </div>
     <div class="card-effect price" *ngIf="house.friendshipReward">
       <ng-container *ngFor="let reward of house.friendshipReward">

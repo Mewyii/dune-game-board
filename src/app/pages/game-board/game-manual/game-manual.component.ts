@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-game-manual',
@@ -8,7 +9,7 @@ import { Component } from '@angular/core';
 export class GameManualComponent {
   public isFullScreen = false;
 
-  constructor() {
+  constructor(public t: TranslateService) {
     addEventListener('fullscreenchange', (event) => {
       this.isFullScreen = !!document.fullscreenElement;
     });

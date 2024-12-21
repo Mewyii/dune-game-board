@@ -57,7 +57,7 @@ export class DuneFactionComponent implements OnInit {
   constructor(
     public playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
-    public translateService: TranslateService,
+    public t: TranslateService,
     public gameModifiersService: GameModifiersService
   ) {}
 

@@ -31,7 +31,6 @@ export class PlayerboardComponent implements OnInit {
 
   public playerScores: PlayerScore[] = [];
 
-  public playersString: LanguageString = { de: 'Spieler', en: 'Players' };
   public roundString: LanguageString = { de: 'Runde', en: 'Round' };
   public playerDecks: PlayerCardStack[] = [];
   public playerDiscardPiles: PlayerCardStack[] = [];
@@ -45,7 +44,7 @@ export class PlayerboardComponent implements OnInit {
     public leadersService: LeadersService,
     public cardsService: CardsService,
     public intriguesService: IntriguesService,
-    public translateService: TranslateService,
+    public t: TranslateService,
     private audioManager: AudioManager,
     public dialog: MatDialog
   ) {}

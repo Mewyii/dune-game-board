@@ -1,7 +1,7 @@
 <div class="player-board-container">
   <div class="heading">
     <div class="font-scifi" *ngIf="gameManager.currentRound == 0">
-      {{ translateService.translate(playersString) }}
+      {{ t.translate('playerboardHeading') }}
     </div>
     <div *ngIf="gameManager.currentRound == 0">
       <button
@@ -24,7 +24,7 @@
     </div>
     <div *ngIf="currentTurn" class="turn-area">
       <div class="font-scifi" *ngIf="currentTurn">
-        {{ translateService.translate(roundString) }} <span class="turn">{{ currentTurn }}</span>
+        {{ t.translate('playerboardRound') }} <span class="turn">{{ currentTurn }}</span>
       </div>
       <div class="turn-state font-medieval">{{ turnState.toUpperCase() }}</div>
     </div>
@@ -36,7 +36,7 @@
         [style.color]="player.color"
       >
         <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
-        {{ translateService.translate(getPlayerLeaderName(player.id)).toUpperCase() }}
+        {{ t.translateLS(getPlayerLeaderName(player.id)).toUpperCase() }}
       </div>
     </div>
     <div class="ai-area font-medieval">
@@ -101,7 +101,13 @@
     </div>
   </div>
   <div class="action-container" [style]="'padding-bottom: 48px'">
-    <button *ngIf="!currentTurn" mat-fab color="accent" (click)="showSettingsDialog()" matTooltip="Settings">
+    <button
+      *ngIf="!currentTurn"
+      mat-fab
+      color="accent"
+      (click)="showSettingsDialog()"
+      [matTooltip]="t.translate('playerboardSettingsTooltip')"
+    >
       <mat-icon>settings</mat-icon>
     </button>
     <button
@@ -109,7 +115,7 @@
       *ngIf="currentTurn && turnState === 'agent-placement'"
       color="accent"
       (click)="onBeginCombatClicked()"
-      matTooltip="Combat"
+      [matTooltip]="t.translate('playerboardCombatTooltip')"
       [disabled]="!canSwitchToCombatPhase"
     >
       <mat-icon>flash_on</mat-icon>
@@ -119,7 +125,7 @@
       mat-fab
       color="accent"
       (click)="onResolveCombatClicked()"
-      matTooltip="Resolve Conflict"
+      [matTooltip]="t.translate('playerboardResolveCombatTooltip')"
     >
       <mat-icon>groups</mat-icon>
     </button>
@@ -128,7 +134,7 @@
       mat-fab
       color="accent"
       (click)="onNextRoundClicked()"
-      matTooltip="Next Round"
+      [matTooltip]="t.translate('playerboardNextRoundTooltip')"
     >
       <mat-icon>start</mat-icon>
     </button>
@@ -138,12 +144,18 @@
       color="accent"
       (click)="onStartGameClicked()"
       [disabled]="players.length < 2"
-      matTooltip="Begin"
+      [matTooltip]="t.translate('playerboardBeginGameTooltip')"
     >
       <mat-icon>play_arrow</mat-icon>
     </button>
 
-    <button *ngIf="currentTurn" mat-fab color="accent" (click)="onFinishGameClicked()" matTooltip="Finish Game">
+    <button
+      *ngIf="currentTurn"
+      mat-fab
+      color="accent"
+      (click)="onFinishGameClicked()"
+      [matTooltip]="t.translate('playerboardFinishGameTooltip')"
+    >
       <mat-icon>power_settings_new</mat-icon>
     </button>
   </div>

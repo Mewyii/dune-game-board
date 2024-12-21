@@ -5,10 +5,11 @@ import { fire, spice } from './constants';
 import { IParticlesProps } from 'ng-particles';
 import { GameManager } from '../game-manager.service';
 import { welcome } from './constants/welcome';
+import { LanguageString } from 'src/app/models';
 
 export interface Effect {
   id: string;
-  title: string;
+  title: LanguageString;
   effect: IParticlesProps;
   duration: number;
   show: boolean;
@@ -20,7 +21,7 @@ export interface Effect {
 export class EffectsService {
   private welcomeAnimationSubject = new BehaviorSubject<Effect>({
     id: 'welcomeEffect',
-    title: 'dune: imperium',
+    title: { en: 'Dune: Imperium', de: 'Dune: Imperium' },
     effect: welcome,
     duration: 5,
     show: false,
@@ -29,7 +30,7 @@ export class EffectsService {
 
   private combatAnimationSubject = new BehaviorSubject<Effect>({
     id: 'combatEffect',
-    title: 'combat',
+    title: { en: 'Combat', de: 'Kampf' },
     effect: fire,
     duration: 4,
     show: false,
@@ -38,7 +39,7 @@ export class EffectsService {
 
   private spiceAnimationSubject = new BehaviorSubject<Effect>({
     id: 'spiceEffect',
-    title: 'rundenbeginn',
+    title: { en: 'Round Start', de: 'Rundenbeginn' },
     effect: spice,
     duration: 4,
     show: false,
@@ -57,7 +58,7 @@ export class EffectsService {
         this.showCombatAnimation();
       }
       if (phase === 'agent-placement') {
-        this.showSpiceAnimation('runde ' + this.currentTurn);
+        this.showSpiceAnimation({ en: 'Round ' + this.currentTurn, de: 'Runde ' + this.currentTurn });
       }
       if (phase === 'none') {
         this.showWelcomeAnimation();
@@ -104,11 +105,11 @@ export class EffectsService {
     this.welcomeAnimationSubject.next({ ...this.welcomeAnimation, show: true });
   }
 
-  public showCombatAnimation(title?: string) {
+  public showCombatAnimation(title?: LanguageString) {
     this.combatAnimationSubject.next({ ...this.combatAnimation, title: title ?? this.combatAnimation.title, show: true });
   }
 
-  public showSpiceAnimation(title?: string) {
+  public showSpiceAnimation(title?: LanguageString) {
     this.spiceAnimationSubject.next({ ...this.spiceAnimation, title: title ?? this.spiceAnimation.title, show: true });
   }
 }

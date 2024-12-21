@@ -21,7 +21,7 @@ export class CardConfiguratorService {
   private startingCardsSubject = new BehaviorSubject<ImperiumCard[]>(startingCards);
   public startingCards$ = this.startingCardsSubject.asObservable();
 
-  constructor(public translateService: TranslateService) {
+  constructor(public t: TranslateService) {
     const imperiumCardsString = localStorage.getItem('imperiumCards');
     if (imperiumCardsString) {
       const imperiumCards = JSON.parse(imperiumCardsString) as ImperiumCard[];

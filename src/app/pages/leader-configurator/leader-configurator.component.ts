@@ -16,7 +16,7 @@ export class LeaderConfiguratorComponent {
   public showControls = true;
   public imagePadding = 0;
 
-  constructor(public translateService: TranslateService, public leadersService: LeadersService, public dialog: MatDialog) {}
+  constructor(public t: TranslateService, public leadersService: LeadersService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.leadersService.leaders$.subscribe((leaders) => {

@@ -19,7 +19,7 @@ export class IntrigueConfiguratorComponent implements OnInit {
   public totalIntrigueAmount = 0;
 
   constructor(
-    public translateService: TranslateService,
+    public t: TranslateService,
     public intrigueConfigService: IntrigueConfiguratorService,
     public dialog: MatDialog
   ) {}

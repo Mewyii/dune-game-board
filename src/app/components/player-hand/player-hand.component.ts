@@ -43,7 +43,7 @@ export class PlayerHandComponent implements OnInit {
     private settingsService: SettingsService,
     public dialog: MatDialog,
     private logService: LoggingService,
-    private translateService: TranslateService,
+    private t: TranslateService,
     private playerRewardChoicesService: PlayerRewardChoicesService
   ) {}
 
@@ -116,7 +116,7 @@ export class PlayerHandComponent implements OnInit {
 
   onPlayCardClicked(card: ImperiumDeckCard) {
     this.cardsService.setPlayedPlayerCard(this.activePlayerId, card.id);
-    this.logService.logPlayerPlayedCard(this.activePlayerId, this.translateService.translate(card.name));
+    this.logService.logPlayerPlayedCard(this.activePlayerId, this.t.translateLS(card.name));
   }
 
   onUnPlayCardClicked(cardId: string) {
@@ -128,7 +128,7 @@ export class PlayerHandComponent implements OnInit {
     this.cardsService.discardPlayerHandCard(this.activePlayerId, card);
     this.activeCardId = '';
 
-    this.logService.logPlayerDiscardedCard(this.activePlayerId, this.translateService.translate(card.name));
+    this.logService.logPlayerDiscardedCard(this.activePlayerId, this.t.translateLS(card.name));
   }
 
   onAIDiscardCardClicked() {
@@ -178,13 +178,13 @@ export class PlayerHandComponent implements OnInit {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.activeCardId = '';
 
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
       } else if (this.currentPlayer.focusTokens > 0) {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
 
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
       }
     }
   }
@@ -195,13 +195,13 @@ export class PlayerHandComponent implements OnInit {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.activeCardId = '';
 
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
       } else if (this.currentPlayer.focusTokens > 0) {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
 
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.translateService.translate(card.name));
+        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
       }
     }
   }

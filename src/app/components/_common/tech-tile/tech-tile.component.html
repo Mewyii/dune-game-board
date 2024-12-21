@@ -6,7 +6,7 @@
       [style.background-image]="'url(' + getFactionTypePath(card.faction) + ')'"
     ></div>
     <span>
-      {{ translateService.translate(card.name).toUpperCase() }}
+      {{ t.translateLS(card.name).toUpperCase() }}
     </span>
   </div>
   <div class="card-img" [style.background-image]="'url(' + card.imageUrl + ')'">
@@ -25,12 +25,12 @@
         <div
           *ngIf="!card.customEffect.fontSize || card.customEffect.fontSize == 'small'"
           class="card-reveal-effect-custom-text"
-          [innerHTML]="translateService.translate(card.customEffect) | duneSymbols"
+          [innerHTML]="t.translateLS(card.customEffect) | duneSymbols"
         ></div>
         <div
           *ngIf="card.customEffect.fontSize === 'medium'"
           class="card-reveal-effect-custom-text medium"
-          [innerHTML]="translateService.translate(card.customEffect) | duneSymbols : '20px'"
+          [innerHTML]="t.translateLS(card.customEffect) | duneSymbols : '20px'"
         ></div>
       </div>
       <div class="card-agent-effect" *ngIf="card.effects">

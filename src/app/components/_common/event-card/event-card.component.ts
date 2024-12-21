@@ -10,5 +10,5 @@ import { TranslateService } from 'src/app/services/translate-service';
 export class EventCardComponent {
   @Input() event!: DuneEvent;
 
-  constructor(public translateService: TranslateService) {}
+  constructor(public t: TranslateService) {}
 }

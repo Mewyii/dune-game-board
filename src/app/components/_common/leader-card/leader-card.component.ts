@@ -14,5 +14,5 @@ export class LeaderCardComponent {
   public deckName: LanguageString = { de: 'deck', en: 'deck' };
   public discardName: LanguageString = { de: 'ablage', en: 'discard' };
 
-  constructor(public translateService: TranslateService) {}
+  constructor(public t: TranslateService) {}
 }

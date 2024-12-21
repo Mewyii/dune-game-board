@@ -15,7 +15,7 @@ export class ImperiumRowCardComponent {
   @Input() card!: ImperiumCard;
   @Input() costModifier = 0;
 
-  constructor(public translateService: TranslateService, public settingsService: SettingsService) {}
+  constructor(public t: TranslateService, public settingsService: SettingsService) {}
 
   getFactionType(faction: FactionType) {
     return '';
@@ -36,7 +36,7 @@ export class ImperiumRowCardComponent {
   public getFactionName(factionType: FactionType) {
     const factionName = this.settingsService.getFactionName(factionType);
     if (factionName) {
-      return this.translateService.translate(factionName);
+      return this.t.translateLS(factionName);
     }
     return '';
   }

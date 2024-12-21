@@ -18,14 +18,14 @@
 }
 
 .effect-title {
+    font-family: 'scifi';
     position: fixed;
-    font-size: 66px;
     width: 100%;
     text-align: center;
     left: 0;
-    top: calc(50% - 33px);
+    top: calc(50% - 90px);
     color: white;
-    font-size: 128px;
+    font-size: 180px;
     letter-spacing: 32px;
     user-select: none;
 }

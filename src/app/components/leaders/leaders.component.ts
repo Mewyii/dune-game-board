@@ -59,7 +59,7 @@ export class LeadersComponent implements OnInit {
 
   constructor(
     public leadersService: LeadersService,
-    public translateService: TranslateService,
+    public t: TranslateService,
     public gameManager: GameManager,
     public playerManager: PlayersService,
     public combatManager: CombatManager,

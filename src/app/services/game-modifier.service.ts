@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, compact, flatten, min, sum } from 'lodash';
+import { cloneDeep, compact, flatten, isArray, min, sum } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, Reward } from '../models';
 import { mergeObjects } from '../helpers/common';
@@ -294,6 +294,22 @@ export class GameModifiersService {
     }
 
     this.playerGameModifiersSubject.next(playerGameModifiers);
+  }
+
+  public removeTemporaryGameModifiers() {
+    const playerModifiers = this.playerGameModifiers;
+    for (const modifiers of playerModifiers) {
+      for (const keyString in modifiers) {
+        const key = keyString as keyof GameModifiers;
+
+        let modifier = modifiers[key];
+        if (isArray(modifier)) {
+          modifiers[key] = modifier.filter((x) => !x.currentRoundOnly) as any;
+        }
+      }
+    }
+
+    this.playerGameModifiersSubject.next(playerModifiers);
   }
 
   public resetplayerGameModifiers(players: Player[]) {

@@ -14,7 +14,7 @@ import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/help
 import { GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { PlayersService } from 'src/app/services/players.service';
-import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
+import { getFieldIsBlocked, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 
 @Component({
   selector: 'app-dune-action',
@@ -55,6 +55,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
   public actionCosts: RewardWithModifier[] = [];
 
   public actionRewards: RewardWithModifier[] = [];
+
+  public isBlocked = false;
 
   public canWriteFieldHistory = false;
   public fieldHistoryAmount: number | undefined;
@@ -110,8 +112,15 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
       this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
 
+      if (this.actionField.title.en.includes('Imperial')) {
+        const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
+        this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
+      }
       const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
       this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
+
+      const fieldBlockModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldBlock');
+      this.isBlocked = getFieldIsBlocked(this.actionField, fieldBlockModifiers);
 
       this.canWriteFieldHistory = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
@@ -147,6 +156,9 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
       this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
 
+      const fieldBlockModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldBlock');
+      this.isBlocked = getFieldIsBlocked(this.actionField, fieldBlockModifiers);
+
       this.canWriteFieldHistory = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
         'field-history'
@@ -178,7 +190,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     if (currentPlayerId) {
       const playerAgentCount = this.gameManager.getAvailableAgentCountForPlayer(currentPlayerId);
 
-      if (playerAgentCount > 0) {
+      if (playerAgentCount > 0 && !this.isBlocked) {
         this.gameManager.addAgentToField(this.actionField);
         this.actionFieldClick.emit({ playerId: currentPlayerId });
         this.audioManager.playSound('click');

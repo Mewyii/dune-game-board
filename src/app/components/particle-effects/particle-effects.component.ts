@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Container, Engine } from 'tsparticles-engine';
 import { loadFirePreset } from 'tsparticles-preset-fire';
 import { Effect, EffectsService } from 'src/app/services/effects/effects.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-particle-effects',
@@ -13,7 +14,7 @@ export class ParticleEffectsComponent implements OnInit {
   public spiceAnimation: Effect | undefined;
   public welcomeAnimation: Effect | undefined;
 
-  constructor(public effectsService: EffectsService) {}
+  constructor(public effectsService: EffectsService, public t: TranslateService) {}
 
   ngOnInit(): void {
     this.effectsService.combatAnimation$.subscribe((combatAnimation) => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, first, map } from 'rxjs';
 import { DuneEvent, duneEvents } from '../constants/events';
 
 @Injectable({
@@ -12,6 +12,7 @@ export class DuneEventsManager {
 
   private eventDeckSubject = new BehaviorSubject<Omit<DuneEvent, 'cardAmount'>[]>([]);
   public eventDeck$ = this.eventDeckSubject.asObservable();
+  public currentEvent$ = this.eventDeck$.pipe(map((x) => x[0]));
 
   constructor() {
     const eventsString = localStorage.getItem('events');
@@ -59,7 +60,16 @@ export class DuneEventsManager {
     return cloneDeep(this.eventDeckSubject.value);
   }
 
-  public seteventDeck() {
+  public getCurrentEvent() {
+    const currentEvent = this.eventDeckSubject.value[0];
+    if (currentEvent) {
+      return cloneDeep(this.eventDeckSubject.value[0]);
+    } else {
+      return undefined;
+    }
+  }
+
+  public setEventDeck() {
     const newEvents: Omit<DuneEvent, 'cardAmount'>[] = [];
     for (let event of this.events) {
       for (let i = 0; i < (event.cardAmount ?? 1); i++) {
@@ -68,13 +78,21 @@ export class DuneEventsManager {
           description: event.description,
           imagePath: event.imagePath,
           aiAdjustments: event.aiAdjustments,
+          gameModifiers: event.gameModifiers,
         });
       }
     }
     this.eventDeckSubject.next(shuffle(newEvents));
   }
 
-  public reseteventDeck() {
+  public setNextEvent() {
+    const eventDeck = this.eventDeck;
+    eventDeck.shift();
+    this.eventDeckSubject.next(eventDeck);
+    return eventDeck[0];
+  }
+
+  public resetEventDeck() {
     this.eventDeckSubject.next([]);
   }
 

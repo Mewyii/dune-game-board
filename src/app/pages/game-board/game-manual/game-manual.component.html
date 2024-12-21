@@ -1,10 +1,10 @@
 <div class="manual-container">
   <div class="about-container">
-    <h2>Fullscreen</h2>
-    <div>This app is best used in fullscreen mode.</div>
+    <h2>{{ t.translate('gamemanualFullscreenHeading') }}</h2>
+    <div>{{ t.translate('gamemanualFullscreenText') }}</div>
     <br />
     <button mat-raised-button [color]="'accent'" (click)="enableFullScreen()">
-      {{ isFullScreen ? 'Exit' : 'Enter' }} Fullscreen Mode
+      {{ isFullScreen ? t.translate('gamemanualFullscreenExitTooltip') : t.translate('gamemanualFullscreenEnterTooltip') }}
     </button>
     <br /><br />
     <h2>How to play</h2>

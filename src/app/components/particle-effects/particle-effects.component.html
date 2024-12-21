@@ -11,7 +11,7 @@
     (particlesLoaded)="particlesLoaded($event)"
   >
   </ng-particles>
-  <div class="effect-title font-medieval red">{{ combatAnimation.title.toUpperCase() }}</div>
+  <div class="effect-title font-medieval red">{{ t.translateLS(combatAnimation.title) }}</div>
 </div>
 
 <div
@@ -27,7 +27,7 @@
     (particlesLoaded)="particlesLoaded($event)"
   >
   </ng-particles>
-  <div class="effect-title font-medieval gold">{{ spiceAnimation.title.toUpperCase() }}</div>
+  <div class="effect-title font-medieval gold">{{ t.translateLS(spiceAnimation.title) }}</div>
 </div>
 
 <div
@@ -43,5 +43,5 @@
     (particlesLoaded)="particlesLoaded($event)"
   >
   </ng-particles>
-  <div class="effect-title font-medieval gold">{{ welcomeAnimation.title.toUpperCase() }}</div>
+  <div class="effect-title font-medieval gold">{{ t.translateLS(welcomeAnimation.title) }}</div>
 </div>
