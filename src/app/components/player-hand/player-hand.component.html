@@ -52,6 +52,9 @@
           [class]="'card-container' + (showCards ? ' ' : ' hidden')"
           (click)="setCardActive(handCard.id)"
         >
+          @if (currentPlayer?.isAI && currentPlayer?.turnState !== 'reveal' && handCard.id !== playedPlayerCardId) {
+          <div [class]="'imperium-card background' + (handCard.id === activeCardId ? ' active' : '')"></div>
+          } @else {
           <dune-imperium-row-card
             [class]="
               (handCard.id === activeCardId ? 'active' : '') +
@@ -99,6 +102,7 @@
               <mat-icon>delete</mat-icon>
             </button>
           </div>
+          }
         </div>
       </ng-container>
       <ng-container *ngIf="playerDiscardPiles && cardsShown === 'discard'">

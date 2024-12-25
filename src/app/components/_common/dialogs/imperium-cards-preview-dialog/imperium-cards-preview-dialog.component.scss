@@ -1,7 +1,16 @@
+.dialog-content {
+    min-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .cards-container {
     display: flex;
     gap: 32px;
     flex-wrap: wrap;
+    overflow: auto;
+    height: 500px;
 }
 
 .card-container {

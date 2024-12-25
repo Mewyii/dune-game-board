@@ -105,8 +105,11 @@ export class ImperiumRowComponent implements OnInit {
     if (imperiumDeck) {
       const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
         data: {
-          title: 'Imperium Deck',
+          title: 'Search Imperium Deck',
+          playerId: this.activePlayerId,
           imperiumCards: imperiumDeck,
+          canAquireCards: true,
+          search: true,
         },
       });
 

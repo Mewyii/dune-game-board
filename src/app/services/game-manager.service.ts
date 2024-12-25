@@ -708,7 +708,9 @@ export class GameManager {
             for (const agentEffect of card.agentEffects) {
               this.addRewardToPlayer(player, agentEffect, card);
             }
-          } else if (isAI && hasRewardOptions) {
+          } else if (!isAI && (hasRewardOptions || hasRewardConversion)) {
+            this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, card.agentEffects);
+          } else if (isAI && hasRewardConversion) {
             const gameState = this.getGameState(player);
 
             const leftSideRewards = card.agentEffects.slice(0, rewardOptionIndex);
@@ -738,7 +740,7 @@ export class GameManager {
             const rewards = card.agentEffects.slice(rewardConversionIndex + 1);
             if (this.playerCanPayCosts(player.id, costs)) {
               for (const cost of costs) {
-                const aiInfo = this.payCostForPlayer(player.id, cost);
+                this.payCostForPlayer(player.id, cost);
               }
               for (const reward of rewards) {
                 this.addRewardToPlayer(player, reward, card);
@@ -753,7 +755,7 @@ export class GameManager {
             this.addRewardToPlayer(player, reward);
           }
 
-          if (restString && isAI) {
+          if (restString) {
             this.playerRewardChoicesService.addPlayerCustomChoice(player.id, restString);
           }
         }
@@ -972,7 +974,11 @@ export class GameManager {
           const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
           this.aiUseFocusTokens(playerId, playerFocusTokens);
 
-          this.playerManager.setTurnStateForPlayer(playerId, 'revealed');
+          const playerHand = this.cardsService.getPlayerHand(player.id);
+          if (playerHand && playerHand.cards) {
+            this.cardsService.discardPlayerHandCards(player.id);
+            this.playerManager.setTurnStateForPlayer(player.id, 'revealed');
+          }
         }
       }
     }

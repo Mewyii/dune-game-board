@@ -16,7 +16,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    title: 'Dune Imperium: Alliances',
+    title: 'Dune Imperium: Sands of Arrakis',
     path: 'game-board',
     component: GameBoardComponent,
     pathMatch: 'full',

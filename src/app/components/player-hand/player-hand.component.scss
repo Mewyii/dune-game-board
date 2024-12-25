@@ -165,3 +165,21 @@ dune-intrigue-card.not-played {
     background-position: center;
     background-image: url("/assets/images/intrigues/_backside.jpg");
 }
+
+.imperium-card.background {
+    height: 342px;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    border: 12px solid #151515;;
+    border-radius: 8px;
+    position: relative;
+    color: #fffcfa;
+    background-color: #151515;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+    line-height: initial;
+    background-image: url(/assets/images/card-backgrounds/_backside.jpg);
+    background-size: cover;
+    background-position: center;
+}
