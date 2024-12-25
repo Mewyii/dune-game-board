@@ -2,6 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CardEditorComponent } from '../card-editor/card-editor.component';
 import { ImperiumCard } from 'src/app/models/imperium-card';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-dialog-card-editor',
@@ -12,6 +13,7 @@ export class DialogCardEditorComponent {
   @ViewChild(CardEditorComponent) cardEditorComponent!: CardEditorComponent;
 
   constructor(
+    public t: TranslateService,
     public dialogRef: MatDialogRef<DialogCardEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string; imperiumCard: ImperiumCard }
   ) {}

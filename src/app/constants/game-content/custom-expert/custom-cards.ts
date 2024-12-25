@@ -90,7 +90,7 @@ export const customCardsCustomExpert: CustomCard[] = [
     fieldAccess: ['bene', 'emperor', 'fremen', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/foldspace.png',
     buyEffects: [],
-    revealEffects: [],
+    revealEffects: [{ type: 'trash-self' }],
     agentEffects: [{ type: 'trash-self' }],
   },
 ];

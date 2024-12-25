@@ -2,6 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DuneEvent } from 'src/app/constants/events';
 import { EventEditorComponent } from '../event-editor/event-editor.component';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-dialog-event-editor',
@@ -12,6 +13,7 @@ export class DialogEventEditorComponent {
   @ViewChild(EventEditorComponent) eventEditorComponent!: EventEditorComponent;
 
   constructor(
+    public t: TranslateService,
     public dialogRef: MatDialogRef<DialogEventEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string; event: DuneEvent }
   ) {}

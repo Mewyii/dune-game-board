@@ -2,7 +2,7 @@
 <div mat-dialog-content class="dialog-content">
   <div *ngIf="data.search">
     <mat-form-field>
-      <mat-label>Card name or type...</mat-label>
+      <mat-label>{{ t.translate('imperiumcardspreviewSearchTooltip') }}</mat-label>
       <input matInput [(ngModel)]="searchString" (input)="filterCards()" />
     </mat-form-field>
   </div>
@@ -23,5 +23,5 @@
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-button (click)="onClose()">{{ t.translate('commonCancel') }}</button>
 </div>

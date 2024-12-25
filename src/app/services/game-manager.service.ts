@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, shuffle } from 'lodash';
+import { cloneDeep, max, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { isResource, isResourceType } from '../helpers/resources';
 import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
@@ -991,7 +991,7 @@ export class GameManager {
           this.playerManager.setTurnStateForPlayer(playerId, 'done');
         } else {
           const enemyCombatScores = this.combatManager.getEnemyCombatScores(playerId).map((x) => x.score);
-          const highestEnemyCombatScore = enemyCombatScores[0] ?? 0;
+          const highestEnemyCombatScore = max(enemyCombatScores) ?? 0;
           if (highestEnemyCombatScore >= playerCombatScore) {
             const intriguesWithCombatScores: { intrigue: IntrigueDeckCard; score: number }[] = [];
             const intriguesWithoutCombatScores: IntrigueDeckCard[] = [];

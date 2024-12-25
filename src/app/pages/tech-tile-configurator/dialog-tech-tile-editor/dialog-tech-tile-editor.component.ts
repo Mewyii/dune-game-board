@@ -2,6 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TechTileEditorComponent } from '../tech-tile-editor/tech-tile-editor.component';
 import { TechTileCard } from 'src/app/models/tech-tile';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-dialog-tech-tile-editor',
@@ -12,6 +13,7 @@ export class DialogTechTileEditorComponent {
   @ViewChild(TechTileEditorComponent) techTileEditorComponent!: TechTileEditorComponent;
 
   constructor(
+    public t: TranslateService,
     public dialogRef: MatDialogRef<DialogTechTileEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string; techTile: TechTileCard }
   ) {}

@@ -1,6 +1,7 @@
 import { Locale } from '../services/translate-service';
 
 export const enLocale: Locale = {
+  commonCancel: 'Cancel',
   playerboardHeading: 'Players',
   playerboardRound: 'Round',
   playerboardCombatTooltip: 'Combat-Phase',
@@ -14,4 +15,7 @@ export const enLocale: Locale = {
   gamemanualFullscreenText: 'This app is best used in fullscreen mode.',
   gamemanualFullscreenExitTooltip: 'Exit fullscreen mode',
   gamemanualFullscreenEnterTooltip: 'Enter fullscreen mode',
+  imperiumcardspreviewSearchTooltip: 'Card name or faction...',
+  imperiumrowSearchTitle: 'Search Imperium Deck',
+  imperiumrowRecruitmentTitle: 'Imperium Deck Recruitment',
 };

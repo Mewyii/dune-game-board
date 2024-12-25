@@ -2,6 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IntrigueEditorComponent } from '../intrigue-editor/intrigue-editor.component';
 import { IntrigueCard } from 'src/app/models/intrigue';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-dialog-intrigue-editor',
@@ -12,6 +13,7 @@ export class DialogIntrigueEditorComponent {
   @ViewChild(IntrigueEditorComponent) intrigueEditorComponent!: IntrigueEditorComponent;
 
   constructor(
+    public t: TranslateService,
     public dialogRef: MatDialogRef<DialogIntrigueEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string; intrigue: IntrigueCard }
   ) {}

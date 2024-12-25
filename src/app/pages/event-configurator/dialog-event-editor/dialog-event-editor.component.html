@@ -3,6 +3,6 @@
   <dune-event-editor [event]="event"></dune-event-editor>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onCancel()">{{ t.translate('commonCancel') }}</button>
   <button mat-button (click)="onSave()">Save</button>
 </div>

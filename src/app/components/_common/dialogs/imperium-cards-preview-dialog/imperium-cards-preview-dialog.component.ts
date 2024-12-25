@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-imperium-cards-preview-dialog',
@@ -14,6 +15,7 @@ export class ImperiumCardsPreviewDialogComponent implements OnInit {
 
   constructor(
     public gameManager: GameManager,
+    public t: TranslateService,
     public dialogRef: MatDialogRef<ImperiumCardsPreviewDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {

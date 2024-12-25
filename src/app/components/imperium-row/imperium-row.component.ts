@@ -105,7 +105,7 @@ export class ImperiumRowComponent implements OnInit {
     if (imperiumDeck) {
       const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
         data: {
-          title: 'Search Imperium Deck',
+          title: this.t.translate('imperiumrowSearchTitle'),
           playerId: this.activePlayerId,
           imperiumCards: imperiumDeck,
           canAquireCards: true,
@@ -126,7 +126,7 @@ export class ImperiumRowComponent implements OnInit {
     if (recruitableCards) {
       const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
         data: {
-          title: 'Imperium Deck Recruitment',
+          title: this.t.translate('imperiumrowRecruitmentTitle'),
           playerId: this.activePlayerId,
           imperiumCards: recruitableCards,
           canAquireCards: true,
