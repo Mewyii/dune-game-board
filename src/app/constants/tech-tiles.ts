@@ -61,7 +61,7 @@ export const techTiles: TechTileCard[] = [
       en: 'Enhanced Sandcrawler Engines',
       de: 'Verbesserte Sandcrawler- Antriebe',
     },
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
     buyEffects: [],
     customEffect: {

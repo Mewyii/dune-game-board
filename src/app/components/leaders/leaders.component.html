@@ -2,11 +2,6 @@
   <div class="leader-viewer">
     <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setPreviousLeader()"><</div>
     <dune-leader-card *ngIf="activeLeader.type === 'new'" [leader]="activeLeader"></dune-leader-card>
-    <div
-      *ngIf="activeLeader.type === 'old'"
-      class="leader-card full-picture"
-      [style.background-image]="'url(' + activeLeader.imageUrl + ')'"
-    ></div>
     <div class="leader-action-container" *ngIf="!playerLeader?.isLockedIn">
       <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()" matTooltip="Select">
         <mat-icon>check</mat-icon>
@@ -241,7 +236,24 @@
         </div>
       </div>
     </div>
+    <div class="line" *ngIf="currentPlayer.isAI">
+      <div class="info-container left"></div>
+      <div class="info-container">
+        <div class="resource-container">
+          <div class="resource-display" (click)="onAIIncreaseInfluenceChoiceClicked(currentPlayer.id)">
+            <img class="resource" [src]="getRewardTypePath('faction-influence-up-choice')" />
+          </div>
+        </div>
+        <div class="resource-container">
+          <div class="resource-display" (click)="onAIDecreaseInfluenceChoiceClicked(currentPlayer.id)">
+            <img class="resource" [src]="getRewardTypePath('faction-influence-down-choice')" />
+          </div>
+        </div>
+      </div>
+      <div class="info-container right"></div>
+    </div>
   </div>
+
   <div class="control-bar center" *ngIf="houses.length > 0">
     <ng-container *ngFor="let house of houses">
       <div class="house-card-container">

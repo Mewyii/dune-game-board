@@ -109,6 +109,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.dreadnoughtCombatStrength);
   }
 
+  public getLocationTakeoverTroopCosts() {
+    return cloneDeep(this.settingsSubject.value.gameContent.locationTakeoverTroopCosts);
+  }
+
   public getFactions() {
     return cloneDeep(this.settingsSubject.value.gameContent.factions);
   }

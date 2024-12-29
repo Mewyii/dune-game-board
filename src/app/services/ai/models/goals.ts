@@ -2,8 +2,7 @@ import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
-import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, RewardType } from 'src/app/models';
-import { LeaderImageOnly } from 'src/app/constants/leaders-old';
+import { ActionField, ActionType, ActiveFactionType, RewardType } from 'src/app/models';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard } from '../../cards.service';
 import { TurnInfo } from 'src/app/models/turn-info';
@@ -57,7 +56,7 @@ export interface GameState {
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];
-  playerLeader: Leader | LeaderImageOnly;
+  playerLeader: Leader;
   conflict: Conflict;
   availableTechTiles: TechTileCard[];
   currentEvent: DuneEvent | undefined;

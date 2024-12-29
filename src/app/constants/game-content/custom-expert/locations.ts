@@ -13,7 +13,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
+    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(183, 153, 114)',
@@ -43,7 +43,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
+    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(85, 70, 55)',

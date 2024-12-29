@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Leader, leaders } from '../constants/leaders';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
-import { LeaderImageOnly, leadersOld } from '../constants/leaders-old';
 import { Player } from '../models/player';
 
 export interface PlayerLeader {
@@ -15,9 +14,9 @@ export interface PlayerLeader {
   providedIn: 'root',
 })
 export class LeadersService {
-  private leadersSubject = new BehaviorSubject<(Leader | LeaderImageOnly)[]>([...leaders, ...leadersOld]);
+  private leadersSubject = new BehaviorSubject<Leader[]>([...leaders]);
   public leaders$ = this.leadersSubject.asObservable();
-  public leaders: (Leader | LeaderImageOnly)[] = [];
+  public leaders: Leader[] = [];
 
   private playerLeadersSubject = new BehaviorSubject<PlayerLeader[]>([]);
   public playerLeaders$ = this.playerLeadersSubject.asObservable();
@@ -26,11 +25,11 @@ export class LeadersService {
   constructor() {
     const leadersString = localStorage.getItem('leaders');
     if (leadersString) {
-      const leaderss = JSON.parse(leadersString) as (Leader | LeaderImageOnly)[];
+      const leaderss = JSON.parse(leadersString) as Leader[];
 
       // Workaround for local storage not being able to store functions
       const realLeaders = leaderss.map((x) => {
-        const techTile = [...leaders, ...leadersOld].find((y) => y.name.en === x.name.en);
+        const techTile = [...leaders].find((y) => y.name.en === x.name.en);
         return techTile ?? x;
       });
 
@@ -78,7 +77,7 @@ export class LeadersService {
   }
 
   setLeaders(leaders: Leader[]) {
-    this.leadersSubject.next([...leaders, ...leadersOld]);
+    this.leadersSubject.next([...leaders]);
   }
 
   assignRandomLeadersToPlayers(players: Player[]) {

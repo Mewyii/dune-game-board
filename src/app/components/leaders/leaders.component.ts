@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
-import { LeaderImageOnly } from 'src/app/constants/leaders-old';
 import { House } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
@@ -27,7 +26,7 @@ import { TechTileCard } from 'src/app/models/tech-tile';
   styleUrls: ['./leaders.component.scss'],
 })
 export class LeadersComponent implements OnInit {
-  public leaders: (Leader | LeaderImageOnly)[] = [];
+  public leaders: Leader[] = [];
   public newLeaders: Leader[] = [];
 
   public currentRound = 0;
@@ -37,7 +36,7 @@ export class LeadersComponent implements OnInit {
   public playerLeader: PlayerLeader | undefined;
   public activePlayerId: number = 0;
 
-  public activeLeader: Leader | LeaderImageOnly | undefined;
+  public activeLeader: Leader | undefined;
 
   public currentPlayer: Player | undefined;
 
@@ -340,6 +339,14 @@ export class LeadersComponent implements OnInit {
 
     this.gameManager.setPreferredFieldsForAIPlayer(playerId);
     return false;
+  }
+
+  public onAIIncreaseInfluenceChoiceClicked(playerId: number) {
+    this.gameManager.aiIncreaseInfluenceChoice(playerId);
+  }
+
+  public onAIDecreaseInfluenceChoiceClicked(playerId: number) {
+    this.gameManager.aiDecreaseInfluenceChoice(playerId);
   }
 
   public onRevealCardsClicked(playerId: number) {

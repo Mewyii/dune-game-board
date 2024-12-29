@@ -529,7 +529,7 @@ export class CardsService {
       this.imperiumRowSubject.next(imperiumRow);
       this.imperiumDeckSubject.next(imperiumDeck);
     }
-    this.addCardToPlayerDiscardPile(playerId, card);
+    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
   }
 
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {

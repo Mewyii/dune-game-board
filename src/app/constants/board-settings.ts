@@ -24,6 +24,7 @@ export interface GameContent {
   aiGoals?: FieldsForGoals;
   customCards?: CustomCard[];
   recruitmentCardAmount: number;
+  locationTakeoverTroopCosts?: number;
 }
 
 export type AppMode = 'board' | 'game';

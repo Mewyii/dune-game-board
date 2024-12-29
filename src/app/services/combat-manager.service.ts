@@ -50,7 +50,7 @@ export class CombatManager {
 
   public setInitialPlayerCombatUnits(players: Player[]) {
     for (const player of players) {
-      this.setPlayerTroopsInGarrison(player.id, 3);
+      this.setPlayerTroopsInGarrison(player.id, 0);
       this.setPlayerShipsInGarrison(player.id, 0);
     }
   }

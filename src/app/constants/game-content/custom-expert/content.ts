@@ -21,8 +21,9 @@ export const gameContentCustomExpert: GameContent = {
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
-  startingResources: [{ type: 'solari', amount: 1 }],
+  startingResources: [],
   aiGoals: aiGoalsCustomExpert,
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 5,
+  locationTakeoverTroopCosts: 2,
 };

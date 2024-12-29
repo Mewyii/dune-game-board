@@ -121,6 +121,7 @@ export class LeaderConfiguratorComponent {
       name: { en: '', de: '' },
       type: 'new',
       house: { en: '', de: '' },
+      startingResources: [],
       passiveName: { en: '', de: '' },
       passiveDescription: { en: '', de: '' },
       signetName: { en: '', de: '' },

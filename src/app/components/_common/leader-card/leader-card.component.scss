@@ -17,6 +17,8 @@
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 8px;
+    z-index: 2;
+    position: relative;
 }
 
 .leader-title {
@@ -133,4 +135,25 @@
     height: 15px;
     filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
     margin-top: 1px;
+}
+
+.card-aquire-effect-container {
+    position: absolute;
+    top: 65px;
+    left: 11px;
+    width: 28px;
+    padding: 6px;
+    padding-top: 10px;
+    padding-bottom: 32px;
+    font-family: "Roboto", "Verdana";
+    font-weight: initial;
+    font-size: small;
+    color: #e1e1e1;
+    white-space: pre-wrap;
+    background-image: linear-gradient(#1d1c1b, 33%, #4a423a);
+    background-size: cover;
+    background-position-y: bottom;
+    z-index: 1;
+    border: 1px solid rgba(111, 111, 111, 0.3490196078);
+    clip-path: polygon(0px 0%, 100% 0%, 100% 66%, 0px 100%);
 }

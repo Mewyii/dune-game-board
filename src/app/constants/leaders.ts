@@ -1,4 +1,4 @@
-import { LanguageString } from '../models';
+import { LanguageString, Reward } from '../models';
 import { AIAdjustments } from '../services/ai/models';
 import { GameModifiers } from '../services/game-modifier.service';
 
@@ -6,6 +6,7 @@ export interface Leader {
   name: LanguageString;
   type: 'new';
   house: LanguageString;
+  startingResources: Reward[];
   passiveName: LanguageString;
   passiveDescription: LanguageString;
   signetName: LanguageString;
@@ -45,6 +46,7 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
+    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
   },
   {
     name: {
@@ -94,6 +96,7 @@ export const leaders: Leader[] = [
       ],
     },
     type: 'new',
+    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
   },
   {
     name: {
@@ -133,6 +136,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
   },
   {
     name: {
@@ -161,6 +165,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/alia.png',
     type: 'new',
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -189,6 +194,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/preacher.png',
     type: 'new',
+    startingResources: [{ type: 'solari' }, { type: 'troop' }],
   },
   {
     name: {
@@ -236,6 +242,10 @@ export const leaders: Leader[] = [
       ],
       customActions: [{ id: 'irulan-field-history', action: 'field-history' }],
     },
+    startingResources: [
+      { type: 'solari', amount: 2 },
+      { type: 'troop', amount: 2 },
+    ],
   },
   {
     name: {
@@ -268,6 +278,7 @@ export const leaders: Leader[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.rewards.some((x) => x.type === 'intrigue') ? 0.05 : 0.0),
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -297,6 +308,10 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/hasimir.png',
     playableByAI: true,
+    startingResources: [
+      { type: 'solari', amount: 2 },
+      { type: 'troop', amount: 2 },
+    ],
   },
   {
     name: {
@@ -334,6 +349,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 2 }],
   },
   {
     name: {
@@ -367,6 +383,7 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? 0.025 : 0.0,
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -396,6 +413,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
     playableByAI: true,
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -429,6 +447,7 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
+    startingResources: [{ type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -458,6 +477,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     playableByAI: true,
+    startingResources: [{ type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -499,6 +519,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -540,6 +561,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
   },
   {
     name: {
@@ -584,6 +606,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'spice' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -613,6 +636,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/vlad.png',
     type: 'new',
     playableByAI: true,
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 4 }],
   },
   {
     name: {
@@ -650,6 +674,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -679,6 +704,7 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
     playableByAI: true,
+    startingResources: [{ type: 'spice' }, { type: 'troop', amount: 4 }],
   },
   {
     name: {
@@ -694,8 +720,8 @@ export const leaders: Leader[] = [
       de: 'Renommiertes Haus',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: {resource:solari;amount:2} {resource:troop}',
-      de: '<b>Spielbeginn</b>: {resource:solari;amount:2} {resource:troop}',
+      en: '<b>Game start</b>: {resource:faction-influence-up-choice}',
+      de: '<b>Spielbeginn</b>: {resource:faction-influence-up-choice}',
     },
     signetName: {
       en: 'Battle-hardened',
@@ -708,11 +734,15 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/armand.png',
     type: 'new',
     playableByAI: true,
+    startingResources: [
+      { type: 'solari', amount: 3 },
+      { type: 'troop', amount: 3 },
+    ],
   },
   {
     name: {
-      en: 'Yuna Moritani',
-      de: 'Yuna Moritani',
+      en: 'Jin Moritani',
+      de: 'Jin Moritani',
     },
     house: {
       en: 'House Moritani',
@@ -741,6 +771,7 @@ export const leaders: Leader[] = [
     gameModifiers: {
       fieldCost: [{ id: 'yuna-warlord', actionType: 'landsraad', costType: 'solari', amount: 1 }],
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -756,8 +787,8 @@ export const leaders: Leader[] = [
       de: 'In den Schatten',
     },
     passiveDescription: {
-      en: 'You begin the game without troops. <br><br>Enemy agents dont block board spaces for you.',
-      de: 'Du beginnst das Spiel ohne Truppen. <br><br>Gegnerische Agenten blockieren Felder für dich nicht.',
+      en: 'Enemy agents dont block board spaces for you.',
+      de: 'Gegnerische Agenten blockieren Felder für dich nicht.',
     },
     signetName: {
       en: 'Oppression',
@@ -778,5 +809,66 @@ export const leaders: Leader[] = [
         },
       ],
     },
+    startingResources: [{ type: 'solari' }, { type: 'troop' }],
+  },
+  {
+    name: {
+      en: 'Earl Memnon Thorvald',
+      de: 'Graf Memnon Thorvald',
+    },
+    house: {
+      en: 'House Thorvald',
+      de: 'Haus Thorvald',
+    },
+    passiveName: {
+      en: 'Landsraad-Support',
+      de: 'Landsraad-Unterstützung',
+    },
+    passiveDescription: {
+      en: 'Each time you send an agent to a {faction:landsraad} board space: {resource:solari}{resource:helper-trade}{resource:troop}',
+      de: 'Immer wenn du einen Agenten zu einem {faction:landsraad}-Feld entsendest: {resource:solari}{resource:helper-trade}{resource:troop}',
+    },
+    signetName: {
+      en: 'Smuggling-Connections',
+      de: 'Schmuggler-Verbindungen',
+    },
+    signetDescription: {
+      en: '{resource:spice}',
+      de: '{resource:spice}',
+    },
+    imageUrl: '/assets/images/leaders/memnon.png',
+    type: 'new',
+    playableByAI: true,
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+  },
+  {
+    name: {
+      en: 'Countess Ariana Thorvald',
+      de: 'Gräfin Ariana Thorvald',
+    },
+    house: {
+      en: 'House Thorvald',
+      de: 'Haus Thorvald',
+    },
+    passiveName: {
+      en: 'Spice receptive',
+      de: 'Spice-Empfänglich',
+    },
+    passiveDescription: {
+      en: '<b>Round start</b>: {resource:spice}{resource:helper-trade}{resource:focus}',
+      de: '<b>Rundenbeginn</b>: {resource:spice}{resource:helper-trade}{resource:focus}',
+    },
+    signetName: {
+      en: 'Equipment production',
+      de: 'Ausrüstungsproduktion',
+    },
+    signetDescription: {
+      en: '{resource:water}',
+      de: '{resource:water}',
+    },
+    imageUrl: '/assets/images/leaders/ariana_4.png',
+    type: 'new',
+    playableByAI: true,
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
 ];

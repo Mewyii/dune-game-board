@@ -19,7 +19,7 @@ export const customCardsCustomExpert: CustomCard[] = [
         amount: 2,
       },
     ],
-    cardAmount: 2,
+    cardAmount: 3,
   },
   {
     type: 'limited',
@@ -39,7 +39,7 @@ export const customCardsCustomExpert: CustomCard[] = [
         amount: 2,
       },
     ],
-    cardAmount: 2,
+    cardAmount: 3,
   },
   {
     type: 'limited',
@@ -59,7 +59,7 @@ export const customCardsCustomExpert: CustomCard[] = [
         amount: 2,
       },
     ],
-    cardAmount: 2,
+    cardAmount: 3,
   },
   {
     type: 'unlimited',
@@ -90,7 +90,7 @@ export const customCardsCustomExpert: CustomCard[] = [
     fieldAccess: ['bene', 'emperor', 'fremen', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/foldspace.png',
     buyEffects: [],
-    revealEffects: [{ type: 'trash-self' }],
     agentEffects: [{ type: 'trash-self' }],
+    revealEffects: [{ type: 'solari' }, { type: 'trash-self' }],
   },
 ];

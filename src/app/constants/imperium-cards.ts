@@ -497,7 +497,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Dr. Yueh, Suk Doctor',
       de: 'Dr. Yueh, Suk-Arzt',
     },
-    persuasionCosts: 3,
+    persuasionCosts: 4,
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/yueh_2.png',
     cardAmount: 1,

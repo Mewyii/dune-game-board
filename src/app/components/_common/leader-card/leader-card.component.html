@@ -17,14 +17,18 @@
     </div>
     <div class="leader-signet-container">
       <div class="leader-signet-name font-scifi">
-        <!-- <img class="signet-ring" src="/assets/images/reward-markers/marker_signet_ring.png" /> -->
         {{ t.translateLS(leader.signetName) }}
       </div>
       <div class="leader-signet-description-container font-text">
         <div class="leader-signet-description" [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols"></div>
       </div>
     </div>
-    <!-- <div class="deck-indicator">{{ t.translateLS(deckName) }}</div>
-    <div class="discard-indicator">{{ t.translateLS(discardName) }}</div> -->
+  </div>
+  <div class="card-aquire-effect-container" *ngIf="leader.startingResources && leader.startingResources.length > 0">
+    <dune-reward-array
+      *ngIf="leader.startingResources"
+      [rewards]="leader.startingResources"
+      [size]="'24px'"
+    ></dune-reward-array>
   </div>
 </div>
