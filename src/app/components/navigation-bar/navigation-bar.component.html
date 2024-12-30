@@ -1,0 +1,50 @@
+<div [class]="'navigation-container ' + (showNavigationSelection ? 'shown' : 'hidden')">
+  <div class="control-bar">
+    <button mat-fab [color]="'accent'" (click)="showNavigationSelection = !showNavigationSelection">
+      <mat-icon *ngIf="!showNavigationSelection">menu</mat-icon>
+      <mat-icon *ngIf="showNavigationSelection">chevron_left</mat-icon>
+    </button>
+  </div>
+  <div [class]="'navigation-item-container ' + (showNavigationSelection ? 'shown' : 'hidden')">
+    <div [class]="'navigation-item ' + (url.includes('game-board') ? 'highlighted' : '')" [routerLink]="'game-board'">
+      GAME BOARD
+    </div>
+    <div
+      [class]="'navigation-item ' + (url.includes('starting-card-configurator') ? 'highlighted' : '')"
+      [routerLink]="'starting-card-configurator'"
+    >
+      STARTING CARDS
+    </div>
+    <div
+      [class]="'navigation-item ' + (url.includes('imperium-card-configurator') ? 'highlighted' : '')"
+      [routerLink]="'imperium-card-configurator'"
+    >
+      IMPERIUM CARDS
+    </div>
+    <div
+      [class]="'navigation-item ' + (url.includes('tech-tile-configurator') ? 'highlighted' : '')"
+      [routerLink]="'tech-tile-configurator'"
+    >
+      TECH TILES
+    </div>
+    <div
+      [class]="'navigation-item ' + (url.includes('leader-configurator') ? 'highlighted' : '')"
+      [routerLink]="'leader-configurator'"
+    >
+      LEADERS
+    </div>
+    <div
+      [class]="'navigation-item ' + (url.includes('intrigue-configurator') ? 'highlighted' : '')"
+      [routerLink]="'intrigue-configurator'"
+    >
+      INTRIGUES
+    </div>
+    <div
+      [class]="'navigation-item ' + (url.includes('event-configurator') ? 'highlighted' : '')"
+      [routerLink]="'event-configurator'"
+    >
+      EVENTS
+    </div>
+    <div [class]="'navigation-item ' + (url.includes('about') ? 'highlighted' : '')" [routerLink]="'about'">ABOUT</div>
+  </div>
+</div>

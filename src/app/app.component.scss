@@ -1,28 +1,8 @@
-.navigation-container {
+.menu-container {
     position: fixed;
-    top: calc(50% - 430px);
-    right: 0;
-    background: #45382f;
-    z-index: 3;
-    word-break: break-word;
-    text-wrap: wrap;
+    left: 0;
+    top: 25%;
     display: flex;
-    flex-direction: row;
-    writing-mode: vertical-lr;
-    font-size: small;
-    gap: 6px;
-    padding: 6px;
-    filter: drop-shadow(0px 0px 12px black);
-}
-
-.navigation-element {
-    background-color: #886b54;
-    padding: 6px;
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    transition: 0.3s;
-}
-
-.navigation-element:hover {
-    background-color: #ad8465;
-    color: rgb(46, 25, 0);
+    flex-direction: column;
+    gap: 32px;
 }

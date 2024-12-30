@@ -1,7 +1,6 @@
 import { clamp } from 'lodash';
 import {
   enemyIsCloseToPlayerFactionScore,
-  getAccumulatedSpice,
   getCostAdjustedDesire,
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesireModifier,
@@ -11,7 +10,6 @@ import {
   noOneHasMoreInfluence,
   playerCanDrawCards,
   playerCanGetAllianceThisTurn,
-  playerCanGetVictoryPointThisTurn,
   playerLikelyWinsCombat,
 } from 'src/app/services/ai/shared';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
@@ -36,12 +34,12 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') -
       0.0175 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 7 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 7,
+      (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState) => player.hasCouncilSeat || gameState.isFinale,
     desiredFields: (fields) => ({
       // Three because "amount" is used for the persuasion indicator
-      ...getViableBoardFields(fields, 'council-seat-small', 0, 3),
+      ...getViableBoardFields(fields, 'council-seat-small', 0, 4),
     }),
     viableFields: () => ({}),
   },
@@ -50,8 +48,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') -
       0.025 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 7 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 7,
+      (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', 0, 1),
@@ -380,7 +378,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > 4 && !player.hasSwordmaster ? 0.2 - 0.025 * (gameState.currentRound - 1) : 0,
+      getResourceAmount(player, 'solari') > 6 && !player.hasSwordmaster ? 0.2 - 0.025 * (gameState.currentRound - 1) : 0,
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({

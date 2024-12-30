@@ -232,21 +232,20 @@
 
 .high-council-indicator-area {
     position: absolute;
-    top: 41px;
-    right: 37px;
+    top: 40px;
+    right: 36px;
     z-index: 2;
     display: flex;
     width: 131px;
-    height: 94px;
     justify-content: space-between;
     align-content: space-between;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 22px;
 }
 
 .high-council-marker {
-    width: 34px;
-    height: 34px;
+    width: 33px;
+    height: 33px;
     border-radius: 50%;
     border: 2px solid #2f2112;
     filter: drop-shadow(0px 0px 5px black);

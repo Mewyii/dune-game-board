@@ -534,12 +534,12 @@ export class CardsService {
 
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
-    this.addCardToPlayerDiscardPile(playerId, card);
+    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
   }
 
   aquirePlayerCardFromLimitedCustomCards(playerId: number, card: ImperiumDeckCard) {
     this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x) => x.id !== card.id)]);
-    this.addCardToPlayerDiscardPile(playerId, card);
+    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
   }
 
   setPlayedPlayerCard(playerId: number, cardId: string) {

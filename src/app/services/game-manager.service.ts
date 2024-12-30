@@ -1085,6 +1085,11 @@ export class GameManager {
       } else if (hasRewardConversion) {
         const costs = intrigue.effects.slice(0, rewardConversionIndex);
         const rewards = intrigue.effects.slice(rewardConversionIndex + 1);
+        if (rewards.some((x) => x.type === 'location-control')) {
+          if (gameState.freeLocations.length < 1) {
+            costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+          }
+        }
 
         const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
         const conversionIsUseful =
@@ -1512,8 +1517,9 @@ export class GameManager {
     if (enemyLocations.length > 0) {
       const playerTroopAmount = this.combatManager.getPlayerTroopsInGarrison(player.id);
       const stealChance = 0.2 * playerTroopAmount + 0.1 * (gameState.currentRound - 1);
+      const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts() ?? 0;
 
-      if (playerTroopAmount > 0 && stealChance > Math.random()) {
+      if (playerTroopAmount >= locationTakeoverTroopCosts && stealChance > Math.random()) {
         if (highPriorityLocations.length > 0) {
           controllableLocations = boardLocations.filter((x) =>
             highPriorityLocations.some((y) => x.actionField.title.en === y.locationId)
@@ -1655,6 +1661,11 @@ export class GameManager {
         for (const effect of card.buyEffects) {
           this.addRewardToPlayer(player, effect);
         }
+        if (!player.isAI) {
+          this.showPlayerRewardChoices(player);
+        } else {
+          this.aiResolveRewardChoices(player);
+        }
       }
       this.cardsService.aquirePlayerCardFromImperiumRow(this.activePlayerId, card);
 
@@ -1681,6 +1692,11 @@ export class GameManager {
       if (card.buyEffects) {
         for (const effect of card.buyEffects) {
           this.addRewardToPlayer(player, effect);
+        }
+        if (!player.isAI) {
+          this.showPlayerRewardChoices(player);
+        } else {
+          this.aiResolveRewardChoices(player);
         }
       }
       this.cardsService.aquirePlayerCardFromImperiumDeck(this.activePlayerId, card);
@@ -1712,10 +1728,13 @@ export class GameManager {
         for (const effect of card.buyEffects) {
           this.addRewardToPlayer(player, effect);
         }
+        if (!player.isAI) {
+          this.showPlayerRewardChoices(player);
+        } else {
+          this.aiResolveRewardChoices(player);
+        }
       }
-      this.cardsService.removeCardFromLimitedCustomCards(card);
-
-      this.cardsService.addCardToPlayerDiscardPile(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
+      this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, card);
 
       this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
     }
@@ -2157,7 +2176,6 @@ export class GameManager {
         }
       }
     } else if (rewardType === 'faction-influence-up-choice') {
-      this.audioManager.playSound('influence');
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
     } else if (rewardType === 'faction-influence-up-twice-choice') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
@@ -2211,6 +2229,7 @@ export class GameManager {
       if (!player.hasCouncilSeat) {
         this.audioManager.playSound('high-council');
         this.playerManager.addCouncilSeatToPlayer(player.id);
+        this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
       }
     } else if (rewardType === 'sword-master' || rewardType === 'agent') {
       if (!player.hasSwordmaster) {

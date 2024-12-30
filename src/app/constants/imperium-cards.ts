@@ -25,7 +25,7 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'persuasion',
-        amount: 3,
+        amount: 4,
       },
       {
         type: 'focus',
@@ -791,6 +791,9 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
+        type: 'recruitment-fremen',
+      },
+      {
         type: 'sword',
       },
     ],
@@ -834,10 +837,10 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'focus',
+        type: 'recruitment-fremen',
       },
       {
-        type: 'recruitment-fremen',
+        type: 'focus',
       },
     ],
   },
@@ -990,6 +993,9 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'recruitment-bene',
       },
       {
         type: 'focus',
@@ -1458,6 +1464,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'persuasion',
         amount: 1,
       },
+      { type: 'recruitment-emperor' },
       {
         type: 'sword',
       },
@@ -1603,8 +1610,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:1}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
-      de: '{resource:persuasion;amount:1}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
+      en: '{resource:persuasion;amount:1}{resource:recruitment-fremen}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
+      de: '{resource:persuasion;amount:1}{resource:recruitment-fremen}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
       fontSize: 'medium',
     },
   },
@@ -1625,8 +1632,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:2}{resource:sword}<br>{faction:fremen} -Connection: {resource:focus}',
-      de: '{resource:persuasion;amount:2}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:focus}',
+      en: '{resource:persuasion;amount:2}{resource:recruitment-fremen}<br>{faction:fremen} -Connection: {resource:focus}{resource:sword}',
+      de: '{resource:persuasion;amount:2}{resource:recruitment-fremen}<br>{faction:fremen} -Verbindung: {resource:focus}{resource:sword}',
       fontSize: 'medium',
     },
   },
@@ -2019,8 +2026,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customAgentEffect: {
-      en: 'Troops in your garrison<br>0 {resource:card-draw} {resource:helper-or} 1 {resource:card-draw}{resource:troop} {resource:helper-or} 2 {resource:troop}{resource:troop}',
-      de: 'Truppen in deiner Garnison <br>0 {resource:card-draw} {resource:helper-or} 1 {resource:card-draw}{resource:troop} {resource:helper-or} 2 {resource:troop}{resource:troop}',
+      en: 'Troops in your garrison<br>0 {resource:card-draw} {resource:helper-or} 2 {resource:card-draw}{resource:troop} {resource:helper-or} 4 {resource:troop}{resource:troop}',
+      de: 'Truppen in deiner Garnison <br>0 {resource:card-draw} {resource:helper-or} 2 {resource:card-draw}{resource:troop} {resource:helper-or} 4 {resource:troop}{resource:troop}',
       fontSize: 'small',
     },
   },

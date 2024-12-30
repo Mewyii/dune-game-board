@@ -82,6 +82,9 @@ import { TranslationComponent } from './components/translation/translation.compo
 import { RewardArrayComponent } from './components/_common/reward-array/reward-array.component';
 import { MarkerComponent } from './components/_common/marker/marker.component';
 import { ConflictCardComponent } from './components/_common/conflict-card/conflict-card.component';
+import { SoundcloudPlayerComponent } from './components/audio-player/soundcloud-player/soundcloud-player.component';
+import { SafeUrlPipe } from './pipes/safe-url';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 
 @NgModule({
   declarations: [
@@ -103,6 +106,7 @@ import { ConflictCardComponent } from './components/_common/conflict-card/confli
     AllianceTokenComponent,
     DuneSymbolsPipe,
     NumberToArrayPipe,
+    SafeUrlPipe,
     MinorHousesComponent,
     MinorHouseCardComponent,
     ImperiumRowCardComponent,
@@ -148,6 +152,8 @@ import { ConflictCardComponent } from './components/_common/conflict-card/confli
     RewardArrayComponent,
     MarkerComponent,
     ConflictCardComponent,
+    SoundcloudPlayerComponent,
+    NavigationBarComponent,
   ],
   imports: [
     BrowserModule,

@@ -46,7 +46,7 @@ export const leaders: Leader[] = [
     type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
     playableByAI: true,
-    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
+    startingResources: [{ type: 'water' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -136,7 +136,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
+    startingResources: [{ type: 'water' }, { type: 'troop', amount: 1 }],
   },
   {
     name: {

@@ -20,7 +20,7 @@ export const gameContentCustomExpert: GameContent = {
   ],
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 4,
-  highCouncilPersuasion: 3,
+  highCouncilPersuasion: 4,
   startingResources: [],
   aiGoals: aiGoalsCustomExpert,
   customCards: customCardsCustomExpert,

@@ -35,7 +35,7 @@ export function getRewardTypePath(rewardType: RewardType) {
     case 'spice-accumulation':
       return 'assets/images/reward-markers/marker_spice_extra.png';
     case 'council-seat-small':
-      return 'assets/images/reward-markers/marker_high_council_2.png';
+      return 'assets/images/reward-markers/marker_high_council_with_influence.png';
     case 'council-seat-large':
       return 'assets/images/reward-markers/marker_high_council.png';
     case 'combat':

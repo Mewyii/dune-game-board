@@ -1,5 +1,5 @@
 .house-board {
-    background: rgba(84, 67, 53, 0.8);
+    background: rgba(64, 51, 40, 0.8);
     display: flex;
     flex-wrap: wrap;
     max-width: 900px;
@@ -24,14 +24,14 @@
     width: 900px;
     display: flex;
     justify-content: space-between;
-    background: rgba(84, 67, 53, 0.8);
+    background: rgba(64, 51, 40, 0.8);
     padding: 16px;
     box-sizing: border-box;
     gap: 16px;
     flex-wrap: wrap;
 }
 .house-list {
-    background: rgba(84, 67, 53, 0.8);
+    background: rgba(64, 51, 40, 0.8);
     display: grid;
     grid-gap: 16px;
     grid-area: 3 3;

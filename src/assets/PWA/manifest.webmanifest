@@ -1,0 +1,24 @@
+{
+  "name": "Dune Imperium: Sands of Arrakis",
+  "short_name": "Dune",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display_override": ["window-controls-overlay"],
+  "display": "fullscreen",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}

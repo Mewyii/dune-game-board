@@ -42,6 +42,14 @@ h2 {
     margin-bottom: 32px;
 }
 
+a {
+    color: #b29779;
+}
+
+h2, h3, h4, h5 {
+    color: #eacaa6;
+}
+
 .mat-mdc-fab.mat-accent:not(:disabled), .mat-mdc-mini-fab.mat-accent:not(:disabled), .mat-mdc-raised-button.mat-accent:not(:disabled),
 .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mat-mdc-slide-toggle .mdc-switch:enabled .mdc-switch__track::after {
     background-color: #e49944be !important;

@@ -185,8 +185,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 8 }],
-        rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
+        costs: [{ type: 'solari', amount: 10 }],
+        rewards: [{ type: 'council-seat-small', amount: 4, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
       },
@@ -201,7 +201,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Mentat', en: 'Mentat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 8 }],
+        costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
         customWidth: '135px',
@@ -233,12 +233,12 @@ export const factionsCustomExpert: Faction[] = [
           [
             { type: 'spice', amount: 2, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 7, width: 45 },
+            { type: 'solari', amount: 8, width: 45 },
           ],
           [
             { type: 'spice', amount: 3, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 9, width: 45 },
+            { type: 'solari', amount: 10, width: 45 },
           ],
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
