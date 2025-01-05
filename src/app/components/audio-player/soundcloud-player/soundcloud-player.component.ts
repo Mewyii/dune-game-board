@@ -29,10 +29,7 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
           this.widget?.getSounds((sounds) => {
             this.playlistLength = sounds.length;
 
-            setTimeout(() => {
-              this.widget?.setVolume(50);
-              this.playRandomSound();
-            }, 5000);
+            this.waitForSoundsToLoadAndPlayRandomSound();
           });
         } else {
           this.widget?.play();
@@ -48,6 +45,13 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
     }
   }
 
+  private waitForSoundsToLoadAndPlayRandomSound() {
+    setTimeout(() => {
+      this.widget?.setVolume(50);
+      this.playRandomSound();
+    }, 5000);
+  }
+
   private playRandomSound() {
     if (!this.widget) {
       return;
@@ -55,5 +59,15 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
 
     const randomIndex = Math.floor(Math.random() * this.playlistLength);
     this.widget.skip(randomIndex);
+
+    this.widget.isPaused((isPaused) => {
+      if (isPaused) {
+        this.waitForSoundsToLoadAndPlayRandomSound();
+      } else {
+        this.widget?.getCurrentSound((sound) => {
+          console.log('Now playing: ' + sound.user.username + ': ' + sound.title);
+        });
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
 <div class="event-card" [style.background-image]="'url(' + event.imagePath + ')'">
   <div class="event-title font-medieval">
-    {{ t.translateLS(event.title).toUpperCase() }}
+    {{ t.translateLS(event.title) }}
   </div>
   <div class="underline"></div>
   <div class="event-description" [innerHTML]="t.translateLS(event.description) | duneSymbols : '30px'"></div>

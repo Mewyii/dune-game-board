@@ -8,6 +8,8 @@ interface Widget {
   prev: () => void;
   skip: (index: any) => void;
   getSounds: (callback: (sounds: any[]) => void) => void;
+  getCurrentSound: (callback: (sounds: any) => void) => void;
+  isPaused: (callback: (isPaused: boolean) => void) => void;
 }
 
 declare var SC: {
