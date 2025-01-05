@@ -25,6 +25,7 @@ export interface GameContent {
   customCards?: CustomCard[];
   recruitmentCardAmount: number;
   locationTakeoverTroopCosts?: number;
+  combatMaxDeployableUnits: number;
 }
 
 export type AppMode = 'board' | 'game';

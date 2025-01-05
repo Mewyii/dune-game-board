@@ -109,7 +109,7 @@ export class DuneEventsManager {
 
     const events = this.events;
     const cardIndex = events.findIndex((x) => x.title.en === cardId);
-    events[cardIndex] = card;
+    events[cardIndex] = { ...events[cardIndex], ...card };
 
     this.eventsSubject.next(events);
   }

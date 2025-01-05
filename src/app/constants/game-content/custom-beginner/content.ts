@@ -25,4 +25,5 @@ export const gameContentCustomBeginner: GameContent = {
   startingResources: [],
   aiGoals: aiGoalsCustomBeginner,
   recruitmentCardAmount: 5,
+  combatMaxDeployableUnits: 2,
 };

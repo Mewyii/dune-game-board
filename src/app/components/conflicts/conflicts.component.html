@@ -9,6 +9,9 @@
     (click)="onSetConflictStackActiveClicked()"
   >
     <div class="conflict-action-container" *ngIf="conflictStackIsActive">
+      <button mat-fab [color]="'accent'" (click)="onSearchConflictsClicked()" matTooltip="Search">
+        <mat-icon>search</mat-icon>
+      </button>
       <button
         class="card-buy-button"
         mat-fab

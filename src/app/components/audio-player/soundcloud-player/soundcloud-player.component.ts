@@ -47,7 +47,7 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
 
   private waitForSoundsToLoadAndPlayRandomSound() {
     setTimeout(() => {
-      this.widget?.setVolume(50);
+      this.widget?.setVolume(40);
       this.playRandomSound();
     }, 5000);
   }

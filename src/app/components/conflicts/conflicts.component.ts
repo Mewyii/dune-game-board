@@ -63,4 +63,16 @@ export class ConflictsComponent implements OnInit {
       });
     }
   }
+
+  onSearchConflictsClicked() {
+    const conflictDeck = this.conflictsService.conflictStack;
+    if (conflictDeck) {
+      this.dialog.open(ConflictsPreviewDialogComponent, {
+        data: {
+          title: 'Conflict Deck',
+          conflicts: conflictDeck,
+        },
+      });
+    }
+  }
 }

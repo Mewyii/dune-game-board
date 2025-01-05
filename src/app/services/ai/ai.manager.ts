@@ -21,10 +21,9 @@ import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.ser
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { ImperiumRowModifier } from '../game-modifier.service';
-import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
+import { getCardCostModifier, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
-import { isFactionType } from 'src/app/helpers/faction-types';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 
 export interface AIPlayer {
@@ -75,7 +74,7 @@ export class AIManager {
 
   public aiGoals: FieldsForGoals | undefined;
 
-  constructor(public settingsService: SettingsService) {
+  constructor(private settingsService: SettingsService) {
     const aiPlayersString = localStorage.getItem('aiPlayers');
     if (aiPlayersString) {
       const aiPlayers = JSON.parse(aiPlayersString) as AIPlayer[];
@@ -177,7 +176,7 @@ export class AIManager {
   }
 
   public setPreferredFieldsForAIPlayer(player: Player, gameState: GameState) {
-    const boardFields = this.getFieldsWithAdjustedRewards(
+    const boardFields = this.getFieldsWithAdjustedRewardsAndCosts(
       gameState,
       this.getFieldsWithChoices(this.settingsService.boardFields)
     );
@@ -729,9 +728,12 @@ export class AIManager {
     return result;
   }
 
-  getFieldsWithAdjustedRewards(gameState: GameState, fields: ActionField[]) {
+  getFieldsWithAdjustedRewardsAndCosts(gameState: GameState, fields: ActionField[]) {
     return fields.map((field) => {
-      // Faction adjustments
+      // Game Modifier Reward Adjustments
+      const fieldRewards = getModifiedRewardsForField(field, gameState.playerGameModifiers?.fieldReward);
+
+      // Faction Reward Adjustments
       if (isFactionScoreType(field.actionType)) {
         const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
           (x) => x.factionId === field.actionType
@@ -741,47 +743,51 @@ export class AIManager {
           const nextFactionInfluenceRewards = factionInfluenceRewards[nextFactionScore];
           if (nextFactionInfluenceRewards) {
             for (const reward of nextFactionInfluenceRewards) {
-              field.rewards.push(reward);
+              fieldRewards.push(reward);
             }
           }
         }
       }
 
-      // Spice Adjustments
-      if (field.rewards.some((x) => x.type === 'spice-accumulation')) {
+      // Spice Reward Adjustments
+      if (fieldRewards.some((x) => x.type === 'spice-accumulation')) {
         const accumulatedSpice = getAccumulatedSpice(gameState, field.title.en);
         if (accumulatedSpice > 0) {
-          const spiceIndex = field.rewards.findIndex((x) => x.type === 'spice');
+          const spiceIndex = fieldRewards.findIndex((x) => x.type === 'spice');
           if (spiceIndex > -1) {
-            const spiceAmount = field.rewards[spiceIndex].amount ?? 1;
-            field.rewards[spiceIndex].amount = spiceAmount + accumulatedSpice;
+            const spiceAmount = fieldRewards[spiceIndex].amount ?? 1;
+            fieldRewards[spiceIndex].amount = spiceAmount + accumulatedSpice;
           } else {
-            field.rewards.push({ type: 'spice', amount: accumulatedSpice });
+            fieldRewards.push({ type: 'spice', amount: accumulatedSpice });
           }
         }
       }
 
-      // Combat Adjustments
-      const combatRewardIndex = field.rewards.findIndex((x) => x.type === 'combat');
+      // Combat Reward Adjustments
+      const combatRewardIndex = fieldRewards.findIndex((x) => x.type === 'combat');
 
       if (combatRewardIndex > -1) {
         let modifier = 0.4;
 
-        const troopRewards = field.rewards.find((x) => x.type === 'troop');
+        const troopRewards = fieldRewards.find((x) => x.type === 'troop');
         if (troopRewards) {
           modifier = modifier + 0.15 * (troopRewards.amount ?? 1);
         }
-        const dreadnoughtRewards = field.rewards.find((x) => x.type === 'dreadnought');
+        const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought');
         if (dreadnoughtRewards) {
           modifier = modifier + 0.3 * (dreadnoughtRewards.amount ?? 1);
         }
-        const intrigueRewards = field.rewards.find((x) => x.type === 'intrigue');
+        const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
         if (intrigueRewards) {
           modifier = modifier + 0.075 * (intrigueRewards.amount ?? 1);
         }
 
-        field.rewards[combatRewardIndex].amount = modifier;
-        return field;
+        fieldRewards[combatRewardIndex].amount = modifier;
+
+        // Game Modifier Cost Adjustments
+        const fieldCosts = getModifiedCostsForField(field, gameState.playerGameModifiers?.fieldCost);
+
+        return { ...field, rewards: fieldRewards, costs: fieldCosts };
       } else {
         return field;
       }
@@ -1136,9 +1142,9 @@ export class AIManager {
       case 'intrigue':
         return 1.75 + 0.1 * (gameState.currentRound - 1);
       case 'persuasion':
-        return 2.0 - 0.1 * (gameState.currentRound - 1);
+        return 2.0 - 0.15 * (gameState.currentRound - 1);
       case 'foldspace':
-        return 2.0 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed;
+        return 2.25 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
       case 'council-seat-small':
       case 'council-seat-large':
         return !player.hasCouncilSeat ? 12 - 1 * (gameState.currentRound - 1) : 0;
@@ -1150,7 +1156,7 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 9 + 1.0 * (gameState.currentRound - 1);
+        return 9 + 1.25 * (gameState.currentRound - 1);
       case 'sword':
         return 1;
       case 'combat':
@@ -1239,7 +1245,7 @@ export class AIManager {
         return value;
       case 'card-destroy':
       case 'focus':
-        return gameState.playerDeckSizeTotal > 6 ? value : 0;
+        return gameState.playerDeckSizeTotal > 7 ? value : 0;
       case 'card-draw-or-destroy':
         return gameState.playerDeckCards.length > 0 || gameState.playerDeckSizeTotal > 6 ? value : 0;
       case 'intrigue':

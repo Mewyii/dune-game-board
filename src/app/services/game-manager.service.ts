@@ -1771,6 +1771,8 @@ export class GameManager {
     const playerCardsFieldAccess = this.getInitialPlayerCardsFieldAccess();
     const playerCardsRewards = this.getInitialPlayerCardsRewards();
 
+    const playerGameModifiers = this.gameModifiersService.getPlayerGameModifiers(player.id);
+
     for (const playerCard of playerCards) {
       if (playerCard.faction) {
         playerCardsFactions[playerCard.faction] += 1;
@@ -1882,6 +1884,7 @@ export class GameManager {
       playerCardsFactions,
       playerCardsFieldAccess,
       playerCardsRewards,
+      playerGameModifiers,
     };
   }
 
@@ -2261,7 +2264,14 @@ export class GameManager {
       this.loggingService.logPlayerTrashedCard(player.id, this.t.translateLS(card.name));
     } else if (reward.type === 'combat') {
       this.audioManager.playSound('combat');
-      this.turnInfoService.setPlayerTurnInfo(player.id, { canEnterCombat: true, deployableUnits: 2 });
+
+      let deployableUnits = this.settingsService.getCombatMaxDeployableUnits();
+      const combatModifier = this.gameModifiersService.getPlayerGameModifier(player.id, 'combat');
+      if (combatModifier && combatModifier.combatMaxDeployableUnits) {
+        deployableUnits = combatModifier.combatMaxDeployableUnits;
+      }
+
+      this.turnInfoService.setPlayerTurnInfo(player.id, { canEnterCombat: true, deployableUnits });
     } else if (reward.type === 'intrigue-draw') {
       const enemiesIntrigues = this.intriguesService.getEnemyIntrigues(player.id).filter((x) => x.intrigues.length > 3);
       for (const enemyIntrigues of enemiesIntrigues) {

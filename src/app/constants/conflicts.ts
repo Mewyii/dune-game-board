@@ -15,8 +15,8 @@ export const conflicts: Conflict[] = [
     name: { de: 'Belagerung von Arrakeen', en: 'siege of arrakeen' },
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech-reduced-two' }],
-      [{ type: 'water' }, { type: 'water' }, { type: 'tech-reduced' }],
+      [{ type: 'location-control' }, { type: 'tech-reduced' }],
+      [{ type: 'water' }, { type: 'tech-reduced' }],
       [{ type: 'water' }],
     ],
   },
@@ -24,19 +24,15 @@ export const conflicts: Conflict[] = [
     name: { de: 'Belagerung von Carthag', en: 'siege of carthag' },
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'intrigue' }, { type: 'intrigue' }],
-      [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'solari', amount: 2 }],
+      [{ type: 'location-control' }, { type: 'intrigue' }],
+      [{ type: 'intrigue' }, { type: 'solari', amount: 3 }],
       [{ type: 'solari', amount: 2 }],
     ],
   },
   {
     name: { de: 'Imperiales Becken sichern', en: 'secure imperial basin' },
     lvl: 1,
-    rewards: [
-      [{ type: 'location-control' }, { type: 'spice', amount: 2 }],
-      [{ type: 'spice', amount: 3 }],
-      [{ type: 'spice' }],
-    ],
+    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
   },
   {
     name: { de: 'Machenschaften', en: 'machinations' },
@@ -53,7 +49,7 @@ export const conflicts: Conflict[] = [
     rewards: [
       [{ type: 'victory-point' }, { type: 'faction-influence-up-choice' }],
       [{ type: 'intrigue' }, { type: 'intrigue' }],
-      [{ type: 'intrigue' }, { type: 'helper-or' }, { type: 'spice' }],
+      [{ type: 'intrigue' }],
     ],
   },
   {
@@ -71,7 +67,7 @@ export const conflicts: Conflict[] = [
     rewards: [
       [{ type: 'victory-point' }, { type: 'focus' }],
       [{ type: 'intrigue' }, { type: 'solari', amount: 2 }, { type: 'focus' }],
-      [{ type: 'solari', amount: 2 }, { type: 'focus' }],
+      [{ type: 'solari', amount: 2 }],
     ],
   },
   {
@@ -79,8 +75,8 @@ export const conflicts: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'victory-point' }, { type: 'foldspace' }],
-      [{ type: 'water' }, { type: 'spice', amount: 2 }],
-      [{ type: 'spice' }, { type: 'foldspace' }],
+      [{ type: 'water' }, { type: 'spice' }, { type: 'foldspace' }],
+      [{ type: 'spice' }],
     ],
   },
   {
@@ -97,8 +93,8 @@ export const conflicts: Conflict[] = [
     lvl: 2,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 3 }],
-      [{ type: 'spice', amount: 3 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
+      [{ type: 'spice', amount: 2 }],
     ],
   },
   {
@@ -115,7 +111,7 @@ export const conflicts: Conflict[] = [
     lvl: 2,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'water' }, { type: 'water' }, { type: 'tech-reduced-two' }],
+      [{ type: 'water' }, { type: 'water' }, { type: 'tech-reduced' }],
       [{ type: 'water' }, { type: 'tech-reduced' }],
     ],
   },
@@ -125,7 +121,7 @@ export const conflicts: Conflict[] = [
     rewards: [
       [{ type: 'faction-influence-up-twice-choice' }, { type: 'intrigue' }],
       [{ type: 'victory-point' }],
-      [{ type: 'spice', amount: 3 }],
+      [{ type: 'spice', amount: 2 }],
     ],
   },
   {
@@ -134,10 +130,7 @@ export const conflicts: Conflict[] = [
     rewards: [
       [{ type: 'victory-point' }, { type: 'victory-point' }],
       [{ type: 'victory-point' }],
-      [
-        { type: 'spice', amount: 2 },
-        { type: 'solari', amount: 2 },
-      ],
+      [{ type: 'spice' }, { type: 'solari', amount: 3 }],
     ],
   },
 ];

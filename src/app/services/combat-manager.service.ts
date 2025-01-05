@@ -25,7 +25,6 @@ export interface PlayerCombatScore {
 export class CombatManager {
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
   public playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
-  public playerCombatUnits: PlayerCombatUnits[] = [];
 
   constructor(private settingsService: SettingsService) {
     const playerCombatUnitsString = localStorage.getItem('playerCombatUnits');
@@ -35,17 +34,20 @@ export class CombatManager {
     }
 
     this.playerCombatUnits$.subscribe((playerCombatUnits) => {
-      this.playerCombatUnits = cloneDeep(playerCombatUnits);
       localStorage.setItem('playerCombatUnits', JSON.stringify(playerCombatUnits));
     });
   }
 
+  private get playerCombatUnits() {
+    return cloneDeep(this.playerCombatUnitsSubject.value);
+  }
+
   public getPlayerCombatUnits(playerId: number) {
-    return this.playerCombatUnits.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playerCombatUnitsSubject.value.find((x) => x.playerId === playerId));
   }
 
   public getEnemyCombatUnits(playerId: number) {
-    return this.playerCombatUnits.filter((x) => x.playerId !== playerId);
+    return cloneDeep(this.playerCombatUnitsSubject.value.filter((x) => x.playerId !== playerId));
   }
 
   public setInitialPlayerCombatUnits(players: Player[]) {
@@ -77,7 +79,7 @@ export class CombatManager {
   }
 
   public addPlayerTroopsToGarrison(playerId: number, troops: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       this.setPlayerTroopsInGarrison(playerId, combatUnits.troopsInGarrison + troops);
     } else {
@@ -86,7 +88,7 @@ export class CombatManager {
   }
 
   public removePlayerTroopsFromGarrison(playerId: number, troops: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInGarrison - troops >= 0) {
         this.setPlayerTroopsInGarrison(playerId, combatUnits.troopsInGarrison - troops);
@@ -97,7 +99,7 @@ export class CombatManager {
   }
 
   public removePlayerTroopsFromGarrisonOrCombat(playerId: number, troops: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInGarrison - troops >= 0) {
         this.setPlayerTroopsInGarrison(playerId, combatUnits.troopsInGarrison - troops);
@@ -129,16 +131,18 @@ export class CombatManager {
   }
 
   public addPlayerShipsToGarrison(playerId: number, ships: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
-      this.setPlayerShipsInGarrison(playerId, combatUnits.shipsInGarrison + ships);
+      const newShipAmount = combatUnits.shipsInGarrison + ships <= 2 ? combatUnits.shipsInGarrison + ships : 2;
+      this.setPlayerShipsInGarrison(playerId, newShipAmount);
     } else {
-      this.setPlayerShipsInGarrison(playerId, ships);
+      const newShipAmount = ships <= 2 ? ships : 2;
+      this.setPlayerShipsInGarrison(playerId, newShipAmount);
     }
   }
 
   public removePlayerShipsFromGarrison(playerId: number, ships: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.shipsInGarrison - ships >= 0) {
         this.setPlayerShipsInGarrison(playerId, combatUnits.shipsInGarrison - ships);
@@ -178,7 +182,7 @@ export class CombatManager {
   }
 
   public addPlayerTroopsToCombat(playerId: number, troops: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       this.setPlayerTroopsInCombat(playerId, combatUnits.troopsInCombat + troops);
     } else {
@@ -187,7 +191,7 @@ export class CombatManager {
   }
 
   public removePlayerTroopsFromCombat(playerId: number, troops: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInCombat - troops >= 0) {
         this.setPlayerTroopsInCombat(playerId, combatUnits.troopsInCombat - troops);
@@ -198,7 +202,7 @@ export class CombatManager {
   }
 
   public addAllPossibleTroopsToCombat(playerId: number, troopsGainedThisTurn: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
     }
@@ -216,7 +220,7 @@ export class CombatManager {
   }
 
   public addAllPossibleDreadnoughtsToCombat(playerId: number, dreadnoughtsGainedThisTurn: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
     }
@@ -232,7 +236,7 @@ export class CombatManager {
   }
 
   public addAllPossibleUnitsToCombat(playerId: number, deployableUnitAmount: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
     }
@@ -287,7 +291,7 @@ export class CombatManager {
   }
 
   public addPlayerShipsToCombat(playerId: number, ships: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       this.setPlayerShipsInCombat(playerId, combatUnits.shipsInCombat + ships);
     } else {
@@ -296,7 +300,7 @@ export class CombatManager {
   }
 
   public removePlayerShipsFromCombat(playerId: number, ships: number) {
-    const combatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
+    const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.shipsInCombat - ships >= 0) {
         this.setPlayerShipsInCombat(playerId, combatUnits.shipsInCombat - ships);

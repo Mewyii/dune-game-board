@@ -10,6 +10,7 @@ import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { Conflict } from 'src/app/models/conflict';
+import { PlayerGameModifiers } from '../../game-modifier.service';
 
 export type AIGoals =
   | 'high-council'
@@ -42,7 +43,7 @@ export type PlayerCardsRewards = { [key in RewardType]: number };
 export type PlayerCardsFactions = { [key in ActiveFactionType]: number };
 export type PlayerCardsFieldAccess = { [key in ActionType]: number };
 
-export interface GameState {
+export type GameState = Readonly<{
   playerScore: PlayerScore;
   enemyScore: PlayerScore[];
   playerCombatUnits: PlayerCombatUnits;
@@ -87,7 +88,8 @@ export interface GameState {
   playerCardsFactions: PlayerCardsFactions;
   playerCardsRewards: PlayerCardsRewards;
   playerCardsFieldAccess: PlayerCardsFieldAccess;
-}
+  playerGameModifiers?: PlayerGameModifiers;
+}>;
 
 export interface AIGoal {
   baseDesire: number;

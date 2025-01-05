@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, compact, flatten, isArray, min, sum } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, Reward } from '../models';
+import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, Reward, RewardType } from '../models';
 import { mergeObjects } from '../helpers/common';
 import { Player } from '../models/player';
 
@@ -11,13 +11,10 @@ export interface GameModifier {
 }
 
 export interface FactionInfluenceModifier extends GameModifier {
+  factionType: FactionType;
   noInfluence: boolean;
   alternateReward: Reward;
 }
-
-export type FactionInfluenceModifiers = {
-  [key in FactionType]?: FactionInfluenceModifier;
-};
 
 export interface ImperiumRowModifier extends GameModifier {
   cardId?: string;
@@ -80,7 +77,7 @@ export interface FieldCostsModifier extends GameModifier {
 export interface FieldRewardsModifier extends GameModifier {
   fieldId?: string;
   actionType?: ActionType;
-  rewardType: ResourceType;
+  rewardType: RewardType;
   amount: number;
 }
 
@@ -89,8 +86,12 @@ export interface FieldBlockModifier extends GameModifier {
   actionType?: ActionType;
 }
 
+export interface CombatModifier extends GameModifier {
+  combatMaxDeployableUnits?: number;
+}
+
 export interface GameModifiers {
-  factionInfluence?: FactionInfluenceModifiers;
+  factionInfluence?: FactionInfluenceModifier[];
   imperiumRow?: ImperiumRowModifier[];
   techTiles?: TechTileModifier[];
   customActions?: CustomGameActionModifier[];
@@ -101,6 +102,7 @@ export interface GameModifiers {
   fieldCost?: FieldCostsModifier[];
   fieldReward?: FieldRewardsModifier[];
   fieldBlock?: FieldBlockModifier[];
+  combat?: CombatModifier;
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
@@ -305,6 +307,10 @@ export class GameModifiersService {
         let modifier = modifiers[key];
         if (isArray(modifier)) {
           modifiers[key] = modifier.filter((x) => !x.currentRoundOnly) as any;
+        } else if (modifier) {
+          if (modifier.currentRoundOnly) {
+            modifiers[key] = undefined;
+          }
         }
       }
     }

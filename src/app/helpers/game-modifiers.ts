@@ -21,7 +21,7 @@ export function hasFactionInfluenceModifier(
   if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
   } else {
-    return !!playerGameModifier.factionInfluence[factionType];
+    return !!playerGameModifier.factionInfluence.some((x) => x.factionType === factionType);
   }
 }
 
@@ -32,7 +32,7 @@ export function getFactionInfluenceModifier(
   if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
   } else {
-    return playerGameModifier.factionInfluence[factionType];
+    return playerGameModifier.factionInfluence.find((x) => x.factionType);
   }
 }
 
@@ -163,6 +163,10 @@ export function getModifiedRewardsForField(
           }
         }
       }
+    }
+
+    if (remainingRewardModifier !== 0) {
+      actionRewards.push({ type: modifier.rewardType, amount: modifier.amount !== 1 ? modifier.amount : undefined });
     }
   }
 

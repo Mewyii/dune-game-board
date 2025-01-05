@@ -66,12 +66,17 @@ export class IntriguesComponent {
   onSearchIntriguesClicked() {
     const intrigues = this.intriguesService.intrigueDeck;
     if (intrigues) {
-      this.dialog.open(IntriguesPreviewDialogComponent, {
+      const dialogRef = this.dialog.open(IntriguesPreviewDialogComponent, {
         data: {
           title: 'Intrigue Deck',
           intrigues: intrigues,
           canAquireCards: true,
+          playerId: this.activePlayerId,
         },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.intriguesService.shuffleIntrigueDeck();
       });
     }
   }

@@ -57,6 +57,10 @@ export class IntriguesService {
     this.intrigueDeckSubject.next(shuffle(intrigueDeck));
   }
 
+  public shuffleIntrigueDeck() {
+    this.intrigueDeckSubject.next(shuffle(this.intrigueDeckSubject.value));
+  }
+
   public drawPlayerIntriguesFromDeck(playerId: number, amount: number) {
     const intrigueDeck = this.intrigueDeck;
     const addedPlayerIntrigues: IntrigueDeckCard[] = [];
@@ -86,13 +90,13 @@ export class IntriguesService {
     }
   }
 
-  addPlayerIntrigue(playerId: number, stolenIntrigue: IntrigueDeckCard) {
+  addPlayerIntrigue(playerId: number, intrigue: IntrigueDeckCard) {
     const playerIntrigues = this.playerIntrigues;
     const playerIndex = playerIntrigues.findIndex((x) => x.playerId === playerId);
     if (playerIndex > -1) {
-      playerIntrigues[playerIndex].intrigues.push(stolenIntrigue);
+      playerIntrigues[playerIndex].intrigues.push(intrigue);
     } else {
-      playerIntrigues.push({ playerId, intrigues: [stolenIntrigue] });
+      playerIntrigues.push({ playerId, intrigues: [intrigue] });
     }
     this.playerIntriguesSubject.next(playerIntrigues);
   }

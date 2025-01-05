@@ -3,3 +3,19 @@
     gap: 32px;
     flex-wrap: wrap;
 }
+
+.card-container {
+    position: relative;
+}
+
+.card-action-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    z-index: 3;
+}

@@ -88,7 +88,11 @@ export class DuneFactionComponent implements OnInit {
 
     this.gameModifiersService.playerGameModifiers$.subscribe((gameModifiers) => {
       this.excludedPlayers = gameModifiers
-        .filter((x) => x.factionInfluence && x.factionInfluence[this.faction.type]?.noInfluence === true)
+        .filter(
+          (x) =>
+            x.factionInfluence &&
+            x.factionInfluence.some((x) => x.factionType === this.faction.type && x.noInfluence === true)
+        )
         .map((x) => x.playerId);
     });
   }

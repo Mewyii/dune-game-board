@@ -79,15 +79,16 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
     },
     gameModifiers: {
-      factionInfluence: {
-        fremen: {
+      factionInfluence: [
+        {
           id: 'liet',
+          factionType: 'fremen',
           noInfluence: true,
           alternateReward: {
             type: 'card-draw',
           },
         },
-      },
+      ],
       fieldFactionAccess: [
         {
           id: 'liet-fremen',
@@ -136,7 +137,7 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'water' }, { type: 'troop', amount: 1 }],
+    startingResources: [{ type: 'water' }, { type: 'troop' }],
   },
   {
     name: {
@@ -225,15 +226,16 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/irulan.png',
     playableByAI: true,
     gameModifiers: {
-      factionInfluence: {
-        emperor: {
+      factionInfluence: [
+        {
           id: 'irulan',
+          factionType: 'emperor',
           noInfluence: true,
           alternateReward: {
             type: 'solari',
           },
         },
-      },
+      ],
       fieldFactionAccess: [
         {
           id: 'irulan-emperor',
@@ -261,7 +263,7 @@ export const leaders: Leader[] = [
       en: 'Ruthless ambition',
     },
     passiveDescription: {
-      de: 'Spiele mit allen deinen Intrigen aufgedeckt. Immer wenn du eine Intrige ziehst, ziehe eine Zusätzliche und entsorge dann eine davon.',
+      de: '<b>Immer wenn du eine Intrige ziehst</b>: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
       en: 'Play with all your intrigues revealed. Every time you would draw an intrigue, draw 2 instead, then trash one of them.',
     },
     signetName: {
@@ -278,7 +280,7 @@ export const leaders: Leader[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.rewards.some((x) => x.type === 'intrigue') ? 0.05 : 0.0),
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 4 }],
   },
   {
     name: {
@@ -447,7 +449,7 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
-    startingResources: [{ type: 'troop', amount: 3 }],
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -477,7 +479,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     playableByAI: true,
-    startingResources: [{ type: 'troop', amount: 3 }],
+    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -753,16 +755,16 @@ export const leaders: Leader[] = [
       de: 'Geächtete Kriegsherrin',
     },
     passiveDescription: {
-      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Reveal turn:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
-      de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Reveal turn:</b> {resource:persuasion;amount:3}{resource:helper-trade}{resource:troop}{resource:troop}',
+      de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:persuasion;amount:3}{resource:helper-trade}{resource:troop}{resource:troop}',
     },
     signetName: {
       en: 'Pillage',
       de: 'Plündern',
     },
     signetDescription: {
-      en: 'If you have troops in combat: {resource:solari;amount:2}',
-      de: 'Wenn du Truppen in der Schlacht hast: {resource:solari;amount:2}',
+      en: 'If you have troops in combat: {resource:spice}',
+      de: 'Wenn du Truppen in der Schlacht hast: {resource:spice}',
     },
 
     imageUrl: '/assets/images/leaders/yuna_2.png',
@@ -795,8 +797,8 @@ export const leaders: Leader[] = [
       de: 'Erpressung',
     },
     signetDescription: {
-      en: 'If there is an enemy agent on this board space: {resource:spice}',
-      de: 'Wenn sich auf diesem Feld ein gegnerischer Agent befindet: {resource:spice}',
+      en: 'If there is an enemy agent on this board space: {resource:solari;amount:2}',
+      de: 'Wenn sich auf diesem Feld ein gegnerischer Agent befindet: {resource:solari;amount:2}',
     },
     imageUrl: '/assets/images/leaders/dara.png',
     type: 'new',

@@ -15,4 +15,5 @@ export const gameContentOriginal: GameContent = {
   customCards: customCardsOriginal,
   recruitmentCardAmount: 5,
   finaleTrigger: 8,
+  combatMaxDeployableUnits: 2,
 };

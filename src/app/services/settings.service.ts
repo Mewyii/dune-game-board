@@ -113,6 +113,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.locationTakeoverTroopCosts);
   }
 
+  public getCombatMaxDeployableUnits() {
+    return cloneDeep(this.settingsSubject.value.gameContent.combatMaxDeployableUnits);
+  }
+
   public getFactions() {
     return cloneDeep(this.settingsSubject.value.gameContent.factions);
   }

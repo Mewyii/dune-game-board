@@ -238,8 +238,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'get-board-persuasion': {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
-      -0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
+      -0.0125 * gameState.playerCardsBought -
+      0.0125 * (gameState.playerCardsTrashed + player.focusTokens) -
       (player.hasCouncilSeat ? 0.05 : 0.0),
     goalIsReachable: () => false,
     reachedGoal: () => false,
@@ -308,7 +308,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         0.4
       ),
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 8 || gameState.isFinale,
+    reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 9 || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'focus', 0, 2),
       ...getViableBoardFields(fields, 'card-destroy', 0, 2),

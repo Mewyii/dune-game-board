@@ -26,4 +26,5 @@ export const gameContentCustomExpert: GameContent = {
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 5,
   locationTakeoverTroopCosts: 2,
+  combatMaxDeployableUnits: 2,
 };

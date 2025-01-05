@@ -1,7 +1,14 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
   <div class="intrigues-container">
-    <dune-intrigue-card *ngFor="let intrigue of data.intrigues" [card]="intrigue"></dune-intrigue-card>
+    <div class="card-container" *ngFor="let card of data.intrigues">
+      <dune-intrigue-card [card]="card"></dune-intrigue-card>
+      <div class="card-action-container" *ngIf="data.canAquireCards">
+        <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 <div mat-dialog-actions>
