@@ -1338,18 +1338,7 @@ export class GameManager {
         if (techBuyOption === 0) {
           this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
             type: 'tech',
-          });
-        } else if (techBuyOption === 1) {
-          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-            type: 'tech-reduced',
-          });
-        } else if (techBuyOption === 2) {
-          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-            type: 'tech-reduced-two',
-          });
-        } else if (techBuyOption === 3) {
-          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-            type: 'tech-reduced-three',
+            amount: techBuyOption,
           });
         }
       }
@@ -2148,16 +2137,17 @@ export class GameManager {
     const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(player.id);
 
     const rewardType = reward.type;
+    const rewardAmount = reward.amount ?? 1;
     if (isResourceType(rewardType)) {
       if (rewardType === 'solari') {
-        this.audioManager.playSound('solari', reward.amount);
+        this.audioManager.playSound('solari', rewardAmount);
       } else if (rewardType === 'water') {
-        this.audioManager.playSound('water', reward.amount);
+        this.audioManager.playSound('water', rewardAmount);
       } else if (rewardType === 'spice') {
-        this.audioManager.playSound('spice', reward.amount);
+        this.audioManager.playSound('spice', rewardAmount);
       }
 
-      this.playerManager.addResourceToPlayer(player.id, rewardType, reward.amount ?? 1);
+      this.playerManager.addResourceToPlayer(player.id, rewardType, rewardAmount);
     } else if (rewardType === 'shipping') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { shippingAmount: 1 });
     } else if (isFactionScoreRewardType(rewardType)) {
@@ -2184,50 +2174,35 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
     } else if (rewardType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 1 });
-    } else if (
-      rewardType === 'tech' ||
-      rewardType === 'tech-reduced' ||
-      rewardType === 'tech-reduced-two' ||
-      rewardType === 'tech-reduced-three'
-    ) {
-      const agents =
-        rewardType === 'tech'
-          ? 0
-          : rewardType === 'tech-reduced'
-          ? 1
-          : rewardType === 'tech-reduced-two'
-          ? 2
-          : rewardType === 'tech-reduced-three'
-          ? 3
-          : 0;
-      this.audioManager.playSound('tech-agent', agents);
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { techBuyOptionsWithAgents: [agents] });
+    } else if (rewardType === 'tech') {
+      this.audioManager.playSound('tech-agent', rewardAmount);
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { techBuyOptionsWithAgents: [rewardAmount] });
     } else if (rewardType === 'intrigue') {
-      this.audioManager.playSound('intrigue', reward.amount);
-      this.intriguesService.drawPlayerIntriguesFromDeck(player.id, reward.amount ?? 1);
+      this.audioManager.playSound('intrigue', rewardAmount);
+      this.intriguesService.drawPlayerIntriguesFromDeck(player.id, rewardAmount);
     } else if (rewardType === 'troop') {
-      this.audioManager.playSound('troops', reward.amount);
-      this.combatManager.addPlayerTroopsToGarrison(player.id, reward.amount ?? 1);
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { troopsGainedThisTurn: reward.amount ?? 1 });
+      this.audioManager.playSound('troops', rewardAmount);
+      this.combatManager.addPlayerTroopsToGarrison(player.id, rewardAmount);
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { troopsGainedThisTurn: rewardAmount });
     } else if (rewardType === 'dreadnought') {
       this.audioManager.playSound('dreadnought');
       this.combatManager.addPlayerShipsToGarrison(player.id, 1);
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { troopsGainedThisTurn: reward.amount ?? 1 });
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { troopsGainedThisTurn: rewardAmount });
     } else if (rewardType === 'card-draw') {
       this.audioManager.playSound('card-draw');
-      this.cardsService.drawPlayerCardsFromDeck(player.id, reward.amount ?? 1);
+      this.cardsService.drawPlayerCardsFromDeck(player.id, rewardAmount);
     } else if (rewardType === 'card-destroy') {
-      this.playerManager.addFocusTokens(player.id, reward.amount ?? 1);
+      this.playerManager.addFocusTokens(player.id, rewardAmount);
     } else if (rewardType == 'card-draw-or-destroy') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 1 });
     } else if (rewardType === 'focus') {
       this.audioManager.playSound('focus');
-      this.playerManager.addFocusTokens(player.id, reward.amount ?? 1);
+      this.playerManager.addFocusTokens(player.id, rewardAmount);
     } else if (rewardType == 'persuasion') {
-      this.playerManager.addPersuasionGainedToPlayer(player.id, reward.amount ?? 1);
+      this.playerManager.addPersuasionGainedToPlayer(player.id, rewardAmount);
     } else if (rewardType == 'sword') {
       this.audioManager.playSound('sword');
-      this.combatManager.addAdditionalCombatPowerToPlayer(player.id, reward.amount ?? 1);
+      this.combatManager.addAdditionalCombatPowerToPlayer(player.id, rewardAmount);
     } else if (rewardType === 'council-seat-small' || rewardType === 'council-seat-large') {
       if (!player.hasCouncilSeat) {
         this.audioManager.playSound('high-council');
@@ -2246,7 +2221,7 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { canLiftAgent: true });
     } else if (rewardType === 'victory-point') {
       this.audioManager.playSound('victory-point');
-      this.playerScoreManager.addPlayerScore(player.id, 'victoryPoints', reward.amount ?? 1);
+      this.playerScoreManager.addPlayerScore(player.id, 'victoryPoints', rewardAmount);
     } else if (rewardType === 'foldspace') {
       const foldspaceCard = this.settingsService
         .getCustomCards()
@@ -2290,7 +2265,7 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionRecruitment: ['emperor'] });
     }
 
-    this.loggingService.logPlayerResourceGained(player.id, rewardType, reward.amount);
+    this.loggingService.logPlayerResourceGained(player.id, rewardType, rewardAmount);
   }
 
   public payCostForPlayer(playerId: number, cost: Reward) {
@@ -2547,9 +2522,7 @@ export class GameManager {
       sword: 0,
       'sword-master': 0,
       tech: 0,
-      'tech-reduced': 0,
-      'tech-reduced-three': 0,
-      'tech-reduced-two': 0,
+      'tech-tile': 0,
       'tech-tile-flip': 0,
       'victory-point': 0,
       'trash-self': 0,
@@ -2557,6 +2530,9 @@ export class GameManager {
       'recruitment-fremen': 0,
       'recruitment-bene': 0,
       'recruitment-guild': 0,
+      research: 0,
+      specimen: 0,
+      beetle: 0,
     };
   }
 }

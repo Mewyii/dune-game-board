@@ -6,7 +6,7 @@ export const startingCards: ImperiumCard[] = [
       en: 'Warmaster',
       de: 'Kriegsmeister',
     },
-    fieldAccess: ['emperor', 'guild'],
+    fieldAccess: ['emperor', 'town'],
     imageUrl: '/assets/images/action-backgrounds/gurney_3.png',
     cardAmount: 1,
     buyEffects: [],
@@ -39,7 +39,7 @@ export const startingCards: ImperiumCard[] = [
       en: 'Negotiator',
       de: 'Unterhändler',
     },
-    fieldAccess: ['landsraad', 'town'],
+    fieldAccess: ['guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/meeting_2.png',
     cardAmount: 1,
     buyEffects: [],
@@ -72,7 +72,7 @@ export const startingCards: ImperiumCard[] = [
       en: 'Spy Master',
       de: 'Spionagemeister',
     },
-    fieldAccess: ['bene', 'fremen'],
+    fieldAccess: ['bene', 'town'],
     imageUrl: '/assets/images/action-backgrounds/mentat_4.png',
     cardAmount: 1,
     buyEffects: [],
@@ -153,22 +153,26 @@ export const startingCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
-    agentEffects: [{ type: 'trash-self' }],
+    agentEffects: [
+      {
+        type: 'trash-self',
+      },
+    ],
   },
-  // {
-  //   name: {
-  //     en: 'Scouts',
-  //     de: 'Kundschafter',
-  //   },
-  //   fieldAccess: ['spice', 'town'],
-  //   imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
-  //   cardAmount: 1,
-  //   buyEffects: [],
-  //   agentEffects: [],
-  //   revealEffects: [
-  //     {
-  //       type: 'sword',
-  //     },
-  //   ],
-  // },
+  {
+    name: {
+      en: 'Scouts',
+      de: 'Kundschafter',
+    },
+    fieldAccess: ['fremen', 'spice'],
+    imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
+    cardAmount: 1,
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'sword',
+      },
+    ],
+  },
 ];

@@ -12,8 +12,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Die Wüste Verstehen', en: 'Desert Knowledge' },
         actionType: 'fremen',
-        costs: [{ type: 'spice', amount: 1 }],
-        rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
+        costs: [{ type: 'spice', amount: 2 }],
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
       },
       {
@@ -24,7 +24,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Fremen.png',
-    primaryColor: 'rgb(52, 86, 153)',
+    primaryColor: 'rgb(45, 77, 140)',
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -64,7 +64,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Bene_Gesserit.png',
-    primaryColor: 'rgb(102, 90, 125)',
+    primaryColor: 'rgb(89, 82, 102)',
     secondaryColor: '#1f192eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -95,7 +95,10 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Heighliner', en: 'Heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'troop', amount: 4 }, { type: 'tech' }],
+        rewards: [
+          { type: 'card-draw', amount: 2 },
+          { type: 'troop', amount: 5 },
+        ],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
       },
       {
@@ -133,8 +136,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Verschwörung', en: 'Conspiracy' },
         actionType: 'emperor',
-        costs: [{ type: 'spice', amount: 3 }],
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 2 }, { type: 'combat' }],
+        costs: [{ type: 'spice', amount: 4 }],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
         pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
       },
       {
@@ -145,8 +148,8 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(85, 85, 85)',
-    secondaryColor: '#262626b8',
+    primaryColor: 'rgb(75, 75, 75)',
+    secondaryColor: '#1e1e1eb8',
     hasScoreBoard: true,
     influenceRewards: {
       2: [
@@ -175,10 +178,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 3 }],
-        rewards: [
-          { type: 'card-draw', amount: 2 },
-          { type: 'troop', amount: 2 },
-        ],
+        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 3 }],
         requiresInfluence: { type: 'bene' },
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
       },
@@ -186,14 +186,19 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 10 }],
-        rewards: [{ type: 'council-seat-small', amount: 4, iconHeight: 110 }],
+        rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
       },
       {
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        rewards: [{ type: 'persuasion', amount: 2 }, { type: 'helper-or' }, { type: 'troop', amount: 2 }, { type: 'tech' }],
+        rewards: [
+          { type: 'persuasion', amount: 2 },
+          { type: 'helper-or' },
+          { type: 'troop', amount: 2 },
+          { type: 'solari' },
+        ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
         customWidth: '130px',
         noColumnGap: true,
@@ -208,7 +213,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
-    primaryColor: 'rgb(77, 94, 75)',
+    primaryColor: 'rgb(76, 94, 74)',
     secondaryColor: '#192e19b8',
   },
   {

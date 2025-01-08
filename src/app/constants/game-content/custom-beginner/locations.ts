@@ -2,7 +2,7 @@ import { DuneLocation } from '../../../models';
 
 export const locationsCustomBeginner: DuneLocation[] = [
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 880,
       marginLeft: 1430,
@@ -32,7 +32,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     ownerReward: { type: 'spice' },
   },
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 890,
       marginLeft: 1010,
@@ -46,7 +46,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 670,
       marginLeft: 1250,
@@ -60,7 +60,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     ownerReward: { type: 'solari', amount: 2 },
   },
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 810,
       marginLeft: 600,

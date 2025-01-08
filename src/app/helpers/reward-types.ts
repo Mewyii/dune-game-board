@@ -48,12 +48,8 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_intrigue_draw.png';
     case 'tech':
       return 'assets/images/reward-markers/marker_tech.png';
-    case 'tech-reduced':
-      return 'assets/images/reward-markers/marker_tech_reduced.png';
-    case 'tech-reduced-two':
-      return 'assets/images/reward-markers/marker_tech_reduced_2.png';
-    case 'tech-reduced-three':
-      return 'assets/images/reward-markers/marker_tech_reduced_3.png';
+    case 'tech-tile':
+      return 'assets/images/reward-markers/marker_tech_tile.png';
     case 'dreadnought':
       return 'assets/images/reward-markers/marker_ship.png';
     case 'helper-trade-horizontal':
@@ -118,6 +114,12 @@ export function getRewardTypePath(rewardType: RewardType) {
       return 'assets/images/reward-markers/marker_recruitment_bene.png';
     case 'recruitment-guild':
       return 'assets/images/reward-markers/marker_recruitment_guild.png';
+    case 'research':
+      return 'assets/images/reward-markers/marker_research.png';
+    case 'specimen':
+      return 'assets/images/reward-markers/marker_specimen.png';
+    case 'beetle':
+      return 'assets/images/reward-markers/marker_beetle.png';
     default:
       return '';
   }

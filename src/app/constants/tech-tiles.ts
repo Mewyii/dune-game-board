@@ -11,8 +11,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Reveal turn</b>:<br>{resource:tech-tile-flip}{resource:solari;amount:2}{resource:helper-trade}{resource:sword} for each of your troops in conflict',
-      de: '<b>Aufdeckzug</b>:<br>{resource:tech-tile-flip}{resource:solari;amount:2}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
+      en: '<b>Reveal turn</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} for each of your troops in conflict',
+      de: '<b>Aufdeckzug</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -32,8 +32,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip}{resource:solari}{resource:helper-trade}{resource:tech-reduced}',
-      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip}{resource:solari}{resource:helper-trade}{resource:tech-reduced}',
+      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:solari}{resource:helper-trade}{resource:tech;amount:2}',
+      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:solari}{resource:helper-trade}{resource:tech;amount:2}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -49,8 +49,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/military_camp.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip}{resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
-      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip}{resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -150,8 +150,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:water}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:water}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.65 + 0.1 * gameState.playerScore.fremen - 0.075 * (gameState.currentRound - 1),
@@ -166,8 +166,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/port.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -187,8 +187,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -282,8 +282,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -448,8 +448,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip}{resource:spice;amount:4}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip}{resource:spice;amount:4}{resource:helper-trade}{resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:spice;amount:4}{resource:helper-trade}{resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:spice;amount:4}{resource:helper-trade}{resource:victory-point}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -474,8 +474,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:intrigue}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip}{resource:solari;amount:6}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:intrigue}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip}{resource:solari;amount:6}{resource:helper-trade}{resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:intrigue}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari;amount:6}{resource:helper-trade}{resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:intrigue}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:solari;amount:6}{resource:helper-trade}{resource:victory-point}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -502,8 +502,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Reveal turn</b>: <br>{resource:tech-tile-flip}{resource:water}{resource:spice}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:tech-tile-flip}{resource:water}{resource:spice}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Reveal turn</b>: <br>{resource:tech-tile-flip} {resource:water}{resource:spice}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:tech-tile-flip} {resource:water}{resource:spice}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>

@@ -1176,13 +1176,7 @@ export class AIManager {
       case 'helper-or-horizontal':
         return 0;
       case 'tech':
-        return 1;
-      case 'tech-reduced':
-        return 2.75;
-      case 'tech-reduced-two':
-        return 4.75;
-      case 'tech-reduced-three':
-        return 6.75;
+        return 1.5;
       case 'card-round-start':
         return 1.5;
       case 'shipping':
@@ -1287,12 +1281,6 @@ export class AIManager {
       case 'helper-or-horizontal':
         return value;
       case 'tech':
-        return value + 0.33 * player.techAgents;
-      case 'tech-reduced':
-        return value + 0.33 * player.techAgents;
-      case 'tech-reduced-two':
-        return value + 0.33 * player.techAgents;
-      case 'tech-reduced-three':
         return value + 0.33 * player.techAgents;
       case 'card-round-start':
         return value;

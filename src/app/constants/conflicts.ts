@@ -15,8 +15,8 @@ export const conflicts: Conflict[] = [
     name: { de: 'Belagerung von Arrakeen', en: 'siege of arrakeen' },
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech-reduced' }],
-      [{ type: 'water' }, { type: 'tech-reduced' }],
+      [{ type: 'location-control' }, { type: 'tech', amount: 2 }],
+      [{ type: 'water' }, { type: 'tech', amount: 2 }],
       [{ type: 'water' }],
     ],
   },
@@ -111,8 +111,8 @@ export const conflicts: Conflict[] = [
     lvl: 2,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'water' }, { type: 'water' }, { type: 'tech-reduced' }],
-      [{ type: 'water' }, { type: 'tech-reduced' }],
+      [{ type: 'water' }, { type: 'water' }, { type: 'tech', amount: 2 }],
+      [{ type: 'water' }, { type: 'tech', amount: 2 }],
     ],
   },
   {

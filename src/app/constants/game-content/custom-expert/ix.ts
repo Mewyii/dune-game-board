@@ -8,7 +8,7 @@ export const ixCustomExpert: ActionField = {
     [
       { type: 'solari', amount: 3 },
       { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-      { type: 'tech-reduced-two' },
+      { type: 'tech', amount: 3 },
     ],
     [{ type: 'solari', amount: 6 }, { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 }, { type: 'dreadnought' }],
   ],

@@ -39,7 +39,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState) => player.hasCouncilSeat || gameState.isFinale,
     desiredFields: (fields) => ({
       // Three because "amount" is used for the persuasion indicator
-      ...getViableBoardFields(fields, 'council-seat-small', 0, 4),
+      ...getViableBoardFields(fields, 'council-seat-small', 0, 3),
     }),
     viableFields: () => ({}),
   },
@@ -58,16 +58,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.45,
+    baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'spice') + 0.033 * player.techAgents - 0.01 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'tech', 0, 4),
-      ...getViableBoardFields(fields, 'tech-reduced', 0, 2),
-      ...getViableBoardFields(fields, 'tech-reduced-two', 0, 1.33),
-      ...getViableBoardFields(fields, 'tech-reduced-three', 0, 1),
+      ...getViableBoardFields(fields, 'tech', 0, 3),
     }),
   },
   dreadnought: {

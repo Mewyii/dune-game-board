@@ -20,7 +20,7 @@
     padding-right: 32px;
     min-height: 20px;
     border-radius: 8px 8px 0px 0px;
-    color: #f3f5de;
+    color: rgb(230, 239, 255);
     background-image: url(/assets/images/tech-tile-backgrounds/heading.png);
     background-size: cover;
     display: flex;
@@ -32,7 +32,7 @@
 .card-img {
     flex: 1 1;
     background-size: cover;
-    border-top: 2px solid #b79f40;
+    border-top: 2px solid rgb(179, 207, 255);
     position: relative;
     background-position: top;
     border-radius: 0px 0px 8px 8px;
@@ -57,7 +57,7 @@
     min-height: 30px;
     padding: 8px;
     background-size: cover;
-    background: linear-gradient(rgba(184, 159, 57, 0.9), 5%, rgba(60, 48, 11, 0.45), 95%, rgba(120, 107, 41, 0.9));
+    background: linear-gradient(rgba(152, 176, 217, 0.9), 5%, rgba(27, 31, 38, 0.45), 95%, rgba(26, 34, 51, 0.9));
     box-sizing: border-box;
     border-radius: 0px 0px 8px 8px;
 }

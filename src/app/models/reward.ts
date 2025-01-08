@@ -44,9 +44,7 @@ export const rewardTypes = [
   'sword',
   'sword-master',
   'tech',
-  'tech-reduced',
-  'tech-reduced-three',
-  'tech-reduced-two',
+  'tech-tile',
   'tech-tile-flip',
   'victory-point',
   'trash-self',
@@ -54,6 +52,9 @@ export const rewardTypes = [
   'recruitment-fremen',
   'recruitment-bene',
   'recruitment-guild',
+  'research',
+  'specimen',
+  'beetle',
 ] as const;
 
 export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];

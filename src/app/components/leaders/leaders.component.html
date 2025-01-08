@@ -1,13 +1,17 @@
 <div class="leader-board" *ngIf="activeLeader">
   <div class="leader-viewer">
-    <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setPreviousLeader()"><</div>
+    <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setPreviousLeader()">
+      <mat-icon>navigate_before</mat-icon>
+    </div>
     <dune-leader-card *ngIf="activeLeader.type === 'new'" [leader]="activeLeader"></dune-leader-card>
     <div class="leader-action-container" *ngIf="!playerLeader?.isLockedIn">
       <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()" matTooltip="Select">
         <mat-icon>check</mat-icon>
       </button>
     </div>
-    <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setNextLeader()">></div>
+    <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setNextLeader()">
+      <mat-icon>navigate_next</mat-icon>
+    </div>
   </div>
   <div class="control-bar center" *ngIf="currentPlayer">
     <button

@@ -180,7 +180,8 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-or',
       },
       {
-        type: 'tech-reduced',
+        type: 'tech',
+        amount: 2,
       },
     ],
     customAgentEffect: {
@@ -482,7 +483,8 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'tech-reduced',
+        type: 'tech',
+        amount: 2,
       },
     ],
     revealEffects: [
@@ -863,7 +865,8 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'tech-reduced-two',
+        type: 'tech',
+        amount: 3,
       },
     ],
     revealEffects: [
@@ -1270,7 +1273,8 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'tech-reduced',
+        type: 'tech',
+        amount: 2,
       },
     ],
   },

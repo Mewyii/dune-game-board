@@ -251,7 +251,8 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'tech-reduced-two',
+        type: 'tech',
+        amount: 3,
       },
     ],
   },

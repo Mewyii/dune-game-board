@@ -2,7 +2,7 @@ import { DuneLocation } from '../../../models';
 
 export const locationsCustomExpert: DuneLocation[] = [
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 880,
       marginLeft: 1430,
@@ -25,14 +25,14 @@ export const locationsCustomExpert: DuneLocation[] = [
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'troop' }, { type: 'spice-accumulation' }, { type: 'tech-reduced' }],
+      rewards: [{ type: 'tech', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },
     ownerReward: { type: 'spice' },
   },
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 890,
       marginLeft: 1010,
@@ -46,7 +46,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'spice' },
   },
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 670,
       marginLeft: 1250,
@@ -60,7 +60,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     ownerReward: { type: 'solari', amount: 2 },
   },
   {
-    color: 'rgb(85, 70, 55)',
+    color: 'rgb(77, 61, 48)',
     position: {
       marginTop: 810,
       marginLeft: 600,
@@ -118,7 +118,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   },
   // 5-6Player Stuff
   // {
-  //   color: 'rgb(85, 70, 55)',
+  //   color: 'rgb(77, 61, 48)',
   //   position: {
   //     marginTop: 635,
   //     marginLeft: 1375,
@@ -144,7 +144,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   //   },
   // },
   // {
-  //   color: 'rgb(85, 70, 55)',
+  //   color: 'rgb(77, 61, 48)',
   //   position: {
   //     marginTop: 1000,
   //     marginLeft: 1444,

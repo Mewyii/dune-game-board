@@ -24,7 +24,7 @@ export const factionsCustomBeginner: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Fremen.png',
-    primaryColor: 'rgb(52, 86, 153)',
+    primaryColor: 'rgb(45, 77, 140)',
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -64,7 +64,7 @@ export const factionsCustomBeginner: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Bene_Gesserit.png',
-    primaryColor: 'rgb(102, 90, 125)',
+    primaryColor: 'rgb(89, 82, 102)',
     secondaryColor: '#1f192eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -148,8 +148,8 @@ export const factionsCustomBeginner: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(85, 85, 85)',
-    secondaryColor: '#262626b8',
+    primaryColor: 'rgb(75, 75, 75)',
+    secondaryColor: '#1e1e1eb8',
     hasScoreBoard: true,
     influenceRewards: {
       2: [
@@ -208,7 +208,7 @@ export const factionsCustomBeginner: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
-    primaryColor: 'rgb(77, 94, 75)',
+    primaryColor: 'rgb(76, 94, 74)',
     secondaryColor: '#192e19b8',
   },
   {
