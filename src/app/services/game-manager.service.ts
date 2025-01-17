@@ -17,7 +17,7 @@ import { TechTilesService } from './tech-tiles.service';
 import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
-import { GameState, PlayerCardsFactions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
+import { GameState, PlayerCardsFactions as Factions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
 import { CardsService, ImperiumDeckCard } from './cards.service';
 import { isFactionScoreCostType, isFactionScoreRewardType } from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
@@ -353,10 +353,17 @@ export class GameManager {
             this.showPlayerRewardChoices(player);
           } else {
             this.aiResolveRewardChoices(player);
+          }
 
-            if (isFirstCycle) {
-              const dreadnoughtCount = this.combatManager.getPlayerCombatUnits(player.id)?.shipsInCombat;
-              if (dreadnoughtCount && dreadnoughtCount > 0) {
+          if (isFirstCycle) {
+            const dreadnoughtCount = this.combatManager.getPlayerCombatUnits(player.id)?.shipsInCombat;
+            if (dreadnoughtCount && dreadnoughtCount > 0) {
+              if (!player.isAI) {
+                this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+                  type: 'location-control',
+                  amount: dreadnoughtCount,
+                });
+              } else {
                 this.aiControlLocations(player, dreadnoughtCount);
               }
             }
@@ -902,8 +909,9 @@ export class GameManager {
         this.addRewardToPlayer(player, reward);
       }
     }
-    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
-    this.loggingService.logPlayerPlayedIntrigue(this.activePlayerId, this.t.translateLS(intrigue.name));
+    this.intriguesService.trashPlayerIntrigue(playerId, intrigue.id);
+    this.loggingService.logPlayerPlayedIntrigue(playerId, this.t.translateLS(intrigue.name));
+    this.turnInfoService.updatePlayerTurnInfo(playerId, { intriguesPlayedThisTurn: [intrigue] });
   }
 
   public doAIAction(playerId: number) {
@@ -1051,6 +1059,7 @@ export class GameManager {
     const intrigueEffects = intrigue.effects;
 
     this.loggingService.logPlayerPlayedIntrigue(player.id, this.t.translateLS(intrigue.name));
+    this.turnInfoService.updatePlayerTurnInfo(player.id, { intriguesPlayedThisTurn: [intrigue] });
 
     const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } =
       this.aIManager.getRewardArrayAIInfos(intrigueEffects);
@@ -1335,12 +1344,10 @@ export class GameManager {
     }
     if (turnInfo.techBuyOptionsWithAgents) {
       for (const techBuyOption of turnInfo.techBuyOptionsWithAgents) {
-        if (techBuyOption === 0) {
-          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-            type: 'tech',
-            amount: techBuyOption,
-          });
-        }
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'tech',
+          amount: techBuyOption,
+        });
       }
     }
   }
@@ -1580,10 +1587,16 @@ export class GameManager {
 
       if (this.cardsService.limitedCustomCards.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, cardToBuy);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
       } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
       } else if (imperiumRow.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromImperiumRow(playerId, cardToBuy);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
+      } else {
+        this.cardsService.shuffleCardsUnderPlayerDeck(playerId, [cardToBuy]);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
       }
 
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(cardToBuy.name));
@@ -1604,7 +1617,7 @@ export class GameManager {
     }
 
     const playerDeckCards = this.cardsService.getPlayerDeck(playerId)?.cards;
-    if ((playerDeckCards?.length ?? 0) + (playerHandCards?.length ?? 0) + (playerDiscardPileCards?.length ?? 0) < 8) {
+    if ((playerDeckCards?.length ?? 0) + (playerHandCards?.length ?? 0) + (playerDiscardPileCards?.length ?? 0) < 9) {
       return;
     }
 
@@ -1622,6 +1635,7 @@ export class GameManager {
 
       this.playerManager.removeFocusTokens(playerId, 1);
 
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsTrashedThisTurn: [cardToTrash] });
       this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(cardToTrash.name));
 
       if (focusTokens > 1) {
@@ -1644,7 +1658,7 @@ export class GameManager {
 
     if (playerCanAffordCard) {
       if (card.persuasionCosts) {
-        this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
+        this.playerManager.addPersuasionSpentToPlayer(playerId, card.persuasionCosts + costModifier);
       }
       if (card.buyEffects) {
         for (const effect of card.buyEffects) {
@@ -1656,9 +1670,10 @@ export class GameManager {
           this.aiResolveRewardChoices(player);
         }
       }
-      this.cardsService.aquirePlayerCardFromImperiumRow(this.activePlayerId, card);
+      this.cardsService.aquirePlayerCardFromImperiumRow(playerId, card);
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
 
-      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
+      this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
     }
   }
 
@@ -1676,7 +1691,7 @@ export class GameManager {
 
     if (playerCanAffordCard) {
       if (card.persuasionCosts) {
-        this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
+        this.playerManager.addPersuasionSpentToPlayer(playerId, card.persuasionCosts + costModifier);
       }
       if (card.buyEffects) {
         for (const effect of card.buyEffects) {
@@ -1688,9 +1703,10 @@ export class GameManager {
           this.aiResolveRewardChoices(player);
         }
       }
-      this.cardsService.aquirePlayerCardFromImperiumDeck(this.activePlayerId, card);
+      this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, card);
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
 
-      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
+      this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
       return true;
     } else {
       return false;
@@ -1711,7 +1727,7 @@ export class GameManager {
 
     if (playerCanAffordCard) {
       if (card.persuasionCosts) {
-        this.playerManager.addPersuasionSpentToPlayer(this.activePlayerId, card.persuasionCosts + costModifier);
+        this.playerManager.addPersuasionSpentToPlayer(playerId, card.persuasionCosts + costModifier);
       }
       if (card.buyEffects) {
         for (const effect of card.buyEffects) {
@@ -1724,8 +1740,9 @@ export class GameManager {
         }
       }
       this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, card);
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
 
-      this.loggingService.logPlayerBoughtCard(this.activePlayerId, this.t.translateLS(card.name));
+      this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
     }
   }
 
@@ -1756,7 +1773,7 @@ export class GameManager {
 
     const playerCards = [...playerDeckCards, ...playerHandCards, ...playerDiscardPileCards];
 
-    const playerCardsFactions = this.getInitialPlayerCardsFactions();
+    const playerCardsFactions = this.getInitialFactions();
     const playerCardsFieldAccess = this.getInitialPlayerCardsFieldAccess();
     const playerCardsRewards = this.getInitialPlayerCardsRewards();
 
@@ -1786,6 +1803,14 @@ export class GameManager {
             playerCardsRewards[reward.type] += reward.amount ?? 1;
           }
         }
+      }
+    }
+
+    const playerTechTilesFactions = this.getInitialFactions();
+    const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
+    for (const techTile of playerTechTiles) {
+      if (techTile.faction) {
+        playerTechTilesFactions[techTile.faction] += 1;
       }
     }
 
@@ -1874,6 +1899,7 @@ export class GameManager {
       playerCardsFieldAccess,
       playerCardsRewards,
       playerGameModifiers,
+      playerTechTilesFactions,
     };
   }
 
@@ -2041,11 +2067,12 @@ export class GameManager {
     return canPayCosts;
   }
 
-  private aiBuyTechOrStackTechAgents(playerId: number, techDiscount: number) {
+  private aiBuyTechOrStackTechAgents(playerId: number, techAmount: number) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
       return;
     }
+    const possibleDiscount = techAmount - 1;
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
 
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
@@ -2053,7 +2080,7 @@ export class GameManager {
     const availablePlayerTechAgents = player.techAgents;
     const affordableTechTiles = buyableTechTiles.filter(
       (x) =>
-        x.costs - techDiscount + getTechTileCostModifier(x, costModifiers) <=
+        x.costs - possibleDiscount + getTechTileCostModifier(x, costModifiers) <=
         availablePlayerTechAgents + availablePlayerSpice
     );
 
@@ -2064,22 +2091,27 @@ export class GameManager {
       )[0];
 
       const desire = mostDesiredTechTile.aiEvaluation(player, gameState);
-      const effectiveCosts = mostDesiredTechTile.costs - techDiscount - availablePlayerTechAgents;
+      const effectiveCosts = mostDesiredTechTile.costs - possibleDiscount - availablePlayerTechAgents;
 
       if (
         affordableTechTiles.some((x) => x.name.en === mostDesiredTechTile.name.en) &&
         (desire > 0.25 || effectiveCosts < 1)
       ) {
         const costModifier = getTechTileCostModifier(mostDesiredTechTile, costModifiers);
-        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, techDiscount + costModifier);
+        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, possibleDiscount + costModifier);
       } else if (this.isFinale) {
         const costModifier = getTechTileCostModifier(affordableTechTiles[0], costModifiers);
-        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTechAgents, techDiscount + costModifier);
+        this.buyTechTileForPlayer(
+          player,
+          affordableTechTiles[0],
+          availablePlayerTechAgents,
+          possibleDiscount + costModifier
+        );
       } else {
-        this.playerManager.addTechAgentsToPlayer(player.id, techDiscount + 1);
+        this.playerManager.addTechAgentsToPlayer(player.id, techAmount);
       }
     } else {
-      this.playerManager.addTechAgentsToPlayer(player.id, techDiscount + 1);
+      this.playerManager.addTechAgentsToPlayer(player.id, techAmount);
     }
   }
 
@@ -2114,6 +2146,8 @@ export class GameManager {
     }
 
     this.audioManager.playSound('aquire-tech');
+
+    this.turnInfoService.updatePlayerTurnInfo(player.id, { techTilesBoughtThisTurn: [techTile] });
   }
 
   private isOpeningTurn(playerId: number) {
@@ -2450,7 +2484,7 @@ export class GameManager {
     return result;
   }
 
-  private getInitialPlayerCardsFactions(): PlayerCardsFactions {
+  private getInitialFactions(): Factions {
     return {
       bene: 0,
       emperor: 0,

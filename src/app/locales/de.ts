@@ -2,6 +2,7 @@ import { Locale } from '../services/translate-service';
 
 export const deLocale: Locale = {
   commonCancel: 'Abbrechen',
+  commonEndgame: 'Finale',
   playerboardHeading: 'Spieler',
   playerboardRound: 'Runde',
   playerboardCombatTooltip: 'Kampf-Phase',
@@ -18,4 +19,8 @@ export const deLocale: Locale = {
   imperiumcardspreviewSearchTooltip: 'Karten-Name oder Fraktion...',
   imperiumrowSearchTitle: 'Imperium Deck durchsuchen',
   imperiumrowRecruitmentTitle: 'Imperium Deck Rekrutierung',
+  turninfosCardsBought: 'Erworbene Karten',
+  turninfosCardsTrashed: 'Entsorgte Karten',
+  turninfosIntriguesPlayed: 'Gespielte Intrigen',
+  turninfosTechTilesBought: 'Gekaufte Tech-Plättchen',
 };

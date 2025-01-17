@@ -1,4 +1,7 @@
+import { ImperiumDeckCard } from '../services/cards.service';
 import { ActiveFactionType } from './faction';
+import { IntrigueDeckCard } from './intrigue';
+import { TechTileCard } from './tech-tile';
 
 export interface TurnInfo {
   playerId: number;
@@ -20,4 +23,8 @@ export interface TurnInfo {
   locationControlAmount: number;
   signetRingAmount: number;
   factionRecruitment: ActiveFactionType[];
+  cardsBoughtThisTurn: ImperiumDeckCard[];
+  cardsTrashedThisTurn: ImperiumDeckCard[];
+  intriguesPlayedThisTurn: IntrigueDeckCard[];
+  techTilesBoughtThisTurn: TechTileCard[];
 }

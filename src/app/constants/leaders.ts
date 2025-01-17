@@ -70,8 +70,8 @@ export const leaders: Leader[] = [
       de: 'Pflanzen des Paradieses',
     },
     signetDescription: {
-      en: '{resource:signet-token}{resource:helper-or}{resource:water}{resource:loose-troop} {resource:helper-trade} {resource:signet-token}{resource:signet-token}{resource:helper-or}{resource:signet-token}{resource:signet-token} {resource:helper-trade} {resource:victory-point}',
-      de: '{resource:signet-token}{resource:helper-or}{resource:water}{resource:loose-troop} {resource:helper-trade} {resource:signet-token}{resource:signet-token}{resource:helper-or}{resource:signet-token}{resource:signet-token} {resource:helper-trade} {resource:victory-point}',
+      en: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:2}{resource:helper-trade}{resource:victory-point}',
+      de: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:2}{resource:helper-trade}{resource:victory-point}',
     },
     imageUrl: '/assets/images/leaders/liet.png',
     playableByAI: true,
@@ -329,8 +329,8 @@ export const leaders: Leader[] = [
       de: 'Bene Gesserit Ausbildung',
     },
     passiveDescription: {
-      en: 'You may pass your 1. turn. If you do, {resource:card-draw}.',
-      de: 'Du kannst deinen 1. Zug passen. Tust du das, {resource:card-draw}.',
+      en: 'You may pass your 1. turn of each round. If you do, {resource:card-discard}{resource:helper-trade}{resource:card-draw}.',
+      de: 'Du kannst deinen 1. Zug jeder Runde passen. Tust du das, {resource:card-discard}{resource:helper-trade}{resource:card-draw}.',
     },
     signetName: {
       en: 'Hypnotic seduction',
@@ -351,7 +351,10 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 2 }],
+    startingResources: [
+      { type: 'solari', amount: 2 },
+      { type: 'troop', amount: 2 },
+    ],
   },
   {
     name: {
@@ -385,7 +388,7 @@ export const leaders: Leader[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? 0.025 : 0.0,
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [{ type: 'tech' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {
@@ -397,25 +400,25 @@ export const leaders: Leader[] = [
       de: 'haus vernius',
     },
     passiveName: {
+      en: 'Cybernetic implants',
+      de: 'Kybernetische Implantate',
+    },
+    passiveDescription: {
+      en: '<b>Round start</b>: {resource:signet-token}. You may at any time trash {resource:signet-token;amount:3} to {resource:agent-lift}.',
+      de: '<b>Rundenbeginn</b>: {resource:signet-token}. Du kannst jederzeit {resource:signet-token;amount:3} entsorgen, um {resource:agent-lift}.',
+    },
+    signetName: {
       en: 'Earl of ix',
       de: 'Graf von Ix',
     },
-    passiveDescription: {
-      en: '<b>Reveal turn</b>: {resource:tech}',
-      de: '<b>Aufdeckzug</b>: {resource:tech}',
-    },
-    signetName: {
-      en: 'Enhanced cybernetics',
-      de: 'Kybernetische Upgrades',
-    },
     signetDescription: {
-      en: '{resource:card-discard} {resource:helper-trade} {resource:card-draw}',
-      de: '{resource:card-discard} {resource:helper-trade} {resource:card-draw}',
+      en: '{resource:tech}',
+      de: '{resource:tech}',
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
     playableByAI: true,
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [{ type: 'tech' }, { type: 'troop', amount: 3 }],
   },
   {
     name: {

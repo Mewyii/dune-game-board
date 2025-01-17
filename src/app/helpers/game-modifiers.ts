@@ -101,7 +101,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
   let remainingCostModifier = costsModifier;
 
   for (const costs of actionCosts as RewardWithModifier[]) {
-    let costAmount = costs.amount ?? 1;
+    const costAmount = costs.amount ?? 1;
 
     if (remainingCostModifier > 0) {
       costs.amount = costAmount + remainingCostModifier;
@@ -146,27 +146,31 @@ export function getModifiedRewardsForField(
 
     for (const reward of actionRewards as RewardWithModifier[]) {
       if (reward.type === modifier.rewardType) {
-        let costAmount = reward.amount ?? 1;
+        const rewardAmount = reward.amount ?? 1;
 
         if (remainingRewardModifier > 0) {
-          reward.amount = costAmount + remainingRewardModifier;
+          reward.amount = rewardAmount + remainingRewardModifier;
           reward.modifier = 'positive';
           break;
         } else if (remainingRewardModifier < 0) {
-          if (Math.abs(remainingRewardModifier) >= costAmount) {
+          if (Math.abs(remainingRewardModifier) >= rewardAmount) {
             actionRewards.shift();
-            remainingRewardModifier -= costAmount;
+            remainingRewardModifier += rewardAmount;
           } else {
-            reward.amount = costAmount + remainingRewardModifier;
+            reward.amount = rewardAmount + remainingRewardModifier;
             reward.modifier = 'negative';
+            remainingRewardModifier = 0;
             break;
           }
         }
       }
     }
 
-    if (remainingRewardModifier !== 0) {
-      actionRewards.push({ type: modifier.rewardType, amount: modifier.amount !== 1 ? modifier.amount : undefined });
+    if (remainingRewardModifier > 0) {
+      actionRewards.push({
+        type: modifier.rewardType,
+        amount: remainingRewardModifier !== 1 ? remainingRewardModifier : undefined,
+      });
     }
   }
 

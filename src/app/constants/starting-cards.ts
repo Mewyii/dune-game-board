@@ -147,13 +147,16 @@ export const startingCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_10.png',
     cardAmount: 1,
     buyEffects: [],
+    agentEffects: [
+      {
+        type: 'trash-self',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
         amount: 1,
       },
-    ],
-    agentEffects: [
       {
         type: 'trash-self',
       },

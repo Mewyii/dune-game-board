@@ -111,7 +111,7 @@ export const techTiles: TechTileCard[] = [
       en: 'Experimental Shields',
       de: 'Experimentelle Schilde',
     },
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/shields.png',
     buyEffects: [],
     customEffect: {
@@ -155,6 +155,23 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.65 + 0.1 * gameState.playerScore.fremen - 0.075 * (gameState.currentRound - 1),
+  },
+  {
+    name: {
+      en: 'Botanical Research Station',
+      de: 'Botanische Forschungsstation',
+    },
+    faction: 'fremen',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/research_station.png',
+    buyEffects: [],
+    customEffect: {
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.4 + 0.015 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.fremen,
   },
   {
     name: {

@@ -4,7 +4,7 @@
       {{ t.translateLS(card.name).toUpperCase() }}
     </span>
   </div>
-  <div [class]="'card-content ' + card.type">
+  <div [class]="'card-content font-text ' + card.type">
     <dune-reward-array [rewards]="card.effects" [size]="'36px'"></dune-reward-array>
   </div>
 </div>

@@ -42,6 +42,7 @@
     <dune-intrigues *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
     <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
     <dune-always-buyable-cards></dune-always-buyable-cards>
+    <dune-turn-infos *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-turn-infos>
   </div>
   <dune-imperium-row *ngIf="mode === 'game'"></dune-imperium-row>
   <div class="sideboard-container">

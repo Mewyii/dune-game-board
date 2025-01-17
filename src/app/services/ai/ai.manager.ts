@@ -835,7 +835,8 @@ export class AIManager {
   private getImperiumCardPlayEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (card.faction) {
-      evaluationValue += 0.5 * gameState.playerCardsFactions[card.faction];
+      evaluationValue +=
+        0.5 * (gameState.playerCardsFactions[card.faction] + gameState.playerTechTilesFactions[card.faction]);
     }
     if (card.fieldAccess) {
       evaluationValue -= card.fieldAccess.length * 0.1;
@@ -898,7 +899,7 @@ export class AIManager {
   private getImperiumCardBuyEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (card.faction) {
-      evaluationValue += 1 * gameState.playerCardsFactions[card.faction];
+      evaluationValue += 1 * (gameState.playerCardsFactions[card.faction] + gameState.playerTechTilesFactions[card.faction]);
     }
     if (card.persuasionCosts) {
       evaluationValue += card.persuasionCosts * 0.1;
@@ -971,7 +972,8 @@ export class AIManager {
   private getImperiumCardTrashEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (card.faction) {
-      evaluationValue -= 0.5 * gameState.playerCardsFactions[card.faction];
+      evaluationValue -=
+        0.5 * (gameState.playerCardsFactions[card.faction] + gameState.playerTechTilesFactions[card.faction]);
     }
     if (card.persuasionCosts) {
       evaluationValue -= card.persuasionCosts * 0.1;

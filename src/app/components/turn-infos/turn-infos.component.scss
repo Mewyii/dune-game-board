@@ -1,0 +1,36 @@
+.turn-infos-container {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    padding: 16px;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.turn-info-container {
+    background-color: #45382f;
+    padding: 16px;
+    border-radius: 5px;
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+    width: min-content;
+}
+
+.turn-info-title {
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}

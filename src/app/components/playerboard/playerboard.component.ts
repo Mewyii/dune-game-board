@@ -37,6 +37,8 @@ export class PlayerboardComponent implements OnInit {
   public playerHandCards: PlayerCardStack[] = [];
   public playerIntrigues: PlayerIntrigueStack[] = [];
 
+  public isFinale = false;
+
   constructor(
     public gameManager: GameManager,
     public playerManager: PlayersService,
@@ -85,6 +87,10 @@ export class PlayerboardComponent implements OnInit {
 
     this.intriguesService.playerIntrigues$.subscribe((playerIntrigues) => {
       this.playerIntrigues = playerIntrigues;
+    });
+
+    this.gameManager.isFinale$.subscribe((isFinale) => {
+      this.isFinale = isFinale;
     });
   }
 
@@ -138,6 +144,20 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onFinishGameClicked() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Are you sure you want to finish the game?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.gameManager.finishGame();
+      }
+    });
+  }
+
+  onShowGameSummaryClicked() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Are you sure you want to finish the game?',

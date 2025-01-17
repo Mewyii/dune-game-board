@@ -26,6 +26,7 @@
       <div class="font-scifi" *ngIf="currentTurn">
         {{ t.translate('playerboardRound') }} <span class="turn">{{ currentTurn }}</span>
       </div>
+      <div *ngIf="isFinale" class="endgame font-medieval">{{ t.translate('commonEndgame') }}</div>
       <div class="turn-state font-medieval">{{ turnState.toUpperCase() }}</div>
     </div>
   </div>
@@ -130,7 +131,7 @@
       <mat-icon>groups</mat-icon>
     </button>
     <button
-      *ngIf="currentTurn && turnState === 'combat-resolvement'"
+      *ngIf="currentTurn && turnState === 'combat-resolvement' && !isFinale"
       mat-fab
       color="accent"
       (click)="onNextRoundClicked()"
@@ -148,15 +149,23 @@
     >
       <mat-icon>play_arrow</mat-icon>
     </button>
-
     <button
-      *ngIf="currentTurn"
+      *ngIf="currentTurn && (turnState !== 'combat-resolvement' || !isFinale)"
       mat-fab
       color="accent"
       (click)="onFinishGameClicked()"
       [matTooltip]="t.translate('playerboardFinishGameTooltip')"
     >
       <mat-icon>power_settings_new</mat-icon>
+    </button>
+    <button
+      *ngIf="currentTurn && turnState === 'combat-resolvement' && isFinale"
+      mat-fab
+      color="accent"
+      (click)="onShowGameSummaryClicked()"
+      [matTooltip]="t.translate('playerboardFinishGameTooltip')"
+    >
+      <mat-icon>emoji_events</mat-icon>
     </button>
   </div>
 </div>

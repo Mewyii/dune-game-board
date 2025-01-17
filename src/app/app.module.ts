@@ -85,6 +85,7 @@ import { ConflictCardComponent } from './components/_common/conflict-card/confli
 import { SoundcloudPlayerComponent } from './components/audio-player/soundcloud-player/soundcloud-player.component';
 import { SafeUrlPipe } from './pipes/safe-url';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { TurnInfosComponent } from './components/turn-infos/turn-infos.component';
 
 @NgModule({
   declarations: [
@@ -154,6 +155,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
     ConflictCardComponent,
     SoundcloudPlayerComponent,
     NavigationBarComponent,
+    TurnInfosComponent,
   ],
   imports: [
     BrowserModule,

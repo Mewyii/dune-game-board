@@ -99,6 +99,10 @@ export class TurnInfoService {
       locationControlAmount: 0,
       signetRingAmount: 0,
       factionRecruitment: [],
+      cardsBoughtThisTurn: [],
+      cardsTrashedThisTurn: [],
+      intriguesPlayedThisTurn: [],
+      techTilesBoughtThisTurn: [],
     };
   }
 }
