@@ -1,18 +1,21 @@
-<ng-container>
+<div class="container-wrapper">
   <div class="player-hand-container">
-    <div
-      *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
-      class="draw-card-button"
-      (click)="onAITrashIntrigueClicked()"
-      matTooltip="AI trash intrigue"
-    >
-      <img class="draw-card-icon" [src]="getRewardTypePath('intrigue-trash')" />
+    <div class="action-container left">
+      <div
+        *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
+        class="draw-card-button"
+        (click)="onAITrashIntrigueClicked()"
+        matTooltip="AI trash intrigue"
+      >
+        <img class="draw-card-icon" [src]="getRewardTypePath('intrigue-trash')" />
+      </div>
     </div>
-    <div class="player-cards-container">
-      <ng-container *ngIf="playerIntrigues && cardsShown === 'hand'">
+    <div class="player-cards-container intrigues">
+      <ng-container *ngIf="playerIntrigues && playerIntrigues.length > 0">
         <div
-          *ngFor="let intrigue of playerIntrigues"
+          *ngFor="let intrigue of playerIntrigues; let i = index"
           [class]="'intrigue-container' + (showCards ? ' ' : ' hidden')"
+          [style.left]="(i * 170) / (-0.85 + 0.85 * playerIntrigues.length) + 'px'"
           (click)="setIntrigueActive(intrigue.id)"
         >
           <dune-intrigue-card
@@ -46,69 +49,78 @@
           </div>
         </div>
       </ng-container>
+    </div>
+    <div class="player-cards-container">
       <ng-container *ngIf="playerHandCards && cardsShown === 'hand'">
-        <div
-          *ngFor="let handCard of playerHandCards.cards"
-          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
-          (click)="setCardActive(handCard.id)"
-        >
-          @if (currentPlayer?.isAI && currentPlayer?.turnState !== 'reveal' && handCard.id !== playedPlayerCardId) {
-          <div [class]="'imperium-card background' + (handCard.id === activeCardId ? ' active' : '')"></div>
-          } @else {
-          <dune-imperium-row-card
-            [class]="
-              (handCard.id === activeCardId ? 'active' : '') +
-              (playedPlayerCardId ? (handCard.id === playedPlayerCardId ? ' played' : ' not-played') : '')
+        <ng-container *ngFor="let handCard of playerHandCards.cards; let i = index">
+          <div
+            [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+            [style.left]="
+              (i * 250) / (playerHandCards.cards.length < 5 ? 0.99 : -0.25 + 0.25 * playerHandCards.cards.length) + 'px'
             "
-            [card]="handCard"
-          ></dune-imperium-row-card>
-          <div class="card-action-container" *ngIf="handCard.id === activeCardId">
-            <button
-              *ngIf="currentPlayer?.turnState === 'agent-placement' && handCard.id !== playedPlayerCardId"
-              class="card-activate-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onPlayCardClicked(handCard)"
-              matTooltip="Play"
-            >
-              <mat-icon>check</mat-icon>
-            </button>
-            <button
-              *ngIf="handCard.id === playedPlayerCardId"
-              class="card-activate-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onUnPlayCardClicked(handCard.id)"
-              matTooltip="Cancel"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-            <button
-              class="card-discard-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onDiscardCardClicked(handCard)"
-              matTooltip="Discard"
-            >
-              <mat-icon>expand_more</mat-icon>
-            </button>
-            <button
-              class="card-remove-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onTrashHandCardClicked(handCard)"
-              matTooltip="Trash"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
+            (click)="setCardActive(handCard.id)"
+          >
+            @if (currentPlayer?.isAI && currentPlayer?.turnState !== 'reveal' && handCard.id !== playedPlayerCardId) {
+            <div [class]="'imperium-card background' + (handCard.id === activeCardId ? ' active' : '')"></div>
+            } @else {
+            <dune-imperium-row-card
+              [class]="
+                (handCard.id === activeCardId ? 'active' : '') +
+                (playedPlayerCardId ? (handCard.id === playedPlayerCardId ? ' played' : ' not-played') : '')
+              "
+              [card]="handCard"
+            ></dune-imperium-row-card>
+            <div class="card-action-container" *ngIf="handCard.id === activeCardId">
+              <button
+                *ngIf="currentPlayer?.turnState === 'agent-placement' && handCard.id !== playedPlayerCardId"
+                class="card-activate-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onPlayCardClicked(handCard)"
+                matTooltip="Play"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+              <button
+                *ngIf="handCard.id === playedPlayerCardId"
+                class="card-activate-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onUnPlayCardClicked(handCard.id)"
+                matTooltip="Cancel"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+              <button
+                class="card-discard-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onDiscardCardClicked(handCard)"
+                matTooltip="Discard"
+              >
+                <mat-icon>expand_more</mat-icon>
+              </button>
+              <button
+                class="card-remove-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onTrashHandCardClicked(handCard)"
+                matTooltip="Trash"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            }
           </div>
-          }
-        </div>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="playerDiscardPiles && cardsShown === 'discard'">
         <div
-          *ngFor="let card of playerDiscardPiles.cards"
+          *ngFor="let card of playerDiscardPiles.cards; let i = index"
           [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+          [style.left]="
+            (i * 250) / (playerDiscardPiles.cards.length < 5 ? 0.99 : -0.25 + 0.25 * playerDiscardPiles.cards.length) + 'px'
+          "
           (click)="setCardActive(card.id)"
         >
           <dune-imperium-row-card [class]="card.id === activeCardId ? 'active' : ''" [card]="card"></dune-imperium-row-card>
@@ -135,103 +147,105 @@
         </div>
       </ng-container>
     </div>
-    <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()" matTooltip="Draw card">
-      <img class="draw-card-icon" [src]="getRewardTypePath('card-draw')" />
-    </div>
-    <div
-      *ngIf="cardsShown === 'hand'"
-      class="draw-card-button"
-      (click)="onAddFoldspaceToHandClicked()"
-      matTooltip="Draw Foldspace"
-    >
-      <img class="draw-card-icon" [src]="getRewardTypePath('foldspace')" />
-    </div>
-    <div
-      *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
-      class="draw-card-button"
-      (click)="onAIDiscardCardClicked()"
-      matTooltip="AI Discard card"
-    >
-      <img class="draw-card-icon" [src]="getRewardTypePath('card-discard')" />
-    </div>
-    <div
-      *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
-      class="draw-card-button"
-      (click)="onAITrashCardFromHandClicked()"
-      matTooltip="AI Trash card"
-    >
-      <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
-    </div>
-    <div
-      *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
-      class="draw-card-button"
-      (click)="onAITrashCardFromDiscardPileClicked()"
-      matTooltip="AI Trash card"
-    >
-      <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
-    </div>
-    <button
-      *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
-      mat-mini-fab
-      [color]="'accent'"
-      (click)="onAIAddCardToHandFromDiscardPileClicked()"
-      matTooltip="AI add card to hand"
-    >
-      <mat-icon>arrow_upward</mat-icon>
-    </button>
-    <button
-      *ngIf="cardsShown === 'discard'"
-      mat-mini-fab
-      [color]="'accent'"
-      (click)="onShuffleDiscardPileUnderDeckClicked()"
-      matTooltip="shuffle under deck"
-    >
-      <mat-icon>redo</mat-icon>
-    </button>
-    <button
-      *ngIf="cardsShown === 'deck'"
-      mat-mini-fab
-      [color]="'accent'"
-      (click)="onShowTopCardClicked()"
-      matTooltip="show top card"
-    >
-      <mat-icon>visibility</mat-icon>
-    </button>
-    <button
-      *ngIf="cardsShown === 'deck'"
-      mat-mini-fab
-      [color]="'accent'"
-      (click)="onShuffleDeckClicked()"
-      matTooltip="shuffle deck"
-    >
-      <mat-icon>sync</mat-icon>
-    </button>
-    <div
-      [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')"
-      (click)="onShowHandClicked()"
-      matTooltip="Hand"
-    >
-      <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
-    </div>
-    <div
-      [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')"
-      (click)="onShowDiscardPileClicked()"
-      matTooltip="Discard-pile"
-    >
-      <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
-    </div>
-    <div
-      [class]="'draw-card-button' + (cardsShown === 'deck' ? ' active' : '')"
-      (click)="onShowDeckClicked()"
-      matTooltip="Deck"
-    >
-      <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
-    </div>
-    <div>
-      <button mat-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">
-        <mat-icon *ngIf="!showCards">expand_less</mat-icon>
-        <mat-icon *ngIf="showCards">expand_more</mat-icon>
+    <div class="action-container">
+      <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()" matTooltip="Draw card">
+        <img class="draw-card-icon" [src]="getRewardTypePath('card-draw')" />
+      </div>
+      <div
+        *ngIf="cardsShown === 'hand'"
+        class="draw-card-button"
+        (click)="onAddFoldspaceToHandClicked()"
+        matTooltip="Draw Foldspace"
+      >
+        <img class="draw-card-icon" [src]="getRewardTypePath('foldspace')" />
+      </div>
+      <div
+        *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
+        class="draw-card-button"
+        (click)="onAIDiscardCardClicked()"
+        matTooltip="AI Discard card"
+      >
+        <img class="draw-card-icon" [src]="getRewardTypePath('card-discard')" />
+      </div>
+      <div
+        *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
+        class="draw-card-button"
+        (click)="onAITrashCardFromHandClicked()"
+        matTooltip="AI Trash card"
+      >
+        <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
+      </div>
+      <div
+        *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
+        class="draw-card-button"
+        (click)="onAITrashCardFromDiscardPileClicked()"
+        matTooltip="AI Trash card"
+      >
+        <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
+      </div>
+      <button
+        *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAIAddCardToHandFromDiscardPileClicked()"
+        matTooltip="AI add card to hand"
+      >
+        <mat-icon>arrow_upward</mat-icon>
       </button>
+      <button
+        *ngIf="cardsShown === 'discard'"
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onShuffleDiscardPileUnderDeckClicked()"
+        matTooltip="shuffle under deck"
+      >
+        <mat-icon>redo</mat-icon>
+      </button>
+      <button
+        *ngIf="cardsShown === 'deck'"
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onShowTopCardClicked()"
+        matTooltip="show top card"
+      >
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button
+        *ngIf="cardsShown === 'deck'"
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onShuffleDeckClicked()"
+        matTooltip="shuffle deck"
+      >
+        <mat-icon>sync</mat-icon>
+      </button>
+      <div
+        [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')"
+        (click)="onShowHandClicked()"
+        matTooltip="Hand"
+      >
+        <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
+      </div>
+      <div
+        [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')"
+        (click)="onShowDiscardPileClicked()"
+        matTooltip="Discard-pile"
+      >
+        <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+      </div>
+      <div
+        [class]="'draw-card-button' + (cardsShown === 'deck' ? ' active' : '')"
+        (click)="onShowDeckClicked()"
+        matTooltip="Deck"
+      >
+        <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
+      </div>
+      <div>
+        <button mat-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">
+          <mat-icon *ngIf="!showCards">expand_less</mat-icon>
+          <mat-icon *ngIf="showCards">expand_more</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
-</ng-container>
+</div>

@@ -6,6 +6,7 @@ import * as htmlToImage from 'html-to-image';
 import { ActionType, ActiveFactionType } from 'src/app/models';
 import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
 import { ImperiumCard } from 'src/app/models/imperium-card';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-starting-card-configurator',
@@ -123,7 +124,13 @@ export class StartingCardConfiguratorComponent implements OnInit {
   }
 
   onDeleteCardClicked(id: string) {
-    this.cardConfiguratorService.deleteStartingCard(id);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.cardConfiguratorService.deleteStartingCard(id);
+      }
+    });
   }
 
   onEditCardClicked(imperiumCard: ImperiumCard) {

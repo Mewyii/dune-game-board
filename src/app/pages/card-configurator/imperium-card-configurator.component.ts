@@ -180,7 +180,13 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   }
 
   onDeleteCardClicked(id: string) {
-    this.cardConfiguratorService.deleteImperiumCard(id);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.cardConfiguratorService.deleteImperiumCard(id);
+      }
+    });
   }
 
   onEditCardClicked(imperiumCard: ImperiumCard) {

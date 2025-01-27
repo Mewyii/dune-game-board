@@ -151,6 +151,7 @@ export function getModifiedRewardsForField(
         if (remainingRewardModifier > 0) {
           reward.amount = rewardAmount + remainingRewardModifier;
           reward.modifier = 'positive';
+          remainingRewardModifier -= rewardAmount;
           break;
         } else if (remainingRewardModifier < 0) {
           if (Math.abs(remainingRewardModifier) >= rewardAmount) {

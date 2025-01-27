@@ -6,6 +6,7 @@ import { PlayerScoreManager } from 'src/app/services/player-score-manager.servic
 import { TranslateService } from 'src/app/services/translate-service';
 import { AppMode } from 'src/app/constants/board-settings';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-dune-faction',
@@ -45,8 +46,8 @@ export class DuneFactionComponent implements OnInit {
   @Input() marginLeft: number = 33;
   @Input() mode: AppMode = 'board';
 
-  maxFavorScore: number = 7;
-  public favorScoreArray: number[] = [];
+  public influenceScoreArray: number[] = [];
+  public allianceTreshold = 0;
 
   public playerScores: { playerId: number; score: number }[] = [];
 
@@ -58,11 +59,14 @@ export class DuneFactionComponent implements OnInit {
     public playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     public t: TranslateService,
-    public gameModifiersService: GameModifiersService
+    public gameModifiersService: GameModifiersService,
+    private settingsService: SettingsService
   ) {}
 
   ngOnInit(): void {
-    this.favorScoreArray = new Array(this.maxFavorScore);
+    this.influenceScoreArray = new Array(this.settingsService.getFactionInfluenceMaxScore() + 1);
+    this.allianceTreshold = this.settingsService.getFactionInfluenceAllianceTreshold() - 1;
+
     this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       const factionType = this.faction.type;
       if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'emperor') {

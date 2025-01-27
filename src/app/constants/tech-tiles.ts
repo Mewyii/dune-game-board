@@ -6,7 +6,6 @@ export const techTiles: TechTileCard[] = [
       en: 'Maula Pistol Works',
       de: 'Maula Pistolen Werk',
     },
-    faction: 'fremen',
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
     buyEffects: [],
@@ -54,32 +53,10 @@ export const techTiles: TechTileCard[] = [
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
-      0.35 + 0.033 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.solari,
-  },
-  {
-    name: {
-      en: 'Enhanced Sandcrawler Engines',
-      de: 'Verbesserte Sandcrawler- Antriebe',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
-    buyEffects: [],
-    customEffect: {
-      en: '<b>When you place an agent on a {faction:spice}-field:</b><br>{resource:spice}',
-      de: '<b>Wenn du einen Agenten auf einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
-      fontSize: 'medium',
-    },
-    gameModifiers: {
-      fieldReward: [
-        {
-          id: 'sandcrawler-engines',
-          actionType: 'spice',
-          rewardType: 'spice',
-          amount: 1,
-        },
-      ],
-    },
-    aiEvaluation: (player, gameState) => 0.85 - 0.125 * (gameState.currentRound - 1),
+      0.35 +
+      0.033 * (gameState.currentRound - 1) +
+      0.066 * gameState.playerCardsRewards.solari +
+      0.033 * gameState.playerCardsFactions.emperor,
   },
   {
     name: {
@@ -108,21 +85,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Experimental Shields',
-      de: 'Experimentelle Schilde',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/shields.png',
-    buyEffects: [],
-    customEffect: {
-      en: 'Your dreadnoughts have no timeout after a conflict.',
-      de: 'Deine Schlachtschiffe müssen nach einem Konflikt keine Runde aussetzen.',
-      fontSize: 'medium',
-    },
-    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
-  },
-  {
-    name: {
       en: 'Heavy Lasguns',
       de: 'Schwere Lasguns',
     },
@@ -138,40 +100,77 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Spy Network',
+      de: 'Spionage-Netzwerk',
+    },
+    faction: 'bene',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
+    buyEffects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.3 + 0.02 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.bene,
+  },
+  {
+    name: {
       en: 'Wind Traps',
       de: 'Windfallen',
     },
     faction: 'fremen',
-    costs: 3,
+    costs: 2,
     imageUrl: '/assets/images/action-backgrounds/windtraps.png',
-    buyEffects: [
-      {
-        type: 'faction-influence-up-fremen',
-      },
-    ],
+    buyEffects: [],
     customEffect: {
       en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
       de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.65 + 0.1 * gameState.playerScore.fremen - 0.075 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) =>
+      0.65 - 0.075 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.fremen,
   },
   {
     name: {
-      en: 'Botanical Research Station',
-      de: 'Botanische Forschungsstation',
+      en: 'Enhanced Sandcrawler Engines',
+      de: 'Verbesserte Sandcrawler- Antriebe',
     },
-    faction: 'fremen',
     costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/research_station.png',
+    imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
+      en: '<b>When you place an agent on a {faction:spice}-field:</b><br>{resource:spice}',
+      de: '<b>Wenn du einen Agenten auf einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
+      fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.4 + 0.015 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.fremen,
+    gameModifiers: {
+      fieldReward: [
+        {
+          id: 'sandcrawler-engines',
+          actionType: 'spice',
+          rewardType: 'spice',
+          amount: 1,
+        },
+      ],
+    },
+    aiEvaluation: (player, gameState) => 0.85 - 0.125 * (gameState.currentRound - 1),
+  },
+  {
+    name: {
+      en: 'Experimental Shields',
+      de: 'Experimentelle Schilde',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/shields.png',
+    buyEffects: [],
+    customEffect: {
+      en: 'Your dreadnoughts have no timeout after a conflict.',
+      de: 'Deine Schlachtschiffe müssen nach einem Konflikt keine Runde aussetzen.',
+      fontSize: 'medium',
+    },
+    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
   },
   {
     name: {
@@ -189,44 +188,6 @@ export const techTiles: TechTileCard[] = [
     },
     aiEvaluation: (player, gameState) =>
       0.6 - 0.033 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.guild,
-  },
-  {
-    name: {
-      en: 'Sardaukar Commando Post',
-      de: 'Sardaukar Kommando-Posten',
-    },
-    faction: 'emperor',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
-    buyEffects: [
-      {
-        type: 'troop',
-      },
-    ],
-    customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
-    },
-    aiEvaluation: (player, gameState) =>
-      0.5 + 0.01 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.emperor,
-  },
-  {
-    name: {
-      en: 'Spy Network',
-      de: 'Spionage-Netzwerk',
-    },
-    faction: 'bene',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
-    buyEffects: [],
-    customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} and pass your turn.<br><br><b>Aufdeckzug:</b> <br>{faction:bene} -Connections<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.<br><br><b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
-    },
-    aiEvaluation: (player, gameState) =>
-      0.3 + 0.02 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.bene,
   },
   {
     name: {
@@ -284,24 +245,79 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Ornithopter Hangar',
+      de: 'Ornithopter Hangar',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/port_2.png',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'agent-lift',
+      },
+    ],
+    aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 0.1 : 0.0),
+  },
+  {
+    name: {
+      en: 'Botanical Research Station',
+      de: 'Botanische Forschungsstation',
+    },
+    faction: 'fremen',
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/research_station.png',
+    buyEffects: [],
+    customEffect: {
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.4 + 0.015 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.fremen,
+  },
+  {
+    name: {
+      en: 'Sardaukar Commando Post',
+      de: 'Sardaukar Kommando-Posten',
+    },
+    faction: 'emperor',
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    customEffect: {
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.5 + 0.01 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.emperor,
+  },
+  {
+    name: {
       en: 'Missionaria Protectiva',
       de: 'Missionaria Protectiva',
     },
     faction: 'bene',
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
-    buyEffects: [
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'card-draw',
-      },
-    ],
+    buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}',
-      fontSize: 'medium',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}<br><br><b>Reveal turn:</b> <br>{faction:bene} -Connections<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}<br><br><b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
+      fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
       0.2 + 0.033 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.water,
@@ -311,7 +327,6 @@ export const techTiles: TechTileCard[] = [
       en: 'Stillsuits Factory',
       de: 'Destillanzugs-Fabrik',
     },
-    faction: 'fremen',
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_5.png',
     buyEffects: [],
@@ -339,30 +354,6 @@ export const techTiles: TechTileCard[] = [
       0.01 * gameState.playerCardsBought +
       0.01 * gameState.playerCardsTrashed +
       0.066 * gameState.playerCardsRewards.solari,
-  },
-  {
-    name: {
-      en: 'Ornithopter Hangar',
-      de: 'Ornithopter Hangar',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/port_2.png',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'agent-lift',
-      },
-    ],
-    aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 0.1 : 0.0),
   },
   {
     name: {
@@ -453,6 +444,33 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Sietch',
+      de: 'Sietch',
+    },
+    faction: 'fremen',
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    buyEffects: [
+      {
+        type: 'faction-influence-up-fremen',
+      },
+    ],
+    customEffect: {
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:troop}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:water}{resource:water}{resource:helper-trade}{resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:troop}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:water}{resource:water}{resource:water}{resource:helper-trade}{resource:victory-point}',
+      fontSize: 'medium',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.6 +
+      0.02 * (gameState.currentRound - 1) +
+      0.01 * gameState.playerCardsBought +
+      0.01 * gameState.playerCardsTrashed +
+      (player.hasCouncilSeat ? 0.1 : 0.0) +
+      0.033 * gameState.playerCardsRewards.water +
+      0.033 * gameState.playerCardsFactions.fremen,
+  },
+  {
+    name: {
       en: 'Guild Bank',
       de: 'Gilden-Bank',
     },
@@ -461,7 +479,7 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
     buyEffects: [
       {
-        type: 'faction-influence-up-choice',
+        type: 'faction-influence-up-guild',
       },
     ],
     customEffect: {
@@ -487,7 +505,7 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/arrakeen_12.png',
     buyEffects: [
       {
-        type: 'faction-influence-up-choice',
+        type: 'faction-influence-up-emperor',
       },
     ],
     customEffect: {
@@ -503,7 +521,8 @@ export const techTiles: TechTileCard[] = [
       (player.hasSwordmaster ? 0.1 : 0.0) +
       (player.hasCouncilSeat ? 0.1 : 0.0) -
       0.05 * gameState.playerIntrigueCount +
-      0.033 * gameState.playerCardsRewards.solari,
+      0.033 * gameState.playerCardsRewards.solari +
+      0.033 * gameState.playerCardsFactions.emperor,
   },
   {
     name: {
@@ -515,7 +534,7 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
     buyEffects: [
       {
-        type: 'faction-influence-up-choice',
+        type: 'faction-influence-up-bene',
       },
     ],
     customEffect: {
@@ -529,7 +548,8 @@ export const techTiles: TechTileCard[] = [
       0.02 * gameState.playerCardsBought +
       0.01 * gameState.playerCardsTrashed +
       (player.hasSwordmaster ? 0.1 : 0.0) +
-      0.033 * gameState.playerCardsRewards.water,
+      0.033 * gameState.playerCardsRewards.water +
+      0.033 * gameState.playerCardsFactions.bene,
   },
   {
     name: {

@@ -3,6 +3,8 @@ import { Locale } from '../services/translate-service';
 export const deLocale: Locale = {
   commonCancel: 'Abbrechen',
   commonEndgame: 'Finale',
+  commonConfirmDialogTitle: 'Bitte bestätigen',
+  commonConfirmDialogText: 'Sind Sie sicher?',
   playerboardHeading: 'Spieler',
   playerboardRound: 'Runde',
   playerboardCombatTooltip: 'Kampf-Phase',
@@ -23,4 +25,5 @@ export const deLocale: Locale = {
   turninfosCardsTrashed: 'Entsorgte Karten',
   turninfosIntriguesPlayed: 'Gespielte Intrigen',
   turninfosTechTilesBought: 'Gekaufte Tech-Plättchen',
+  turninfosFieldsVisited: 'Besuchte Felder',
 };

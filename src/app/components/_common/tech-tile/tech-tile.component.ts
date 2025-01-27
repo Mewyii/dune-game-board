@@ -18,28 +18,12 @@ export class TechTileComponent {
 
   constructor(public t: TranslateService, public settingsService: SettingsService) {}
 
-  getFactionType(faction: FactionType) {
-    return '';
-  }
-
   public getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
   }
 
   public getActionTypePath(rewardType: ActionType) {
     return getActionTypePath(rewardType);
-  }
-
-  public getFactionColor(factionType: FactionType) {
-    return this.settingsService.getFactionColor(factionType) ?? '';
-  }
-
-  public getFactionName(factionType: FactionType) {
-    const factionName = this.settingsService.getFactionName(factionType);
-    if (factionName) {
-      return this.t.translateLS(factionName);
-    }
-    return '';
   }
 
   getFactionTypePath(factionType: FactionType) {

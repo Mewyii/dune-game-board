@@ -37,7 +37,7 @@ export const leaders: Leader[] = [
     },
     signetName: {
       de: 'Die Wege der Fremen',
-      en: 'The Fremen Ways',
+      en: 'The fremen ways',
     },
     signetDescription: {
       de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst es jederzeit entsorgen, um {resource:sword}{resource:sword}{resource:sword} zu erhalten.',
@@ -62,8 +62,8 @@ export const leaders: Leader[] = [
       de: 'Anführer der Fremen',
     },
     passiveDescription: {
-      en: 'Dont put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:card-draw}<br>Ignore all {faction:fremen} -requirements.',
-      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:card-draw}<br>Ignoriere alle {faction:fremen} -Anforderungen.',
+      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:card-draw}<br>Ignore all {faction:fremen} -requirements.",
+      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:card-draw}<br>Ignoriere alle {faction:fremen} -Bedingungen.',
     },
     signetName: {
       en: 'Planting the paradise',
@@ -153,16 +153,16 @@ export const leaders: Leader[] = [
       de: 'Vorgeboren',
     },
     passiveDescription: {
-      en: '{resource:card-round-start}{resource:card-round-start}. You can not trash your {resource:signet-ring}-cards. Every time you reveal them: {resource:faction-influence-down-choice}',
-      de: '{resource:card-round-start}{resource:card-round-start}. Du kannst deine {resource:signet-ring}-Karten nicht entsorgen. Jedes Mal, wenn du sie aufdeckst: {resource:faction-influence-down-choice}',
+      en: '{resource:card-round-start}. You can not trash your {resource:signet-ring}-cards. Every time you reveal or discard them: {resource:faction-influence-down-choice}',
+      de: '{resource:card-round-start}. Du kannst deine {resource:signet-ring}-Karten nicht entsorgen. Jedes Mal, wenn du sie aufdeckst oder abwirfst: {resource:faction-influence-down-choice}',
     },
     signetName: {
       en: 'Ego-memories',
       de: 'Ego-Erinnerungen',
     },
     signetDescription: {
-      en: 'If this field is a {faction:town} field: {resource:card-discard}<br>If not: {resource:card-discard}{resource:card-discard}{resource:card-discard}',
-      de: 'Wenn dieses Feld ein {faction:town}-Feld ist: {resource:card-discard}<br>Wenn nicht: {resource:card-discard}{resource:card-discard}{resource:card-discard}',
+      en: 'If this field is a {faction:town} field: {resource:loose-troop}<br>If not: {resource:card-discard}{resource:card-discard}',
+      de: '{resource:spice;amount:-1}{resource:helper-or}{resource:card-discard}{resource:card-discard}',
     },
     imageUrl: '/assets/images/leaders/alia.png',
     type: 'new',
@@ -211,16 +211,16 @@ export const leaders: Leader[] = [
       en: 'Daughter of the emperor',
     },
     passiveDescription: {
-      en: 'Dont put a marker on the {faction:emperor}-influence-track. Every time you would gain influence there: {resource:solari}<br>Ignore all {faction:emperor} -requirements.',
-      de: 'Lege keinen Marker auf die {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Ignoriere alle {faction:emperor} -Anforderungen.',
+      en: "Don't put a marker on the {faction:emperor}-influence-track. Every time you would gain influence there: {resource:solari}<br>Ignore all {faction:emperor} -requirements.",
+      de: 'Lege keinen Marker auf die {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Ignoriere alle {faction:emperor} -Bedingungen.',
     },
     signetName: {
       de: 'Chronistin',
       en: 'Chronicler',
     },
     signetDescription: {
-      en: 'Place {resource:signet-token} on this board space. Trash it when you place an agent there the next time to get {resource:card-draw}{resource:card-draw}.',
-      de: 'Lege {resource:signet-token} auf dieses Feld. Entsorge es wenn du dort das nächste Mal einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
+      en: 'Place {resource:signet-token} on a board space that has one of your agents on it. Trash it when you place an agent there the next time to get {resource:card-draw}{resource:card-draw}.',
+      de: 'Lege {resource:signet-token} auf ein Feld mit einem deiner Agenten. Entsorge es, wenn du dort das nächste Mal einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
@@ -263,8 +263,8 @@ export const leaders: Leader[] = [
       en: 'Ruthless ambition',
     },
     passiveDescription: {
-      de: '<b>Immer wenn du eine Intrige ziehst</b>: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
-      en: 'Play with all your intrigues revealed. Every time you would draw an intrigue, draw 2 instead, then trash one of them.',
+      de: 'Immer wenn du eine Intrige ziehst: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
+      en: 'Every time you draw an intrigue card: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
     },
     signetName: {
       de: 'Verstecktes Gift',
@@ -301,7 +301,7 @@ export const leaders: Leader[] = [
     },
     signetName: {
       de: 'Inszenierte Schwächlichkeit',
-      en: 'Orchestrated Weakness',
+      en: 'Orchestrated weakness',
     },
     signetDescription: {
       de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Entsorge es an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
@@ -404,8 +404,8 @@ export const leaders: Leader[] = [
       de: 'Kybernetische Implantate',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: {resource:signet-token}. You may at any time trash {resource:signet-token;amount:3} to {resource:agent-lift}.',
-      de: '<b>Rundenbeginn</b>: {resource:signet-token}. Du kannst jederzeit {resource:signet-token;amount:3} entsorgen, um {resource:agent-lift}.',
+      en: '<b>Round start</b>: {resource:signet-token} <br><br>You may at any time: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
+      de: '<b>Rundenbeginn</b>: {resource:signet-token} <br><br>Du kannst jederzeit: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
     },
     signetName: {
       en: 'Earl of ix',
@@ -494,7 +494,7 @@ export const leaders: Leader[] = [
       de: 'Haus Atreides',
     },
     passiveName: {
-      en: 'Atreides Training',
+      en: 'Atreides training',
       de: 'Atreides-Ausbildung',
     },
     passiveDescription: {
@@ -627,11 +627,11 @@ export const leaders: Leader[] = [
       de: 'Verschwörer',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: Search the intrigue deck for two intrigues of your choice and add them to your hand. Then shuffle.',
+      en: '<b>Game start</b>: Search the intrigue deck for two intrigue cards of your choice and add them to your hand. Then shuffle it.',
       de: '<b>Spielbeginn</b>: Durchsuche den Intrigenstapel nach zwei beliebigen Intrigen und nimm diese auf deine Hand. Mische ihn danach.',
     },
     signetName: {
-      en: 'Boundless Greed',
+      en: 'Boundless greed',
       de: 'Grenzenlose Gier',
     },
     signetDescription: {
@@ -653,7 +653,7 @@ export const leaders: Leader[] = [
       de: 'Haus Atreides',
     },
     passiveName: {
-      en: 'Fair Leader',
+      en: 'Fair leader',
       de: 'Gerechter Anführer',
     },
     passiveDescription: {
@@ -691,7 +691,7 @@ export const leaders: Leader[] = [
       de: 'Haus Harkonnen',
     },
     passiveName: {
-      en: 'Uncontrolled Aggression',
+      en: 'Uncontrolled aggression',
       de: 'Unkontrollierte Agression',
     },
     passiveDescription: {
@@ -703,8 +703,8 @@ export const leaders: Leader[] = [
       de: 'Unterdrückung',
     },
     signetDescription: {
-      en: '{resource:solari}{resource:helper-or}Receive the bonus of all board spaces under your control.',
-      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus aller Felder unter deiner Kontrolle.',
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of all locations under your control.',
+      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus aller Orte unter deiner Kontrolle.',
     },
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
@@ -746,20 +746,20 @@ export const leaders: Leader[] = [
   },
   {
     name: {
-      en: 'Jin Moritani',
-      de: 'Jin Moritani',
+      en: 'Eva Moritani',
+      de: 'Eva Moritani',
     },
     house: {
       en: 'House Moritani',
       de: 'Haus Moritani',
     },
     passiveName: {
-      en: 'Pariah Warlord',
+      en: 'Pariah warlord',
       de: 'Geächtete Kriegsherrin',
     },
     passiveDescription: {
-      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Reveal turn:</b> {resource:persuasion;amount:3}{resource:helper-trade}{resource:troop}{resource:troop}',
-      de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:persuasion;amount:3}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Reveal turn:</b> {resource:persuasion;amount:4}{resource:helper-trade}{resource:troop}{resource:troop}',
+      de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:persuasion;amount:4}{resource:helper-trade}{resource:troop}{resource:troop}',
     },
     signetName: {
       en: 'Pillage',
@@ -792,16 +792,16 @@ export const leaders: Leader[] = [
       de: 'In den Schatten',
     },
     passiveDescription: {
-      en: 'Enemy agents dont block board spaces for you.',
+      en: "Enemy agents don't block board spaces for you.",
       de: 'Gegnerische Agenten blockieren Felder für dich nicht.',
     },
     signetName: {
-      en: 'Oppression',
+      en: 'Extortion',
       de: 'Erpressung',
     },
     signetDescription: {
-      en: 'If there is an enemy agent on this board space: {resource:solari;amount:2}',
-      de: 'Wenn sich auf diesem Feld ein gegnerischer Agent befindet: {resource:solari;amount:2}',
+      en: 'For each board space that has one of your agents and an enemy agent on it: {resource:solari;amount:2}{resource:helper-or}{resource:spice}',
+      de: 'Für jedes Feld, auf dem sich einer deiner Agenten und ein gegnerischer Agent befindet: {resource:solari;amount:2}{resource:helper-or}{resource:spice}',
     },
     imageUrl: '/assets/images/leaders/dara.png',
     type: 'new',
@@ -826,15 +826,15 @@ export const leaders: Leader[] = [
       de: 'Haus Thorvald',
     },
     passiveName: {
-      en: 'Landsraad-Support',
+      en: 'Landsraad-support',
       de: 'Landsraad-Unterstützung',
     },
     passiveDescription: {
-      en: 'Each time you send an agent to a {faction:landsraad} board space: {resource:solari}{resource:helper-trade}{resource:troop}',
+      en: 'Every time you send an agent to a {faction:landsraad} board space: {resource:solari}{resource:helper-trade}{resource:troop}',
       de: 'Immer wenn du einen Agenten zu einem {faction:landsraad}-Feld entsendest: {resource:solari}{resource:helper-trade}{resource:troop}',
     },
     signetName: {
-      en: 'Smuggling-Connections',
+      en: 'Smuggling connections',
       de: 'Schmuggler-Verbindungen',
     },
     signetDescription: {
@@ -856,7 +856,7 @@ export const leaders: Leader[] = [
       de: 'Haus Thorvald',
     },
     passiveName: {
-      en: 'Spice receptive',
+      en: 'Spice-receptive',
       de: 'Spice-Empfänglich',
     },
     passiveDescription: {

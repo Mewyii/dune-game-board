@@ -1,6 +1,15 @@
 @if (playerTurnInfo) {
 <div class="turn-infos-container font-scifi">
-  @if (playerTurnInfo.cardsBoughtThisTurn.length > 0) {
+  @if (playerTurnInfo.fieldsVisitedThisTurn.length > 0) {
+  <div class="turn-info-container">
+    <div class="turn-info-title">{{ t.translate('turninfosFieldsVisited') }}</div>
+    <div class="cards-container">
+      @for (field of playerTurnInfo.fieldsVisitedThisTurn; track $index) {
+      <app-dune-action [actionField]="field" [disabled]="true" [backgroundColor]="getColor(field)"></app-dune-action>
+      }
+    </div>
+  </div>
+  } @if (playerTurnInfo.cardsBoughtThisTurn.length > 0) {
   <div class="turn-info-container">
     <div class="turn-info-title">{{ t.translate('turninfosCardsBought') }}</div>
     <div class="cards-container">

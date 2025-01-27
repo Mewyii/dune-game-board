@@ -133,6 +133,14 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.recruitmentCardAmount);
   }
 
+  public getFactionInfluenceMaxScore() {
+    return cloneDeep(this.settingsSubject.value.gameContent.factionInfluenceMaxScore);
+  }
+
+  public getFactionInfluenceAllianceTreshold() {
+    return cloneDeep(this.settingsSubject.value.gameContent.factionInfluenceAllianceTreshold);
+  }
+
   public setFields() {
     const gameContent = this.gameContent;
     const result: ActionField[] = [];

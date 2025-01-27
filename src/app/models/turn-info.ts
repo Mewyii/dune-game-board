@@ -1,6 +1,7 @@
 import { ImperiumDeckCard } from '../services/cards.service';
 import { ActiveFactionType } from './faction';
 import { IntrigueDeckCard } from './intrigue';
+import { ActionField } from './location';
 import { TechTileCard } from './tech-tile';
 
 export interface TurnInfo {
@@ -27,4 +28,5 @@ export interface TurnInfo {
   cardsTrashedThisTurn: ImperiumDeckCard[];
   intriguesPlayedThisTurn: IntrigueDeckCard[];
   techTilesBoughtThisTurn: TechTileCard[];
+  fieldsVisitedThisTurn: ActionField[];
 }

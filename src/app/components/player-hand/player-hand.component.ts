@@ -61,6 +61,8 @@ export class PlayerHandComponent implements OnInit {
       this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
 
       this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
+      this.showCards = false;
+      this.cardsShown = 'hand';
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {

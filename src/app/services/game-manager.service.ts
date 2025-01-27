@@ -32,7 +32,7 @@ import {
   getTechTileCostModifier,
   hasFactionInfluenceModifier,
 } from '../helpers/game-modifiers';
-import { isFactionType } from '../helpers/faction-types';
+import { isActiveFactionType } from '../helpers/faction-types';
 import { PlayerRewardChoicesService } from './player-reward-choices.service';
 import { TranslateService } from './translate-service';
 import { IntriguesService } from './intrigues.service';
@@ -600,7 +600,7 @@ export class GameManager {
       }
     }
 
-    if (isFactionType(field.actionType)) {
+    if (isActiveFactionType(field.actionType)) {
       if (hasFactionInfluenceModifier(gameModifiers, field.actionType)) {
         const factionInfluenceModifier = getFactionInfluenceModifier(gameModifiers, field.actionType);
         if (factionInfluenceModifier) {
@@ -686,6 +686,7 @@ export class GameManager {
 
     this.removeAgentFromPlayer(activePlayer.id);
 
+    this.turnInfoService.updatePlayerTurnInfo(activePlayer.id, { fieldsVisitedThisTurn: [field] });
     this.loggingService.logAgentAction(field);
   }
 

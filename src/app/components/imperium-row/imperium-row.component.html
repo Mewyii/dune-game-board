@@ -1,7 +1,7 @@
 <div class="imperium-row-container">
   <div class="heading font-scifi">
     <div>{{ t.translate('imperiumrowHeading') }}</div>
-    <div class="persuasion-area" *ngIf="activePlayer">
+    <div class="persuasion-area font-text" *ngIf="activePlayer">
       <div class="resource-display" [style]="'filter: saturate(0.25);'">
         <img class="resource small" [src]="getRewardTypePath('persuasion')" />
         <div class="resource-amount" *ngIf="activePlayer.permanentPersuasion > 0">

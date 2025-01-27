@@ -1,7 +1,7 @@
 <div
   [class]="
     'action-field ' +
-    (activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer ? 'highlighted ' : '') +
+    (!disabled && activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer ? 'highlighted ' : '') +
     (isBlocked ? 'blocked ' : '')
   "
 >
@@ -16,7 +16,7 @@
       [style.background-image]="'url(' + actionField.pathToImage + ')'"
       (click)="onActionFieldClicked()"
     >
-      <div class="costs-area">
+      <div class="costs-area font-text">
         <ng-container *ngIf="actionField.requiresInfluence">
           <div class="costs-container">
             <img class="costs faction" [src]="getFactionTypePath(actionField.requiresInfluence.type)" />
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div
-      class="reward-area"
+      class="reward-area font-text"
       [style.width]="actionField.customWidth"
       [style.max-width]="actionField.customWidth"
       [style.row-gap]="actionField.noRowGap ? '0px' : ''"
@@ -54,7 +54,13 @@
           [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
         >
           <img
-            [class]="'reward ' + rewardType.modifier + (rewardType.type === 'spice-accumulation' ? ' pointer' : '')"
+            [class]="
+              'reward ' +
+              rewardType.type +
+              ' ' +
+              rewardType.modifier +
+              (rewardType.type === 'spice-accumulation' ? ' pointer' : '')
+            "
             [src]="getRewardTypePath(rewardType.type)"
             [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
             [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
@@ -91,7 +97,7 @@
     </div>
   </div>
   <div
-    *ngIf="boardSettings.mode === 'game' && playerOnField"
+    *ngIf="!disabled && boardSettings.mode === 'game' && playerOnField"
     [style.color]="playerOnField.color"
     class="player-marker"
     (contextmenu)="onPlayerMarkerRightClicked(playerOnField.id, actionField.title.en)"
@@ -113,7 +119,7 @@
       <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
     </ng-container>
   </div>
-  <ng-container *ngIf="canWriteFieldHistory">
+  <ng-container *ngIf="!disabled && canWriteFieldHistory">
     <button
       class="field-history-button"
       mat-fab

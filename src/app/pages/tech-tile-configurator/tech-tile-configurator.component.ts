@@ -5,6 +5,7 @@ import * as htmlToImage from 'html-to-image';
 import { TechTilesService } from 'src/app/services/tech-tiles.service';
 import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 import { TechTileCard } from 'src/app/models/tech-tile';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-tech-tile-configurator',
@@ -110,7 +111,13 @@ export class TechTileConfiguratorComponent implements OnInit {
   }
 
   onDeleteCardClicked(id: string) {
-    this.techTilesService.deleteTechTile(id);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.techTilesService.deleteTechTile(id);
+      }
+    });
   }
 
   onEditCardClicked(techTile: TechTileCard) {

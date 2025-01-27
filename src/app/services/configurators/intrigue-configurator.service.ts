@@ -45,6 +45,10 @@ export class IntrigueConfiguratorService {
     this.intriguesSubject.next(this.intrigues.filter((x) => x.name.en !== id));
   }
 
+  setIntrigues(intrigues: IntrigueCard[]) {
+    this.intriguesSubject.next(intrigues);
+  }
+
   sortIntrigues(category: keyof IntrigueCard, order: 'asc' | 'desc') {
     if (category === 'name') {
       const orderedIntrigues = this.intrigues.sort((a, b) => {

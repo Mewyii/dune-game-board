@@ -3,6 +3,8 @@ import { Locale } from '../services/translate-service';
 export const enLocale: Locale = {
   commonCancel: 'Cancel',
   commonEndgame: 'Endgame',
+  commonConfirmDialogTitle: 'Please confirm',
+  commonConfirmDialogText: 'Are you sure?',
   playerboardHeading: 'Players',
   playerboardRound: 'Round',
   playerboardCombatTooltip: 'Combat-Phase',
@@ -23,4 +25,5 @@ export const enLocale: Locale = {
   turninfosCardsTrashed: 'Cards Trashed',
   turninfosIntriguesPlayed: 'Intrigues Played',
   turninfosTechTilesBought: 'Tech tiles bought',
+  turninfosFieldsVisited: 'Board Spaces Visited',
 };

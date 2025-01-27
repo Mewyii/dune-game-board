@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { ActionType, FactionType, RewardType } from 'src/app/models';
@@ -11,29 +11,38 @@ import { TranslateService } from 'src/app/services/translate-service';
   templateUrl: './imperium-row-card.component.html',
   styleUrls: ['./imperium-row-card.component.scss'],
 })
-export class ImperiumRowCardComponent {
+export class ImperiumRowCardComponent implements OnInit, OnChanges {
   @Input() card!: ImperiumCard;
   @Input() costModifier = 0;
 
+  public factionName = '';
+  public factionColor = '';
+
   constructor(public t: TranslateService, public settingsService: SettingsService) {}
 
-  getFactionType(faction: FactionType) {
-    return '';
+  ngOnInit(): void {
+    if (this.card.faction) {
+      this.factionName = this.getFactionName(this.card.faction);
+      this.factionColor = this.getFactionColor(this.card.faction);
+    }
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.card.faction) {
+      this.factionName = this.getFactionName(this.card.faction);
+      this.factionColor = this.getFactionColor(this.card.faction);
+    }
   }
 
   public getActionTypePath(rewardType: ActionType) {
     return getActionTypePath(rewardType);
   }
 
-  public getFactionColor(factionType: FactionType) {
+  private getFactionColor(factionType: FactionType) {
     return this.settingsService.getFactionColor(factionType) ?? '';
   }
 
-  public getFactionName(factionType: FactionType) {
+  private getFactionName(factionType: FactionType) {
     const factionName = this.settingsService.getFactionName(factionType);
     if (factionName) {
       return this.t.translateLS(factionName);

@@ -6,9 +6,9 @@
     <div
       class="faction-container font-medieval"
       *ngIf="card.faction"
-      [style.background]="'linear-gradient(90deg, ' + getFactionColor(card.faction) + ', rgb(90 90 90 / 50%))'"
+      [style.background]="'linear-gradient(90deg, ' + factionColor + ', rgb(90 90 90 / 50%))'"
     >
-      {{ getFactionName(card.faction).toUpperCase() }}
+      {{ factionName.toUpperCase() }}
     </div>
     <div class="field-access-container">
       <ng-container *ngFor="let access of card.fieldAccess">

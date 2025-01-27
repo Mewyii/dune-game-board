@@ -783,14 +783,11 @@ export class AIManager {
         }
 
         fieldRewards[combatRewardIndex].amount = modifier;
-
-        // Game Modifier Cost Adjustments
-        const fieldCosts = getModifiedCostsForField(field, gameState.playerGameModifiers?.fieldCost);
-
-        return { ...field, rewards: fieldRewards, costs: fieldCosts };
-      } else {
-        return field;
       }
+      // Game Modifier Cost Adjustments
+      const fieldCosts = getModifiedCostsForField(field, gameState.playerGameModifiers?.fieldCost);
+
+      return { ...field, rewards: fieldRewards, costs: fieldCosts };
     });
   }
 
@@ -1206,7 +1203,7 @@ export class AIManager {
       case 'signet-token':
         return 0;
       case 'signet-ring':
-        return 2 - 0.1 * (gameState.currentRound - 1);
+        return 3 - 0.1 * (gameState.currentRound - 1);
       case 'location-control':
         return 6 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':

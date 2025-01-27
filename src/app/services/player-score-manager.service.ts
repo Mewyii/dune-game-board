@@ -29,8 +29,6 @@ export type PlayerFactionScoreType = keyof Omit<PlayerScore, 'playerId' | 'victo
   providedIn: 'root',
 })
 export class PlayerScoreManager {
-  public factionAllianceTreshold = 4;
-
   private playerScoresSubject = new BehaviorSubject<PlayerScore[]>([]);
   public playerScores$ = this.playerScoresSubject.asObservable();
 
@@ -107,7 +105,12 @@ export class PlayerScoreManager {
 
     if (playerScore) {
       if (actionType === 'fremen' || actionType === 'bene' || actionType === 'guild' || actionType === 'emperor') {
-        const newScore = playerScore[actionType] + score;
+        const maxFactionScore = this.settingsService.getFactionInfluenceMaxScore();
+        let newScore = playerScore[actionType] + score;
+
+        if (playerScore[actionType] + score > maxFactionScore) {
+          newScore = maxFactionScore;
+        }
 
         playerScores[playerScoreIndex] = {
           ...playerScore,
@@ -126,7 +129,7 @@ export class PlayerScoreManager {
           }
         }
 
-        if (newScore >= this.factionAllianceTreshold) {
+        if (newScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
           this.adjustAlliancesBasedOnFactionScore(playerId, actionType, newScore);
         }
       }
@@ -165,7 +168,7 @@ export class PlayerScoreManager {
       this.playerScoresSubject.next(playerScores);
 
       if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
-        if (newPlayerScore >= this.factionAllianceTreshold) {
+        if (newPlayerScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
           this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
         }
       }
@@ -187,7 +190,7 @@ export class PlayerScoreManager {
       this.playerScoresSubject.next(playerScores);
 
       if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
-        if (newPlayerScore >= this.factionAllianceTreshold) {
+        if (newPlayerScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
           this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
         }
       }

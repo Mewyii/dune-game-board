@@ -16,4 +16,6 @@ export const gameContentOriginal: GameContent = {
   recruitmentCardAmount: 5,
   finaleTrigger: 8,
   combatMaxDeployableUnits: 2,
+  factionInfluenceMaxScore: 6,
+  factionInfluenceAllianceTreshold: 4,
 };

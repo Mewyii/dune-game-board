@@ -19,6 +19,12 @@ export function getFactionTypePath(actionType: FactionType) {
   }
 }
 
-export function isFactionType(type: string): type is FactionType {
+export function isActiveFactionType(type: string): type is FactionType {
   return type === 'fremen' || type === 'guild' || type === 'bene' || type === 'emperor';
+}
+
+export function isFactionType(type: string): type is FactionType {
+  return (
+    type === 'fremen' || type === 'guild' || type === 'bene' || type === 'emperor' || type === 'landsraad' || type === 'ix'
+  );
 }

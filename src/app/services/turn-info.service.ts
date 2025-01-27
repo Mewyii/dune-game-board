@@ -103,6 +103,7 @@ export class TurnInfoService {
       cardsTrashedThisTurn: [],
       intriguesPlayedThisTurn: [],
       techTilesBoughtThisTurn: [],
+      fieldsVisitedThisTurn: [],
     };
   }
 }

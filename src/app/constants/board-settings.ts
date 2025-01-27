@@ -26,6 +26,8 @@ export interface GameContent {
   recruitmentCardAmount: number;
   locationTakeoverTroopCosts?: number;
   combatMaxDeployableUnits: number;
+  factionInfluenceMaxScore: number;
+  factionInfluenceAllianceTreshold: number;
 }
 
 export type AppMode = 'board' | 'game';

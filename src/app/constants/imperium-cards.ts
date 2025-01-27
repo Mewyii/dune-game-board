@@ -349,13 +349,10 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'card-draw',
       },
-      {
-        type: 'card-draw',
-      },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:1}<br>Each opponent: {resource:intrigue-trash}',
-      de: '{resource:persuasion;amount:1}<br>Jeder Gegner: {resource:intrigue-trash}',
+      en: 'Each opponent: {resource:intrigue-trash}',
+      de: 'Jeder Gegner: {resource:intrigue-trash}',
       fontSize: 'medium',
     },
   },
@@ -1409,9 +1406,6 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'water',
       },
       {
-        type: 'water',
-      },
-      {
         type: 'troop',
       },
       {
@@ -1445,7 +1439,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'tech',
-        amount: 2,
       },
     ],
   },

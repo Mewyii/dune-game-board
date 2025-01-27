@@ -5,6 +5,7 @@ import { DuneEventsManager } from 'src/app/services/dune-events.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import * as htmlToImage from 'html-to-image';
 import { DialogEventEditorComponent } from './dialog-event-editor/dialog-event-editor.component';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-event-configurator',
@@ -77,7 +78,13 @@ export class EventConfiguratorComponent {
   }
 
   onDeleteCardClicked(id: string) {
-    this.eventsService.deleteEvent(id);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.eventsService.deleteEvent(id);
+      }
+    });
   }
 
   onEditCardClicked(event: DuneEvent) {

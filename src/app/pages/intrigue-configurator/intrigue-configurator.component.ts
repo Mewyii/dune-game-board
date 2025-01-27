@@ -5,6 +5,7 @@ import * as htmlToImage from 'html-to-image';
 import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-intrigue-editor.component';
 import { IntrigueConfiguratorService } from 'src/app/services/configurators/intrigue-configurator.service';
 import { IntrigueCard } from 'src/app/models/intrigue';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-intrigue-configurator',
@@ -62,8 +63,8 @@ export class IntrigueConfiguratorComponent implements OnInit {
 
     reader.onload = (e: any) => {
       const content = e.target.result;
-      const startingCards = JSON.parse(content) as IntrigueCard[];
-      // this.intrigues.addStartingCards(startingCards);
+      const intrigues = JSON.parse(content) as IntrigueCard[];
+      this.intrigueConfigService.setIntrigues(intrigues);
 
       input.value = '';
     };
@@ -88,7 +89,13 @@ export class IntrigueConfiguratorComponent implements OnInit {
   }
 
   onDeleteCardClicked(id: string) {
-    this.intrigueConfigService.deleteIntrigue(id);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.intrigueConfigService.deleteIntrigue(id);
+      }
+    });
   }
 
   onEditCardClicked(intrigue: IntrigueCard) {

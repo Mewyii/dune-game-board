@@ -12,11 +12,17 @@
     <br /><br />
     <h4>AI</h4>
     <div>
-      The AI will move on its own (depending on its goals and resources). You will be noticed about custom effects it is not
-      able to comprehend (yet) and resolve it for them.
+      The AI will move on its own (depending on its goals and resources) when you click on the hourglass-button below it's
+      leader image. You will be noticed about custom effects it is not able to comprehend yet, like leader or tech tile
+      effects and will need to resolve those for them. When you've done that, just click on the notification to dismiss it.
     </div>
     <br /><br />
     <h4>New mechanics / symbols</h4>
+    <div>
+      <b>Tech tiles</b> may now have faction-symbols printed on them. Those are tech tiles that are related to those faction.
+      They can be used to activate a connection of a card by flipping them in addition to their printed effects.
+    </div>
+    <br />
     <div>
       <b>Locations</b> now have give the controlling player resources (on the left side) at their reveal turn. They also give
       the controlling player a victory point as long as they control the location (similar to the alliance tokens). If a an
@@ -57,7 +63,7 @@
     <br />
     <div
       [innerHTML]="
-        '{resource:foldspace}: Foldspaces are added to your hand when you get them. They dont draw cards anymore.'
+        '{resource:foldspace}: Foldspaces are added to your hand when you get them. They don\'t draw cards anymore.'
           | duneSymbols : '24px'
       "
     ></div>
@@ -66,7 +72,7 @@
     <br />
     <div
       [innerHTML]="
-        '{resource:tech}: You can decide wether to buy a tech tile or add one negotiator to the ix board.'
+        '{resource:tech}: You can decide wether to buy a tech tile or add one technology token to the ix board.'
           | duneSymbols : '24px'
       "
     ></div>

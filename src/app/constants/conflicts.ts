@@ -2,26 +2,16 @@ import { Conflict } from '../models/conflict';
 
 export const conflicts: Conflict[] = [
   {
-    name: { de: 'Gildenbanküberfall', en: 'guild bank raid' },
-    lvl: 1,
-    rewards: [[{ type: 'solari', amount: 7 }], [{ type: 'solari', amount: 5 }], [{ type: 'solari', amount: 2 }]],
-  },
-  {
-    name: { de: 'Raub der Lagerbestände', en: 'raid stockpiles' },
-    lvl: 1,
-    rewards: [[{ type: 'spice', amount: 4 }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
-  },
-  {
-    name: { de: 'Belagerung von Arrakeen', en: 'siege of arrakeen' },
+    name: { de: 'Schlacht von Arrakeen', en: 'Battle of Arrakeen' },
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech', amount: 2 }],
+      [{ type: 'location-control' }, { type: 'tech' }],
       [{ type: 'water' }, { type: 'tech', amount: 2 }],
       [{ type: 'water' }],
     ],
   },
   {
-    name: { de: 'Belagerung von Carthag', en: 'siege of carthag' },
+    name: { de: 'Schlacht von Carthag', en: 'Battle of Carthag' },
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'intrigue' }],
@@ -30,57 +20,12 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Imperiales Becken sichern', en: 'secure imperial basin' },
+    name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle of the Spice Fields' },
     lvl: 1,
     rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
   },
   {
-    name: { de: 'Machenschaften', en: 'machinations' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'faction-influence-up-choice' }, { type: 'location-control' }],
-      [{ type: 'water' }, { type: 'solari', amount: 3 }],
-      [{ type: 'water' }],
-    ],
-  },
-  {
-    name: { de: 'Heimlichtuerei', en: 'cloak and dagger' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'victory-point' }, { type: 'faction-influence-up-choice' }],
-      [{ type: 'intrigue' }, { type: 'intrigue' }],
-      [{ type: 'intrigue' }],
-    ],
-  },
-  {
-    name: { de: 'Wüstenmacht', en: 'desert power' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'victory-point' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'spice', amount: 2 }],
-      [{ type: 'spice' }],
-    ],
-  },
-  {
-    name: { de: 'Schrecklicher Zweck', en: 'terrible purpose' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'victory-point' }, { type: 'focus' }],
-      [{ type: 'intrigue' }, { type: 'solari', amount: 2 }, { type: 'focus' }],
-      [{ type: 'solari', amount: 2 }],
-    ],
-  },
-  {
-    name: { de: 'Sortieren des Chaos', en: 'sort trough the chaos' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'victory-point' }, { type: 'foldspace' }],
-      [{ type: 'water' }, { type: 'spice' }, { type: 'foldspace' }],
-      [{ type: 'spice' }],
-    ],
-  },
-  {
-    name: { de: 'Handelsmonopol', en: 'trade monopoly' },
+    name: { de: 'Vorherrschaft über die Handelshäfen', en: 'Supremacy over the trade ports' },
     lvl: 1,
     rewards: [
       [{ type: 'victory-point' }, { type: 'shipping' }],
@@ -89,16 +34,61 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Schlacht um das Imperiale Becken', en: 'battle for imperial basin' },
-    lvl: 2,
+    name: { de: 'Vorherrschaft über die Vorstädte', en: 'Supremacy over the Suburbs' },
+    lvl: 1,
     rewards: [
-      [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
-      [{ type: 'spice', amount: 2 }],
+      [{ type: 'victory-point' }, { type: 'intrigue' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'intrigue' }],
+      [{ type: 'intrigue' }],
     ],
   },
   {
-    name: { de: 'Schlacht um Carthag', en: 'battle for carthag' },
+    name: { de: 'Vorherrschaft über die Spice-Raffinerien', en: 'Supremacy over the spice-refineries' },
+    lvl: 1,
+    rewards: [
+      [{ type: 'victory-point' }, { type: 'spice' }],
+      [
+        { type: 'spice', amount: 2 },
+        { type: 'solari', amount: 2 },
+      ],
+      [{ type: 'solari', amount: 2 }],
+    ],
+  },
+  {
+    name: { de: 'Vorherrschaft über den Wasserhandel', en: 'Supremacyover the Water Trade' },
+    lvl: 1,
+    rewards: [
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'water' }],
+      [{ type: 'water' }, { type: 'solari', amount: 3 }],
+      [{ type: 'water' }],
+    ],
+  },
+  {
+    name: { de: 'Eroberung der imperialen Forschungs-Stationen', en: 'Conquest of the Imperial Research Stations' },
+    lvl: 1,
+    rewards: [
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'focus' }],
+      [{ type: 'water' }, { type: 'spice' }, { type: 'focus' }],
+      [{ type: 'spice' }],
+    ],
+  },
+  {
+    name: { de: 'Eroberung der Spice-Läger', en: 'Conquest of the Spice Depots' },
+    lvl: 1,
+    rewards: [[{ type: 'spice', amount: 4 }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
+  },
+  {
+    name: { de: 'Eroberung der Schmuggler-Sietches', en: "Conquest of the Smuggler's Sietches" },
+    lvl: 1,
+    rewards: [
+      [{ type: 'victory-point' }, { type: 'solari', amount: 2 }],
+      [{ type: 'solari', amount: 5 }],
+      [{ type: 'solari', amount: 2 }],
+    ],
+  },
+
+  {
+    name: { de: 'Schlacht von Carthag', en: 'Battle of Carthag' },
     lvl: 2,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
@@ -107,30 +97,39 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Schlacht um Arrakeen', en: 'battle for arrakeen' },
+    name: { de: 'Schlacht von Arrakeen', en: 'Battle of Arrakeen' },
     lvl: 2,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'water' }, { type: 'water' }, { type: 'tech', amount: 2 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
       [{ type: 'water' }, { type: 'tech', amount: 2 }],
     ],
   },
   {
-    name: { de: 'Große Vision', en: 'grand vision' },
+    name: { de: 'Schlacht von Sietch Tabr', en: 'Battle of Sietch Tabr' },
     lvl: 2,
     rewards: [
-      [{ type: 'faction-influence-up-twice-choice' }, { type: 'intrigue' }],
+      [{ type: 'victory-point' }, { type: 'location-control' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'spice' }],
+      [{ type: 'water' }, { type: 'spice' }],
+    ],
+  },
+  {
+    name: { de: 'Schlacht in der tiefen Wüste', en: 'Battle of the Deep Dessert' },
+    lvl: 2,
+    rewards: [
+      [{ type: 'victory-point' }, { type: 'victory-point' }],
       [{ type: 'victory-point' }],
       [{ type: 'spice', amount: 2 }],
     ],
   },
   {
-    name: { de: 'Wirtschaftliche Überlegenheit', en: 'economic supremacy' },
+    name: { de: 'Schlacht um den Raumhafen', en: 'Battle of the Space Port' },
     lvl: 2,
     rewards: [
-      [{ type: 'victory-point' }, { type: 'victory-point' }],
+      [{ type: 'faction-influence-up-twice-choice' }, { type: 'tech', amount: 2 }],
       [{ type: 'victory-point' }],
-      [{ type: 'spice' }, { type: 'solari', amount: 3 }],
+      [{ type: 'tech', amount: 2 }],
     ],
   },
 ];

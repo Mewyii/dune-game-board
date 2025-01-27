@@ -27,4 +27,6 @@ export const gameContentCustomExpert: GameContent = {
   recruitmentCardAmount: 5,
   locationTakeoverTroopCosts: 2,
   combatMaxDeployableUnits: 2,
+  factionInfluenceMaxScore: 6,
+  factionInfluenceAllianceTreshold: 4,
 };

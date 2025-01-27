@@ -5,6 +5,7 @@ import { LeadersService } from 'src/app/services/leaders.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leader-editor.component';
 import * as htmlToImage from 'html-to-image';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-leader-configurator',
@@ -77,7 +78,13 @@ export class LeaderConfiguratorComponent {
   }
 
   onDeleteCardClicked(id: string) {
-    this.leadersService.deleteLeader(id);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.leadersService.deleteLeader(id);
+      }
+    });
   }
 
   onEditCardClicked(leader: Leader) {

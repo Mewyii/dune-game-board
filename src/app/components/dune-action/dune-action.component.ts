@@ -31,6 +31,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
   };
 
   @Input() backgroundColor: string = '';
+  @Input() disabled = false;
 
   @Output() actionFieldClick = new EventEmitter<{ playerId: number }>();
 
@@ -185,6 +186,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   public onActionFieldClicked() {
+    if (this.disabled) {
+      return;
+    }
+
     const currentPlayerId = this.gameManager.activePlayerId;
 
     if (currentPlayerId) {
@@ -205,6 +210,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   onRewardClicked(fieldId: string, rewardType: RewardType) {
+    if (this.disabled) {
+      return;
+    }
+
     if (rewardType === 'spice-accumulation') {
       this.gameManager.increaseAccumulatedSpiceOnField(fieldId);
       this.audioManager.playSound('click-soft');
@@ -212,6 +221,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   onRewardRightClicked(fieldId: string, rewardType: RewardType) {
+    if (this.disabled) {
+      return;
+    }
+
     if (rewardType === 'spice-accumulation') {
       this.gameManager.decreaseAccumulatedSpiceOnField(fieldId);
       this.audioManager.playSound('click-soft');
