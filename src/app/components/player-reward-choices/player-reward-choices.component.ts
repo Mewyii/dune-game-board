@@ -43,9 +43,11 @@ export class PlayerRewardChoicesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.rewardLogElements.changes.subscribe((res) => {
       setTimeout(() => {
-        const parent = (res.last.nativeElement as HTMLDivElement).parentElement;
-        if (parent) {
-          parent.scrollTo({ top: parent.scrollHeight, behavior: 'smooth' });
+        if (res.last && res.last.nativeElement) {
+          const parent = (res.last.nativeElement as HTMLDivElement).parentElement;
+          if (parent) {
+            parent.scrollTo({ top: parent.scrollHeight, behavior: 'smooth' });
+          }
         }
       });
     });

@@ -28,6 +28,7 @@ export interface GameContent {
   combatMaxDeployableUnits: number;
   factionInfluenceMaxScore: number;
   factionInfluenceAllianceTreshold: number;
+  imperiumRowCards: number;
 }
 
 export type AppMode = 'board' | 'game';

@@ -10,10 +10,11 @@
 .heading {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 32px;
     font-size: x-large;
+    height: 118px;
+    padding-bottom: 32px;
 }
 
 .cards-container {
@@ -21,8 +22,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    gap: 108px;
-    margin-top: 32px;
+    height: 1900px;
 }
 
 .card-container {

@@ -24,8 +24,9 @@ export const gameContentCustomBeginner: GameContent = {
   highCouncilPersuasion: 3,
   startingResources: [],
   aiGoals: aiGoalsCustomBeginner,
-  recruitmentCardAmount: 5,
+  recruitmentCardAmount: 6,
   combatMaxDeployableUnits: 2,
   factionInfluenceMaxScore: 6,
   factionInfluenceAllianceTreshold: 4,
+  imperiumRowCards: 6,
 };

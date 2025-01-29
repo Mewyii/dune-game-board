@@ -141,6 +141,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.factionInfluenceAllianceTreshold);
   }
 
+  public getImperiumRowCards() {
+    return cloneDeep(this.settingsSubject.value.gameContent.imperiumRowCards);
+  }
+
   public setFields() {
     const gameContent = this.gameContent;
     const result: ActionField[] = [];

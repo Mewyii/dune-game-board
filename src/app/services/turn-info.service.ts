@@ -104,6 +104,7 @@ export class TurnInfoService {
       intriguesPlayedThisTurn: [],
       techTilesBoughtThisTurn: [],
       fieldsVisitedThisTurn: [],
+      isDoingAIActions: false,
     };
   }
 }

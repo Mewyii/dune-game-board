@@ -19,6 +19,8 @@ import { CardsService } from 'src/app/services/cards.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { Player } from 'src/app/models/player';
 import { TechTileCard } from 'src/app/models/tech-tile';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
+import { TurnInfo } from 'src/app/models/turn-info';
 
 @Component({
   selector: 'dune-leaders',
@@ -56,6 +58,8 @@ export class LeadersComponent implements OnInit {
   public techTiles: TechTileCard[] = [];
   public activeTechTileId = '';
 
+  public turnInfos: TurnInfo | undefined;
+
   constructor(
     public leadersService: LeadersService,
     public t: TranslateService,
@@ -68,7 +72,8 @@ export class LeadersComponent implements OnInit {
     public cardsService: CardsService,
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private turnInfoService: TurnInfoService
   ) {}
 
   ngOnInit(): void {
@@ -142,6 +147,10 @@ export class LeadersComponent implements OnInit {
 
     this.intriguesService.playerIntrigues$.subscribe(() => {
       this.currentPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
+    });
+
+    this.turnInfoService.turnInfos$.subscribe(() => {
+      this.turnInfos = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
     });
   }
 

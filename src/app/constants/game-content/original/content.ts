@@ -18,4 +18,5 @@ export const gameContentOriginal: GameContent = {
   combatMaxDeployableUnits: 2,
   factionInfluenceMaxScore: 6,
   factionInfluenceAllianceTreshold: 4,
+  imperiumRowCards: 5,
 };

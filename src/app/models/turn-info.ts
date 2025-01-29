@@ -29,4 +29,5 @@ export interface TurnInfo {
   intriguesPlayedThisTurn: IntrigueDeckCard[];
   techTilesBoughtThisTurn: TechTileCard[];
   fieldsVisitedThisTurn: ActionField[];
+  isDoingAIActions: boolean;
 }

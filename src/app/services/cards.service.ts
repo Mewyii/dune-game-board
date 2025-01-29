@@ -234,10 +234,13 @@ export class CardsService {
     }
 
     const imperiumDeck = shuffle(imperiumDeckCards);
-    const imperiumRow: ImperiumRowCard[] = imperiumDeck.slice(0, 5).map((x) => ({ ...x, status: 'present' }));
+    const imperiumRowCardAmount = this.settingsService.getImperiumRowCards();
+    const imperiumRow: ImperiumRowCard[] = imperiumDeck
+      .slice(0, imperiumRowCardAmount)
+      .map((x) => ({ ...x, status: 'present' }));
 
     this.imperiumRowSubject.next(imperiumRow);
-    this.imperiumDeckSubject.next(imperiumDeck.splice(5));
+    this.imperiumDeckSubject.next(imperiumDeck.splice(imperiumRowCardAmount));
   }
 
   setLimitedCustomCards() {

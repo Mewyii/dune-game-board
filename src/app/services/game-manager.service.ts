@@ -924,49 +924,62 @@ export class GameManager {
       return;
     }
 
+    this.turnInfoService.updatePlayerTurnInfo(player.id, { isDoingAIActions: true });
+
     const roundPhase = this.currentRoundPhase;
     const gameState = this.getGameState(player);
 
     if (roundPhase === 'agent-placement') {
-      const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot');
-      const playableAndUsefulIntrigues = this.aiGetPlayableAndUsefulIntrigues(player, playerIntrigues, gameState);
+      const playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
+      const hasPlacedAgentsThisTurn = playerTurnInfo && playerTurnInfo.fieldsVisitedThisTurn.length > 0;
+      if (!hasPlacedAgentsThisTurn) {
+        const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot');
+        const playableAndUsefulIntrigues = this.aiGetPlayableAndUsefulIntrigues(player, playerIntrigues, gameState);
 
-      if (playableAndUsefulIntrigues.length > 0 && Math.random() < 0.4 + 0.4 * playableAndUsefulIntrigues.length) {
-        this.aiPlayIntrigue(player, playableAndUsefulIntrigues[0], gameState);
+        if (playableAndUsefulIntrigues.length > 0 && Math.random() < 0.4 + 0.4 * playableAndUsefulIntrigues.length) {
+          this.aiPlayIntrigue(player, playableAndUsefulIntrigues[0], gameState);
 
-        this.setPreferredFieldsForAIPlayer(player.id);
-      } else {
-        if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
-          const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards;
-          if (playerHandCards && playerHandCards.length > 0) {
-            const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState, 3);
+          this.setPreferredFieldsForAIPlayer(player.id);
 
-            const boardField = this.settingsService.boardFields.find((x) =>
-              cardAndField?.preferredField.fieldId.includes(x.title.en)
-            );
-            if (boardField && cardAndField) {
-              this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
-              this.loggingService.logPlayerPlayedCard(playerId, this.t.translateLS(cardAndField.cardToPlay.name));
-              this.addAgentToField(boardField);
+          setTimeout(() => {
+            this.doAIAction(player.id);
+          }, 1500);
+        } else {
+          if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
+            const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards;
+            if (playerHandCards && playerHandCards.length > 0) {
+              const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState, 3);
 
-              couldPlaceAgent = true;
+              const boardField = this.settingsService.boardFields.find((x) =>
+                cardAndField?.preferredField.fieldId.includes(x.title.en)
+              );
+              if (boardField && cardAndField) {
+                this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
+                this.loggingService.logPlayerPlayedCard(playerId, this.t.translateLS(cardAndField.cardToPlay.name));
+                this.addAgentToField(boardField);
+
+                couldPlaceAgent = true;
+                this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
+              }
             }
           }
-        }
-        if (!couldPlaceAgent && player.turnState !== 'reveal') {
-          this.setPlayerRevealTurn(playerId);
-        }
-        if (player.turnState === 'reveal') {
-          const playerPersuasionAvailable = this.playerManager.getPlayerPersuasion(playerId);
-          this.aiBuyImperiumCards(playerId, playerPersuasionAvailable);
+          if (!couldPlaceAgent && player.turnState !== 'reveal') {
+            this.setPlayerRevealTurn(playerId);
+            this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
+          }
+          if (player.turnState === 'reveal') {
+            const playerPersuasionAvailable = this.playerManager.getPlayerPersuasion(playerId);
+            this.aiBuyImperiumCards(playerId, playerPersuasionAvailable);
 
-          const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
-          this.aiUseFocusTokens(playerId, playerFocusTokens);
+            const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
+            this.aiUseFocusTokens(playerId, playerFocusTokens);
 
-          const playerHand = this.cardsService.getPlayerHand(player.id);
-          if (playerHand && playerHand.cards) {
-            this.cardsService.discardPlayerHandCards(player.id);
-            this.playerManager.setTurnStateForPlayer(player.id, 'revealed');
+            const playerHand = this.cardsService.getPlayerHand(player.id);
+            if (playerHand && playerHand.cards) {
+              this.cardsService.discardPlayerHandCards(player.id);
+              this.playerManager.setTurnStateForPlayer(player.id, 'revealed');
+            }
+            this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
           }
         }
       }
@@ -1053,6 +1066,7 @@ export class GameManager {
           }
         }
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
     }
   }
 
