@@ -8,6 +8,7 @@ import { EventConfiguratorComponent } from './pages/event-configurator/event-con
 import { StartingCardConfiguratorComponent } from './pages/starting-card-configurator/starting-card-configurator.component';
 import { TechTileConfiguratorComponent } from './pages/tech-tile-configurator/tech-tile-configurator.component';
 import { IntrigueConfiguratorComponent } from './pages/intrigue-configurator/intrigue-configurator.component';
+import { PlotConfiguratorComponent } from './pages/plot-configurator/plot-configurator.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,12 @@ const routes: Routes = [
     title: 'Dune Starting Card-Configurator',
     path: 'starting-card-configurator',
     component: StartingCardConfiguratorComponent,
+    pathMatch: 'full',
+  },
+  {
+    title: 'Dune Plot-Configurator',
+    path: 'plot-configurator',
+    component: PlotConfiguratorComponent,
     pathMatch: 'full',
   },
   {

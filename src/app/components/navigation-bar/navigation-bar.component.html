@@ -22,6 +22,12 @@
       IMPERIUM CARDS
     </div>
     <div
+      [class]="'navigation-item ' + (url.includes('plot-configurator') ? 'highlighted' : '')"
+      [routerLink]="'plot-configurator'"
+    >
+      PLOTS
+    </div>
+    <div
       [class]="'navigation-item ' + (url.includes('tech-tile-configurator') ? 'highlighted' : '')"
       [routerLink]="'tech-tile-configurator'"
     >

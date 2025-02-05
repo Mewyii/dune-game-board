@@ -1,0 +1,102 @@
+.imperium-card {
+  height: 342px;
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  border: 12px solid #101010;
+  border-radius: 8px;
+  position: relative;
+  color: #fffcfa;
+  background-color: #101010;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  line-height: initial;
+}
+
+.card-header {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 40px;
+  background-image: url(/assets/images/plots/heading.png);
+  background-size: cover;
+  border-radius: 4px 4px 0px 0px;
+  font-size: 14px;
+}
+
+.card-img {
+  flex: 1 1;
+  background-size: cover;
+  border-top: 2px solid rgba(192, 192, 192, 0.243);
+  border-bottom: 2px solid rgba(192, 192, 192, 0.243);
+  position: relative;
+  background-position: center;
+}
+
+.card-reveal-effect-container {
+  display: flex;
+  font-weight: initial;
+  font-size: small;
+  color: #e1e1e1;
+  white-space: pre-wrap;
+  min-height: 46px;
+  padding: 12px 6px;
+  background-image: url(/assets/images/plots/reveal-effect.png);
+  background-size: cover;
+  border-radius: 0px 0px 4px 4px;
+  background-color: #1f2533;
+}
+
+.card-reveal-effect-custom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.card-reveal-effect-custom-text {
+  text-align: center;
+  line-height: 1.3;
+}
+
+.card-reveal-effect-custom-text.medium {
+  font-size: medium;
+}
+
+.card-aquire-costs-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url(/assets/images/reward-markers/marker_conviction.png);
+  width: 45px;
+  height: 50px;
+  background-size: 55px;
+  background-position-y: bottom;
+}
+
+.card-aquire-costs {
+  padding-top: 6px;
+  padding-left: 20px;
+  filter: drop-shadow(0px 1px 1px rgb(0, 0, 0));
+  font-size: 26px;
+}
+
+.faction-container {
+  width: -webkit-fill-available;
+  padding: 2px 32px 2px 4px;
+  font-size: x-small;
+  text-wrap: nowrap;
+  clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
+}
+
+.card-aquire-costs-container.highlighted {
+  filter: saturate(1.2) brightness(1.4);
+}
+
+.card-aquire-costs-container.negative {
+  color: #f15f5f;
+}
+
+.card-aquire-costs-container.positive {
+  color: #5ff15f;
+}

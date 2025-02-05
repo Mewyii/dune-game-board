@@ -1,0 +1,34 @@
+<div class="imperium-card">
+  <div class="card-header font-scifi">
+    {{ t.translateLS(plot.name) }}
+  </div>
+  <div class="card-img" [style.background-image]="'url(' + plot.imageUrl + ')'">
+    <div
+      class="faction-container font-medieval"
+      *ngIf="plot.faction"
+      [style.background]="'linear-gradient(90deg, ' + factionColor + ', rgb(90 90 90 / 50%))'"
+    >
+      {{ factionName.toUpperCase() }}
+    </div>
+  </div>
+  <div class="card-reveal-effect-container font-text">
+    <div class="card-reveal-effect-custom" *ngIf="plot.plotDescription">
+      <div
+        *ngIf="!plot.plotDescription.fontSize || plot.plotDescription.fontSize == 'small'"
+        class="card-reveal-effect-custom-text"
+        [innerHTML]="t.translateLS(plot.plotDescription) | duneSymbols"
+      ></div>
+      <div
+        *ngIf="plot.plotDescription.fontSize === 'medium'"
+        class="card-reveal-effect-custom-text medium"
+        [innerHTML]="t.translateLS(plot.plotDescription) | duneSymbols : '20px'"
+      ></div>
+    </div>
+  </div>
+  <div
+    [class]="'card-aquire-costs-container font-text ' + (costModifier ? (costModifier > 0 ? ' negative' : ' positive') : '')"
+    *ngIf="plot.persuasionCosts"
+  >
+    <div class="card-aquire-costs">{{ plot.persuasionCosts + costModifier }}</div>
+  </div>
+</div>

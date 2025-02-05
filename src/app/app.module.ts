@@ -87,6 +87,10 @@ import { SafeUrlPipe } from './pipes/safe-url';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { TurnInfosComponent } from './components/turn-infos/turn-infos.component';
 import { GameSummaryDialogComponent } from './components/_common/dialogs/game-summary-dialog/game-summary-dialog.component';
+import { PlotConfiguratorComponent } from './pages/plot-configurator/plot-configurator.component';
+import { PlotEditorComponent } from './pages/plot-configurator/plot-editor/plot-editor.component';
+import { DialogPlotEditorComponent } from './pages/plot-configurator/dialog-plot-editor/dialog-plot-editor.component';
+import { PlotCardComponent } from './components/_common/plot-card/plot-card.component';
 
 @NgModule({
   declarations: [
@@ -158,6 +162,10 @@ import { GameSummaryDialogComponent } from './components/_common/dialogs/game-su
     NavigationBarComponent,
     TurnInfosComponent,
     GameSummaryDialogComponent,
+    PlotCardComponent,
+    PlotConfiguratorComponent,
+    PlotEditorComponent,
+    DialogPlotEditorComponent,
   ],
   imports: [
     BrowserModule,

@@ -3,37 +3,6 @@ import { ImperiumCard } from '../models/imperium-card';
 export const imperiumCards: ImperiumCard[] = [
   {
     name: {
-      en: 'spice consumption',
-      de: 'Spice Konsum',
-    },
-    persuasionCosts: 1,
-    fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/spice_3.png',
-    cardAmount: 2,
-    buyEffects: [
-      {
-        type: 'focus',
-      },
-    ],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'persuasion',
-        amount: 4,
-      },
-      {
-        type: 'focus',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Suk Doctor',
       de: 'Suk-Arzt',
     },
@@ -1677,7 +1646,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'fremen',
     persuasionCosts: 4,
     fieldAccess: ['fremen'],
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_5.png',
+    imageUrl: '/assets/images/action-backgrounds/sayadina_2.png',
     cardAmount: 2,
     buyEffects: [],
     customAgentEffect: {
@@ -1757,7 +1726,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/duncan_2.png',
     cardAmount: 1,
-    buyEffects: [],
+    buyEffects: [{ type: 'water' }],
     customAgentEffect: {
       en: 'Ignore enemy agents and influence requirements.',
       de: 'Ignoriere gegnerische Agenten und Einfluss-Anforderungen.',

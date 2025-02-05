@@ -6,11 +6,6 @@ import { startingCards } from 'src/app/constants/starting-cards';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { imperiumCards } from 'src/app/constants/imperium-cards';
 
-export interface Log {
-  fieldId: string;
-  visitedAmount: number;
-}
-
 @Injectable({
   providedIn: 'root',
 })
