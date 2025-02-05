@@ -122,8 +122,8 @@
         <div class="resource-container" *ngFor="let resource of currentPlayer.resources">
           <div
             class="resource-display"
-            (click)="onAddResourceClicked(currentPlayer.id, resource.type)"
-            (contextmenu)="onRemoveResourceClicked(currentPlayer.id, resource.type)"
+            (click)="onAddRewardClicked(currentPlayer, resource.type)"
+            (contextmenu)="onRemoveResourceClicked(currentPlayer, resource.type)"
           >
             <img class="resource" [src]="getRewardTypePath(resource.type)" />
             <div class="resource-amount on-background">
@@ -180,8 +180,8 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'fremen')"
-            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'fremen')"
+            (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-fremen')"
+            (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-fremen')"
           >
             <img class="resource dark" [src]="getFactionTypePath('fremen')" />
             <div class="resource-amount on-background">
@@ -192,8 +192,8 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'bene')"
-            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'bene')"
+            (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-bene')"
+            (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-bene')"
           >
             <img class="resource dark" [src]="getFactionTypePath('bene')" />
             <div class="resource-amount on-background">
@@ -204,8 +204,8 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'guild')"
-            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'guild')"
+            (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-guild')"
+            (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-guild')"
           >
             <img class="resource dark" [src]="getFactionTypePath('guild')" />
             <div class="resource-amount on-background">
@@ -216,8 +216,8 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'emperor')"
-            (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'emperor')"
+            (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-emperor')"
+            (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-emperor')"
           >
             <img class="resource dark" [src]="getFactionTypePath('emperor')" />
             <div class="resource-amount on-background">
@@ -230,7 +230,7 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddPlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
+            (click)="onAddRewardClicked(currentPlayer, 'victory-point')"
             (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
           >
             <img class="resource dark" [src]="getRewardTypePath('victory-point')" />

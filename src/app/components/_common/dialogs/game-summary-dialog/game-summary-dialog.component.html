@@ -1,0 +1,118 @@
+<!-- <h1 mat-dialog-title>{{ t.translate('gameSummaryDialogTitle') }}</h1> -->
+<div mat-dialog-content class="dialog-content">
+  @for (playerSummary of playerSummaries; track $index) {
+  <div class="player-container">
+    <div class="player-detail-container heading">
+      <div
+        [class]="'player-image ' + (playerSummary.playerRank === 1 ? 'first' : '')"
+        [style.backgroundImage]="'url(' + playerSummary.playerImageURL + ')'"
+      >
+        <div [class]="'player-name ' + (playerSummary.playerRank === 1 ? 'first' : '')">{{ playerSummary.playerName }}</div>
+      </div>
+    </div>
+    <div class="player-detail-container vp">
+      <div>{{ t.translate('commonVictoryPoints') }}</div>
+      <div class="points-container">
+        <img
+          *ngFor="let object of playerSummary.victoryPoints | numberToArray"
+          class="reward"
+          [src]="getRewardTypePath('victory-point')"
+        />
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogVictoryPointsGained') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker font-text"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let roundNumber of playerSummary.victoryPointsGained"
+        >
+          <div>{{ roundNumber }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogVictoryPointsLost') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker font-text"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let roundNumber of playerSummary.victoryPointsLost"
+        >
+          <div>{{ roundNumber }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogCombatsWon') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let roundNumber of playerSummary.combatsWon"
+        >
+          <div>{{ roundNumber }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogLocationControlsGained') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let roundNumber of playerSummary.locationControlsGained"
+        >
+          <div>{{ roundNumber }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogLocationControlsLost') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let roundNumber of playerSummary.locationControlsLost"
+        >
+          <div>{{ roundNumber }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogPlayedIntrigues') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let object of playerSummary.playedIntrigues | numberToArray"
+        ></div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogBoughtCards') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let object of playerSummary.boughtCards | numberToArray"
+        ></div>
+      </div>
+    </div>
+    <div class="player-detail-container">
+      <div>{{ t.translate('gameSummaryDialogTrashedCards') }}</div>
+      <div class="points-container" [style.color]="playerSummary.fontColor">
+        <div
+          class="point-marker"
+          [style.backgroundColor]="playerSummary.playerColor"
+          *ngFor="let object of playerSummary.trashedCards | numberToArray"
+        ></div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">{{ t.translate('commonClose') }}</button>
+</div>

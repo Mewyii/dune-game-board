@@ -1,79 +1,91 @@
 /* You can add global styles to this file, and also import other style files */
 @font-face {
-    font-family: 'scifi';
-    src: url('assets/fonts/Orbitron-Regular.ttf');
-    
+  font-family: 'scifi';
+  src: url('assets/fonts/Orbitron-Regular.ttf');
 }
 
 @font-face {
-    font-family: 'medieval';
-    src: url('assets/fonts/Sansation-Light.ttf');
+  font-family: 'medieval';
+  src: url('assets/fonts/Sansation-Light.ttf');
 }
 
 body {
-    font-family: "Roboto", "Verdana";
-    cursor: url("assets/images/cursors/auto.png") 6 6, auto;
-    background-color: #0c0d0e;
-    background: url(assets/images/homeworld-background.png);
-    background-size: auto;
-    background-repeat: repeat;
+  font-family: 'Roboto', 'Verdana';
+  cursor: url('assets/images/cursors/auto.png') 6 6, auto;
+  background-color: #0c0d0e;
+  background: url(assets/images/homeworld-background.png);
+  background-size: auto;
+  background-repeat: repeat;
 }
 
 .font-scifi {
-    font-family: 'scifi';
-    letter-spacing: 1px;
+  font-family: 'scifi';
+  letter-spacing: 1px;
 }
 
 .font-medieval {
-    font-family: 'medieval';
-    letter-spacing: 0.5px;
+  font-family: 'medieval';
+  letter-spacing: 0.5px;
 }
 
 .font-text {
-    font-family: "Roboto", "Verdana";
-    letter-spacing: normal;
+  font-family: 'Roboto', 'Verdana';
+  letter-spacing: normal;
 }
 
-html, body { 
-    // height: 100%; 
+html,
+body {
+  scrollbar-color: rgb(60, 60, 60) rgb(20, 20, 20);
+  scrollbar-width: thin;
 }
 
 h2 {
-    margin-top: 0;
-    margin-bottom: 32px;
+  margin-top: 0;
+  margin-bottom: 32px;
 }
 
 a {
-    color: #b29779;
+  color: #b29779;
 }
 
-h2, h3, h4, h5 {
-    color: #eacaa6;
+h2,
+h3,
+h4,
+h5 {
+  color: #eacaa6;
 }
 
-.mat-mdc-fab.mat-accent:not(:disabled), .mat-mdc-mini-fab.mat-accent:not(:disabled), .mat-mdc-raised-button.mat-accent:not(:disabled),
-.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mat-mdc-slide-toggle .mdc-switch:enabled .mdc-switch__track::after {
-    background-color: #e49944be !important;
-    transition: .3s;
+.mat-mdc-fab.mat-accent:not(:disabled),
+.mat-mdc-mini-fab.mat-accent:not(:disabled),
+.mat-mdc-raised-button.mat-accent:not(:disabled),
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mat-mdc-slide-toggle .mdc-switch:enabled .mdc-switch__track::after {
+  background-color: #e49944be !important;
+  transition: 0.3s;
 }
 
-.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
-    border-color: rgba(255, 136, 0, 0.847) !important;
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+  border-color: rgba(255, 136, 0, 0.847) !important;
 }
 
-.mat-mdc-slide-toggle .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after, .mat-mdc-fab.mat-accent:not(:disabled):hover, .mat-mdc-mini-fab.mat-accent:not(:disabled):hover, .mat-mdc-raised-button.mat-accent:not(:disabled):hover,
-.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background:hover{
-    background-color: rgba(255, 136, 0) !important;
+.mat-mdc-slide-toggle .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after,
+.mat-mdc-fab.mat-accent:not(:disabled):hover,
+.mat-mdc-mini-fab.mat-accent:not(:disabled):hover,
+.mat-mdc-raised-button.mat-accent:not(:disabled):hover,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background:hover {
+  background-color: rgba(255, 136, 0) !important;
 }
 
-.mdc-form-field, .mdc-form-field>label {
-    color:white !important;
+.mdc-form-field,
+.mdc-form-field > label {
+  color: white !important;
 }
 
 .mdc-dialog__surface {
-    background-color: #e3dcd6 !important;
- }
+  background-color: #cdbfb1 !important;
+}
 
- .mdc-fab, .mdc-fab:hover {
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
- }
+.mdc-fab,
+.mdc-fab:hover {
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+}

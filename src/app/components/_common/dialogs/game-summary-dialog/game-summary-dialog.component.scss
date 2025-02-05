@@ -1,0 +1,98 @@
+.dialog-content {
+  display: flex;
+  gap: 128px;
+  font-family: 'medieval';
+  font-size: x-large;
+  padding: 64px;
+}
+
+.player-container {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.player-detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 90px;
+  margin-bottom: 16px;
+}
+
+.player-detail-container.heading {
+  margin-bottom: 16px;
+  min-height: max-content;
+}
+
+.player-detail-container.vp {
+  min-height: 135px;
+  margin-bottom: 32px;
+}
+
+.player-name {
+  font-size: xxx-large;
+  font-family: 'scifi';
+  color: rgb(255 255 255 / 80%);
+  line-height: 1;
+  width: calc(100% - 64px);
+  justify-content: center;
+  align-items: flex-end;
+  padding: 32px;
+  position: absolute;
+  bottom: 32px;
+  text-align: center;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+}
+
+.player-name.first {
+  color: #ffd489;
+}
+
+.player-image {
+  position: relative;
+  min-height: 450px;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 5px;
+  filter: saturate(0.6);
+  box-shadow: inset 0px 0px 48px -3px rgb(200 200 200);
+}
+
+.player-image.first {
+  color: #ffd489;
+  filter: saturate(1.2);
+  box-shadow: inset 0px 0px 48px -3px #ffc45c;
+}
+
+.points-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.point-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 26px;
+  font-size: small;
+}
+
+.point-marker.vp {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  font-size: large;
+}
+
+.reward {
+  height: 48px;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+}

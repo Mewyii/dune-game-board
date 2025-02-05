@@ -6,6 +6,7 @@ import { SettingsService } from './settings.service';
 import { ActionType, FactionType, Reward } from '../models';
 import { CombatManager } from './combat-manager.service';
 import { Player } from '../models/player';
+import { LoggingService } from './log.service';
 
 export interface PlayerScore {
   playerId: number;
@@ -38,7 +39,8 @@ export class PlayerScoreManager {
   constructor(
     private playerManager: PlayersService,
     private combatManager: CombatManager,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private loggingService: LoggingService
   ) {
     const playersScoresString = localStorage.getItem('playersScores');
     if (playersScoresString) {
@@ -97,7 +99,7 @@ export class PlayerScoreManager {
     this.playerAlliancesSubject.next([]);
   }
 
-  public addFactionScore(playerId: number, actionType: ActionType, score: number) {
+  public addFactionScore(playerId: number, actionType: ActionType, score: number, roundNumber: number) {
     let factionRewards: Reward[] = [];
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
@@ -130,7 +132,7 @@ export class PlayerScoreManager {
         }
 
         if (newScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
-          this.adjustAlliancesBasedOnFactionScore(playerId, actionType, newScore);
+          this.adjustAlliancesBasedOnFactionScore(playerId, actionType, newScore, roundNumber);
         }
       }
     }
@@ -138,7 +140,7 @@ export class PlayerScoreManager {
     return factionRewards;
   }
 
-  public addPlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number) {
+  public addPlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number, roundNumber: number) {
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
@@ -169,13 +171,13 @@ export class PlayerScoreManager {
 
       if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
         if (newPlayerScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
-          this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
+          this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore, roundNumber);
         }
       }
     }
   }
 
-  public removePlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number) {
+  public removePlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number, roundNumber: number) {
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
@@ -191,7 +193,7 @@ export class PlayerScoreManager {
 
       if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
         if (newPlayerScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
-          this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore);
+          this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore, roundNumber);
         }
       }
 
@@ -209,7 +211,7 @@ export class PlayerScoreManager {
     }
   }
 
-  public addAllianceToPlayer(playerId: number, factionType: PlayerFactionScoreType) {
+  public addAllianceToPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
     const playerAlliances = this.playerAlliances;
     const playerIndex = this.playerAlliances.findIndex((x) => x.playerId === playerId);
     if (playerIndex > -1) {
@@ -223,10 +225,11 @@ export class PlayerScoreManager {
 
     this.playerAlliancesSubject.next(playerAlliances);
 
-    this.addPlayerScore(playerId, 'victoryPoints', 1);
+    this.addPlayerScore(playerId, 'victoryPoints', 1, roundNumber);
+    this.loggingService.logPlayerGainedVictoryPoint(playerId, 1);
   }
 
-  public removeAllianceFromPlayer(playerId: number, factionType: PlayerFactionScoreType) {
+  public removeAllianceFromPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
     const playerAlliances = this.playerAlliances;
     const playerIndex = this.playerAlliances.findIndex((x) => x.playerId === playerId);
     if (playerIndex > -1) {
@@ -237,11 +240,17 @@ export class PlayerScoreManager {
 
       this.playerAlliancesSubject.next(playerAlliances);
 
-      this.removePlayerScore(playerId, 'victoryPoints', 1);
+      this.removePlayerScore(playerId, 'victoryPoints', 1, roundNumber);
+      this.loggingService.logPlayerLostVictoryPoint(playerId, 1);
     }
   }
 
-  public adjustAlliancesBasedOnFactionScore(playerId: number, factionType: PlayerFactionScoreType, score: number) {
+  public adjustAlliancesBasedOnFactionScore(
+    playerId: number,
+    factionType: PlayerFactionScoreType,
+    score: number,
+    roundNumber: number
+  ) {
     const playerWithAlliance = this.playerAlliances.find((x) =>
       x.alliances.some((allianceType) => allianceType === factionType)
     );
@@ -251,13 +260,13 @@ export class PlayerScoreManager {
         if (enemyPlayerScores) {
           const enemyFactionScore = enemyPlayerScores[factionType];
           if (score > enemyFactionScore) {
-            this.removeAllianceFromPlayer(playerWithAlliance.playerId, factionType);
-            this.addAllianceToPlayer(playerId, factionType);
+            this.removeAllianceFromPlayer(playerWithAlliance.playerId, factionType, roundNumber);
+            this.addAllianceToPlayer(playerId, factionType, roundNumber);
           }
         }
       }
     } else {
-      this.addAllianceToPlayer(playerId, factionType);
+      this.addAllianceToPlayer(playerId, factionType, roundNumber);
     }
   }
 }

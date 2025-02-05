@@ -367,6 +367,8 @@ export class GameManager {
                 this.aiControlLocations(player, dreadnoughtCount);
               }
             }
+
+            this.loggingService.logPlayerWonCombat(player.id, this.currentRound);
           }
         }
 
@@ -612,7 +614,12 @@ export class GameManager {
         }
       } else {
         this.audioManager.playSound('influence');
-        const factionRewards = this.playerScoreManager.addFactionScore(activePlayer.id, field.actionType, 1);
+        const factionRewards = this.playerScoreManager.addFactionScore(
+          activePlayer.id,
+          field.actionType,
+          1,
+          this.currentRound
+        );
 
         for (const reward of factionRewards) {
           this.addRewardToPlayer(activePlayer, reward);
@@ -887,12 +894,16 @@ export class GameManager {
           this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' });
           this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
           this.addRewardToPlayer(player, { type: 'victory-point' });
+
+          this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound);
+          this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
         }
       }
     } else {
       this.audioManager.playSound('location-control');
       this.locationManager.setLocationOwner(locationId, playerId);
       this.addRewardToPlayer(player, { type: 'victory-point' });
+      this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
     }
   }
 
@@ -2211,7 +2222,12 @@ export class GameManager {
           }
         }
       } else {
-        const factionRewards = this.playerScoreManager.addFactionScore(player.id, scoreType as PlayerFactionScoreType, 1);
+        const factionRewards = this.playerScoreManager.addFactionScore(
+          player.id,
+          scoreType as PlayerFactionScoreType,
+          1,
+          this.currentRound
+        );
 
         for (const reward of factionRewards) {
           this.addRewardToPlayer(player, reward);
@@ -2221,6 +2237,12 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
     } else if (rewardType === 'faction-influence-up-twice-choice') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
+    } else if (isFactionScoreCostType(rewardType)) {
+      this.audioManager.playSound('fog');
+
+      const scoreType = getFactionScoreTypeFromCost(reward);
+
+      this.playerScoreManager.removePlayerScore(player.id, scoreType as PlayerFactionScoreType, 1, this.currentRound);
     } else if (rewardType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 1 });
     } else if (rewardType === 'tech') {
@@ -2270,7 +2292,9 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { canLiftAgent: true });
     } else if (rewardType === 'victory-point') {
       this.audioManager.playSound('victory-point');
-      this.playerScoreManager.addPlayerScore(player.id, 'victoryPoints', rewardAmount);
+      this.playerScoreManager.addPlayerScore(player.id, 'victoryPoints', rewardAmount, this.currentRound);
+      this.loggingService.logPlayerGainedVictoryPoint(player.id, this.currentRound);
+      return;
     } else if (rewardType === 'foldspace') {
       const foldspaceCard = this.settingsService
         .getCustomCards()
@@ -2326,7 +2350,7 @@ export class GameManager {
     } else if (isFactionScoreRewardType(costType)) {
       const scoreType = getFactionScoreTypeFromReward(cost);
 
-      this.playerScoreManager.removePlayerScore(playerId, scoreType as PlayerFactionScoreType, 1);
+      this.playerScoreManager.removePlayerScore(playerId, scoreType as PlayerFactionScoreType, 1, this.currentRound);
     } else if (costType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: 1 });
     } else if (costType === 'intrigue' || costType === 'intrigue-trash') {
@@ -2344,7 +2368,7 @@ export class GameManager {
     } else if (costType === 'persuasion') {
       this.playerManager.addPersuasionSpentToPlayer(playerId, cost.amount ?? 1);
     } else if (costType === 'victory-point') {
-      this.playerScoreManager.removePlayerScore(playerId, 'victoryPoints', cost.amount ?? 1);
+      this.playerScoreManager.removePlayerScore(playerId, 'victoryPoints', cost.amount ?? 1, this.currentRound);
     }
 
     this.loggingService.logPlayerResourcePaid(playerId, costType, cost.amount);
@@ -2416,7 +2440,7 @@ export class GameManager {
         const desiredScoreType = this.aIManager.getMostDesiredFactionScoreType(playerScores, increasedFactionScoreTypes);
 
         if (desiredScoreType) {
-          const factionRewards = this.playerScoreManager.addFactionScore(player.id, desiredScoreType, 1);
+          const factionRewards = this.playerScoreManager.addFactionScore(player.id, desiredScoreType, 1, this.currentRound);
           increasedFactionScoreTypes.push(desiredScoreType);
 
           for (const reward of factionRewards) {
@@ -2435,7 +2459,7 @@ export class GameManager {
         const desiredScoreType = this.aIManager.getMostDesiredFactionScoreType(playerScores, increasedFactionScoreTypes);
 
         if (desiredScoreType) {
-          const factionRewards = this.playerScoreManager.addFactionScore(player.id, desiredScoreType, 2);
+          const factionRewards = this.playerScoreManager.addFactionScore(player.id, desiredScoreType, 2, this.currentRound);
           increasedFactionScoreTypes.push(desiredScoreType);
 
           for (const reward of factionRewards) {
@@ -2452,7 +2476,7 @@ export class GameManager {
       if (playerScores) {
         const leastDesiredScoreType = this.aIManager.getLeastDesiredFactionScoreType(playerScores);
         if (leastDesiredScoreType) {
-          this.playerScoreManager.removePlayerScore(playerId, leastDesiredScoreType, 1);
+          this.playerScoreManager.removePlayerScore(playerId, leastDesiredScoreType, 1, this.currentRound);
         }
       }
     }

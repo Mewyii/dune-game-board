@@ -1,8 +1,10 @@
-import { Locale } from '../services/translate-service';
+import { Locale } from './en';
 
 export const deLocale: Locale = {
   commonCancel: 'Abbrechen',
+  commonClose: 'Schließen',
   commonEndgame: 'Finale',
+  commonVictoryPoints: 'Siegpunkte',
   commonConfirmDialogTitle: 'Bitte bestätigen',
   commonConfirmDialogText: 'Sind Sie sicher?',
   playerboardHeading: 'Spieler',
@@ -26,4 +28,14 @@ export const deLocale: Locale = {
   turninfosIntriguesPlayed: 'Gespielte Intrigen',
   turninfosTechTilesBought: 'Gekaufte Tech-Plättchen',
   turninfosFieldsVisited: 'Besuchte Felder',
+  gameSummaryDialogTitle: 'Spielübersicht',
+  gameSummaryDialogPlayerName: 'Spieler',
+  gameSummaryDialogVictoryPointsGained: 'Erhaltene Siegpunkte',
+  gameSummaryDialogVictoryPointsLost: 'Verlorene Siegpunkte',
+  gameSummaryDialogCombatsWon: 'Gewonnene Konflikte',
+  gameSummaryDialogLocationControlsGained: 'Eroberte Orte',
+  gameSummaryDialogLocationControlsLost: 'Verlorene Orte',
+  gameSummaryDialogPlayedIntrigues: 'Gespielte Intrigen',
+  gameSummaryDialogBoughtCards: 'Gekaufte Karten',
+  gameSummaryDialogTrashedCards: 'Entsorgte Karten',
 };

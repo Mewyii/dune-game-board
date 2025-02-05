@@ -226,7 +226,7 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddResourceClicked(id: number, type: ResourceType) {
+  onAddRewardClicked(player: Player, type: RewardType) {
     if (type === 'solari') {
       this.audioManager.playSound('solari');
     } else if (type === 'water') {
@@ -235,16 +235,18 @@ export class LeadersComponent implements OnInit {
       this.audioManager.playSound('spice');
     }
 
-    this.playerManager.addResourceToPlayer(id, type, 1);
+    this.gameManager.addRewardToPlayer(player, { type });
 
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
+    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
+
+    return false;
   }
 
-  onRemoveResourceClicked(id: number, type: ResourceType) {
+  onRemoveResourceClicked(player: Player, type: ResourceType) {
     this.audioManager.playSound('click-reverse');
-    this.playerManager.removeResourceFromPlayer(id, type, 1);
+    this.playerManager.removeResourceFromPlayer(player.id, type, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
+    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
     return false;
   }
 
@@ -263,20 +265,9 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  public onAddPlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
-    if (scoreType === 'victoryPoints') {
-      this.audioManager.playSound('victory-point');
-    } else {
-      this.audioManager.playSound('influence');
-    }
-    this.playerScoreManager.addPlayerScore(id, scoreType, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-  }
-
   public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-reverse');
-    this.playerScoreManager.removePlayerScore(id, scoreType, 1);
+    this.playerScoreManager.removePlayerScore(id, scoreType, 1, this.gameManager.currentRound);
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
     return false;

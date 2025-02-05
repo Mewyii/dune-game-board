@@ -16,6 +16,7 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
+import { GameSummaryDialogComponent } from '../_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 
 @Component({
   selector: 'app-playerboard',
@@ -158,16 +159,14 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onShowGameSummaryClicked() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    const dialogRef = this.dialog.open(GameSummaryDialogComponent, {
       data: {
         title: 'Are you sure you want to finish the game?',
       },
     });
 
     dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
-      if (result) {
-        this.gameManager.finishGame();
-      }
+      this.gameManager.finishGame();
     });
   }
 

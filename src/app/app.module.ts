@@ -86,6 +86,7 @@ import { SoundcloudPlayerComponent } from './components/audio-player/soundcloud-
 import { SafeUrlPipe } from './pipes/safe-url';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { TurnInfosComponent } from './components/turn-infos/turn-infos.component';
+import { GameSummaryDialogComponent } from './components/_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 
 @NgModule({
   declarations: [
@@ -156,6 +157,7 @@ import { TurnInfosComponent } from './components/turn-infos/turn-infos.component
     SoundcloudPlayerComponent,
     NavigationBarComponent,
     TurnInfosComponent,
+    GameSummaryDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,8 @@
-import { Locale } from '../services/translate-service';
-
-export const enLocale: Locale = {
+export const enLocale = {
   commonCancel: 'Cancel',
+  commonClose: 'Close',
   commonEndgame: 'Endgame',
+  commonVictoryPoints: 'Victorypoints',
   commonConfirmDialogTitle: 'Please confirm',
   commonConfirmDialogText: 'Are you sure?',
   playerboardHeading: 'Players',
@@ -26,4 +26,17 @@ export const enLocale: Locale = {
   turninfosIntriguesPlayed: 'Intrigues Played',
   turninfosTechTilesBought: 'Tech tiles bought',
   turninfosFieldsVisited: 'Board Spaces Visited',
+  gameSummaryDialogTitle: 'Game Summary',
+  gameSummaryDialogPlayerName: 'Player',
+  gameSummaryDialogVictoryPointsGained: 'Victorypoints received',
+  gameSummaryDialogVictoryPointsLost: 'Victorypoints lost',
+  gameSummaryDialogCombatsWon: 'Combats won',
+  gameSummaryDialogLocationControlsGained: 'Location controls gained',
+  gameSummaryDialogLocationControlsLost: 'Location controls lost',
+  gameSummaryDialogPlayedIntrigues: 'Intrigues played',
+  gameSummaryDialogBoughtCards: 'Cards bought',
+  gameSummaryDialogTrashedCards: 'Cards trashed',
 };
+
+export type Locale = typeof enLocale;
+export type LocaleType = keyof typeof enLocale;

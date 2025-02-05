@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SettingsService } from './settings.service';
 import { LanguageString, LanguageType } from '../models';
-import { deLocale, enLocale } from '../locales';
+import { deLocale, enLocale, LocaleType } from '../locales';
 
 export type Locale = { [key: string]: string };
 
@@ -17,7 +17,7 @@ export class TranslateService {
     this.language = this.settingsService.language;
   }
 
-  public translate(string: string) {
+  public translate(string: LocaleType) {
     switch (this.language) {
       case 'de':
         return this.de[string] ?? string;

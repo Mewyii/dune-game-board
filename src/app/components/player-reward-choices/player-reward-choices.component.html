@@ -7,12 +7,12 @@
         Player {{ logEntry.playerId }} sent an agent to field {{ logEntry.fieldName }}.
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'reward-gain'">
-        Player {{ logEntry.playerId }} got {{ logEntry.amount }}
-        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />.
+        Player {{ logEntry.playerId }} got: {{ logEntry.amount }}
+        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'reward-pay'">
-        Player {{ logEntry.playerId }} paid {{ logEntry.amount }}
-        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />.
+        Player {{ logEntry.playerId }} paid: {{ logEntry.amount }}
+        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'card-buy'">
         Player {{ logEntry.playerId }} bought card {{ logEntry.cardName }}.
@@ -34,6 +34,9 @@
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'intrigue-steal'">
         Player {{ logEntry.playerId }} stole an intrigue from player {{ logEntry.enemyPlayerId }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'victory-point-gain'">
+        Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getRewardTypePath('victory-point')" />
       </ng-container>
     </div>
   </div>

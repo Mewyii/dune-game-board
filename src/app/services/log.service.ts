@@ -8,66 +8,81 @@ export interface FieldLog {
   visitedAmount: number;
 }
 
-export interface playerRewardGainLog {
+interface LogBase {
   playerId: number;
+  roundNumber?: number;
+}
+
+export interface playerRewardGainLog extends LogBase {
   type: 'reward-gain';
   rewardType: RewardType;
   amount: number;
 }
 
-export interface playerRewardPayLog {
-  playerId: number;
+export interface playerRewardPayLog extends LogBase {
   type: 'reward-pay';
   rewardType: RewardType;
   amount: number;
 }
 
-export interface PlayerFieldLog {
-  playerId: number;
+export interface PlayerFieldLog extends LogBase {
   type: 'field-visit';
   fieldName: string;
 }
 
-export interface PlayerCardBuyLog {
-  playerId: number;
+export interface PlayerCardBuyLog extends LogBase {
   type: 'card-buy';
   cardName: string;
 }
 
-export interface PlayerCardPlayLog {
-  playerId: number;
+export interface PlayerCardPlayLog extends LogBase {
   type: 'card-play';
   cardName: string;
 }
 
-export interface PlayerCardDiscardLog {
-  playerId: number;
+export interface PlayerCardDiscardLog extends LogBase {
   type: 'card-discard';
   cardName: string;
 }
 
-export interface PlayerCardTrashLog {
-  playerId: number;
+export interface PlayerCardTrashLog extends LogBase {
   type: 'card-trash';
   cardName: string;
 }
 
-export interface PlayerIntriguePlayLog {
-  playerId: number;
+export interface PlayerIntriguePlayLog extends LogBase {
   type: 'intrigue-play';
   cardName: string;
 }
 
-export interface PlayerIntrigueTrashLog {
-  playerId: number;
+export interface PlayerIntrigueTrashLog extends LogBase {
   type: 'intrigue-trash';
   cardName: string;
 }
 
-export interface PlayerIntrigueStealLog {
-  playerId: number;
+export interface PlayerIntrigueStealLog extends LogBase {
   type: 'intrigue-steal';
   enemyPlayerId: number;
+}
+
+export interface PlayerVictoryPointGainLog extends LogBase {
+  type: 'victory-point-gain';
+}
+
+export interface PlayerVictoryPointLossLog extends LogBase {
+  type: 'victory-point-loss';
+}
+
+export interface PlayerCombatWinLog extends LogBase {
+  type: 'combat-win';
+}
+
+export interface PlayerLocationControlGainLog extends LogBase {
+  type: 'location-control-gain';
+}
+
+export interface PlayerLocationControlLossLog extends LogBase {
+  type: 'location-control-loss';
 }
 
 export type PlayerActionLog =
@@ -80,7 +95,12 @@ export type PlayerActionLog =
   | PlayerCardDiscardLog
   | PlayerIntriguePlayLog
   | PlayerIntrigueTrashLog
-  | PlayerIntrigueStealLog;
+  | PlayerIntrigueStealLog
+  | PlayerCombatWinLog
+  | PlayerLocationControlGainLog
+  | PlayerLocationControlLossLog
+  | PlayerVictoryPointGainLog
+  | PlayerVictoryPointLossLog;
 
 @Injectable({
   providedIn: 'root',
@@ -118,8 +138,12 @@ export class LoggingService {
     return cloneDeep(this.logSubject.value);
   }
 
-  public get playerActionLog() {
+  public get playerActionLogs() {
     return cloneDeep(this.playerActionLogSubject.value);
+  }
+
+  public getPlayerActionLog(playerId: number) {
+    return cloneDeep(this.playerActionLogSubject.value.filter((x) => x.playerId === playerId));
   }
 
   public clearLogs() {
@@ -146,52 +170,72 @@ export class LoggingService {
 
   logPlayerResourceGained(playerId: number, rewardType: RewardType, amount: number | undefined) {
     this.playerActionLogSubject.next([
-      ...this.playerActionLog,
+      ...this.playerActionLogs,
       { playerId, type: 'reward-gain', rewardType: rewardType, amount: amount ?? 1 },
     ]);
   }
 
   logPlayerResourcePaid(playerId: number, rewardType: RewardType, amount: number | undefined) {
     this.playerActionLogSubject.next([
-      ...this.playerActionLog,
+      ...this.playerActionLogs,
       { playerId, type: 'reward-pay', rewardType: rewardType, amount: amount ?? 1 },
     ]);
   }
 
   logPlayerSentAgentToField(playerId: number, fieldName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'field-visit', fieldName: fieldName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'field-visit', fieldName: fieldName }]);
   }
 
   logPlayerBoughtCard(playerId: number, cardName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-buy', cardName: cardName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'card-buy', cardName: cardName }]);
   }
 
   logPlayerPlayedCard(playerId: number, cardName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-play', cardName: cardName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'card-play', cardName: cardName }]);
   }
 
   logPlayerDiscardedCard(playerId: number, cardName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-discard', cardName: cardName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'card-discard', cardName: cardName }]);
   }
 
   logPlayerTrashedCard(playerId: number, cardName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'card-trash', cardName: cardName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'card-trash', cardName: cardName }]);
   }
 
   logPlayerTrashedIntrigue(playerId: number, cardName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'intrigue-trash', cardName: cardName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'intrigue-trash', cardName: cardName }]);
   }
 
   logPlayerStoleIntrigue(playerId: number, enemyPlayerId: number) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'intrigue-steal', enemyPlayerId }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'intrigue-steal', enemyPlayerId }]);
   }
 
   logPlayerPlayedIntrigue(playerId: number, cardName: string) {
-    this.playerActionLogSubject.next([...this.playerActionLog, { playerId, type: 'intrigue-play', cardName: cardName }]);
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'intrigue-play', cardName: cardName }]);
+  }
+
+  logPlayerWonCombat(playerId: number, roundNumber: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'combat-win', roundNumber }]);
+  }
+
+  logPlayerGainedLocationControl(playerId: number, roundNumber: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'location-control-gain', roundNumber }]);
+  }
+
+  logPlayerLostLocationControl(playerId: number, roundNumber: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'location-control-loss', roundNumber }]);
+  }
+
+  logPlayerGainedVictoryPoint(playerId: number, roundNumber: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'victory-point-gain', roundNumber }]);
+  }
+
+  logPlayerLostVictoryPoint(playerId: number, roundNumber: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'victory-point-loss', roundNumber }]);
   }
 
   public printLogs() {
     console.log(this.log);
-    console.log(this.playerActionLog);
+    console.log(this.playerActionLogs);
   }
 }
