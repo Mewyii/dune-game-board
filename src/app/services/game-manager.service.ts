@@ -18,7 +18,7 @@ import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
 import { GameState, PlayerCardsFactions as Factions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
-import { CardsService, ImperiumDeckCard } from './cards.service';
+import { CardsService, ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
 import { isFactionScoreCostType, isFactionScoreRewardType } from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
@@ -1572,7 +1572,7 @@ export class GameManager {
 
     const gameState = this.getGameState(player);
 
-    const imperiumRow = this.cardsService.imperiumRow;
+    const imperiumRow = this.cardsService.imperiumRow.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[];
     const imperiumRowModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'imperiumRow');
 
     const alwaysBuyableCards = [
@@ -1586,7 +1586,7 @@ export class GameManager {
       const recruitmentCardAmount = this.settingsService.getRecruitmentCardAmount();
       recruitableCards = this.cardsService
         .getTopDeckCards(recruitmentCardAmount)
-        .filter((x) => factionRecruitment.some((y) => y === x.faction));
+        .filter((x) => factionRecruitment.some((y) => y === x.faction) && x.type === 'imperium-card') as ImperiumDeckCard[];
     }
 
     const availableCards = [...imperiumRow, ...recruitableCards, ...shuffle(alwaysBuyableCards)];
@@ -1670,7 +1670,7 @@ export class GameManager {
     }
   }
 
-  acquireImperiumRowCard(playerId: number, card: ImperiumDeckCard) {
+  acquireImperiumRowCard(playerId: number, card: ImperiumRowCard | ImperiumRowPlot) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
       return;
@@ -1686,18 +1686,21 @@ export class GameManager {
       if (card.persuasionCosts) {
         this.playerManager.addPersuasionSpentToPlayer(playerId, card.persuasionCosts + costModifier);
       }
-      if (card.buyEffects) {
-        for (const effect of card.buyEffects) {
-          this.addRewardToPlayer(player, effect);
+      if (card.type === 'imperium-card') {
+        if (card.buyEffects) {
+          for (const effect of card.buyEffects) {
+            this.addRewardToPlayer(player, effect);
+          }
+          if (!player.isAI) {
+            this.showPlayerRewardChoices(player);
+          } else {
+            this.aiResolveRewardChoices(player);
+          }
         }
-        if (!player.isAI) {
-          this.showPlayerRewardChoices(player);
-        } else {
-          this.aiResolveRewardChoices(player);
-        }
+      } else {
+        this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, card);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
       }
-      this.cardsService.aquirePlayerCardFromImperiumRow(playerId, card);
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
 
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
     }

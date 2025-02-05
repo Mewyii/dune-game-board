@@ -1,4 +1,4 @@
-import { ImperiumDeckCard } from '../services/cards.service';
+import { ImperiumDeckCard, ImperiumDeckPlot } from '../services/cards.service';
 import { ActiveFactionType } from './faction';
 import { IntrigueDeckCard } from './intrigue';
 import { ActionField } from './location';
@@ -24,7 +24,7 @@ export interface TurnInfo {
   locationControlAmount: number;
   signetRingAmount: number;
   factionRecruitment: ActiveFactionType[];
-  cardsBoughtThisTurn: ImperiumDeckCard[];
+  cardsBoughtThisTurn: (ImperiumDeckCard | ImperiumDeckPlot)[];
   cardsTrashedThisTurn: ImperiumDeckCard[];
   intriguesPlayedThisTurn: IntrigueDeckCard[];
   techTilesBoughtThisTurn: TechTileCard[];

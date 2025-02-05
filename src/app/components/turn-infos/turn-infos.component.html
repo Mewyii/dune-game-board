@@ -13,9 +13,11 @@
   <div class="turn-info-container">
     <div class="turn-info-title">{{ t.translate('turninfosCardsBought') }}</div>
     <div class="cards-container">
-      @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) {
+      @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) { @if (card.type === 'imperium-card') {
       <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
-      }
+      } @if (card.type === 'plot') {
+      <dune-plot-card [plot]="card"></dune-plot-card>
+      } }
     </div>
   </div>
   } @if (playerTurnInfo.cardsTrashedThisTurn.length > 0) {

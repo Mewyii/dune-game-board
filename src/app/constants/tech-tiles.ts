@@ -594,9 +594,6 @@ export const techTiles: TechTileCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'troop',
-      },
     ],
     customEffect: {
       en: '<b>Reveal turn:</b><br>{resource:faction-influence-down-choice}{resource:helper-trade} {resource:victory-point}',

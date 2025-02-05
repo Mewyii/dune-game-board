@@ -1,68 +1,74 @@
 .imperium-row-container {
-    width: 250px;
-    height: calc(100% - 64px);
-    padding: 32px;
-    background: rgba(23, 19, 16, 0.8);
-    color:white;
-    border-radius: 5px;
+  width: 250px;
+  height: calc(100% - 64px);
+  padding: 32px;
+  background: rgba(23, 19, 16, 0.8);
+  color: white;
+  border-radius: 5px;
 }
 
 .heading {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    font-size: x-large;
-    height: 118px;
-    padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-size: x-large;
+  height: 118px;
+  padding-bottom: 32px;
 }
 
 .cards-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 1900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 1900px;
 }
 
 .card-container {
-    position: relative;
+  position: relative;
 }
 
-dune-imperium-row-card {
-    transition: .8s;
-    transform: scale(0.75) translateY(-150px);
-    margin-top: 16px;
-    max-height: 200px;
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    display: block;
-    user-select: none;
+dune-imperium-row-card,
+dune-plot-card {
+  transition: 0.8s;
+  transform: scale(0.75) translateY(-150px);
+  margin-top: 16px;
+  max-height: 200px;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  display: block;
+  user-select: none;
 }
 
-dune-imperium-row-card.desaturated {
-    filter: saturate(0.75) brightness(0.75);
+dune-imperium-row-card.desaturated,
+dune-plot-card.desaturated {
+  filter: saturate(0.75) brightness(0.75);
 }
 
-dune-imperium-row-card.leaving {
-    filter: drop-shadow(0px 0px 10px rgb(163, 49, 49));
+dune-imperium-row-card.leaving,
+dune-plot-card.leaving {
+  filter: drop-shadow(0px 0px 10px rgb(163, 49, 49));
 }
 
-dune-imperium-row-card.buyable {
-    filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
+dune-imperium-row-card.buyable,
+dune-plot-card.buyable {
+  filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
 }
 
 dune-imperium-row-card:hover,
-dune-imperium-row-card.active {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    transform: scale(1.25) translateY(-150px);
-    z-index: 3;
-    position: relative;
+dune-imperium-row-card.active,
+dune-plot-card:hover,
+dune-plot-card.active {
+  filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  transform: scale(1.25) translateY(-150px);
+  z-index: 3;
+  position: relative;
 }
 
 .player-name {
-    border-top: 3px solid transparent;
-    border-bottom: 3px solid transparent;
-    text-align: center;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  text-align: center;
 }
 
 .card-buy-button {
@@ -72,84 +78,83 @@ dune-imperium-row-card.active {
 }
 
 .card-action-container {
-    width: 100%;
-    position: absolute;
-    top: 0px;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    z-index: 3;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 3;
 }
 
 .persuasion-area {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
 }
 
 .resource-display {
-    max-height: 60px;
-    max-width: 60px;
-    position: relative;
-    color: white;
+  max-height: 60px;
+  max-width: 60px;
+  position: relative;
+  color: white;
 }
 
 .resource {
-    height: 60px;
-    width: 60px;
-    object-fit: scale-down;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  height: 60px;
+  width: 60px;
+  object-fit: scale-down;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .resource.small {
-    margin-top: 5px;
-    height: 40px;
-    width: 40px;
+  margin-top: 5px;
+  height: 40px;
+  width: 40px;
 }
 
 .resource-amount {
-    position: absolute;
-    top: -2px;
-    left: 0;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: larger;
+  position: absolute;
+  top: -2px;
+  left: 0;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: larger;
 }
 
 .imperium-deck {
-    height: 171px;
-    width: 115px;
-    border: 6px solid #101010;;
-    border-radius: 8px;
-    position: relative;
-    color: #fffcfa;
-    background-image: url("/assets/images/card-backgrounds/_backside.jpg");
-    background-size: cover;
-    background-position: center;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    transition: .66s;
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+  height: 171px;
+  width: 115px;
+  border: 6px solid #101010;
+  border-radius: 8px;
+  position: relative;
+  color: #fffcfa;
+  background-image: url('/assets/images/card-backgrounds/_backside.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  transition: 0.66s;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
 }
-
 
 .imperium-deck:hover,
 .imperium-deck.active {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    transform: scale(1.1);
+  filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  transform: scale(1.1);
 }
 
 .imperium-deck-action-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  z-index: 3;
 }

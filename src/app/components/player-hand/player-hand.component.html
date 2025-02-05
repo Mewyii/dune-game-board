@@ -50,6 +50,27 @@
         </div>
       </ng-container>
     </div>
+    <div class="player-cards-container plots">
+      <ng-container *ngIf="playerPlots && playerPlots.cards.length > 0">
+        <div
+          *ngFor="let plot of playerPlots.cards; let i = index"
+          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+          [style.left]="(i * 250) / (-1.25 + 1.25 * playerPlots.cards.length) + 'px'"
+          (click)="setCardActive(plot.id)"
+        >
+          <dune-plot-card
+            *ngIf="!currentPlayer?.isAI"
+            [plot]="plot"
+            [class]="plot.id === activeCardId ? 'active' : ''"
+          ></dune-plot-card>
+          <div
+            *ngIf="currentPlayer?.isAI"
+            [class]="'imperium-card background' + (plot.id === activeCardId ? ' active' : '')"
+          ></div>
+          <div class="card-action-container" *ngIf="plot.id === activeCardId"></div>
+        </div>
+      </ng-container>
+    </div>
     <div class="player-cards-container">
       <ng-container *ngIf="playerHandCards && cardsShown === 'hand'">
         <ng-container *ngFor="let handCard of playerHandCards.cards; let i = index">

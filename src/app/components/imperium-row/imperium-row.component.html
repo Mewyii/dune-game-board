@@ -45,6 +45,7 @@
       </div>
     </div>
     <div class="card-container" *ngFor="let card of imperiumRowCards" (click)="setCardActive(card.id)">
+      @if (card.type === 'imperium-card') {
       <dune-imperium-row-card
         [class]="
           (card.id === activeCardId ? 'active ' : '') +
@@ -59,6 +60,22 @@
         [card]="card"
         [costModifier]="getCardCostModifier(card)"
       ></dune-imperium-row-card>
+      } @if (card.type === 'plot') {
+      <dune-plot-card
+        [class]="
+          (card.id === activeCardId ? 'active ' : '') +
+          (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
+          (activePlayerTurnState === 'reveal' &&
+          card.persuasionCosts &&
+          activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+            ? 'buyable '
+            : '') +
+          card.status
+        "
+        [plot]="card"
+        [costModifier]="getCardCostModifier(card)"
+      ></dune-plot-card>
+      }
       <div class="card-action-container" *ngIf="card.id === activeCardId">
         <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
           <mat-icon>check</mat-icon>

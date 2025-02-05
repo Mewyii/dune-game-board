@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { RewardType } from 'src/app/models';
 import { AudioManager } from 'src/app/services/audio-manager.service';
-import { CardsService, ImperiumDeckCard, PlayerCardStack } from 'src/app/services/cards.service';
+import { CardsService, ImperiumDeckCard, PlayerCardStack, PlayerPlotStack } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -28,6 +28,8 @@ export class PlayerHandComponent implements OnInit {
   public activeCardId = '';
   public playedPlayerCardId: string | undefined;
 
+  public playerPlots: PlayerPlotStack | undefined;
+
   public playerIntrigues: IntrigueDeckCard[] | undefined;
   public activeIntrigueId = '';
 
@@ -43,8 +45,7 @@ export class PlayerHandComponent implements OnInit {
     private settingsService: SettingsService,
     public dialog: MatDialog,
     private logService: LoggingService,
-    private t: TranslateService,
-    private playerRewardChoicesService: PlayerRewardChoicesService
+    private t: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +61,8 @@ export class PlayerHandComponent implements OnInit {
       this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
       this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
 
+      this.playerPlots = this.cardsService.playerPlots.find((x) => x.playerId === this.activePlayerId);
+
       this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
       this.showCards = false;
       this.cardsShown = 'hand';
@@ -71,6 +74,10 @@ export class PlayerHandComponent implements OnInit {
 
     this.cardsService.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
       this.playerDiscardPiles = playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
+    });
+
+    this.cardsService.playerPlots$.subscribe((playerPlots) => {
+      this.playerPlots = playerPlots.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.cardsService.playedPlayerCards$.subscribe((playedPlayerCards) => {

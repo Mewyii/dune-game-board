@@ -16,7 +16,7 @@ import {
   RewardType,
 } from 'src/app/models';
 import { getAccumulatedSpice, getDesire, getResourceAmount } from './shared/ai-goal-functions';
-import { ImperiumDeckCard } from '../cards.service';
+import { ImperiumDeckCard, ImperiumRowCard } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
@@ -196,9 +196,9 @@ export class AIManager {
     const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 24);
     const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
 
-    const evaluatedImperiumRowCards = gameState.imperiumRowCards.map((x) =>
-      this.getImperiumCardBuyEvaluation(x, player, gameState)
-    );
+    const evaluatedImperiumRowCards = (
+      gameState.imperiumRowCards.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[]
+    ).map((x) => this.getImperiumCardBuyEvaluation(x, player, gameState));
     const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 16, 5);
 
     let eventGoalModifiers: GoalModifier[] = [];

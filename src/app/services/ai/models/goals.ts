@@ -4,7 +4,7 @@ import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manage
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
 import { ActionField, ActionType, ActiveFactionType, RewardType } from 'src/app/models';
 import { DuneEvent } from 'src/app/constants/events';
-import { ImperiumDeckCard } from '../../cards.service';
+import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../../cards.service';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
@@ -69,7 +69,7 @@ export type GameState = Readonly<{
   playerCardsBought: number;
   playerCardsTrashed: number;
   playerDreadnoughtCount: number;
-  imperiumRowCards: ImperiumDeckCard[];
+  imperiumRowCards: (ImperiumRowCard | ImperiumRowPlot)[];
   playerFactionFriendships: PlayerFactionScoreType[];
   playerFieldUnlocksForFactions: ActiveFactionType[];
   playerFieldUnlocksForIds: string[];

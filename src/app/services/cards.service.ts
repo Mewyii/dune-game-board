@@ -7,12 +7,24 @@ import { CardConfiguratorService } from './configurators/card-configurator.servi
 import { ActionType, FactionType } from '../models';
 import { SettingsService } from './settings.service';
 import { ImperiumCard } from '../models/imperium-card';
+import { PlotConfiguratorService } from './configurators/plot-configurator.service';
+import { ImperiumPlot } from '../models/imperium-plot';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
+  type: 'imperium-card';
 }
 
 export interface ImperiumRowCard extends ImperiumDeckCard {
+  status: 'just-arrived' | 'present' | 'leaving';
+}
+
+export interface ImperiumDeckPlot extends ImperiumPlot {
+  id: string;
+  type: 'plot';
+}
+
+export interface ImperiumRowPlot extends ImperiumDeckPlot {
   status: 'just-arrived' | 'present' | 'leaving';
 }
 
@@ -31,14 +43,19 @@ export interface CardFactionAndFieldAccess {
   actionType: ActionType[];
 }
 
+export interface PlayerPlotStack {
+  playerId: number;
+  cards: ImperiumRowPlot[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CardsService {
-  private imperiumDeckSubject = new BehaviorSubject<ImperiumDeckCard[]>([]);
+  private imperiumDeckSubject = new BehaviorSubject<(ImperiumDeckCard | ImperiumDeckPlot)[]>([]);
   public imperiumDeck$ = this.imperiumDeckSubject.asObservable();
 
-  private imperiumRowSubject = new BehaviorSubject<ImperiumRowCard[]>([]);
+  private imperiumRowSubject = new BehaviorSubject<(ImperiumRowCard | ImperiumRowPlot)[]>([]);
   public imperiumRow$ = this.imperiumRowSubject.asObservable();
 
   private playerDecksSubject = new BehaviorSubject<PlayerCardStack[]>([]);
@@ -53,6 +70,9 @@ export class CardsService {
   private playerTrashPilesSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerTrashPiles$ = this.playerTrashPilesSubject.asObservable();
 
+  private playerPlotsSubject = new BehaviorSubject<PlayerPlotStack[]>([]);
+  public playerPlots$ = this.playerPlotsSubject.asObservable();
+
   private playedPlayerCardsSubject = new BehaviorSubject<PlayerCard[]>([]);
   public playedPlayerCards$ = this.playedPlayerCardsSubject.asObservable();
 
@@ -65,6 +85,7 @@ export class CardsService {
   constructor(
     private playerManager: PlayersService,
     private cardConfiguratorService: CardConfiguratorService,
+    private plotConfiguratorService: PlotConfiguratorService,
     private settingsService: SettingsService
   ) {
     const imperiumDeckString = localStorage.getItem('imperiumDeck');
@@ -129,6 +150,16 @@ export class CardsService {
       localStorage.setItem('playerTrashPiles', JSON.stringify(playerTrashPiles));
     });
 
+    const playerPlotsString = localStorage.getItem('playerPlots');
+    if (playerPlotsString) {
+      const playerPlots = JSON.parse(playerPlotsString) as PlayerPlotStack[];
+      this.playerPlotsSubject.next(playerPlots);
+    }
+
+    this.playerPlots$.subscribe((playerPlots) => {
+      localStorage.setItem('playerPlots', JSON.stringify(playerPlots));
+    });
+
     const playedPlayerCardsString = localStorage.getItem('playedPlayerCards');
     if (playedPlayerCardsString) {
       const playedPlayerCards = JSON.parse(playedPlayerCardsString) as PlayerCard[];
@@ -188,6 +219,10 @@ export class CardsService {
     return cloneDeep(this.playerTrashPilesSubject.value);
   }
 
+  public get playerPlots() {
+    return cloneDeep(this.playerPlotsSubject.value);
+  }
+
   public get limitedCustomCards() {
     return cloneDeep(this.limitedCustomCardsSubject.value);
   }
@@ -225,17 +260,25 @@ export class CardsService {
   }
 
   setImperiumDeck() {
-    const imperiumDeckCards: ImperiumDeckCard[] = [];
+    const imperiumDeckCards: (ImperiumDeckCard | ImperiumDeckPlot)[] = [];
     const imperiumCards = this.cardConfiguratorService.imperiumCards;
+    const plotCards = this.plotConfiguratorService.imperiumPlots;
+
     for (const imperiumCard of imperiumCards) {
       for (let i = 0; i < (imperiumCard.cardAmount ?? 1); i++) {
         imperiumDeckCards.push(this.instantiateImperiumCard(imperiumCard));
       }
     }
 
+    for (const plotCard of plotCards) {
+      for (let i = 0; i < (plotCard.cardAmount ?? 1); i++) {
+        imperiumDeckCards.push(this.instantiateImperiumPlot(plotCard));
+      }
+    }
+
     const imperiumDeck = shuffle(imperiumDeckCards);
     const imperiumRowCardAmount = this.settingsService.getImperiumRowCards();
-    const imperiumRow: ImperiumRowCard[] = imperiumDeck
+    const imperiumRow: (ImperiumRowCard | ImperiumRowPlot)[] = imperiumDeck
       .slice(0, imperiumRowCardAmount)
       .map((x) => ({ ...x, status: 'present' }));
 
@@ -283,7 +326,7 @@ export class CardsService {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
   }
 
-  removeCardFromImperiumRow(card: ImperiumRowCard) {
+  removeCardFromImperiumRow(card: ImperiumRowCard | ImperiumRowPlot) {
     const imperiumDeck = this.imperiumDeck;
     const nextCard = imperiumDeck.shift();
     if (nextCard) {
@@ -503,7 +546,7 @@ export class CardsService {
     const imperiumRow = this.imperiumRow;
     const imperiumDeck = this.imperiumDeck;
 
-    const newImperiumRow: ImperiumRowCard[] = [];
+    const newImperiumRow: (ImperiumRowCard | ImperiumRowPlot)[] = [];
     for (const imperiumCard of imperiumRow) {
       if (imperiumCard.status === 'just-arrived') {
         imperiumCard.status = 'present';
@@ -533,6 +576,18 @@ export class CardsService {
       this.imperiumDeckSubject.next(imperiumDeck);
     }
     this.shuffleCardsUnderPlayerDeck(playerId, [card]);
+  }
+
+  aquirePlayerPlotFromImperiumRow(playerId: number, card: ImperiumRowPlot) {
+    const imperiumDeck = this.imperiumDeck;
+    const nextCard = imperiumDeck.shift();
+    if (nextCard) {
+      const imperiumRow = this.imperiumRow.filter((x) => x.id !== card.id);
+      imperiumRow.push({ ...nextCard, status: 'just-arrived' });
+      this.imperiumRowSubject.next(imperiumRow);
+      this.imperiumDeckSubject.next(imperiumDeck);
+    }
+    this.addCardsToPlayerPlots(playerId, [card]);
   }
 
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {
@@ -607,7 +662,24 @@ export class CardsService {
     }
   }
 
+  addCardsToPlayerPlots(playerId: number, cards: ImperiumRowPlot[]) {
+    const playerPlots = this.playerPlots;
+    const playerPlotStackIndex = playerPlots.findIndex((x) => x.playerId === playerId);
+    if (playerPlotStackIndex > -1) {
+      const playerPlotCards = playerPlots[playerPlotStackIndex].cards;
+      playerPlots[playerPlotStackIndex].cards = [...playerPlotCards, ...cards];
+      this.playerPlotsSubject.next(playerPlots);
+    } else {
+      playerPlots.push({ playerId, cards });
+      this.playerPlotsSubject.next(playerPlots);
+    }
+  }
+
   public instantiateImperiumCard(card: ImperiumCard): ImperiumDeckCard {
-    return { ...card, id: crypto.randomUUID(), cardAmount: 1 };
+    return { ...card, type: 'imperium-card', id: crypto.randomUUID(), cardAmount: 1 };
+  }
+
+  public instantiateImperiumPlot(card: ImperiumPlot): ImperiumDeckPlot {
+    return { ...card, type: 'plot', id: crypto.randomUUID(), cardAmount: 1 };
   }
 }

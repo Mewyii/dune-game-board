@@ -4,7 +4,7 @@ import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardTypePath } from 'src/app/helpers/reward-types';
 import { ActiveFactionType, RewardType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
-import { CardsService, ImperiumRowCard } from 'src/app/services/cards.service';
+import { CardsService, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -19,7 +19,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./imperium-row.component.scss'],
 })
 export class ImperiumRowComponent implements OnInit {
-  public imperiumRowCards: ImperiumRowCard[] = [];
+  public imperiumRowCards: (ImperiumRowCard | ImperiumRowPlot)[] = [];
   public activeCardId = '';
 
   public activePlayerId: number = 0;
@@ -84,15 +84,15 @@ export class ImperiumRowComponent implements OnInit {
     });
   }
 
-  onBuyCardClicked(card: ImperiumRowCard) {
+  onBuyCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
     this.gameManager.acquireImperiumRowCard(this.activePlayerId, card);
   }
 
-  onRemoveCardClicked(card: ImperiumRowCard) {
+  onRemoveCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
     this.cardsService.removeCardFromImperiumRow(card);
   }
 
-  onCharmCardClicked(card: ImperiumRowCard) {
+  onCharmCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
     this.gameModifierService.addPlayerImperiumRowModifier(this.activePlayerId, { cardId: card.id, persuasionAmount: -1 });
     const enemyPlayers = this.playerManager.getEnemyPlayers(this.activePlayerId);
     for (const player of enemyPlayers) {
@@ -152,7 +152,7 @@ export class ImperiumRowComponent implements OnInit {
     return getRewardTypePath(rewardType);
   }
 
-  getCardCostModifier(card: ImperiumRowCard) {
+  getCardCostModifier(card: ImperiumRowCard | ImperiumRowPlot) {
     return getCardCostModifier(card, this.imperiumRowModifiers);
   }
 }
