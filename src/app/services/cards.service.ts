@@ -440,6 +440,10 @@ export class CardsService {
     }
   }
 
+  resetPlayerHandCards() {
+    this.playerHandsSubject.next([]);
+  }
+
   resetPlayerTrashPiles() {
     this.playerTrashPilesSubject.next([]);
   }
@@ -673,6 +677,10 @@ export class CardsService {
       playerPlots.push({ playerId, cards });
       this.playerPlotsSubject.next(playerPlots);
     }
+  }
+
+  resetPlayerPlots() {
+    this.playerPlotsSubject.next([]);
   }
 
   public instantiateImperiumCard(card: ImperiumCard): ImperiumDeckCard {

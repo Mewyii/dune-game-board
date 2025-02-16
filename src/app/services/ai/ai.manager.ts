@@ -9,6 +9,7 @@ import { PlayerCombatScore, PlayerCombatUnits } from '../combat-manager.service'
 import {
   ActionField,
   ActionType,
+  ActiveFactionType,
   activeFactionTypes,
   DuneLocation,
   FactionInfluence,
@@ -792,22 +793,72 @@ export class AIManager {
   }
 
   getMostDesiredFactionScoreType(
-    playerScores: PlayerScore,
+    playerId: number,
+    playerScores: PlayerScore[],
+    influenceGainAmount: number,
     exclusions?: PlayerFactionScoreType[]
   ): PlayerFactionScoreType | undefined {
-    let desiredFactionScoreType: PlayerFactionScoreType | undefined;
-    let desiredFactionScoreAmount = -1;
+    const playerScore = playerScores.find((x) => x.playerId === playerId);
+    if (!playerScore) {
+      return;
+    }
+
+    const enemyScores = playerScores.filter((x) => x.playerId !== playerId);
+    const factionAllianceTreshold = this.settingsService.getFactionInfluenceAllianceTreshold();
+    const maxFactionInfluence = this.settingsService.getFactionInfluenceMaxScore();
+
+    const factionDesires = {
+      emperor: 0,
+      guild: 0,
+      bene: 0,
+      fremen: 0,
+    };
 
     for (const factionType of activeFactionTypes) {
       if (!exclusions?.includes(factionType)) {
-        if (playerScores[factionType] > desiredFactionScoreAmount && playerScores[factionType] < 4) {
-          desiredFactionScoreType = factionType;
-          desiredFactionScoreAmount = playerScores[factionType];
+        const playerFactionScore = playerScore[factionType];
+        if (playerFactionScore < maxFactionInfluence) {
+          factionDesires[factionType] += 1;
+
+          if (playerFactionScore >= factionAllianceTreshold) {
+            if (
+              enemyScores.some(
+                (x) =>
+                  x[factionType] > playerFactionScore &&
+                  x[factionType] < maxFactionInfluence &&
+                  playerFactionScore + influenceGainAmount === x[factionType]
+              )
+            ) {
+              factionDesires[factionType] += 5;
+            }
+            if (
+              enemyScores.some(
+                (x) =>
+                  x[factionType] >= playerFactionScore &&
+                  x[factionType] < maxFactionInfluence &&
+                  playerFactionScore + influenceGainAmount > x[factionType]
+              )
+            ) {
+              factionDesires[factionType] += 10;
+            }
+          } else if (playerFactionScore < factionAllianceTreshold) {
+            factionDesires[factionType] += 1 + playerFactionScore + influenceGainAmount;
+
+            if (enemyScores.some((x) => x[factionType] >= factionAllianceTreshold)) {
+              factionDesires[factionType] -= 1;
+            }
+            if (playerFactionScore + influenceGainAmount > factionAllianceTreshold) {
+              factionDesires[factionType] += 5;
+            }
+          }
         }
       }
     }
 
-    return desiredFactionScoreType;
+    return Object.entries(factionDesires).reduce(
+      (maxKey: any, [key, value]) => (factionDesires[maxKey as ActiveFactionType] < value ? key : maxKey),
+      Object.keys(factionDesires)[0]
+    );
   }
 
   getLeastDesiredFactionScoreType(

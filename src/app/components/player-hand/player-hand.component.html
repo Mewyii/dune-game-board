@@ -50,8 +50,8 @@
         </div>
       </ng-container>
     </div>
-    <div class="player-cards-container plots">
-      <ng-container *ngIf="playerPlots && playerPlots.cards.length > 0">
+    <div class="player-cards-container plots" *ngIf="playerPlots && playerPlots.cards.length > 0">
+      <ng-container>
         <div
           *ngFor="let plot of playerPlots.cards; let i = index"
           [class]="'card-container' + (showCards ? ' ' : ' hidden')"

@@ -1,402 +1,329 @@
 .action-field {
-    font-size: medium;
-    color: #e5e5e5;
-    position: relative;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.33));
-    z-index: 2;
-    transition: .66s;
+  font-size: medium;
+  color: #e5e5e5;
+  position: relative;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.33));
+  z-index: 2;
+  transition: 0.66s;
 }
 
 .action-field.highlighted {
-    filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
+  filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
 }
 
 .action-field.blocked {
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.33)) brightness(0.75);
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.33)) brightness(0.75);
 }
 
 .heading {
-    position: relative;
-    background: #afafaf;
-    border-radius: 6px 6px 0px 0px;
-    padding: 5px 8px 0px 34px;
-    width: max-content;
-    border: 1px solid #9f9f9f70;
-    border-bottom: none;
-    display:flex;
+  position: relative;
+  background: #afafaf;
+  border-radius: 6px 6px 0px 0px;
+  padding: 5px 8px 0px 34px;
+  width: max-content;
+  border: 1px solid #9f9f9f70;
+  border-bottom: none;
+  display: flex;
 }
 
 .border-remover {
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    z-index: 1;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  z-index: 1;
 }
 
 .title {
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.4));
-    margin-bottom: -3px;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.4));
+  margin-bottom: -3px;
 }
 
 .action-area {
-    height: 130px;
-    box-sizing: border-box;
-    display: flex;
-    position: relative;
-    background: #afafaf;
-    border-radius: 0px 6px 14px 6px;
-    padding: 6px;
-    border: 1px solid #9f9f9f70;
+  height: 130px;
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+  background: #afafaf;
+  border-radius: 0px 6px 14px 6px;
+  padding: 6px;
+  border: 1px solid #9f9f9f70;
 }
 
 .agent-area {
-    min-width: 145px;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 4px 0px 0px 4px;
-    box-shadow: inset 0px 0px 15px -3px black;
-    // border: 1px solid #9a9a9aab;
-    box-sizing: border-box;
-    position:relative;
-    transition: 0.3s;
+  min-width: 145px;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 4px 0px 0px 4px;
+  box-shadow: inset 0px 0px 15px -3px black;
+  // border: 1px solid #9a9a9aab;
+  box-sizing: border-box;
+  position: relative;
+  transition: 0.3s;
 }
 
 .agent-area:hover {
-    box-shadow: inset 0px 0px 25px -3px rgb(255, 123, 0);
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+  box-shadow: inset 0px 0px 25px -3px rgb(255, 123, 0);
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
 }
 
 .reward-area {
-    border-radius: 0px 4px 10px 0px;
-    box-shadow: inset 8px 0px 10px -10px #ffffff75;
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 6px;
-    row-gap: 8px;
-    padding: 6px;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    font-size: 22px;
-    color: white;
-    min-width: 86px;
-    max-width: 100px;
+  border-radius: 0px 4px 10px 0px;
+  box-shadow: inset 8px 0px 10px -10px #ffffff75;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 6px;
+  row-gap: 8px;
+  padding: 6px;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  min-width: 86px;
+  max-width: 100px;
 }
 
 .reward {
-    height: 38px;
-    min-width: 38px;
-    object-fit: scale-down;
-    filter: drop-shadow(0px 2px 5px rgb(0,0,0,0.5));
+  height: 38px;
+  min-width: 38px;
+  object-fit: scale-down;
+  filter: drop-shadow(0px 2px 5px rgb(0, 0, 0, 0.5));
 }
 
 .reward-container {
-    max-height: 38px;
-    position:relative;
-    transition: 0.3s;
+  max-height: 38px;
+  position: relative;
+  transition: 0.3s;
 }
 
 .reward-container.spice-accumulation:hover {
-    filter: brightness(1.2) saturate(1.2);
-    transform: scale(1.1);
+  filter: brightness(1.2) saturate(1.2);
+  transform: scale(1.1);
 }
 
 .reward-amount {
-    position: absolute;
-    top: 0px;
-    left: 0;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.costs-area{
-    position: absolute;
-    top: 0;
-    left: -20px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    font-size: 20px;
-    color: white;
+.costs-area {
+  position: absolute;
+  top: 0;
+  left: -20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 20px;
+  color: white;
 }
 
 .costs {
-    height: 30px;
-    min-width: 35px;
-    object-fit: scale-down;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  height: 30px;
+  min-width: 35px;
+  object-fit: scale-down;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .costs.positive,
 .reward.positive {
-    filter: drop-shadow(0px 2px 6px #5ff15f);
+  filter: drop-shadow(0px 2px 6px #5ff15f);
 }
 
 .costs.negative,
 .reward.negative {
-    filter: drop-shadow(0px 2px 6px #f15f5f);
+  filter: drop-shadow(0px 2px 6px #f15f5f);
 }
 
 .costs.faction {
-    max-width: 30px;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.9)
+  max-width: 30px;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.9);
 }
 
 .costs-container {
-    height: 30px;
-    position:relative;
+  height: 30px;
+  position: relative;
 }
 
 .costs-amount {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
-
 .costs-amount.faction {
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 1));
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 1));
 }
 
 .actionTypeIcon {
-    position: absolute;
-    top: 3px;
-    left: 4px;
-    width: 26px;
-    height: 22px;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
-    z-index: 1;
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 26px;
+  height: 22px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+  z-index: 1;
 }
 
 .player-marker {
-    position: absolute;
-    top: 40px;
-    left: 30px;
-    width: 90px;
-    height: 90px;
-    z-index: 2;
-    filter: drop-shadow(0px 0px 5px black);
-    animation-name: marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 5s;
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    transition: 0.3s;
+  position: absolute;
+  top: 40px;
+  left: 30px;
+  width: 90px;
+  height: 90px;
+  z-index: 2;
+  filter: drop-shadow(0px 0px 5px black);
+  animation-name: marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 5s;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  transition: 0.3s;
 }
 
 .player-marker:hover {
-    filter: drop-shadow(0px 0px 5px black) brightness(1.25);
+  filter: drop-shadow(0px 0px 5px black) brightness(1.25);
 }
 
 .player-marker.small {
-    width: 30px;
-    height: 30px;
-    left: 110px;
+  width: 30px;
+  height: 30px;
+  left: 110px;
 }
 
 .spice-accumulation-area {
-    position: absolute;
-    top: 42px;
-    left: 130px;
-    z-index: 2;
+  position: absolute;
+  top: 42px;
+  left: 130px;
+  z-index: 2;
 }
 
 .spice-accumulation-marker {
-    width: 10px;
-    height: 10px;
-    background-color: #d68100;
-    border-radius: 50%;
-    border: 1px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
+  width: 10px;
+  height: 10px;
+  background-color: #d68100;
+  border-radius: 50%;
+  border: 1px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
 }
 
 .high-council-indicator-area {
-    position: absolute;
-    top: 40px;
-    right: 36px;
-    z-index: 2;
-    display: flex;
-    width: 131px;
-    justify-content: space-between;
-    align-content: space-between;
-    flex-wrap: wrap;
-    gap: 22px;
+  position: absolute;
+  top: 40px;
+  right: 36px;
+  z-index: 2;
+  display: flex;
+  width: 131px;
+  justify-content: space-between;
+  align-content: space-between;
+  flex-wrap: wrap;
+  gap: 22px;
 }
 
 .high-council-marker {
-    width: 33px;
-    height: 33px;
-    border-radius: 50%;
-    border: 2px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+  border: 2px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
 }
 
 .pointer {
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
 }
 
 .conversions-container {
-    display: flex;
-    gap: 6px;
+  display: flex;
+  gap: 6px;
 }
 
 .conversion-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .field-history-button {
-    position: absolute;
-    z-index: 2;
-    left: 15px;
-    bottom: -25px;
+  position: absolute;
+  z-index: 2;
+  left: 15px;
+  bottom: -25px;
 }
 
 .reward {
-    animation-name: resource-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 6.0s;
-    animation-iteration-count: infinite;
+  animation-name: resource-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
 }
 
 .reward.troop {
-    animation-name: troop-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 12.0s;
-    animation-iteration-count: infinite;
+  animation-name: troop-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 12s;
+  animation-iteration-count: infinite;
 }
 
 .reward.intrigue {
-    animation-name: intrigue-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 6.0s;
-    animation-iteration-count: infinite;
+  animation-name: intrigue-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
 }
 
 .reward.focus {
-    animation-name: focus-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 4.0s;
-    animation-iteration-count: infinite;
+  animation-name: focus-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
 }
 
 .reward.solari {
-    animation-name: solari-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 6.0s;
-    animation-iteration-count: infinite;
+  animation-name: solari-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
 }
 
 .reward.spice {
-    animation-name: spice-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 12.0s;
-    animation-iteration-count: infinite;
+  animation-name: spice-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 12s;
+  animation-iteration-count: infinite;
 }
 
 .reward.water {
-    animation-name: water-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 6.0s;
-    animation-iteration-count: infinite;
+  animation-name: water-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
 }
 
 .reward.combat {
-    animation-name: combat-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 6.0s;
-    animation-iteration-count: infinite;
+  animation-name: combat-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
 }
-
-@keyframes marker-anim {
-    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
-    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(2.5)}
-    40%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
-    70%  {filter:  drop-shadow(0px 0px 5px black) brightness(2.5)}
-    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
-  }
-
-  @keyframes resource-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-    25%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(0.95) brightness(0.95)};
-    50%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)};
-    75%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.05) brightness(1.05)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-  }
-
-  @keyframes water-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-    25%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.15) brightness(1.05)};
-    50%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(0.9)};
-    75%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.25) brightness(1.05)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-  }
-
-  @keyframes spice-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) hue-rotate(0deg)}
-    25%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5))  hue-rotate(-5deg)};
-    50%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5))  hue-rotate(5deg)};
-    75%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5))  hue-rotate(-10deg)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) hue-rotate(0deg)}
-  }
-
-  @keyframes intrigue-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-    90%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.5) brightness(0.75)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-  }
-
-  @keyframes troop-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-    25%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(0.66) brightness(1.2)};
-    50%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)};
-    75%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(0.75) brightness(1.1)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) saturate(1.0) brightness(1.0)}
-  }
-
-  @keyframes focus-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)}
-    25%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5))  brightness(0.85)};
-    50%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5))  brightness(1.0)};
-    75%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5))  brightness(1.3)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)}
-  }
-
-  @keyframes solari-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)}
-    96%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.033)};
-    98%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.075)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)}
-  }
-
-  @keyframes combat-anim {
-    0%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)}
-    92%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.95)};
-    94%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.05)};
-    96%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)};
-    98%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.15)};
-    100%  {filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(1.0)}
-  }
-  

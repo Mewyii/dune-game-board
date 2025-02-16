@@ -48,8 +48,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/military_camp.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
-      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari}{resource:tech}{resource:helper-trade}{resource:troop}{resource:troop}',
+      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:solari}{resource:tech}{resource:helper-trade}{resource:troop}{resource:troop}',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -85,15 +85,15 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Heavy Lasguns',
-      de: 'Schwere Lasguns',
+      en: 'Spice transport modules',
+      de: 'Spice-Transportmodule',
     },
     costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    imageUrl: '/assets/images/action-backgrounds/industry.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>When you send a dreadnought into the conflict:</b><br>Each opponent loses a unit.',
-      de: '<b>Wenn du ein Schlachtschiff in den Konflikt einsetzt:</b><br>Jeder Gegner verliert eine Einheit.',
+      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a dreadnought to gain {resource:spice}.',
+      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein Schlachtschiff zurück, um {resource:spice} zu erhalten.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
@@ -110,7 +110,7 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
       de: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
-      fontSize: 'small',
+      fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
       0.3 + 0.02 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.bene,
@@ -134,6 +134,21 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Heavy Lasguns',
+      de: 'Schwere Lasguns',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    buyEffects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent loses a troop for each of your dreadnoughts in combat.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner verliert einen Trupp für jedes deiner Schlachtschiffe im Konflikt.',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+  },
+  {
+    name: {
       en: 'Enhanced Sandcrawler Engines',
       de: 'Verbesserte Sandcrawler- Antriebe',
     },
@@ -141,9 +156,9 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>When you place an agent on a {faction:spice}-field:</b><br>{resource:spice}',
-      de: '<b>Wenn du einen Agenten auf einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
-      fontSize: 'medium',
+      en: '<b>When you place an agent <br>on a {faction:spice}-field:</b><br>{resource:spice}',
+      de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
+      fontSize: 'small',
     },
     gameModifiers: {
       fieldReward: [
@@ -159,21 +174,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Experimental Shields',
-      de: 'Experimentelle Schilde',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/shields.png',
-    buyEffects: [],
-    customEffect: {
-      en: 'Your dreadnoughts have no timeout after a conflict.',
-      de: 'Deine Schlachtschiffe müssen nach einem Konflikt keine Runde aussetzen.',
-      fontSize: 'medium',
-    },
-    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
-  },
-  {
-    name: {
       en: 'Trade Port',
       de: 'Handelshafen',
     },
@@ -182,8 +182,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/port.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -269,6 +269,21 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Shieldbreakers',
+      de: 'Schildbrecher',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/shields.png',
+    buyEffects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your dreadnoughts in conflict: An opponent of your choice loses a dreadnought from is garrison{resource:helper-or}Every opponent {resource:sword}{resource:sword}{resource:sword}',
+      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner Schlachtschiffe im Konflikt: Ein Gegner deiner Wahl verliert ein Schlachtschiff aus seiner Garnison{resource:helper-or}Alle Gegner verlieren {resource:sword}{resource:sword}{resource:sword}',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+  },
+  {
+    name: {
       en: 'Botanical Research Station',
       de: 'Botanische Forschungsstation',
     },
@@ -277,8 +292,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/research_station.png',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>

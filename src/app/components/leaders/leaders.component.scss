@@ -1,378 +1,466 @@
 .leader-board {
-    background: rgba(64, 51, 40, 0.8);
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 900px;
-    gap: 32px;
-    justify-content: center;
-    align-items: center;
-    color: #fffcfa;
-    padding: 32px;
-    box-sizing: border-box;
-    border-radius: 5px;
+  background: rgba(64, 51, 40, 0.8);
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 900px;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+  color: #fffcfa;
+  padding: 32px;
+  box-sizing: border-box;
+  border-radius: 5px;
 }
 
 .leader-viewer {
-    position: relative;
-    height: 415px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
+  position: relative;
+  height: 415px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
 }
 
 .leader-list {
-    background: rgba(64, 51, 40, 0.8);
-    display: grid;
-    grid-gap: 16px;
-    grid-area: 3 3;
-    grid-template-columns: 1fr 1fr;
-    padding: 16px;
+  background: rgba(64, 51, 40, 0.8);
+  display: grid;
+  grid-gap: 16px;
+  grid-area: 3 3;
+  grid-template-columns: 1fr 1fr;
+  padding: 16px;
 }
 
 dune-leader-card {
-    animation-name: leader-glow-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 15s;
-    animation-iteration-count: infinite;
+  animation-name: leader-glow-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 15s;
+  animation-iteration-count: infinite;
 }
 
 .leader-card.full-picture {
-    width: 600px;
-    height: 410px;
-    position: relative;
-    background-size: cover;
-    border: none;
-    border-radius: 20px;
-    background-color: black;
-    background-position: center;
-    animation-name: leader-glow-anim-old;
-    animation-timing-function: ease-in-out;
-    animation-duration: 15s;
-    animation-iteration-count: infinite;
+  width: 600px;
+  height: 410px;
+  position: relative;
+  background-size: cover;
+  border: none;
+  border-radius: 20px;
+  background-color: black;
+  background-position: center;
+  animation-name: leader-glow-anim-old;
+  animation-timing-function: ease-in-out;
+  animation-duration: 15s;
+  animation-iteration-count: infinite;
 }
 
 .control-button {
-    height: 160px;
-    width: 40px;
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    background: #00000075;
-    transition:0.3s;
-    z-index: 1;
+  height: 160px;
+  width: 40px;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #00000075;
+  transition: 0.3s;
+  z-index: 1;
 }
 
 .control-button:hover {
-    background: #2c2c2c73;
+  background: #2c2c2c73;
 }
 
-
-
 .control-bar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 32px;
-    flex-wrap: wrap;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
 }
 
 .control-bar.center {
-    justify-content: center;
+  justify-content: center;
 }
 
 .line {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 64px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 64px;
 }
 
 .info-container {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    justify-content: center;
-    flex: 1 1;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1;
 }
 
 .info-container.left {
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 
 .info-container.right {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .info-container.vertical {
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
 }
 
 .info-container.vertical.column {
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 
 .info-container.half-width {
-    width: 50%;
+  width: 50%;
 }
 
 .agents-icon-container {
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
 }
 
 .agents-icon {
-    height: 50px;
-    width: 32px;
-    margin: 0px 11px;
-    mask-image: url(/assets/images/reward-markers/marker_agent.png);
-    mask-size: contain;
-    mask-mode: luminance;
-    mask-repeat: no-repeat;
-    background-color: #bebebe;
+  height: 50px;
+  width: 32px;
+  margin: 0px 11px;
+  mask-image: url(/assets/images/reward-markers/marker_agent.png);
+  mask-size: contain;
+  mask-mode: luminance;
+  mask-repeat: no-repeat;
+  background-color: #bebebe;
 }
 
 .tech-agent-marker {
-    box-sizing: border-box;
-    width: 45px;
-    height: 45px;
-    margin: 5px;
-    border-radius: 25%;
-    border: 5px solid rgb(51, 42, 26);
-    background-color: rgb(148, 136, 0);
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
-    left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+  box-sizing: border-box;
+  width: 45px;
+  height: 45px;
+  margin: 5px;
+  border-radius: 25%;
+  border: 5px solid rgb(51, 42, 26);
+  background-color: rgb(148, 136, 0);
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  left: calc(50% - 13px);
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
 }
 
 .tech-background-image {
-    background-image: url(/assets/images/faction-symbols/Symbol_Ix.png);
-    background-size: contain;
-    opacity: 0.33;
-    width: auto;
-    height: 100%;
-    margin: 2px;
-    background-repeat: no-repeat;
-    box-sizing: border-box;
+  background-image: url(/assets/images/faction-symbols/Symbol_Ix.png);
+  background-size: contain;
+  opacity: 0.33;
+  width: auto;
+  height: 100%;
+  margin: 2px;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
 }
 
 .focus-marker {
-    box-sizing: border-box;
-    width: 41px;
-    height: 41px;
-    margin: 7px;
-    border-radius: 50%;
-    border: 4px solid white;
-    background-color: rgb(255 255 255 / 20%);
-    filter: drop-shadow(0px 0px 5px white);
-    left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+  box-sizing: border-box;
+  width: 41px;
+  height: 41px;
+  margin: 7px;
+  border-radius: 50%;
+  border: 4px solid white;
+  background-color: rgb(255 255 255 / 20%);
+  filter: drop-shadow(0px 0px 5px white);
+  left: calc(50% - 13px);
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
 }
 
 .units-control-bar {
-    display:flex;
-    align-items: center;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .troop-marker {
-    width: 25px;
-    height: 25px;
-    border-radius: 25%;
-    border: 1px solid #2f2112;
-    border-right: 4px solid #2f2112;
-    border-top: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
+  width: 25px;
+  height: 25px;
+  border-radius: 25%;
+  border: 1px solid #2f2112;
+  border-right: 4px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  left: calc(50% - 13px);
 }
 
 .ship-marker {
-    width: 25px;
-    height: 25px;
-    border-radius: 25%;
-    border: 1px solid #2f2112;
-    border-right: 4px solid #2f2112;
-    border-top: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
-    transform: rotateX(45deg) rotateZ(45deg);
+  width: 25px;
+  height: 25px;
+  border-radius: 25%;
+  border: 1px solid #2f2112;
+  border-right: 4px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  left: calc(50% - 13px);
+  transform: rotateX(45deg) rotateZ(45deg);
 }
 
-
 .resource-container {
-    display:flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .resource-display {
-    max-height: 55px;
-    position: relative;
-    color: white;
-    transition: .3s;
-    user-select: none;
+  max-height: 55px;
+  position: relative;
+  color: white;
+  transition: 0.3s;
+  user-select: none;
 }
 
 .resource-display:hover {
-    filter: brightness(1.2) saturate(1.2);
-    transform: scale(1.1);
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
+  filter: brightness(1.2) saturate(1.2);
+  transform: scale(1.1);
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
 }
 
 .resource {
-    height: 55px;
-    width: 55px;
-    object-fit: scale-down;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  height: 55px;
+  width: 55px;
+  object-fit: scale-down;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .resource.dark {
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.8);
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.8);
 }
 
 .resource.intrigue {
-    filter: brightness(0.5);
+  filter: brightness(0.5);
 }
 
 .resource-amount {
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
 }
 
 .resource-amount.on-background {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .house-card-container {
-    position: relative;
+  position: relative;
 }
 
 .house-level-up-button {
-    position: absolute;
-    bottom: calc(50% + 26px);
-    right: -14px;
+  position: absolute;
+  bottom: calc(50% + 26px);
+  right: -14px;
 }
 
 .house-level-down-button {
-    position: absolute;
-    bottom: calc(50% - 26px);
-    right: -14px;
+  position: absolute;
+  bottom: calc(50% - 26px);
+  right: -14px;
 }
 
 .house-marker {
-    position: absolute;
-    bottom: 0px;
-    right: 44px;
-    width: 30px;
-    height: 30px;
-    border-radius: 25%;
-    border: 1px solid #2f2112;
-    border-right: 4px solid #2f2112;
-    border-top: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    box-sizing: border-box;
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+  position: absolute;
+  bottom: 0px;
+  right: 44px;
+  width: 30px;
+  height: 30px;
+  border-radius: 25%;
+  border: 1px solid #2f2112;
+  border-right: 4px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  box-sizing: border-box;
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
 }
 
 .tech-tile-container {
-    position: relative;
+  position: relative;
 }
-
 
 dune-tech-tile,
 .tech-tile {
-    display: block;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    transition: .66s;
+  display: block;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  transition: 0.66s;
 }
 
 .tech-tile {
-    width: 250px;
-    height: 165px;
-    background-position: center;
-    background-size: cover;
-    border-radius: 12px;
+  width: 250px;
+  height: 165px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 12px;
 }
 
 dune-tech-tile:hover,
 dune-tech-tile.active,
 .tech-tile:hover,
 .tech-tile.active {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    transform: scale(1.5);
-    z-index: 3;
-    position: relative;
+  filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  transform: scale(1.5);
+  z-index: 3;
+  position: relative;
 }
 
 .tech-tile-action-container {
-    width: 100%;
-    position: absolute;
-    top: 55px;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    z-index: 3;
+  width: 100%;
+  position: absolute;
+  top: 55px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 3;
 }
 
 .leader-action-container {
-    width: 50%;
-    position: absolute;
-    top: calc(50% - 55px / 2);
-    left: 25%;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    z-index: 2;
+  width: 50%;
+  position: absolute;
+  top: calc(50% - 55px / 2);
+  left: 25%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 2;
+}
+
+.resource.troop {
+  animation-name: troop-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 12s;
+  animation-iteration-count: infinite;
+}
+
+.resource.intrigue {
+  animation-name: intrigue-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+}
+
+.resource.focus {
+  animation-name: focus-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}
+
+.resource.solari {
+  animation-name: solari-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+}
+
+.resource.spice {
+  animation-name: spice-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 12s;
+  animation-iteration-count: infinite;
+}
+
+.resource.water {
+  animation-name: water-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
 }
 
 @keyframes unit-marker-anim {
-    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
-    20%  {filter:  drop-shadow(0px 0px 5px black) brightness(2.0)}
-    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
+  0% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
   }
+  20% {
+    filter: drop-shadow(0px 0px 5px black) brightness(2);
+  }
+  100% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
+}
 
 @keyframes leader-glow-anim {
-    0%  {filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));}
-    12%  {filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));}
-    25%  {filter: drop-shadow(0px 0px 4px rgb(255, 123, 0));}
-    37%  {filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));}
-    50%  {filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));}
-    62%  {filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));}
-    75%  {filter: drop-shadow(0px 0px 4px rgb(255, 123, 0));}
-    87%  {filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));}
-    90%  {filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));}
-    92%  {filter: drop-shadow(0px 0px 12px rgb(255, 193, 160));}
-    100%  {filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));}
+  0% {
+    filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));
+  }
+  12% {
+    filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));
+  }
+  25% {
+    filter: drop-shadow(0px 0px 4px rgb(255, 123, 0));
+  }
+  37% {
+    filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));
+  }
+  50% {
+    filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));
+  }
+  62% {
+    filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));
+  }
+  75% {
+    filter: drop-shadow(0px 0px 4px rgb(255, 123, 0));
+  }
+  87% {
+    filter: drop-shadow(0px 0px 12px rgb(255, 123, 0));
+  }
+  90% {
+    filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));
+  }
+  92% {
+    filter: drop-shadow(0px 0px 12px rgb(255, 193, 160));
+  }
+  100% {
+    filter: drop-shadow(0px 0px 6px rgb(255, 123, 0));
+  }
 }
 
 @keyframes leader-glow-anim-old {
-    0%  {box-shadow: 0px 0px 25px -3px rgb(255, 123, 0)}
-    12%  {box-shadow: 0px 0px 35px -3px rgb(255, 123, 0)}
-    25%  {box-shadow: 0px 0px 20px -3px rgb(255, 123, 0)}
-    37%  {box-shadow: 0px 0px 35px -3px rgb(255, 123, 0)}
-    50%  {box-shadow: 0px 0px 25px -3px rgb(255, 123, 0)}
-    62%  {box-shadow: 0px 0px 35px -3px rgb(255, 123, 0)}
-    75%  {box-shadow: 0px 0px 20px -3px rgb(255, 123, 0)}
-    87%  {box-shadow: 0px 0px 35px -3px rgb(255, 123, 0)}
-    90%  {box-shadow: 0px 0px 25px -3px rgb(255, 123, 0)}
-    92%  {box-shadow: 0px 0px 40px -3px rgb(255, 195, 138)}
-    100%  {box-shadow: 0px 0px 25px -3px rgb(255, 123, 0)}
+  0% {
+    box-shadow: 0px 0px 25px -3px rgb(255, 123, 0);
+  }
+  12% {
+    box-shadow: 0px 0px 35px -3px rgb(255, 123, 0);
+  }
+  25% {
+    box-shadow: 0px 0px 20px -3px rgb(255, 123, 0);
+  }
+  37% {
+    box-shadow: 0px 0px 35px -3px rgb(255, 123, 0);
+  }
+  50% {
+    box-shadow: 0px 0px 25px -3px rgb(255, 123, 0);
+  }
+  62% {
+    box-shadow: 0px 0px 35px -3px rgb(255, 123, 0);
+  }
+  75% {
+    box-shadow: 0px 0px 20px -3px rgb(255, 123, 0);
+  }
+  87% {
+    box-shadow: 0px 0px 35px -3px rgb(255, 123, 0);
+  }
+  90% {
+    box-shadow: 0px 0px 25px -3px rgb(255, 123, 0);
+  }
+  92% {
+    box-shadow: 0px 0px 40px -3px rgb(255, 195, 138);
+  }
+  100% {
+    box-shadow: 0px 0px 25px -3px rgb(255, 123, 0);
+  }
 }

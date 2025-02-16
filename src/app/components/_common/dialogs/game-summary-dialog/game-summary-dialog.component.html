@@ -26,9 +26,9 @@
         <div
           class="point-marker font-text"
           [style.backgroundColor]="playerSummary.playerColor"
-          *ngFor="let roundNumber of playerSummary.victoryPointsGained"
+          *ngFor="let details of playerSummary.victoryPointsGained"
         >
-          <div>{{ roundNumber }}</div>
+          <div [matTooltip]="details.source">{{ details.round }}{{ details.source?.substring(0, 1) }}</div>
         </div>
       </div>
     </div>
@@ -38,9 +38,9 @@
         <div
           class="point-marker font-text"
           [style.backgroundColor]="playerSummary.playerColor"
-          *ngFor="let roundNumber of playerSummary.victoryPointsLost"
+          *ngFor="let details of playerSummary.victoryPointsLost"
         >
-          <div>{{ roundNumber }}</div>
+          <div [matTooltip]="details.source">{{ details.round }}{{ details.source?.substring(0, 1) }}</div>
         </div>
       </div>
     </div>

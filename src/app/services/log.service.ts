@@ -67,10 +67,12 @@ export interface PlayerIntrigueStealLog extends LogBase {
 
 export interface PlayerVictoryPointGainLog extends LogBase {
   type: 'victory-point-gain';
+  source?: string;
 }
 
 export interface PlayerVictoryPointLossLog extends LogBase {
   type: 'victory-point-loss';
+  source?: string;
 }
 
 export interface PlayerCombatWinLog extends LogBase {
@@ -226,12 +228,18 @@ export class LoggingService {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'location-control-loss', roundNumber }]);
   }
 
-  logPlayerGainedVictoryPoint(playerId: number, roundNumber: number) {
-    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'victory-point-gain', roundNumber }]);
+  logPlayerGainedVictoryPoint(playerId: number, roundNumber: number, source?: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'victory-point-gain', roundNumber, source },
+    ]);
   }
 
-  logPlayerLostVictoryPoint(playerId: number, roundNumber: number) {
-    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'victory-point-loss', roundNumber }]);
+  logPlayerLostVictoryPoint(playerId: number, roundNumber: number, source?: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'victory-point-loss', roundNumber, source },
+    ]);
   }
 
   public printLogs() {

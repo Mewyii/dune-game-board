@@ -16,8 +16,8 @@ interface PlayerSummary {
   playerColor: string;
   playerRank: number;
   victoryPoints: number;
-  victoryPointsGained: (number | undefined)[];
-  victoryPointsLost: (number | undefined)[];
+  victoryPointsGained: { round?: number; source?: string }[];
+  victoryPointsLost: { round?: number; source?: string }[];
   combatsWon: (number | undefined)[];
   locationControlsGained: (number | undefined)[];
   locationControlsLost: (number | undefined)[];
@@ -58,8 +58,12 @@ export class GameSummaryDialogComponent implements OnInit {
 
       const playerLogs = this.loggingService.getPlayerActionLog(player.id);
       const victoryPoints = playerScores.find((x) => x.playerId === player.id)?.victoryPoints ?? 0;
-      const victoryPointsGained = playerLogs.filter((x) => x.type === 'victory-point-gain').map((x) => x.roundNumber);
-      const victoryPointsLost = playerLogs.filter((x) => x.type === 'victory-point-loss').map((x) => x.roundNumber);
+      const victoryPointsGained = playerLogs
+        .filter((x) => x.type === 'victory-point-gain')
+        .map((x: any) => ({ round: x.roundNumber, source: x.source }));
+      const victoryPointsLost = playerLogs
+        .filter((x) => x.type === 'victory-point-loss')
+        .map((x: any) => ({ round: x.roundNumber, source: x.source }));
       const boughtCards = playerLogs.filter((x) => x.type === 'card-buy').length;
       const trashedCards = playerLogs.filter((x) => x.type === 'card-trash').length;
       const playedIntrigues = playerLogs.filter((x) => x.type === 'intrigue-play').length;

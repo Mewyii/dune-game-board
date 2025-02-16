@@ -83,7 +83,7 @@
             (click)="onAddFocusTokenClicked(currentPlayer.id)"
             (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
           >
-            <img class="resource dark" [src]="getRewardTypePath('focus')" />
+            <img class="resource focus dark" [src]="getRewardTypePath('focus')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.focusTokens }}</span>
             </div>
@@ -119,13 +119,13 @@
         </div>
       </div>
       <div class="info-container">
-        <div class="resource-container" *ngFor="let resource of currentPlayer.resources">
+        <div [class]="'resource-container'" *ngFor="let resource of currentPlayer.resources">
           <div
             class="resource-display"
             (click)="onAddRewardClicked(currentPlayer, resource.type)"
             (contextmenu)="onRemoveResourceClicked(currentPlayer, resource.type)"
           >
-            <img class="resource" [src]="getRewardTypePath(resource.type)" />
+            <img [class]="'resource ' + resource.type" [src]="getRewardTypePath(resource.type)" />
             <div class="resource-amount on-background">
               <span>{{ resource.amount }}</span>
             </div>

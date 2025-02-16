@@ -226,7 +226,7 @@ export class PlayerScoreManager {
     this.playerAlliancesSubject.next(playerAlliances);
 
     this.addPlayerScore(playerId, 'victoryPoints', 1, roundNumber);
-    this.loggingService.logPlayerGainedVictoryPoint(playerId, 1);
+    this.loggingService.logPlayerGainedVictoryPoint(playerId, roundNumber, 'Alliance');
   }
 
   public removeAllianceFromPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
@@ -241,7 +241,7 @@ export class PlayerScoreManager {
       this.playerAlliancesSubject.next(playerAlliances);
 
       this.removePlayerScore(playerId, 'victoryPoints', 1, roundNumber);
-      this.loggingService.logPlayerLostVictoryPoint(playerId, 1);
+      this.loggingService.logPlayerLostVictoryPoint(playerId, roundNumber, 'Alliance');
     }
   }
 
