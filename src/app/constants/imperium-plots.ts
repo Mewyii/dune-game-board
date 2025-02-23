@@ -3,12 +3,12 @@ import { ImperiumPlot } from '../models/imperium-plot';
 export const imperiumPlots: ImperiumPlot[] = [
   {
     name: {
-      en: 'Spice-Monopoly',
+      en: 'Control over the Spice',
       de: 'Kontrolle über das Spice',
     },
     persuasionCosts: 2,
     imageUrl: '/assets/images/action-backgrounds/spice.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you have more spice than each opponent: {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du mehr Spice besitzt als jeder Gegner: {resource:victory-point}',
@@ -17,15 +17,29 @@ export const imperiumPlots: ImperiumPlot[] = [
   },
   {
     name: {
-      en: 'Drying out the supply',
+      en: 'Control over the supply routes',
       de: 'Kontrolle der Versorgungsrouten',
     },
     persuasionCosts: 2,
     imageUrl: '/assets/images/action-backgrounds/troops.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you control <b>3</b> or more locations: {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du <b>3</b> oder mehr Orte kontrollierst: {resource:victory-point}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Military supremacy',
+      de: 'Militärische Vorherrschaft',
+    },
+    persuasionCosts: 2,
+    imageUrl: '/assets/images/action-backgrounds/troops_3.png',
+    cardAmount: 1,
+    plotDescription: {
+      en: '<b>Endgame</b>: <br>If you have more troops than each opponent: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du mehr Truppen besitzt als jeder Gegner: {resource:victory-point}',
       fontSize: 'small',
     },
   },
@@ -36,24 +50,10 @@ export const imperiumPlots: ImperiumPlot[] = [
     },
     persuasionCosts: 3,
     imageUrl: '/assets/images/action-backgrounds/spaceship_landing.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you have <b>4</b> or more tech tiles: {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du <b>4</b> oder mehr Tech-Plättchen besitzt: {resource:victory-point}',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Eyes everywhere',
-      de: 'Augen überall',
-    },
-    persuasionCosts: 3,
-    imageUrl: '/assets/images/action-backgrounds/fremen_warriors_2.png',
-    cardAmount: 2,
-    plotDescription: {
-      en: '<b>Endgame</b>: <br>If you have <b>15</b> or more cards in your deck: {resource:victory-point}',
-      de: '<b>Finale</b>: <br>Wenn du <b>15</b> oder mehr Karten in deinem Deck hast: {resource:victory-point}',
       fontSize: 'small',
     },
   },
@@ -64,7 +64,7 @@ export const imperiumPlots: ImperiumPlot[] = [
     },
     persuasionCosts: 3,
     imageUrl: '/assets/images/action-backgrounds/lighter_2.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you have <b>1</b> or less influence on 3 or more Faction tracks: {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du <b>1</b> oder weniger Einfluss bei 3 oder mehr Einflussleisten hast: {resource:victory-point}',
@@ -73,26 +73,26 @@ export const imperiumPlots: ImperiumPlot[] = [
   },
   {
     name: {
-      en: 'CHOAM Directorship',
-      de: 'MAFEA-Vorsitz',
+      en: 'Shift in power',
+      de: 'Verschiebung der Macht',
     },
-    persuasionCosts: 2,
-    imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
-    cardAmount: 2,
+    persuasionCosts: 3,
+    imageUrl: '/assets/images/action-backgrounds/ceremony_4.png',
+    cardAmount: 1,
     plotDescription: {
-      en: '<b>Endgame</b>: <br>If you have more solari than each opponent: {resource:victory-point}',
-      de: '<b>Finale</b>: <br>Wenn du mehr Solari besitzt als jeder Gegner: {resource:victory-point}',
+      en: '<b>Endgame</b>: <br>If you have a high council seat, <b>1</b> or more {resource:dreadnought} and <b>1</b> or more faction alliances: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du einen Sitz im hohen Rat, <b>1</b> oder mehr {resource:dreadnought} und <b>1</b> oder mehr Fraktions-Allianzen hast: {resource:victory-point}',
       fontSize: 'small',
     },
   },
   {
     name: {
-      en: 'Landsraads leadership',
+      en: 'Landsraad leadership',
       de: 'Landsraad-Führerschaft',
     },
     persuasionCosts: 4,
     imageUrl: '/assets/images/action-backgrounds/signet_ring.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you have a high council seat and <b>2</b> or less influence on 4 Faction tracks: {resource:victory-point} {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du einen Sitz im hohen Rat und <b>2</b> oder weniger Einfluss bei 4 Einflussleisten hast: {resource:victory-point} {resource:victory-point}',
@@ -101,28 +101,28 @@ export const imperiumPlots: ImperiumPlot[] = [
   },
   {
     name: {
-      en: 'Trade blockade',
-      de: 'Handelsblockade',
+      en: 'Eyes everywhere',
+      de: 'Augen überall',
     },
-    faction: 'guild',
-    persuasionCosts: 3,
-    imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
-    cardAmount: 2,
+    faction: 'bene',
+    persuasionCosts: 2,
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_15.png',
+    cardAmount: 1,
     plotDescription: {
-      en: '<b>Endgame</b>: <br>If you have <b>2</b> dreadnoughts and <b>4</b> or more {faction:guild}-influence: {resource:victory-point}',
-      de: '<b>Finale</b>: <br>Wenn du <b>2</b> Schlachtschiffe und <b>4</b> oder mehr {faction:guild}-Einfluss hast: {resource:victory-point}',
+      en: '<b>Endgame</b>: <br>If you have <b>15</b> or more cards in your deck and <b>4</b> or more {faction:bene}-influence: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du <b>15</b> oder mehr Karten in deinem Deck und <b>2</b> oder mehr {faction:bene}-Einfluss hast: {resource:victory-point}',
       fontSize: 'small',
     },
   },
   {
     name: {
-      en: 'Control over religion',
+      en: 'Control over the religion',
       de: 'Kontrolle über die Religion',
     },
     faction: 'bene',
     persuasionCosts: 3,
     imageUrl: '/assets/images/action-backgrounds/sayadina.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you control <b>2</b> or more locations and have <b>4</b> or more {faction:bene}-influence: {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du <b>2</b> oder mehr Orte kontrollierst und <b>4</b> oder mehr {faction:bene}-Einfluss hast: {resource:victory-point}',
@@ -131,16 +131,16 @@ export const imperiumPlots: ImperiumPlot[] = [
   },
   {
     name: {
-      en: 'Desert power',
-      de: 'Wüstenmacht',
+      en: 'CHOAM Directorship',
+      de: 'MAFEA-Vorsitz',
     },
-    faction: 'fremen',
-    persuasionCosts: 3,
-    imageUrl: '/assets/images/action-backgrounds/worm_assault.png',
-    cardAmount: 2,
+    faction: 'emperor',
+    persuasionCosts: 2,
+    imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
+    cardAmount: 1,
     plotDescription: {
-      en: '<b>Endgame</b>: <br>If you have <b>3</b> or more troops and <b>4</b> or more {faction:fremen}-influence: {resource:victory-point}',
-      de: '<b>Finale</b>: <br>Wenn du <b>3</b> oder mehr Truppen und <b>4</b> oder mehr {faction:fremen}-Einfluss hast: {resource:victory-point}',
+      en: '<b>Endgame</b>: <br>If you have <b>9</b> or more solari and <b>2</b> or more {faction:emperor}-influence: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du <b>9</b> oder mehr Solari und <b>2</b> oder mehr {faction:emperor}-Einfluss hast: {resource:victory-point}',
       fontSize: 'small',
     },
   },
@@ -152,7 +152,7 @@ export const imperiumPlots: ImperiumPlot[] = [
     faction: 'emperor',
     persuasionCosts: 3,
     imageUrl: '/assets/images/action-backgrounds/emperor_3.png',
-    cardAmount: 2,
+    cardAmount: 1,
     plotDescription: {
       en: '<b>Endgame</b>: <br>If you have <b>2</b> or more intrigues and <b>4</b> or more {faction:emperor}-influence: {resource:victory-point}',
       de: '<b>Finale</b>: <br>Wenn du <b>2</b> oder mehr Intrigen und <b>4</b> oder mehr {faction:emperor}-Einfluss hast: {resource:victory-point}',
@@ -161,15 +161,61 @@ export const imperiumPlots: ImperiumPlot[] = [
   },
   {
     name: {
-      en: 'Shift in power',
-      de: 'Verschiebung der Macht',
+      en: 'Greening of Arrakis',
+      de: 'Ergrünung von Arrakis',
     },
-    persuasionCosts: 3,
-    imageUrl: '/assets/images/action-backgrounds/ceremony_4.png',
-    cardAmount: 2,
+    faction: 'fremen',
+    persuasionCosts: 2,
+    imageUrl: '/assets/images/action-backgrounds/ecological_testing_station.png',
+    cardAmount: 1,
     plotDescription: {
-      en: '<b>Endgame</b>: <br>If you have a high council seat, <b>1</b> or more dreadnoughts and <b>1</b> or more faction alliances: {resource:victory-point}',
-      de: '<b>Finale</b>: <br>Wenn du einen Sitz im hohen Rat, <b>1</b> oder mehr Schlachtschiffe und <b>1</b> oder mehr Fraktions-Allianzen hast: {resource:victory-point}',
+      en: '<b>Endgame</b>: <br>If you have <b>3</b> or more water and <b>2</b> or more {faction:fremen}-influence: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du <b>3</b> oder mehr Wasser und <b>2</b> oder mehr {faction:fremen}-Einfluss hast: {resource:victory-point}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Desert power',
+      de: 'Wüstenmacht',
+    },
+    faction: 'fremen',
+    persuasionCosts: 3,
+    imageUrl: '/assets/images/action-backgrounds/worm_assault.png',
+    cardAmount: 1,
+    plotDescription: {
+      en: '<b>Endgame</b>: <br>If you have <b>3</b> or more troops and <b>4</b> or more {faction:fremen}-influence: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du <b>3</b> oder mehr Truppen und <b>4</b> oder mehr {faction:fremen}-Einfluss hast: {resource:victory-point}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Navigators Network',
+      de: 'Netzwerk der Navigatoren',
+    },
+    faction: 'guild',
+    persuasionCosts: 2,
+    imageUrl: '/assets/images/action-backgrounds/highliner_2.png',
+    cardAmount: 1,
+    plotDescription: {
+      en: '<b>Endgame</b>: <br>If you have <b>6</b> or more spice and <b>2</b> or more {faction:guild}-influence: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du <b>6</b> oder mehr Spice und <b>2</b> oder mehr {faction:guild}-Einfluss hast: {resource:victory-point}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Trade blockade',
+      de: 'Handelsblockade',
+    },
+    faction: 'guild',
+    persuasionCosts: 3,
+    imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
+    cardAmount: 1,
+    plotDescription: {
+      en: '<b>Endgame</b>: <br>If you have <b>2</b> {resource:dreadnought} and <b>4</b> or more {faction:guild}-influence: {resource:victory-point}',
+      de: '<b>Finale</b>: <br>Wenn du <b>2</b> {resource:dreadnought} und <b>4</b> oder mehr {faction:guild}-Einfluss hast: {resource:victory-point}',
       fontSize: 'small',
     },
   },

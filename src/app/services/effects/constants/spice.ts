@@ -13,7 +13,7 @@ export const spice: IParticlesProps = {
       },
     },
     color: {
-      value: ['#d17c1a', '#e97c00', '#e0a25c', '#ebd8c2', '#94632b'],
+      value: ['#d17c1a', '#e97c00', '#e0a25c', '#ebc79d', '#b5762d'],
     },
     opacity: {
       value: { min: 0.1, max: 0.5 },

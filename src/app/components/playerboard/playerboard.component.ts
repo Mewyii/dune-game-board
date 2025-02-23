@@ -166,7 +166,7 @@ export class PlayerboardComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
-      // this.gameManager.finishGame();
+      this.gameManager.finishGame();
     });
   }
 

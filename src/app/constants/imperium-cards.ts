@@ -994,8 +994,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customAgentEffect: {
-      en: 'Each opponent retreats a battleship or loses <b>1</b> troop.',
-      de: 'Jeder Gegner zieht ein Schlachtschiff zurück oder verliert <b>1</b> Trupp.',
+      en: 'Each opponent retreats a {resource:dreadnought} or loses <b>1</b> troop.',
+      de: 'Jeder Gegner zieht ein {resource:dreadnought} zurück oder verliert <b>1</b> Trupp.',
       fontSize: 'small',
     },
   },

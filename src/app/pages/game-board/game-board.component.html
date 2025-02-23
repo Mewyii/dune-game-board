@@ -28,6 +28,12 @@
       [options]="sand"
       [particlesInit]="initSand"
     ></ng-particles>
+    <ng-particles
+      *ngIf="viewInitialized && mode === 'game'"
+      [id]="'spiceGlitter'"
+      [options]="spiceGlitter"
+      [particlesInit]="initSpiceGlitter"
+    ></ng-particles>
     <ng-container *ngFor="let faction of gameContent.factions">
       <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
     </ng-container>

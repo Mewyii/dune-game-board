@@ -665,8 +665,8 @@ export const leaders: Leader[] = [
       de: 'Loyalität Inspirierend',
     },
     signetDescription: {
-      en: 'Place {resource:signet-token} on this location. If there are 2 or more {resource:signet-token}, take control of it.',
-      de: 'Lege {resource:signet-token} auf diesen Ort. Sind dort 2 oder mehr {resource:signet-token}, übernimm die Kontrolle über ihn.',
+      en: 'Place {resource:signet-token} on a location that has one of your agents on it. If there are 2 or more {resource:signet-token}, take control of it.',
+      de: 'Lege {resource:signet-token} auf einen Ort mit einem deiner Agenten. Sind dort 2 oder mehr {resource:signet-token}, übernimm die Kontrolle über ihn.',
     },
     imageUrl: '/assets/images/leaders/leto.png',
     type: 'new',
@@ -703,8 +703,8 @@ export const leaders: Leader[] = [
       de: 'Unterdrückung',
     },
     signetDescription: {
-      en: '{resource:solari}{resource:helper-or}Receive the bonus of all locations under your control.',
-      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus aller Orte unter deiner Kontrolle.',
+      en: '{resource:solari}{resource:helper-or}Receive the bonus of up to 3 locations under your control.',
+      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus von bis zu 3 Orten unter deiner Kontrolle.',
     },
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',

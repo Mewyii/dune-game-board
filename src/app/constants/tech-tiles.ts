@@ -92,8 +92,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/industry.png',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a dreadnought to gain {resource:spice}.',
-      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein Schlachtschiff zurück, um {resource:spice} zu erhalten.',
+      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:spice}.',
+      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
@@ -108,8 +108,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
+      en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
+      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -141,8 +141,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/lasgun.png',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent loses a troop for each of your dreadnoughts in combat.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner verliert einen Trupp für jedes deiner Schlachtschiffe im Konflikt.',
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent loses a troop for each of your {resource:dreadnought} in combat.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner verliert einen Trupp für jedes deiner {resource:dreadnought} im Konflikt.',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
@@ -276,8 +276,8 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/shields.png',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your dreadnoughts in conflict: An opponent of your choice loses a dreadnought from is garrison{resource:helper-or}Every opponent {resource:sword}{resource:sword}{resource:sword}',
-      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner Schlachtschiffe im Konflikt: Ein Gegner deiner Wahl verliert ein Schlachtschiff aus seiner Garnison{resource:helper-or}Alle Gegner verlieren {resource:sword}{resource:sword}{resource:sword}',
+      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your {resource:dreadnought} in conflict: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
+      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner {resource:dreadnought} im Konflikt: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,

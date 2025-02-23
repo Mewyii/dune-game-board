@@ -43,7 +43,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
     },
-    ownerReward: { type: 'spice' },
+    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(77, 61, 48)',
@@ -57,7 +57,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'solari', amount: 2 }, { type: 'foldspace' }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/troops.png',
     },
-    ownerReward: { type: 'solari', amount: 2 },
+    ownerReward: { type: 'tech' },
   },
   {
     color: 'rgb(77, 61, 48)',

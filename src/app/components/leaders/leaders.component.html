@@ -44,7 +44,7 @@
       [color]="'accent'"
       (click)="onRevealCardsClicked(currentPlayer.id)"
       matTooltip="Reveal"
-      [disabled]="currentPlayer.turnState !== 'agent-placement'"
+      [disabled]="currentPlayer.turnState !== 'agent-placement' || (turnInfos && turnInfos.fieldsVisitedThisTurn.length > 0)"
     >
       <mat-icon>hdr_strong</mat-icon>
     </button>

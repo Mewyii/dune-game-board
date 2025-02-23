@@ -351,7 +351,18 @@ export class LeadersComponent implements OnInit {
 
   public onRevealCardsClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
-    this.gameManager.setPlayerRevealTurn(playerId);
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Revealing Cards',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.gameManager.setPlayerRevealTurn(playerId);
+      }
+    });
   }
 
   public onEndTurnClicked(playerId: number) {

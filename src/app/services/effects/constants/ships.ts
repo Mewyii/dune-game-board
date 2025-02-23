@@ -13,11 +13,11 @@ export const ships: IParticlesProps = {
       value: { r: { min: 25, max: 125 }, b: { min: 25, max: 125 }, g: { min: 25, max: 125 } },
     },
     opacity: {
-      value: 0.66,
+      value: 0.8,
       anim: {
         enable: true,
         speed: { min: 0.25, max: 0.75 },
-        opacity_min: 0.33,
+        opacity_min: 0.4,
         sync: false,
       },
     },
@@ -25,7 +25,7 @@ export const ships: IParticlesProps = {
       type: 'circle',
     },
     size: {
-      value: { min: 1.5, max: 3 },
+      value: { min: 2.5, max: 5 },
     },
     line_linked: {
       enable: false,

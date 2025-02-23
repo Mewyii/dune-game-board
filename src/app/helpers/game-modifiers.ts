@@ -32,7 +32,7 @@ export function getFactionInfluenceModifier(
   if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
   } else {
-    return playerGameModifier.factionInfluence.find((x) => x.factionType);
+    return playerGameModifier.factionInfluence.find((x) => x.factionType === factionType);
   }
 }
 

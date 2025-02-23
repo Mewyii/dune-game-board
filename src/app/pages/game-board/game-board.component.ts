@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { AppMode, GameContent, Settings } from 'src/app/constants/board-settings';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
+import { spiceGlitter } from 'src/app/services/effects/constants/spice-glitter';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Engine } from 'tsparticles-engine';
@@ -20,6 +21,7 @@ export class GameBoardComponent implements AfterViewInit {
   public dust = dust;
   public sand = sand;
   public ships = ships;
+  public spiceGlitter = spiceGlitter;
 
   public viewInitialized = false;
 
@@ -54,6 +56,10 @@ export class GameBoardComponent implements AfterViewInit {
   }
 
   async initSand(engine: Engine) {
+    await loadSlim(engine);
+  }
+
+  async initSpiceGlitter(engine: Engine) {
     await loadSlim(engine);
   }
 }
