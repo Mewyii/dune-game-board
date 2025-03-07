@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          source: 'dist/dune_imperium/*'
+          source: 'dist/dune-game-board/*'
           target: '/kunden/homepages/35/d992320858/htdocs/dune_imperium'
 
       - name: Move files from browser folder to dune_imperium
@@ -49,4 +49,4 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           script: |
-            mv /kunden/homepages/35/d992320858/htdocs/dune_imperium/dist/dune_imperium/browser/* /kunden/homepages/35/d992320858/htdocs/dune_imperium/
+            mv /kunden/homepages/35/d992320858/htdocs/dune_imperium/dist/dune-game-board/browser/* /kunden/homepages/35/d992320858/htdocs/dune_imperium/
