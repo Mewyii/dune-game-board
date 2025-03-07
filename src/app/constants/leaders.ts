@@ -754,29 +754,26 @@ export const leaders: Leader[] = [
       de: 'Haus Moritani',
     },
     passiveName: {
-      en: 'Pariah warlord',
-      de: 'Geächtete Kriegsherrin',
+      en: 'Forced recruitment',
+      de: 'Zwangsrekrutierung',
     },
     passiveDescription: {
-      en: '{faction:landsraad} board spaces cost an additional {resource:solari}.<br><br><b>Reveal turn:</b> {resource:persuasion;amount:4}{resource:helper-trade}{resource:troop}{resource:troop}',
-      de: '{faction:landsraad}-Felder Kosten zusätzlich {resource:solari}.<br><br><b>Aufdeckzug:</b> {resource:persuasion;amount:4}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '<b>Reveal turn:</b> Trash any amount of times one of your {resource:signet-token} to gain {resource:troop}.',
+      de: '<b>Aufdeckzug:</b> Entsorge beliebig viele deiner {resource:signet-token}, um dafür jeweils {resource:troop} zu erhalten.',
     },
     signetName: {
-      en: 'Pillage',
-      de: 'Plündern',
+      en: 'Labour camps',
+      de: 'Arbeitslager',
     },
     signetDescription: {
-      en: 'If you have troops in combat: {resource:spice}',
-      de: 'Wenn du Truppen in der Schlacht hast: {resource:spice}',
+      en: 'Place {resource:signet-token} on a board space that has one of your agents on it. If you have troops in combat: {resource:spice}',
+      de: 'Lege {resource:signet-token} auf ein {faction:town}-Feld mit einem deiner Agenten. Wenn ein Spieler dort einen Agent platziert, erhältst du und der Spieler jeweils {resource:solari}.',
     },
 
     imageUrl: '/assets/images/leaders/yuna_2.png',
     type: 'new',
     playableByAI: true,
-    gameModifiers: {
-      fieldCost: [{ id: 'yuna-warlord', actionType: 'landsraad', costType: 'solari', amount: 1 }],
-    },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [{ type: 'solari' }, { type: 'troop' }],
   },
   {
     name: {
@@ -800,8 +797,8 @@ export const leaders: Leader[] = [
       de: 'Erpressung',
     },
     signetDescription: {
-      en: 'For each board space that has one of your agents and an enemy agent on it: {resource:solari;amount:2}{resource:helper-or}{resource:spice}',
-      de: 'Für jedes Feld, auf dem sich einer deiner Agenten und ein gegnerischer Agent befindet: {resource:solari;amount:2}{resource:helper-or}{resource:spice}',
+      en: 'For each board space that has one of your agents and an enemy agent on it: {resource:spice}',
+      de: 'Für jedes Feld, auf dem sich einer deiner Agenten und ein gegnerischer Agent befindet: {resource:spice}',
     },
     imageUrl: '/assets/images/leaders/dara.png',
     type: 'new',
@@ -838,8 +835,8 @@ export const leaders: Leader[] = [
       de: 'Schmuggler-Verbindungen',
     },
     signetDescription: {
-      en: '{resource:spice}',
-      de: '{resource:spice}',
+      en: '{resource:solari;amount:2}',
+      de: '{resource:solari;amount:2}',
     },
     imageUrl: '/assets/images/leaders/memnon.png',
     type: 'new',

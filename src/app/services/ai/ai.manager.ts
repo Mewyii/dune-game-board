@@ -1361,9 +1361,14 @@ export class AIManager {
       case 'signet-ring':
         return value;
       case 'location-control':
-        return gameState.freeLocations.length > 0 || gameState.playerCombatUnits.troopsInGarrison > 0
-          ? 6 + 0.25 * (gameState.currentRound - 1)
-          : 0;
+        const controllableFreeLocations = gameState.playerAgentsOnFields.some((x) =>
+          gameState.freeLocations.some((y) => x.fieldId === y)
+        );
+        const controllableEnemyLocations =
+          gameState.playerAgentsOnFields.some((x) => gameState.occupiedLocations.some((y) => x.fieldId === y)) &&
+          gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
+
+        return controllableFreeLocations || controllableEnemyLocations ? value : value / 3;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':

@@ -9,14 +9,11 @@
       {{ t.translateLS(card.name).toUpperCase() }}
     </span>
   </div>
-  <div class="card-img" [style.background-image]="'url(' + card.imageUrl + ')'">
-    <!-- <div
-      class="faction-container"
-      *ngIf="card.faction"
-      [style.background]="'linear-gradient(90deg, ' + getFactionColor(card.faction) + ', rgb(90 90 90 / 50%))'"
-    >
-      {{ getFactionName(card.faction) }}
-    </div> -->
+  <div
+    class="card-img"
+    [style.background-image]="'url(' + card.imageUrl + ')'"
+    [style.background-position]="card.imagePosition ?? 'center'"
+  >
     <div
       class="card-agent-effect-container font-text"
       *ngIf="card.customEffect || (card.effects && card.effects.length > 0)"

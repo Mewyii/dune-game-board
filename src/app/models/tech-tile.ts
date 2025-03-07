@@ -14,6 +14,7 @@ export interface TechTileCard {
   customEffect?: LanguageStringAndFontSize;
   buyEffects?: Reward[];
   imageUrl?: string;
+  imagePosition?: 'top' | 'center' | 'bottom';
   aiEvaluation: (player: Player, gameState: GameState) => number;
   gameModifiers?: GameModifiers;
 }

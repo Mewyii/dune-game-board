@@ -43,7 +43,14 @@ export class ImperiumRowComponent implements OnInit {
 
   ngOnInit(): void {
     this.cardsService.imperiumRow$.subscribe((imperiumCards) => {
-      this.imperiumRowCards = imperiumCards;
+      const currentRound = this.gameManager.currentRound;
+      this.imperiumRowCards = imperiumCards.map((x) => {
+        if (x.type === 'plot') {
+          return { ...x, persuasionCosts: currentRound };
+        } else {
+          return x;
+        }
+      });
     });
 
     this.playerManager.players$.subscribe((players) => {
@@ -81,6 +88,16 @@ export class ImperiumRowComponent implements OnInit {
       if (playerTurnInfo) {
         this.factionRecruitment = playerTurnInfo.factionRecruitment;
       }
+    });
+
+    this.gameManager.currentRound$.subscribe((round) => {
+      this.imperiumRowCards = this.cardsService.imperiumRow.map((x) => {
+        if (x.type === 'plot') {
+          return { ...x, persuasionCosts: round };
+        } else {
+          return x;
+        }
+      });
     });
   }
 

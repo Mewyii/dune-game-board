@@ -29,7 +29,7 @@
     <div>
       <b>Locations</b> now have give the controlling player resources (on the left side) at their reveal turn. They also give
       the controlling player a victory point as long as they control the location (similar to the alliance tokens). If a an
-      already occupied location gets taken over by another player, this player has to pay 2 troops from his garrison to take
+      already occupied location gets taken over by another player, this player has to pay 1 troop from his garrison to take
       it over.
     </div>
     <br />
@@ -59,7 +59,10 @@
     ></div>
     <br />
     <div
-      [innerHTML]="'{resource:location-control}: You gain control of one location of your choice.' | duneSymbols : '24px'"
+      [innerHTML]="
+        '{resource:location-control}: You gain control of a location that has one of your agents on it.'
+          | duneSymbols : '24px'
+      "
     ></div>
     <br />
     <div [innerHTML]="'{resource:trash-self}: Immediately trash the played card.' | duneSymbols : '24px'"></div>

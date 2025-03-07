@@ -1,42 +1,42 @@
 .available-techs {
-    position: absolute;
-    top: 425px;
-    right: 52px;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 11px;
-    z-index: 2;
+  position: absolute;
+  top: 423px;
+  right: 49px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 7px;
+  z-index: 2;
 }
 
 .tech-tile-container {
-    position: relative;
+  position: relative;
 }
 
 dune-tech-tile {
-    display: block;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    transition: .8s;
-    transform: scale(0.97);
-    user-select: none;
+  display: block;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  transition: 0.8s;
+  transform: scale(0.97);
+  user-select: none;
 }
 
 dune-tech-tile:hover,
 dune-tech-tile.active {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    transform: scale(1.5);
-    z-index: 3;
-    position: relative;
+  filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  transform: scale(1.5);
+  z-index: 3;
+  position: relative;
 }
 
 .tech-tile-action-container {
-    width: 100%;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    z-index: 3;
+  width: 100%;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 3;
 }

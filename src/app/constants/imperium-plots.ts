@@ -6,7 +6,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Control over the Spice',
       de: 'Kontrolle über das Spice',
     },
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/spice.png',
     cardAmount: 1,
     plotDescription: {
@@ -20,7 +20,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Control over the supply routes',
       de: 'Kontrolle der Versorgungsrouten',
     },
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/troops.png',
     cardAmount: 1,
     plotDescription: {
@@ -34,7 +34,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Military supremacy',
       de: 'Militärische Vorherrschaft',
     },
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/troops_3.png',
     cardAmount: 1,
     plotDescription: {
@@ -48,7 +48,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Alliance with IX',
       de: 'Bündnis mit IX',
     },
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/spaceship_landing.png',
     cardAmount: 1,
     plotDescription: {
@@ -62,7 +62,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Against the old order',
       de: 'Gegen die alte Ordnung',
     },
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/lighter_2.png',
     cardAmount: 1,
     plotDescription: {
@@ -76,7 +76,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Shift in power',
       de: 'Verschiebung der Macht',
     },
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/ceremony_4.png',
     cardAmount: 1,
     plotDescription: {
@@ -90,7 +90,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       en: 'Landsraad leadership',
       de: 'Landsraad-Führerschaft',
     },
-    persuasionCosts: 4,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/signet_ring.png',
     cardAmount: 1,
     plotDescription: {
@@ -105,7 +105,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Augen überall',
     },
     faction: 'bene',
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_15.png',
     cardAmount: 1,
     plotDescription: {
@@ -120,7 +120,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Kontrolle über die Religion',
     },
     faction: 'bene',
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/sayadina.png',
     cardAmount: 1,
     plotDescription: {
@@ -135,7 +135,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'MAFEA-Vorsitz',
     },
     faction: 'emperor',
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
     cardAmount: 1,
     plotDescription: {
@@ -150,7 +150,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Favorit des Imperators',
     },
     faction: 'emperor',
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/emperor_3.png',
     cardAmount: 1,
     plotDescription: {
@@ -165,7 +165,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Ergrünung von Arrakis',
     },
     faction: 'fremen',
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/ecological_testing_station.png',
     cardAmount: 1,
     plotDescription: {
@@ -180,7 +180,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Wüstenmacht',
     },
     faction: 'fremen',
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/worm_assault.png',
     cardAmount: 1,
     plotDescription: {
@@ -195,7 +195,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Netzwerk der Navigatoren',
     },
     faction: 'guild',
-    persuasionCosts: 2,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/highliner_2.png',
     cardAmount: 1,
     plotDescription: {
@@ -210,7 +210,7 @@ export const imperiumPlots: ImperiumPlot[] = [
       de: 'Handelsblockade',
     },
     faction: 'guild',
-    persuasionCosts: 3,
+    persuasionCosts: 0,
     imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
     cardAmount: 1,
     plotDescription: {

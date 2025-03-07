@@ -4,10 +4,11 @@ export const techTiles: TechTileCard[] = [
   {
     name: {
       en: 'Maula Pistol Works',
-      de: 'Maula Pistolen Werk',
+      de: 'Maula-Pistolen Werk',
     },
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
+    imagePosition: 'top',
     buyEffects: [],
     customEffect: {
       en: '<b>Reveal turn</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} for each of your troops in conflict',
@@ -25,6 +26,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'guild',
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'foldspace',
@@ -46,6 +48,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'emperor',
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/military_camp.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari}{resource:tech}{resource:helper-trade}{resource:troop}{resource:troop}',
@@ -65,6 +68,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/carryall.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: 'Access to {faction:spice} board spaces costs {resource:water} less.',
@@ -88,12 +92,29 @@ export const techTiles: TechTileCard[] = [
       en: 'Spice transport modules',
       de: 'Spice-Transportmodule',
     },
-    costs: 2,
+    costs: 1,
     imageUrl: '/assets/images/action-backgrounds/industry.png',
+    imagePosition: 'top',
     buyEffects: [],
     customEffect: {
       en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:spice}.',
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
+      fontSize: 'medium',
+    },
+    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+  },
+  {
+    name: {
+      en: 'Spy modules',
+      de: 'Spionagemodule',
+    },
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:tech}.',
+      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
@@ -106,10 +127,11 @@ export const techTiles: TechTileCard[] = [
     faction: 'bene',
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
-      de: '{resource:tech-tile-flip}{resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
+      en: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
+      de: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
       fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
@@ -123,6 +145,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'fremen',
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/windtraps.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
@@ -139,11 +162,12 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent loses a troop for each of your {resource:dreadnought} in combat.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner verliert einen Trupp für jedes deiner {resource:dreadnought} im Konflikt.',
-      fontSize: 'small',
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent {resource:card-discard} for each of your {resource:dreadnought} in combat.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner {resource:card-discard} für jedes deiner {resource:dreadnought} im Konflikt.',
+      fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
   },
@@ -154,6 +178,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: '<b>When you place an agent <br>on a {faction:spice}-field:</b><br>{resource:spice}',
@@ -180,6 +205,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'guild',
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/port.png',
+    imagePosition: 'bottom',
     buyEffects: [],
     customEffect: {
       en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
@@ -196,6 +222,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/ornithopter.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: '<b>When you place an agent:</b> <br>{resource:tech-tile-flip}{resource:helper-trade}Keep the played card in your hand.',
@@ -211,10 +238,11 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/assault.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Choose any board space. It is blocked this round.<br><br><b>Reveal turn</b>: <br>{resource:sword}{resource:sword}',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Wähle ein beliebiges Feld. Es ist für diese Runde blockiert.<br><br><b>Aufdeckzug</b>: <br>{resource:sword}{resource:sword}',
+      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Choose any board space. It is blocked this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
+      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Wähle ein beliebiges Feld. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
       fontSize: 'small',
     },
     aiEvaluation: (player, gameState) =>
@@ -227,6 +255,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/infrastructure.png',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'faction-influence-down-choice',
@@ -250,6 +279,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/port_2.png',
+    imagePosition: 'center',
     buyEffects: [],
     effects: [
       {
@@ -274,6 +304,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/shields.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your {resource:dreadnought} in conflict: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
@@ -290,6 +321,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'fremen',
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/research_station.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
@@ -307,6 +339,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'emperor',
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'troop',
@@ -328,6 +361,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'bene',
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
+    imagePosition: 'bottom',
     buyEffects: [],
     customEffect: {
       en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}<br><br><b>Reveal turn:</b> <br>{faction:bene} -Connections<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
@@ -344,6 +378,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_5.png',
+    imagePosition: 'center',
     buyEffects: [],
     effects: [
       {
@@ -377,6 +412,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/spice_port.png',
+    imagePosition: 'center',
     buyEffects: [],
     customEffect: {
       en: 'All {resource:spice} -costs are reduced by 1 (min. 1).',
@@ -409,6 +445,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/ornithopters.png',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'troop',
@@ -441,6 +478,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/dreadnought.png',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'troop',
@@ -465,6 +503,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'fremen',
     costs: 5,
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'faction-influence-up-fremen',
@@ -492,6 +531,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'guild',
     costs: 5,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'faction-influence-up-guild',
@@ -518,6 +558,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'emperor',
     costs: 5,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_12.png',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'faction-influence-up-emperor',
@@ -547,6 +588,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'bene',
     costs: 5,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'faction-influence-up-bene',
@@ -573,6 +615,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 6,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'troop',
@@ -580,14 +623,11 @@ export const techTiles: TechTileCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'combat',
-      },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}<br><br><b>When you win a conflict:</b><br> {resource:location-control}',
-      de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}<br><br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
-      fontSize: 'small',
+      en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}{resource:helper-or}{resource:persuasion;amount:2}<br><br><b>When you win a conflict:</b><br> {resource:location-control}',
+      de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}{resource:helper-or}{resource:persuasion;amount:2}<br><br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
+      fontSize: 'medium',
     },
     aiEvaluation: (player, gameState) =>
       0.3 +
@@ -602,6 +642,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 8,
     imageUrl: '/assets/images/action-backgrounds/lighter.png',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'troop',
@@ -623,5 +664,53 @@ export const techTiles: TechTileCard[] = [
       0.025 * gameState.playerScore.emperor +
       0.025 * gameState.playerScore.fremen +
       0.025 * gameState.playerScore.guild,
+  },
+  {
+    name: {
+      en: 'Landing Ships',
+      de: 'Landungsschiffe',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
+    imagePosition: 'bottom',
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    customEffect: {
+      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:combat}{resource:sword}',
+      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:combat}{resource:sword}',
+      fontSize: 'medium',
+    },
+    aiEvaluation: (player, gameState) =>
+      0.3 +
+      0.02 * (gameState.currentRound - 1) +
+      0.05 * gameState.playerDreadnoughtCount +
+      0.02 * gameState.playerCardsRewards.sword +
+      0.025 * gameState.playerCardsRewards.tech,
+  },
+  {
+    name: {
+      en: 'Planetary Surveillance',
+      de: 'Planetare Überwachung',
+    },
+    costs: 6,
+    imageUrl: '/assets/images/action-backgrounds/surveillance.png',
+    imagePosition: 'top',
+    buyEffects: [
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    customEffect: {
+      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:card-draw}<br><br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
+      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:card-draw}<br><br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
+      fontSize: 'small',
+    },
+    aiEvaluation: (player, gameState) => 0.75 - 0.05 * (gameState.currentRound - 1),
   },
 ];

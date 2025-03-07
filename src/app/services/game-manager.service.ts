@@ -236,6 +236,10 @@ export class GameManager {
     return this.playerManager.getPlayer(this.activePlayerId);
   }
 
+  public getPlayerAgentsOnFields(playerId: number) {
+    return cloneDeep(this.agentsOnFieldsSubject.value.filter((x) => x.playerId === playerId));
+  }
+
   public getAvailableAgentCountForPlayer(playerId: number) {
     return this.availablePlayerAgents.find((x) => x.playerId === playerId)?.agentAmount ?? 0;
   }
@@ -886,26 +890,29 @@ export class GameManager {
       return;
     }
 
-    const playerLocation = this.locationManager.getPlayerLocation(locationId);
-    if (playerLocation) {
-      if (playerLocation.playerId !== playerId) {
-        const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
-        if (this.playerCanPayCosts(playerId, [{ type: 'loose-troop', amount: locationTakeoverTroopCosts }])) {
-          this.audioManager.playSound('location-control');
-          this.locationManager.setLocationOwner(locationId, playerId);
-          this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, 'Location');
-          this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
-          this.addRewardToPlayer(player, { type: 'victory-point' }, undefined, 'Location');
+    const playerAgentsOnFields = this.getPlayerAgentsOnFields(playerId).map((x) => x.fieldId);
+    if (playerAgentsOnFields.some((x) => x === locationId)) {
+      const playerLocation = this.locationManager.getPlayerLocation(locationId);
+      if (playerLocation) {
+        if (playerLocation.playerId !== playerId) {
+          const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
+          if (this.playerCanPayCosts(playerId, [{ type: 'loose-troop', amount: locationTakeoverTroopCosts }])) {
+            this.audioManager.playSound('location-control');
+            this.locationManager.setLocationOwner(locationId, playerId);
+            this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, 'Location');
+            this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
+            this.addRewardToPlayer(player, { type: 'victory-point' }, undefined, 'Location');
 
-          this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound);
-          this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
+            this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound);
+            this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
+          }
         }
+      } else {
+        this.audioManager.playSound('location-control');
+        this.locationManager.setLocationOwner(locationId, playerId);
+        this.addRewardToPlayer(player, { type: 'victory-point' }, undefined, 'Location');
+        this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
       }
-    } else {
-      this.audioManager.playSound('location-control');
-      this.locationManager.setLocationOwner(locationId, playerId);
-      this.addRewardToPlayer(player, { type: 'victory-point' }, undefined, 'Location');
-      this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
     }
   }
 
@@ -1541,10 +1548,14 @@ export class GameManager {
   }
 
   private aiControlLocation(player: Player, gameState: GameState) {
-    const boardLocations = this.settingsService.getBoardLocations();
+    const playerAgentsOnFields = this.getPlayerAgentsOnFields(player.id).map((x) => x.fieldId);
+
+    const possibleBoardLocations = this.settingsService
+      .getBoardLocations()
+      .filter((x) => playerAgentsOnFields.includes(x.actionField.title.en));
     const playerLocations = this.locationManager.getPlayerLocations(player.id);
     const enemyLocations = this.locationManager.getEnemyLocations(player.id);
-    const freeLocations = boardLocations.filter(
+    const freeLocations = possibleBoardLocations.filter(
       (x) =>
         !playerLocations.some((y) => x.actionField.title.en === y.locationId) &&
         !enemyLocations.some((y) => x.actionField.title.en === y.locationId)
@@ -1560,11 +1571,11 @@ export class GameManager {
 
       if (playerTroopAmount >= locationTakeoverTroopCosts && stealChance > Math.random()) {
         if (highPriorityLocations.length > 0) {
-          controllableLocations = boardLocations.filter((x) =>
+          controllableLocations = possibleBoardLocations.filter((x) =>
             highPriorityLocations.some((y) => x.actionField.title.en === y.locationId)
           );
         } else {
-          controllableLocations = boardLocations.filter(
+          controllableLocations = possibleBoardLocations.filter(
             (x) => !playerLocations.some((y) => x.actionField.title.en === y.locationId)
           );
         }

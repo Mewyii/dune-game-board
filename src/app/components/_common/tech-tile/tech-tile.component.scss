@@ -1,209 +1,209 @@
-
 .tech-tile {
-    height: 165px;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    border-radius: 8px;
-    position: relative;
-    color: white;
-    background-color: #101010;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    box-sizing: border-box;
+  height: 170px;
+  width: 255px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  border-radius: 8px;
+  position: relative;
+  color: white;
+  background-color: #101010;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  box-sizing: border-box;
 }
 
 .card-header {
-    padding-top: 6px;
-    padding-bottom: 6px;
-    padding-left: 8px;
-    padding-right: 32px;
-    min-height: 20px;
-    border-radius: 8px 8px 0px 0px;
-    color: rgb(230, 239, 255);
-    background-image: url(/assets/images/tech-tile-backgrounds/heading.png);
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
+  padding-right: 46px;
+  min-height: 22px;
+  border-radius: 8px 8px 0px 0px;
+  color: rgb(230, 239, 255);
+  background-image: url(/assets/images/tech-tile-backgrounds/heading.png);
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
 }
 
 .card-img {
-    flex: 1 1;
-    background-size: cover;
-    border-top: 2px solid rgb(179, 207, 255);
-    position: relative;
-    background-position: top;
-    border-radius: 0px 0px 8px 8px;
+  flex: 1 1;
+  background-size: cover;
+  border-top: 2px solid rgb(179, 207, 255);
+  position: relative;
+  background-position: top;
+  border-radius: 0px 0px 8px 8px;
 }
 
 .card-title {
-    padding: 4px;
-    font-size: large;
-    text-align: center;
+  padding: 4px;
+  font-size: large;
+  text-align: center;
 }
 
 .card-agent-effect-container {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    font-weight: initial;
-    font-size: small;
-    white-space: pre-wrap;
-    min-height: 30px;
-    padding: 8px;
-    background-size: cover;
-    background: linear-gradient(rgba(152, 176, 217, 0.9), 5%, rgba(27, 31, 38, 0.45), 95%, rgba(26, 34, 51, 0.9));
-    box-sizing: border-box;
-    border-radius: 0px 0px 8px 8px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  font-weight: initial;
+  font-size: small;
+  white-space: pre-wrap;
+  min-height: 30px;
+  padding: 8px;
+  background-size: cover;
+  background: linear-gradient(rgba(152, 176, 217, 0.9), 5%, rgba(27, 31, 38, 0.45), 95%, rgba(26, 34, 51, 0.9));
+  box-sizing: border-box;
+  border-radius: 0px 0px 8px 8px;
 }
 
 .card-agent-effect-separator {
-    min-height: 2px;
-    background-image: url(/assets/images/card-backgrounds/agent-effect.png);
-    background-size: 100%;
+  min-height: 2px;
+  background-image: url(/assets/images/card-backgrounds/agent-effect.png);
+  background-size: 100%;
 }
 
 .card-reveal-effect-custom,
 .card-agent-effect-custom {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width:100%;
-    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, .66));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.66));
 }
 
 .card-reveal-effect-custom-text,
 .card-agent-effect-custom-text {
-    text-align: center;
-    line-height: 1.3;
+  text-align: center;
+  line-height: 1.3;
 }
 
 .card-reveal-effect-custom-text.medium,
 .card-agent-effect-custom-text.medium {
-    font-size: medium;
+  font-size: medium;
 }
 
 .card-reveal-effect,
 .card-agent-effect {
-    width: 100%;
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
 }
 
 .card-aquire-costs-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: url(/assets/images/reward-markers/marker_spice.png);
-    width: 44px;
-    height: 44px;
-    background-size: 55px;
-    background-position-y: bottom;
-    background-repeat: no-repeat;
-    border-radius: 0px 8px 0px 0px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url(/assets/images/reward-markers/marker_tech.png);
+  width: 46px;
+  height: 48px;
+  background-size: 56px;
+  background-position-y: bottom;
+  background-repeat: no-repeat;
+  border-radius: 0px 8px 0px 0px;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.8));
 }
 
 .card-aquire-costs {
-    font-size: 26px;
-    padding-top: 4px;
-    padding-left: 19px;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 1));
+  font-size: 26px;
+  padding-top: 1px;
+  padding-left: 20px;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 1));
 }
 
 .reward-container {
-    position: relative;
-    width: min-content;
+  position: relative;
+  width: min-content;
 }
 
 .reward {
-    height: 28px;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  height: 28px;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .reward-amount {
-    position: absolute;
-    top: 4px;
-    right: 0px;
-    width: 100%;
-    color: white;
-    font-size: large;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
-    text-align: center;
+  position: absolute;
+  top: 4px;
+  right: 0px;
+  width: 100%;
+  color: white;
+  font-size: large;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  text-align: center;
 }
 
 .field-access-container {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 4px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .field-access {
-    height: 24px;
-    width: 34px;
-    background-image: url(/assets/images/card-backgrounds/field-access.png);
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 24px;
+  width: 34px;
+  background-image: url(/assets/images/card-backgrounds/field-access.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .field-access-image {
-    max-width: 26px;
-    height: 18px;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 1));
+  max-width: 26px;
+  height: 18px;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 1));
 }
 
 .faction-container {
-    width: -webkit-fill-available;
-    padding: 1px 32px 2px 4px;
-    font-size: xx-small;
-    text-wrap: nowrap;
-    clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
+  width: -webkit-fill-available;
+  padding: 1px 32px 2px 4px;
+  font-size: xx-small;
+  text-wrap: nowrap;
+  clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
 }
 
 .card-aquire-effect-container {
-    position: absolute;
-    top: 14px;
-    right: 3px;
-    width: 28px;
-    padding-top: 29px;
-    font-family: "Roboto", "Verdana";
-    font-weight: initial;
-    font-size: small;
-    color: #e1e1e1;
-    white-space: pre-wrap;
-    background-image: url(/assets/images/tech-tile-backgrounds/aquire-effect.png);
-    background-size: cover;
-    background-position-y: bottom;
+  position: absolute;
+  top: 20px;
+  right: 4px;
+  width: min-content;
+  padding-top: 29px;
+  font-family: 'Roboto', 'Verdana';
+  font-weight: initial;
+  font-size: small;
+  color: #e1e1e1;
+  white-space: pre-wrap;
+  background-image: url(/assets/images/tech-tile-backgrounds/aquire-effect.png);
+  background-size: cover;
+  background-position-y: bottom;
 }
 
 .faction-type-icon {
-    min-width: 18px;
-    height: 14px;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
-    z-index: 1;
+  min-width: 18px;
+  height: 14px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5));
+  z-index: 1;
 }
 
 .card-aquire-costs-container.negative {
-    color: #f15f5f;
+  color: #f15f5f;
 }
 
 .card-aquire-costs-container.positive {
-    color: #5ff15f;
+  color: #5ff15f;
 }
