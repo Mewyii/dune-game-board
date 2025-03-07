@@ -50,4 +50,4 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           script: |
             rsync -av --remove-source-files /kunden/homepages/35/d992320858/htdocs/dune_imperium/dist/dune-game-board/browser/ /kunden/homepages/35/d992320858/htdocs/dune_imperium/
-            rm -r /kunden/homepages/35/d992320858/htdocs/dune_imperium/dist/dune-game-board/browser/
+            rm -r /kunden/homepages/35/d992320858/htdocs/dune_imperium/dist/
