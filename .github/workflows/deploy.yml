@@ -1,0 +1,52 @@
+name: 🚀 Deploy Angular to IONOS (SFTP)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    name: 🏗️ Build & Deploy Angular
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: 📦 Install Dependencies
+        run: npm ci
+      - name: 🔧 Build Angular App
+        run: npm run build -- --configuration=production
+
+      - name: 🗑️ Clean old files on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          script: |
+            find /kunden/homepages/35/d992320858/htdocs/dune_imperium/ -type f ! -name '.htaccess' -exec rm -f {} \;
+
+      - name: 📤 Deploy via SFTP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
+          source: 'dist/dune_imperium/*'
+          target: '/kunden/homepages/35/d992320858/htdocs/dune_imperium'
+
+      - name: Move files from browser folder to dune_imperium
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          script: |
+            mv /kunden/homepages/35/d992320858/htdocs/dune_imperium/dist/dune_imperium/browser/* /kunden/homepages/35/d992320858/htdocs/dune_imperium/
