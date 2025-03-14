@@ -957,12 +957,16 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/pilot.png',
     cardAmount: 2,
     buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'tech',
-      },
-    ],
+    customAgentEffect: {
+      en: '',
+      de: '{faction:emperor}-Verbindung: {resource:card-draw}',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '{resource:persuasion;amount:1}{resource:tech}<br>Wenn du ein Schlachtschiff im Konflikt hast: {resource:sword}{resource:sword}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -1722,8 +1726,16 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/fremen_8.png',
     cardAmount: 2,
     buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
+    customAgentEffect: {
+      en: '',
+      de: '{faction:bene} -Verbindung: {resource:faction-influence-up-fremen}',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '{faction:fremen} Einfluss <br>0 {resource:persuasion;amount:1} {resource:helper-or} 2 {resource:persuasion;amount:1} {resource:spice} {resource:helper-or} 4 {resource:persuasion;amount:2} {resource:spice}',
+      fontSize: 'medium',
+    },
   },
   {
     name: {
@@ -1972,8 +1984,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:1}{resource:recruitment-fremen}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
-      de: '{resource:persuasion;amount:1}{resource:recruitment-fremen}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
+      en: '{resource:persuasion;amount:1} {resource:recruitment-fremen}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
+      de: '{resource:persuasion;amount:1} {resource:recruitment-fremen}{resource:sword}<br>{faction:fremen} -Verbindung: {resource:sword}{resource:sword}',
       fontSize: 'medium',
     },
   },
@@ -1998,8 +2010,8 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     customRevealEffect: {
-      en: '{resource:persuasion;amount:2}{resource:recruitment-fremen}<br>{faction:fremen} -Connection: {resource:focus}{resource:sword}',
-      de: '{resource:persuasion;amount:2}{resource:recruitment-fremen}<br>{faction:fremen} -Verbindung: {resource:focus}{resource:sword}',
+      en: '{resource:persuasion;amount:2} {resource:recruitment-fremen}<br>{faction:fremen} -Connection: {resource:focus}{resource:sword}',
+      de: '{resource:persuasion;amount:2} {resource:recruitment-fremen}<br>{faction:fremen} -Verbindung: {resource:focus}{resource:sword}',
       fontSize: 'medium',
     },
   },
