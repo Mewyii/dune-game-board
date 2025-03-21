@@ -60,13 +60,13 @@ export function enemyCanContestPlayer(
   gameState: GameState,
   countEnemiesNotInCombat?: boolean
 ) {
-  const playerAgentCount = gameState.playerAgentCount;
+  const playerAgentCount = gameState.playerAgentsAvailable;
   const combatPowerTreshold = 3 * (playerAgentCount + Math.random()) + 0.5 * (gameState.currentRound - 1);
 
   const playerCombatPower = getPlayerCombatStrength(player);
 
   const enemyCombatPower = getPlayerCombatStrength(enemy);
-  const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount;
+  const enemyAgentCount = gameState.enemyAgentsAvailable.find((x) => x.playerId === enemy.playerId)?.agentAmount;
 
   if (enemyAgentCount !== undefined && enemyAgentCount < 1 && playerCombatPower > enemyCombatPower) {
     if (countEnemiesNotInCombat) {
@@ -108,7 +108,7 @@ export function playerLikelyWinsCombat(gameState: GameState) {
 export function getWinCombatDesireModifier(gameState: GameState) {
   let desire =
     0.0 +
-    0.2 * gameState.playerAgentCount +
+    0.2 * gameState.playerAgentsAvailable +
     0.125 * gameState.playerCombatIntrigueCount +
     0.05 * getPlayerGarrisonStrength(gameState.playerCombatUnits) +
     0.075 * getPlayerCombatStrength(gameState.playerCombatUnits);
@@ -132,7 +132,7 @@ export function getWinCombatDesireModifier(gameState: GameState) {
         strengthOfStrongestEnemy = enemyStrength;
       }
     } else {
-      const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
+      const enemyAgentCount = gameState.enemyAgentsAvailable.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
       if (enemyAgentCount < 1) {
         desire += 0.1;
       }
@@ -168,7 +168,7 @@ export function getParticipateInCombatDesireModifier(gameState: GameState) {
 
       desire -= 0.01 * getPlayerCombatStrength(enemy);
     } else {
-      const enemyAgentCount = gameState.enemyAgentCount.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
+      const enemyAgentCount = gameState.enemyAgentsAvailable.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
       if (enemyAgentCount < 1) {
         desire += 0.1;
       } else {
@@ -228,7 +228,7 @@ export function getMaxDesireOfUnreachableGoals(
 }
 
 export function getInactiveEnemyCount(gamestate: GameState) {
-  return gamestate.enemyAgentCount.filter((x) => x.agentAmount < 1).length;
+  return gamestate.enemyAgentsAvailable.filter((x) => x.agentAmount < 1).length;
 }
 
 export function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: keyof PlayerScore) {

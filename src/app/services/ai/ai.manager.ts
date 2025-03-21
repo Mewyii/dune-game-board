@@ -50,7 +50,8 @@ interface ViableField {
   value: number;
   actionType: ActionType;
   requiresInfluence: FactionInfluence | undefined;
-  accessTrough: 'card' | 'other';
+  accessTrough: 'influence' | 'game-modifiers';
+  requiresInfiltration: boolean;
 }
 
 export interface AIRewardArrayInfo {
@@ -288,7 +289,6 @@ export class AIManager {
     aiPlayer: AIPlayer
   ) {
     const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
-    const factionAndFieldAccessFromCards = getCardsFactionAndFieldAccess(gameState.playerHandCards);
 
     const accessibleFields = boardFields
       .map((x) => {
@@ -307,21 +307,25 @@ export class AIManager {
           (y) => x.title.en.includes(y.fieldId) && y.playerId !== aiPlayer.playerId
         );
 
-        const hasEnemyAcess = gameState.playerFieldEnemyAccessForActionTypes.some((y) => y === x.actionType);
+        const playerFieldEnemyAccessForActionTypes = [
+          ...gameState.playerEnemyFieldTypeAcessTroughCards,
+          ...gameState.playerEnemyFieldTypeAcessTroughGameModifiers,
+        ];
+        const hasEnemyAcess = playerFieldEnemyAccessForActionTypes.some((y) => y === x.actionType);
 
         if (hasOwnAgentOnField || (hasEnemyAgentOnField && !hasEnemyAcess)) {
           return undefined;
         }
 
+        const requiresInfiltration = hasEnemyAgentOnField && hasEnemyAcess;
+
         const fieldEvaluation = fieldEvaluations.find((y) => y.fieldId === x.title.en);
         if (fieldEvaluation) {
-          let accessTrough: 'card' | 'influence' | 'other' | undefined;
+          let accessTrough: 'influence' | 'game-modifiers' | undefined;
 
           const hasCardActionType = fieldAccessFromCards.some((actionType) => x.actionType === actionType);
           if (hasCardActionType) {
-            if (!x.requiresInfluence) {
-              accessTrough = 'card';
-            } else {
+            if (x.requiresInfluence) {
               const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
                 (y) => y === x.requiresInfluence!.type
               );
@@ -334,20 +338,18 @@ export class AIManager {
                   gameState.playerFieldUnlocksForIds.some((y) => x.title.en.includes(y));
 
                 if (hasOtherAccess) {
-                  accessTrough = 'other';
-                } else {
-                  const hasFactionAccessViaCard = factionAndFieldAccessFromCards.some(
-                    (y) => y.actionType.includes(x.actionType) && y.faction === x.requiresInfluence!.type
-                  );
-
-                  if (hasFactionAccessViaCard) {
-                    accessTrough = 'card';
-                  }
+                  accessTrough = 'game-modifiers';
                 }
               }
             }
           }
-          return { ...fieldEvaluation, actionType: x.actionType, requiresInfluence: x.requiresInfluence, accessTrough };
+          return {
+            ...fieldEvaluation,
+            actionType: x.actionType,
+            requiresInfluence: x.requiresInfluence,
+            requiresInfiltration,
+            accessTrough,
+          };
         }
 
         return undefined;
@@ -533,26 +535,30 @@ export class AIManager {
 
     const preferredFields = aiPlayer.preferredFields.slice(0, preferredFieldAmount);
 
-    const usableCards = playerHandCards.filter((x) =>
-      x.fieldAccess?.some((accessType) => preferredFields.some((y) => y.actionType === accessType))
-    );
+    let cardEvaluations: { field: ViableField; evaluation: number; card: ImperiumDeckCard }[] = [];
+    for (const [fieldIndex, preferredField] of preferredFields.entries()) {
+      const usableCards = playerHandCards.filter(
+        (card) =>
+          (preferredField.requiresInfiltration ? card.canInfiltrate : true) &&
+          card.fieldAccess?.some((x) => x === preferredField.actionType)
+      );
 
-    if (usableCards.length > 0) {
-      const cardEvaluations = usableCards
-        .map((card) => {
+      if (usableCards.length > 0) {
+        const evaluations = usableCards.map((card) => {
           const cardEvaluation = this.getImperiumCardPlayEvaluation(card, player, gameState);
-          const fieldIndex = preferredFields.findIndex((x) =>
-            x.accessTrough === 'card' && x.requiresInfluence
-              ? card.fieldAccess?.includes(x.actionType) && card.faction === x.requiresInfluence.type
-              : card.fieldAccess?.includes(x.actionType)
-          );
+
           const evaluation = cardEvaluation - fieldIndex * 1.5;
-          return { evaluation, card, fieldIndex };
-        })
-        .filter((x) => x.fieldIndex > -1);
+          return { field: preferredField, evaluation, card };
+        });
+
+        cardEvaluations.push(...evaluations);
+      }
+    }
+
+    if (cardEvaluations.length > 0) {
       cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
 
-      return { cardToPlay: cardEvaluations[0].card, preferredField: preferredFields[cardEvaluations[0].fieldIndex] };
+      return { cardToPlay: cardEvaluations[0].card, preferredField: cardEvaluations[0].field };
     }
     return undefined;
   }
@@ -889,6 +895,11 @@ export class AIManager {
     if (card.fieldAccess) {
       evaluationValue -= card.fieldAccess.length * 0.1;
     }
+    if (card.canInfiltrate) {
+      const totalAgents = gameState.playerAgentsOnFields.length + gameState.playerAgentsAvailable;
+      const agentsPlaced = gameState.playerAgentsOnFields.length;
+      evaluationValue += 2 * (agentsPlaced / (totalAgents - 1)) - 1;
+    }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
         card.agentEffects
@@ -963,6 +974,9 @@ export class AIManager {
         evaluationValue += gameState.playerCardsFieldAccess[access] < 2 ? 1.5 : 0.75;
       }
     }
+    if (card.canInfiltrate) {
+      evaluationValue += 0.5 * (card.fieldAccess?.length ?? 0);
+    }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(
         card.agentEffects
@@ -1030,6 +1044,9 @@ export class AIManager {
       for (const access of card.fieldAccess) {
         evaluationValue -= gameState.playerCardsFieldAccess[access] < 2 ? 1.5 : 0.75;
       }
+    }
+    if (card.canInfiltrate) {
+      evaluationValue -= 0.5 * (card.fieldAccess?.length ?? 0);
     }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(

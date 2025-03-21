@@ -53,8 +53,8 @@ export type GameState = Readonly<{
   agentsOnFields: AgentOnField[];
   playerAgentsOnFields: AgentOnField[];
   enemyAgentsOnFields: AgentOnField[];
-  playerAgentCount: number;
-  enemyAgentCount: PlayerAgents[];
+  playerAgentsAvailable: number;
+  enemyAgentsAvailable: PlayerAgents[];
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];

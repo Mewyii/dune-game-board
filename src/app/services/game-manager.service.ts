@@ -1916,8 +1916,8 @@ export class GameManager {
     return {
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
-      playerAgentCount: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
-      enemyAgentCount: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
+      playerAgentsAvailable: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
+      enemyAgentsAvailable: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
       playerScore: playerScore,
       enemyScore,
       playerCombatUnits,
