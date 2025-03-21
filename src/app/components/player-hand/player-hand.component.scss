@@ -59,6 +59,9 @@ dune-plot-card {
   cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
   display: block;
   user-select: none;
+  animation-name: card-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1s;
 }
 
 dune-imperium-row-card:hover,
@@ -150,6 +153,9 @@ dune-intrigue-card,
   cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
   display: block;
   user-select: none;
+  animation-name: card-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1s;
 }
 
 dune-intrigue-card:hover,
@@ -217,4 +223,27 @@ dune-intrigue-card.not-played {
 .action-container.left {
   justify-content: flex-start;
   width: 50px;
+}
+
+@keyframes card-anim {
+  0% {
+    opacity: 0;
+    translate: 0px 500px;
+    scale: 1.25;
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
+  33% {
+    opacity: 0.8;
+    scale: 1;
+    filter: brightness(1.5);
+  }
+  66% {
+    filter: brightness(1.5);
+  }
+  100% {
+    opacity: 1;
+    translate: 0px 0px;
+    scale: 1;
+    filter: brightness(1);
+  }
 }

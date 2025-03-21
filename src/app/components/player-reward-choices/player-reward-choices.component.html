@@ -2,7 +2,8 @@
   <div class="reward-log-container">
     <div>Game Action Log</div>
     <br />
-    <div #rewardLogs class="reward-log" *ngFor="let logEntry of playerActionLog">
+    @for (logEntry of playerActionLog; track $index) {
+    <div #rewardLogs class="reward-log">
       <ng-container *ngIf="logEntry.type === 'field-visit'">
         Player {{ logEntry.playerId }} sent an agent to field {{ logEntry.fieldName }}.
       </ng-container>
@@ -39,13 +40,11 @@
         Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getRewardTypePath('victory-point')" />
       </ng-container>
     </div>
+    }
   </div>
   <ng-container *ngIf="playerRewardChoices">
-    <div
-      class="rewards-choice"
-      *ngFor="let rewardsChoice of playerRewardChoices.rewardsChoices"
-      (click)="onRewardsChoiceClicked(rewardsChoice.id)"
-    >
+    @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
+    <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
       <div *ngFor="let reward of rewardsChoice.choice">
         <div class="reward-container">
           <img class="reward" [src]="getRewardTypePath(reward.type)" />
@@ -57,11 +56,8 @@
         </div>
       </div>
     </div>
-    <div
-      class="reward-choice"
-      *ngFor="let rewardChoice of playerRewardChoices.rewardChoices"
-      (click)="onRewardChoiceClicked(rewardChoice.id)"
-    >
+    } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
+    <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
       <div class="reward-container">
         <img class="reward" [src]="getRewardTypePath(rewardChoice.choice.type)" />
         <ng-container *ngIf="rewardChoice.choice.amount">
@@ -71,11 +67,12 @@
         </ng-container>
       </div>
     </div>
+    } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
     <div
       class="reward-choice"
-      *ngFor="let rewardChoice of playerRewardChoices.customChoices"
       [innerHTML]="rewardChoice.choice | duneSymbols : '20px'"
       (click)="onCustomChoiceClicked(rewardChoice.id)"
     ></div>
+    }
   </ng-container>
 </div>

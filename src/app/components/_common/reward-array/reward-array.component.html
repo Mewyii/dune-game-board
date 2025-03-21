@@ -1,12 +1,12 @@
 <div class="rewards-container">
-  <ng-container *ngFor="let reward of rewards">
-    <div class="reward-container" [style.height]="size">
-      <img class="reward" [src]="getRewardTypePath(reward.type)" [style.height]="size" />
-      <div class="reward-amount" *ngIf="reward.amount">
-        <div>
-          {{ reward.amount }}
-        </div>
+  @for (reward of rewards; track reward.type) {
+  <div class="reward-container" [style.height]="size">
+    <img class="reward" [src]="getRewardTypePath(reward.type)" [style.height]="size" />
+    <div class="reward-amount" *ngIf="reward.amount">
+      <div>
+        {{ reward.amount }}
       </div>
     </div>
-  </ng-container>
+  </div>
+  }
 </div>

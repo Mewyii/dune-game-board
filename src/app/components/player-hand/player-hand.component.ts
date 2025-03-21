@@ -270,4 +270,8 @@ export class PlayerHandComponent implements OnInit {
   public getRewardTypePath(rewardType: RewardType) {
     return getRewardTypePath(rewardType);
   }
+
+  public trackCount(index: number, card: any) {
+    return index + card.id;
+  }
 }

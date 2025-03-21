@@ -119,7 +119,8 @@
         </div>
       </div>
       <div class="info-container">
-        <div [class]="'resource-container'" *ngFor="let resource of currentPlayer.resources">
+        @for (resource of currentPlayer.resources; track resource.amount) {
+        <div [class]="'resource-container'">
           <div
             class="resource-display"
             (click)="onAddRewardClicked(currentPlayer, resource.type)"
@@ -131,6 +132,7 @@
             </div>
           </div>
         </div>
+        }
       </div>
       <div class="info-container right">
         <div class="resource-container">
@@ -290,27 +292,27 @@
     </ng-container>
   </div>
   <div class="control-bar center" *ngIf="techTiles.length > 0">
-    <ng-container *ngFor="let techTile of techTiles">
-      <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
-        <div
-          *ngIf="getIsTechTileFlipped(techTile.name.en)"
-          [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
-          [style.background-image]="'url(/assets/images/tech-tiles/_backside.jpg)'"
-        ></div>
-        <dune-tech-tile
-          *ngIf="!getIsTechTileFlipped(techTile.name.en)"
-          [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
-          [card]="techTile"
-        ></dune-tech-tile>
-        <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
-          <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.name.en)">
-            <mat-icon>refresh</mat-icon>
-          </button>
-          <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.name.en)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+    @for (techTile of techTiles; track techTile.name.en) {
+    <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
+      <div
+        *ngIf="getIsTechTileFlipped(techTile.name.en)"
+        [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
+        [style.background-image]="'url(/assets/images/tech-tiles/_backside.jpg)'"
+      ></div>
+      <dune-tech-tile
+        *ngIf="!getIsTechTileFlipped(techTile.name.en)"
+        [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
+        [card]="techTile"
+      ></dune-tech-tile>
+      <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
+        <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.name.en)">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.name.en)">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
-    </ng-container>
+    </div>
+    }
   </div>
 </div>

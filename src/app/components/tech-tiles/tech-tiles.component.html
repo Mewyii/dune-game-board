@@ -1,23 +1,19 @@
 <div class="available-techs">
-  <ng-container *ngFor="let techTile of availableTechTiles">
-    <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
-      <dune-tech-tile
-        [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
-        [card]="techTile"
-        [costModifier]="getTechTileCostModifier(techTile)"
-      ></dune-tech-tile>
-      <!-- <div
-        [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
-        [style.background-image]="'url(' + techTile.imageUrl + ')'"
-      ></div> -->
-      <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
-        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTakeCardClicked(techTile)">
-          <mat-icon>check</mat-icon>
-        </button>
-        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTrashCardClicked(techTile.name.en)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
+  @for (techTile of availableTechTiles; track techTile.name.en) {
+  <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
+    <dune-tech-tile
+      [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
+      [card]="techTile"
+      [costModifier]="getTechTileCostModifier(techTile)"
+    ></dune-tech-tile>
+    <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTakeCardClicked(techTile)">
+        <mat-icon>check</mat-icon>
+      </button>
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTrashCardClicked(techTile.name.en)">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
-  </ng-container>
+  </div>
+  }
 </div>

@@ -44,7 +44,8 @@
         </button>
       </div>
     </div>
-    <div class="card-container" *ngFor="let card of imperiumRowCards" (click)="setCardActive(card.id)">
+    @for (card of imperiumRowCards; track card.id) {
+    <div class="card-container" (click)="setCardActive(card.id)">
       @if (card.type === 'imperium-card') {
       <dune-imperium-row-card
         [class]="
@@ -94,5 +95,6 @@
         </button>
       </div>
     </div>
+    }
   </div>
 </div>

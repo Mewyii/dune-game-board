@@ -12,8 +12,8 @@
     </div>
     <div class="player-cards-container intrigues">
       <ng-container *ngIf="playerIntrigues && playerIntrigues.length > 0">
+        @for (intrigue of playerIntrigues; track intrigue.id; let i = $index) {
         <div
-          *ngFor="let intrigue of playerIntrigues; let i = index"
           [class]="'intrigue-container' + (showCards ? ' ' : ' hidden')"
           [style.left]="(i * 170) / (-0.85 + 0.85 * playerIntrigues.length) + 'px'"
           (click)="setIntrigueActive(intrigue.id)"
@@ -48,96 +48,96 @@
             </button>
           </div>
         </div>
+        }
       </ng-container>
     </div>
     <div class="player-cards-container plots" *ngIf="playerPlots && playerPlots.cards.length > 0">
-      <ng-container>
+      @for (plot of playerPlots.cards; track plot.id;let i = $index) {
+      <div
+        [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+        [style.left]="(i * 250) / (-1.25 + 1.25 * playerPlots.cards.length) + 'px'"
+        (click)="setCardActive(plot.id)"
+      >
+        <dune-plot-card
+          *ngIf="!currentPlayer?.isAI"
+          [plot]="plot"
+          [class]="plot.id === activeCardId ? 'active' : ''"
+        ></dune-plot-card>
         <div
-          *ngFor="let plot of playerPlots.cards; let i = index"
-          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
-          [style.left]="(i * 250) / (-1.25 + 1.25 * playerPlots.cards.length) + 'px'"
-          (click)="setCardActive(plot.id)"
-        >
-          <dune-plot-card
-            *ngIf="!currentPlayer?.isAI"
-            [plot]="plot"
-            [class]="plot.id === activeCardId ? 'active' : ''"
-          ></dune-plot-card>
-          <div
-            *ngIf="currentPlayer?.isAI"
-            [class]="'imperium-card background' + (plot.id === activeCardId ? ' active' : '')"
-          ></div>
-          <div class="card-action-container" *ngIf="plot.id === activeCardId"></div>
-        </div>
-      </ng-container>
+          *ngIf="currentPlayer?.isAI"
+          [class]="'imperium-card background' + (plot.id === activeCardId ? ' active' : '')"
+        ></div>
+        <div class="card-action-container" *ngIf="plot.id === activeCardId"></div>
+      </div>
+      }
     </div>
     <div class="player-cards-container">
       <ng-container *ngIf="playerHandCards && cardsShown === 'hand'">
-        <ng-container *ngFor="let handCard of playerHandCards.cards; let i = index">
-          <div
-            [class]="'card-container' + (showCards ? ' ' : ' hidden')"
-            [style.left]="
-              (i * 250) / (playerHandCards.cards.length < 5 ? 0.99 : -0.25 + 0.25 * playerHandCards.cards.length) + 'px'
+        @for (handCard of playerHandCards.cards; track handCard.id;let i = $index) {
+        <div
+          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+          [style.left]="
+            (i * 250) / (playerHandCards.cards.length < 5 ? 0.99 : -0.25 + 0.25 * playerHandCards.cards.length) + 'px'
+          "
+          (click)="setCardActive(handCard.id)"
+        >
+          @if (currentPlayer?.isAI && currentPlayer?.turnState !== 'reveal' && handCard.id !== playedPlayerCardId) {
+          <div [class]="'imperium-card background' + (handCard.id === activeCardId ? ' active' : '')"></div>
+          } @else {
+          <dune-imperium-row-card
+            [class]="
+              (handCard.id === activeCardId ? 'active' : '') +
+              (playedPlayerCardId ? (handCard.id === playedPlayerCardId ? ' played' : ' not-played') : '')
             "
-            (click)="setCardActive(handCard.id)"
-          >
-            @if (currentPlayer?.isAI && currentPlayer?.turnState !== 'reveal' && handCard.id !== playedPlayerCardId) {
-            <div [class]="'imperium-card background' + (handCard.id === activeCardId ? ' active' : '')"></div>
-            } @else {
-            <dune-imperium-row-card
-              [class]="
-                (handCard.id === activeCardId ? 'active' : '') +
-                (playedPlayerCardId ? (handCard.id === playedPlayerCardId ? ' played' : ' not-played') : '')
-              "
-              [card]="handCard"
-            ></dune-imperium-row-card>
-            <div class="card-action-container" *ngIf="handCard.id === activeCardId">
-              <button
-                *ngIf="currentPlayer?.turnState === 'agent-placement' && handCard.id !== playedPlayerCardId"
-                class="card-activate-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onPlayCardClicked(handCard)"
-                matTooltip="Play"
-              >
-                <mat-icon>check</mat-icon>
-              </button>
-              <button
-                *ngIf="handCard.id === playedPlayerCardId"
-                class="card-activate-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onUnPlayCardClicked(handCard.id)"
-                matTooltip="Cancel"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-              <button
-                class="card-discard-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onDiscardCardClicked(handCard)"
-                matTooltip="Discard"
-              >
-                <mat-icon>expand_more</mat-icon>
-              </button>
-              <button
-                class="card-remove-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onTrashHandCardClicked(handCard)"
-                matTooltip="Trash"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-            }
+            [card]="handCard"
+          ></dune-imperium-row-card>
+          <div class="card-action-container" *ngIf="handCard.id === activeCardId">
+            <button
+              *ngIf="currentPlayer?.turnState === 'agent-placement' && handCard.id !== playedPlayerCardId"
+              class="card-activate-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onPlayCardClicked(handCard)"
+              matTooltip="Play"
+            >
+              <mat-icon>check</mat-icon>
+            </button>
+            <button
+              *ngIf="handCard.id === playedPlayerCardId"
+              class="card-activate-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onUnPlayCardClicked(handCard.id)"
+              matTooltip="Cancel"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+            <button
+              class="card-discard-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onDiscardCardClicked(handCard)"
+              matTooltip="Discard"
+            >
+              <mat-icon>expand_more</mat-icon>
+            </button>
+            <button
+              class="card-remove-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onTrashHandCardClicked(handCard)"
+              matTooltip="Trash"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
-        </ng-container>
+          }
+        </div>
+        }
       </ng-container>
       <ng-container *ngIf="playerDiscardPiles && cardsShown === 'discard'">
+        @for (card of playerDiscardPiles.cards; track card.id;let i = $index) {
         <div
-          *ngFor="let card of playerDiscardPiles.cards; let i = index"
           [class]="'card-container' + (showCards ? ' ' : ' hidden')"
           [style.left]="
             (i * 250) / (playerDiscardPiles.cards.length < 5 ? 0.99 : -0.25 + 0.25 * playerDiscardPiles.cards.length) + 'px'
@@ -166,6 +166,7 @@
             </button>
           </div>
         </div>
+        }
       </ng-container>
     </div>
     <div class="action-container">

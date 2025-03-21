@@ -389,7 +389,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public getIsTechTileFlipped(techTileId: string) {
-    return this.playerTechTiles.find((x) => x.techTileId === techTileId)?.isFlipped;
+    return this.playerTechTiles.find((x) => x.techTile.name.en === techTileId)?.isFlipped;
   }
 
   public getPlayerScore(scoreType: PlayerScoreType) {

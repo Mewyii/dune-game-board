@@ -6,7 +6,7 @@ import { TechTileCard } from '../models/tech-tile';
 
 export interface PlayerTechTile {
   playerId: number;
-  techTileId: string;
+  techTile: TechTileCard;
   isFlipped: boolean;
 }
 
@@ -97,19 +97,24 @@ export class TechTilesService {
   }
 
   getPlayerTechTiles(playerId: number) {
-    const playerTechTiles = this.playerTechTiles.filter((x) => x.playerId === playerId).map((x) => x.techTileId);
-    return this.techTiles.filter((x) => playerTechTiles.includes(x.name.en));
+    return this.playerTechTiles.filter((x) => x.playerId === playerId).map((x) => x.techTile);
   }
 
   setPlayerTechTile(playerId: number, techTileId: string) {
+    const techTile = this.availableTechTiles.find((x) => x.name.en === techTileId);
     const techTileIndex = this.availableTechTiles.findIndex((x) => x.name.en === techTileId);
-    const filteredAvailableTechTiles = this.availableTechTiles.filter((x) => x.name.en !== techTileId);
+    if (!techTile || techTileIndex < 0) {
+      return;
+    }
+
+    const filteredAvailableTechTiles = this.availableTechTiles.filter((x) => x.name.en !== techTile.name.en);
     const filteredAvailableTechTileIds = filteredAvailableTechTiles.map((y) => y.name.en);
 
-    const newTakenTechTiles = [...this.playerTechTiles, { playerId, techTileId: techTileId, isFlipped: false }];
+    const newTakenTechTiles = [...this.playerTechTiles, { playerId, techTile: techTile, isFlipped: false }];
 
     const availableTechTiles = this.techTiles.filter(
-      (x) => !newTakenTechTiles.some((y) => y.techTileId === x.name.en) && !filteredAvailableTechTileIds.includes(x.name.en)
+      (x) =>
+        !newTakenTechTiles.some((y) => y.techTile.name.en === x.name.en) && !filteredAvailableTechTileIds.includes(x.name.en)
     );
 
     const newAvailableTechTile = shuffle(availableTechTiles).pop();
@@ -128,7 +133,7 @@ export class TechTilesService {
 
   flipTechTile(techTileId: string) {
     const playerTechTiles = this.playerTechTiles;
-    const techTileIndex = playerTechTiles.findIndex((x) => x.techTileId === techTileId);
+    const techTileIndex = playerTechTiles.findIndex((x) => x.techTile.name.en === techTileId);
     if (techTileIndex > -1) {
       playerTechTiles[techTileIndex] = {
         ...playerTechTiles[techTileIndex],
@@ -145,7 +150,7 @@ export class TechTilesService {
 
   trashTechTile(techTileId: string) {
     this.techTiles = this.techTiles.filter((x) => x.name.en !== techTileId);
-    this.playerTechTilesSubject.next(this.playerTechTiles.filter((x) => x.techTileId !== techTileId));
+    this.playerTechTilesSubject.next(this.playerTechTiles.filter((x) => x.techTile.name.en !== techTileId));
   }
 
   addTechTile(card: TechTileCard) {

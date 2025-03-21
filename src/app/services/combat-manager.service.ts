@@ -51,10 +51,11 @@ export class CombatManager {
   }
 
   public setInitialPlayerCombatUnits(players: Player[]) {
+    const playerCombatUnits = [];
     for (const player of players) {
-      this.setPlayerTroopsInGarrison(player.id, 0);
-      this.setPlayerShipsInGarrison(player.id, 0);
+      playerCombatUnits.push(this.getInitialPlayerCombatUnits(player.id));
     }
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
   public setPlayerTroopsInGarrison(playerId: number, troops: number) {
@@ -279,10 +280,10 @@ export class CombatManager {
       playerCombatUnits.push({
         playerId,
         troopsInGarrison: 0,
-        troopsInCombat: ships,
+        troopsInCombat: 0,
         shipsInTimeout: 0,
         shipsInGarrison: 0,
-        shipsInCombat: 0,
+        shipsInCombat: ships,
         additionalCombatPower: 0,
       });
     }
@@ -501,5 +502,17 @@ export class CombatManager {
     const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
     return troopAmount * troopCombatStrength + dreadnoughtAmount * dreadnoughtCombatStrength;
+  }
+
+  private getInitialPlayerCombatUnits(playerId: number) {
+    return {
+      playerId,
+      troopsInGarrison: 0,
+      troopsInCombat: 0,
+      shipsInTimeout: 0,
+      shipsInGarrison: 0,
+      shipsInCombat: 0,
+      additionalCombatPower: 0,
+    };
   }
 }

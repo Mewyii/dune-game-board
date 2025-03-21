@@ -189,15 +189,15 @@
 
 .player-marker {
   position: absolute;
-  top: 40px;
-  left: 30px;
-  width: 90px;
-  height: 90px;
+  top: 45px;
+  left: 35px;
+  width: 80px;
+  height: 80px;
   z-index: 2;
   filter: drop-shadow(0px 0px 5px black);
-  animation-name: marker-anim;
+  animation-name: ornithopter-anim;
   animation-timing-function: ease-in-out;
-  animation-duration: 5s;
+  animation-duration: 4s;
   cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
   transition: 0.3s;
 }
@@ -326,4 +326,31 @@
   animation-timing-function: ease-in-out;
   animation-duration: 6s;
   animation-iteration-count: infinite;
+}
+
+@keyframes ornithopter-anim {
+  0% {
+    opacity: 0;
+    translate: 5px 100px;
+    scale: 1.5;
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
+  20% {
+    opacity: 0.9;
+    translate: 1px 10px;
+    scale: 1.25;
+    filter: drop-shadow(0px 0px 5px black) brightness(2.5);
+  }
+  40% {
+    opacity: 1;
+    translate: 0px 0px;
+    scale: 1;
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
+  70% {
+    filter: drop-shadow(0px 0px 5px black) brightness(2.5);
+  }
+  100% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
 }
