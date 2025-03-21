@@ -11,6 +11,7 @@ import {
   rewardTypes,
 } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-card-editor',
@@ -32,7 +33,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
   hasCustomAgentEffect = false;
   hasCustomRevealEffect = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, public t: TranslateService) {
     this.initForm();
   }
 
@@ -119,6 +120,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       fieldAccess: new FormControl([]),
       imageUrl: '',
       cardAmount: 1,
+      canInfiltrate: false,
     });
 
     this.addBuyEffectControl();

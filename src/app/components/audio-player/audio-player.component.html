@@ -6,10 +6,17 @@
     </button>
   </div>
   <div [class]="'player-container ' + (showAudioSelection ? 'shown' : 'hidden')">
-    <dune-soundcloud-player [musicId]="1309441711" [type]="'playlists'"></dune-soundcloud-player>
-    <dune-soundcloud-player [musicId]="1779224988" [type]="'playlists'"></dune-soundcloud-player>
-    <dune-soundcloud-player [musicId]="1935683711" [type]="'playlists'" [autoplay]="true"></dune-soundcloud-player>
-    <dune-soundcloud-player [musicId]="1597120503"></dune-soundcloud-player>
-    <dune-soundcloud-player [musicId]="1514263612"></dune-soundcloud-player>
+    <dune-soundcloud-player
+      [musicId]="1935683711"
+      [type]="'playlists'"
+      [autoplay]="true"
+      [volume]="30"
+    ></dune-soundcloud-player>
+    <dune-soundcloud-player
+      [musicId]="1985154320"
+      [type]="'playlists'"
+      [autoplay]="true"
+      [volume]="40"
+    ></dune-soundcloud-player>
   </div>
 </div>

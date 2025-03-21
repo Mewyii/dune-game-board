@@ -34,6 +34,15 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Infiltration -->
+  <mat-form-field class="medium-text-field">
+    <mat-label>Can Infiltrate</mat-label>
+    <mat-select formControlName="canInfiltrate">
+      <mat-option [value]="false"> {{ t.translate('commonNo') }} </mat-option>
+      <mat-option [value]="true"> {{ t.translate('commonYes') }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <!-- Buy Effects -->
   <div class="card-effect-container">
     <div class="title-container">

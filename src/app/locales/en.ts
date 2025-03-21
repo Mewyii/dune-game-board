@@ -5,6 +5,8 @@ export const enLocale = {
   commonVictoryPoints: 'Victorypoints',
   commonConfirmDialogTitle: 'Please confirm',
   commonConfirmDialogText: 'Are you sure?',
+  commonNo: 'No',
+  commonYes: 'Yes',
   playerboardHeading: 'Players',
   playerboardRound: 'Round',
   playerboardCombatTooltip: 'Combat-Phase',

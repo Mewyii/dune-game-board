@@ -7,6 +7,8 @@ export const deLocale: Locale = {
   commonVictoryPoints: 'Siegpunkte',
   commonConfirmDialogTitle: 'Bitte bestätigen',
   commonConfirmDialogText: 'Sind Sie sicher?',
+  commonNo: 'Nein',
+  commonYes: 'Ja',
   playerboardHeading: 'Spieler',
   playerboardRound: 'Runde',
   playerboardCombatTooltip: 'Kampf-Phase',

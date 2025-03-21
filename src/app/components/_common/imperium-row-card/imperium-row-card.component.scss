@@ -124,15 +124,21 @@ dune-reward-array {
 }
 
 .field-access {
-  height: 24px;
-  width: 34px;
+  width: 32px;
   background-image: url(/assets/images/card-backgrounds/field-access.png);
-  background-size: contain;
-  background-position: center;
+  background-size: 100% 100%;
+  background-position-y: center;
+  background-position-x: right;
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 3px;
+  padding: 3px 0px;
+}
+
+.field-access.infiltration {
+  width: 46px;
 }
 
 .field-access-image {
@@ -147,6 +153,7 @@ dune-reward-array {
   font-size: x-small;
   text-wrap: nowrap;
   clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
+  letter-spacing: 1px;
 }
 
 .card-aquire-costs-container.highlighted {

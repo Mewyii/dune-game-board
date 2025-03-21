@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, max, shuffle } from 'lodash';
+import { cloneDeep, flatten, max, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { isResource, isResourceType } from '../helpers/resources';
 import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
@@ -8,7 +8,7 @@ import { PlayersService } from './players.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
-import { ActionField, ActiveFactionType, DuneLocation, Reward, RewardType } from '../models';
+import { ActionField, ActionType, ActiveFactionType, DuneLocation, Reward, RewardType } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
@@ -1873,9 +1873,9 @@ export class GameManager {
     }
 
     const playerCardsBought =
-      (playerDeckCards?.filter((x) => x.persuasionCosts).length ?? 0) +
-      (playerHandCards?.filter((x) => x.persuasionCosts).length ?? 0) +
-      (playerDiscardPileCards?.filter((x) => x.persuasionCosts).length ?? 0) +
+      (playerDeckCards.filter((x) => x.persuasionCosts).length ?? 0) +
+      (playerHandCards.filter((x) => x.persuasionCosts).length ?? 0) +
+      (playerDiscardPileCards.filter((x) => x.persuasionCosts).length ?? 0) +
       (playerTrashPileCards?.filter((x) => x.persuasionCosts).length ?? 0);
 
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
@@ -1885,7 +1885,10 @@ export class GameManager {
     const playerFactionFriendships = this.getFactionFriendships(playerScore);
     const playerFieldUnlocksForFactions = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id) ?? [];
     const playerFieldUnlocksForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id) ?? [];
-    const playerFieldEnemyAccessForActionTypes =
+    const playerEnemyFieldTypeAcessTroughCards = flatten(
+      playerHandCards.filter((x) => x.fieldAccess && x.canInfiltrate).map((x) => x.fieldAccess)
+    ) as ActionType[];
+    const playerEnemyFieldTypeAcessTroughGameModifiers =
       this.gameModifiersService.getPlayerFieldEnemyAcessForActionTypes(player.id) ?? [];
 
     const playerBlockedFieldsForActionTypes =
@@ -1921,6 +1924,7 @@ export class GameManager {
       enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
       agentsOnFields: this.agentsOnFields,
       playerAgentsOnFields: this.agentsOnFields.filter((x) => x.playerId === player.id),
+      enemyAgentsOnFields: this.agentsOnFields.filter((x) => x.playerId !== player.id),
       isOpeningTurn: this.isOpeningTurn(player.id),
       isFinale: this.isFinale,
       enemyPlayers: this.playerManager.getEnemyPlayers(player.id),
@@ -1941,7 +1945,8 @@ export class GameManager {
       playerFactionFriendships,
       playerFieldUnlocksForFactions,
       playerFieldUnlocksForIds,
-      playerFieldEnemyAccessForActionTypes,
+      playerEnemyFieldTypeAcessTroughCards,
+      playerEnemyFieldTypeAcessTroughGameModifiers,
       blockedFieldsForActionTypes: playerBlockedFieldsForActionTypes,
       blockedFieldsForIds: playerBlockedFieldsForIds,
       playerIntrigues,
@@ -1958,7 +1963,7 @@ export class GameManager {
       playerCardsRewards,
       playerGameModifiers,
       playerTechTilesFactions,
-    };
+    } as GameState;
   }
 
   private fieldHasAccumulatedSpice(fieldId: string) {

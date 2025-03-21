@@ -8,11 +8,12 @@ import { AfterViewInit, Component, Input } from '@angular/core';
 export class SoundcloudPlayerComponent implements AfterViewInit {
   @Input() musicId = 0;
   @Input() type: 'tracks' | 'playlists' = 'tracks';
+  @Input() volume = 50;
   @Input() autoplay: boolean = false;
 
   public baseUrl = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/';
   public srcSettings =
-    '&color=%23e49944&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=true&visual=true&sharing=false&show_playcount=false';
+    '&color=%23e49944&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=true&visual=true&sharing=false&show_playcount=false&single_active=false';
 
   public playlistLength = 0;
   public widget: Widget | undefined;
@@ -33,7 +34,7 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
           });
         } else {
           this.widget?.play();
-          this.widget?.setVolume(50);
+          this.widget?.setVolume(33);
         }
       });
 
@@ -47,7 +48,7 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
 
   private waitForSoundsToLoadAndPlayRandomSound() {
     setTimeout(() => {
-      this.widget?.setVolume(40);
+      this.widget?.setVolume(33);
       this.playRandomSound();
     }, 5000);
   }

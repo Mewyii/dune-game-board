@@ -52,6 +52,7 @@ export type GameState = Readonly<{
   enemyCombatUnits: PlayerCombatUnits[];
   agentsOnFields: AgentOnField[];
   playerAgentsOnFields: AgentOnField[];
+  enemyAgentsOnFields: AgentOnField[];
   playerAgentCount: number;
   enemyAgentCount: PlayerAgents[];
   isOpeningTurn: boolean;
@@ -73,7 +74,8 @@ export type GameState = Readonly<{
   playerFactionFriendships: PlayerFactionScoreType[];
   playerFieldUnlocksForFactions: ActiveFactionType[];
   playerFieldUnlocksForIds: string[];
-  playerFieldEnemyAccessForActionTypes: ActionType[];
+  playerEnemyFieldTypeAcessTroughCards: ActionType[];
+  playerEnemyFieldTypeAcessTroughGameModifiers: ActionType[];
   blockedFieldsForIds: string[];
   blockedFieldsForActionTypes: ActionType[];
   playerIntrigues: IntrigueDeckCard[];

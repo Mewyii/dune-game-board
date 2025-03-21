@@ -17,6 +17,7 @@ export interface ImperiumCard {
   revealEffects?: Reward[];
   customRevealEffect?: LanguageStringAndFontSize;
   buyEffects?: Reward[];
+  canInfiltrate?: boolean;
   imageUrl?: string;
   cardAmount?: number;
 }
