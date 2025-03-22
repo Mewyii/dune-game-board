@@ -38,8 +38,8 @@
   font-size: small;
   color: #e1e1e1;
   white-space: pre-wrap;
-  min-height: 46px;
-  padding: 6px;
+  min-height: 36px;
+  padding: 10px 8px;
   background-image: url(/assets/images/card-backgrounds/reveal-effect.png);
   background-size: cover;
   border-radius: 0px 0px 4px 4px;
@@ -52,8 +52,8 @@
   font-size: small;
   color: #e1e1e1;
   white-space: pre-wrap;
-  min-height: 30px;
-  padding: 6px;
+  min-height: 36px;
+  padding: 8px 6px;
   background-image: url(/assets/images/card-backgrounds/agent-effect.png);
   background-size: cover;
 }
@@ -174,6 +174,7 @@ dune-reward-array {
   right: 3px;
   width: 28px;
   padding-top: 29px;
+  padding-bottom: 2px;
   font-family: 'Roboto', 'Verdana';
   font-weight: initial;
   font-size: small;
@@ -187,5 +188,5 @@ dune-reward-array {
 .imperium-card ::ng-deep br {
   display: block;
   content: '';
-  height: 3px;
+  height: 4px;
 }

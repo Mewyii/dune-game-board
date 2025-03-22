@@ -33,7 +33,7 @@
       <div
         *ngIf="card.customAgentEffect.fontSize === 'medium'"
         class="card-reveal-effect-custom-text medium"
-        [innerHTML]="t.translateLS(card.customAgentEffect) | duneSymbols : '20px'"
+        [innerHTML]="t.translateLS(card.customAgentEffect) | duneSymbols : '22px'"
       ></div>
     </div>
     <dune-reward-array *ngIf="card.agentEffects" [rewards]="card.agentEffects"></dune-reward-array>
@@ -52,7 +52,7 @@
       <div
         *ngIf="card.customRevealEffect.fontSize === 'medium'"
         class="card-reveal-effect-custom-text medium"
-        [innerHTML]="t.translateLS(card.customRevealEffect) | duneSymbols : '20px'"
+        [innerHTML]="t.translateLS(card.customRevealEffect) | duneSymbols : '22px'"
       ></div>
     </div>
     <dune-reward-array *ngIf="card.revealEffects" [rewards]="card.revealEffects"></dune-reward-array>

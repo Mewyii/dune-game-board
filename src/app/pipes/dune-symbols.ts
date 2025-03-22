@@ -8,7 +8,7 @@ import { getActionTypePath } from '../helpers/action-types';
 export class DuneSymbolsPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: string, iconSize: string = '17px'): SafeHtml {
+  transform(value: string, iconSize: string = '18px'): SafeHtml {
     const iconSizeNumber = parseInt(iconSize);
     let returnValue = value;
 
@@ -31,7 +31,7 @@ export class DuneSymbolsPipe implements PipeTransform {
             ';height: ' +
             iconSize +
             ';object-fit:scale-down; margin-bottom:-' +
-            Math.ceil(ratioFix - ratioFix / 2) +
+            Math.ceil(ratioFix - ratioFix / 3) +
             'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
             '"/>'
@@ -52,10 +52,13 @@ export class DuneSymbolsPipe implements PipeTransform {
             ';height: ' +
             iconSize +
             ';object-fit:scale-down; margin-bottom:-' +
-            Math.ceil(ratioFix - ratioFix / 2) +
+            Math.ceil(ratioFix - ratioFix / 3) +
             'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
-            '"/><div style="position:absolute;top:0px;left:0px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
+            '"/><div style="position:absolute;top:0px;left:0px;width:100%' +
+            ';height:' +
+            Math.ceil(iconSizeNumber + ratioFix / 4) +
+            'px;display:flex;align-items:center;justify-content:center;font-size:' +
             (iconSizeNumber - ratioFix) +
             'px;filter:drop-shadow(0px 0px 1px rgb(0, 0, 0));"><span>' +
             amountNumber +
@@ -76,11 +79,11 @@ export class DuneSymbolsPipe implements PipeTransform {
       returnValue = returnValue.replace(
         factionString[0],
         '<img style="min-width:' +
-          Math.ceil(iconSizeNumber - ratioFix / 2) +
+          Math.ceil(iconSizeNumber - ratioFix / 3) +
           'px;height:' +
-          Math.ceil(iconSizeNumber - ratioFix / 1.5) +
+          Math.ceil(iconSizeNumber - ratioFix / 2) +
           'px;object-fit:scale-down; margin-bottom:-' +
-          Math.ceil(0.25 * ratioFix) +
+          Math.ceil(0.4 * ratioFix) +
           'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
           factionImgPath +
           '"/>'

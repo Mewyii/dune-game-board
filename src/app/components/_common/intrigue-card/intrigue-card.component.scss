@@ -1,62 +1,62 @@
-
 .intrigue-card {
-    border-radius: 10px;
-    height: 255px;
-    width: 170px;
-    display: flex;
-    flex-direction: column;
-    color: white;
-    background-color: #101010;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    box-sizing: border-box;
-    line-height: initial;
+  border-radius: 10px;
+  height: 255px;
+  width: 170px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  background-color: #101010;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  box-sizing: border-box;
+  line-height: initial;
 }
 
 .card-header {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    padding-left: 4px;
-    padding-right: 4px;
-    border-radius: 8px 8px 0px 0px;
-    color: #f3f5de;
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: medium;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 8px 8px 0px 0px;
+  color: #f3f5de;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: medium;
 }
 
 .card-header.complot {
-    background-image: url(/assets/images/intrigues/heading_complot.png);
+  background-image: url(/assets/images/intrigues/heading_complot.png);
 }
 
 .card-header.combat {
-    background-image: url(/assets/images/intrigues/heading_combat.png);
+  background-image: url(/assets/images/intrigues/heading_combat.png);
 }
 
 .card-content {
-    background-size: cover;
-    background-position: top;
-    border-radius: 0px 0px 8px 8px;
-    flex: 1 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-size: cover;
+  background-position: top;
+  border-radius: 0px 0px 8px 8px;
+  flex: 1 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
 }
 
 .card-content.complot {
-    border-top: 2px solid #fbb83c;
-    background-image: linear-gradient(#eba92f, 5%, #806536, 70%, #473a21);
+  border-top: 2px solid #fbb83c;
+  background-image: linear-gradient(#eba92f, 5%, #806536, 70%, #473a21);
 }
 
 .card-content.combat {
-    border-top: 2px solid #ff3434;
-    background-image: linear-gradient(#e42424, 5%, #852929, 70%, #481919);
+  border-top: 2px solid #ff3434;
+  background-image: linear-gradient(#e42424, 5%, #852929, 70%, #481919);
 }
 
 .card-title {
-    padding: 4px;
-    font-size: large;
-    text-align: center;
+  padding: 4px;
+  font-size: large;
+  text-align: center;
 }

@@ -70,7 +70,7 @@
     } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
     <div
       class="reward-choice"
-      [innerHTML]="rewardChoice.choice | duneSymbols : '20px'"
+      [innerHTML]="rewardChoice.choice | duneSymbols : '22px'"
       (click)="onCustomChoiceClicked(rewardChoice.id)"
     ></div>
     }

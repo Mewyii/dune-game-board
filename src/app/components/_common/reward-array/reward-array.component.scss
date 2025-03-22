@@ -1,32 +1,32 @@
 .rewards-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    flex-wrap: wrap;
-    padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 2px;
 }
 
 .reward-container {
-    position: relative;
-    width: min-content;
+  position: relative;
+  width: min-content;
 }
 
 .reward {
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .reward-amount {
-    position: absolute;
-    top: 0;
-    right: 0px;
-    width: 100%;
-    height: 100%;
-    color: white;
-    font-size: large;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-size: large;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

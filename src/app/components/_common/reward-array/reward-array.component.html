@@ -1,5 +1,5 @@
 <div class="rewards-container">
-  @for (reward of rewards; track reward.type) {
+  @for (reward of rewards; track $index) {
   <div class="reward-container" [style.height]="size">
     <img class="reward" [src]="getRewardTypePath(reward.type)" [style.height]="size" />
     <div class="reward-amount" *ngIf="reward.amount">
