@@ -898,7 +898,7 @@ export class AIManager {
     if (card.canInfiltrate) {
       const totalAgents = gameState.playerAgentsOnFields.length + gameState.playerAgentsAvailable;
       const agentsPlaced = gameState.playerAgentsOnFields.length;
-      evaluationValue += 2 * (agentsPlaced / (totalAgents - 1)) - 1;
+      evaluationValue += 4 * (agentsPlaced / (totalAgents - 1)) - 2;
     }
     if (card.agentEffects) {
       const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } = this.getRewardArrayAIInfos(

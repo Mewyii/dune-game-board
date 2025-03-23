@@ -182,10 +182,7 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'sword',
+        amount: 2,
       },
       {
         type: 'sword',
@@ -410,21 +407,16 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'bene',
     persuasionCosts: 2,
-    fieldAccess: ['emperor', 'landsraad'],
+    fieldAccess: ['landsraad'],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_6.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [],
-    agentEffects: [
-      {
-        type: 'solari',
-      },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'troop',
-      },
-    ],
+    customAgentEffect: {
+      en: '',
+      de: 'Jeder Gegner auf {faction:landsraad}-Feldern verliert {resource:solari} und du erhältst {resource:solari}.',
+      fontSize: 'small',
+    },
     customRevealEffect: {
       en: '{resource:persuasion;amount:1}<br>{faction:bene} -Connection: {resource:persuasion;amount:1}',
       de: '{resource:persuasion;amount:1}<br>{faction:bene} -Verbindung: {resource:persuasion;amount:1}',
@@ -497,7 +489,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Bene Gesserit Schwester',
     },
     faction: 'bene',
-    persuasionCosts: 3,
+    persuasionCosts: 4,
     fieldAccess: ['bene', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_14.png',
     cardAmount: 2,
@@ -531,8 +523,16 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/combat.png',
     cardAmount: 2,
     buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
+    customAgentEffect: {
+      en: '{resource:troop}<br>{faction:bene} -Connection: {resource:intrigue}',
+      de: '{resource:troop}<br>{faction:bene} -Verbindung: {resource:intrigue}',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '{resource:sword}<br><br>For each card with a {resource:sword}-symbol you have in play: {resource:sword}',
+      de: '{resource:sword}<br>Für jede Karte mit {resource:sword}-Symbol, die du im Spiel hast: {resource:sword}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -564,9 +564,10 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'bene',
     persuasionCosts: 4,
-    fieldAccess: ['landsraad', 'town'],
+    fieldAccess: ['emperor', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_7.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [
       {
         type: 'intrigue',
@@ -574,7 +575,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     customAgentEffect: {
       en: 'Each opponent trashes one of his cards in his hand.',
-      de: 'Jeder Gegner entsorgt eine der Karten in seiner Hand.',
+      de: 'Jeder Gegner auf Feldern dieses Typs entsorgt eine Karte aus seiner Hand.',
       fontSize: 'small',
     },
     customRevealEffect: {
@@ -711,26 +712,20 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'bene',
     persuasionCosts: 5,
-    fieldAccess: ['bene', 'landsraad', 'spice', 'town'],
+    fieldAccess: ['bene', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_10.png',
     cardAmount: 1,
+    canInfiltrate: false,
     buyEffects: [],
-    revealEffects: [
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'persuasion',
-        amount: 3,
-      },
-    ],
     customAgentEffect: {
       en: 'For each bene-gesserit card in play: {resource:card-draw}',
-      de: 'Für jede Bene-Gesserit-Karte, die du im Spiel hast: {resource:card-draw}',
+      de: 'Für jeden deiner Agenten auf Feldern: {resource:card-draw}',
       fontSize: 'small',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '{resource:persuasion;amount:2}<br>{faction:bene} -Verbindung: {resource:persuasion;amount:1} {resource:focus}',
+      fontSize: 'medium',
     },
   },
   {
@@ -740,9 +735,10 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'bene',
     persuasionCosts: 6,
-    fieldAccess: ['bene', 'emperor', 'fremen', 'landsraad', 'town'],
+    fieldAccess: ['bene', 'emperor', 'fremen', 'town'],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_13.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [],
     revealEffects: [
       {
@@ -755,7 +751,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     customAgentEffect: {
       en: '{faction:bene} Influence <br>0 {resource:card-draw-or-destroy} {resource:helper-or} 2 {resource:card-draw}{resource:card-draw-or-destroy} {resource:helper-or} 4 {resource:faction-influence-up-choice}',
-      de: '{faction:bene} Einfluss <br>0 {resource:card-draw-or-destroy} {resource:helper-or} 2 {resource:card-draw}{resource:card-draw-or-destroy} {resource:helper-or} 4 {resource:faction-influence-up-choice}',
+      de: 'Jeder Gegner auf Feldern dieses Typs {resource:card-discard} und du erhältst {resource:card-draw} für jede abgeworfene Karte.',
       fontSize: 'small',
     },
   },
@@ -956,10 +952,11 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/pilot.png',
     cardAmount: 2,
+    canInfiltrate: false,
     buyEffects: [],
     customAgentEffect: {
       en: '',
-      de: '{faction:emperor}-Verbindung: {resource:card-draw}',
+      de: '{faction:emperor} -Verbindung: {resource:card-draw}',
       fontSize: 'medium',
     },
     customRevealEffect: {
@@ -1001,35 +998,33 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'emperor',
     persuasionCosts: 3,
-    fieldAccess: ['spice', 'town'],
+    fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_4.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [],
-    agentEffects: [
+    revealEffects: [
       {
-        type: 'card-discard',
+        type: 'sword',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
       },
       {
         type: 'loose-troop',
-      },
-      {
-        type: 'loose-troop',
-      },
-      {
-        type: 'helper-trade',
       },
       {
         type: 'location-control',
       },
     ],
-    revealEffects: [
-      {
-        type: 'intrigue',
-      },
-      {
-        type: 'sword',
-      },
-    ],
+    customAgentEffect: {
+      en: '',
+      de: 'Jeder Gegner auf {faction:spice}-Feldern: {resource:loose-troop}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -1041,6 +1036,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_6.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [],
     revealEffects: [
       {
@@ -1056,7 +1052,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     customAgentEffect: {
       en: 'Each opponent retreats a {resource:dreadnought} or loses <b>1</b> troop.',
-      de: 'Jeder Gegner zieht ein {resource:dreadnought} zurück oder verliert <b>1</b> Trupp.',
+      de: 'Jeder Gegner auf {faction:town}-Feldern zieht ein {resource:dreadnought} zurück oder verliert <b>1</b> Trupp.',
       fontSize: 'small',
     },
   },
@@ -1127,10 +1123,27 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 3,
     fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/landing_ship.png',
-    cardAmount: 1,
+    cardAmount: 2,
     buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
+    agentEffects: [
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    customRevealEffect: {
+      en: '{resource:intrigue}<br>{faction:emperor} -Connection: {resource:sword}{resource:sword}',
+      de: '{resource:intrigue}<br>{faction:emperor} -Verbindung: {resource:sword}{resource:sword}',
+      fontSize: 'medium',
+    },
   },
   {
     name: {
@@ -1142,6 +1155,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['emperor', 'town'],
     imageUrl: '/assets/images/action-backgrounds/military_camp.png',
     cardAmount: 2,
+    canInfiltrate: false,
     buyEffects: [
       {
         type: 'troop',
@@ -1211,13 +1225,10 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
+        amount: 2,
       },
       {
         type: 'recruitment-emperor',
-      },
-      {
-        type: 'sword',
       },
     ],
   },
@@ -1256,11 +1267,21 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['guild', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/assassin.png',
     cardAmount: 2,
+    canInfiltrate: false,
     buyEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
+        amount: 2,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -1282,9 +1303,28 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['emperor'],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_9.png',
     cardAmount: 1,
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
+    canInfiltrate: false,
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'focus',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    customAgentEffect: {
+      en: '{resource:loose-troop}{resource:helper-trade}{resource:helper-trade}{resource:sword} for each of your troops in conflict',
+      de: '{resource:loose-troop}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
+      fontSize: 'medium',
+    },
   },
   {
     name: {
@@ -1296,7 +1336,11 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['emperor', 'guild', 'bene', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_3.png',
     cardAmount: 2,
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
     agentEffects: [
       {
         type: 'card-draw',
@@ -1309,9 +1353,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'recruitment-emperor',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -1351,7 +1392,10 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 3,
+        amount: 2,
+      },
+      {
+        type: 'solari',
       },
     ],
   },
@@ -1365,10 +1409,11 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/battle_2.png',
     cardAmount: 1,
+    canInfiltrate: true,
     buyEffects: [],
     customAgentEffect: {
       en: 'Each opponent send <b>2</b> units into the conflict',
-      de: 'Jeder Gegner entsendet <b>2</b> Einheiten in den Konflikt.',
+      de: 'Jeder Gegner auf {faction:town}-Feldern entsendet <b>2</b> Einheiten in den Konflikt.',
       fontSize: 'small',
     },
     customRevealEffect: {
@@ -1384,18 +1429,19 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'emperor',
     persuasionCosts: 7,
-    fieldAccess: ['landsraad', 'town'],
+    fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/battle_3.png',
     cardAmount: 1,
+    canInfiltrate: true,
     buyEffects: [],
-    agentEffects: [
-      {
-        type: 'intrigue',
-      },
-    ],
+    customAgentEffect: {
+      en: '',
+      de: '{resource:solari;amount:2} {resource:helper-trade} Ziehe von jedem Gegner auf {faction:town}-Feldern eine {resource:intrigue}.',
+      fontSize: 'small',
+    },
     customRevealEffect: {
-      en: 'Each opponent loses all troops in the conflict.<br>{resource:trash-self}',
-      de: 'Jeder Gegner verliert alle Truppen im Konflikt.<br>{resource:trash-self}',
+      en: '{resource:trash-self}. Each opponent loses <b>4</b> troops in the conflict.',
+      de: '{resource:trash-self}. Jeder Gegner verliert <b>4</b> Truppen im Konflikt.',
       fontSize: 'small',
     },
   },
@@ -1409,9 +1455,31 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/imperial_bashar.png',
     cardAmount: 1,
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
+    buyEffects: [
+      {
+        type: 'intrigue',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 3,
+      },
+      {
+        type: 'recruitment-emperor',
+      },
+    ],
+    customAgentEffect: {
+      en: '',
+      de: 'Ziehe Intrigen, bis du eine Kampf-Intrige ziehst. Behalte sie, entsorge die anderen.',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -1423,6 +1491,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/ship.png',
     cardAmount: 1,
+    canInfiltrate: false,
     buyEffects: [
       {
         type: 'dreadnought',
@@ -1446,7 +1515,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'solari',
-        amount: 2,
       },
       {
         type: 'troop',
@@ -1569,18 +1637,19 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'fremen',
     persuasionCosts: 2,
-    fieldAccess: ['spice', 'town'],
+    fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors_4.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [],
     customAgentEffect: {
       en: 'Each opponent loses {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
-      de: 'Jeder Gegner verliert {resource:spice}{resource:helper-or}{resource:water}{resource:helper-or}{resource:solari}',
+      de: 'Jeder Gegner auf {faction:town}-Feldern verliert {resource:spice}{resource:helper-or}{resource:solari} und du erhältst {resource:tech}.',
       fontSize: 'small',
     },
     customRevealEffect: {
-      en: '{resource:sword}{resource:sword}. Deploy up to <b>1</b> additional troop to the conflict.',
-      de: '{resource:sword}{resource:sword}. Setze bis zu <b>1</b> Trupp aus deiner Garnison im Konflikt ein.',
+      en: '{resource:sword} <br>Deploy up to <b>1</b> additional troop to the conflict.',
+      de: '{resource:sword} <br>Setze bis zu <b>1</b> Trupp aus deiner Garnison im Konflikt ein.',
       fontSize: 'small',
     },
   },
@@ -1636,11 +1705,12 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/ambush.png',
     cardAmount: 1,
+    canInfiltrate: true,
     buyEffects: [],
     customAgentEffect: {
       en: 'Each opponent: {resource:loose-troop}<br>{faction:fremen} -Connection: {resource:water}',
-      de: 'Jeder Gegner: {resource:loose-troop}<br>{faction:fremen} -Verbindung: {resource:water}',
-      fontSize: 'medium',
+      de: 'Jeder Gegner auf {faction:spice}-Feldern: {resource:loose-troop}<br>{faction:fremen} -Verbindung: {resource:water}',
+      fontSize: 'small',
     },
     customRevealEffect: {
       en: '{resource:sword}{resource:sword}<br>Deploy up to <b>2</b> troops from your garrison to the conflict.',
@@ -1725,6 +1795,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/fremen_8.png',
     cardAmount: 2,
+    canInfiltrate: false,
     buyEffects: [],
     customAgentEffect: {
       en: '',
@@ -1733,7 +1804,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     customRevealEffect: {
       en: '',
-      de: '{faction:fremen} Einfluss <br>0 {resource:persuasion;amount:1} {resource:helper-or} 2 {resource:persuasion;amount:1} {resource:spice} {resource:helper-or} 4 {resource:persuasion;amount:2} {resource:spice}',
+      de: '{faction:fremen} Einfluss <br>0 {resource:persuasion;amount:1}{resource:helper-or}2 {resource:persuasion;amount:1} {resource:spice}{resource:helper-or}4 {resource:persuasion;amount:2} {resource:spice}',
       fontSize: 'medium',
     },
   },
@@ -1791,10 +1862,11 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/harkonnen_soldier.png',
     cardAmount: 2,
+    canInfiltrate: true,
     buyEffects: [],
     customAgentEffect: {
       en: 'Each opponent retreats two units.',
-      de: 'Jeder Gegner zieht zwei Einheiten zurück.',
+      de: 'Jeder Gegner auf Feldern dieses Typs zieht <b>2</b> Einheiten zurück.',
       fontSize: 'small',
     },
     customRevealEffect: {
@@ -1848,8 +1920,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors_5.png',
     cardAmount: 2,
     buyEffects: [],
-    agentEffects: [],
     revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
       {
         type: 'sword',
       },
@@ -1857,6 +1932,11 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+    customAgentEffect: {
+      en: '{resource:focus}<br>{faction:fremen} -Connection: Each opponent: {resource:loose-troop}',
+      de: '{resource:focus}<br>{faction:fremen} -Verbindung: Jeder Gegner: {resource:loose-troop}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -1868,14 +1948,15 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/duncan_2.png',
     cardAmount: 1,
+    canInfiltrate: true,
     buyEffects: [
       {
         type: 'water',
       },
     ],
     customAgentEffect: {
-      en: 'Ignore enemy agents and influence requirements.',
-      de: 'Ignoriere gegnerische Agenten und Einfluss-Anforderungen.',
+      en: 'Ignore all influence requirements on board spaces this round.',
+      de: 'Ignoriere alle Einfluss-Anforderungen auf Feldern in dieser Runde.',
       fontSize: 'small',
     },
     customRevealEffect: {
@@ -1894,6 +1975,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/fremen_5.png',
     cardAmount: 2,
+    canInfiltrate: false,
     buyEffects: [],
     agentEffects: [
       {
@@ -1935,7 +2017,14 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'town', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors.png',
     cardAmount: 2,
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     agentEffects: [
       {
         type: 'troop',
@@ -1950,9 +2039,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'troop',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -2022,15 +2108,19 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'fremen',
     persuasionCosts: 5,
-    fieldAccess: ['fremen'],
+    fieldAccess: [],
     imageUrl: '/assets/images/action-backgrounds/jihad_2.png',
     cardAmount: 1,
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'faction-influence-up-bene',
+      },
+    ],
     agentEffects: [],
     customRevealEffect: {
-      en: '+{resource:sword} for each revealed card that provides 1 or more {resource:sword} this turn.',
-      de: '+{resource:sword} für jede in diesem Zug aufgedeckte Karte mit einem {resource:sword}-Symbol.',
-      fontSize: 'small',
+      en: '{resource:sword} for each of your troops in conflict',
+      de: '{resource:sword} für jede deiner Truppen im Konflikt',
+      fontSize: 'medium',
     },
   },
   {
@@ -2072,7 +2162,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     agentEffects: [
       {
-        type: 'focus',
+        type: 'card-draw',
       },
       {
         type: 'helper-or',
@@ -2135,7 +2225,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'recruitment-fremen',
       },
       {
-        type: 'faction-influence-up-bene',
+        type: 'spice',
       },
     ],
   },
@@ -2193,15 +2283,23 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/lasguns.png',
     cardAmount: 1,
+    canInfiltrate: true,
     buyEffects: [],
+    revealEffects: [
+      {
+        type: 'spice',
+        amount: 3,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
     customAgentEffect: {
       en: '',
-      de: '',
-      fontSize: 'small',
-    },
-    customRevealEffect: {
-      en: '',
-      de: 'Jeder Gegner gibt dir {resource:spice} für jeden Agent, der sich auf einem {faction:spice} -Feld befindet.',
+      de: 'Jeder Gegner auf {faction:spice}-Feldern verliert {resource:spice;amount:2} und du erhältst {resource:spice;amount:2}.',
       fontSize: 'small',
     },
   },
@@ -2316,7 +2414,7 @@ export const imperiumCards: ImperiumCard[] = [
     customAgentEffect: {
       en: '{faction:guild} Influence <br>0 {resource:solari} {resource:helper-or} 2 {resource:solari;amount:2} {resource:helper-or} 4 {resource:solari;amount:3}',
       de: '{faction:guild} Einfluss <br>0 {resource:solari} {resource:helper-or} 2 {resource:solari;amount:2} {resource:helper-or} 4 {resource:solari;amount:3}',
-      fontSize: 'small',
+      fontSize: 'medium',
     },
   },
   {
@@ -2342,6 +2440,9 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
       },
       {
         type: 'sword',
@@ -2466,7 +2567,7 @@ export const imperiumCards: ImperiumCard[] = [
     customAgentEffect: {
       en: '{faction:guild} Influence <br>0 {resource:foldspace} {resource:helper-or} 2 {resource:shipping} {resource:helper-or} 4 {resource:foldspace} {resource:shipping}',
       de: '{faction:guild} Einfluss <br>0 {resource:foldspace} {resource:helper-or} 2 {resource:shipping} {resource:helper-or} 4 {resource:foldspace} {resource:shipping}',
-      fontSize: 'small',
+      fontSize: 'medium',
     },
   },
   {
@@ -2516,6 +2617,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/guild_banker.png',
     cardAmount: 2,
+    canInfiltrate: false,
     buyEffects: [],
     revealEffects: [
       {
@@ -2529,7 +2631,7 @@ export const imperiumCards: ImperiumCard[] = [
     customAgentEffect: {
       en: '{faction:guild} Influence <br>0 {resource:solari;amount:2} {resource:helper-or} 2 {resource:solari;amount:3} {resource:helper-or} 4 {resource:solari;amount:4}',
       de: '{faction:guild} Einfluss <br>0 {resource:solari;amount:2} {resource:helper-or} 2 {resource:solari;amount:3} {resource:helper-or} 4 {resource:solari;amount:4}',
-      fontSize: 'small',
+      fontSize: 'medium',
     },
   },
   {
@@ -2542,6 +2644,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['guild', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/esmar.png',
     cardAmount: 1,
+    canInfiltrate: false,
     buyEffects: [],
     agentEffects: [
       {
@@ -2611,17 +2714,13 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['guild', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/guild_navigators.png',
     cardAmount: 1,
+    canInfiltrate: false,
     buyEffects: [
       {
         type: 'faction-influence-up-guild',
       },
       {
         type: 'spice',
-      },
-    ],
-    agentEffects: [
-      {
-        type: 'intrigue',
       },
     ],
     revealEffects: [
@@ -2634,6 +2733,11 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
     ],
+    customAgentEffect: {
+      en: '',
+      de: 'Ziehe Intrigen, bis du eine Komplott-Intrige ziehst. Behalte sie, entsorge die anderen.',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -2668,6 +2772,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
+    canInfiltrate: true,
     buyEffects: [],
     agentEffects: [
       {
@@ -2678,9 +2783,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     revealEffects: [
-      {
-        type: 'shipping',
-      },
       {
         type: 'shipping',
       },
