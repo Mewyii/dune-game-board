@@ -1,10 +1,12 @@
 import { ActiveFactionType } from './faction';
 import { LanguageString } from './language';
 import { ActionType } from './location';
-import { Reward } from './reward';
+import { Effect, EffectReward } from './reward';
+
+export type EffectSizeType = 'large' | 'medium' | 'small';
 
 export interface LanguageStringAndFontSize extends LanguageString {
-  fontSize?: 'medium' | 'small';
+  fontSize?: EffectSizeType;
 }
 
 export interface ImperiumCard {
@@ -12,11 +14,13 @@ export interface ImperiumCard {
   faction?: ActiveFactionType;
   persuasionCosts?: number;
   fieldAccess?: ActionType[];
-  agentEffects?: Reward[];
+  agentEffects?: Effect[];
+  agentEffectSize?: EffectSizeType;
   customAgentEffect?: LanguageStringAndFontSize;
-  revealEffects?: Reward[];
+  revealEffects?: Effect[];
+  revealEffectSize?: EffectSizeType;
   customRevealEffect?: LanguageStringAndFontSize;
-  buyEffects?: Reward[];
+  buyEffects?: EffectReward[];
   canInfiltrate?: boolean;
   imageUrl?: string;
   cardAmount?: number;

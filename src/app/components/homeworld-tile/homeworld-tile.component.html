@@ -5,7 +5,7 @@
       <div class="rewards-container">
         <ng-container *ngFor="let upgrade of upgrades">
           <div class="reward-container">
-            <img class="reward" [src]="getRewardTypePath(upgrade.rewardType)" />
+            <img class="reward" [src]="getEffectTypePath(upgrade.rewardType)" />
             <div>:</div>
             <div>{{ upgrade.initialAmount }}</div>
             <ng-container *ngFor="let upgradeCount of upgrade.upgradeCount | numberToArray; let i = index">

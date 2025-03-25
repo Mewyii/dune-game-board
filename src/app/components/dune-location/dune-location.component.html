@@ -20,14 +20,14 @@
       <div class="location-owner-reward-area">
         <div class="location-owner-game-reward-area" [style.background-color]="location.color">
           <div class="location-owner-visitor-reward-container">
-            <img class="location-owner-visitor-reward" [src]="getRewardTypePath(location.ownerReward.type)" />
+            <img class="location-owner-visitor-reward" [src]="getEffectTypePath(location.ownerReward.type)" />
             <div class="location-owner-visitor-reward-amount">
               {{ location.ownerReward.amount }}
             </div>
           </div>
         </div>
         <div class="location-owner-finale-reward-area">
-          <img class="location-owner-victory-point-finale" [src]="getRewardTypePath('victory-point')" />
+          <img class="location-owner-victory-point-finale" [src]="getEffectTypePath('victory-point')" />
         </div>
         <div class="border-remover" [style.background-color]="location.color"></div>
       </div>

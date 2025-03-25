@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionField, Reward } from 'src/app/models';
+import { ActionField, Effect } from 'src/app/models';
 import { SettingsService } from 'src/app/services/settings.service';
 
 interface FieldValue {
@@ -69,7 +69,7 @@ export class BoardEvaluationComponent implements OnInit {
     });
   }
 
-  private getRewardValue(rewards: Reward[]) {
+  private getRewardValue(rewards: Effect[]) {
     let value = 0;
     for (const reward of rewards) {
       const amount = reward.amount ?? 1;

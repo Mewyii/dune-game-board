@@ -4,15 +4,15 @@ import { ActiveFactionType } from './faction';
 import { LanguageStringAndFontSize } from './imperium-card';
 import { LanguageString } from './language';
 import { Player } from './player';
-import { Reward } from './reward';
+import { Effect, EffectReward } from './reward';
 
 export interface TechTileCard {
   name: LanguageString;
   faction?: ActiveFactionType;
   costs: number;
-  effects?: Reward[];
+  effects?: Effect[];
   customEffect?: LanguageStringAndFontSize;
-  buyEffects?: Reward[];
+  buyEffects?: EffectReward[];
   imageUrl?: string;
   imagePosition?: 'top' | 'center' | 'bottom';
   aiEvaluation: (player: Player, gameState: GameState) => number;

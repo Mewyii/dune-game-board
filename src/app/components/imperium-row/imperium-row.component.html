@@ -3,21 +3,21 @@
     <div>{{ t.translate('imperiumrowHeading') }}</div>
     <div class="persuasion-area font-text" *ngIf="activePlayer">
       <div class="resource-display" [style]="'filter: saturate(0.25);'">
-        <img class="resource small" [src]="getRewardTypePath('persuasion')" />
+        <img class="resource small" [src]="getEffectTypePath('persuasion')" />
         <div class="resource-amount" *ngIf="activePlayer.permanentPersuasion > 0">
           <span>{{ activePlayer.permanentPersuasion }}</span>
         </div>
       </div>
       +
       <div class="resource-display">
-        <img class="resource small" [src]="getRewardTypePath('persuasion')" />
+        <img class="resource small" [src]="getEffectTypePath('persuasion')" />
         <div class="resource-amount" *ngIf="activePlayer.persuasionGainedThisRound > 0">
           <span>{{ activePlayer.persuasionGainedThisRound }}</span>
         </div>
       </div>
       =
       <div class="resource-display" [style]="'filter: saturate(1.25) brightness(1.25);'">
-        <img class="resource" [src]="getRewardTypePath('persuasion')" />
+        <img class="resource" [src]="getEffectTypePath('persuasion')" />
         <div class="resource-amount" *ngIf="activePlayerPersuasion > 0">
           <span>{{ activePlayerPersuasion }}</span>
         </div>

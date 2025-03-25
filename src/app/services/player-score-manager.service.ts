@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
-import { ActionType, FactionType, Reward } from '../models';
+import { ActionType, FactionType, Effect, EffectReward } from '../models';
 import { CombatManager } from './combat-manager.service';
 import { Player } from '../models/player';
 import { LoggingService } from './log.service';
@@ -100,7 +100,7 @@ export class PlayerScoreManager {
   }
 
   public addFactionScore(playerId: number, actionType: ActionType, score: number, roundNumber: number) {
-    let factionRewards: Reward[] = [];
+    let factionRewards: EffectReward[] = [];
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ActionField, FactionType, RewardType } from 'src/app/models';
+import { ActionField, EffectType, FactionType, RewardType } from 'src/app/models';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -11,7 +11,7 @@ import { CardsService } from 'src/app/services/cards.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
-import { GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
+import { EffectWithModifier, GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { PlayersService } from 'src/app/services/players.service';
 import { getFieldIsBlocked, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
@@ -55,7 +55,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
   public actionCosts: RewardWithModifier[] = [];
 
-  public actionRewards: RewardWithModifier[] = [];
+  public actionRewards: EffectWithModifier[] = [];
 
   public isBlocked = false;
 
@@ -209,7 +209,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     return false;
   }
 
-  onRewardClicked(fieldId: string, rewardType: RewardType) {
+  onRewardClicked(fieldId: string, rewardType: EffectType) {
     if (this.disabled) {
       return;
     }
@@ -220,7 +220,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     }
   }
 
-  onRewardRightClicked(fieldId: string, rewardType: RewardType) {
+  onRewardRightClicked(fieldId: string, rewardType: EffectType) {
     if (this.disabled) {
       return;
     }
@@ -232,8 +232,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
     return false;
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   public getFactionTypePath(rewardType: FactionType) {

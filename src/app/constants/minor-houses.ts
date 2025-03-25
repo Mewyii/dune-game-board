@@ -1,17 +1,17 @@
-import { LanguageString, Reward } from '../models';
+import { LanguageString, Effect } from '../models';
 
 export interface House {
   name: LanguageString;
   colorPrimary: string;
   colorSecondary: string;
   persuasion: number;
-  friendshipRequirement?: Reward[];
+  friendshipRequirement?: Effect[];
   customFriendshipRequirement?: LanguageString;
-  friendshipReward?: Reward[];
+  friendshipReward?: Effect[];
   customFriendshipReward?: LanguageString;
-  allianceRequirement?: Reward[];
+  allianceRequirement?: Effect[];
   customAllianceRequirement?: LanguageString;
-  allianceReward?: Reward[];
+  allianceReward?: Effect[];
   customAllianceReward?: LanguageString;
 }
 

@@ -4,15 +4,18 @@ import { cloneDeep } from 'lodash';
 import { shuffle } from 'lodash';
 import { PlayersService } from './players.service';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
-import { ActionType, FactionType } from '../models';
+import { ActionType, FactionType, StructuredEffects } from '../models';
 import { SettingsService } from './settings.service';
 import { ImperiumCard } from '../models/imperium-card';
 import { PlotConfiguratorService } from './configurators/plot-configurator.service';
 import { ImperiumPlot } from '../models/imperium-plot';
+import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
   type: 'imperium-card';
+  structuredAgentEffects?: StructuredEffects;
+  structuredRevealEffects?: StructuredEffects;
 }
 
 export interface ImperiumRowCard extends ImperiumDeckCard {
@@ -684,7 +687,14 @@ export class CardsService {
   }
 
   public instantiateImperiumCard(card: ImperiumCard): ImperiumDeckCard {
-    return { ...card, type: 'imperium-card', id: crypto.randomUUID(), cardAmount: 1 };
+    return {
+      ...card,
+      type: 'imperium-card',
+      id: crypto.randomUUID(),
+      cardAmount: 1,
+      structuredAgentEffects: card.agentEffects ? getStructuredEffectArrayInfos(card.agentEffects) : undefined,
+      structuredRevealEffects: card.revealEffects ? getStructuredEffectArrayInfos(card.revealEffects) : undefined,
+    };
   }
 
   public instantiateImperiumPlot(card: ImperiumPlot): ImperiumDeckPlot {

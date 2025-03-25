@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DuneLocation, RewardType } from 'src/app/models';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { DuneLocation, EffectType, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -106,7 +106,7 @@ export class DuneLocationComponent implements OnInit {
     this.gameModifierService.increaseLocationChangeModifier(this.activePlayerId, this.location.actionField.title.en, 1);
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 }

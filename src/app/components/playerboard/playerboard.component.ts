@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
@@ -209,8 +209,8 @@ export class PlayerboardComponent implements OnInit {
     }
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   public getFactionTypePath(rewardType: FactionType) {

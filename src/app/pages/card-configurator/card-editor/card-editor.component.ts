@@ -1,12 +1,19 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { getFactionTypePath } from 'src/app/helpers/faction-types';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { isConditionalEffect } from 'src/app/helpers/rewards';
 import {
   activeFactionTypes,
   combatUnitTypes,
+  EffectType,
+  FactionType,
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
+  rewardChoices,
+  rewardConditions,
+  rewardSeparators,
   RewardType,
   rewardTypes,
 } from 'src/app/models';
@@ -25,10 +32,13 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   editMode = false;
 
-  factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b));
+  factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b)) as FactionType[];
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes].sort((a, b) => a.localeCompare(b)); // Add other reward types
-  fontSizes = ['medium', 'small'];
+  effectTypes = [...rewardTypes, ...rewardSeparators, ...rewardChoices, ...rewardConditions].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  fontSizes = ['large', 'medium', 'small'];
 
   hasCustomAgentEffect = false;
   hasCustomRevealEffect = false;
@@ -79,12 +89,23 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
         agentEffectsArray.clear();
         newImperiumCard.agentEffects.forEach((field) => {
-          agentEffectsArray.push(
-            this.fb.group({
-              type: field.type,
-              amount: field.amount,
-            })
-          );
+          if (isConditionalEffect(field)) {
+            agentEffectsArray.push(
+              this.fb.group({
+                type: field.type,
+                amount: field.amount,
+                faction: field.faction,
+              })
+            );
+          } else {
+            agentEffectsArray.push(
+              this.fb.group({
+                type: field.type,
+                amount: field.amount,
+                faction: undefined,
+              })
+            );
+          }
         });
       }
 
@@ -94,12 +115,23 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
         revealEffectsArray.clear();
         newImperiumCard.revealEffects.forEach((field) => {
-          revealEffectsArray.push(
-            this.fb.group({
-              type: field.type,
-              amount: field.amount,
-            })
-          );
+          if (isConditionalEffect(field)) {
+            revealEffectsArray.push(
+              this.fb.group({
+                type: field.type,
+                amount: field.amount,
+                faction: field.faction,
+              })
+            );
+          } else {
+            revealEffectsArray.push(
+              this.fb.group({
+                type: field.type,
+                amount: field.amount,
+                faction: undefined,
+              })
+            );
+          }
         });
       }
 
@@ -121,6 +153,8 @@ export class CardEditorComponent implements OnInit, OnChanges {
       imageUrl: '',
       cardAmount: 1,
       canInfiltrate: false,
+      agentEffectSize: 'large',
+      revealEffectSize: 'large',
     });
 
     this.addBuyEffectControl();
@@ -138,6 +172,10 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   get fieldAccess() {
     return this.imperiumCardForm.get('fieldAccess') as FormArray;
+  }
+
+  getFaction() {
+    return this.imperiumCardForm.get('faction') as FormArray;
   }
 
   // Buy Effects
@@ -187,6 +225,10 @@ export class CardEditorComponent implements OnInit, OnChanges {
     return this.agentEffects.at(index).get('amount') as FormControl;
   }
 
+  getAgentEffectFactionControl(index: number): FormControl {
+    return this.agentEffects.at(index).get('faction') as FormControl;
+  }
+
   addAgentEffectControl() {
     this.imperiumCardForm.addControl(
       'agentEffects',
@@ -194,6 +236,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
         this.fb.group({
           type: '',
           amount: undefined,
+          faction: undefined,
         }),
       ])
     );
@@ -215,6 +258,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
+        faction: undefined,
       })
     );
   }
@@ -252,6 +296,10 @@ export class CardEditorComponent implements OnInit, OnChanges {
     return this.revealEffects.at(index).get('amount') as FormControl;
   }
 
+  getRevealEffectFactionControl(index: number): FormControl {
+    return this.revealEffects.at(index).get('faction') as FormControl;
+  }
+
   addRevealEffectControl() {
     this.imperiumCardForm.addControl(
       'revealEffects',
@@ -259,6 +307,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
         this.fb.group({
           type: '',
           amount: undefined,
+          faction: undefined,
         }),
       ])
     );
@@ -280,6 +329,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
+        faction: undefined,
       })
     );
   }
@@ -300,7 +350,11 @@ export class CardEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
+  }
+
+  public getFactionTypePath(factionType: FactionType) {
+    return getFactionTypePath(factionType);
   }
 }

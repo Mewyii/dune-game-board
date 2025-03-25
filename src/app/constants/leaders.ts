@@ -1,4 +1,4 @@
-import { LanguageString, Reward } from '../models';
+import { LanguageString, Effect, EffectReward } from '../models';
 import { AIAdjustments } from '../services/ai/models';
 import { GameModifiers } from '../services/game-modifier.service';
 
@@ -6,7 +6,7 @@ export interface Leader {
   name: LanguageString;
   type: 'new';
   house: LanguageString;
-  startingResources: Reward[];
+  startingResources: EffectReward[];
   passiveName: LanguageString;
   passiveDescription: LanguageString;
   signetName: LanguageString;

@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, compact, flatten, isArray, min, sum } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { ActionField, ActionType, ActiveFactionType, FactionType, ResourceType, Reward, RewardType } from '../models';
+import {
+  ActionField,
+  ActionType,
+  ActiveFactionType,
+  FactionType,
+  ResourceType,
+  Effect,
+  EffectReward,
+  RewardType,
+  EffectWithoutSeparatorAndCondition,
+} from '../models';
 import { mergeObjects } from '../helpers/common';
 import { Player } from '../models/player';
 
@@ -13,7 +23,7 @@ export interface GameModifier {
 export interface FactionInfluenceModifier extends GameModifier {
   factionType: FactionType;
   noInfluence: boolean;
-  alternateReward: Reward;
+  alternateReward: EffectReward;
 }
 
 export interface ImperiumRowModifier extends GameModifier {
@@ -109,9 +119,13 @@ export interface PlayerGameModifiers extends GameModifiers {
   playerId: number;
 }
 
-export interface RewardWithModifier extends Reward {
+export type RewardWithModifier = EffectReward & {
   modifier?: 'positive' | 'negative';
-}
+};
+
+export type EffectWithModifier = EffectWithoutSeparatorAndCondition & {
+  modifier?: 'positive' | 'negative';
+};
 
 @Injectable({
   providedIn: 'root',

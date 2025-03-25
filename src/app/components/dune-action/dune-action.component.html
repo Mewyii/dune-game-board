@@ -27,11 +27,11 @@
         </ng-container>
         <ng-container *ngFor="let costs of actionCosts">
           <ng-container *ngIf="!costs.amount">
-            <img [class]="'costs ' + costs.modifier" [src]="getRewardTypePath(costs.type)" />
+            <img [class]="'costs ' + costs.modifier" [src]="getEffectTypePath(costs.type)" />
           </ng-container>
           <ng-container *ngIf="costs.amount">
             <div class="costs-container">
-              <img [class]="'costs ' + costs.modifier" [src]="getRewardTypePath(costs.type)" />
+              <img [class]="'costs ' + costs.modifier" [src]="getEffectTypePath(costs.type)" />
               <div [class]="'costs-amount '">
                 {{ costs.amount }}
               </div>
@@ -61,7 +61,7 @@
               rewardType.modifier +
               (rewardType.type === 'spice-accumulation' ? ' pointer' : '')
             "
-            [src]="getRewardTypePath(rewardType.type)"
+            [src]="getEffectTypePath(rewardType.type)"
             [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
             [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
             (click)="onRewardClicked(actionField.title.en, rewardType.type)"
@@ -81,7 +81,7 @@
             >
               <img
                 [class]="'reward '"
-                [src]="getRewardTypePath(rewardType.type)"
+                [src]="getEffectTypePath(rewardType.type)"
                 [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
                 [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
                 (click)="onRewardClicked(actionField.title.en, rewardType.type)"

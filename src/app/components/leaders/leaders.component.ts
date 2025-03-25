@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
 import { House } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
 import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
@@ -400,8 +400,8 @@ export class LeadersComponent implements OnInit {
     return this.playerHouses.find((x) => x.houseId === houseId)?.level ?? 0;
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   public getFactionTypePath(rewardType: FactionType) {

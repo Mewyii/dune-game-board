@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { ActiveFactionType, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { ActiveFactionType, EffectType, RewardType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -165,8 +165,8 @@ export class ImperiumRowComponent implements OnInit {
     }
   }
 
-  getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   getCardCostModifier(card: ImperiumRowCard | ImperiumRowPlot) {

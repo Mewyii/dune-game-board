@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Reward } from '../models';
+import { Effect } from '../models';
 
 export interface PlayerRewardChoice<T> {
   id: string;
@@ -10,8 +10,8 @@ export interface PlayerRewardChoice<T> {
 
 export interface PlayerRewardChoices {
   playerId: number;
-  rewardChoices: PlayerRewardChoice<Reward>[];
-  rewardsChoices: PlayerRewardChoice<Reward[]>[];
+  rewardChoices: PlayerRewardChoice<Effect>[];
+  rewardsChoices: PlayerRewardChoice<Effect[]>[];
   customChoices: PlayerRewardChoice<string>[];
 }
 
@@ -46,7 +46,7 @@ export class PlayerRewardChoicesService {
     this.playerRewardChoicesSubject.next([]);
   }
 
-  public addPlayerRewardChoice(playerId: number, reward: Reward) {
+  public addPlayerRewardChoice(playerId: number, reward: Effect) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -65,7 +65,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public addPlayerRewardsChoice(playerId: number, rewards: Reward[]) {
+  public addPlayerRewardsChoice(playerId: number, rewards: Effect[]) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);

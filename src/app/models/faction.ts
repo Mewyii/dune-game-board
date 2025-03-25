@@ -1,4 +1,4 @@
-import { ActionField, LanguageString, Reward } from '.';
+import { ActionField, LanguageString, Effect, EffectReward } from '.';
 
 export const passiveFactionTypes = ['landsraad', 'choam'] as const;
 
@@ -8,7 +8,7 @@ export type PassiveFactionType = (typeof passiveFactionTypes)[number];
 export type ActiveFactionType = (typeof activeFactionTypes)[number];
 export type FactionType = PassiveFactionType | ActiveFactionType;
 
-export type FactionInfluenceReward = { [key: number]: Reward[] };
+export type FactionInfluenceReward = { [key: number]: EffectReward[] };
 
 export interface Faction {
   title: LanguageString;

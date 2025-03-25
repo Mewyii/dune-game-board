@@ -1,12 +1,26 @@
-<div class="rewards-container">
-  @for (reward of rewards; track $index) {
-  <div class="reward-container" [style.height]="size">
-    <img class="reward" [src]="getRewardTypePath(reward.type)" [style.height]="size" />
-    <div class="reward-amount" *ngIf="reward.amount">
-      <div>
-        {{ reward.amount }}
+<div class="effect-arrays-container">
+  @for (effects of effectArrays; track $index) {
+  <div class="effects-container">
+    @for (reward of effects; track $index) { @if(isConditionalEffect(reward)) { @if (isInfluenceType(reward.type)) {
+    <div class="condition-container">
+      <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
+      <div class="text" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">{{ reward.amount }} Einfluss:</div>
+    </div>
+    } @else if (isConnectionType(reward.type)) {
+    <div class="condition-container">
+      <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
+      <div class="text" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">-Verbindung:</div>
+    </div>
+    } } @else {
+    <div class="reward-container" [style.height]="size">
+      <img class="reward" [src]="getEffectTypePath(reward.type)" [style.height]="size" />
+      <div class="reward-amount" *ngIf="reward.amount">
+        <div [style.fontSize]="rewardAmountFontSize">
+          {{ reward.amount }}
+        </div>
       </div>
     </div>
+    } }
   </div>
   }
 </div>

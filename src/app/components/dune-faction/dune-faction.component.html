@@ -21,7 +21,7 @@
             <div class="reward-area">
               <ng-container *ngFor="let reward of faction.influenceRewards[i]">
                 <div class="reward-container">
-                  <img class="reward" [src]="getRewardTypePath(reward.type)" />
+                  <img class="reward" [src]="getEffectTypePath(reward.type)" />
                   <ng-container *ngIf="reward.amount">
                     <div class="reward-amount">
                       {{ reward.amount }}

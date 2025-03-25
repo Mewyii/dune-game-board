@@ -18,7 +18,7 @@
     <div class="card-effect requirement" *ngIf="house.allianceRequirement">
       <ng-container *ngFor="let reward of house.allianceRequirement">
         <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <img class="reward" [src]="getEffectTypePath(reward.type)" />
           <ng-container *ngIf="reward.amount">
             <div class="reward-amount">
               {{ reward.amount }}
@@ -33,7 +33,7 @@
     <div class="card-effect price" *ngIf="house.allianceReward">
       <ng-container *ngFor="let reward of house.allianceReward">
         <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <img class="reward" [src]="getEffectTypePath(reward.type)" />
           <ng-container *ngIf="reward.amount">
             <div class="reward-amount">
               {{ reward.amount }}
@@ -53,7 +53,7 @@
     <div class="card-effect requirement" *ngIf="house.friendshipRequirement">
       <ng-container *ngFor="let reward of house.friendshipRequirement">
         <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <img class="reward" [src]="getEffectTypePath(reward.type)" />
           <ng-container *ngIf="reward.amount">
             <div class="reward-amount">
               {{ reward.amount }}
@@ -68,7 +68,7 @@
     <div class="card-effect price" *ngIf="house.friendshipReward">
       <ng-container *ngFor="let reward of house.friendshipReward">
         <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <img class="reward" [src]="getEffectTypePath(reward.type)" />
           <ng-container *ngIf="reward.amount">
             <div class="reward-amount">
               {{ reward.amount }}

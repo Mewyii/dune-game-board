@@ -9,11 +9,11 @@
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'reward-gain'">
         Player {{ logEntry.playerId }} got: {{ logEntry.amount }}
-        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />
+        <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'reward-pay'">
         Player {{ logEntry.playerId }} paid: {{ logEntry.amount }}
-        <img class="reward-small" [src]="getRewardTypePath(logEntry.rewardType)" />
+        <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'card-buy'">
         Player {{ logEntry.playerId }} bought card {{ logEntry.cardName }}.
@@ -37,7 +37,7 @@
         Player {{ logEntry.playerId }} stole an intrigue from player {{ logEntry.enemyPlayerId }}.
       </ng-container>
       <ng-container *ngIf="logEntry.type === 'victory-point-gain'">
-        Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getRewardTypePath('victory-point')" />
+        Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getEffectTypePath('victory-point')" />
       </ng-container>
     </div>
     }
@@ -47,7 +47,7 @@
     <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
       <div *ngFor="let reward of rewardsChoice.choice">
         <div class="reward-container">
-          <img class="reward" [src]="getRewardTypePath(reward.type)" />
+          <img class="reward" [src]="getEffectTypePath(reward.type)" />
           <ng-container *ngIf="reward.amount">
             <div class="reward-amount">
               {{ reward.amount }}
@@ -59,7 +59,7 @@
     } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
     <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
       <div class="reward-container">
-        <img class="reward" [src]="getRewardTypePath(rewardChoice.choice.type)" />
+        <img class="reward" [src]="getEffectTypePath(rewardChoice.choice.type)" />
         <ng-container *ngIf="rewardChoice.choice.amount">
           <div class="reward-amount">
             {{ rewardChoice.choice.amount }}

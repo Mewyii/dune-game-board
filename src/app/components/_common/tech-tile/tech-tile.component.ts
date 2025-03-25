@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { ActionType, FactionType, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { ActionType, EffectType, FactionType, RewardType } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -18,8 +18,8 @@ export class TechTileComponent {
 
   constructor(public t: TranslateService, public settingsService: SettingsService) {}
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   public getActionTypePath(rewardType: ActionType) {

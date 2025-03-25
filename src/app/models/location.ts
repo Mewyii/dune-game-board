@@ -1,4 +1,12 @@
-import { FactionInfluence, FactionType, LanguageString, Reward, RewardType } from '.';
+import {
+  FactionInfluence,
+  FactionType,
+  LanguageString,
+  Effect,
+  EffectReward,
+  RewardType,
+  EffectWithoutSeparatorAndCondition,
+} from '.';
 
 export interface DuneLocation {
   color: string;
@@ -7,15 +15,15 @@ export interface DuneLocation {
     marginLeft: number;
   };
   actionField: ActionField;
-  ownerReward?: Reward;
+  ownerReward?: EffectReward;
 }
 
 export interface ActionField {
   title: LanguageString;
   actionType: ActionType;
-  costs?: Reward[];
-  rewards: Reward[];
-  conversionOptions?: Reward[][];
+  costs?: EffectReward[];
+  rewards: EffectWithoutSeparatorAndCondition[];
+  conversionOptions?: EffectWithoutSeparatorAndCondition[][];
   pathToImage: string;
   isBattlefield?: boolean;
   isNonBlockingField?: boolean;

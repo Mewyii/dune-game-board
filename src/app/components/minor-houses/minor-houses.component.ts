@@ -3,8 +3,8 @@ import { shuffle } from 'lodash';
 import { imperiumCards } from 'src/app/constants/imperium-cards';
 import { House, minorHouses } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { FactionType, LanguageString, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, FactionType, LanguageString, RewardType } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { MinorHousesService } from 'src/app/services/minor-houses.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -30,8 +30,8 @@ export class MinorHousesComponent implements OnInit {
     this.minorHousesService.setPlayerHouse(this.gameManager.activePlayerId, houseId);
   }
 
-  getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   getFactionTypePath(rewardType: FactionType) {

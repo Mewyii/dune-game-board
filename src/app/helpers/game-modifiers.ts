@@ -4,6 +4,7 @@ import { ImperiumCard } from '../models/imperium-card';
 import { TechTileCard } from '../models/tech-tile';
 import { ImperiumDeckCard } from '../services/cards.service';
 import {
+  EffectWithModifier,
   FieldBlockModifier,
   FieldCostsModifier,
   FieldRewardsModifier,
@@ -130,7 +131,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
 export function getModifiedRewardsForField(
   actionField: ActionField,
   modifiers?: FieldRewardsModifier[]
-): RewardWithModifier[] {
+): EffectWithModifier[] {
   if (!modifiers || actionField.rewards.length < 1) {
     return actionField.rewards;
   }

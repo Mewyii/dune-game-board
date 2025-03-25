@@ -36,7 +36,7 @@
         [innerHTML]="t.translateLS(card.customAgentEffect) | duneSymbols : '22px'"
       ></div>
     </div>
-    <dune-reward-array *ngIf="card.agentEffects" [rewards]="card.agentEffects"></dune-reward-array>
+    <dune-reward-array *ngIf="card.agentEffects" [rewards]="card.agentEffects" [size]="agentEffectSize"></dune-reward-array>
   </div>
   <div
     class="card-agent-effect-separator"
@@ -55,7 +55,11 @@
         [innerHTML]="t.translateLS(card.customRevealEffect) | duneSymbols : '22px'"
       ></div>
     </div>
-    <dune-reward-array *ngIf="card.revealEffects" [rewards]="card.revealEffects"></dune-reward-array>
+    <dune-reward-array
+      *ngIf="card.revealEffects"
+      [rewards]="card.revealEffects"
+      [size]="revealEffectSize"
+    ></dune-reward-array>
   </div>
   <div class="card-aquire-effect-container" *ngIf="card.buyEffects && card.buyEffects.length > 0">
     <dune-reward-array *ngIf="card.buyEffects" [rewards]="card.buyEffects" [size]="'24px'"></dune-reward-array>

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RewardType } from 'src/app/models';
+import { EffectType, RewardType } from 'src/app/models';
 import { boardSettings } from 'src/app/constants/board-settings';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -99,8 +99,8 @@ export class DuneCombatComponent implements OnInit {
     }
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   public onCombatScoreMarkerDrop(event: CdkDragDrop<number[]>, score: number) {

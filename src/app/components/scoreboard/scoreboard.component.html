@@ -9,7 +9,7 @@
       <ng-container *ngIf="victoryPointBoni"
         ><ng-container *ngIf="scoreHasReward(i)">
           <div class="reward-container">
-            <img class="reward" [src]="getRewardTypePath(i)" />
+            <img class="reward" [src]="getEffectTypePath(i)" />
             <ng-container *ngIf="getRewardAmount(i)">
               <div class="reward-amount">
                 {{ getRewardAmount(i) }}

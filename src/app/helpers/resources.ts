@@ -1,6 +1,6 @@
-import { Resource, ResourceType, Reward, RewardType } from '../models';
+import { Resource, ResourceType, Effect, RewardType } from '../models';
 
-export function isResourceArray(rewards: Reward[]): rewards is Resource[] {
+export function isResourceArray(rewards: Effect[]): rewards is Resource[] {
   for (const reward of rewards) {
     if (reward.type !== 'solari' && reward.type !== 'spice' && reward.type !== 'water') {
       return false;
@@ -9,7 +9,7 @@ export function isResourceArray(rewards: Reward[]): rewards is Resource[] {
   return true;
 }
 
-export function isResource(reward: Reward): reward is Resource {
+export function isResource(reward: Effect): reward is Resource {
   if (reward.type === 'solari' || reward.type === 'spice' || reward.type === 'water') {
     return true;
   }

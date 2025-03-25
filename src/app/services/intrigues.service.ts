@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
 import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
 import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
+import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 
 @Injectable({
   providedIn: 'root',
@@ -136,6 +137,12 @@ export class IntriguesService {
   }
 
   public instantiateIntrigueCard(card: IntrigueCard): IntrigueDeckCard {
-    return { name: card.name, effects: card.effects, type: card.type, id: crypto.randomUUID() };
+    return {
+      name: card.name,
+      effects: card.effects,
+      type: card.type,
+      id: crypto.randomUUID(),
+      structuredEffects: getStructuredEffectArrayInfos(card.effects),
+    };
   }
 }

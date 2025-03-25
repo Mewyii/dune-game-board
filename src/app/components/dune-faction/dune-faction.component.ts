@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Faction, Reward, RewardType } from 'src/app/models';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { Faction, Effect, RewardType, EffectType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -105,8 +105,8 @@ export class DuneFactionComponent implements OnInit {
     return this.playerManager.getPlayerColor(playerId);
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   public getTitleColor(rgbColor: string) {

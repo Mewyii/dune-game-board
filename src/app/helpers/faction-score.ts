@@ -1,7 +1,7 @@
-import { Reward } from '../models';
+import { Effect } from '../models';
 import { PlayerFactionScoreType } from '../services/player-score-manager.service';
 
-export function getFactionScoreTypeFromReward(reward: Reward): PlayerFactionScoreType | undefined {
+export function getFactionScoreTypeFromReward(reward: Effect): PlayerFactionScoreType | undefined {
   if (reward.type === 'faction-influence-up-bene') {
     return 'bene';
   } else if (reward.type === 'faction-influence-up-fremen') {
@@ -14,7 +14,7 @@ export function getFactionScoreTypeFromReward(reward: Reward): PlayerFactionScor
   return undefined;
 }
 
-export function getFactionScoreTypeFromCost(reward: Reward): PlayerFactionScoreType | undefined {
+export function getFactionScoreTypeFromCost(reward: Effect): PlayerFactionScoreType | undefined {
   if (reward.type === 'faction-influence-down-bene') {
     return 'bene';
   } else if (reward.type === 'faction-influence-down-fremen') {

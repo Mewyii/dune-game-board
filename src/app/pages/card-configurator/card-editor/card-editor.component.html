@@ -14,7 +14,18 @@
   <mat-form-field>
     <mat-label>Faction</mat-label>
     <mat-select formControlName="faction">
-      <mat-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</mat-option>
+      <mat-select-trigger>
+        <div class="reward-container">
+          <img class="reward" [src]="getFactionTypePath(getFaction().value)" />
+          <span class="reward-label">{{ getFaction().value }}</span>
+        </div>
+      </mat-select-trigger>
+      <mat-option *ngFor="let faction of factions" [value]="faction"
+        ><div class="reward-container">
+          <img class="reward" [src]="getFactionTypePath(faction)" />
+          <span class="reward-label">{{ faction }}</span>
+        </div></mat-option
+      >
     </mat-select>
   </mat-form-field>
 
@@ -55,19 +66,19 @@
           <mat-select [formControl]="getBuyEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getRewardTypePath(getBuyEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getEffectTypePath(getBuyEffectTypeControl(i).value)" />
                 <span class="reward-label">{{ getBuyEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">
               <div class="reward-container">
-                <img class="reward" [src]="getRewardTypePath(rewardType)" />
+                <img class="reward" [src]="getEffectTypePath(rewardType)" />
                 <span class="reward-label">{{ rewardType }}</span>
               </div>
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="small-text-field">
           <mat-label>Amount</mat-label>
           <input matInput [formControl]="getBuyEffectAmountControl(i)" type="number" />
         </mat-form-field>
@@ -104,21 +115,38 @@
           <mat-select [formControl]="getAgentEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getRewardTypePath(getAgentEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getEffectTypePath(getAgentEffectTypeControl(i).value)" />
                 <span class="reward-label">{{ getAgentEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType"
+            <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
               ><div class="reward-container">
-                <img class="reward" [src]="getRewardTypePath(rewardType)" />
-                <span class="reward-label">{{ rewardType }}</span>
+                <img class="reward" [src]="getEffectTypePath(effectType)" />
+                <span class="reward-label">{{ effectType }}</span>
               </div></mat-option
             >
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="small-text-field">
           <mat-label>Amount</mat-label>
           <input matInput [formControl]="getAgentEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <mat-form-field class="small-text-field">
+          <mat-label>Faction</mat-label>
+          <mat-select [formControl]="getAgentEffectFactionControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(getAgentEffectFactionControl(i).value)" />
+                <span class="reward-label">{{ getAgentEffectFactionControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let faction of factions" [value]="faction"
+              ><div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(faction)" />
+                <span class="reward-label">{{ faction }}</span>
+              </div></mat-option
+            >
+          </mat-select>
         </mat-form-field>
         <button mat-mini-fab [color]="'accent'" (click)="onRemoveAgentEffectClicked(i)">
           <mat-icon>delete</mat-icon>
@@ -128,6 +156,12 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Agent Effect Size</mat-label>
+      <mat-select formControlName="agentEffectSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <div *ngIf="hasCustomAgentEffect" class="form-group" formGroupName="customAgentEffect">
       <mat-form-field class="large-text-field">
         <mat-label>English</mat-label>
@@ -169,21 +203,38 @@
           <mat-select [formControl]="getRevealEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getRewardTypePath(getRevealEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getEffectTypePath(getRevealEffectTypeControl(i).value)" />
                 <span class="reward-label">{{ getRevealEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType"
+            <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
               ><div class="reward-container">
-                <img class="reward" [src]="getRewardTypePath(rewardType)" />
-                <span class="reward-label">{{ rewardType }}</span>
+                <img class="reward" [src]="getEffectTypePath(effectType)" />
+                <span class="reward-label">{{ effectType }}</span>
               </div></mat-option
             >
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="small-text-field">
           <mat-label>Amount</mat-label>
           <input matInput [formControl]="getRevealEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <mat-form-field class="small-text-field">
+          <mat-label>Faction</mat-label>
+          <mat-select [formControl]="getRevealEffectFactionControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(getRevealEffectFactionControl(i).value)" />
+                <span class="reward-label">{{ getRevealEffectFactionControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let faction of factions" [value]="faction"
+              ><div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(faction)" />
+                <span class="reward-label">{{ faction }}</span>
+              </div></mat-option
+            >
+          </mat-select>
         </mat-form-field>
         <button mat-mini-fab [color]="'accent'" (click)="onRemoveRevealEffectClicked(i)">
           <mat-icon>delete</mat-icon>
@@ -193,6 +244,12 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Reveal Effect Size</mat-label>
+      <mat-select formControlName="revealEffectSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <div *ngIf="hasCustomRevealEffect" class="form-group" formGroupName="customRevealEffect">
       <mat-form-field class="large-text-field">
         <mat-label>English</mat-label>

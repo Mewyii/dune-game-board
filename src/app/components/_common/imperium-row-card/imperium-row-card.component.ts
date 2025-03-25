@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { getActionTypePath } from 'src/app/helpers/action-types';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { ActionType, FactionType, RewardType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -17,6 +17,8 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
 
   public factionName = '';
   public factionColor = '';
+  public agentEffectSize = '32px';
+  public revealEffectSize = '32px';
 
   constructor(public t: TranslateService, public settingsService: SettingsService) {}
 
@@ -24,6 +26,14 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     if (this.card.faction) {
       this.factionName = this.getFactionName(this.card.faction);
       this.factionColor = this.getFactionColor(this.card.faction);
+    }
+    if (this.card.agentEffectSize) {
+      this.agentEffectSize =
+        this.card.agentEffectSize === 'large' ? '32px' : this.card.agentEffectSize === 'medium' ? '22px' : '18px';
+    }
+    if (this.card.revealEffectSize) {
+      this.revealEffectSize =
+        this.card.revealEffectSize === 'large' ? '32px' : this.card.revealEffectSize === 'medium' ? '22px' : '18px';
     }
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, RewardType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { LoggingService } from 'src/app/services/log.service';
@@ -99,7 +99,7 @@ export class GameSummaryDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 }

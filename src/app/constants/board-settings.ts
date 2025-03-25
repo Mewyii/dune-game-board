@@ -1,11 +1,11 @@
-import { ActionField, DuneLocation, Faction, LanguageType, Reward } from '../models';
+import { ActionField, DuneLocation, Faction, LanguageType, Effect } from '../models';
 import { CustomCard } from '../models/imperium-card';
 import { FieldsForGoals } from '../services/ai/models';
 import { gameContentCustomExpert } from './game-content';
 
 export interface VictoryPointReward {
   score: number;
-  reward: Reward;
+  reward: Effect;
 }
 
 export interface GameContent {
@@ -20,7 +20,7 @@ export interface GameContent {
   troopCombatStrength: number;
   dreadnoughtCombatStrength: number;
   highCouncilPersuasion: number;
-  startingResources: Reward[];
+  startingResources: Effect[];
   aiGoals?: FieldsForGoals;
   customCards?: CustomCard[];
   recruitmentCardAmount: number;

@@ -1,62 +1,66 @@
 form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .form-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.small-text-field {
+  width: 150px;
 }
 
 .medium-text-field {
-    width: 250px;
+  width: 250px;
 }
 
 .big-text-field {
-    width: 400px;
+  width: 400px;
 }
 
 .large-text-field {
-    width: 800px;
+  width: 800px;
 }
 
 .padding-top {
-    padding-top: 8px;
+  padding-top: 8px;
 }
 
 .margin-top {
-    margin-top: 32px;
+  margin-top: 32px;
 }
 
 .card-effect-container {
-    margin-top: 32px;
-    width: 100%;
-    min-height: 240px;
+  margin-top: 32px;
+  width: 100%;
+  min-height: 240px;
 }
 
 .title-container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .card-effect-title {
-    margin-right: 16px;
+  margin-right: 16px;
 }
 
 .reward-container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .reward {
-    position: absolute;
-    height: 24px;
-    max-width: 36px;
+  position: absolute;
+  height: 24px;
+  max-width: 36px;
 }
 
 .reward-label {
-    margin-left: 44px;
+  margin-left: 44px;
 }

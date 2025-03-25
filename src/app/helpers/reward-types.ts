@@ -1,6 +1,6 @@
-import { RewardType } from '../models';
+import { EffectType } from '../models';
 
-export function getRewardTypePath(rewardType: RewardType) {
+export function getEffectTypePath(rewardType: EffectType) {
   switch (rewardType) {
     case 'solari':
       return 'assets/images/reward-markers/marker_coin.png';

@@ -8,7 +8,7 @@ import { PlayersService } from './players.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
-import { ActionField, ActionType, ActiveFactionType, DuneLocation, Reward, RewardType } from '../models';
+import { ActionField, ActionType, ActiveFactionType, DuneLocation, Effect, EffectReward, RewardType } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
@@ -19,7 +19,13 @@ import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
 import { GameState, PlayerCardsFactions as Factions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
 import { CardsService, ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
-import { isFactionScoreCostType, isFactionScoreRewardType } from '../helpers/rewards';
+import {
+  getStructuredChoiceEffectIfPossible,
+  isConversionEffectType,
+  isFactionScoreCostType,
+  isFactionScoreRewardType,
+  isOptionEffectType,
+} from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { Leader } from '../constants/leaders';
@@ -473,56 +479,36 @@ export class GameManager {
 
     const playerHand = this.cardsService.getPlayerHand(playerId);
     if (playerHand) {
-      const gameState = this.getGameState(player);
-
       for (const card of playerHand.cards) {
-        if (card.revealEffects) {
-          const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } =
-            this.aIManager.getRewardArrayAIInfos(card.revealEffects);
-
-          if (!hasRewardOptions && !hasRewardConversion) {
-            for (const reward of card.revealEffects) {
-              this.addRewardToPlayer(player, reward, card);
-            }
-          } else if (!player.isAI && (hasRewardOptions || hasRewardConversion)) {
-            this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, card.revealEffects);
-          } else if (player.isAI && hasRewardOptions) {
-            const leftSideRewards = card.revealEffects.slice(0, rewardOptionIndex);
-            const rightSideRewards = card.revealEffects.slice(rewardOptionIndex + 1);
-            const leftSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(
-              leftSideRewards,
-              player,
-              gameState
-            );
-            const rightSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(
-              rightSideRewards,
-              player,
-              gameState
-            );
-
-            if (leftSideEvaluation >= rightSideEvaluation) {
-              for (const reward of leftSideRewards) {
-                this.addRewardToPlayer(player, reward, card);
-              }
-            } else {
-              for (const reward of rightSideRewards) {
-                this.addRewardToPlayer(player, reward, card);
-              }
-            }
-          } else if (player.isAI && hasRewardConversion) {
-            this.aiConvertRewardIfUsefulAndPossible(player, card.revealEffects, rewardConversionIndex, gameState, card);
-          }
-        }
-        if (card.customRevealEffect) {
-          const localizedString = this.t.translateLS(card.customRevealEffect);
-          const { rewards, restString } = this.getExtractedRewardsFromCustomAgentEffect(localizedString);
-          for (const reward of rewards) {
+        if (card.structuredRevealEffects) {
+          const revealEffects = card.structuredRevealEffects;
+          for (const reward of revealEffects.rewards) {
             this.addRewardToPlayer(player, reward);
           }
+          for (const choiceEffect of revealEffects.choiceEffects) {
+            if (!player.isAI) {
+              this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
+                ...choiceEffect.left,
+                { type: choiceEffect.choiceType },
+                ...choiceEffect.right,
+              ]);
+            } else {
+              const gameState = this.getGameState(player);
 
-          if (restString) {
-            this.playerRewardChoicesService.addPlayerCustomChoice(playerId, restString);
+              if (isOptionEffectType(choiceEffect.choiceType)) {
+                this.aiChooseRewardOption(player, choiceEffect.left, choiceEffect.right, gameState, card);
+              } else if (isConversionEffectType(choiceEffect.choiceType)) {
+                this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect.left, choiceEffect.right, gameState, card);
+              }
+            }
           }
+          for (const conditionalEffect of revealEffects.conditionalEffects) {
+          }
+        }
+
+        if (card.customRevealEffect) {
+          const localizedString = this.t.translateLS(card.customRevealEffect);
+          this.playerRewardChoicesService.addPlayerCustomChoice(playerId, localizedString);
         }
       }
 
@@ -582,8 +568,8 @@ export class GameManager {
     const fieldRewards = getModifiedRewardsForField(field, gameModifiers?.fieldReward);
 
     const { rewardOptionIndex, hasRewardOptions } = this.aIManager.getRewardArrayAIInfos(fieldRewards);
-    let rewards: Reward[] = [];
-    const option: Reward[] = [];
+    let rewards: EffectReward[] = [];
+    const option: Effect[] = [];
 
     if (hasRewardOptions) {
       for (const [index, reward] of fieldRewards.entries()) {
@@ -591,11 +577,11 @@ export class GameManager {
         if (isRewardOption || index === rewardOptionIndex) {
           option.push(reward);
         } else {
-          rewards.push(reward);
+          rewards.push(reward as EffectReward);
         }
       }
     } else {
-      rewards = fieldRewards;
+      rewards = fieldRewards as EffectReward[];
     }
 
     for (const reward of rewards) {
@@ -652,7 +638,7 @@ export class GameManager {
       if (activePlayer && aiPlayer) {
         if (hasRewardOptions) {
           const aiDecision = this.aIManager.getFieldDecision(activePlayer.id, field.title.en);
-          const reward = fieldRewards.find((x) => x.type.includes(aiDecision));
+          const reward = rewards.find((x) => x.type.includes(aiDecision));
 
           if (reward) {
             this.addRewardToPlayer(activePlayer, reward);
@@ -663,21 +649,24 @@ export class GameManager {
           const gameState = this.getGameState(activePlayer);
 
           let favoredConversionValue = 0;
-          let favoredConversion: { costs: Reward[]; rewards: Reward[] } | undefined;
+          let favoredConversion: { costs: EffectReward[]; rewards: EffectReward[] } | undefined;
 
           for (const conversionOption of field.conversionOptions) {
-            const { hasRewardConversion, rewardConversionIndex } = this.aIManager.getRewardArrayAIInfos(conversionOption);
-            if (hasRewardConversion) {
-              const costs = conversionOption.slice(0, rewardConversionIndex);
-              const rewards = conversionOption.slice(rewardConversionIndex + 1);
-              if (this.playerCanPayCosts(activePlayer.id, costs)) {
-                const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, activePlayer, gameState);
+            const [_, choiceEffect] = getStructuredChoiceEffectIfPossible(conversionOption);
+            if (choiceEffect) {
+              if (this.playerCanPayCosts(activePlayer.id, choiceEffect.left)) {
+                const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(
+                  choiceEffect.left,
+                  activePlayer,
+                  gameState
+                );
                 const conversionValue =
-                  this.aIManager.getRewardArrayEvaluationForTurnState(rewards, activePlayer, gameState) - costsEvaluation;
+                  this.aIManager.getRewardArrayEvaluationForTurnState(choiceEffect.right, activePlayer, gameState) -
+                  costsEvaluation;
 
                 if (conversionValue > favoredConversionValue) {
                   favoredConversionValue = conversionValue;
-                  favoredConversion = { costs, rewards };
+                  favoredConversion = { costs: choiceEffect.left, rewards: choiceEffect.right };
                 }
               }
             }
@@ -708,56 +697,35 @@ export class GameManager {
     if (playerCard) {
       const card = this.cardsService.getPlayerHandCard(player.id, playerCard.cardId);
       if (card) {
-        if (card.agentEffects) {
-          const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } =
-            this.aIManager.getRewardArrayAIInfos(card.agentEffects);
-          if (!hasRewardOptions && !hasRewardConversion) {
-            for (const agentEffect of card.agentEffects) {
-              this.addRewardToPlayer(player, agentEffect, card);
-            }
-          } else if (!isAI && (hasRewardOptions || hasRewardConversion)) {
-            this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, card.agentEffects);
-          } else if (isAI && hasRewardOptions) {
-            const gameState = this.getGameState(player);
-
-            const leftSideRewards = card.agentEffects.slice(0, rewardOptionIndex);
-            const rightSideRewards = card.agentEffects.slice(rewardOptionIndex + 1);
-            const leftSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(
-              leftSideRewards,
-              player,
-              gameState
-            );
-            const rightSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(
-              rightSideRewards,
-              player,
-              gameState
-            );
-
-            if (leftSideEvaluation >= rightSideEvaluation) {
-              for (const reward of leftSideRewards) {
-                this.addRewardToPlayer(player, reward, card);
-              }
-            } else {
-              for (const reward of rightSideRewards) {
-                this.addRewardToPlayer(player, reward, card);
-              }
-            }
-          } else if (isAI && hasRewardConversion) {
-            const gameState = this.getGameState(player);
-
-            this.aiConvertRewardIfUsefulAndPossible(player, card.agentEffects, rewardConversionIndex, gameState, card);
-          }
-        }
-        if (card.customAgentEffect) {
-          const localizedString = this.t.translateLS(card.customAgentEffect);
-          const { rewards, restString } = this.getExtractedRewardsFromCustomAgentEffect(localizedString);
-          for (const reward of rewards) {
+        if (card.structuredAgentEffects) {
+          const agentEffects = card.structuredAgentEffects;
+          for (const reward of agentEffects.rewards) {
             this.addRewardToPlayer(player, reward);
           }
+          for (const choiceEffect of agentEffects.choiceEffects) {
+            if (!isAI) {
+              this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
+                ...choiceEffect.left,
+                { type: choiceEffect.choiceType },
+                ...choiceEffect.right,
+              ]);
+            } else {
+              const gameState = this.getGameState(player);
 
-          if (restString) {
-            this.playerRewardChoicesService.addPlayerCustomChoice(player.id, restString);
+              if (isOptionEffectType(choiceEffect.choiceType)) {
+                this.aiChooseRewardOption(player, choiceEffect.left, choiceEffect.right, gameState, card);
+              } else if (isConversionEffectType(choiceEffect.choiceType)) {
+                this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect.left, choiceEffect.right, gameState, card);
+              }
+            }
           }
+          for (const conditionalEffect of agentEffects.conditionalEffects) {
+          }
+        }
+
+        if (card.customAgentEffect) {
+          const localizedString = this.t.translateLS(card.customAgentEffect);
+          this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
         }
       }
     }
@@ -922,14 +890,19 @@ export class GameManager {
       return;
     }
 
-    const { hasRewardOptions, hasRewardConversion } = this.aIManager.getRewardArrayAIInfos(intrigue.effects);
-    if (hasRewardOptions || hasRewardConversion) {
-      this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, intrigue.effects);
-    } else {
-      for (const reward of intrigue.effects) {
+    if (intrigue.structuredEffects) {
+      for (const reward of intrigue.structuredEffects.rewards) {
         this.addRewardToPlayer(player, reward);
       }
+      for (const choiceEffect of intrigue.structuredEffects.choiceEffects) {
+        this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
+          ...choiceEffect.left,
+          { type: choiceEffect.choiceType },
+          ...choiceEffect.right,
+        ]);
+      }
     }
+
     this.intriguesService.trashPlayerIntrigue(playerId, intrigue.id);
     this.loggingService.logPlayerPlayedIntrigue(playerId, this.t.translateLS(intrigue.name));
     this.turnInfoService.updatePlayerTurnInfo(playerId, { intriguesPlayedThisTurn: [intrigue] });
@@ -1019,26 +992,21 @@ export class GameManager {
             const intriguesWithoutCombatScores: IntrigueDeckCard[] = [];
 
             for (const intrigue of playerCombatIntrigues) {
-              const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } =
-                this.aIManager.getRewardArrayAIInfos(intrigue.effects);
+              if (intrigue.structuredEffects) {
+                let swordAmount = intrigue.structuredEffects.rewards.filter((x) => x.type === 'sword').length;
 
-              if (!hasRewardOptions && !hasRewardConversion) {
-                const swordAmount = intrigue.effects.filter((x) => x.type === 'sword').length;
+                for (const choiceEffect of intrigue.structuredEffects.choiceEffects) {
+                  if (isConversionEffectType(choiceEffect.choiceType)) {
+                    if (this.playerCanPayCosts(playerId, choiceEffect.left)) {
+                      swordAmount = choiceEffect.right.filter((x) => x.type === 'sword').length;
+                    }
+                  }
+                }
+
                 if (swordAmount > 0) {
                   intriguesWithCombatScores.push({ intrigue, score: swordAmount });
                 } else {
                   intriguesWithoutCombatScores.push(intrigue);
-                }
-              } else if (hasRewardConversion) {
-                const costs = intrigue.effects.slice(0, rewardConversionIndex);
-                const rewards = intrigue.effects.slice(rewardConversionIndex + 1);
-                if (this.playerCanPayCosts(playerId, costs)) {
-                  const swordAmount = rewards.filter((x) => x.type === 'sword').length;
-                  if (swordAmount > 0) {
-                    intriguesWithCombatScores.push({ intrigue, score: swordAmount });
-                  } else {
-                    intriguesWithoutCombatScores.push(intrigue);
-                  }
                 }
               }
             }
@@ -1091,20 +1059,20 @@ export class GameManager {
   }
 
   aiPlayIntrigue(player: Player, intrigue: IntrigueDeckCard, gameState: GameState) {
-    const intrigueEffects = intrigue.effects;
+    const intrigueEffects = intrigue.structuredEffects;
 
     this.loggingService.logPlayerPlayedIntrigue(player.id, this.t.translateLS(intrigue.name));
     this.turnInfoService.updatePlayerTurnInfo(player.id, { intriguesPlayedThisTurn: [intrigue] });
 
-    const { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex } =
-      this.aIManager.getRewardArrayAIInfos(intrigueEffects);
-
-    if (!hasRewardOptions && !hasRewardConversion) {
-      for (const agentEffect of intrigueEffects) {
-        this.addRewardToPlayer(player, agentEffect);
+    if (intrigueEffects) {
+      for (const reward of intrigueEffects.rewards) {
+        this.addRewardToPlayer(player, reward);
       }
-    } else if (hasRewardConversion) {
-      this.aiConvertRewardIfUsefulAndPossible(player, intrigueEffects, rewardConversionIndex, gameState);
+      for (const choiceEffect of intrigueEffects.choiceEffects) {
+        if (isConversionEffectType(choiceEffect.choiceType)) {
+          this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect.left, choiceEffect.right, gameState);
+        }
+      }
     }
 
     this.aiResolveRewardChoices(player);
@@ -1118,28 +1086,32 @@ export class GameManager {
       return playableAndUsefulIntrigues;
     }
     for (const intrigue of intrigues) {
-      const { hasRewardConversion, rewardConversionIndex } = this.aIManager.getRewardArrayAIInfos(intrigue.effects);
+      const intrigueEffects = intrigue.structuredEffects;
 
-      if (!hasRewardConversion) {
-        const isUseful = this.aIManager.getRewardArrayEvaluationForTurnState(intrigue.effects, player, gameState) > 0;
+      if (intrigueEffects) {
+        let isUseful = this.aIManager.getRewardArrayEvaluationForTurnState(intrigueEffects.rewards, player, gameState) > 0;
 
-        if (isUseful) {
-          playableAndUsefulIntrigues.push(intrigue);
-        }
-      } else if (hasRewardConversion) {
-        const costs = intrigue.effects.slice(0, rewardConversionIndex);
-        const rewards = intrigue.effects.slice(rewardConversionIndex + 1);
-        if (rewards.some((x) => x.type === 'location-control')) {
-          if (gameState.freeLocations.length < 1) {
-            costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+        for (const choiceEffect of intrigueEffects.choiceEffects) {
+          if (isConversionEffectType(choiceEffect.choiceType)) {
+            const costs = choiceEffect.left;
+            const rewards = choiceEffect.right;
+            if (rewards.some((x) => x.type === 'location-control')) {
+              if (gameState.freeLocations.length < 1) {
+                costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+              }
+            }
+
+            const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
+            const conversionIsUseful =
+              this.aIManager.getRewardArrayEvaluationForTurnState(rewards, player, gameState) - costsEvaluation > 0;
+
+            if (conversionIsUseful && this.playerCanPayCosts(player.id, costs)) {
+              isUseful = true;
+            }
           }
         }
 
-        const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
-        const conversionIsUseful =
-          this.aIManager.getRewardArrayEvaluationForTurnState(rewards, player, gameState) - costsEvaluation > 0;
-
-        if (conversionIsUseful && this.playerCanPayCosts(player.id, costs)) {
+        if (isUseful) {
           playableAndUsefulIntrigues.push(intrigue);
         }
       }
@@ -1246,19 +1218,11 @@ export class GameManager {
 
   private aiConvertRewardIfUsefulAndPossible(
     player: Player,
-    effects: Reward[],
-    conversionIndex: number,
+    costs: EffectReward[],
+    rewards: EffectReward[],
     gameState: GameState,
     card?: ImperiumDeckCard
   ) {
-    let costs = effects.slice(0, conversionIndex);
-    const rewards = effects.slice(conversionIndex + 1);
-    if (rewards.some((x) => x.type === 'location-control')) {
-      if (gameState.freeLocations.length < 1) {
-        costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
-      }
-    }
-
     const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
     const conversionIsUseful =
       this.aIManager.getRewardArrayEvaluationForTurnState(rewards, player, gameState) - costsEvaluation > 0;
@@ -1268,6 +1232,27 @@ export class GameManager {
         this.payCostForPlayer(player.id, cost);
       }
       for (const reward of rewards) {
+        this.addRewardToPlayer(player, reward, card);
+      }
+    }
+  }
+
+  private aiChooseRewardOption(
+    player: Player,
+    leftSideRewards: EffectReward[],
+    rightSideRewards: EffectReward[],
+    gameState: GameState,
+    card?: ImperiumDeckCard
+  ) {
+    const leftSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(leftSideRewards, player, gameState);
+    const rightSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(rightSideRewards, player, gameState);
+
+    if (leftSideEvaluation >= rightSideEvaluation) {
+      for (const reward of leftSideRewards) {
+        this.addRewardToPlayer(player, reward, card);
+      }
+    } else {
+      for (const reward of rightSideRewards) {
         this.addRewardToPlayer(player, reward, card);
       }
     }
@@ -1846,20 +1831,14 @@ export class GameManager {
           playerCardsFieldAccess[access] += 1;
         }
       }
-      if (playerCard.agentEffects) {
-        const { hasRewardOptions, hasRewardConversion } = this.aIManager.getRewardArrayAIInfos(playerCard.agentEffects);
-        if (!hasRewardOptions && !hasRewardConversion) {
-          for (const reward of playerCard.agentEffects) {
-            playerCardsRewards[reward.type] += reward.amount ?? 1;
-          }
+      if (playerCard.structuredAgentEffects?.rewards) {
+        for (const reward of playerCard.structuredAgentEffects.rewards) {
+          playerCardsRewards[reward.type] += reward.amount ?? 1;
         }
       }
-      if (playerCard.revealEffects) {
-        const { hasRewardOptions, hasRewardConversion } = this.aIManager.getRewardArrayAIInfos(playerCard.revealEffects);
-        if (!hasRewardOptions && !hasRewardConversion) {
-          for (const reward of playerCard.revealEffects) {
-            playerCardsRewards[reward.type] += reward.amount ?? 1;
-          }
+      if (playerCard.structuredRevealEffects?.rewards) {
+        for (const reward of playerCard.structuredRevealEffects.rewards) {
+          playerCardsRewards[reward.type] += reward.amount ?? 1;
         }
       }
     }
@@ -2054,7 +2033,7 @@ export class GameManager {
     this.accumulatedSpiceOnFieldsSubject.next([]);
   }
 
-  private playerCanPayCosts(playerId: number, costs: Reward[]) {
+  private playerCanPayCosts(playerId: number, costs: EffectReward[]) {
     let canPayCosts = true;
     const player = this.playerManager.getPlayer(playerId);
     const playerScore = this.playerScoreManager.getPlayerScore(playerId);
@@ -2230,7 +2209,7 @@ export class GameManager {
     }
   }
 
-  public addRewardToPlayer(player: Player, reward: Reward, card?: ImperiumDeckCard, source?: string) {
+  public addRewardToPlayer(player: Player, reward: EffectReward, card?: ImperiumDeckCard, source?: string) {
     const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(player.id);
 
     const rewardType = reward.type;
@@ -2378,7 +2357,7 @@ export class GameManager {
     this.loggingService.logPlayerResourceGained(player.id, rewardType, rewardAmount);
   }
 
-  public payCostForPlayer(playerId: number, cost: Reward, source?: string) {
+  public payCostForPlayer(playerId: number, cost: EffectReward, source?: string) {
     const costType = cost.type;
     if (isResourceType(costType)) {
       this.playerManager.removeResourceFromPlayer(playerId, costType, cost.amount ?? 1);
@@ -2531,7 +2510,7 @@ export class GameManager {
   }
 
   private getExtractedRewardsFromCustomAgentEffect(customAgentEffect: string) {
-    const rewards: Reward[] = [];
+    const rewards: Effect[] = [];
     let restString = customAgentEffect;
 
     const potentialReward = customAgentEffect.slice(0, customAgentEffect.indexOf('}') + 1).trim();
@@ -2624,10 +2603,6 @@ export class GameManager {
       'faction-influence-up-twice-choice': 0,
       focus: 0,
       foldspace: 0,
-      'helper-or': 0,
-      'helper-or-horizontal': 0,
-      'helper-trade': 0,
-      'helper-trade-horizontal': 0,
       intrigue: 0,
       'intrigue-draw': 0,
       'intrigue-trash': 0,

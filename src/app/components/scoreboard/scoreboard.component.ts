@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Reward, RewardType } from 'src/app/models';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -56,9 +55,9 @@ export class ScoreboardComponent implements OnInit {
     return this.victoryPointBoni?.find((x) => x.score === score)?.reward.amount;
   }
 
-  public getRewardTypePath(score: number) {
+  public getEffectTypePath(score: number) {
     const reward = this.victoryPointBoni?.find((x) => x.score === score);
-    return reward ? getRewardTypePath(reward.reward.type) : '';
+    return reward ? getEffectTypePath(reward.reward.type) : '';
   }
 
   public trackPlayerScore(index: number, playerScore: { playerId: number; amount: number }) {

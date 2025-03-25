@@ -85,7 +85,7 @@
     <div class="resource-area">
       <div class="resource-container" *ngFor="let resource of player.resources">
         <div class="resource-display">
-          <img class="resource" [src]="getRewardTypePath(resource.type)" />
+          <img class="resource" [src]="getEffectTypePath(resource.type)" />
           <div class="resource-amount">
             <span>{{ resource.amount }}</span>
           </div>
@@ -94,7 +94,7 @@
     </div>
     <div class="cards-area">
       <div class="resource-display">
-        <img class="resource dark" [src]="getRewardTypePath('intrigue')" />
+        <img class="resource dark" [src]="getEffectTypePath('intrigue')" />
         <div class="resource-amount">
           <span>{{ getPlayerIntrigues(player.id)?.intrigues?.length }}</span>
         </div>

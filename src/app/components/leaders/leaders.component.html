@@ -68,7 +68,7 @@
             (click)="onAddSignetTokenClicked(currentPlayer.id)"
             (contextmenu)="onRemoveSignetTokenClicked(currentPlayer.id)"
           >
-            <img class="resource intrigue" [src]="getRewardTypePath('signet-token')" />
+            <img class="resource intrigue" [src]="getEffectTypePath('signet-token')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.signetTokenCount }}</span>
             </div>
@@ -83,7 +83,7 @@
             (click)="onAddFocusTokenClicked(currentPlayer.id)"
             (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
           >
-            <img class="resource focus dark" [src]="getRewardTypePath('focus')" />
+            <img class="resource focus dark" [src]="getEffectTypePath('focus')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.focusTokens }}</span>
             </div>
@@ -99,7 +99,7 @@
             (click)="onAddTroopToGarrisonClicked(currentPlayer.id)"
             (contextmenu)="onRemoveTroopFromGarrisonClicked(currentPlayer.id)"
           >
-            <img class="resource" [src]="getRewardTypePath('troop')" />
+            <img class="resource" [src]="getEffectTypePath('troop')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayerCombatUnits?.troopsInGarrison }}</span>
             </div>
@@ -111,7 +111,7 @@
             (click)="onAddShipToGarrisonClicked(currentPlayer.id)"
             (contextmenu)="onRemoveShipFromGarrisonClicked(currentPlayer.id)"
           >
-            <img class="resource" [src]="getRewardTypePath('dreadnought')" />
+            <img class="resource" [src]="getEffectTypePath('dreadnought')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayerCombatUnits?.shipsInGarrison }}</span>
             </div>
@@ -119,14 +119,14 @@
         </div>
       </div>
       <div class="info-container">
-        @for (resource of currentPlayer.resources; track resource.amount) {
+        @for (resource of currentPlayer.resources; track $index) {
         <div [class]="'resource-container'">
           <div
             class="resource-display"
             (click)="onAddRewardClicked(currentPlayer, resource.type)"
             (contextmenu)="onRemoveResourceClicked(currentPlayer, resource.type)"
           >
-            <img [class]="'resource ' + resource.type" [src]="getRewardTypePath(resource.type)" />
+            <img [class]="'resource ' + resource.type" [src]="getEffectTypePath(resource.type)" />
             <div class="resource-amount on-background">
               <span>{{ resource.amount }}</span>
             </div>
@@ -142,7 +142,7 @@
             (click)="onAddPermanentPersuasionClicked(currentPlayer.id)"
             (contextmenu)="onRemovePermanentPersuasionClicked(currentPlayer.id)"
           >
-            <img class="resource" [src]="getRewardTypePath('persuasion')" />
+            <img class="resource" [src]="getEffectTypePath('persuasion')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.permanentPersuasion }}</span>
             </div>
@@ -154,7 +154,7 @@
             (click)="onAddPersuasionGainedThisRoundClicked(currentPlayer.id)"
             (contextmenu)="onRemovePersuasionGainedThisRoundClicked(currentPlayer.id)"
           >
-            <img class="resource" [src]="getRewardTypePath('persuasion')" />
+            <img class="resource" [src]="getEffectTypePath('persuasion')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.persuasionGainedThisRound }}</span>
             </div>
@@ -235,7 +235,7 @@
             (click)="onAddRewardClicked(currentPlayer, 'victory-point')"
             (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
           >
-            <img class="resource dark" [src]="getRewardTypePath('victory-point')" />
+            <img class="resource dark" [src]="getEffectTypePath('victory-point')" />
             <div class="resource-amount on-background">
               <span>{{ getPlayerScore('victoryPoints') }}</span>
             </div>
@@ -248,12 +248,12 @@
       <div class="info-container">
         <div class="resource-container">
           <div class="resource-display" (click)="onAIIncreaseInfluenceChoiceClicked(currentPlayer.id)">
-            <img class="resource" [src]="getRewardTypePath('faction-influence-up-choice')" />
+            <img class="resource" [src]="getEffectTypePath('faction-influence-up-choice')" />
           </div>
         </div>
         <div class="resource-container">
           <div class="resource-display" (click)="onAIDecreaseInfluenceChoiceClicked(currentPlayer.id)">
-            <img class="resource" [src]="getRewardTypePath('faction-influence-down-choice')" />
+            <img class="resource" [src]="getEffectTypePath('faction-influence-down-choice')" />
           </div>
         </div>
       </div>

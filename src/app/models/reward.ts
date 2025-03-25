@@ -1,4 +1,4 @@
-import { CombatUnitType, ResourceType } from '.';
+import { ActiveFactionType, CombatUnitType, Faction, ResourceType } from '.';
 
 export const rewardTypes = [
   'agent',
@@ -25,10 +25,6 @@ export const rewardTypes = [
   'faction-influence-up-twice-choice',
   'focus',
   'foldspace',
-  'helper-or',
-  'helper-or-horizontal',
-  'helper-trade',
-  'helper-trade-horizontal',
   'intrigue',
   'intrigue-draw',
   'intrigue-trash',
@@ -57,11 +53,61 @@ export const rewardTypes = [
   'beetle',
 ] as const;
 
-export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];
+export const rewardSeparators = ['helper-separator'] as const;
 
-export interface Reward {
-  type: RewardType;
+export const rewardChoices = ['helper-or', 'helper-or-horizontal', 'helper-trade', 'helper-trade-horizontal'] as const;
+
+export const rewardConditions = ['condition-influence', 'condition-connection'] as const;
+
+export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];
+export type RewardSeparatorType = (typeof rewardSeparators)[number];
+export type RewardChoiceType = (typeof rewardChoices)[number];
+export type RewardConditionType = (typeof rewardConditions)[number];
+
+export type EffectType = RewardType | RewardSeparatorType | RewardChoiceType | RewardConditionType;
+
+interface EffectBase {
+  type: EffectType;
   amount?: number;
   iconHeight?: number;
   width?: number;
+}
+
+export interface EffectReward extends EffectBase {
+  type: RewardType;
+}
+
+export interface EffectSeparator extends EffectBase {
+  type: RewardSeparatorType;
+}
+
+export interface EffectChoice extends EffectBase {
+  type: RewardChoiceType;
+}
+
+export interface EffectCondition extends EffectBase {
+  type: RewardConditionType;
+  faction: ActiveFactionType;
+}
+
+export type Effect = EffectReward | EffectSeparator | EffectChoice | EffectCondition;
+export type EffectWithoutSeparator = EffectReward | EffectChoice | EffectCondition;
+export type EffectWithoutSeparatorAndCondition = EffectReward | EffectChoice;
+
+export interface StructuredConditionalEffect {
+  condition: RewardConditionType;
+  faction: ActiveFactionType;
+  effect: EffectReward[] | StructuredChoiceEffect;
+}
+
+export interface StructuredChoiceEffect {
+  choiceType: RewardChoiceType;
+  left: EffectReward[];
+  right: EffectReward[];
+}
+
+export interface StructuredEffects {
+  rewards: EffectReward[];
+  choiceEffects: StructuredChoiceEffect[];
+  conditionalEffects: StructuredConditionalEffect[];
 }

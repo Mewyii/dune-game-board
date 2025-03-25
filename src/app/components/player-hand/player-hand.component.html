@@ -7,7 +7,7 @@
         (click)="onAITrashIntrigueClicked()"
         matTooltip="AI trash intrigue"
       >
-        <img class="draw-card-icon" [src]="getRewardTypePath('intrigue-trash')" />
+        <img class="draw-card-icon" [src]="getEffectTypePath('intrigue-trash')" />
       </div>
     </div>
     <div class="player-cards-container intrigues">
@@ -171,7 +171,7 @@
     </div>
     <div class="action-container">
       <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()" matTooltip="Draw card">
-        <img class="draw-card-icon" [src]="getRewardTypePath('card-draw')" />
+        <img class="draw-card-icon" [src]="getEffectTypePath('card-draw')" />
       </div>
       <div
         *ngIf="cardsShown === 'hand'"
@@ -179,7 +179,7 @@
         (click)="onAddFoldspaceToHandClicked()"
         matTooltip="Draw Foldspace"
       >
-        <img class="draw-card-icon" [src]="getRewardTypePath('foldspace')" />
+        <img class="draw-card-icon" [src]="getEffectTypePath('foldspace')" />
       </div>
       <div
         *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
@@ -187,7 +187,7 @@
         (click)="onAIDiscardCardClicked()"
         matTooltip="AI Discard card"
       >
-        <img class="draw-card-icon" [src]="getRewardTypePath('card-discard')" />
+        <img class="draw-card-icon" [src]="getEffectTypePath('card-discard')" />
       </div>
       <div
         *ngIf="cardsShown === 'hand' && currentPlayer?.isAI"
@@ -195,7 +195,7 @@
         (click)="onAITrashCardFromHandClicked()"
         matTooltip="AI Trash card"
       >
-        <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
+        <img class="draw-card-icon" [src]="getEffectTypePath('card-destroy')" />
       </div>
       <div
         *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"
@@ -203,7 +203,7 @@
         (click)="onAITrashCardFromDiscardPileClicked()"
         matTooltip="AI Trash card"
       >
-        <img class="draw-card-icon" [src]="getRewardTypePath('card-destroy')" />
+        <img class="draw-card-icon" [src]="getEffectTypePath('card-destroy')" />
       </div>
       <button
         *ngIf="cardsShown === 'discard' && currentPlayer?.isAI"

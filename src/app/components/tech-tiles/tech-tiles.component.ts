@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { FactionType, LanguageString, RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, FactionType, LanguageString, RewardType } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, TechTileModifier } from 'src/app/services/game-modifier.service';
@@ -59,8 +59,8 @@ export class TechTilesComponent {
     }
   }
 
-  getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 
   getFactionTypePath(rewardType: FactionType) {

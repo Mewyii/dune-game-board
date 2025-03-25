@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { getRewardTypePath } from 'src/app/helpers/reward-types';
-import { RewardType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, RewardType } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
@@ -65,7 +65,7 @@ export class PlayerRewardChoicesComponent implements OnInit, AfterViewInit {
     this.playerRewardChoicesService.removePlayerCustomChoice(this.activePlayerId, id);
   }
 
-  public getRewardTypePath(rewardType: RewardType) {
-    return getRewardTypePath(rewardType);
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 }
