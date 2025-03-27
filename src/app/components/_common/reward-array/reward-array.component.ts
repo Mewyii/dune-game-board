@@ -9,6 +9,7 @@ import {
   isOptionEffectType,
 } from 'src/app/helpers/rewards';
 import { Effect, EffectType, EffectWithoutSeparator, FactionType, RewardType } from 'src/app/models';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'dune-reward-array',
@@ -19,9 +20,12 @@ export class RewardArrayComponent implements OnInit {
   public effectArrays: EffectWithoutSeparator[][] = [];
   @Input() rewards: Effect[] = [];
   @Input() size: string = '32px';
+  @Input() textColor: 'black' | 'white' = 'black';
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';
+
+  constructor(public t: TranslateService) {}
 
   ngOnInit(): void {
     this.effectArrays = getSeparatedEffectArrays(this.rewards);

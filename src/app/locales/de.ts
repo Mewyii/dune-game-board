@@ -9,6 +9,8 @@ export const deLocale: Locale = {
   commonConfirmDialogText: 'Sind Sie sicher?',
   commonNo: 'Nein',
   commonYes: 'Ja',
+  commonEffectConditionInfluence: 'Einfluss',
+  commonEffectConditionConnection: 'Verbindung',
   playerboardHeading: 'Spieler',
   playerboardRound: 'Runde',
   playerboardCombatTooltip: 'Kampf-Phase',

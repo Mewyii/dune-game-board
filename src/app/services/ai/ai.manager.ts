@@ -15,27 +15,21 @@ import {
   FactionInfluence,
   Effect,
   RewardType,
-  EffectWithoutSeparator,
   EffectReward,
-  RewardConditionType,
-  Faction,
-  EffectWithoutSeparatorAndCondition,
-  RewardChoiceType,
   StructuredConditionalEffect,
   StructuredChoiceEffect,
-  StructuredEffects,
 } from 'src/app/models';
 import { getAccumulatedSpice, getDesire, getResourceAmount } from './shared/ai-goal-functions';
 import { ImperiumDeckCard, ImperiumRowCard } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
-import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
+import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { ImperiumRowModifier } from '../game-modifier.service';
 import { getCardCostModifier, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
-import { isConditionalEffect, isConversionEffectType, isOptionEffectType } from 'src/app/helpers/rewards';
+import { isConversionEffectType, isOptionEffectType, isStructuredChoiceEffect } from 'src/app/helpers/rewards';
 
 export interface AIPlayer {
   playerId: number;
@@ -59,8 +53,8 @@ interface ViableField {
   fieldId: string;
   value: number;
   actionType: ActionType;
-  requiresInfluence: FactionInfluence | undefined;
-  accessTrough: 'influence' | 'game-modifiers';
+  requiresInfluence?: FactionInfluence;
+  accessTrough?: 'influence' | 'game-modifiers' | undefined;
   requiresInfiltration: boolean;
 }
 
@@ -351,20 +345,30 @@ export class AIManager {
                   accessTrough = 'game-modifiers';
                 }
               }
+
+              if (accessTrough) {
+                return {
+                  ...fieldEvaluation,
+                  actionType: x.actionType,
+                  requiresInfluence: x.requiresInfluence,
+                  requiresInfiltration,
+                  accessTrough,
+                };
+              } else {
+                return undefined;
+              }
             }
           }
           return {
             ...fieldEvaluation,
             actionType: x.actionType,
-            requiresInfluence: x.requiresInfluence,
             requiresInfiltration,
-            accessTrough,
           };
         }
 
         return undefined;
       })
-      .filter((x) => x && x.accessTrough) as ViableField[];
+      .filter((x) => !!x) as ViableField[];
 
     accessibleFields.sort((a, b) => b.value - a.value);
 
@@ -916,40 +920,26 @@ export class AIManager {
         evaluationValue += this.getRewardArrayEvaluationForTurnState(agentEffects.rewards, player, gameState);
       }
       for (const choiceEffect of agentEffects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue += -costsEvaluation + rewardsEvaluation;
-        }
+        evaluationValue += this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      }
+      for (const conditionEffect of agentEffects.conditionalEffects) {
+        evaluationValue += this.getConditionEffectEvaluationForTurnState(conditionEffect, player, gameState);
       }
     }
     if (card.customAgentEffect) {
       evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 0);
     }
 
-    if (card.structuredRevealEffects) {
-      const revealEffects = card.structuredRevealEffects;
-      if (revealEffects.rewards) {
-        evaluationValue -= this.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState);
+    if (card.structuredAgentEffects) {
+      const agentEffects = card.structuredAgentEffects;
+      if (agentEffects.rewards) {
+        evaluationValue -= this.getRewardArrayEvaluationForTurnState(agentEffects.rewards, player, gameState);
       }
-      for (const choiceEffect of revealEffects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= -costsEvaluation + rewardsEvaluation;
-        }
+      for (const choiceEffect of agentEffects.choiceEffects) {
+        evaluationValue -= this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      }
+      for (const conditionEffect of agentEffects.conditionalEffects) {
+        evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState);
       }
     }
     if (card.customRevealEffect) {
@@ -988,17 +978,10 @@ export class AIManager {
         evaluationValue += this.getRewardArrayEvaluationForTurnState(agentEffects.rewards, player, gameState);
       }
       for (const choiceEffect of agentEffects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue += -costsEvaluation + rewardsEvaluation;
-        }
+        evaluationValue += this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      }
+      for (const conditionEffect of agentEffects.conditionalEffects) {
+        evaluationValue += this.getConditionEffectEvaluation(conditionEffect, player, gameState);
       }
     }
     if (card.customAgentEffect) {
@@ -1011,17 +994,10 @@ export class AIManager {
         evaluationValue += this.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState);
       }
       for (const choiceEffect of revealEffects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue += -costsEvaluation + rewardsEvaluation;
-        }
+        evaluationValue += this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      }
+      for (const conditionEffect of revealEffects.conditionalEffects) {
+        evaluationValue += this.getConditionEffectEvaluation(conditionEffect, player, gameState);
       }
     }
     if (card.customRevealEffect) {
@@ -1055,17 +1031,10 @@ export class AIManager {
         evaluationValue -= this.getRewardArrayEvaluationForTurnState(agentEffects.rewards, player, gameState);
       }
       for (const choiceEffect of agentEffects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= -costsEvaluation + rewardsEvaluation;
-        }
+        evaluationValue -= this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      }
+      for (const conditionEffect of agentEffects.conditionalEffects) {
+        evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState);
       }
     }
     if (card.customAgentEffect) {
@@ -1073,21 +1042,16 @@ export class AIManager {
     }
 
     if (card.structuredRevealEffects) {
-      const revealEffects = card.structuredRevealEffects;
-      if (revealEffects.rewards) {
-        evaluationValue -= this.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState);
-      }
-      for (const choiceEffect of revealEffects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= -costsEvaluation + rewardsEvaluation;
+      if (card.structuredRevealEffects) {
+        const revealEffects = card.structuredRevealEffects;
+        if (revealEffects.rewards) {
+          evaluationValue -= this.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState);
+        }
+        for (const choiceEffect of revealEffects.choiceEffects) {
+          evaluationValue -= this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+        }
+        for (const conditionEffect of revealEffects.conditionalEffects) {
+          evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState);
         }
       }
     }
@@ -1107,21 +1071,74 @@ export class AIManager {
         evaluationValue -= this.getRewardArrayEvaluationForTurnState(effects.rewards, player, gameState);
       }
       for (const choiceEffect of effects.choiceEffects) {
-        if (isOptionEffectType(choiceEffect.choiceType)) {
-          const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-        } else if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-          const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-          evaluationValue -= -costsEvaluation + rewardsEvaluation;
-        }
+        evaluationValue -= this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      }
+      for (const conditionEffect of effects.conditionalEffects) {
+        evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState);
       }
     }
 
     return evaluationValue;
+  }
+
+  public getChoiceEffectEvaluation(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    if (isOptionEffectType(choiceEffect.choiceType)) {
+      const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
+      const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
+
+      evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+    } else if (isConversionEffectType(choiceEffect.choiceType)) {
+      const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
+      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
+
+      evaluationValue += -costsEvaluation + rewardsEvaluation;
+    }
+    return evaluationValue;
+  }
+
+  public getConditionEffectEvaluation(conditionEffect: StructuredConditionalEffect, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    if (isStructuredChoiceEffect(conditionEffect.effect)) {
+      evaluationValue += this.getChoiceEffectEvaluation(conditionEffect.effect, player, gameState);
+    } else {
+      evaluationValue += this.getRewardArrayEvaluationForTurnState(conditionEffect.effect, player, gameState);
+    }
+
+    if (conditionEffect.condition === 'condition-connection') {
+      evaluationValue = 0.3 * evaluationValue + 0.15 * gameState.playerCardsFactions[conditionEffect.faction];
+    } else if (conditionEffect.condition === 'condition-influence' && conditionEffect.amount) {
+      const factionScore = gameState.playerScore[conditionEffect.faction];
+      if (factionScore < conditionEffect.amount) {
+        evaluationValue = (evaluationValue * factionScore) / conditionEffect.amount;
+      }
+    }
+    return evaluationValue;
+  }
+
+  public getConditionEffectEvaluationForTurnState(
+    conditionEffect: StructuredConditionalEffect,
+    player: Player,
+    gameState: GameState
+  ) {
+    let evaluationValue = 0;
+    if (isStructuredChoiceEffect(conditionEffect.effect)) {
+      evaluationValue += this.getChoiceEffectEvaluation(conditionEffect.effect, player, gameState);
+    } else {
+      evaluationValue += this.getRewardArrayEvaluationForTurnState(conditionEffect.effect, player, gameState);
+    }
+
+    if (conditionEffect.condition === 'condition-connection') {
+      if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
+        return evaluationValue;
+      }
+    } else if (conditionEffect.condition === 'condition-influence' && conditionEffect.amount) {
+      const factionScore = gameState.playerScore[conditionEffect.faction];
+      if (factionScore >= conditionEffect.amount) {
+        return evaluationValue;
+      }
+    }
+    return 0;
   }
 
   public getRewardArrayEvaluation(rewards: EffectReward[], player: Player, gameState: GameState) {

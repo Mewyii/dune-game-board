@@ -83,6 +83,10 @@ export function isChoiceEffect(reward: Effect): reward is EffectChoice {
   return rewardChoices.some((x) => x === reward.type);
 }
 
+export function isStructuredChoiceEffect(effect: any): effect is StructuredChoiceEffect {
+  return !!effect.choiceType && !!effect.left && !!effect.right;
+}
+
 export function isConversionEffectType(input: string): input is RewardChoiceType {
   return ['helper-trade', 'helper-trade-horizontal'].some((x) => x === input);
 }
@@ -143,6 +147,7 @@ export function getStructuredConditionalEffectIfPossible(
         condition: effect.type,
         faction: effect.faction,
         effect: choiceEffect || effectRewards,
+        amount: effect.amount,
       };
       return [undefined, conditionalEffect];
     }

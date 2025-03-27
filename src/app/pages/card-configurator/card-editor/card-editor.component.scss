@@ -1,13 +1,13 @@
 form {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
   align-items: baseline;
 }
 
@@ -38,12 +38,13 @@ form {
 .card-effect-container {
   margin-top: 32px;
   width: 100%;
-  min-height: 240px;
 }
 
 .title-container {
   display: flex;
   align-items: center;
+  font-size: x-large;
+  margin-bottom: 8px;
 }
 
 .card-effect-title {
@@ -63,4 +64,10 @@ form {
 
 .reward-label {
   margin-left: 44px;
+}
+
+.text-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

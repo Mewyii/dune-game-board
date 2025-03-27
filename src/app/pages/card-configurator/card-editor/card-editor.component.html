@@ -54,6 +54,18 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Image -->
+  <mat-form-field class="big-text-field">
+    <mat-label>Image URL</mat-label>
+    <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+
+  <!-- Card Amount -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Amount</mat-label>
+    <input matInput type="number" formControlName="cardAmount" />
+  </mat-form-field>
+
   <!-- Buy Effects -->
   <div class="card-effect-container">
     <div class="title-container">
@@ -96,19 +108,8 @@
   <div class="card-effect-container">
     <div class="title-container">
       <span class="card-effect-title"> Agent Effects </span>
-      <mat-checkbox
-        [(ngModel)]="hasCustomAgentEffect"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="updateAgentEffects()"
-      ></mat-checkbox
-      >Custom Text
-      <mat-icon
-        [style]="'margin-left: 4px'"
-        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
-        >info</mat-icon
-      >
     </div>
-    <div *ngIf="!hasCustomAgentEffect" formArrayName="agentEffects">
+    <div formArrayName="agentEffects">
       <div class="form-group" *ngFor="let agentEffect of agentEffects.controls; let i = index">
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
@@ -160,9 +161,18 @@
       <mat-label>Agent Effect Size</mat-label>
       <mat-select formControlName="agentEffectSize">
         <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div *ngIf="hasCustomAgentEffect" class="form-group" formGroupName="customAgentEffect">
+      </mat-select> </mat-form-field
+    ><br /><br />
+    <div class="text-container">
+      Custom Agent Effect Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <br />
+    <div class="form-group" formGroupName="customAgentEffect">
       <mat-form-field class="large-text-field">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
@@ -184,19 +194,8 @@
   <div class="card-effect-container">
     <div class="title-container">
       <span class="card-effect-title"> Reveal Effects </span>
-      <mat-checkbox
-        [(ngModel)]="hasCustomRevealEffect"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="updateRevealEffects()"
-      ></mat-checkbox
-      >Custom Text
-      <mat-icon
-        [style]="'margin-left: 4px'"
-        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
-        >info</mat-icon
-      >
     </div>
-    <div *ngIf="!hasCustomRevealEffect" formArrayName="revealEffects">
+    <div formArrayName="revealEffects">
       <div class="form-group" *ngFor="let revealEffect of revealEffects.controls; let i = index">
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
@@ -248,9 +247,18 @@
       <mat-label>Reveal Effect Size</mat-label>
       <mat-select formControlName="revealEffectSize">
         <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div *ngIf="hasCustomRevealEffect" class="form-group" formGroupName="customRevealEffect">
+      </mat-select> </mat-form-field
+    ><br /><br />
+    <div class="text-container">
+      Custom Reveal Effect Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <br />
+    <div class="form-group" formGroupName="customRevealEffect">
       <mat-form-field class="large-text-field">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
@@ -267,14 +275,4 @@
       </mat-form-field>
     </div>
   </div>
-
-  <mat-form-field class="large-text-field margin-top">
-    <mat-label>Image URL</mat-label>
-    <input matInput formControlName="imageUrl" />
-  </mat-form-field>
-
-  <mat-form-field class="small-text-field">
-    <mat-label>Card Amount</mat-label>
-    <input matInput type="number" formControlName="cardAmount" />
-  </mat-form-field>
 </form>

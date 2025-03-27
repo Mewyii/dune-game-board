@@ -96,6 +96,7 @@ export type EffectWithoutSeparatorAndCondition = EffectReward | EffectChoice;
 
 export interface StructuredConditionalEffect {
   condition: RewardConditionType;
+  amount?: number;
   faction: ActiveFactionType;
   effect: EffectReward[] | StructuredChoiceEffect;
 }

@@ -4,12 +4,16 @@
     @for (reward of effects; track $index) { @if(isConditionalEffect(reward)) { @if (isInfluenceType(reward.type)) {
     <div class="condition-container">
       <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
-      <div class="text" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">{{ reward.amount }} Einfluss:</div>
+      <div [class]="'text ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+        {{ reward.amount }} {{ t.translate('commonEffectConditionInfluence') }}:
+      </div>
     </div>
     } @else if (isConnectionType(reward.type)) {
     <div class="condition-container">
       <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
-      <div class="text" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">-Verbindung:</div>
+      <div [class]="'text ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+        -{{ t.translate('commonEffectConditionConnection') }}:
+      </div>
     </div>
     } } @else {
     <div class="reward-container" [style.height]="size">

@@ -89,6 +89,7 @@ export type GameState = Readonly<{
   playerTurnInfos?: TurnInfo;
   playerCardsFactions: PlayerCardsFactions;
   playerCardsRewards: PlayerCardsRewards;
+  playerCardsFactionsInPlay: PlayerCardsFactions;
   playerTechTilesFactions: PlayerCardsFactions;
   playerCardsFieldAccess: PlayerCardsFieldAccess;
   playerGameModifiers?: PlayerGameModifiers;

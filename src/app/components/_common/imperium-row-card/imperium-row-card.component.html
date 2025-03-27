@@ -22,9 +22,14 @@
   </div>
   <div
     class="card-agent-effect-container font-text"
-    *ngIf="card.customAgentEffect || (card.agentEffects && card.agentEffects.length > 0)"
+    *ngIf="card.customAgentEffect?.en || (card.agentEffects && card.agentEffects.length > 0)"
   >
-    <div class="card-agent-effect-custom" *ngIf="card.customAgentEffect">
+    <dune-reward-array
+      *ngIf="card.agentEffects && card.agentEffects.length > 0"
+      [rewards]="card.agentEffects"
+      [size]="agentEffectSize"
+    ></dune-reward-array>
+    <div class="card-agent-effect-custom" *ngIf="card.customAgentEffect && card.customAgentEffect.en">
       <div
         *ngIf="!card.customAgentEffect.fontSize || card.customAgentEffect.fontSize == 'small'"
         class="card-reveal-effect-custom-text"
@@ -36,14 +41,19 @@
         [innerHTML]="t.translateLS(card.customAgentEffect) | duneSymbols : '22px'"
       ></div>
     </div>
-    <dune-reward-array *ngIf="card.agentEffects" [rewards]="card.agentEffects" [size]="agentEffectSize"></dune-reward-array>
   </div>
   <div
     class="card-agent-effect-separator"
-    *ngIf="!card.customAgentEffect && (!card.agentEffects || card.agentEffects.length === 0)"
+    *ngIf="!card.customAgentEffect?.en && (!card.agentEffects || card.agentEffects.length === 0)"
   ></div>
   <div class="card-reveal-effect-container font-text">
-    <div class="card-reveal-effect-custom" *ngIf="card.customRevealEffect">
+    <dune-reward-array
+      *ngIf="card.revealEffects && card.revealEffects.length > 0"
+      [rewards]="card.revealEffects"
+      [size]="revealEffectSize"
+      [textColor]="'white'"
+    ></dune-reward-array>
+    <div class="card-reveal-effect-custom" *ngIf="card.customRevealEffect && card.customRevealEffect.en">
       <div
         *ngIf="!card.customRevealEffect.fontSize || card.customRevealEffect.fontSize == 'small'"
         class="card-reveal-effect-custom-text"
@@ -55,11 +65,6 @@
         [innerHTML]="t.translateLS(card.customRevealEffect) | duneSymbols : '22px'"
       ></div>
     </div>
-    <dune-reward-array
-      *ngIf="card.revealEffects"
-      [rewards]="card.revealEffects"
-      [size]="revealEffectSize"
-    ></dune-reward-array>
   </div>
   <div class="card-aquire-effect-container" *ngIf="card.buyEffects && card.buyEffects.length > 0">
     <dune-reward-array *ngIf="card.buyEffects" [rewards]="card.buyEffects" [size]="'24px'"></dune-reward-array>

@@ -8,7 +8,17 @@ import { PlayersService } from './players.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { LocationManager } from './location-manager.service';
 import { DuneEventsManager } from './dune-events.service';
-import { ActionField, ActionType, ActiveFactionType, DuneLocation, Effect, EffectReward, RewardType } from '../models';
+import {
+  ActionField,
+  ActionType,
+  ActiveFactionType,
+  DuneLocation,
+  Effect,
+  EffectReward,
+  RewardType,
+  StructuredChoiceEffect,
+  StructuredEffects,
+} from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
@@ -25,6 +35,7 @@ import {
   isFactionScoreCostType,
   isFactionScoreRewardType,
   isOptionEffectType,
+  isStructuredChoiceEffect,
 } from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
@@ -481,31 +492,16 @@ export class GameManager {
     if (playerHand) {
       for (const card of playerHand.cards) {
         if (card.structuredRevealEffects) {
-          const revealEffects = card.structuredRevealEffects;
-          for (const reward of revealEffects.rewards) {
-            this.addRewardToPlayer(player, reward);
-          }
-          for (const choiceEffect of revealEffects.choiceEffects) {
-            if (!player.isAI) {
-              this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
-                ...choiceEffect.left,
-                { type: choiceEffect.choiceType },
-                ...choiceEffect.right,
-              ]);
-            } else {
-              const gameState = this.getGameState(player);
+          const gameState = this.getGameState(player);
 
-              if (isOptionEffectType(choiceEffect.choiceType)) {
-                this.aiChooseRewardOption(player, choiceEffect.left, choiceEffect.right, gameState, card);
-              } else if (isConversionEffectType(choiceEffect.choiceType)) {
-                this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect.left, choiceEffect.right, gameState, card);
-              }
-            }
-          }
-          for (const conditionalEffect of revealEffects.conditionalEffects) {
-          }
+          this.resolveStructuredEffects(
+            card.structuredRevealEffects,
+            player,
+            gameState,
+            card,
+            playerHand.cards.filter((x) => x.id !== card.id)
+          );
         }
-
         if (card.customRevealEffect) {
           const localizedString = this.t.translateLS(card.customRevealEffect);
           this.playerRewardChoicesService.addPlayerCustomChoice(playerId, localizedString);
@@ -698,31 +694,10 @@ export class GameManager {
       const card = this.cardsService.getPlayerHandCard(player.id, playerCard.cardId);
       if (card) {
         if (card.structuredAgentEffects) {
-          const agentEffects = card.structuredAgentEffects;
-          for (const reward of agentEffects.rewards) {
-            this.addRewardToPlayer(player, reward);
-          }
-          for (const choiceEffect of agentEffects.choiceEffects) {
-            if (!isAI) {
-              this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
-                ...choiceEffect.left,
-                { type: choiceEffect.choiceType },
-                ...choiceEffect.right,
-              ]);
-            } else {
-              const gameState = this.getGameState(player);
+          const gameState = this.getGameState(player);
 
-              if (isOptionEffectType(choiceEffect.choiceType)) {
-                this.aiChooseRewardOption(player, choiceEffect.left, choiceEffect.right, gameState, card);
-              } else if (isConversionEffectType(choiceEffect.choiceType)) {
-                this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect.left, choiceEffect.right, gameState, card);
-              }
-            }
-          }
-          for (const conditionalEffect of agentEffects.conditionalEffects) {
-          }
+          this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, card);
         }
-
         if (card.customAgentEffect) {
           const localizedString = this.t.translateLS(card.customAgentEffect);
           this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
@@ -1295,6 +1270,74 @@ export class GameManager {
     this.aiResolveRewardChoices(player);
   }
 
+  private resolveStructuredEffects(
+    structuredRevealEffects: StructuredEffects,
+    player: Player,
+    gameState: GameState,
+    card?: ImperiumDeckCard,
+    additionalCardsInPlay?: ImperiumDeckCard[]
+  ) {
+    const effects = structuredRevealEffects;
+    for (const reward of effects.rewards) {
+      this.addRewardToPlayer(player, reward);
+    }
+    for (const choiceEffect of effects.choiceEffects) {
+      this.resolveStructuredChoiceEffect(choiceEffect, player, gameState, card);
+    }
+    for (const conditionalEffect of effects.conditionalEffects) {
+      let conditionFullfilled = false;
+
+      if (conditionalEffect.condition === 'condition-connection') {
+        if (
+          gameState.playerCardsFactionsInPlay[conditionalEffect.faction] > 0 ||
+          additionalCardsInPlay?.some((x) => x.faction === conditionalEffect.faction)
+        ) {
+          conditionFullfilled = true;
+        }
+      } else if (conditionalEffect.condition === 'condition-influence' && conditionalEffect.amount) {
+        if (gameState.playerScore[conditionalEffect.faction] >= conditionalEffect.amount) {
+          conditionFullfilled = true;
+        }
+      }
+      if (conditionFullfilled) {
+        if (isStructuredChoiceEffect(conditionalEffect.effect)) {
+          this.resolveStructuredChoiceEffect(conditionalEffect.effect, player, gameState, card);
+        } else {
+          for (const reward of conditionalEffect.effect) {
+            this.addRewardToPlayer(player, reward);
+          }
+        }
+      }
+    }
+  }
+
+  private resolveStructuredChoiceEffect(
+    structuredChoiceEffect: StructuredChoiceEffect,
+    player: Player,
+    gameState: GameState,
+    card?: ImperiumDeckCard
+  ) {
+    if (!player.isAI) {
+      this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
+        ...structuredChoiceEffect.left,
+        { type: structuredChoiceEffect.choiceType },
+        ...structuredChoiceEffect.right,
+      ]);
+    } else {
+      if (isOptionEffectType(structuredChoiceEffect.choiceType)) {
+        this.aiChooseRewardOption(player, structuredChoiceEffect.left, structuredChoiceEffect.right, gameState, card);
+      } else if (isConversionEffectType(structuredChoiceEffect.choiceType)) {
+        this.aiConvertRewardIfUsefulAndPossible(
+          player,
+          structuredChoiceEffect.left,
+          structuredChoiceEffect.right,
+          gameState,
+          card
+        );
+      }
+    }
+  }
+
   private showPlayerRewardChoices(player: Player) {
     const turnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
     if (!turnInfo) {
@@ -1842,6 +1885,12 @@ export class GameManager {
         }
       }
     }
+    const playerCardsFactionsInPlay = this.getInitialFactions();
+    for (const playerCard of playerDiscardPileCards) {
+      if (playerCard.faction) {
+        playerCardsFactionsInPlay[playerCard.faction] += 1;
+      }
+    }
 
     const playerTechTilesFactions = this.getInitialFactions();
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
@@ -1940,6 +1989,7 @@ export class GameManager {
       playerCardsFactions,
       playerCardsFieldAccess,
       playerCardsRewards,
+      playerCardsFactionsInPlay,
       playerGameModifiers,
       playerTechTilesFactions,
     } as GameState;

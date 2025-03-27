@@ -51,8 +51,11 @@
   width: max-content;
 }
 
+.text.white {
+  color: #e1e1e1;
+}
+
 .faction {
   filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));
-  margin-right: 0.2rem;
   object-fit: scale-down;
 }

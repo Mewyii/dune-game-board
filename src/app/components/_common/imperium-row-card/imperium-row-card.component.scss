@@ -44,6 +44,8 @@
   background-size: cover;
   border-radius: 0px 0px 4px 4px;
   background-color: #1f2533;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
 .card-agent-effect-container {
@@ -56,6 +58,8 @@
   padding: 8px 6px;
   background-image: url(/assets/images/card-backgrounds/agent-effect.png);
   background-size: cover;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
 .card-agent-effect-separator {
