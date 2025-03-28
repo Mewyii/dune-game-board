@@ -90,6 +90,21 @@ h5 {
   cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
 }
 
+// Angular Material Notification
+.mdc-snackbar.notification {
+  margin-top: 10vh;
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+
+  & .mdc-snackbar__surface {
+    background-color: #45382f;
+    padding: 6px;
+  }
+  & .mat-mdc-snack-bar-label {
+    font-size: 24px;
+    line-height: 28px;
+  }
+}
+
 // Animations
 
 @keyframes marker-anim {

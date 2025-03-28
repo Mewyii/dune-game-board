@@ -1,187 +1,187 @@
 .player-board-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 250px;
-    height: calc(100% - 64px);
-    padding: 32px;
-    background: rgba(23, 19, 16, 0.8);
-    color:white;
-    border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  height: calc(100% - 64px);
+  padding: 32px;
+  background: rgba(23, 19, 16, 0.8);
+  color: white;
+  border-radius: 5px;
 }
 
 .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height:150px;
-    font-size: x-large;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 150px;
+  font-size: x-large;
 }
 
 .player-area {
 }
 
 .player-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .player-heading {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 .player-name {
-    border-top: 3px solid transparent;
-    border-bottom: 3px solid transparent;
-    text-align: center;
-    font-size: x-large;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  text-align: center;
+  font-size: x-large;
 }
 
 .ai-area {
-    margin-top: 3px;
+  margin-top: 3px;
 }
 
 .ai-label {
-    color: rgb(255, 170, 73);
+  color: rgb(255, 170, 73);
 }
 
 .agent-area {
-    display:flex;
-    gap: 6px;
-    align-items: center;
-    margin-top: 16px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 16px;
 }
 
 .agents-icon-container {
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
 }
 
 .agents-icon {
-    height: 40px;
-    width: 25px;
-    mask-image: url(/assets/images/reward-markers/marker_agent.png);
-    mask-size: contain;
-    mask-mode: luminance;
-    background-color: #bebebe;
+  height: 40px;
+  width: 25px;
+  mask-image: url(/assets/images/reward-markers/marker_agent.png);
+  mask-size: contain;
+  mask-mode: luminance;
+  background-color: #bebebe;
 }
 
 .agents-icon.greyed-out {
-    background: rgba(190, 190, 190, 0.706) !important;
+  background: rgba(190, 190, 190, 0.706) !important;
 }
 
-.starting-player-marker{
-    background-color: #d1a267;
-    width: 15px;
-    height: 15px;
-    z-index: 2;
-    transform: rotate3d(1, 0, 0, 69deg);
-    border-radius: 5px;
-    margin-right: 8px;
+.starting-player-marker {
+  background-color: #d1a267;
+  width: 15px;
+  height: 15px;
+  z-index: 2;
+  transform: rotate3d(1, 0, 0, 69deg);
+  border-radius: 5px;
+  margin-right: 8px;
 }
 
 .player-name.highlighted {
-    filter: drop-shadow(0px 0px 5px black);
-    border-top: 3px solid;
-    border-bottom: 3px solid;
+  filter: drop-shadow(0px 0px 5px black);
+  border-top: 3px solid;
+  border-bottom: 3px solid;
 }
 
 .resource-area {
-    display:flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-    margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
 }
 
 .resource-container {
-    display:flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .resource-display {
-    max-height: 55px;
-    position: relative;
-    color: white;
+  max-height: 55px;
+  position: relative;
+  color: white;
 }
 
 .resource {
-    height: 55px;
-    width: 55px;
-    object-fit: scale-down;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  height: 55px;
+  width: 55px;
+  object-fit: scale-down;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .resource.dark {
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.66);
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5)) brightness(0.66);
 }
 
 .resource-amount {
-    position: absolute;
-    top: 0px;
-    left: 0;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: x-large;
+  position: absolute;
+  top: 0px;
+  left: 0;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 1));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: x-large;
 }
 
 .persuasion-area {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 .turn-area {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-    font-size: xxx-large;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  font-size: xxx-large;
+  justify-content: center;
 }
 
 .turn {
-    color: rgb(255, 170, 73);
+  color: rgb(255, 170, 73);
 }
 
 .turn-state {
-    font-size: large;
+  font-size: large;
 }
 
 .ai-container {
-    display: flex;
-    gap: 12px;
-    align-items: center;
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
-.mat-slide-toggle{
-    padding: 6px;
-    background: #555555;
-    border-radius: 5px;
-    border: 1px solid green;
+.mat-slide-toggle {
+  padding: 6px;
+  background: #555555;
+  border-radius: 5px;
+  border: 1px solid green;
 }
 
 .action-container {
-    width: 100%;
-    min-height:75px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
+  width: 100%;
+  min-height: 75px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
 }
 
 .cards-area {
-    display:flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-    margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
 }
 
 .endgame {
-    font-size: xxx-large;
-    color: rgb(255, 170, 73);
+  font-size: xxx-large;
+  color: rgb(255, 170, 73);
 }

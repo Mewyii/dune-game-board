@@ -33,8 +33,6 @@ export class DuneActionComponent implements OnInit, OnChanges {
   @Input() backgroundColor: string = '';
   @Input() disabled = false;
 
-  @Output() actionFieldClick = new EventEmitter<{ playerId: number }>();
-
   public transparentBackgroundColor: string = '';
   public backgroundGradient: string = '';
   public pathToActionType = '';
@@ -190,16 +188,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
       return;
     }
 
-    const currentPlayerId = this.gameManager.activePlayerId;
-
-    if (currentPlayerId) {
-      const playerAgentCount = this.gameManager.getAvailableAgentCountForPlayer(currentPlayerId);
-
-      if (playerAgentCount > 0 && !this.isBlocked) {
-        this.gameManager.addAgentToField(this.actionField);
-        this.actionFieldClick.emit({ playerId: currentPlayerId });
-        this.audioManager.playSound('click');
-      }
+    if (this.gameManager.activePlayerId) {
+      this.gameManager.addAgentToField(this.actionField);
     }
   }
 

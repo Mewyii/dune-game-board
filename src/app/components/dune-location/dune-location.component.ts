@@ -92,15 +92,6 @@ export class DuneLocationComponent implements OnInit {
     this.gameManager.changeLocationOwner(this.location.actionField.title.en, this.gameManager.activePlayerId);
   }
 
-  onActionFieldClicked(event: { playerId: number }) {
-    // const ownerReward = this.location.ownerReward;
-    // if (ownerReward && isResourceType(ownerReward.type)) {
-    //   if (this.owner && this.owner.id !== event.playerId) {
-    //     this.playerManager.addResourceToPlayer(this.owner.id, ownerReward.type, ownerReward.amount ?? 1);
-    //   }
-    // }
-  }
-
   onBuildUpLocationChangeClicked() {
     this.audioManager.playSound('click-soft');
     this.gameModifierService.increaseLocationChangeModifier(this.activePlayerId, this.location.actionField.title.en, 1);

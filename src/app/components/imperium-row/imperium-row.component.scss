@@ -62,7 +62,7 @@ dune-imperium-row-card:hover,
 dune-imperium-row-card.active,
 dune-plot-card:hover,
 dune-plot-card.active {
-  filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
   transform: scale(1.25) translateY(-150px);
   z-index: 3;
   position: relative;
@@ -148,7 +148,7 @@ dune-plot-card.active {
 
 .imperium-deck:hover,
 .imperium-deck.active {
-  filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
   transform: scale(1.1);
 }
 

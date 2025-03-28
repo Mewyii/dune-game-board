@@ -1,95 +1,95 @@
 .choices-board {
-    background: rgba(64, 51, 40, 0.8);
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 900px;
-    gap: 32px;
-    justify-content: center;
-    align-items: center;
-    color: #fffcfa;
-    padding: 32px;
-    box-sizing: border-box;
-    border-radius: 5px;
+  background: rgba(64, 51, 40, 0.8);
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 900px;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+  color: #fffcfa;
+  padding: 32px;
+  box-sizing: border-box;
+  border-radius: 5px;
 }
 
 .reward-choice {
-    font-family: "Roboto", "Verdana";
-    font-weight: initial;
-    font-size: small;
-    padding: 16px;
-    background: #232f42;
-    border-radius: 12px;
-    filter: drop-shadow(0px 0px 6px rgb(255, 170, 73));
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    transition: .66s;
+  font-family: 'Roboto', 'Verdana';
+  font-weight: initial;
+  font-size: small;
+  padding: 16px;
+  background: #232f42;
+  border-radius: 12px;
+  filter: drop-shadow(0px 0px 6px rgb(255, 170, 73));
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  transition: 0.66s;
 }
 
 .reward-choice:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .reward-container {
-    position: relative;
-    width: min-content;
+  position: relative;
+  width: min-content;
 }
 
 .reward {
-    height: 32px;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  height: 32px;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .reward-amount {
-    position: absolute;
-    top: 5px;
-    right: 0px;
-    width: 100%;
-    color: white;
-    font-size: large;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
-    text-align: center;
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  width: 100%;
+  color: white;
+  font-size: large;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  text-align: center;
 }
 
 .reward-log-container {
-    font-family: "Roboto", "Verdana";
-    font-weight: initial;
-    font-size: medium;
-    padding: 16px;
-    background: #232f42;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    align-items: center;
-    max-height: 125px;
-    overflow-y: auto;
-    scrollbar-color: #bf8340 #2d343e;
+  font-family: 'Roboto', 'Verdana';
+  font-weight: initial;
+  font-size: medium;
+  padding: 16px;
+  background: #232f42;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+  max-height: 125px;
+  overflow-y: auto;
+  scrollbar-color: #bf8340 #2d343e;
 }
 
 .reward-log {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .reward-small {
-    height: 24px;
-    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+  height: 24px;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .rewards-choice {
-    font-family: "Roboto", "Verdana";
-    font-weight: initial;
-    font-size: small;
-    padding: 16px;
-    background: #232f42;
-    border-radius: 12px;
-    filter: drop-shadow(0px 0px 6px rgb(255, 170, 73));
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    transition: .66s;
-    display: flex;
-    gap: 2px;
+  font-family: 'Roboto', 'Verdana';
+  font-weight: initial;
+  font-size: small;
+  padding: 16px;
+  background: #232f42;
+  border-radius: 12px;
+  filter: drop-shadow(0px 0px 6px rgb(255, 170, 73));
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  transition: 0.66s;
+  display: flex;
+  gap: 2px;
 }
 
 .rewards-choice:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }

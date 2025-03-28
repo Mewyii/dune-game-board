@@ -11,7 +11,6 @@ import { DuneEventsManager } from './dune-events.service';
 import {
   ActionField,
   ActionType,
-  ActiveFactionType,
   DuneLocation,
   Effect,
   EffectReward,
@@ -28,7 +27,7 @@ import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
 import { GameState, PlayerCardsFactions as Factions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
-import { CardsService, ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
+import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
 import {
   getStructuredChoiceEffectIfPossible,
   isConversionEffectType,
@@ -44,6 +43,7 @@ import { GameModifiersService } from './game-modifier.service';
 import {
   getCardCostModifier,
   getFactionInfluenceModifier,
+  getFieldIsBlocked,
   getModifiedCostsForField,
   getModifiedRewardsForField,
   getTechTileCostModifier,
@@ -57,6 +57,7 @@ import { TurnInfoService } from './turn-info.service';
 import { IntrigueDeckCard } from '../models/intrigue';
 import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
+import { NotificationService } from './notification.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -124,7 +125,8 @@ export class GameManager {
     private playerRewardChoicesService: PlayerRewardChoicesService,
     private t: TranslateService,
     private intriguesService: IntriguesService,
-    private turnInfoService: TurnInfoService
+    private turnInfoService: TurnInfoService,
+    private notificationService: NotificationService
   ) {
     const currentRoundString = localStorage.getItem('currentTurn');
     if (currentRoundString) {
@@ -535,20 +537,47 @@ export class GameManager {
     const activePlayer = this.getActivePlayer();
 
     if (this.currentRoundPhase !== 'agent-placement' || !activePlayer || activePlayer.turnState !== 'agent-placement') {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningNotAgentTurnPhase'));
+      return;
+    }
+
+    const playerCard = this.cardsService.getPlayedPlayerCard(activePlayer.id);
+    if (!playerCard) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningCardNeededToPlaceAgent'));
+      return;
+    }
+
+    const playedCard = this.cardsService.getPlayerHandCard(activePlayer.id, playerCard.cardId);
+
+    if (!playedCard || !playedCard.fieldAccess?.some((x) => x === field.actionType)) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningCardNeedsToHaveFieldAccess'));
       return;
     }
 
     const activePlayerAgentCount = this.getAvailableAgentCountForPlayer(activePlayer.id);
     if (activePlayerAgentCount < 1) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningNoAgentsLeft'));
+      return;
+    }
+
+    const agentAlreadyPlacedThisTurn = this.turnInfoService.getPlayerTurnInfo(activePlayer.id)?.agentPlacedOnFieldId;
+    if (agentAlreadyPlacedThisTurn) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningAgentAlreadyPlacedThisTurn'));
       return;
     }
 
     const gameModifiers = this.gameModifiersService.getPlayerGameModifiers(activePlayer.id);
 
+    if (getFieldIsBlocked(field, gameModifiers?.fieldBlock)) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningFieldIsBlocked'));
+      return;
+    }
+
     const fieldCosts = getModifiedCostsForField(field, gameModifiers?.fieldCost);
 
     if (fieldCosts) {
       if (!this.playerCanPayCosts(activePlayer.id, fieldCosts)) {
+        this.notificationService.showWarning(this.t.translate('playerboardWarningNotEnoughResources'));
         return;
       }
 
@@ -558,6 +587,8 @@ export class GameManager {
         }
       }
     }
+
+    this.audioManager.playSound('click');
 
     this.setPlayerOnField(activePlayer.id, field);
 
@@ -615,7 +646,7 @@ export class GameManager {
       }
     }
 
-    this.addPlayedCardRewards(activePlayer, activePlayer.isAI);
+    this.addPlayedCardRewards(playedCard, activePlayer, activePlayer.isAI);
 
     if (!activePlayer.isAI) {
       if (hasRewardOptions) {
@@ -688,21 +719,15 @@ export class GameManager {
     this.loggingService.logAgentAction(field);
   }
 
-  addPlayedCardRewards(player: Player, isAI?: boolean) {
-    const playerCard = this.cardsService.getPlayedPlayerCard(player.id);
-    if (playerCard) {
-      const card = this.cardsService.getPlayerHandCard(player.id, playerCard.cardId);
-      if (card) {
-        if (card.structuredAgentEffects) {
-          const gameState = this.getGameState(player);
+  addPlayedCardRewards(card: ImperiumDeckCard, player: Player, isAI?: boolean) {
+    if (card.structuredAgentEffects) {
+      const gameState = this.getGameState(player);
 
-          this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, card);
-        }
-        if (card.customAgentEffect) {
-          const localizedString = this.t.translateLS(card.customAgentEffect);
-          this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
-        }
-      }
+      this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, card);
+    }
+    if (card.customAgentEffect) {
+      const localizedString = this.t.translateLS(card.customAgentEffect);
+      this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
     }
   }
 

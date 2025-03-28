@@ -1,72 +1,69 @@
 .spice-must-flow-container {
-    position: absolute;
-    top: 1155px;
-    right: 262px;
+  position: absolute;
+  top: 1155px;
+  right: 262px;
 }
 
 .liason-container {
-    position: absolute;
-    top: 1155px;
-    right: 0px;
+  position: absolute;
+  top: 1155px;
+  right: 0px;
 }
 
 dune-imperium-row-card {
-    transition: .8s;
-    transform: scale(0.75);
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer;
-    display: block;
-    user-select: none;
+  transition: 0.8s;
+  transform: scale(0.75);
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  display: block;
+  user-select: none;
 }
 
 dune-imperium-row-card.desaturated {
-    filter: saturate(0.75) brightness(0.75);
+  filter: saturate(0.75) brightness(0.75);
 }
 
 dune-imperium-row-card.buyable {
-    filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
+  filter: drop-shadow(0px 0px 10px rgb(141, 202, 255));
 }
 
 dune-imperium-row-card:hover,
 dune-imperium-row-card.active {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    transform: scale(1.25);
-    z-index: 3;
-    position: relative;
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+  transform: scale(1.25);
+  z-index: 3;
+  position: relative;
 }
 
 .card-action-container {
-    width: 100%;
-    position: absolute;
-    top: 150px;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    z-index: 3;
+  width: 100%;
+  position: absolute;
+  top: 150px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 3;
 }
 
 .cards-area {
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
 }
-
 
 .cards-area.two {
-    right: 10px;
-    bottom: 620px;
+  right: 10px;
+  bottom: 620px;
 }
-
 
 .card-area {
-    border-radius: 15px;
-    background: #0000001c;
-    box-shadow: inset 0px 0px 2px 0px #00000040;
+  border-radius: 15px;
+  background: #0000001c;
+  box-shadow: inset 0px 0px 2px 0px #00000040;
 }
 
-
 .card-area.large {
-    width: 230px;
-    height: 325px;
+  width: 230px;
+  height: 325px;
 }

@@ -1,334 +1,339 @@
 .combat-tile {
-    position: absolute;
-    right: 390px;
-    bottom: 240px;
-    width: 1170px;
-    display: flex;
-    border-radius: 50%;
+  position: absolute;
+  right: 390px;
+  bottom: 240px;
+  width: 1170px;
+  display: flex;
+  border-radius: 50%;
 }
 
 .units-area {
-    flex: 1 1;
-    display:flex;
-    flex-direction: column;
-    gap: 95px;
-    padding-right: 32px;
-    position:relative;
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  gap: 95px;
+  padding-right: 32px;
+  position: relative;
 }
 
 .units-area .upper-row {
-    display: flex;
-    justify-content: center;
-    gap: 140px;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  gap: 140px;
+  align-items: center;
 }
 
 .units-area .mid-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .units-gathering-area {
-    width: 290px;
-    height: 110px;
-    background: #c19e7d30;
-    border-radius: 48%;
-    box-sizing: border-box;
-    box-shadow: inset 0px 0px 20px 2px #e7dbbb;
-    backdrop-filter: blur(5px);
-    filter: blur(4px);
-    transition: .66s;
+  width: 290px;
+  height: 110px;
+  background: #c19e7d30;
+  border-radius: 48%;
+  box-sizing: border-box;
+  box-shadow: inset 0px 0px 20px 2px #e7dbbb;
+  backdrop-filter: blur(5px);
+  filter: blur(4px);
+  transition: 0.66s;
 }
 
 .units-gathering-area:hover,
 .units-gathering-area.active {
-    filter: blur(4px) drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
-    transform: scale(1.1);
+  filter: blur(4px) drop-shadow(0px 0px 10px rgb(255, 170, 73));
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+  transform: scale(1.1);
 }
 
 .battlefield-background {
-    position: absolute;
-    top: 115px;
-    left: calc(50% - 160px);
-    width: 300px;
-    transform: rotate3d(1, 0, 0, 67deg);
-    opacity: 0.2;
-    filter: invert(1) blur(6px);
-    transform: rotateY(-355deg) rotateX(72deg) rotateZ(44deg);
+  position: absolute;
+  top: 115px;
+  left: calc(50% - 160px);
+  width: 300px;
+  transform: rotate3d(1, 0, 0, 67deg);
+  opacity: 0.2;
+  filter: invert(1) blur(6px);
+  transform: rotateY(-355deg) rotateX(72deg) rotateZ(44deg);
 }
 
 .lower-row {
-    display: flex;
-    gap: 3px;
-    font-size: large;
-    flex: 1 1;
-    align-items: flex-end;
+  display: flex;
+  gap: 3px;
+  font-size: large;
+  flex: 1 1;
+  align-items: flex-end;
 }
 
 .combat-score-board {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    width: calc(100% - 103px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  width: calc(100% - 103px);
 }
 
 .score-legend {
-    position: absolute;
-    top: -45px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 48px;
-    color: #e5e5e5;
+  position: absolute;
+  top: -45px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  color: #e5e5e5;
 }
 
 .legend-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.2em;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2em;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
 }
 
-.legend-icon{
-    height:1.5em;
+.legend-icon {
+  height: 1.5em;
 }
 
 .score-tile {
-    position: absolute;
-    right: 425px;
-    bottom: 16px;
-    width: 1100px;
-    display: flex;
-    border-radius: 50%;
+  position: absolute;
+  right: 425px;
+  bottom: 16px;
+  width: 1100px;
+  display: flex;
+  border-radius: 50%;
 }
 
 .score-element {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-content: flex-end;
-    flex-wrap: wrap;
-    background: #0000001c;
-    box-shadow: inset 0px 0px 5px 0px #7e00003b;
-    border-radius: 5px;
-    position:relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-content: flex-end;
+  flex-wrap: wrap;
+  background: #0000001c;
+  box-shadow: inset 0px 0px 5px 0px #7e00003b;
+  border-radius: 5px;
+  position: relative;
 }
 
 .score-element.first {
-    width: 163px;
-    height: 163px;
-    background: #c0a17fa6;
+  width: 163px;
+  height: 163px;
+  background: #c0a17fa6;
 }
 
 .score {
-    flex: 1 1;
-    text-align: center;
-    color: #910000;
+  flex: 1 1;
+  text-align: center;
+  color: #910000;
 }
 
 .score-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80px;
-    height: 70px;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    padding: 6px;
-    gap: 2px;
-    flex-wrap: wrap;
-    box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 70px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 6px;
+  gap: 2px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 .score-container.large {
-    width: 153px;
-    height: 153px;
-    padding: 32px;
-    gap: 4px;
+  width: 153px;
+  height: 153px;
+  padding: 32px;
+  gap: 4px;
 }
 
 .score-marker {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    border: 1px solid #2f2112;
-    border-right: 3px solid #2f2112;
-    border-top: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    cursor:pointer;
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid #2f2112;
+  border-right: 3px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  cursor: pointer;
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
 }
 
 .units-control-bar-container {
-    position: absolute;
-    display:flex;
-    gap: 24px;
-    z-index: 2;
-    top: -50px;
-    left: -10px;
+  position: absolute;
+  display: flex;
+  gap: 24px;
+  z-index: 2;
+  top: -50px;
+  left: -10px;
 }
 
 .units-control-bar {
-    display:flex;
-    align-items: center;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.units-in-combat-container, .units-in-garrison-container, .units-in-timeout-container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 175px;
-    gap: 2px;
-    transition: .66s;
+.units-in-combat-container,
+.units-in-garrison-container,
+.units-in-timeout-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 175px;
+  gap: 2px;
+  transition: 0.66s;
 }
 
 .units-in-garrison-container:hover {
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
 }
 
 .units-in-combat-container {
-    width: 275px;
-    min-height: 80px;
-    justify-content: flex-end;
-    align-items: flex-start;
+  width: 275px;
+  min-height: 80px;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 
 .units-in-combat-container.top {
-    align-items: flex-end;
+  align-items: flex-end;
 }
 
 .units-in-combat-container.right {
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 
-
-
-.troop-marker-container, .ship-marker-container {
-    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 1));
+.troop-marker-container,
+.ship-marker-container {
+  filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 1));
 }
 
 .troop-marker {
-    width: 40px;
-    height: 30px;
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
-    box-sizing: border-box;
-    mask-image: url(/assets/images/reward-markers/marker_troops_colored.png);
-    mask-size: contain;
-    mask-position: bottom;
-    mask-repeat: no-repeat;
-    mask-mode: luminance;
-    z-index: 1;
-    filter: saturate(0.9);
+  width: 40px;
+  height: 30px;
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
+  box-sizing: border-box;
+  mask-image: url(/assets/images/reward-markers/marker_troops_colored.png);
+  mask-size: contain;
+  mask-position: bottom;
+  mask-repeat: no-repeat;
+  mask-mode: luminance;
+  z-index: 1;
+  filter: saturate(0.9);
 }
 
 .troop-marker.combat {
-    width: 50px;
-    height: 35px;
+  width: 50px;
+  height: 35px;
 }
 
-
 .ship-marker {
-    width: 55px;
-    height: 40px;
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
-    box-sizing: border-box;
-    mask-image: url(/assets/images/reward-markers/marker_ship_colored.png);
-    mask-size: contain;
-    mask-position: bottom;
-    mask-repeat: no-repeat;
-    mask-mode: luminance;
-    z-index: 1;
-    filter: saturate(0.9);
+  width: 55px;
+  height: 40px;
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
+  box-sizing: border-box;
+  mask-image: url(/assets/images/reward-markers/marker_ship_colored.png);
+  mask-size: contain;
+  mask-position: bottom;
+  mask-repeat: no-repeat;
+  mask-mode: luminance;
+  z-index: 1;
+  filter: saturate(0.9);
 }
 
 .ship-marker.combat {
-    width: 70px;
-    height: 45px;
+  width: 70px;
+  height: 45px;
 }
 
 .ship-marker.timeout {
-    opacity: 0.66;
-    background-color: gray;
+  opacity: 0.66;
+  background-color: gray;
 }
 
 .absolute-scores {
-    position: absolute;
-    bottom: 0;
-    right: -16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    background: #0000001c;
-    box-shadow: inset 0px 0px 5px 0px #7e00003b;
-    border-radius: 5px;
+  position: absolute;
+  bottom: 0;
+  right: -16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #0000001c;
+  box-shadow: inset 0px 0px 5px 0px #7e00003b;
+  border-radius: 5px;
 }
 
 .troop-button {
-    width: 50px;
-    height: 45px;
-    box-sizing: border-box;
-    mask-image: url(/assets/images/reward-markers/marker_troops_colored.png);
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-mode: luminance;
-    z-index: 1;
-    background-color: #830e0e;
-    transition: .66s;
+  width: 50px;
+  height: 45px;
+  box-sizing: border-box;
+  mask-image: url(/assets/images/reward-markers/marker_troops_colored.png);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-mode: luminance;
+  z-index: 1;
+  background-color: #830e0e;
+  transition: 0.66s;
 }
 
 .ship-button {
-    width: 55px;
-    height: 45px;
-    box-sizing: border-box;
-    mask-image: url(/assets/images/reward-markers/marker_ship_colored.png);
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-mode: luminance;
-    z-index: 1;
-    background-color: #830e0e;
-    transition: .66s;
+  width: 55px;
+  height: 45px;
+  box-sizing: border-box;
+  mask-image: url(/assets/images/reward-markers/marker_ship_colored.png);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-mode: luminance;
+  z-index: 1;
+  background-color: #830e0e;
+  transition: 0.66s;
 }
 
 .troop-button:hover,
 .ship-button:hover {
-    background-color: #c91111;
-    transform: scale(1.1);
+  background-color: #c91111;
+  transform: scale(1.1);
 }
 
 .swords-button {
-    width: 40px;
-    height: 45px;
-    border-radius: 25%;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
-    background-image: url(/assets/images/reward-markers/marker_sword.png);
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: .66s;
+  width: 40px;
+  height: 45px;
+  border-radius: 25%;
+  filter: drop-shadow(0px 0px 5px black);
+  left: calc(50% - 13px);
+  background-image: url(/assets/images/reward-markers/marker_sword.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: 0.66s;
 }
 
 .swords-button:hover {
-    filter: drop-shadow(0px 0px 5px black) brightness(1.2);
-    transform: scale(1.1);
+  filter: drop-shadow(0px 0px 5px black) brightness(1.2);
+  transform: scale(1.1);
 }
 
-
 @keyframes unit-marker-anim {
-    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
-    20%  {filter:  drop-shadow(0px 0px 10px rgb(255, 170, 73)) brightness(2.0)}
-    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
+  0% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
   }
+  20% {
+    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73)) brightness(2);
+  }
+  100% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
+}

@@ -1,36 +1,34 @@
 .turn-infos-container {
-    position: absolute;
-    top: 128px;
-    left: 0;
-    width: 100%;
-    padding: 16px;
-    border-radius: 5px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 32px;
+  position: absolute;
+  top: 10vh;
+  left: 0;
+  width: 100%;
+  border-radius: 5px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
 }
 
 .turn-info-container {
-    background-color: #45382f;
-    padding: 16px;
-    border-radius: 5px;
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    // width: min-content;
-    z-index: 3;
+  background-color: #45382f;
+  padding: 16px;
+  border-radius: 5px;
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+  z-index: 3;
 }
 
 .turn-info-title {
-    margin-bottom: 12px;
-    text-align: center;
+  margin-bottom: 12px;
+  text-align: center;
 }
 
 .cards-container {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
 }

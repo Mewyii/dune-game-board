@@ -1,151 +1,151 @@
 .faction-tile {
-    background-color: rgba(8, 15, 26, 0.72);
-    position: absolute;
-    padding: 20px;
-    border: 1px solid #9f9f9f4a;
-    box-shadow: inset 0px 0px 15px -3px #0000007a;
-    border-radius: 30px 4px;
-    top: 170px;
-    right: 10px;
-    width: 290px;
+  background-color: rgba(8, 15, 26, 0.72);
+  position: absolute;
+  padding: 20px;
+  border: 1px solid #9f9f9f4a;
+  box-shadow: inset 0px 0px 15px -3px #0000007a;
+  border-radius: 30px 4px;
+  top: 170px;
+  right: 10px;
+  width: 290px;
 }
 
 .faction-tile::after {
-    content: "";
-    border: 1px solid #efd5b6b8;
-    box-shadow: inset 0px 0px 15px -3px #0000007a;
-    border-radius: 4px;
-    position: absolute;
-    top: -4px;
-    left: -3px;
-    width: calc(100% + 5px);
-    height: calc(100% + 6px);
-    clip-path: ellipse(65% 65% at center);
+  content: '';
+  border: 1px solid #efd5b6b8;
+  box-shadow: inset 0px 0px 15px -3px #0000007a;
+  border-radius: 4px;
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: calc(100% + 5px);
+  height: calc(100% + 6px);
+  clip-path: ellipse(65% 65% at center);
 }
 
 .title-container {
-    width: 100%;
-    text-align: center;
-    color: rgb(195, 203, 217);
-    background: #0000007e;
-    margin-bottom: 16px;
-    z-index: 1;
-    position: relative;
-    font-size: x-large;
+  width: 100%;
+  text-align: center;
+  color: rgb(195, 203, 217);
+  background: #0000007e;
+  margin-bottom: 16px;
+  z-index: 1;
+  position: relative;
+  font-size: x-large;
 }
 
 .title {
-    filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
 }
 
 .content {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    align-content: flex-end;
-    flex-wrap: wrap;
-    gap: 16px;
-    position: relative;
-    z-index: 1;
-    // height: 360px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  align-content: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+  // height: 360px;
 }
 
-.background-symbol{
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 16px 32px;
-    height: calc(100% - 32px);
-    width: calc(100% - 66px);
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.2;
+.background-symbol {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 16px 32px;
+  height: calc(100% - 32px);
+  width: calc(100% - 66px);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.2;
 }
 
 .cards-area {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-content: space-between;
-    gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  gap: 16px;
 }
 
 .card-area {
-    border-radius: 5px;
-    background: #ffffff08;
-    box-shadow: inset 0px 0px 2px 0px #ffffff7d;
-    width: 240px;
-    height: 160px;
+  border-radius: 5px;
+  background: #ffffff08;
+  box-shadow: inset 0px 0px 2px 0px #ffffff7d;
+  width: 240px;
+  height: 160px;
 }
 
 .agent-area {
-    border-radius: 4px;
-    background: #0000006e;
-    padding: 8px;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
-    width: 210px;
-    height: 140px;
-    box-sizing: border-box;
-    margin-top: 16px;
-    transition: .66s;
-    cursor: url("/assets/images/cursors/pointer.png") 6 6, pointer !important;
+  border-radius: 4px;
+  background: #0000006e;
+  padding: 8px;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
+  width: 210px;
+  height: 140px;
+  box-sizing: border-box;
+  margin-top: 16px;
+  transition: 0.66s;
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
 }
 
 .agent-area:hover {
-    filter: drop-shadow(0px 0px 10px rgb(255, 170, 73));
-    transform: scale(1.05);
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+  transform: scale(1.05);
 }
 
 .agent-container {
-    background: #00000038;
-    border-radius: 3px;
-    border: 1px solid #9f9f9f4a;
-    position:relative;
-    box-shadow: inset 0px 0px 15px 0px #0000007a;
-    background-color: rgb(31, 39, 51);
-    height: 100%;
+  background: #00000038;
+  border-radius: 3px;
+  border: 1px solid #9f9f9f4a;
+  position: relative;
+  box-shadow: inset 0px 0px 15px 0px #0000007a;
+  background-color: rgb(31, 39, 51);
+  height: 100%;
 }
 
 .logo-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    filter: drop-shadow(0px 0px 4px #99bbff4e);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0px 0px 4px #99bbff4e);
 }
 
 .logo {
-    width: 110px;
-    height: 110px;
-    background-size: cover;
-    opacity: 0.2;
-    filter: invert(1) drop-shadow(0px 0px 10px black);
+  width: 110px;
+  height: 110px;
+  background-size: cover;
+  opacity: 0.2;
+  filter: invert(1) drop-shadow(0px 0px 10px black);
 }
 
 .tech-agent-container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 100px;
-    z-index: 1;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100px;
+  z-index: 1;
 }
 
 .tech-agent-marker {
-    width: 25px;
-    height: 25px;
-    border-radius: 25%;
-    border: 1px solid #2f2112;
-    border-right: 4px solid #2f2112;
-    border-top: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    left: calc(50% - 13px);
-    animation-name: unit-marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+  width: 25px;
+  height: 25px;
+  border-radius: 25%;
+  border: 1px solid #2f2112;
+  border-right: 4px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  left: calc(50% - 13px);
+  animation-name: unit-marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
 }
