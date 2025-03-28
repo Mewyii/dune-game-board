@@ -30,6 +30,29 @@ export const duneEvents: DuneEvent[] = [
       de: 'Sandstürme',
     },
     description: {
+      en: '{faction:spice}-fields cost an additional {resource:water}.',
+      de: '{faction:spice}-Felder kosten zusätzlich {resource:water}.',
+    },
+    imagePath: 'assets/images/action-backgrounds/sandstorm.png',
+    cardAmount: 1,
+    gameModifiers: {
+      fieldCost: [
+        {
+          id: 'sandstorms-field-block',
+          costType: 'water',
+          amount: 1,
+          actionType: 'spice',
+          currentRoundOnly: true,
+        },
+      ],
+    },
+  },
+  {
+    title: {
+      en: 'Grandmother Storm',
+      de: 'Urgroßmuttersturm',
+    },
+    description: {
       en: '{faction:spice}-fields are blocked.',
       de: '{faction:spice}-Felder sind blockiert.',
     },
@@ -47,21 +70,6 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'Grandmother Storm',
-      de: 'Urgroßmuttersturm',
-    },
-    description: {
-      en: 'For {resource:combat} fields, only 1 instead of 2 units can be sent into the conflict.',
-      de: 'Bei {resource:combat}-Feldern kann nur 1 statt 2 Einheiten in den Konflikt geschickt werden.',
-    },
-    imagePath: 'assets/images/action-backgrounds/sandstorm.png',
-    cardAmount: 1,
-    gameModifiers: {
-      combat: { id: 'solar-eclipse-combat', combatMaxDeployableUnits: 1, currentRoundOnly: true },
-    },
-  },
-  {
-    title: {
       en: 'Spice gusts',
       de: 'Spice-Winde',
     },
@@ -72,7 +80,15 @@ export const duneEvents: DuneEvent[] = [
     imagePath: 'assets/images/action-backgrounds/spice_2.png',
     cardAmount: 1,
     gameModifiers: {
-      fieldReward: [{ id: 'spice-gusts', rewardType: 'card-draw', amount: 1, actionType: 'spice', currentRoundOnly: true }],
+      fieldReward: [
+        {
+          id: 'spice-gusts',
+          rewardType: 'card-draw',
+          amount: 1,
+          actionType: 'spice',
+          currentRoundOnly: true,
+        },
+      ],
     },
   },
   {
@@ -81,14 +97,11 @@ export const duneEvents: DuneEvent[] = [
       de: 'Sonnenfinsternis',
     },
     description: {
-      en: 'For {resource:combat} fields, 3 instead of 2 units can be sent into the conflict.',
-      de: 'Bei {resource:combat}-Feldern können 3 statt 2 Einheiten in den Konflikt geschickt werden.',
+      en: 'Each player can put up to 2 troops into the conflict.',
+      de: 'Jeder Spieler darf bis zu 2 Truppen in den Konflikt entsenden.',
     },
     imagePath: '/assets/images/action-backgrounds/sun.png',
     cardAmount: 1,
-    gameModifiers: {
-      combat: { id: 'solar-eclipse-combat', combatMaxDeployableUnits: 3, currentRoundOnly: true },
-    },
   },
   {
     title: {
@@ -96,8 +109,8 @@ export const duneEvents: DuneEvent[] = [
       de: 'Spice-Explosionen',
     },
     description: {
-      en: '<b>Round start</b>: +1 bonus spice on {faction:spice}-fields.',
-      de: '<b>Rundenbeginn</b>: +1 Bonus-Spice auf {faction:spice}-Feldern.',
+      en: 'Put 1 bonus spice on all {faction:spice}-fields.',
+      de: 'Setze 1 Bonus-Spice auf alle {faction:spice}-Felder.',
     },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
     cardAmount: 2,
@@ -139,134 +152,74 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      de: 'Imperiale Delegation',
-      en: 'Imperial Delegation',
-    },
-    description: {
-      de: '<b>Aufdeckzug </b>:   {resource:intrigue-trash}{resource:solari;amount:2}{resource:helper-trade}{resource:faction-influence-up-emperor}   {resource:helper-or}   {resource:faction-influence-down-emperor} {resource:solari;amount:4}{resource:helper-trade} {resource:victory-point}',
-      en: '<b>Reveal turn</b>:   {resource:intrigue-trash}{resource:solari;amount:2}{resource:helper-trade}{resource:faction-influence-up-emperor}   {resource:helper-or}   {resource:faction-influence-down-emperor} {resource:solari;amount:4}{resource:helper-trade} {resource:victory-point}',
-    },
-    imagePath: 'assets/images/action-backgrounds/empire_ambassador.png',
-    cardAmount: 1,
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'emperor-alliance', modifier: 0.15 }],
-    },
-  },
-  {
-    title: {
-      de: 'Gilden-Abgesandte',
-      en: 'Guild Ambassadors',
-    },
-    description: {
-      de: '<b>Aufdeckzug </b>:   {resource:spice;amount:2}{resource:helper-trade}{resource:faction-influence-up-guild}   {resource:helper-or}   {resource:faction-influence-down-guild} {resource:spice;amount:2}{resource:helper-trade} {resource:victory-point}',
-      en: '<b>Reveal turn</b>:   {resource:spice;amount:2}{resource:helper-trade}{resource:faction-influence-up-guild}   {resource:helper-or}   {resource:faction-influence-down-guild} {resource:spice;amount:2}{resource:helper-trade} {resource:victory-point}',
-    },
-    imagePath: 'assets/images/action-backgrounds/guild_navigators_3.png',
-    cardAmount: 1,
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'guild-alliance', modifier: 0.15 }],
-    },
-  },
-  {
-    title: {
-      de: 'Missionara Protectiva',
-      en: 'Missionara Protectiva',
-    },
-    description: {
-      de: '<b>Aufdeckzug </b>:   {resource:water}{resource:spice}{resource:helper-trade}{resource:faction-influence-up-bene}   {resource:helper-or}   {resource:faction-influence-down-bene} {resource:persuasion;amount:4}{resource:helper-trade} {resource:victory-point}',
-      en: '<b>Reveal turn</b>:   {resource:water}{resource:spice}{resource:helper-trade}{resource:faction-influence-up-bene}   {resource:helper-or}   {resource:faction-influence-down-bene} {resource:persuasion;amount:4}{resource:helper-trade} {resource:victory-point}',
-    },
-    imagePath: 'assets/images/action-backgrounds/bene_gesserit_3.png',
-    cardAmount: 1,
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'bg-alliance', modifier: 0.15 }],
-    },
-  },
-  {
-    title: {
-      de: 'Abgefallene Fremen',
-      en: 'Renegade Fremen',
-    },
-    description: {
-      de: '<b>Aufdeckzug </b>:   {resource:loose-troop}{resource:loose-troop}{resource:helper-trade}{resource:faction-influence-up-fremen}   {resource:helper-or}   {resource:faction-influence-down-fremen} {resource:water}{resource:water}{resource:helper-trade} {resource:victory-point}',
-      en: '<b>Reveal turn</b>:   {resource:loose-troop}{resource:loose-troop}{resource:helper-trade}{resource:faction-influence-up-fremen}   {resource:helper-or}   {resource:faction-influence-down-fremen} {resource:water}{resource:water}{resource:helper-trade} {resource:victory-point}',
-    },
-    imagePath: 'assets/images/action-backgrounds/fremen_warriors.png',
-    cardAmount: 1,
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'fremen-alliance', modifier: 0.15 }],
-    },
-  },
-  {
-    title: {
-      de: 'Schmuggler',
-      en: 'Smugglers',
-    },
-    description: {
-      de: '<b>Aufdeckzug </b>:   {resource:spice}{resource:helper-trade}{resource:solari;amount:4}   {resource:helper-or}   {resource:loose-troop} {resource:loose-troop}{resource:helper-trade} {resource:spice;amount:3}',
-      en: '<b>Reveal turn</b>:   {resource:spice}{resource:helper-trade}{resource:solari;amount:4}   {resource:helper-or}   {resource:loose-troop} {resource:loose-troop}{resource:helper-trade} {resource:spice;amount:3}',
-    },
-    imagePath: 'assets/images/action-backgrounds/smugglers.png',
-    cardAmount: 1,
-  },
-  {
-    title: {
-      de: 'Ixianische Händler',
       en: 'Ixian Merchants',
+      de: 'Ixianische Händler',
     },
     description: {
-      de: '<b>Aufdeckzug </b>:   {resource:solari;amount:1}{resource:helper-trade}{resource:tech-reduced}   {resource:helper-or}   {resource:solari;amount:3}{resource:helper-trade}{resource:tech-reduced-two}',
-      en: '<b>Reveal turn</b>:   {resource:solari;amount:1}{resource:helper-trade}{resource:tech-reduced}   {resource:helper-or}   {resource:solari;amount:3}{resource:helper-trade}{resource:tech-reduced-two}',
+      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}',
+      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}',
     },
     imagePath: 'assets/images/action-backgrounds/port_4.png',
     cardAmount: 1,
   },
   {
     title: {
-      en: 'Conspirators',
-      de: 'Verschwörer',
-    },
-    description: {
-      en: '<b>Round start</b>: {resource:intrigue-trash}',
-      de: '<b>Rundenbeginn </b>: {resource:intrigue-trash}',
-    },
-    imagePath: 'assets/images/action-backgrounds/conspiracy.png',
-    cardAmount: 1,
-  },
-  {
-    title: {
-      en: 'Assassins',
-      de: 'Assassinen',
-    },
-    description: {
-      en: '<b>Round start</b>: {resource:loose-troop}{resource:loose-troop}',
-      de: '<b>Rundenbeginn </b>: {resource:loose-troop}{resource:loose-troop}',
-    },
-    imagePath: 'assets/images/action-backgrounds/bene_gesserit.png',
-    cardAmount: 1,
-  },
-  {
-    title: {
-      de: 'Saboteure',
-      en: 'Saboteurs',
-    },
-    description: {
-      en: '<b>Round start</b>: {resource:spice;amount:-1}',
-      de: '<b>Rundenbeginn </b>: {resource:spice;amount:-1}',
-    },
-    imagePath: 'assets/images/action-backgrounds/spice_depot.png',
-    cardAmount: 1,
-  },
-  {
-    title: {
       en: 'Heighliner',
-      de: 'Heighliner',
+      de: 'Orbitaler Heighliner',
     },
     description: {
-      en: '<b>Reveal turn</b>: {resource:recruitment-emperor}{resource:recruitment-guild}{resource:recruitment-bene}',
-      de: '<b>Aufdeckzug </b>: {resource:recruitment-emperor}{resource:recruitment-guild}{resource:recruitment-bene}',
+      en: 'Ziehe <b>3</b> zusätzliche Karten für die Imperium-Reihe in dieser Runde.',
+      de: 'Ziehe <b>3</b> zusätzliche Karten für die Imperium-Reihe in dieser Runde.',
     },
     imagePath: '/assets/images/action-backgrounds/highliner_2.png',
     cardAmount: 2,
+  },
+  {
+    title: {
+      en: "Muad'Dib",
+      de: "Muad'Dib",
+    },
+    description: {
+      en: '{faction:spice}-fields cost {resource:water} less.',
+      de: '{faction:spice}-Felder kosten {resource:water} weniger.',
+    },
+    imagePath: '/assets/images/action-backgrounds/muaddib.png',
+    cardAmount: 1,
+  },
+  {
+    title: {
+      en: 'Delegation of the major houses',
+      de: 'Delegationen der großen Häuser',
+    },
+    description: {
+      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari}',
+      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari}',
+    },
+    imagePath: '/assets/images/action-backgrounds/emperor_camp.png',
+    cardAmount: 1,
+  },
+  {
+    title: {
+      en: 'Delegations of the minor houses',
+      de: 'Delegationen der kleinen Häuser',
+    },
+    description: {
+      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:solari;amount:2}',
+      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:solari;amount:2}',
+    },
+    imagePath: '/assets/images/action-backgrounds/freighter.png',
+    cardAmount: 1,
+  },
+  {
+    title: {
+      en: 'CHOAM merchant fleet',
+      de: 'MAFEA-Handelsflotte',
+    },
+    description: {
+      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:water}',
+      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:water}',
+    },
+    imagePath: '/assets/images/action-backgrounds/troops.png',
+    cardAmount: 1,
   },
 ];
