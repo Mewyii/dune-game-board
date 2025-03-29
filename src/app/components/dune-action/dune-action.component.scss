@@ -62,12 +62,13 @@
   // border: 1px solid #9a9a9aab;
   box-sizing: border-box;
   position: relative;
-  transition: 0.3s;
+  transition: 0.66s;
 }
 
 .agent-area:hover {
   box-shadow: inset 0px 0px 25px -3px rgb(255, 123, 0);
   cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  filter: brightness(1.2);
 }
 
 .reward-area {
