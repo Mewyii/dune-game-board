@@ -941,7 +941,7 @@ export class GameManager {
           if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
             const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards;
             if (playerHandCards && playerHandCards.length > 0) {
-              const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState, 3);
+              const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState);
 
               const boardField = this.settingsService.boardFields.find((x) =>
                 cardAndField?.preferredField.fieldId.includes(x.title.en)
@@ -1443,16 +1443,6 @@ export class GameManager {
       });
       this.turnInfoService.setPlayerTurnInfo(player.id, { canEnterCombat: false });
     }
-
-    if (turnInfo.techBuyOptionsWithAgents) {
-      for (const techBuyOption of turnInfo.techBuyOptionsWithAgents) {
-        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-          type: 'tech',
-          amount: techBuyOption,
-        });
-      }
-      this.turnInfoService.setPlayerTurnInfo(player.id, { techBuyOptionsWithAgents: [] });
-    }
   }
 
   private aiResolveRewardChoices(player: Player) {
@@ -1592,11 +1582,8 @@ export class GameManager {
         }
       }
     }
-    if (turnInfo.techBuyOptionsWithAgents) {
-      for (const techBuyOption of turnInfo.techBuyOptionsWithAgents) {
-        this.turnInfoService.setPlayerTurnInfo(player.id, { techBuyOptionsWithAgents: [] });
-        this.aiBuyTechOrStackTechAgents(player.id, techBuyOption);
-      }
+    if (turnInfo.canBuyTech) {
+      this.aiBuyTechIfPossible(player.id);
     }
   }
 
@@ -1868,7 +1855,7 @@ export class GameManager {
 
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTechAgents = player.techAgents;
-    const playerCanAffordTechTile = techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTechAgents;
+    const playerCanAffordTechTile = 1 + techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTechAgents;
 
     if (playerCanAffordTechTile) {
       this.buyTechTileForPlayer(player, techTile, availablePlayerTechAgents, 0);
@@ -2184,21 +2171,19 @@ export class GameManager {
     return canPayCosts;
   }
 
-  private aiBuyTechOrStackTechAgents(playerId: number, techAmount: number) {
+  private aiBuyTechIfPossible(playerId: number) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
       return;
     }
-    const possibleDiscount = techAmount - 1;
+
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
 
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTechAgents = player.techAgents;
     const affordableTechTiles = buyableTechTiles.filter(
-      (x) =>
-        x.costs - possibleDiscount + getTechTileCostModifier(x, costModifiers) <=
-        availablePlayerTechAgents + availablePlayerSpice
+      (x) => 1 + x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTechAgents + availablePlayerSpice
     );
 
     if (affordableTechTiles.length > 0) {
@@ -2208,32 +2193,23 @@ export class GameManager {
       )[0];
 
       const desire = mostDesiredTechTile.aiEvaluation(player, gameState);
-      const effectiveCosts = mostDesiredTechTile.costs - possibleDiscount - availablePlayerTechAgents;
+      const effectiveCosts = mostDesiredTechTile.costs - availablePlayerTechAgents;
 
       if (
         affordableTechTiles.some((x) => x.name.en === mostDesiredTechTile.name.en) &&
         (desire > 0.25 || effectiveCosts < 1)
       ) {
         const costModifier = getTechTileCostModifier(mostDesiredTechTile, costModifiers);
-        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, possibleDiscount + costModifier);
+        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, costModifier);
       } else if (this.isFinale) {
         const costModifier = getTechTileCostModifier(affordableTechTiles[0], costModifiers);
-        this.buyTechTileForPlayer(
-          player,
-          affordableTechTiles[0],
-          availablePlayerTechAgents,
-          possibleDiscount + costModifier
-        );
-      } else {
-        this.playerManager.addTechAgentsToPlayer(player.id, techAmount);
+        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTechAgents, costModifier);
       }
-    } else {
-      this.playerManager.addTechAgentsToPlayer(player.id, techAmount);
     }
   }
 
   private buyTechTileForPlayer(player: Player, techTile: TechTileCard, techAgents: number, discount: number) {
-    const effectiveCosts = techTile.costs - discount;
+    const effectiveCosts = 1 + techTile.costs - discount;
 
     if (effectiveCosts > 0) {
       if (techAgents) {
@@ -2338,7 +2314,8 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 1 });
     } else if (rewardType === 'tech') {
       this.audioManager.playSound('tech-agent', rewardAmount);
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { techBuyOptionsWithAgents: [rewardAmount] });
+      this.playerManager.addTechAgentsToPlayer(player.id, rewardAmount);
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { canBuyTech: true });
     } else if (rewardType === 'intrigue') {
       this.audioManager.playSound('intrigue', rewardAmount);
       this.intriguesService.drawPlayerIntriguesFromDeck(player.id, rewardAmount);

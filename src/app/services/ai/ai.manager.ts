@@ -536,18 +536,13 @@ export class AIManager {
     return undefined;
   }
 
-  getCardAndFieldToPlay(
-    playerHandCards: ImperiumDeckCard[],
-    player: Player,
-    gameState: GameState,
-    preferredFieldAmount = 1
-  ) {
+  getCardAndFieldToPlay(playerHandCards: ImperiumDeckCard[], player: Player, gameState: GameState) {
     const aiPlayer = this.aiPlayers.find((x) => x.playerId === player.id);
     if (!aiPlayer) {
       return undefined;
     }
 
-    const preferredFields = aiPlayer.preferredFields.slice(0, preferredFieldAmount);
+    const preferredFields = aiPlayer.preferredFields;
 
     let cardEvaluations: { field: ViableField; evaluation: number; card: ImperiumDeckCard }[] = [];
     for (const [fieldIndex, preferredField] of preferredFields.entries()) {

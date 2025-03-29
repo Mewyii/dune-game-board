@@ -82,7 +82,7 @@ export class TurnInfoService {
     return {
       playerId,
       agentPlacedOnFieldId: '',
-      techBuyOptionsWithAgents: [],
+      canBuyTech: false,
       canEnterCombat: false,
       deployableUnits: 0,
       troopsGainedThisTurn: 0,

@@ -7,7 +7,7 @@ import { TechTileCard } from './tech-tile';
 export interface TurnInfo {
   playerId: number;
   agentPlacedOnFieldId: string;
-  techBuyOptionsWithAgents: number[];
+  canBuyTech: boolean;
   canEnterCombat: boolean;
   deployableUnits: number;
   troopsGainedThisTurn: number;
