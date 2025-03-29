@@ -1304,7 +1304,7 @@ export class GameManager {
   ) {
     const effects = structuredRevealEffects;
     for (const reward of effects.rewards) {
-      this.addRewardToPlayer(player, reward);
+      this.addRewardToPlayer(player, reward, card);
     }
     for (const choiceEffect of effects.choiceEffects) {
       this.resolveStructuredChoiceEffect(choiceEffect, player, gameState, card);
@@ -1329,7 +1329,7 @@ export class GameManager {
           this.resolveStructuredChoiceEffect(conditionalEffect.effect, player, gameState, card);
         } else {
           for (const reward of conditionalEffect.effect) {
-            this.addRewardToPlayer(player, reward);
+            this.addRewardToPlayer(player, reward, card);
           }
         }
       }
@@ -2475,6 +2475,12 @@ export class GameManager {
         if (player) {
           for (const startingResource of leader.startingResources) {
             this.addRewardToPlayer(player, startingResource);
+          }
+
+          if (!player.isAI) {
+            this.showPlayerRewardChoices(player);
+          } else {
+            this.aiResolveRewardChoices(player);
           }
         }
       }

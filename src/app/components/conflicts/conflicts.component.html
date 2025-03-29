@@ -1,5 +1,9 @@
 <ng-container *ngIf="currentConflict">
-  <dune-conflict-card [conflict]="currentConflict"></dune-conflict-card>
+  <dune-conflict-card
+    [class]="currentconflictIsActive ? 'active ' : ''"
+    (click)="onSetCurrentConflictActiveClicked()"
+    [conflict]="currentConflict"
+  ></dune-conflict-card>
   <div
     [class]="
       'conflict-card backside clickable ' +

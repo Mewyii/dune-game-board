@@ -23,6 +23,7 @@ export class ConflictsComponent implements OnInit {
   public activePlayerId = 0;
   public hasConflictVision = false;
   public conflictStackIsActive = false;
+  public currentconflictIsActive = false;
 
   ngOnInit(): void {
     this.conflictsService.currentConflict$.subscribe((currentConflict) => {
@@ -38,6 +39,7 @@ export class ConflictsComponent implements OnInit {
       );
 
       this.conflictStackIsActive = false;
+      this.currentconflictIsActive = false;
     });
 
     this.gameModifierService.playerGameModifiers$.subscribe(() => {
@@ -46,6 +48,10 @@ export class ConflictsComponent implements OnInit {
         'vision-conflict'
       );
     });
+  }
+
+  onSetCurrentConflictActiveClicked() {
+    this.currentconflictIsActive = !this.currentconflictIsActive;
   }
 
   onSetConflictStackActiveClicked() {

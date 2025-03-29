@@ -5,6 +5,14 @@ dune-conflict-card,
   right: 200px;
   border-radius: 10px;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  transition: 0.8s;
+}
+
+dune-conflict-card:hover,
+dune-conflict-card.active {
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+  transform: scale(1.5);
+  z-index: 3;
 }
 
 .conflict-card.backside {
@@ -33,7 +41,8 @@ dune-conflict-card,
 .conflict-card.backside.clickable:hover,
 .conflict-card.backside.clickable.active {
   filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
-  transform: scale(1.1);
+  transform: scale(1.2);
+  z-index: 3;
 }
 
 .conflict-action-container {
