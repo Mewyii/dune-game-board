@@ -22,7 +22,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Kein Effekt.',
     },
     imagePath: 'assets/images/action-backgrounds/sky.png',
-    cardAmount: 2,
+    cardAmount: 3,
   },
   {
     title: {
