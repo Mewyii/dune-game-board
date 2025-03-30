@@ -80,7 +80,7 @@ export class PlayersService {
         cardsDrawnAtRoundStart: 5,
         persuasionGainedThisRound: 0,
         persuasionSpentThisRound: 0,
-        techAgents: 0,
+        tech: 0,
         permanentPersuasion: 0,
         isAI: true,
       });
@@ -117,7 +117,7 @@ export class PlayersService {
       intrigueCount: 0,
       signetTokenCount: 0,
       cardsDrawnAtRoundStart: 5,
-      techAgents: 0,
+      tech: 0,
       persuasionGainedThisRound: 0,
       persuasionSpentThisRound: 0,
       permanentPersuasion: 0,
@@ -209,23 +209,23 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public addTechAgentsToPlayer(id: number, amount: number) {
+  public addTechToPlayer(id: number, amount: number) {
     const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
-      player.techAgents = player.techAgents + amount;
+      player.tech = player.tech + amount;
     }
 
     this.playersSubject.next(players);
   }
 
-  public removeTechAgentsFromPlayer(id: number, amount: number) {
+  public removeTechFromPlayer(id: number, amount: number) {
     const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
     if (player) {
-      player.techAgents = player.techAgents - amount;
+      player.tech = player.tech - amount;
     }
 
     this.playersSubject.next(players);

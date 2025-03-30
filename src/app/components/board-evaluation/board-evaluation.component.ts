@@ -137,7 +137,7 @@ export class BoardEvaluationComponent implements OnInit {
           value += 0.1 * amount;
           break;
         case 'tech':
-          value += 1.5 * amount;
+          value += 1.66 * amount;
           break;
         case 'combat':
           if (rewards.some((x) => x.type === 'troop')) {

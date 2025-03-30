@@ -60,7 +60,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   tech: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'spice') + 0.033 * player.techAgents - 0.01 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'spice') + 0.033 * player.tech - 0.01 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({

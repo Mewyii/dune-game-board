@@ -38,7 +38,7 @@ export function getResourceDesire(
 export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech-agents') {
   switch (resourceType) {
     case 'tech-agents':
-      return player.techAgents;
+      return player.tech;
     default:
       const resource = player.resources.find((x) => x.type === resourceType);
 

@@ -14,6 +14,7 @@ import {
   DuneLocation,
   Effect,
   EffectReward,
+  EffectWithoutSeparatorAndCondition,
   RewardType,
   StructuredChoiceEffect,
   StructuredEffects,
@@ -34,6 +35,8 @@ import {
   isFactionScoreCostType,
   isFactionScoreRewardType,
   isOptionEffectType,
+  isRewardEffect,
+  isRewardEffectType,
   isStructuredChoiceEffect,
 } from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
@@ -72,6 +75,16 @@ export interface PlayerAgents {
 export interface SpiceAccumulation {
   fieldId: string;
   amount: number;
+}
+
+export interface BaseGameEffect {
+  id: string;
+  amount: number;
+}
+
+export interface GameEffects {
+  imperiumRowCards?: BaseGameEffect;
+  spiceAccumulation?: BaseGameEffect;
 }
 
 export type RoundPhaseType = 'none' | 'agent-placement' | 'combat' | 'combat-resolvement' | 'done';
@@ -316,9 +329,20 @@ export class GameManager {
       this.duneEventsManager.setEventDeck();
 
       const event = this.duneEventsManager.getCurrentEvent();
-      if (event && event.gameModifiers) {
-        for (const player of this.playerManager.getPlayers()) {
-          this.gameModifiersService.addPlayerGameModifiers(player.id, event.gameModifiers);
+      if (event) {
+        const players = this.playerManager.getPlayers();
+        if (event.gameEffects) {
+          this.resolveGameEffects(event.gameEffects);
+        }
+
+        for (const player of players) {
+          if (event.gameModifiers) {
+            this.gameModifiersService.addPlayerGameModifiers(player.id, event.gameModifiers);
+          }
+          if (event.immediatePlayerEffects) {
+            const gameState = this.getGameState(player);
+            this.resolveStructuredEffects(event.immediatePlayerEffects, player, gameState);
+          }
         }
       }
     }
@@ -432,7 +456,7 @@ export class GameManager {
 
     this.activePlayerIdSubject.next(this.startingPlayerId);
 
-    this.cardsService.churnImperiumRow();
+    this.cardsService.churnAndClearImperiumRow();
     this.cardsService.discardAllPlayerHandCards();
     this.cardsService.shufflePlayerDiscardPilesUnderDecks();
     for (const player of this.playerManager.getPlayers()) {
@@ -447,9 +471,19 @@ export class GameManager {
     this.techTilesService.unFlipTechTiles();
 
     const nextEvent = this.duneEventsManager.setNextEvent();
-    if (nextEvent && nextEvent.gameModifiers) {
-      for (const player of this.playerManager.getPlayers()) {
-        this.gameModifiersService.addPlayerGameModifiers(player.id, nextEvent.gameModifiers);
+    if (nextEvent) {
+      const players = this.playerManager.getPlayers();
+      if (nextEvent.gameEffects) {
+        this.resolveGameEffects(nextEvent.gameEffects);
+      }
+      for (const player of players) {
+        if (nextEvent.gameModifiers) {
+          this.gameModifiersService.addPlayerGameModifiers(player.id, nextEvent.gameModifiers);
+        }
+        if (nextEvent.immediatePlayerEffects) {
+          const gameState = this.getGameState(player);
+          this.resolveStructuredEffects(nextEvent.immediatePlayerEffects, player, gameState);
+        }
       }
     }
   }
@@ -596,15 +630,19 @@ export class GameManager {
 
     const { rewardOptionIndex, hasRewardOptions } = this.aIManager.getRewardArrayAIInfos(fieldRewards);
     let rewards: EffectReward[] = [];
-    const option: Effect[] = [];
+    let rewardOptionLeft: EffectReward | undefined = undefined;
+    let rewardOptionRight: EffectReward | undefined = undefined;
 
     if (hasRewardOptions) {
       for (const [index, reward] of fieldRewards.entries()) {
-        const isRewardOption = hasRewardOptions && (index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1);
-        if (isRewardOption || index === rewardOptionIndex) {
-          option.push(reward);
-        } else {
-          rewards.push(reward as EffectReward);
+        if (isRewardEffect(reward)) {
+          if (index === rewardOptionIndex - 1) {
+            rewardOptionLeft = reward;
+          } else if (index === rewardOptionIndex + 1) {
+            rewardOptionRight = reward;
+          } else {
+            rewards.push(reward);
+          }
         }
       }
     } else {
@@ -649,8 +687,12 @@ export class GameManager {
     this.addPlayedCardRewards(playedCard, activePlayer, activePlayer.isAI);
 
     if (!activePlayer.isAI) {
-      if (hasRewardOptions) {
-        this.playerRewardChoicesService.addPlayerRewardsChoice(activePlayer.id, option);
+      if (hasRewardOptions && rewardOptionLeft && rewardOptionRight) {
+        this.playerRewardChoicesService.addPlayerRewardsChoice(activePlayer.id, [
+          rewardOptionLeft,
+          { type: 'helper-or' },
+          rewardOptionRight,
+        ]);
       }
       if (field.conversionOptions) {
         for (const option of field.conversionOptions) {
@@ -663,12 +705,12 @@ export class GameManager {
       const aiPlayer = this.aIManager.getAIPlayer(activePlayer.id);
 
       if (activePlayer && aiPlayer) {
-        if (hasRewardOptions) {
+        if (hasRewardOptions && rewardOptionLeft && rewardOptionRight) {
           const aiDecision = this.aIManager.getFieldDecision(activePlayer.id, field.title.en);
-          const reward = rewards.find((x) => x.type.includes(aiDecision));
-
-          if (reward) {
-            this.addRewardToPlayer(activePlayer, reward);
+          if (rewardOptionLeft.type.includes(aiDecision)) {
+            this.addRewardToPlayer(activePlayer, rewardOptionLeft);
+          } else {
+            this.addRewardToPlayer(activePlayer, rewardOptionRight);
           }
         }
 
@@ -1343,7 +1385,7 @@ export class GameManager {
     card?: ImperiumDeckCard
   ) {
     if (!player.isAI) {
-      this.playerRewardChoicesService.addPlayerRewardsChoice(this.activePlayerId, [
+      this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, [
         ...structuredChoiceEffect.left,
         { type: structuredChoiceEffect.choiceType },
         ...structuredChoiceEffect.right,
@@ -1360,6 +1402,14 @@ export class GameManager {
           card
         );
       }
+    }
+  }
+
+  private resolveGameEffects(gameEffects: GameEffects) {
+    if (gameEffects.imperiumRowCards) {
+      this.cardsService.addCardsToImperiumRow(gameEffects.imperiumRowCards.amount);
+    } else if (gameEffects.spiceAccumulation) {
+      this.accumulateSpiceOnFields(gameEffects.spiceAccumulation.amount);
     }
   }
 
@@ -1854,11 +1904,11 @@ export class GameManager {
     const costModifier = getTechTileCostModifier(techTile, costModifiers);
 
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
-    const availablePlayerTechAgents = player.techAgents;
-    const playerCanAffordTechTile = 1 + techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTechAgents;
+    const availablePlayerTech = player.tech;
+    const playerCanAffordTechTile = techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTech;
 
     if (playerCanAffordTechTile) {
-      this.buyTechTileForPlayer(player, techTile, availablePlayerTechAgents, 0);
+      this.buyTechTileForPlayer(player, techTile, availablePlayerTech, 0);
     }
   }
 
@@ -2062,7 +2112,7 @@ export class GameManager {
     this.accumulatedSpiceOnFieldsSubject.next(accumulatedSpiceOnFields);
   }
 
-  private accumulateSpiceOnFields() {
+  private accumulateSpiceOnFields(amount = 1) {
     const spiceFieldNames = this.settingsService.spiceAccumulationFields;
 
     const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
@@ -2074,10 +2124,10 @@ export class GameManager {
           const element = accumulatedSpiceOnFields[index];
           accumulatedSpiceOnFields[index] = {
             ...element,
-            amount: element.amount + 1,
+            amount: element.amount + amount,
           };
         } else {
-          accumulatedSpiceOnFields.push({ fieldId: fieldName, amount: 1 });
+          accumulatedSpiceOnFields.push({ fieldId: fieldName, amount: amount });
         }
       } else {
         const index = accumulatedSpiceOnFields.findIndex((x) => x.fieldId === fieldName);
@@ -2181,9 +2231,9 @@ export class GameManager {
 
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
-    const availablePlayerTechAgents = player.techAgents;
+    const availablePlayerTech = player.tech;
     const affordableTechTiles = buyableTechTiles.filter(
-      (x) => 1 + x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTechAgents + availablePlayerSpice
+      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech + availablePlayerSpice
     );
 
     if (affordableTechTiles.length > 0) {
@@ -2193,31 +2243,31 @@ export class GameManager {
       )[0];
 
       const desire = mostDesiredTechTile.aiEvaluation(player, gameState);
-      const effectiveCosts = mostDesiredTechTile.costs - availablePlayerTechAgents;
+      const effectiveCosts = mostDesiredTechTile.costs - availablePlayerTech;
 
       if (
         affordableTechTiles.some((x) => x.name.en === mostDesiredTechTile.name.en) &&
         (desire > 0.25 || effectiveCosts < 1)
       ) {
         const costModifier = getTechTileCostModifier(mostDesiredTechTile, costModifiers);
-        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTechAgents, costModifier);
+        this.buyTechTileForPlayer(player, mostDesiredTechTile, availablePlayerTech, costModifier);
       } else if (this.isFinale) {
         const costModifier = getTechTileCostModifier(affordableTechTiles[0], costModifiers);
-        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTechAgents, costModifier);
+        this.buyTechTileForPlayer(player, affordableTechTiles[0], availablePlayerTech, costModifier);
       }
     }
   }
 
-  private buyTechTileForPlayer(player: Player, techTile: TechTileCard, techAgents: number, discount: number) {
-    const effectiveCosts = 1 + techTile.costs - discount;
+  private buyTechTileForPlayer(player: Player, techTile: TechTileCard, techAmount: number, discount: number) {
+    const effectiveCosts = techTile.costs - discount;
 
     if (effectiveCosts > 0) {
-      if (techAgents) {
-        this.playerManager.removeTechAgentsFromPlayer(player.id, effectiveCosts > techAgents ? techAgents : effectiveCosts);
+      if (techAmount) {
+        this.playerManager.removeTechFromPlayer(player.id, effectiveCosts > techAmount ? techAmount : effectiveCosts);
       }
 
-      if (effectiveCosts > techAgents) {
-        this.playerManager.removeResourceFromPlayer(player.id, 'spice', effectiveCosts - techAgents);
+      if (effectiveCosts > techAmount) {
+        this.playerManager.removeResourceFromPlayer(player.id, 'spice', effectiveCosts - techAmount);
       }
     }
 
@@ -2303,7 +2353,7 @@ export class GameManager {
     } else if (rewardType === 'faction-influence-up-choice') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
     } else if (rewardType === 'faction-influence-up-twice-choice') {
-      this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 1 });
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceUpChoiceTwiceAmount: 1 });
     } else if (isFactionScoreCostType(rewardType)) {
       this.audioManager.playSound('fog');
 
@@ -2314,7 +2364,7 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 1 });
     } else if (rewardType === 'tech') {
       this.audioManager.playSound('tech-agent', rewardAmount);
-      this.playerManager.addTechAgentsToPlayer(player.id, rewardAmount);
+      this.playerManager.addTechToPlayer(player.id, rewardAmount);
       this.turnInfoService.updatePlayerTurnInfo(player.id, { canBuyTech: true });
     } else if (rewardType === 'intrigue') {
       this.audioManager.playSound('intrigue', rewardAmount);

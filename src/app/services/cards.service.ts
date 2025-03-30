@@ -549,9 +549,13 @@ export class CardsService {
     }
   }
 
-  churnImperiumRow() {
+  churnAndClearImperiumRow() {
+    const imperiumRowCardAmount = this.settingsService.getImperiumRowCards();
+
     const imperiumRow = this.imperiumRow;
     const imperiumDeck = this.imperiumDeck;
+
+    imperiumRow.splice(imperiumRowCardAmount);
 
     const newImperiumRow: (ImperiumRowCard | ImperiumRowPlot)[] = [];
     for (const imperiumCard of imperiumRow) {
@@ -583,6 +587,17 @@ export class CardsService {
       this.imperiumDeckSubject.next(imperiumDeck);
     }
     this.shuffleCardsUnderPlayerDeck(playerId, [card]);
+  }
+
+  addCardsToImperiumRow(amount = 1) {
+    const imperiumDeck = this.imperiumDeck;
+    const addedCards = imperiumDeck.splice(0, amount);
+    if (addedCards.length > 0) {
+      const imperiumRow = this.imperiumRow;
+      imperiumRow.push(...addedCards.map((x) => ({ ...x, status: 'just-arrived' } as ImperiumRowPlot)));
+      this.imperiumRowSubject.next(imperiumRow);
+      this.imperiumDeckSubject.next(imperiumDeck);
+    }
   }
 
   aquirePlayerPlotFromImperiumRow(playerId: number, card: ImperiumRowPlot) {

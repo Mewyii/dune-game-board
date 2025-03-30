@@ -1,5 +1,5 @@
-import { LanguageString } from '../models';
-import { AIAdjustments } from '../services/ai/models';
+import { LanguageString, StructuredEffects } from '../models';
+import { GameEffects } from '../services/game-manager.service';
 import { GameModifiers } from '../services/game-modifier.service';
 
 export interface DuneEvent {
@@ -7,8 +7,9 @@ export interface DuneEvent {
   description: LanguageString;
   imagePath: string;
   cardAmount?: number;
-  aiAdjustments?: AIAdjustments;
   gameModifiers?: GameModifiers;
+  gameEffects?: GameEffects;
+  immediatePlayerEffects?: StructuredEffects;
 }
 
 export const duneEvents: DuneEvent[] = [
@@ -38,7 +39,7 @@ export const duneEvents: DuneEvent[] = [
     gameModifiers: {
       fieldCost: [
         {
-          id: 'sandstorms-field-block',
+          id: 'sandstorms-field-water-increase',
           costType: 'water',
           amount: 1,
           actionType: 'spice',
@@ -105,7 +106,7 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'Spice Explosions',
+      en: 'Spice Blows',
       de: 'Spice-Explosionen',
     },
     description: {
@@ -114,6 +115,12 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
     cardAmount: 2,
+    gameEffects: {
+      spiceAccumulation: {
+        id: 'spice-blows-bonus-spice',
+        amount: 1,
+      },
+    },
   },
   {
     title: {
@@ -161,6 +168,17 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/port_4.png',
     cardAmount: 1,
+    immediatePlayerEffects: {
+      rewards: [],
+      conditionalEffects: [],
+      choiceEffects: [
+        {
+          choiceType: 'helper-trade',
+          left: [{ type: 'card-discard' }],
+          right: [{ type: 'tech' }],
+        },
+      ],
+    },
   },
   {
     title: {
@@ -173,6 +191,12 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/highliner_2.png',
     cardAmount: 2,
+    gameEffects: {
+      imperiumRowCards: {
+        id: 'orbital-heighliner-imperium-cards',
+        amount: 3,
+      },
+    },
   },
   {
     title: {
@@ -185,6 +209,17 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/muaddib.png',
     cardAmount: 1,
+    gameModifiers: {
+      fieldCost: [
+        {
+          id: 'muaddib-field-water-decrease',
+          costType: 'water',
+          amount: -1,
+          actionType: 'spice',
+          currentRoundOnly: true,
+        },
+      ],
+    },
   },
   {
     title: {
@@ -197,6 +232,17 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/emperor_camp.png',
     cardAmount: 1,
+    immediatePlayerEffects: {
+      rewards: [],
+      conditionalEffects: [],
+      choiceEffects: [
+        {
+          choiceType: 'helper-trade',
+          left: [{ type: 'card-discard' }],
+          right: [{ type: 'troop' }, { type: 'solari' }],
+        },
+      ],
+    },
   },
   {
     title: {
@@ -209,6 +255,17 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/freighter.png',
     cardAmount: 1,
+    immediatePlayerEffects: {
+      rewards: [],
+      conditionalEffects: [],
+      choiceEffects: [
+        {
+          choiceType: 'helper-trade',
+          left: [{ type: 'card-discard' }],
+          right: [{ type: 'solari', amount: 2 }],
+        },
+      ],
+    },
   },
   {
     title: {
@@ -221,5 +278,16 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/troops.png',
     cardAmount: 1,
+    immediatePlayerEffects: {
+      rewards: [],
+      conditionalEffects: [],
+      choiceEffects: [
+        {
+          choiceType: 'helper-trade',
+          left: [{ type: 'card-discard' }],
+          right: [{ type: 'water' }],
+        },
+      ],
+    },
   },
 ];

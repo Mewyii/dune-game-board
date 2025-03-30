@@ -1,4 +1,4 @@
-import { ActiveFactionType, CombatUnitType, Faction, ResourceType } from '.';
+import { ActiveFactionType, CombatUnitType, ResourceType } from '.';
 
 export const rewardTypes = [
   'agent',

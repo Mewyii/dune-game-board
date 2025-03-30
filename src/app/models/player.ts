@@ -13,7 +13,7 @@ export interface Player {
   signetTokenCount: number;
   focusTokens: number;
   cardsDrawnAtRoundStart: number;
-  techAgents: number;
+  tech: number;
   persuasionGainedThisRound: number;
   persuasionSpentThisRound: number;
   permanentPersuasion: number;

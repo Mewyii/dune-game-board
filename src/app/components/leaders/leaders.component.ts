@@ -265,6 +265,21 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
+  onAddTechClicked() {
+    this.audioManager.playSound('tech-agent');
+    this.playerManager.addTechToPlayer(this.activePlayerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+  }
+
+  onRemoveTechClicked() {
+    this.audioManager.playSound('click-reverse');
+    this.playerManager.removeTechFromPlayer(this.activePlayerId, 1);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    return false;
+  }
+
   public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-reverse');
     this.playerScoreManager.removePlayerScore(id, scoreType, 1, this.gameManager.currentRound);

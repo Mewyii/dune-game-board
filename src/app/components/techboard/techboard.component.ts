@@ -15,7 +15,7 @@ export class TechboardComponent implements OnInit {
   @Input() useTechTiles = false;
 
   public activePlayerId = 0;
-  public playerTechAgents: { playerId: number; techAgents: number }[] = [];
+  public playerTech: { playerId: number; amount: number }[] = [];
 
   constructor(
     public playerManager: PlayersService,
@@ -30,20 +30,20 @@ export class TechboardComponent implements OnInit {
     });
 
     this.playerManager.players$.subscribe((players) => {
-      this.playerTechAgents = players.map((x) => ({ playerId: x.id, techAgents: x.techAgents }));
+      this.playerTech = players.map((x) => ({ playerId: x.id, amount: x.tech }));
     });
   }
 
   onAddTechAgentClicked() {
     this.audioManager.playSound('tech-agent');
-    this.playerManager.addTechAgentsToPlayer(this.activePlayerId, 1);
+    this.playerManager.addTechToPlayer(this.activePlayerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onRemoveTechAgentClicked() {
     this.audioManager.playSound('click-reverse');
-    this.playerManager.removeTechAgentsFromPlayer(this.activePlayerId, 1);
+    this.playerManager.removeTechFromPlayer(this.activePlayerId, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
     return false;

@@ -133,6 +133,14 @@
           </div>
         </div>
         }
+        <div [class]="'resource-container'">
+          <div class="resource-display" (click)="onAddTechClicked()" (contextmenu)="onRemoveTechClicked()">
+            <img [class]="'resource tech'" [src]="getEffectTypePath('tech')" />
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayer.tech }}</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="info-container right">
         <div class="resource-container">

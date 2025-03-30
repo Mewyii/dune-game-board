@@ -3,6 +3,10 @@ import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject, first, map } from 'rxjs';
 import { DuneEvent, duneEvents } from '../constants/events';
 
+export interface DuneEventCard extends DuneEvent {
+  id: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -10,7 +14,7 @@ export class DuneEventsManager {
   private eventsSubject = new BehaviorSubject<DuneEvent[]>(duneEvents);
   public events$ = this.eventsSubject.asObservable();
 
-  private eventDeckSubject = new BehaviorSubject<Omit<DuneEvent, 'cardAmount'>[]>([]);
+  private eventDeckSubject = new BehaviorSubject<DuneEventCard[]>([]);
   public eventDeck$ = this.eventDeckSubject.asObservable();
   public currentEvent$ = this.eventDeck$.pipe(map((x) => x[0]));
 
@@ -19,13 +23,7 @@ export class DuneEventsManager {
     if (eventsString) {
       const events = JSON.parse(eventsString) as DuneEvent[];
 
-      // Workaround for local storage not being able to store functions
-      const realEvents = events.map((x) => {
-        const techTile = duneEvents.find((y) => y.title.en === x.title.en);
-        return techTile ?? x;
-      });
-
-      this.eventsSubject.next(realEvents);
+      this.eventsSubject.next(events);
     } else {
     }
 
@@ -35,15 +33,9 @@ export class DuneEventsManager {
 
     const eventDeckString = localStorage.getItem('eventDeck');
     if (eventDeckString) {
-      const eventDeck = JSON.parse(eventDeckString) as Omit<DuneEvent, 'cardAmount'>[];
+      const eventDeck = JSON.parse(eventDeckString) as DuneEventCard[];
 
-      // Workaround for local storage not being able to store functions
-      const realEvents = eventDeck.map((x) => {
-        const techTile = duneEvents.find((y) => y.title.en === x.title.en);
-        return techTile ?? x;
-      });
-
-      this.eventDeckSubject.next(realEvents);
+      this.eventDeckSubject.next(eventDeck);
     } else {
     }
 
@@ -70,16 +62,10 @@ export class DuneEventsManager {
   }
 
   public setEventDeck() {
-    const newEvents: Omit<DuneEvent, 'cardAmount'>[] = [];
+    const newEvents: DuneEventCard[] = [];
     for (let event of this.events) {
       for (let i = 0; i < (event.cardAmount ?? 1); i++) {
-        newEvents.push({
-          title: event.title,
-          description: event.description,
-          imagePath: event.imagePath,
-          aiAdjustments: event.aiAdjustments,
-          gameModifiers: event.gameModifiers,
-        });
+        newEvents.push(this.instantiateEvent(event));
       }
     }
     this.eventDeckSubject.next(shuffle(newEvents));
@@ -116,6 +102,14 @@ export class DuneEventsManager {
 
   public deleteEvent(id: string) {
     this.eventsSubject.next(this.events.filter((x) => x.title.en !== id));
+  }
+
+  public instantiateEvent(card: DuneEvent): DuneEventCard {
+    return {
+      ...card,
+      id: crypto.randomUUID(),
+      cardAmount: 1,
+    };
   }
 
   public getNewEvent() {

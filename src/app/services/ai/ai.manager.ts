@@ -207,11 +207,6 @@ export class AIManager {
     ).map((x) => this.getImperiumCardBuyEvaluation(x, player, gameState));
     const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 16, 5);
 
-    let eventGoalModifiers: GoalModifier[] = [];
-    if (gameEvent && gameEvent.aiAdjustments && gameEvent.aiAdjustments.goalEvaluationModifier) {
-      eventGoalModifiers = gameEvent.aiAdjustments.goalEvaluationModifier(player, gameState);
-    }
-
     let leaderGoalModifiers: GoalModifier[] = [];
     if (playerLeader.aiAdjustments && playerLeader.aiAdjustments.goalEvaluationModifier) {
       leaderGoalModifiers = playerLeader.aiAdjustments.goalEvaluationModifier(player, gameState);
@@ -230,7 +225,6 @@ export class AIManager {
           getDesire(goal, player, gameState, this.aiGoals) *
             (aiPlayer.personality[aiGoalId] ?? 1.0) *
             this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation) +
-          this.getEventGoalModifier(aiGoalId, eventGoalModifiers) +
           this.getLeaderGoalModifier(goalId, leaderGoalModifiers);
 
         let desireCanBeFullfilled = false;
@@ -870,10 +864,16 @@ export class AIManager {
       }
     }
 
-    return Object.entries(factionDesires).reduce(
-      (maxKey: any, [key, value]) => (factionDesires[maxKey as ActiveFactionType] < value ? key : maxKey),
-      Object.keys(factionDesires)[0]
-    );
+    let mostDesiredFaction: PlayerFactionScoreType | undefined = undefined;
+    let highestFactionValue = -1;
+    for (const [faction, value] of Object.entries(factionDesires)) {
+      if (value > highestFactionValue || (value === highestFactionValue && Math.random() > 0.66)) {
+        highestFactionValue = value;
+        mostDesiredFaction = faction as ActiveFactionType;
+      }
+    }
+
+    return mostDesiredFaction;
   }
 
   getLeastDesiredFactionScoreType(
@@ -1208,9 +1208,9 @@ export class AIManager {
       case 'dreadnought':
         return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 7 : 0) + 0.25 * (gameState.currentRound - 1);
       case 'card-draw':
-        return 1.5 + 0.1 * gameState.playerCardsBought + 0.1 * gameState.playerCardsTrashed;
+        return 1.75 + 0.1 * gameState.playerCardsBought + 0.1 * gameState.playerCardsTrashed;
       case 'card-discard':
-        return -1.0 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
+        return -1.66 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
       case 'card-destroy':
       case 'focus':
         return 2 + 0.15 * gameState.playerCardsBought - 0.3 * gameState.playerCardsTrashed;
@@ -1243,7 +1243,7 @@ export class AIManager {
       case 'intrigue-draw':
         return 0.25;
       case 'tech':
-        return 1.5;
+        return 1.75;
       case 'card-round-start':
         return 1.5;
       case 'shipping':
@@ -1338,7 +1338,7 @@ export class AIManager {
       case 'intrigue-draw':
         return value + 2 * gameState.playerIntrigueStealAmount;
       case 'tech':
-        return value + 0.33 * player.techAgents;
+        return value + 0.25 * player.tech;
       case 'card-round-start':
         return value;
       case 'shipping':

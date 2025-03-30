@@ -1,10 +1,13 @@
 import {
+  combatUnitTypes,
   Effect,
   EffectChoice,
   EffectCondition,
   EffectReward,
+  EffectType,
   EffectWithoutSeparator,
   EffectWithoutSeparatorAndCondition,
+  resourceTypes,
   rewardChoices,
   RewardChoiceType,
   rewardConditions,
@@ -96,7 +99,17 @@ export function isOptionEffectType(input: string): input is RewardChoiceType {
 }
 
 export function isRewardEffect(reward: Effect): reward is EffectReward {
-  return rewardTypes.some((x) => x === reward.type);
+  return (
+    rewardTypes.some((x) => x === reward.type) ||
+    resourceTypes.some((x) => x === reward.type) ||
+    combatUnitTypes.some((x) => x === reward.type)
+  );
+}
+
+export function isRewardEffectType(type: EffectType): type is RewardType {
+  return (
+    rewardTypes.some((x) => x === type) || resourceTypes.some((x) => x === type) || combatUnitTypes.some((x) => x === type)
+  );
 }
 
 export function getStructuredEffectArrayInfos(effects: Effect[]) {
