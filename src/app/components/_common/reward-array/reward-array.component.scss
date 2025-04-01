@@ -49,10 +49,22 @@
 .text {
   color: #101010;
   width: max-content;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.66));
+}
+
+.text.heading {
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
 .text.white {
   color: #e1e1e1;
+}
+
+.text.white-clear {
+  color: #fff;
 }
 
 .faction {

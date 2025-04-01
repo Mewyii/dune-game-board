@@ -1,6 +1,6 @@
 import { ActiveFactionType, CombatUnitType, ResourceType } from '.';
 
-export const rewardTypes = [
+export const effectRewards = [
   'agent',
   'agent-lift',
   'buildup',
@@ -53,18 +53,22 @@ export const rewardTypes = [
   'beetle',
 ] as const;
 
-export const rewardSeparators = ['helper-separator'] as const;
+export const effectTimings = ['timing-round-start', 'timing-reveal-turn'] as const;
 
-export const rewardChoices = ['helper-or', 'helper-or-horizontal', 'helper-trade', 'helper-trade-horizontal'] as const;
+export const effectSeparators = ['helper-separator'] as const;
 
-export const rewardConditions = ['condition-influence', 'condition-connection'] as const;
+export const effectChoices = ['helper-or', 'helper-or-horizontal', 'helper-trade', 'helper-trade-horizontal'] as const;
 
-export type RewardType = ResourceType | CombatUnitType | (typeof rewardTypes)[number];
-export type RewardSeparatorType = (typeof rewardSeparators)[number];
-export type RewardChoiceType = (typeof rewardChoices)[number];
-export type RewardConditionType = (typeof rewardConditions)[number];
+export const effectConditions = ['condition-influence', 'condition-connection'] as const;
 
-export type EffectType = RewardType | RewardSeparatorType | RewardChoiceType | RewardConditionType;
+export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
+
+export type EffectTimingType = (typeof effectTimings)[number];
+export type EffectSeparatorType = (typeof effectSeparators)[number];
+export type EffectChoiceType = (typeof effectChoices)[number];
+export type EffectConditionType = (typeof effectConditions)[number];
+
+export type EffectType = EffectTimingType | EffectRewardType | EffectSeparatorType | EffectChoiceType | EffectConditionType;
 
 interface EffectBase {
   type: EffectType;
@@ -73,42 +77,53 @@ interface EffectBase {
   width?: number;
 }
 
+export interface EffectTiming extends EffectBase {
+  type: EffectTimingType;
+}
+
 export interface EffectReward extends EffectBase {
-  type: RewardType;
+  type: EffectRewardType;
 }
 
 export interface EffectSeparator extends EffectBase {
-  type: RewardSeparatorType;
+  type: EffectSeparatorType;
 }
 
 export interface EffectChoice extends EffectBase {
-  type: RewardChoiceType;
+  type: EffectChoiceType;
 }
 
 export interface EffectCondition extends EffectBase {
-  type: RewardConditionType;
+  type: EffectConditionType;
   faction: ActiveFactionType;
 }
 
-export type Effect = EffectReward | EffectSeparator | EffectChoice | EffectCondition;
-export type EffectWithoutSeparator = EffectReward | EffectChoice | EffectCondition;
-export type EffectWithoutSeparatorAndCondition = EffectReward | EffectChoice;
+export type Effect = EffectTiming | EffectReward | EffectSeparator | EffectChoice | EffectCondition;
+export type EffectTimingRewardChoiceOrCondition = EffectTiming | EffectReward | EffectChoice | EffectCondition;
+export type EffectRewardChoiceOrCondition = EffectReward | EffectChoice | EffectCondition;
+export type EffectRewardOrChoice = EffectReward | EffectChoice;
+
+export interface StructuredEffects {
+  rewards: EffectReward[];
+  choiceEffects: StructuredChoiceEffect[];
+  conditionalEffects: StructuredConditionalEffect[];
+  timingEffects: StructuredTimingEffect[];
+}
+
+export interface StructuredTimingEffect {
+  type: EffectTimingType;
+  effect: StructuredConditionalEffect | StructuredChoiceEffect | EffectReward[];
+}
 
 export interface StructuredConditionalEffect {
-  condition: RewardConditionType;
+  condition: EffectConditionType;
   amount?: number;
   faction: ActiveFactionType;
   effect: EffectReward[] | StructuredChoiceEffect;
 }
 
 export interface StructuredChoiceEffect {
-  choiceType: RewardChoiceType;
+  choiceType: EffectChoiceType;
   left: EffectReward[];
   right: EffectReward[];
-}
-
-export interface StructuredEffects {
-  rewards: EffectReward[];
-  choiceEffects: StructuredChoiceEffect[];
-  conditionalEffects: StructuredConditionalEffect[];
 }

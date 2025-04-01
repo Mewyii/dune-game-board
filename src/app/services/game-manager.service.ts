@@ -14,16 +14,18 @@ import {
   DuneLocation,
   Effect,
   EffectReward,
-  EffectWithoutSeparatorAndCondition,
-  RewardType,
+  EffectRewardOrChoice,
+  EffectRewardType,
   StructuredChoiceEffect,
+  StructuredConditionalEffect,
   StructuredEffects,
+  StructuredTimingEffect,
 } from '../models';
 import { AIManager } from './ai/ai.manager';
 import { LeadersService } from './leaders.service';
 import { ConflictsService } from './conflicts.service';
 import { MinorHousesService } from './minor-houses.service';
-import { TechTilesService } from './tech-tiles.service';
+import { TechTileDeckCard, TechTilesService } from './tech-tiles.service';
 import { AudioManager } from './audio-manager.service';
 import { SettingsService } from './settings.service';
 import { getRandomElementFromArray, sum } from '../helpers/common';
@@ -31,6 +33,7 @@ import { GameState, PlayerCardsFactions as Factions, PlayerCardsFieldAccess, Pla
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
 import {
   getStructuredChoiceEffectIfPossible,
+  isConditionalEffect,
   isConversionEffectType,
   isFactionScoreCostType,
   isFactionScoreRewardType,
@@ -38,6 +41,7 @@ import {
   isRewardEffect,
   isRewardEffectType,
   isStructuredChoiceEffect,
+  isStructuredConditionalEffect,
 } from '../helpers/rewards';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
@@ -88,6 +92,8 @@ export interface GameEffects {
 }
 
 export type RoundPhaseType = 'none' | 'agent-placement' | 'combat' | 'combat-resolvement' | 'done';
+
+export type GameElement = { type: 'card'; object: ImperiumDeckCard } | { type: 'tech-tile'; object: TechTileDeckCard };
 
 @Injectable({
   providedIn: 'root',
@@ -534,7 +540,7 @@ export class GameManager {
             card.structuredRevealEffects,
             player,
             gameState,
-            card,
+            { type: 'card', object: card },
             playerHand.cards.filter((x) => x.id !== card.id)
           );
         }
@@ -765,7 +771,7 @@ export class GameManager {
     if (card.structuredAgentEffects) {
       const gameState = this.getGameState(player);
 
-      this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, card);
+      this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, { type: 'card', object: card });
     }
     if (card.customAgentEffect) {
       const localizedString = this.t.translateLS(card.customAgentEffect);
@@ -968,6 +974,8 @@ export class GameManager {
       const playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
       const hasPlacedAgentsThisTurn = playerTurnInfo && playerTurnInfo.fieldsVisitedThisTurn.length > 0;
       if (!hasPlacedAgentsThisTurn) {
+        this.aiPlayPossibleAndUsefulTechTiles(player);
+
         const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot');
         const playableAndUsefulIntrigues = this.aiGetPlayableAndUsefulIntrigues(player, playerIntrigues, gameState);
 
@@ -1162,6 +1170,24 @@ export class GameManager {
     return playableAndUsefulIntrigues;
   }
 
+  private aiPlayPossibleAndUsefulTechTiles(player: Player) {
+    const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
+    for (const playerTechTile of playerTechTiles) {
+      if (!playerTechTile.isFlipped) {
+        const effects = playerTechTile.techTile.structuredEffects;
+        if (effects) {
+          const gameState = this.getGameState(player);
+          this.resolveStructuredEffects(effects, player, gameState, {
+            type: 'tech-tile',
+            object: playerTechTile.techTile,
+          });
+        }
+      }
+    }
+
+    this.aiResolveRewardChoices(player);
+  }
+
   public aiDiscardHandCard(playerId: number) {
     const playerHandCards = this.cardsService.getPlayerHand(playerId)?.cards;
     if (playerHandCards) {
@@ -1263,7 +1289,7 @@ export class GameManager {
     costs: EffectReward[],
     rewards: EffectReward[],
     gameState: GameState,
-    card?: ImperiumDeckCard
+    element?: GameElement
   ) {
     const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
     const conversionIsUseful =
@@ -1271,10 +1297,10 @@ export class GameManager {
 
     if (conversionIsUseful && this.playerCanPayCosts(player.id, costs)) {
       for (const cost of costs) {
-        this.payCostForPlayer(player.id, cost);
+        this.payCostForPlayer(player.id, cost, undefined, element);
       }
       for (const reward of rewards) {
-        this.addRewardToPlayer(player, reward, card);
+        this.addRewardToPlayer(player, reward, element);
       }
     }
   }
@@ -1284,18 +1310,18 @@ export class GameManager {
     leftSideRewards: EffectReward[],
     rightSideRewards: EffectReward[],
     gameState: GameState,
-    card?: ImperiumDeckCard
+    element?: GameElement
   ) {
     const leftSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(leftSideRewards, player, gameState);
     const rightSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(rightSideRewards, player, gameState);
 
     if (leftSideEvaluation >= rightSideEvaluation) {
       for (const reward of leftSideRewards) {
-        this.addRewardToPlayer(player, reward, card);
+        this.addRewardToPlayer(player, reward, element);
       }
     } else {
       for (const reward of rightSideRewards) {
-        this.addRewardToPlayer(player, reward, card);
+        this.addRewardToPlayer(player, reward, element);
       }
     }
   }
@@ -1338,41 +1364,86 @@ export class GameManager {
   }
 
   private resolveStructuredEffects(
-    structuredRevealEffects: StructuredEffects,
+    structuredEffects: StructuredEffects,
     player: Player,
     gameState: GameState,
-    card?: ImperiumDeckCard,
+    element?: GameElement,
     additionalCardsInPlay?: ImperiumDeckCard[]
   ) {
-    const effects = structuredRevealEffects;
+    const effects = structuredEffects;
     for (const reward of effects.rewards) {
-      this.addRewardToPlayer(player, reward, card);
+      this.addRewardToPlayer(player, reward, element);
     }
     for (const choiceEffect of effects.choiceEffects) {
-      this.resolveStructuredChoiceEffect(choiceEffect, player, gameState, card);
+      this.resolveStructuredChoiceEffect(choiceEffect, player, gameState, element);
     }
     for (const conditionalEffect of effects.conditionalEffects) {
-      let conditionFullfilled = false;
+      this.resolveStructuredConditionEffects(conditionalEffect, player, gameState, element, additionalCardsInPlay);
+    }
+    for (const timingEffect of effects.timingEffects) {
+      this.resolveStructuredTimingEffects(timingEffect, player, gameState, element, additionalCardsInPlay);
+    }
+  }
 
-      if (conditionalEffect.condition === 'condition-connection') {
-        if (
-          gameState.playerCardsFactionsInPlay[conditionalEffect.faction] > 0 ||
-          additionalCardsInPlay?.some((x) => x.faction === conditionalEffect.faction)
-        ) {
-          conditionFullfilled = true;
-        }
-      } else if (conditionalEffect.condition === 'condition-influence' && conditionalEffect.amount) {
-        if (gameState.playerScore[conditionalEffect.faction] >= conditionalEffect.amount) {
-          conditionFullfilled = true;
+  private resolveStructuredTimingEffects(
+    timingEffect: StructuredTimingEffect,
+    player: Player,
+    gameState: GameState,
+    element?: GameElement,
+    additionalCardsInPlay?: ImperiumDeckCard[]
+  ) {
+    let conditionFullfilled = false;
+
+    if (timingEffect.type === 'timing-round-start') {
+      const hasPlacedAgentThisRound = this.agentsOnFields.filter((x) => x.playerId === player.id).length > 0;
+      if (player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+        conditionFullfilled = true;
+      }
+    } else if (timingEffect.type === 'timing-reveal-turn') {
+      if (player.turnState === 'reveal') {
+        conditionFullfilled = true;
+      }
+    }
+    if (conditionFullfilled) {
+      if (isStructuredConditionalEffect(timingEffect.effect)) {
+        this.resolveStructuredConditionEffects(timingEffect.effect, player, gameState, element, additionalCardsInPlay);
+      } else if (isStructuredChoiceEffect(timingEffect.effect)) {
+        this.resolveStructuredChoiceEffect(timingEffect.effect, player, gameState, element);
+      } else {
+        for (const reward of timingEffect.effect) {
+          this.addRewardToPlayer(player, reward, element);
         }
       }
-      if (conditionFullfilled) {
-        if (isStructuredChoiceEffect(conditionalEffect.effect)) {
-          this.resolveStructuredChoiceEffect(conditionalEffect.effect, player, gameState, card);
-        } else {
-          for (const reward of conditionalEffect.effect) {
-            this.addRewardToPlayer(player, reward, card);
-          }
+    }
+  }
+
+  private resolveStructuredConditionEffects(
+    conditionalEffect: StructuredConditionalEffect,
+    player: Player,
+    gameState: GameState,
+    element?: GameElement,
+    additionalCardsInPlay?: ImperiumDeckCard[]
+  ) {
+    let conditionFullfilled = false;
+
+    if (conditionalEffect.condition === 'condition-connection') {
+      if (
+        gameState.playerCardsFactionsInPlay[conditionalEffect.faction] > 0 ||
+        additionalCardsInPlay?.some((x) => x.faction === conditionalEffect.faction)
+      ) {
+        conditionFullfilled = true;
+      }
+    } else if (conditionalEffect.condition === 'condition-influence' && conditionalEffect.amount) {
+      if (gameState.playerScore[conditionalEffect.faction] >= conditionalEffect.amount) {
+        conditionFullfilled = true;
+      }
+    }
+    if (conditionFullfilled) {
+      if (isStructuredChoiceEffect(conditionalEffect.effect)) {
+        this.resolveStructuredChoiceEffect(conditionalEffect.effect, player, gameState, element);
+      } else {
+        for (const reward of conditionalEffect.effect) {
+          this.addRewardToPlayer(player, reward, element);
         }
       }
     }
@@ -1382,7 +1453,7 @@ export class GameManager {
     structuredChoiceEffect: StructuredChoiceEffect,
     player: Player,
     gameState: GameState,
-    card?: ImperiumDeckCard
+    element?: GameElement
   ) {
     if (!player.isAI) {
       this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, [
@@ -1392,14 +1463,14 @@ export class GameManager {
       ]);
     } else {
       if (isOptionEffectType(structuredChoiceEffect.choiceType)) {
-        this.aiChooseRewardOption(player, structuredChoiceEffect.left, structuredChoiceEffect.right, gameState, card);
+        this.aiChooseRewardOption(player, structuredChoiceEffect.left, structuredChoiceEffect.right, gameState, element);
       } else if (isConversionEffectType(structuredChoiceEffect.choiceType)) {
         this.aiConvertRewardIfUsefulAndPossible(
           player,
           structuredChoiceEffect.left,
           structuredChoiceEffect.right,
           gameState,
-          card
+          element
         );
       }
     }
@@ -1955,7 +2026,7 @@ export class GameManager {
     }
 
     const playerTechTilesFactions = this.getInitialFactions();
-    const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
+    const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id).map((x) => x.techTile);
     for (const techTile of playerTechTiles) {
       if (techTile.faction) {
         playerTechTilesFactions[techTile.faction] += 1;
@@ -2167,6 +2238,10 @@ export class GameManager {
           } else {
             canPayCosts = false;
           }
+        } else if (costType === 'tech') {
+          if (player.tech < costAmount) {
+            canPayCosts = false;
+          }
         } else if (costType === 'card-discard') {
           if (playerHandCards && playerHandCards.length >= costAmount) {
             playerHandCards.splice(0, costAmount);
@@ -2310,7 +2385,7 @@ export class GameManager {
     }
   }
 
-  public addRewardToPlayer(player: Player, reward: EffectReward, card?: ImperiumDeckCard, source?: string) {
+  public addRewardToPlayer(player: Player, reward: EffectReward, element?: GameElement, source?: string) {
     const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(player.id);
 
     const rewardType = reward.type;
@@ -2347,7 +2422,7 @@ export class GameManager {
         );
 
         for (const reward of factionRewards) {
-          this.addRewardToPlayer(player, reward, card, 'Influence');
+          this.addRewardToPlayer(player, reward, element, 'Influence');
         }
       }
     } else if (rewardType === 'faction-influence-up-choice') {
@@ -2425,9 +2500,19 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { locationControlAmount: 1 });
     } else if (rewardType === 'signet-ring') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { signetRingAmount: 1 });
-    } else if (rewardType === 'trash-self' && card) {
-      this.cardsService.trashPlayerHandCard(player.id, card);
-      this.loggingService.logPlayerTrashedCard(player.id, this.t.translateLS(card.name));
+    } else if (rewardType === 'trash-self' && element) {
+      if (element.type === 'card') {
+        this.cardsService.trashPlayerHandCard(player.id, element.object);
+        this.loggingService.logPlayerTrashedCard(player.id, this.t.translateLS(element.object.name));
+      } else if (element.type === 'tech-tile') {
+        this.techTilesService.trashTechTile(element.object.id);
+        this.loggingService.logPlayerTrashedTechTile(player.id, this.t.translateLS(element.object.name));
+      }
+    } else if (reward.type === 'tech-tile-flip' && element) {
+      if (element.type === 'tech-tile') {
+        this.techTilesService.flipTechTile(element.object.id);
+        this.loggingService.logPlayerPlayedTechTile(player.id, this.t.translateLS(element.object.name));
+      }
     } else if (reward.type === 'combat') {
       this.audioManager.playSound('combat');
 
@@ -2459,12 +2544,15 @@ export class GameManager {
     this.loggingService.logPlayerResourceGained(player.id, rewardType, rewardAmount);
   }
 
-  public payCostForPlayer(playerId: number, cost: EffectReward, source?: string) {
+  public payCostForPlayer(playerId: number, cost: EffectReward, source?: string, element?: GameElement) {
     const costType = cost.type;
+    const costAmount = cost.amount ?? 1;
     if (isResourceType(costType)) {
-      this.playerManager.removeResourceFromPlayer(playerId, costType, cost.amount ?? 1);
+      this.playerManager.removeResourceFromPlayer(playerId, costType, costAmount);
     } else if (costType === 'shipping') {
-      this.playerManager.removeResourceFromPlayer(playerId, 'water', cost.amount ?? 1);
+      this.playerManager.removeResourceFromPlayer(playerId, 'water', costAmount);
+    } else if (costType === 'tech') {
+      this.playerManager.removeTechFromPlayer(playerId, costAmount);
     } else if (isFactionScoreRewardType(costType)) {
       const scoreType = getFactionScoreTypeFromReward(cost);
 
@@ -2474,20 +2562,33 @@ export class GameManager {
     } else if (costType === 'intrigue' || costType === 'intrigue-trash') {
       this.aiTrashIntrigue(playerId);
     } else if (costType === 'sword') {
-      this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, cost.amount ?? 1);
+      this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, costAmount);
     } else if (costType === 'troop' || costType === 'loose-troop') {
-      this.combatManager.removePlayerTroopsFromGarrison(playerId, cost.amount ?? 1);
+      this.combatManager.removePlayerTroopsFromGarrison(playerId, costAmount);
     } else if (costType === 'dreadnought') {
       this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
     } else if (costType === 'card-discard') {
       this.aiDiscardHandCard(playerId);
     } else if (costType === 'card-destroy' || costType === 'focus') {
-      this.playerManager.addFocusTokens(playerId, cost.amount ?? 1);
+      this.playerManager.addFocusTokens(playerId, costAmount);
     } else if (costType === 'persuasion') {
-      this.playerManager.addPersuasionSpentToPlayer(playerId, cost.amount ?? 1);
+      this.playerManager.addPersuasionSpentToPlayer(playerId, costAmount);
     } else if (costType === 'victory-point') {
-      this.playerScoreManager.removePlayerScore(playerId, 'victoryPoints', cost.amount ?? 1, this.currentRound);
+      this.playerScoreManager.removePlayerScore(playerId, 'victoryPoints', costAmount, this.currentRound);
       this.loggingService.logPlayerLostVictoryPoint(playerId, this.currentRound, source);
+    } else if (costType === 'trash-self' && element) {
+      if (element.type === 'card') {
+        this.cardsService.trashPlayerHandCard(playerId, element.object);
+        this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(element.object.name));
+      } else if (element.type === 'tech-tile') {
+        this.techTilesService.trashTechTile(element.object.id);
+        this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(element.object.name));
+      }
+    } else if (costType === 'tech-tile-flip' && element) {
+      if (element.type === 'tech-tile') {
+        this.techTilesService.flipTechTile(element.object.id);
+        this.loggingService.logPlayerPlayedTechTile(playerId, this.t.translateLS(element.object.name));
+      }
     }
 
     this.loggingService.logPlayerResourcePaid(playerId, costType, cost.amount);
@@ -2629,13 +2730,13 @@ export class GameManager {
       const amountRegExp = /;amount:.*?}/g;
       const amountString = potentialReward.match(amountRegExp);
       if (!amountString) {
-        const resource = potentialReward.substring(10, potentialReward.length - 1) as RewardType;
+        const resource = potentialReward.substring(10, potentialReward.length - 1) as EffectRewardType;
         rewards.push({ type: resource, amount: 1 });
       } else {
         const amount = amountString[0].substring(8, amountString[0].length - 1);
         const amountNumber = parseInt(amount);
 
-        const resource = potentialReward.substring(10, potentialReward.length - amount.length - 9) as RewardType;
+        const resource = potentialReward.substring(10, potentialReward.length - amount.length - 9) as EffectRewardType;
         rewards.push({ type: resource, amount: amountNumber });
       }
       restString = customAgentEffect.slice(customAgentEffect.indexOf('}') + 1).trim();

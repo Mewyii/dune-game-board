@@ -1,4 +1,4 @@
-import { Resource, ResourceType, Effect, RewardType } from '../models';
+import { Resource, ResourceType, Effect, EffectRewardType } from '../models';
 
 export function isResourceArray(rewards: Effect[]): rewards is Resource[] {
   for (const reward of rewards) {
@@ -16,7 +16,7 @@ export function isResource(reward: Effect): reward is Resource {
   return false;
 }
 
-export function isResourceType(rewardType: RewardType): rewardType is ResourceType {
+export function isResourceType(rewardType: EffectRewardType): rewardType is ResourceType {
   if (rewardType === 'solari' || rewardType === 'spice' || rewardType === 'water') {
     return true;
   }

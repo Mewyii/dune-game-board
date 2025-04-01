@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, RewardType } from 'src/app/models';
+import { EffectType, EffectRewardType } from 'src/app/models';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, ImperiumDeckCard, PlayerCardStack, PlayerPlotStack } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';

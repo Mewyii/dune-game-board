@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DuneLocation, EffectType, RewardType } from 'src/app/models';
+import { DuneLocation, EffectType, EffectRewardType } from 'src/app/models';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LocationManager } from 'src/app/services/location-manager.service';

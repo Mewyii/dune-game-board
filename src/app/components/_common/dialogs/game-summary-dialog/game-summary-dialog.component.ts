@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, RewardType } from 'src/app/models';
+import { EffectType, EffectRewardType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { LoggingService } from 'src/app/services/log.service';

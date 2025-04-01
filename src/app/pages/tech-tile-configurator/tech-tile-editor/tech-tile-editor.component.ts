@@ -8,8 +8,11 @@ import {
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
-  RewardType,
-  rewardTypes,
+  effectRewards,
+  effectSeparators,
+  effectChoices,
+  effectConditions,
+  effectTimings,
 } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
 
@@ -27,11 +30,13 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
 
   factions = [...activeFactionTypes, ...passiveFactionTypes, ''].sort((a, b) => a.localeCompare(b));
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
-  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes].sort((a, b) => a.localeCompare(b)); // Add other reward types
-  fontSizes = ['medium', 'small'];
+  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
+  effectTypes = [...this.rewardTypes, ...effectTimings, ...effectSeparators, ...effectChoices, ...effectConditions].sort(
+    (a, b) => a.localeCompare(b)
+  );
 
-  hasCustomAgentEffect = false;
-  hasCustomRevealEffect = false;
+  fontSizes = ['large', 'medium', 'small'];
+  imagePositions = ['top', 'center', 'bottom'];
 
   constructor(private fb: FormBuilder) {
     this.initForm();
@@ -43,12 +48,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
     if (changes['techTile'] && changes['techTile'].currentValue) {
       const newImperiumCard = changes['techTile'].currentValue as TechTileCard;
 
-      if (newImperiumCard.customEffect) {
-        this.hasCustomAgentEffect = true;
-
-        this.addCustomAgentEffectControl();
-        this.techTileForm.removeControl('effects');
-      }
+      this.addCustomAgentEffectControl();
 
       this.techTileForm.patchValue(newImperiumCard);
 
@@ -67,7 +67,6 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
       }
 
       if (newImperiumCard.effects) {
-        this.hasCustomAgentEffect = false;
         const effectsArray = this.effects;
 
         effectsArray.clear();
@@ -96,6 +95,8 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
       faction: '',
       costs: 0,
       imageUrl: '',
+      effectSize: 'medium',
+      imagePosition: 'center',
     });
 
     this.addBuyEffectControl();
@@ -195,18 +196,6 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
 
   onRemoveAgentEffectClicked(index: number) {
     this.effects.removeAt(index);
-  }
-
-  updateAgentEffects() {
-    if (this.hasCustomAgentEffect) {
-      this.techTileForm.removeControl('effects');
-
-      this.addCustomAgentEffectControl();
-    } else {
-      this.addAgentEffectControl();
-
-      this.techTileForm.removeControl('customEffect');
-    }
   }
 
   public getEffectTypePath(effectType: EffectType) {

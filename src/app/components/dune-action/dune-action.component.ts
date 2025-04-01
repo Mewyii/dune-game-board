@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ActionField, EffectType, FactionType, RewardType } from 'src/app/models';
+import { ActionField, EffectType, FactionType, EffectRewardType } from 'src/app/models';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';

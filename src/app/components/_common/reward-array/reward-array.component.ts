@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { getSeparatedEffectArrays, isConditionalEffect } from 'src/app/helpers/rewards';
-import { Effect, EffectType, EffectWithoutSeparator } from 'src/app/models';
+import { getSeparatedEffectArrays, isConditionalEffect, isTimingEffect } from 'src/app/helpers/rewards';
+import { Effect, EffectType, EffectRewardChoiceOrCondition, EffectTimingRewardChoiceOrCondition } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -11,10 +11,10 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrl: './reward-array.component.scss',
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
-  public effectArrays: EffectWithoutSeparator[][] = [];
+  public effectArrays: EffectTimingRewardChoiceOrCondition[][] = [];
   @Input() rewards: Effect[] = [];
   @Input() size: string = '32px';
-  @Input() textColor: 'black' | 'white' = 'black';
+  @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';
@@ -36,8 +36,20 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return getEffectTypePath(effectType);
   }
 
-  public isConditionalEffect(effect: EffectWithoutSeparator) {
+  public isTimingEffect(effect: EffectTimingRewardChoiceOrCondition) {
+    return isTimingEffect(effect);
+  }
+
+  public isConditionalEffect(effect: Effect) {
     return isConditionalEffect(effect);
+  }
+
+  public isRoundStartTiming(type: EffectType) {
+    return type === 'timing-round-start';
+  }
+
+  public isRevealTurnTiming(type: EffectType) {
+    return type === 'timing-reveal-turn';
   }
 
   public isInfluenceType(type: EffectType) {

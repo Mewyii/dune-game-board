@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { ActionField, RewardType } from '../models';
+import { ActionField, EffectRewardType } from '../models';
 
 export interface FieldLog {
   fieldId: string;
@@ -15,13 +15,13 @@ interface LogBase {
 
 export interface playerRewardGainLog extends LogBase {
   type: 'reward-gain';
-  rewardType: RewardType;
+  rewardType: EffectRewardType;
   amount: number;
 }
 
 export interface playerRewardPayLog extends LogBase {
   type: 'reward-pay';
-  rewardType: RewardType;
+  rewardType: EffectRewardType;
   amount: number;
 }
 
@@ -87,6 +87,21 @@ export interface PlayerLocationControlLossLog extends LogBase {
   type: 'location-control-loss';
 }
 
+export interface PlayerTechTileBuyLog extends LogBase {
+  type: 'tech-tile-buy';
+  techTileName: string;
+}
+
+export interface PlayerTechTilePlayLog extends LogBase {
+  type: 'tech-tile-play';
+  techTileName: string;
+}
+
+export interface PlayerTechTileTrashLog extends LogBase {
+  type: 'tech-tile-trash';
+  techTileName: string;
+}
+
 export type PlayerActionLog =
   | playerRewardGainLog
   | playerRewardPayLog
@@ -102,7 +117,10 @@ export type PlayerActionLog =
   | PlayerLocationControlGainLog
   | PlayerLocationControlLossLog
   | PlayerVictoryPointGainLog
-  | PlayerVictoryPointLossLog;
+  | PlayerVictoryPointLossLog
+  | PlayerTechTilePlayLog
+  | PlayerTechTileTrashLog
+  | PlayerTechTileBuyLog;
 
 @Injectable({
   providedIn: 'root',
@@ -170,14 +188,14 @@ export class LoggingService {
     this.logSubject.next(log);
   }
 
-  logPlayerResourceGained(playerId: number, rewardType: RewardType, amount: number | undefined) {
+  logPlayerResourceGained(playerId: number, rewardType: EffectRewardType, amount: number | undefined) {
     this.playerActionLogSubject.next([
       ...this.playerActionLogs,
       { playerId, type: 'reward-gain', rewardType: rewardType, amount: amount ?? 1 },
     ]);
   }
 
-  logPlayerResourcePaid(playerId: number, rewardType: RewardType, amount: number | undefined) {
+  logPlayerResourcePaid(playerId: number, rewardType: EffectRewardType, amount: number | undefined) {
     this.playerActionLogSubject.next([
       ...this.playerActionLogs,
       { playerId, type: 'reward-pay', rewardType: rewardType, amount: amount ?? 1 },
@@ -226,6 +244,18 @@ export class LoggingService {
 
   logPlayerLostLocationControl(playerId: number, roundNumber: number) {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'location-control-loss', roundNumber }]);
+  }
+
+  logPlayerBoughtTechTile(playerId: number, techTileName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'tech-tile-buy', techTileName }]);
+  }
+
+  logPlayerPlayedTechTile(playerId: number, techTileName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'tech-tile-play', techTileName }]);
+  }
+
+  logPlayerTrashedTechTile(playerId: number, techTileName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'tech-tile-trash', techTileName }]);
   }
 
   logPlayerGainedVictoryPoint(playerId: number, roundNumber: number, source?: string) {

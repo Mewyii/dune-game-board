@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { House } from 'src/app/constants/minor-houses';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, LanguageString, RewardType } from 'src/app/models';
+import { EffectType, LanguageString, EffectRewardType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { getActionTypePath } from 'src/app/helpers/action-types';
-import { ActionType, FactionType, RewardType } from 'src/app/models';
+import { ActionType, FactionType, EffectRewardType } from 'src/app/models';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, RewardType } from 'src/app/models';
+import { EffectType, EffectRewardType } from 'src/app/models';
 
 interface HomeworldUpgrade {
-  rewardType: RewardType;
+  rewardType: EffectRewardType;
   upgradeCount: number;
   initialAmount: number;
 }

@@ -4,7 +4,7 @@ import { imperiumCards } from 'src/app/constants/imperium-cards';
 import { House, minorHouses } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, FactionType, LanguageString, RewardType } from 'src/app/models';
+import { EffectType, FactionType, LanguageString, EffectRewardType } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { MinorHousesService } from 'src/app/services/minor-houses.service';
 import { TranslateService } from 'src/app/services/translate-service';

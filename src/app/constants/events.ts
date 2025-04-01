@@ -178,6 +178,7 @@ export const duneEvents: DuneEvent[] = [
           right: [{ type: 'tech' }],
         },
       ],
+      timingEffects: [],
     },
   },
   {
@@ -242,6 +243,7 @@ export const duneEvents: DuneEvent[] = [
           right: [{ type: 'troop' }, { type: 'solari' }],
         },
       ],
+      timingEffects: [],
     },
   },
   {
@@ -265,6 +267,7 @@ export const duneEvents: DuneEvent[] = [
           right: [{ type: 'solari', amount: 2 }],
         },
       ],
+      timingEffects: [],
     },
   },
   {
@@ -288,6 +291,7 @@ export const duneEvents: DuneEvent[] = [
           right: [{ type: 'water' }],
         },
       ],
+      timingEffects: [],
     },
   },
 ];

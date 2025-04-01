@@ -14,7 +14,7 @@ import {
   DuneLocation,
   FactionInfluence,
   Effect,
-  RewardType,
+  EffectRewardType,
   EffectReward,
   StructuredConditionalEffect,
   StructuredChoiceEffect,
@@ -1179,7 +1179,7 @@ export class AIManager {
     return normalizeNumber(this.getRewardArrayEvaluation(rewards, player, gameState), normalizeMax, 0);
   }
 
-  private getEffectEvaluation(rewardType: RewardType, player: Player, gameState: GameState) {
+  private getEffectEvaluation(rewardType: EffectRewardType, player: Player, gameState: GameState) {
     switch (rewardType) {
       case 'water':
         return (
@@ -1283,8 +1283,8 @@ export class AIManager {
     }
   }
 
-  public getEffectEvaluationForTurnState(rewardType: RewardType, player: Player, gameState: GameState) {
-    const hasPlacedAgents = gameState.playerAgentsOnFields.length > 1;
+  public getEffectEvaluationForTurnState(rewardType: EffectRewardType, player: Player, gameState: GameState) {
+    const hasPlacedAgents = gameState.playerAgentsOnFields.length > 0;
     const hasAgentsLeftToPlace = player.agents - gameState.playerAgentsOnFields.length > 0;
 
     const value = this.getEffectEvaluation(rewardType, player, gameState);

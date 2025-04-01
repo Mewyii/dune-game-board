@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppMode } from 'src/app/constants/board-settings';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, RewardType } from 'src/app/models';
+import { EffectType, EffectRewardType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';

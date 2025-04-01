@@ -8,8 +8,8 @@ import {
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
-  RewardType,
-  rewardTypes,
+  EffectRewardType,
+  effectRewards,
 } from 'src/app/models';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 

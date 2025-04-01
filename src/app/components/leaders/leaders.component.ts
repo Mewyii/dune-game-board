@@ -4,14 +4,14 @@ import { Leader } from 'src/app/constants/leaders';
 import { House } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, FactionType, LanguageString, ResourceType, RewardType } from 'src/app/models';
+import { EffectType, FactionType, LanguageString, ResourceType, EffectRewardType } from 'src/app/models';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
 import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
-import { PlayerTechTile, TechTilesService } from 'src/app/services/tech-tiles.service';
+import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -55,7 +55,7 @@ export class LeadersComponent implements OnInit {
   public houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
   public playerTechTiles: PlayerTechTile[] = [];
-  public techTiles: TechTileCard[] = [];
+  public techTiles: TechTileDeckCard[] = [];
   public activeTechTileId = '';
 
   public turnInfos: TurnInfo | undefined;
@@ -106,7 +106,7 @@ export class LeadersComponent implements OnInit {
 
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
 
-      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
+      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId).map((x) => x.techTile);
 
       this.currentPlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
         (x) => x.playerId === this.activePlayerId
@@ -138,7 +138,7 @@ export class LeadersComponent implements OnInit {
 
     this.techTilesService.playerTechTiles$.subscribe((playerTechTiles) => {
       this.playerTechTiles = playerTechTiles;
-      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
+      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId).map((x) => x.techTile);
     });
 
     this.gameManager.currentRound$.subscribe((currentTurn) => {
@@ -226,7 +226,7 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddRewardClicked(player: Player, type: RewardType) {
+  onAddRewardClicked(player: Player, type: EffectRewardType) {
     if (type === 'solari') {
       this.audioManager.playSound('solari');
     } else if (type === 'water') {
@@ -404,7 +404,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public getIsTechTileFlipped(techTileId: string) {
-    return this.playerTechTiles.find((x) => x.techTile.name.en === techTileId)?.isFlipped;
+    return this.playerTechTiles.find((x) => x.techTile.id === techTileId)?.isFlipped;
   }
 
   public getPlayerScore(scoreType: PlayerScoreType) {

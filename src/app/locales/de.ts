@@ -11,6 +11,8 @@ export const deLocale: Locale = {
   commonYes: 'Ja',
   commonEffectConditionInfluence: 'Einfluss',
   commonEffectConditionConnection: 'Verbindung',
+  commongEffectTimingRoundStart: 'Rundenbeginn',
+  commongEffectTimingRevealTurn: 'Aufdeckzug',
   playerboardHeading: 'Spieler',
   playerboardRound: 'Runde',
   playerboardCombatTooltip: 'Kampf-Phase',

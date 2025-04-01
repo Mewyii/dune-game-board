@@ -2,7 +2,7 @@ import { Leader } from 'src/app/constants/leaders';
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
-import { ActionField, ActionType, ActiveFactionType, RewardType } from 'src/app/models';
+import { ActionField, ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
 import { DuneEvent } from 'src/app/constants/events';
 import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../../cards.service';
 import { TurnInfo } from 'src/app/models/turn-info';
@@ -39,7 +39,7 @@ export type AIGoals =
   | 'get-board-persuasion'
   | 'get-victory-points';
 
-export type PlayerCardsRewards = { [key in RewardType]: number };
+export type PlayerCardsRewards = { [key in EffectRewardType]: number };
 export type PlayerCardsFactions = { [key in ActiveFactionType]: number };
 export type PlayerCardsFieldAccess = { [key in ActionType]: number };
 

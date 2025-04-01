@@ -7,6 +7,8 @@ export const enLocale = {
   commonConfirmDialogText: 'Are you sure?',
   commonNo: 'No',
   commonYes: 'Yes',
+  commongEffectTimingRoundStart: 'Round start',
+  commongEffectTimingRevealTurn: 'Reveal turn',
   commonEffectConditionInfluence: 'Influence',
   commonEffectConditionConnection: 'Connection',
   playerboardHeading: 'Players',

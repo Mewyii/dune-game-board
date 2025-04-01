@@ -1,16 +1,17 @@
 import { GameState } from '../services/ai/models';
 import { GameModifiers } from '../services/game-modifier.service';
 import { ActiveFactionType } from './faction';
-import { LanguageStringAndFontSize } from './imperium-card';
+import { EffectSizeType, LanguageStringAndFontSize } from './imperium-card';
 import { LanguageString } from './language';
 import { Player } from './player';
-import { Effect, EffectReward } from './reward';
+import { EffectReward, EffectTimingRewardChoiceOrCondition } from './reward';
 
 export interface TechTileCard {
   name: LanguageString;
   faction?: ActiveFactionType;
   costs: number;
-  effects?: Effect[];
+  effects?: EffectTimingRewardChoiceOrCondition[];
+  effectSize?: EffectSizeType;
   customEffect?: LanguageStringAndFontSize;
   buyEffects?: EffectReward[];
   imageUrl?: string;

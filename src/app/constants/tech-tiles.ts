@@ -33,10 +33,29 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:solari}{resource:helper-trade}{resource:tech;amount:2}',
-      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:solari}{resource:helper-trade}{resource:tech;amount:2}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'tech',
+        amount: 2,
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.6 - 0.025 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.solari,
   },
@@ -51,10 +70,34 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari}{resource:tech}{resource:helper-trade}{resource:troop}{resource:troop}',
-      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:solari}{resource:tech}{resource:helper-trade}{resource:troop}{resource:troop}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.35 +
       0.033 * (gameState.currentRound - 1) +
@@ -148,10 +191,28 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:water}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'water',
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.65 - 0.075 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.fremen,
   },
@@ -262,10 +323,25 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}{resource:sword}<br><br><b>',
-      de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}{resource:sword}<br><br><b>',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.7 +
       0.05 * gameState.playerDreadnoughtCount -
@@ -295,6 +371,12 @@ export const techTiles: TechTileCard[] = [
         type: 'agent-lift',
       },
     ],
+    effectSize: 'large',
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
     aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 0.1 : 0.0),
   },
   {
@@ -398,6 +480,12 @@ export const techTiles: TechTileCard[] = [
         type: 'card-draw',
       },
     ],
+    effectSize: 'large',
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
     aiEvaluation: (player, gameState) =>
       0.3 +
       0.025 * (gameState.currentRound - 1) +
@@ -465,6 +553,12 @@ export const techTiles: TechTileCard[] = [
         type: 'combat',
       },
     ],
+    effectSize: 'large',
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
     aiEvaluation: (player, gameState) =>
       0.25 +
       0.075 * (gameState.currentRound - 1) +
@@ -625,10 +719,29 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}{resource:helper-or}{resource:persuasion;amount:2}<br><br><b>When you win a conflict:</b><br> {resource:location-control}',
-      de: '<b>Aufdeckzug:</b><br>{resource:sword}{resource:sword}{resource:helper-or}{resource:persuasion;amount:2}<br><br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
-      fontSize: 'medium',
+      en: '<br><b>When you win a conflict:</b><br> {resource:location-control}',
+      de: '<br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
+      fontSize: 'small',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.3 +
       0.1 * gameState.playerDreadnoughtCount +
@@ -652,10 +765,25 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:faction-influence-down-choice}{resource:helper-trade} {resource:victory-point}',
-      de: '<b>Aufdeckzug:</b><br>{resource:faction-influence-down-choice}{resource:helper-trade} {resource:victory-point}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.3 +
       0.05 * (gameState.currentRound - 1) +
@@ -679,10 +807,31 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:combat}{resource:sword}',
-      de: '<b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:combat}{resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'combat',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     aiEvaluation: (player, gameState) =>
       0.3 +
       0.02 * (gameState.currentRound - 1) +
@@ -707,10 +856,31 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:card-draw}<br><br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:card-draw}<br><br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
+      en: '<br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
+      de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
       fontSize: 'small',
     },
+    effectSize: 'small',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
     aiEvaluation: (player, gameState) => 0.75 - 0.05 * (gameState.currentRound - 1),
   },
 ];

@@ -9,8 +9,8 @@ import {
   ResourceType,
   Effect,
   EffectReward,
-  RewardType,
-  EffectWithoutSeparatorAndCondition,
+  EffectRewardType,
+  EffectRewardOrChoice,
 } from '../models';
 import { mergeObjects } from '../helpers/common';
 import { Player } from '../models/player';
@@ -87,7 +87,7 @@ export interface FieldCostsModifier extends GameModifier {
 export interface FieldRewardsModifier extends GameModifier {
   fieldId?: string;
   actionType?: ActionType;
-  rewardType: RewardType;
+  rewardType: EffectRewardType;
   amount: number;
 }
 
@@ -123,7 +123,7 @@ export type RewardWithModifier = EffectReward & {
   modifier?: 'positive' | 'negative';
 };
 
-export type EffectWithModifier = EffectWithoutSeparatorAndCondition & {
+export type EffectWithModifier = EffectRewardOrChoice & {
   modifier?: 'positive' | 'negative';
 };
 

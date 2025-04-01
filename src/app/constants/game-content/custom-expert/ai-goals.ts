@@ -14,7 +14,7 @@ import {
 } from 'src/app/services/ai/shared';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { ActionField } from 'src/app/models/location';
-import { FactionType, Resource, RewardType } from '../../../models';
+import { FactionType, Resource, EffectRewardType } from '../../../models';
 import { isResourceArray } from 'src/app/helpers/resources';
 import { normalizeNumber } from 'src/app/helpers/common';
 import { Player } from 'src/app/models/player';
@@ -409,7 +409,7 @@ function getViableBoardFieldsForFaction(
 
 function getViableBoardFields(
   fields: ActionField[],
-  rewardType: RewardType,
+  rewardType: EffectRewardType,
   minReward: number,
   maxReward: number
 ): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number } {

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, RewardType } from 'src/app/models';
+import { EffectType, EffectRewardType } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';

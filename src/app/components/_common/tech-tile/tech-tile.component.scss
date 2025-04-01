@@ -59,6 +59,8 @@
   background: linear-gradient(rgba(152, 176, 217, 0.9), 5%, rgba(27, 31, 38, 0.45), 95%, rgba(26, 34, 51, 0.9));
   box-sizing: border-box;
   border-radius: 0px 0px 8px 8px;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .card-agent-effect-separator {
@@ -179,6 +181,7 @@
   top: 20px;
   right: 4px;
   width: min-content;
+  padding: 4px;
   padding-top: 32px;
   padding-bottom: 4px;
   font-family: 'Roboto', 'Verdana';

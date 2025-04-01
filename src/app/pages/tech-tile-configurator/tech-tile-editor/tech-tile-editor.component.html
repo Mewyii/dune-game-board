@@ -62,28 +62,17 @@
     </div>
   </div>
 
-  <!-- Agent Effects -->
+  <!-- Tech Tile Effects -->
   <div class="card-effect-container">
     <div class="title-container">
       <span class="card-effect-title"> Effects </span>
-      <mat-checkbox
-        [(ngModel)]="hasCustomAgentEffect"
-        [ngModelOptions]="{ standalone: true }"
-        (ngModelChange)="updateAgentEffects()"
-      ></mat-checkbox
-      >Custom Text
-      <mat-icon
-        [style]="'margin-left: 4px'"
-        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
-        >info</mat-icon
-      >
     </div>
-    <div *ngIf="!hasCustomAgentEffect" formArrayName="effects">
+    <div formArrayName="effects">
       <div class="form-group" *ngFor="let effect of effects.controls; let i = index">
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getAgentEffectTypeControl(i)">
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">{{ rewardType }}</mat-option>
+            <mat-option *ngFor="let rewardType of effectTypes" [value]="rewardType">{{ rewardType }}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
@@ -98,7 +87,21 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
-    <div *ngIf="hasCustomAgentEffect" class="form-group" formGroupName="customEffect">
+    <mat-form-field class="margin-top">
+      <mat-label>Effect Size</mat-label>
+      <mat-select formControlName="effectSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select> </mat-form-field
+    ><br /><br />
+    <div>
+      Custom Effect Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <div class="form-group" formGroupName="customEffect">
       <mat-form-field class="large-text-field">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
@@ -119,5 +122,11 @@
   <mat-form-field class="large-text-field margin-top">
     <mat-label>Image URL</mat-label>
     <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Image Position</mat-label>
+    <mat-select formControlName="imagePosition">
+      <mat-option *ngFor="let imagePosition of imagePositions" [value]="imagePosition">{{ imagePosition }}</mat-option>
+    </mat-select>
   </mat-form-field>
 </form>

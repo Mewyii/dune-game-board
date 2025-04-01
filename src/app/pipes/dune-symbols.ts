@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { getEffectTypePath } from '../helpers/reward-types';
-import { ActionType, RewardType } from '../models';
+import { ActionType, EffectRewardType } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { getActionTypePath } from '../helpers/action-types';
 
@@ -19,7 +19,7 @@ export class DuneSymbolsPipe implements PipeTransform {
       const amountRegExp = /;amount:.*?}/g;
       const amountString = resourceString[0].match(amountRegExp);
       if (!amountString) {
-        const resource = resourceString[0].substring(10, resourceString[0].length - 1) as RewardType;
+        const resource = resourceString[0].substring(10, resourceString[0].length - 1) as EffectRewardType;
         const resourceImgPath = getEffectTypePath(resource);
 
         const ratioFix = Math.ceil(iconSizeNumber / 3);
@@ -40,7 +40,7 @@ export class DuneSymbolsPipe implements PipeTransform {
         const amount = amountString[0].substring(8, amountString[0].length - 1);
         const amountNumber = parseInt(amount);
 
-        const resource = resourceString[0].substring(10, resourceString[0].length - amount.length - 9) as RewardType;
+        const resource = resourceString[0].substring(10, resourceString[0].length - amount.length - 9) as EffectRewardType;
         const resourceImgPath = getEffectTypePath(resource);
 
         const ratioFix = Math.ceil(iconSizeNumber / 3);

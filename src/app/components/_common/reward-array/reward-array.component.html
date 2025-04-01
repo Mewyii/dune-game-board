@@ -1,7 +1,15 @@
 <div class="effect-arrays-container">
   @for (effects of effectArrays; track $index) {
   <div class="effects-container">
-    @for (reward of effects; track $index) { @if(isConditionalEffect(reward)) { @if (isInfluenceType(reward.type)) {
+    @for (reward of effects; track $index) { @if (isTimingEffect(reward)) { @if (isRoundStartTiming(reward.type)) {
+    <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+      {{ t.translate('commongEffectTimingRoundStart') }}:
+    </div>
+    } @else if (isRevealTurnTiming(reward.type)) {
+    <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+      {{ t.translate('commongEffectTimingRevealTurn') }}:
+    </div>
+    } } @else if(isConditionalEffect(reward)) { @if (isInfluenceType(reward.type)) {
     <div class="condition-container">
       <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
       <div [class]="'text ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">

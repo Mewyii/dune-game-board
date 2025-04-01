@@ -5,17 +5,21 @@ import {
   EffectCondition,
   EffectReward,
   EffectType,
-  EffectWithoutSeparator,
-  EffectWithoutSeparatorAndCondition,
+  EffectRewardChoiceOrCondition,
+  EffectRewardOrChoice,
   resourceTypes,
-  rewardChoices,
-  RewardChoiceType,
-  rewardConditions,
-  RewardType,
-  rewardTypes,
+  effectChoices,
+  EffectChoiceType,
+  effectConditions,
+  EffectRewardType,
+  effectRewards,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
   StructuredEffects,
+  EffectTimingRewardChoiceOrCondition,
+  StructuredTimingEffect,
+  EffectTiming,
+  effectTimings,
 } from '../models';
 
 export function isFactionScoreReward(reward: Effect) {
@@ -31,7 +35,7 @@ export function isFactionScoreReward(reward: Effect) {
 }
 
 export function isFactionScoreRewardType(
-  rewardType: RewardType
+  rewardType: EffectRewardType
 ): rewardType is
   | 'faction-influence-up-bene'
   | 'faction-influence-up-fremen'
@@ -61,7 +65,7 @@ export function isFactionScoreCost(reward: Effect) {
 }
 
 export function isFactionScoreCostType(
-  rewardType: RewardType
+  rewardType: EffectRewardType
 ): rewardType is
   | 'faction-influence-down-bene'
   | 'faction-influence-down-fremen'
@@ -78,54 +82,70 @@ export function isFactionScoreCostType(
   return false;
 }
 
+export function isTimingEffect(reward: Effect): reward is EffectTiming {
+  return effectTimings.some((x) => x === reward.type);
+}
+
 export function isConditionalEffect(reward: Effect): reward is EffectCondition {
-  return rewardConditions.some((x) => x === reward.type);
+  return effectConditions.some((x) => x === reward.type);
 }
 
 export function isChoiceEffect(reward: Effect): reward is EffectChoice {
-  return rewardChoices.some((x) => x === reward.type);
+  return effectChoices.some((x) => x === reward.type);
 }
 
-export function isStructuredChoiceEffect(effect: any): effect is StructuredChoiceEffect {
-  return !!effect.choiceType && !!effect.left && !!effect.right;
+export function isStructuredConditionalEffect(
+  effect: EffectReward[] | StructuredChoiceEffect | StructuredConditionalEffect
+): effect is StructuredConditionalEffect {
+  return effect.hasOwnProperty('condition');
 }
 
-export function isConversionEffectType(input: string): input is RewardChoiceType {
+export function isStructuredChoiceEffect(effect: EffectReward[] | StructuredChoiceEffect): effect is StructuredChoiceEffect {
+  return effect.hasOwnProperty('choiceType') && effect.hasOwnProperty('left') && effect.hasOwnProperty('right');
+}
+
+export function isConversionEffectType(input: string): input is EffectChoiceType {
   return ['helper-trade', 'helper-trade-horizontal'].some((x) => x === input);
 }
 
-export function isOptionEffectType(input: string): input is RewardChoiceType {
+export function isOptionEffectType(input: string): input is EffectChoiceType {
   return ['helper-or', 'helper-or-horizontal'].some((x) => x === input);
 }
 
 export function isRewardEffect(reward: Effect): reward is EffectReward {
   return (
-    rewardTypes.some((x) => x === reward.type) ||
+    effectRewards.some((x) => x === reward.type) ||
     resourceTypes.some((x) => x === reward.type) ||
     combatUnitTypes.some((x) => x === reward.type)
   );
 }
 
-export function isRewardEffectType(type: EffectType): type is RewardType {
+export function isRewardEffectType(type: EffectType): type is EffectRewardType {
   return (
-    rewardTypes.some((x) => x === type) || resourceTypes.some((x) => x === type) || combatUnitTypes.some((x) => x === type)
+    effectRewards.some((x) => x === type) || resourceTypes.some((x) => x === type) || combatUnitTypes.some((x) => x === type)
   );
 }
 
 export function getStructuredEffectArrayInfos(effects: Effect[]) {
-  const result: StructuredEffects = { rewards: [], conditionalEffects: [], choiceEffects: [] };
+  const result: StructuredEffects = { rewards: [], conditionalEffects: [], choiceEffects: [], timingEffects: [] };
 
   const flatEffects = getSeparatedEffectArrays(effects);
   for (const flatEffect of flatEffects) {
-    const [nonConditionalEffects, structuredConditionalEffect] = getStructuredConditionalEffectIfPossible(flatEffect);
-    if (structuredConditionalEffect) {
-      result.conditionalEffects.push(structuredConditionalEffect);
+    const [nonTimingEffects, structuredTimingEffect] = getStructuredTimingEffectIfPossible(flatEffect);
+    if (structuredTimingEffect) {
+      result.timingEffects.push(structuredTimingEffect);
     } else {
-      const [rewardEffects, structuredChoiceEffect] = getStructuredChoiceEffectIfPossible(nonConditionalEffects);
-      if (structuredChoiceEffect) {
-        result.choiceEffects.push(structuredChoiceEffect);
+      const [nonConditionalEffects, structuredConditionalEffect] =
+        getStructuredConditionalEffectIfPossible(nonTimingEffects);
+      if (structuredConditionalEffect) {
+        result.conditionalEffects.push(structuredConditionalEffect);
       } else {
-        result.rewards.push(...rewardEffects);
+        const [rewardEffects, structuredChoiceEffect] = getStructuredChoiceEffectIfPossible(nonConditionalEffects);
+        if (structuredChoiceEffect) {
+          result.choiceEffects.push(structuredChoiceEffect);
+        } else {
+          result.rewards.push(...rewardEffects);
+        }
       }
     }
   }
@@ -133,8 +153,8 @@ export function getStructuredEffectArrayInfos(effects: Effect[]) {
 }
 
 export function getSeparatedEffectArrays(effects: Effect[]) {
-  const result: EffectWithoutSeparator[][] = [];
-  let current: EffectWithoutSeparator[] = [];
+  const result: EffectTimingRewardChoiceOrCondition[][] = [];
+  let current: EffectTimingRewardChoiceOrCondition[] = [];
 
   for (const item of effects) {
     if (item.type === 'helper-separator') {
@@ -149,12 +169,32 @@ export function getSeparatedEffectArrays(effects: Effect[]) {
   return result;
 }
 
+export function getStructuredTimingEffectIfPossible(
+  effects: EffectTimingRewardChoiceOrCondition[]
+): [EffectRewardChoiceOrCondition[], undefined] | [undefined, StructuredTimingEffect] {
+  for (const [index, effect] of effects.entries()) {
+    if (isTimingEffect(effect)) {
+      const type = effect.type;
+      const effectsWithoutTiming = effects.slice(index + 1) as EffectRewardChoiceOrCondition[];
+      const [nonConditionalEffects, structuredConditionalEffect] =
+        getStructuredConditionalEffectIfPossible(effectsWithoutTiming);
+      if (structuredConditionalEffect) {
+        return [undefined, { type, effect: structuredConditionalEffect }];
+      } else {
+        const [effectRewards, choiceEffect] = getStructuredChoiceEffectIfPossible(nonConditionalEffects);
+        return [undefined, { type, effect: choiceEffect ?? effectRewards }];
+      }
+    }
+  }
+  return [effects as EffectRewardChoiceOrCondition[], undefined];
+}
+
 export function getStructuredConditionalEffectIfPossible(
-  effects: EffectWithoutSeparator[]
-): [EffectWithoutSeparatorAndCondition[], undefined] | [undefined, StructuredConditionalEffect] {
+  effects: EffectRewardChoiceOrCondition[]
+): [EffectRewardOrChoice[], undefined] | [undefined, StructuredConditionalEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isConditionalEffect(effect)) {
-      const effectsWithoutCondition = effects.slice(index + 1) as EffectWithoutSeparatorAndCondition[];
+      const effectsWithoutCondition = effects.slice(index + 1) as EffectRewardOrChoice[];
       const [effectRewards, choiceEffect] = getStructuredChoiceEffectIfPossible(effectsWithoutCondition);
       const conditionalEffect = {
         condition: effect.type,
@@ -165,11 +205,11 @@ export function getStructuredConditionalEffectIfPossible(
       return [undefined, conditionalEffect];
     }
   }
-  return [effects as EffectWithoutSeparatorAndCondition[], undefined];
+  return [effects as EffectRewardOrChoice[], undefined];
 }
 
 export function getStructuredChoiceEffectIfPossible(
-  effects: EffectWithoutSeparatorAndCondition[]
+  effects: EffectRewardOrChoice[]
 ): [EffectReward[], undefined] | [undefined, StructuredChoiceEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isChoiceEffect(effect)) {

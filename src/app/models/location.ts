@@ -4,8 +4,8 @@ import {
   LanguageString,
   Effect,
   EffectReward,
-  RewardType,
-  EffectWithoutSeparatorAndCondition,
+  EffectRewardType,
+  EffectRewardOrChoice,
 } from '.';
 
 export interface DuneLocation {
@@ -22,8 +22,8 @@ export interface ActionField {
   title: LanguageString;
   actionType: ActionType;
   costs?: EffectReward[];
-  rewards: EffectWithoutSeparatorAndCondition[];
-  conversionOptions?: EffectWithoutSeparatorAndCondition[][];
+  rewards: EffectRewardOrChoice[];
+  conversionOptions?: EffectRewardOrChoice[][];
   pathToImage: string;
   isBattlefield?: boolean;
   isNonBlockingField?: boolean;

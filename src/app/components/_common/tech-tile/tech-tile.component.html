@@ -14,11 +14,11 @@
     [style.background-image]="'url(' + card.imageUrl + ')'"
     [style.background-position]="card.imagePosition ?? 'center'"
   >
-    <div
-      class="card-agent-effect-container font-text"
-      *ngIf="card.customEffect || (card.effects && card.effects.length > 0)"
-    >
-      <div class="card-agent-effect-custom" *ngIf="card.customEffect">
+    <div class="card-agent-effect-container font-text">
+      <div class="card-agent-effect" *ngIf="card.effects && card.effects.length > 0">
+        <dune-reward-array [rewards]="card.effects" [textColor]="'white-clear'" [size]="effectSize"></dune-reward-array>
+      </div>
+      <div class="card-agent-effect-custom" *ngIf="card.customEffect && card.customEffect.en">
         <div
           *ngIf="!card.customEffect.fontSize || card.customEffect.fontSize == 'small'"
           class="card-reveal-effect-custom-text"
@@ -29,18 +29,6 @@
           class="card-reveal-effect-custom-text medium"
           [innerHTML]="t.translateLS(card.customEffect) | duneSymbols : '22px'"
         ></div>
-      </div>
-      <div class="card-agent-effect" *ngIf="card.effects">
-        <ng-container *ngFor="let reward of card.effects">
-          <div class="reward-container">
-            <img class="reward" [src]="getEffectTypePath(reward.type)" />
-            <ng-container *ngIf="reward.amount">
-              <div class="reward-amount">
-                {{ reward.amount }}
-              </div>
-            </ng-container>
-          </div>
-        </ng-container>
       </div>
     </div>
   </div>

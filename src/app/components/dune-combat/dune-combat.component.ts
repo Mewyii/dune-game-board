@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { EffectType, RewardType } from 'src/app/models';
+import { EffectType, EffectRewardType } from 'src/app/models';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';

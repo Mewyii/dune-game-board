@@ -11,10 +11,10 @@ import {
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
-  rewardChoices,
-  rewardConditions,
-  rewardSeparators,
-  rewardTypes,
+  effectChoices,
+  effectConditions,
+  effectSeparators,
+  effectRewards,
 } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -33,8 +33,8 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b)) as FactionType[];
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
-  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...rewardTypes].sort((a, b) => a.localeCompare(b)); // Add other reward types
-  effectTypes = [...this.rewardTypes, ...rewardSeparators, ...rewardChoices, ...rewardConditions].sort((a, b) =>
+  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b)); // Add other reward types
+  effectTypes = [...this.rewardTypes, ...effectSeparators, ...effectChoices, ...effectConditions].sort((a, b) =>
     a.localeCompare(b)
   );
   fontSizes = ['large', 'medium', 'small'];

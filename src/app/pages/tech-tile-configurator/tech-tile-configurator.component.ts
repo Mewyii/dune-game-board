@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
-import { TechTilesService } from 'src/app/services/tech-tiles.service';
 import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { TechTileConfiguratorService } from 'src/app/services/configurators/tech-tile-configurator.service';
 
 @Component({
   selector: 'dune-tech-tile-configurator',
@@ -31,7 +31,7 @@ export class TechTileConfiguratorComponent implements OnInit {
     9: 0,
   };
 
-  constructor(public t: TranslateService, public techTilesService: TechTilesService, public dialog: MatDialog) {}
+  constructor(public t: TranslateService, public techTilesService: TechTileConfiguratorService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.techTilesService.techTiles$.subscribe((techTiles) => {
