@@ -6,21 +6,42 @@ form {
 
 .form-group {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
   align-items: baseline;
+  flex: 1 1;
+}
+
+.small-text-field {
+  width: 150px;
+  min-width: 150px;
 }
 
 .medium-text-field {
   width: 250px;
+  min-width: 250px;
 }
 
 .big-text-field {
   width: 400px;
+  min-width: 400px;
+}
+
+.larger-text-field {
+  width: 600px;
+  min-width: 600px;
 }
 
 .large-text-field {
   width: 800px;
+  min-width: 800px;
+}
+
+.flex {
+  flex: 1 1;
+}
+
+.wrap {
+  flex-wrap: wrap;
 }
 
 .padding-top {
@@ -39,6 +60,8 @@ form {
 .title-container {
   display: flex;
   align-items: center;
+  font-size: x-large;
+  margin-bottom: 8px;
 }
 
 .card-effect-title {
@@ -52,8 +75,8 @@ form {
 
 .reward {
   position: absolute;
-  height: 24px;
-  max-width: 36px;
+  height: 26px;
+  max-width: 38px;
 }
 
 .reward-label {

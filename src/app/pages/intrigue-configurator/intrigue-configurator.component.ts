@@ -74,7 +74,7 @@ export class IntrigueConfiguratorComponent implements OnInit {
 
   onAddCardClicked() {
     const dialogRef = this.dialog.open(DialogIntrigueEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Create New Tech Tile',
         intrigue: this.createEmptyIntrigueCard(),
@@ -100,7 +100,7 @@ export class IntrigueConfiguratorComponent implements OnInit {
 
   onEditCardClicked(intrigue: IntrigueCard) {
     const dialogRef = this.dialog.open(DialogIntrigueEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Edit Tech Tile',
         intrigue: intrigue,

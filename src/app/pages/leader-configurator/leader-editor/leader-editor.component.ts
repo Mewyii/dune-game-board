@@ -1,6 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Leader } from 'src/app/constants/leaders';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { combatUnitTypes, effectRewards, EffectType, resourceTypes } from 'src/app/models';
 
 @Component({
   selector: 'dune-leader-editor',
@@ -14,6 +16,8 @@ export class LeaderEditorComponent implements OnChanges {
 
   editMode = false;
 
+  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
+
   constructor(private fb: FormBuilder) {
     this.initForm();
   }
@@ -23,6 +27,20 @@ export class LeaderEditorComponent implements OnChanges {
       const leader = changes['leader'].currentValue as Leader;
 
       this.leaderForm.patchValue(leader);
+
+      if (leader.startingResources) {
+        const startingResourcesArray = this.startingResources;
+
+        startingResourcesArray.clear();
+        leader.startingResources.forEach((field) => {
+          startingResourcesArray.push(
+            this.fb.group({
+              type: field.type,
+              amount: field.amount,
+            })
+          );
+        });
+      }
 
       if (leader.name.en !== '') {
         this.editMode = true;
@@ -60,12 +78,48 @@ export class LeaderEditorComponent implements OnChanges {
       type: 'new',
     });
 
+    this.addStartingResourcesControl();
+
     if (this.leader) {
       this.leaderForm.patchValue(this.leader);
     }
   }
 
+  // Buy Effects
+  get startingResources() {
+    return this.leaderForm.get('startingResources') as FormArray;
+  }
+
+  getStartingResourcesTypeControl(index: number): FormControl {
+    return this.startingResources.at(index).get('type') as FormControl;
+  }
+
+  getStartingResourcesAmountControl(index: number): FormControl {
+    return this.startingResources.at(index).get('amount') as FormControl;
+  }
+
+  addStartingResourcesControl() {
+    this.leaderForm.addControl('startingResources', new FormArray([]));
+  }
+
+  onAddStartingResourcesClicked() {
+    this.startingResources.push(
+      this.fb.group({
+        type: '',
+        amount: undefined,
+      })
+    );
+  }
+
+  onRemoveStartingResourcesClicked(index: number) {
+    this.startingResources.removeAt(index);
+  }
+
   getFormData(): any {
     return this.leaderForm.value;
+  }
+
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 }

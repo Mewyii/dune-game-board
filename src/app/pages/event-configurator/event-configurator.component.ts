@@ -64,7 +64,7 @@ export class EventConfiguratorComponent {
 
   onAddCardClicked() {
     const dialogRef = this.dialog.open(DialogEventEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Create New Event',
         leader: this.eventsService.getNewEvent(),
@@ -89,7 +89,7 @@ export class EventConfiguratorComponent {
 
   onEditCardClicked(event: DuneEvent) {
     const dialogRef = this.dialog.open(DialogEventEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Edit Event',
         event: event,

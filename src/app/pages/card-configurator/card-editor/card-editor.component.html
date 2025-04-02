@@ -1,17 +1,17 @@
 <form [formGroup]="imperiumCardForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
   </div>
 
   <!-- Faction -->
-  <mat-form-field>
+  <mat-form-field class="small-text-field">
     <mat-label>Faction</mat-label>
     <mat-select formControlName="faction">
       <mat-select-trigger>
@@ -30,13 +30,13 @@
   </mat-form-field>
 
   <!-- Persuasion Costs -->
-  <mat-form-field>
+  <mat-form-field class="small-text-field">
     <mat-label>Persuasion Costs</mat-label>
     <input matInput formControlName="persuasionCosts" type="number" />
   </mat-form-field>
 
   <!-- Field Access -->
-  <mat-form-field class="medium-text-field">
+  <mat-form-field class="medium-text-field flex">
     <mat-label>Board Space Access</mat-label>
     <mat-select formControlName="fieldAccess" multiple>
       <mat-option *ngFor="let actionType of actionTypes; let i = index" [value]="actionType">
@@ -46,7 +46,7 @@
   </mat-form-field>
 
   <!-- Infiltration -->
-  <mat-form-field class="medium-text-field">
+  <mat-form-field class="small-text-field">
     <mat-label>Can Infiltrate</mat-label>
     <mat-select formControlName="canInfiltrate">
       <mat-option [value]="false"> {{ t.translate('commonNo') }} </mat-option>
@@ -55,7 +55,7 @@
   </mat-form-field>
 
   <!-- Image -->
-  <mat-form-field class="big-text-field">
+  <mat-form-field class="larger-text-field flex">
     <mat-label>Image URL</mat-label>
     <input matInput formControlName="imageUrl" />
   </mat-form-field>
@@ -67,13 +67,13 @@
   </mat-form-field>
 
   <!-- Buy Effects -->
-  <div class="card-effect-container">
+  <div class="card-effect-container margin-top">
     <div class="title-container">
       <span class="card-effect-title"> Buy Effects </span>
     </div>
     <div formArrayName="buyEffects">
-      <div class="form-group" *ngFor="let buyEffect of buyEffects.controls; let i = index">
-        <mat-form-field class="big-text-field">
+      <div class="form-group wrap" *ngFor="let buyEffect of buyEffects.controls; let i = index">
+        <mat-form-field class="big-text-field flex">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getBuyEffectTypeControl(i)">
             <mat-select-trigger>
@@ -105,12 +105,12 @@
   </div>
 
   <!-- Agent Effects -->
-  <div class="card-effect-container">
+  <div class="card-effect-container margin-top">
     <div class="title-container">
       <span class="card-effect-title"> Agent Effects </span>
     </div>
     <div formArrayName="agentEffects">
-      <div class="form-group" *ngFor="let agentEffect of agentEffects.controls; let i = index">
+      <div class="form-group wrap" *ngFor="let agentEffect of agentEffects.controls; let i = index">
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getAgentEffectTypeControl(i)">
@@ -172,12 +172,12 @@
       >
     </div>
     <br />
-    <div class="form-group" formGroupName="customAgentEffect">
-      <mat-form-field class="large-text-field">
+    <div class="form-group wrap" formGroupName="customAgentEffect">
+      <mat-form-field class="large-text-field flex">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
       </mat-form-field>
-      <mat-form-field class="large-text-field">
+      <mat-form-field class="large-text-field flex">
         <mat-label>German</mat-label>
         <input matInput formControlName="de" />
       </mat-form-field>
@@ -191,12 +191,12 @@
   </div>
 
   <!-- Reveal Effects -->
-  <div class="card-effect-container">
+  <div class="card-effect-container margin-top">
     <div class="title-container">
       <span class="card-effect-title"> Reveal Effects </span>
     </div>
     <div formArrayName="revealEffects">
-      <div class="form-group" *ngFor="let revealEffect of revealEffects.controls; let i = index">
+      <div class="form-group wrap" *ngFor="let revealEffect of revealEffects.controls; let i = index">
         <mat-form-field class="big-text-field">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getRevealEffectTypeControl(i)">
@@ -258,12 +258,12 @@
       >
     </div>
     <br />
-    <div class="form-group" formGroupName="customRevealEffect">
-      <mat-form-field class="large-text-field">
+    <div class="form-group wrap" formGroupName="customRevealEffect">
+      <mat-form-field class="large-text-field flex">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
       </mat-form-field>
-      <mat-form-field class="large-text-field">
+      <mat-form-field class="large-text-field flex">
         <mat-label>German</mat-label>
         <input matInput formControlName="de" />
       </mat-form-field>

@@ -96,7 +96,7 @@ export class TechTileConfiguratorComponent implements OnInit {
 
   onAddCardClicked() {
     const dialogRef = this.dialog.open(DialogTechTileEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Create New Tech Tile',
         techTile: this.createEmptyImperiumCard(),
@@ -122,7 +122,7 @@ export class TechTileConfiguratorComponent implements OnInit {
 
   onEditCardClicked(techTile: TechTileCard) {
     const dialogRef = this.dialog.open(DialogTechTileEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Edit Tech Tile',
         techTile: techTile,

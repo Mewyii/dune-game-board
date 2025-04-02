@@ -1,10 +1,10 @@
 <form [formGroup]="imperiumPlotForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="big-text-field flex">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="big-text-field flex">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
@@ -24,8 +24,18 @@
     <input matInput formControlName="persuasionCosts" type="number" />
   </mat-form-field>
 
+  <mat-form-field class="big-text-field flex">
+    <mat-label>Image URL</mat-label>
+    <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Amount</mat-label>
+    <input matInput type="number" formControlName="cardAmount" />
+  </mat-form-field>
+
   <!-- Plot Description -->
-  <div class="card-effect-container">
+  <div class="card-effect-container margin-top">
     <div class="title-container">
       <span class="card-effect-title"> Plot Description </span>
       <mat-icon
@@ -34,12 +44,12 @@
         >info</mat-icon
       >
     </div>
-    <div class="form-group" formGroupName="plotDescription">
-      <mat-form-field class="large-text-field">
+    <div class="form-group wrap" formGroupName="plotDescription">
+      <mat-form-field class="large-text-field flex">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
       </mat-form-field>
-      <mat-form-field class="large-text-field">
+      <mat-form-field class="large-text-field flex">
         <mat-label>German</mat-label>
         <input matInput formControlName="de" />
       </mat-form-field>
@@ -51,14 +61,4 @@
       </mat-form-field>
     </div>
   </div>
-
-  <mat-form-field class="large-text-field margin-top">
-    <mat-label>Image URL</mat-label>
-    <input matInput formControlName="imageUrl" />
-  </mat-form-field>
-
-  <mat-form-field class="small-text-field">
-    <mat-label>Card Amount</mat-label>
-    <input matInput type="number" formControlName="cardAmount" />
-  </mat-form-field>
 </form>

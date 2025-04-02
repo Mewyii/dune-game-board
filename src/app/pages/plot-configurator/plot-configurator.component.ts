@@ -123,7 +123,7 @@ export class PlotConfiguratorComponent {
 
   onAddPlotClicked() {
     const dialogRef = this.dialog.open(DialogPlotEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Create New Imperium Plot',
         imperiumPlot: this.createEmptyImperiumPlot(),
@@ -163,7 +163,7 @@ export class PlotConfiguratorComponent {
 
   onEditPlotClicked(imperiumPlot: ImperiumPlot) {
     const dialogRef = this.dialog.open(DialogPlotEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Edit Imperium Plot',
         imperiumPlot: imperiumPlot,

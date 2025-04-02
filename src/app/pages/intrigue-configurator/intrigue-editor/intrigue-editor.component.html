@@ -1,10 +1,10 @@
 <form [formGroup]="intrigueForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="big-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="big-text-field flex">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
@@ -17,6 +17,10 @@
       <mat-option *ngFor="let type of intrigueTypes" [value]="type">{{ type }}</mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Amount</mat-label>
+    <input matInput type="number" formControlName="amount" />
+  </mat-form-field>
 
   <!-- Effects -->
   <div class="card-effect-container">
@@ -24,7 +28,7 @@
       <span class="card-effect-title"> Effects </span>
     </div>
     <div class="form-group" *ngFor="let effect of effects.controls; let i = index">
-      <mat-form-field class="big-text-field">
+      <mat-form-field class="big-text-field flex">
         <mat-label>Effect Type</mat-label>
         <mat-select [formControl]="getEffectTypeControl(i)">
           <mat-select-trigger>
@@ -53,9 +57,4 @@
       <mat-icon>add</mat-icon>
     </button>
   </div>
-
-  <mat-form-field class="small-text-field">
-    <mat-label>Card Amount</mat-label>
-    <input matInput type="number" formControlName="amount" />
-  </mat-form-field>
 </form>

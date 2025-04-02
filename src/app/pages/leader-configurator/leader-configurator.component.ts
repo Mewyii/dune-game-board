@@ -64,7 +64,7 @@ export class LeaderConfiguratorComponent {
 
   onAddCardClicked() {
     const dialogRef = this.dialog.open(DialogLeaderEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Create New Leader',
         leader: this.createEmptyLeader(),
@@ -89,7 +89,7 @@ export class LeaderConfiguratorComponent {
 
   onEditCardClicked(leader: Leader) {
     const dialogRef = this.dialog.open(DialogLeaderEditorComponent, {
-      width: '900px',
+      width: '875px',
       data: {
         title: 'Edit Leader',
         leader: leader,

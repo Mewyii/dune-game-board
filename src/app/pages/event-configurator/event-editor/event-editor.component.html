@@ -1,28 +1,16 @@
-<p>event-editor works!</p>
 <form [formGroup]="eventForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="title">
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="big-text-field" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Title (English)</mat-label>
       <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="big-text-field">
       <mat-label>Title (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
   </div>
 
-  <div class="form-group" formGroupName="description">
-    <mat-form-field class="large-text-field">
-      <mat-label>Description (English)</mat-label>
-      <input matInput formControlName="en" />
-    </mat-form-field>
-    <mat-form-field class="large-text-field">
-      <mat-label>Description (German)</mat-label>
-      <input matInput formControlName="de" />
-    </mat-form-field>
-  </div>
-
-  <mat-form-field class="large-text-field">
+  <mat-form-field class="big-text-field flex">
     <mat-label>Image URL</mat-label>
     <input matInput formControlName="imagePath" />
   </mat-form-field>
@@ -31,4 +19,18 @@
     <mat-label>Card Amount</mat-label>
     <input matInput type="number" formControlName="cardAmount" />
   </mat-form-field>
+
+  <div class="card-effect-container margin-top">
+    <div class="title-container">Effects</div>
+    <div class="form-group wrap" formGroupName="description">
+      <mat-form-field class="large-text-field flex">
+        <mat-label>Description (English)</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="large-text-field flex">
+        <mat-label>Description (German)</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+    </div>
+  </div>
 </form>

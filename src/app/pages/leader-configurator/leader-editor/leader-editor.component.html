@@ -1,24 +1,67 @@
 <form [formGroup]="leaderForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="medium-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="medium-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" [readonly]="editMode" />
     </mat-form-field>
   </div>
 
   <div class="form-group" formGroupName="house">
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>House (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>House (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
+  </div>
+
+  <mat-form-field class="large-text-field flex">
+    <mat-label>Image URL</mat-label>
+    <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+
+  <!-- Custom Starting Resources -->
+  <div class="card-effect-container">
+    <div class="title-container">
+      <span class="card-effect-title"> Custom Starting Resources </span>
+    </div>
+    <div formArrayName="startingResources">
+      <div class="form-group" *ngFor="let startingResource of startingResources.controls; let i = index">
+        <mat-form-field class="big-text-field flex">
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getStartingResourcesTypeControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getEffectTypePath(getStartingResourcesTypeControl(i).value)" />
+                <span class="reward-label">{{ getStartingResourcesTypeControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">
+              <div class="reward-container">
+                <img class="reward" [src]="getEffectTypePath(rewardType)" />
+                <span class="reward-label">{{ rewardType }}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getStartingResourcesAmountControl(i)" type="number" />
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveStartingResourcesClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddStartingResourcesClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
   </div>
 
   <div class="title-container">
@@ -31,22 +74,22 @@
   </div>
 
   <div class="form-group" formGroupName="passiveName">
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
   </div>
 
-  <div class="form-group" formGroupName="passiveDescription">
-    <mat-form-field class="large-text-field">
+  <div class="form-group wrap" formGroupName="passiveDescription">
+    <mat-form-field class="large-text-field flex">
       <mat-label>Description (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="large-text-field">
+    <mat-form-field class="large-text-field flex">
       <mat-label>Description (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
@@ -62,29 +105,24 @@
   </div>
 
   <div class="form-group" formGroupName="signetName">
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field">
+    <mat-form-field class="medium-text-field flex">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
   </div>
 
-  <div class="form-group" formGroupName="signetDescription">
-    <mat-form-field class="large-text-field">
+  <div class="form-group wrap" formGroupName="signetDescription">
+    <mat-form-field class="large-text-field flex">
       <mat-label>Description (English)</mat-label>
       <input matInput formControlName="en" />
     </mat-form-field>
-    <mat-form-field class="large-text-field">
+    <mat-form-field class="large-text-field flex">
       <mat-label>Description (German)</mat-label>
       <input matInput formControlName="de" />
     </mat-form-field>
   </div>
-
-  <mat-form-field class="large-text-field margin-top">
-    <mat-label>Image URL</mat-label>
-    <input matInput formControlName="imageUrl" />
-  </mat-form-field>
 </form>

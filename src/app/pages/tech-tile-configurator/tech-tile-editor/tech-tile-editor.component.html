@@ -1,10 +1,10 @@
 <form [formGroup]="techTileForm">
   <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="big-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field class="big-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" [readonly]="editMode" />
     </mat-form-field>
@@ -20,8 +20,20 @@
 
   <!-- Persuasion Costs -->
   <mat-form-field>
-    <mat-label>Costs</mat-label>
+    <mat-label>Tech Costs</mat-label>
     <input matInput formControlName="costs" type="number" />
+  </mat-form-field>
+
+  <!-- Image -->
+  <mat-form-field class="larger-text-field flex">
+    <mat-label>Image URL</mat-label>
+    <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+  <mat-form-field class="small-text-field">
+    <mat-label>Image Position</mat-label>
+    <mat-select formControlName="imagePosition">
+      <mat-option *ngFor="let imagePosition of imagePositions" [value]="imagePosition">{{ imagePosition }}</mat-option>
+    </mat-select>
   </mat-form-field>
 
   <!-- Buy Effects -->
@@ -31,7 +43,7 @@
     </div>
     <div formArrayName="buyEffects">
       <div class="form-group" *ngFor="let buyEffect of buyEffects.controls; let i = index">
-        <mat-form-field class="big-text-field">
+        <mat-form-field class="big-text-field flex">
           <mat-label>Effect Type</mat-label>
           <mat-select [formControl]="getBuyEffectTypeControl(i)">
             <mat-select-trigger>
@@ -101,12 +113,12 @@
         >info</mat-icon
       >
     </div>
-    <div class="form-group" formGroupName="customEffect">
-      <mat-form-field class="large-text-field">
+    <div class="form-group wrap" formGroupName="customEffect">
+      <mat-form-field class="large-text-field flex">
         <mat-label>English</mat-label>
         <input matInput formControlName="en" />
       </mat-form-field>
-      <mat-form-field class="large-text-field">
+      <mat-form-field class="large-text-field flex">
         <mat-label>German</mat-label>
         <input matInput formControlName="de" />
       </mat-form-field>
@@ -118,15 +130,4 @@
       </mat-form-field>
     </div>
   </div>
-
-  <mat-form-field class="large-text-field margin-top">
-    <mat-label>Image URL</mat-label>
-    <input matInput formControlName="imageUrl" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Image Position</mat-label>
-    <mat-select formControlName="imagePosition">
-      <mat-option *ngFor="let imagePosition of imagePositions" [value]="imagePosition">{{ imagePosition }}</mat-option>
-    </mat-select>
-  </mat-form-field>
 </form>
