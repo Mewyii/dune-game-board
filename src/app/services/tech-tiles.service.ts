@@ -33,14 +33,7 @@ export class TechTilesService {
     const availableTechTilesString = localStorage.getItem('availableTechTiles');
     if (availableTechTilesString) {
       const availableTechTiles = JSON.parse(availableTechTilesString) as TechTileDeckCard[];
-
-      // Workaround for local storage not being able to store functions
-      const realTechTiles = availableTechTiles.map((x) => {
-        const techTile = techTiles.find((y) => y.name.en === x.name.en);
-        return { ...techTile, ...x };
-      });
-
-      this.availableTechTilesSubject.next(realTechTiles);
+      this.availableTechTilesSubject.next(availableTechTiles);
     }
 
     this.availableTechTiles$.subscribe((availableTechTiles) => {

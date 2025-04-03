@@ -1,4 +1,4 @@
-<div class="effect-arrays-container">
+<div class="effect-arrays-container" [style.gap]="arraySeparationGap">
   @for (effects of effectArrays; track $index) {
   <div class="effects-container">
     @for (reward of effects; track $index) { @if (isTimingEffect(reward)) { @if (isRoundStartTiming(reward.type)) {

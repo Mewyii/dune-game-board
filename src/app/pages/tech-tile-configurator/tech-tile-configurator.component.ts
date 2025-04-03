@@ -99,7 +99,7 @@ export class TechTileConfiguratorComponent implements OnInit {
       width: '875px',
       data: {
         title: 'Create New Tech Tile',
-        techTile: this.createEmptyImperiumCard(),
+        techTile: this.createEmptyTechTile(),
       },
     });
 
@@ -160,12 +160,11 @@ export class TechTileConfiguratorComponent implements OnInit {
     this.techTilesService.sortTechTiles('costs', 'asc');
   }
 
-  private createEmptyImperiumCard(): TechTileCard {
+  private createEmptyTechTile(): TechTileCard {
     // Create an empty ImperiumCard object with default values
     return {
       name: { en: '', de: '' },
       costs: 0,
-      aiEvaluation: () => 0,
     };
   }
 }

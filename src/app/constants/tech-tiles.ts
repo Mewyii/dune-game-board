@@ -15,8 +15,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.25 + 0.05 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.solari,
+    aiEvaluation: 'maula-pistol-works',
   },
   {
     name: {
@@ -56,8 +55,7 @@ export const techTiles: TechTileCard[] = [
         amount: 2,
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.6 - 0.025 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.solari,
+    aiEvaluation: 'smuggler-outposts',
   },
   {
     name: {
@@ -98,11 +96,7 @@ export const techTiles: TechTileCard[] = [
         type: 'troop',
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.35 +
-      0.033 * (gameState.currentRound - 1) +
-      0.066 * gameState.playerCardsRewards.solari +
-      0.033 * gameState.playerCardsFactions.emperor,
+    aiEvaluation: 'imperial-barracks',
   },
   {
     name: {
@@ -128,7 +122,7 @@ export const techTiles: TechTileCard[] = [
         },
       ],
     },
-    aiEvaluation: (player, gameState) => 0.8 - 0.1 * (gameState.currentRound - 1),
+    aiEvaluation: 'upgrade-carryall-suspensors',
   },
   {
     name: {
@@ -144,7 +138,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+    aiEvaluation: 'spice-transport-modules',
   },
   {
     name: {
@@ -160,7 +154,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+    aiEvaluation: 'spy-modules',
   },
   {
     name: {
@@ -177,8 +171,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.3 + 0.02 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.bene,
+    aiEvaluation: 'spy-network',
   },
   {
     name: {
@@ -213,8 +206,7 @@ export const techTiles: TechTileCard[] = [
         type: 'water',
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.65 - 0.075 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.fremen,
+    aiEvaluation: 'wind-traps',
   },
   {
     name: {
@@ -230,7 +222,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner {resource:card-discard} für jedes deiner {resource:dreadnought} im Konflikt.',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+    aiEvaluation: 'heavy-lasguns',
   },
   {
     name: {
@@ -256,7 +248,7 @@ export const techTiles: TechTileCard[] = [
         },
       ],
     },
-    aiEvaluation: (player, gameState) => 0.85 - 0.125 * (gameState.currentRound - 1),
+    aiEvaluation: 'enhanced-sandcrawler-engines',
   },
   {
     name: {
@@ -269,12 +261,30 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'bottom',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:solari;amount:3}<br><br><b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.6 - 0.033 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.guild,
+    effectSize: 'small',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'solari',
+        amount: 3,
+      },
+    ],
+    aiEvaluation: 'trade-port',
   },
   {
     name: {
@@ -290,7 +300,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-trade}Behalte die dafür gespielte Karte auf deiner Hand.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.25 + 0.025 * gameState.playerCardsBought + 0.025 * gameState.playerCardsTrashed,
+    aiEvaluation: 'upgraded-ornithoper-engines',
   },
   {
     name: {
@@ -306,8 +316,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Wähle ein beliebiges Feld. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.3 + 0.033 * (gameState.currentRound - 1) + 0.05 * gameState.playerDreadnoughtCount,
+    aiEvaluation: 'barrage-rockets',
   },
   {
     name: {
@@ -342,11 +351,7 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.7 +
-      0.05 * gameState.playerDreadnoughtCount -
-      0.033 * (gameState.currentRound - 1) +
-      0.025 * gameState.playerCardsRewards.sword,
+    aiEvaluation: 'artillery-arsenal',
   },
   {
     name: {
@@ -377,7 +382,7 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 0.1 : 0.0),
+    aiEvaluation: 'ornithopter-hangar',
   },
   {
     name: {
@@ -393,7 +398,7 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner {resource:dreadnought} im Konflikt: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount,
+    aiEvaluation: 'shieldbreakers',
   },
   {
     name: {
@@ -406,12 +411,32 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}{resource:card-draw}{resource:focus}<br><br><b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.4 + 0.015 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.fremen,
+    effectSize: 'small',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'focus',
+      },
+    ],
+    aiEvaluation: 'botanical-research-station',
   },
   {
     name: {
@@ -428,12 +453,29 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:card-draw}{resource:helper-trade}{resource:card-discard}<br><br><b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.5 + 0.01 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsFactions.emperor,
+    effectSize: 'small',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-discard',
+      },
+    ],
+    aiEvaluation: 'sardaukar-commando-post',
   },
   {
     name: {
@@ -446,12 +488,29 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'bottom',
     buyEffects: [],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}<br><br><b>Reveal turn:</b> <br>{faction:bene} -Connections<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:helper-trade}{resource:faction-influence-up-choice}<br><br><b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
+      en: '<b>Reveal turn:</b> <br>{faction:bene} -Connections<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.2 + 0.033 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.water,
+    effectSize: 'small',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    aiEvaluation: 'missionara-protectiva',
   },
   {
     name: {
@@ -486,12 +545,7 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.3 +
-      0.025 * (gameState.currentRound - 1) +
-      0.01 * gameState.playerCardsBought +
-      0.01 * gameState.playerCardsTrashed +
-      0.066 * gameState.playerCardsRewards.solari,
+    aiEvaluation: 'stillsuits-factory',
   },
   {
     name: {
@@ -507,7 +561,6 @@ export const techTiles: TechTileCard[] = [
       de: 'Alle {resource:spice} -Kosten sind um 1 reduziert (min. 1).',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) => 0.65 - 0.05 * (gameState.currentRound - 1),
     gameModifiers: {
       fieldCost: [
         {
@@ -525,6 +578,7 @@ export const techTiles: TechTileCard[] = [
         },
       ],
     },
+    aiEvaluation: 'spice-refineries',
   },
   {
     name: {
@@ -559,11 +613,7 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.25 +
-      0.075 * (gameState.currentRound - 1) +
-      0.05 * gameState.playerDreadnoughtCount +
-      0.025 * gameState.playerCardsRewards.sword,
+    aiEvaluation: 'ornithopter-squadron',
   },
   {
     name: {
@@ -583,11 +633,7 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug</b>:<br>{resource:sword}{resource:sword}{resource:helper-or}Entferne die Kontrolle über einen Ort, auf dem sich einer deiner Agenten befindet.',
       fontSize: 'small',
     },
-    aiEvaluation: (player, gameState) =>
-      0.3 +
-      0.033 * (gameState.currentRound - 1) +
-      0.075 * gameState.playerDreadnoughtCount +
-      0.025 * gameState.playerCardsRewards.sword,
+    aiEvaluation: 'gunship',
   },
   {
     name: {
@@ -604,18 +650,50 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:troop}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:water}{resource:water}{resource:water}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:troop}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:water}{resource:water}{resource:water}{resource:helper-trade}{resource:victory-point}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.6 +
-      0.02 * (gameState.currentRound - 1) +
-      0.01 * gameState.playerCardsBought +
-      0.01 * gameState.playerCardsTrashed +
-      (player.hasCouncilSeat ? 0.1 : 0.0) +
-      0.033 * gameState.playerCardsRewards.water +
-      0.033 * gameState.playerCardsFactions.fremen,
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    aiEvaluation: 'sietch',
   },
   {
     name: {
@@ -632,17 +710,46 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:spice;amount:4}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:solari;amount:2}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:spice;amount:4}{resource:helper-trade}{resource:victory-point}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.6 +
-      0.02 * (gameState.currentRound - 1) +
-      0.01 * gameState.playerCardsBought +
-      0.01 * gameState.playerCardsTrashed +
-      (player.hasCouncilSeat ? 0.1 : 0.0) +
-      0.033 * gameState.playerCardsRewards.spice,
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'spice',
+        amount: 4,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    aiEvaluation: 'guild-bank',
   },
   {
     name: {
@@ -659,20 +766,45 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:intrigue}<br><br><b>Reveal turn:</b><br>{resource:tech-tile-flip} {resource:solari;amount:6}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:intrigue}<br><br><b>Aufdeckzug:</b><br>{resource:tech-tile-flip} {resource:solari;amount:6}{resource:helper-trade}{resource:victory-point}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.6 +
-      0.02 * (gameState.currentRound - 1) +
-      0.01 * gameState.playerCardsBought +
-      0.01 * gameState.playerCardsTrashed +
-      (player.hasSwordmaster ? 0.1 : 0.0) +
-      (player.hasCouncilSeat ? 0.1 : 0.0) -
-      0.05 * gameState.playerIntrigueCount +
-      0.033 * gameState.playerCardsRewards.solari +
-      0.033 * gameState.playerCardsFactions.emperor,
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'intrigue',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+        amount: 6,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    aiEvaluation: 'governor-palace',
   },
   {
     name: {
@@ -682,25 +814,57 @@ export const techTiles: TechTileCard[] = [
     faction: 'bene',
     costs: 6,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [
       {
         type: 'faction-influence-up-bene',
       },
     ],
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
     customEffect: {
-      en: '<b>Round start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Reveal turn</b>: <br>{resource:tech-tile-flip} {resource:water}{resource:spice}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
-      de: '<b>Rundenbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}{resource:card-draw}<br><br><b>Aufdeckzug</b>: <br>{resource:tech-tile-flip} {resource:water}{resource:spice}{resource:intrigue-trash}{resource:helper-trade}{resource:victory-point}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
-    aiEvaluation: (player, gameState) =>
-      0.6 +
-      0.01 * (gameState.currentRound - 1) +
-      0.02 * gameState.playerCardsBought +
-      0.01 * gameState.playerCardsTrashed +
-      (player.hasSwordmaster ? 0.1 : 0.0) +
-      0.033 * gameState.playerCardsRewards.water +
-      0.033 * gameState.playerCardsFactions.bene,
+    aiEvaluation: 'bene-gesserit-conclave',
   },
   {
     name: {
@@ -742,11 +906,7 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.3 +
-      0.1 * gameState.playerDreadnoughtCount +
-      0.033 * (gameState.currentRound - 1) +
-      0.025 * gameState.playerCardsRewards.sword,
+    aiEvaluation: 'lighter',
   },
   {
     name: {
@@ -775,6 +935,9 @@ export const techTiles: TechTileCard[] = [
         type: 'timing-reveal-turn',
       },
       {
+        type: 'tech-tile-flip',
+      },
+      {
         type: 'faction-influence-down-choice',
       },
       {
@@ -784,14 +947,7 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.3 +
-      0.05 * (gameState.currentRound - 1) +
-      (player.hasSwordmaster ? 0.1 : 0.0) +
-      0.025 * gameState.playerScore.bene +
-      0.025 * gameState.playerScore.emperor +
-      0.025 * gameState.playerScore.fremen +
-      0.025 * gameState.playerScore.guild,
+    aiEvaluation: 'flagship',
   },
   {
     name: {
@@ -832,12 +988,7 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
-    aiEvaluation: (player, gameState) =>
-      0.3 +
-      0.02 * (gameState.currentRound - 1) +
-      0.05 * gameState.playerDreadnoughtCount +
-      0.02 * gameState.playerCardsRewards.sword +
-      0.025 * gameState.playerCardsRewards.tech,
+    aiEvaluation: 'landing-ships',
   },
   {
     name: {
@@ -846,6 +997,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 7,
     imageUrl: '/assets/images/action-backgrounds/surveillance.png',
+    effectSize: 'small',
     imagePosition: 'top',
     buyEffects: [
       {
@@ -855,12 +1007,6 @@ export const techTiles: TechTileCard[] = [
         type: 'card-draw',
       },
     ],
-    customEffect: {
-      en: '<br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
-      de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
-      fontSize: 'small',
-    },
-    effectSize: 'small',
     effects: [
       {
         type: 'timing-round-start',
@@ -881,6 +1027,11 @@ export const techTiles: TechTileCard[] = [
         type: 'card-draw',
       },
     ],
-    aiEvaluation: (player, gameState) => 0.75 - 0.05 * (gameState.currentRound - 1),
+    customEffect: {
+      en: '<br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
+      de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
+      fontSize: 'small',
+    },
+    aiEvaluation: 'planetary-surveillance',
   },
 ];

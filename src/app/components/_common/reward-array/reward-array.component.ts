@@ -15,6 +15,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   @Input() rewards: Effect[] = [];
   @Input() size: string = '32px';
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
+  @Input() arraySeparationGap = '4px';
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';

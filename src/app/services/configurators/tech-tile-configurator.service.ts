@@ -14,15 +14,8 @@ export class TechTileConfiguratorService {
   constructor() {
     const techTilesString = localStorage.getItem('techTiles');
     if (techTilesString) {
-      const rawTechTiles = JSON.parse(techTilesString) as TechTileCard[];
-
-      // Workaround for local storage not being able to store functions
-      const realTechTiles = rawTechTiles.map((x) => {
-        const techTile = techTiles.find((y) => y.name.en === x.name.en);
-        return { ...techTile, ...x };
-      });
-
-      this.techTilesSubject.next(realTechTiles);
+      const techTiles = JSON.parse(techTilesString) as TechTileCard[];
+      this.techTilesSubject.next(techTiles);
     }
 
     this.techTiles$.subscribe((techTiles) => {

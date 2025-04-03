@@ -11,6 +11,7 @@ import { Player } from 'src/app/models/player';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { Conflict } from 'src/app/models/conflict';
 import { PlayerGameModifiers } from '../../game-modifier.service';
+import { TechTileDeckCard } from '../../tech-tiles.service';
 
 export type AIGoals =
   | 'high-council'
@@ -60,7 +61,7 @@ export type GameState = Readonly<{
   enemyPlayers: Player[];
   playerLeader: Leader;
   conflict: Conflict;
-  availableTechTiles: TechTileCard[];
+  availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;
   playerDeckSizeTotal: number;
   playerDeckCards: ImperiumDeckCard[];

@@ -97,6 +97,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
       imageUrl: '',
       effectSize: 'medium',
       imagePosition: 'center',
+      aiEvaluation: undefined,
     });
 
     this.addBuyEffectControl();

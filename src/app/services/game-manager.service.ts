@@ -65,6 +65,7 @@ import { IntrigueDeckCard } from '../models/intrigue';
 import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
 import { NotificationService } from './notification.service';
+import { techTileAiEvaluations } from '../constants/tech-tiles-ai-evaluations';
 
 export interface AgentOnField {
   fieldId: string;
@@ -1044,19 +1045,23 @@ export class GameManager {
             for (const intrigue of playerCombatIntrigues) {
               if (intrigue.structuredEffects) {
                 let swordAmount = intrigue.structuredEffects.rewards.filter((x) => x.type === 'sword').length;
+                let canPayCosts = true;
 
                 for (const choiceEffect of intrigue.structuredEffects.choiceEffects) {
                   if (isConversionEffectType(choiceEffect.choiceType)) {
-                    if (this.playerCanPayCosts(playerId, choiceEffect.left)) {
-                      swordAmount = choiceEffect.right.filter((x) => x.type === 'sword').length;
+                    canPayCosts = this.playerCanPayCosts(playerId, choiceEffect.left);
+                    if (canPayCosts) {
+                      swordAmount += choiceEffect.right.filter((x) => x.type === 'sword').length;
                     }
                   }
                 }
 
-                if (swordAmount > 0) {
-                  intriguesWithCombatScores.push({ intrigue, score: swordAmount });
-                } else {
-                  intriguesWithoutCombatScores.push(intrigue);
+                if (canPayCosts) {
+                  if (swordAmount > 0) {
+                    intriguesWithCombatScores.push({ intrigue, score: swordAmount });
+                  } else {
+                    intriguesWithoutCombatScores.push(intrigue);
+                  }
                 }
               }
             }
@@ -2314,10 +2319,12 @@ export class GameManager {
     if (affordableTechTiles.length > 0) {
       const gameState = this.getGameState(player);
       const mostDesiredTechTile = buyableTechTiles.sort(
-        (a, b) => b.aiEvaluation(player, gameState) - a.aiEvaluation(this.getActivePlayer()!, gameState)
+        (a, b) =>
+          this.aIManager.getTechTileEvaluation(b, player, gameState) -
+          this.aIManager.getTechTileEvaluation(a, player, gameState)
       )[0];
 
-      const desire = mostDesiredTechTile.aiEvaluation(player, gameState);
+      const desire = this.aIManager.getTechTileEvaluation(mostDesiredTechTile, player, gameState);
       const effectiveCosts = mostDesiredTechTile.costs - availablePlayerTech;
 
       if (
@@ -2511,6 +2518,7 @@ export class GameManager {
     } else if (reward.type === 'tech-tile-flip' && element) {
       if (element.type === 'tech-tile') {
         this.techTilesService.flipTechTile(element.object.id);
+        this.audioManager.playSound('tech-tile');
         this.loggingService.logPlayerPlayedTechTile(player.id, this.t.translateLS(element.object.name));
       }
     } else if (reward.type === 'combat') {

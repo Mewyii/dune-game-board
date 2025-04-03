@@ -30,6 +30,8 @@ import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { isConversionEffectType, isOptionEffectType, isStructuredChoiceEffect } from 'src/app/helpers/rewards';
+import { techTileAiEvaluations } from 'src/app/constants/tech-tiles-ai-evaluations';
+import { TechTileDeckCard } from '../tech-tiles.service';
 
 export interface AIPlayer {
   playerId: number;
@@ -200,7 +202,9 @@ export class AIManager {
     const decisions: string[] = [];
 
     const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 24);
-    const techEvaluation = Math.max(...gameState.availableTechTiles.map((x) => x.aiEvaluation(player, gameState)));
+    const techEvaluation = Math.max(
+      ...gameState.availableTechTiles.map((x) => this.getTechTileEvaluation(x, player, gameState))
+    );
 
     const evaluatedImperiumRowCards = (
       gameState.imperiumRowCards.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[]
@@ -1074,6 +1078,15 @@ export class AIManager {
     }
 
     return evaluationValue;
+  }
+
+  public getTechTileEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
+    let value = 0;
+    if (techTile.aiEvaluation) {
+      value += techTileAiEvaluations[techTile.aiEvaluation](player, gameState);
+    }
+
+    return value;
   }
 
   public getChoiceEffectEvaluation(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
