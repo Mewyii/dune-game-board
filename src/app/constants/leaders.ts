@@ -242,7 +242,7 @@ export const leaders: Leader[] = [
           factionType: 'emperor',
         },
       ],
-      customActions: [{ id: 'irulan-field-history', action: 'field-history' }],
+      customActions: [{ id: 'irulan-field-history', action: 'field-marker' }],
     },
     startingResources: [
       { type: 'solari', amount: 2 },
@@ -675,7 +675,7 @@ export const leaders: Leader[] = [
       customActions: [
         {
           id: 'leto-inspiring-loyalty',
-          action: 'location-change-buildup',
+          action: 'field-marker',
         },
       ],
     },
@@ -774,6 +774,14 @@ export const leaders: Leader[] = [
     type: 'new',
     playableByAI: true,
     startingResources: [{ type: 'solari' }, { type: 'troop' }],
+    gameModifiers: {
+      customActions: [
+        {
+          id: 'eva-labour-camps',
+          action: 'field-marker',
+        },
+      ],
+    },
   },
   {
     name: {

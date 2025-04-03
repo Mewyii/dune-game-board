@@ -47,8 +47,8 @@ export class PlayersService {
   }
 
   public getPlayerColor(playerId: number) {
-    const player = this.getPlayer(playerId);
-    return player ? player.color : '';
+    const player = this.playersSubject.value.find((x) => x.id === playerId);
+    return player ? cloneDeep(player.color) : '';
   }
 
   getPlayerPersuasion(playerId: number) {

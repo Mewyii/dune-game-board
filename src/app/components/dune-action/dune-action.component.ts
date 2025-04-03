@@ -57,8 +57,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
   public isBlocked = false;
 
-  public canWriteFieldHistory = false;
-  public fieldHistoryAmount: number | undefined;
+  public canPlaceFieldMarkers = false;
+  public playerFieldMarkers: { playerId: number; amount: number }[] = [];
 
   constructor(
     public gameManager: GameManager,
@@ -121,14 +121,11 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const fieldBlockModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldBlock');
       this.isBlocked = getFieldIsBlocked(this.actionField, fieldBlockModifiers);
 
-      this.canWriteFieldHistory = this.gameModifierService.playerHasCustomActionAvailable(
+      this.canPlaceFieldMarkers = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'field-history'
+        'field-marker'
       );
-      this.fieldHistoryAmount = this.gameModifierService.getPlayerFieldHistoryModifier(
-        this.activePlayerId,
-        this.actionField.title.en
-      )?.changeAmount;
+      this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
@@ -158,14 +155,11 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const fieldBlockModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldBlock');
       this.isBlocked = getFieldIsBlocked(this.actionField, fieldBlockModifiers);
 
-      this.canWriteFieldHistory = this.gameModifierService.playerHasCustomActionAvailable(
+      this.canPlaceFieldMarkers = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'field-history'
+        'field-marker'
       );
-      this.fieldHistoryAmount = this.gameModifierService.getPlayerFieldHistoryModifier(
-        this.activePlayerId,
-        this.actionField.title.en
-      )?.changeAmount;
+      this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
 
     this.isHighCouncilField = this.actionField.rewards.some(
@@ -230,6 +224,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
     return getFactionTypePath(rewardType);
   }
 
+  public getPlayerColor(playerId: number) {
+    return this.playerManager.getPlayerColor(playerId);
+  }
+
   public trackPlayersOnField(index: number, playerOnField: Player) {
     return playerOnField.id;
   }
@@ -238,9 +236,9 @@ export class DuneActionComponent implements OnInit, OnChanges {
     return spiceOnField;
   }
 
-  public onFieldHistoryChangeClicked(changeAmount: number) {
+  public onFieldMarkerChangeClicked(changeAmount: number) {
     this.audioManager.playSound('click-soft');
-    this.gameModifierService.changeFieldHistoryModifier(this.activePlayerId, this.actionField.title.en, changeAmount);
+    this.gameModifierService.changeFieldMarkerModifier(this.activePlayerId, this.actionField.title.en, changeAmount);
 
     return false;
   }

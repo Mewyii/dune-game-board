@@ -269,8 +269,8 @@
 .field-history-button {
   position: absolute;
   z-index: 2;
-  left: 15px;
-  bottom: -25px;
+  top: 0px;
+  right: -18px;
 }
 
 .reward {
@@ -327,6 +327,31 @@
   animation-timing-function: ease-in-out;
   animation-duration: 6s;
   animation-iteration-count: infinite;
+}
+
+.field-marker-container {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: -35px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.field-marker {
+  width: 25px;
+  height: 25px;
+  border-radius: 25%;
+  border: 1px solid #2f2112;
+  border-right: 4px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  animation-name: marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.5s;
 }
 
 @keyframes ornithopter-anim {

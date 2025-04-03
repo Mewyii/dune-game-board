@@ -39,23 +39,12 @@ export interface TechTileModifier extends GameModifier {
   minCosts?: number;
 }
 
-export interface LocationChangeModifier extends GameModifier {
-  locationId: string;
-  changeAmount: number;
-}
-
-export interface FieldHistoryModifier extends GameModifier {
+export interface FieldMarkerModifier extends GameModifier {
   fieldId: string;
-  changeAmount: number;
+  amount: number;
 }
 
-export type CustomGameActionType =
-  | 'charm'
-  | 'vision-conflict'
-  | 'vision-deck'
-  | 'vision-intrigues'
-  | 'location-change-buildup'
-  | 'field-history';
+export type CustomGameActionType = 'charm' | 'vision-conflict' | 'vision-deck' | 'vision-intrigues' | 'field-marker';
 
 export interface CustomGameActionModifier extends GameModifier {
   action: CustomGameActionType;
@@ -107,8 +96,7 @@ export interface GameModifiers {
   customActions?: CustomGameActionModifier[];
   fieldFactionAccess?: FieldFactionAccessModifier[];
   fieldEnemyAgentAccess?: FieldEnemyAgentsAccessModifier[];
-  locationChange?: LocationChangeModifier[];
-  fieldHistory?: FieldHistoryModifier[];
+  fieldMarkers?: FieldMarkerModifier[];
   fieldCost?: FieldCostsModifier[];
   fieldReward?: FieldRewardsModifier[];
   fieldBlock?: FieldBlockModifier[];
@@ -211,12 +199,14 @@ export class GameModifiersService {
     return this.playerGameModifiers.find((x) => x.playerId === playerId)?.customActions;
   }
 
-  public getPlayerLocationChangeBuildupModifier(playerId: number, locationId: string) {
-    return this.getPlayerGameModifiers(playerId)?.locationChange?.find((x) => x.locationId === locationId);
-  }
-
-  public getPlayerFieldHistoryModifier(playerId: number, fieldId: string) {
-    return this.getPlayerGameModifiers(playerId)?.fieldHistory?.find((x) => x.fieldId === fieldId);
+  public getPlayerFieldMarkers(fieldId: string) {
+    return this.playerGameModifiers
+      .filter((x) => x.fieldMarkers)
+      .map((x) => ({
+        playerId: x.playerId,
+        amount: sum(x.fieldMarkers?.filter((y) => y.fieldId === fieldId).map((y) => y.amount)),
+      }))
+      .filter((x) => x.amount > 0);
   }
 
   addPlayerGameModifiers(playerId: number, gameModifiers: GameModifiers) {
@@ -252,60 +242,30 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
-  public increaseLocationChangeModifier(playerId: number, locationId: string, changeAmount = 1) {
+  public changeFieldMarkerModifier(playerId: number, fieldId: string, changeAmount = 1) {
     const playerGameModifiers = this.playerGameModifiers;
     const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
     if (playerGameModifierIndex > -1) {
       const playerModifiers = playerGameModifiers[playerGameModifierIndex];
-      const locationChangeModifiers = playerModifiers.locationChange;
-      if (locationChangeModifiers) {
-        const currentLocationModifierIndex = locationChangeModifiers.findIndex((x) => x.locationId === locationId);
-        if (currentLocationModifierIndex > -1) {
-          const currentValue = locationChangeModifiers[currentLocationModifierIndex];
-          locationChangeModifiers[currentLocationModifierIndex] = {
-            ...currentValue,
-            changeAmount: currentValue.changeAmount + changeAmount,
-          };
-        } else {
-          locationChangeModifiers.push({ id: crypto.randomUUID(), locationId, changeAmount });
-        }
-      } else {
-        playerModifiers.locationChange = [{ id: crypto.randomUUID(), locationId, changeAmount }];
-      }
-    } else {
-      playerGameModifiers.push({
-        playerId,
-        locationChange: [{ id: crypto.randomUUID(), locationId, changeAmount }],
-      });
-    }
-
-    this.playerGameModifiersSubject.next(playerGameModifiers);
-  }
-
-  public changeFieldHistoryModifier(playerId: number, fieldId: string, changeAmount = 1) {
-    const playerGameModifiers = this.playerGameModifiers;
-    const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
-    if (playerGameModifierIndex > -1) {
-      const playerModifiers = playerGameModifiers[playerGameModifierIndex];
-      const fieldHistoryModifiers = playerModifiers.fieldHistory;
+      const fieldHistoryModifiers = playerModifiers.fieldMarkers;
       if (fieldHistoryModifiers) {
         const currentFieldModifierIndex = fieldHistoryModifiers.findIndex((x) => x.fieldId === fieldId);
         if (currentFieldModifierIndex > -1) {
           const currentValue = fieldHistoryModifiers[currentFieldModifierIndex];
           fieldHistoryModifiers[currentFieldModifierIndex] = {
             ...currentValue,
-            changeAmount: currentValue.changeAmount + changeAmount,
+            amount: currentValue.amount + changeAmount,
           };
         } else {
-          fieldHistoryModifiers.push({ id: crypto.randomUUID(), fieldId: fieldId, changeAmount });
+          fieldHistoryModifiers.push({ id: crypto.randomUUID(), fieldId: fieldId, amount: changeAmount });
         }
       } else {
-        playerModifiers.fieldHistory = [{ id: crypto.randomUUID(), fieldId: fieldId, changeAmount }];
+        playerModifiers.fieldMarkers = [{ id: crypto.randomUUID(), fieldId: fieldId, amount: changeAmount }];
       }
     } else {
       playerGameModifiers.push({
         playerId,
-        fieldHistory: [{ id: crypto.randomUUID(), fieldId: fieldId, changeAmount }],
+        fieldMarkers: [{ id: crypto.randomUUID(), fieldId: fieldId, amount: changeAmount }],
       });
     }
 

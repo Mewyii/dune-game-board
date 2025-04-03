@@ -119,16 +119,23 @@
       <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
     </ng-container>
   </div>
-  <ng-container *ngIf="!disabled && canWriteFieldHistory">
+  <ng-container *ngIf="!disabled && canPlaceFieldMarkers">
     <button
       class="field-history-button"
-      mat-fab
+      mat-mini-fab
       [color]="'accent'"
-      (click)="onFieldHistoryChangeClicked(1)"
-      (contextmenu)="onFieldHistoryChangeClicked(-1)"
+      (click)="onFieldMarkerChangeClicked(1)"
+      (contextmenu)="onFieldMarkerChangeClicked(-1)"
     >
-      <mat-icon>menu_book</mat-icon>
-      {{ fieldHistoryAmount }}
+      <mat-icon>pin_drop </mat-icon>
     </button>
   </ng-container>
+  @if (playerFieldMarkers.length > 0) {
+  <div class="field-marker-container">
+    @for (fieldMarker of playerFieldMarkers; track $index) { @for (marker of fieldMarker.amount | numberToArray; track
+    $index) {
+    <div class="field-marker" [style.background]="getPlayerColor(fieldMarker.playerId)"></div>
+    } }
+  </div>
+  }
 </div>

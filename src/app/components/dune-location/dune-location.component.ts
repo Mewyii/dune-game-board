@@ -33,8 +33,6 @@ export class DuneLocationComponent implements OnInit {
   };
 
   public activePlayerId = 0;
-  public canBuildupLocationChange = false;
-  public locationChangeBuildupAmount: number | undefined;
 
   public owner: Player | undefined;
   public leaderInitials = '';
@@ -63,38 +61,11 @@ export class DuneLocationComponent implements OnInit {
 
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
-
-      this.canBuildupLocationChange = this.gameModifierService.playerHasCustomActionAvailable(
-        this.activePlayerId,
-        'location-change-buildup'
-      );
-
-      this.locationChangeBuildupAmount = this.gameModifierService.getPlayerLocationChangeBuildupModifier(
-        this.activePlayerId,
-        this.location.actionField.title.en
-      )?.changeAmount;
-    });
-
-    this.gameModifierService.playerGameModifiers$.subscribe(() => {
-      this.canBuildupLocationChange = this.gameModifierService.playerHasCustomActionAvailable(
-        this.activePlayerId,
-        'location-change-buildup'
-      );
-
-      this.locationChangeBuildupAmount = this.gameModifierService.getPlayerLocationChangeBuildupModifier(
-        this.activePlayerId,
-        this.location.actionField.title.en
-      )?.changeAmount;
     });
   }
 
   onOwnerIndicatorClicked() {
     this.gameManager.changeLocationOwner(this.location.actionField.title.en, this.gameManager.activePlayerId);
-  }
-
-  onBuildUpLocationChangeClicked() {
-    this.audioManager.playSound('click-soft');
-    this.gameModifierService.increaseLocationChangeModifier(this.activePlayerId, this.location.actionField.title.en, 1);
   }
 
   public getEffectTypePath(effectType: EffectType) {
