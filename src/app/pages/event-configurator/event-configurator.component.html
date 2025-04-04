@@ -6,11 +6,11 @@
         <mat-icon>add</mat-icon>
       </button>
       <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Events">
-        <mat-icon>download</mat-icon>
+        <mat-icon>folder_open</mat-icon>
       </button>
       <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
       <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()" matTooltip="Export Events">
-        <mat-icon>upload</mat-icon>
+        <mat-icon>download</mat-icon>
       </button>
       <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
         <mat-icon>hide_source</mat-icon>
@@ -23,24 +23,24 @@
       </div>
     </div>
     <div class="cards-preview-container">
-      <ng-container *ngFor="let event of events">
-        <div class="card-container">
-          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
-            <dune-event-card [event]="event"></dune-event-card>
-          </div>
-          <div class="card-action-bar" *ngIf="showControls">
-            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(event)" matTooltip="Edit">
-              <mat-icon>settings</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(event.title.en)" matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, event.title.en)" matTooltip="Save">
-              <mat-icon>download</mat-icon>
-            </button>
-          </div>
+      @for (event of events; track $index) {
+      <div class="card-container">
+        <div #cardimg [style]="'padding:' + imagePadding + 'px'">
+          <dune-event-card [event]="event"></dune-event-card>
         </div>
-      </ng-container>
+        <div class="card-action-bar" *ngIf="showControls">
+          <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(event)" matTooltip="Edit">
+            <mat-icon>settings</mat-icon>
+          </button>
+          <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(event.title.en)" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, event.title.en)" matTooltip="Save">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      </div>
+      }
     </div>
   </div>
 </div>

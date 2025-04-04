@@ -17,8 +17,8 @@
 dune-tech-tile {
   display: block;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-  transition: 0.8s;
-  transform: scale(0.97);
+  transition: 0.9s;
+  transform: scale(0.95);
   user-select: none;
   animation-name: tech-tile-row-anim;
   animation-timing-function: ease-in-out;
@@ -28,7 +28,7 @@ dune-tech-tile {
 dune-tech-tile:hover,
 dune-tech-tile.active {
   filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
-  transform: scale(1.5);
+  transform: scale(1.55);
   z-index: 3;
   position: relative;
 }

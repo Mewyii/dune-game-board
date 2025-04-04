@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { isConditionalEffect } from 'src/app/helpers/rewards';
@@ -124,7 +124,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
   initForm() {
     this.imperiumCardForm = this.fb.group({
       name: this.fb.group({
-        en: '',
+        en: new FormControl('', Validators.required),
         de: '',
       }),
       faction: '',
@@ -156,8 +156,8 @@ export class CardEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  getFormData(): any {
-    return this.imperiumCardForm.value;
+  getFormData(): FormGroup {
+    return this.imperiumCardForm;
   }
 
   get fieldAccess() {

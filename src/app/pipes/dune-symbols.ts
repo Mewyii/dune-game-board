@@ -56,9 +56,7 @@ export class DuneSymbolsPipe implements PipeTransform {
             'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
             '"/><div style="position:absolute;top:0px;left:0px;width:100%' +
-            ';height:' +
-            Math.ceil(iconSizeNumber + ratioFix / 4) +
-            'px;display:flex;align-items:center;justify-content:center;font-size:' +
+            ';height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
             (iconSizeNumber - ratioFix) +
             'px;filter:drop-shadow(0px 0px 1px rgb(0, 0, 0));"><span>' +
             amountNumber +

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Leader } from 'src/app/constants/leaders';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { combatUnitTypes, effectRewards, EffectType, resourceTypes } from 'src/app/models';
@@ -51,7 +51,7 @@ export class LeaderEditorComponent implements OnChanges {
   initForm() {
     this.leaderForm = this.fb.group({
       name: this.fb.group({
-        en: '',
+        en: new FormControl('', Validators.required),
         de: '',
       }),
       house: this.fb.group({
@@ -115,8 +115,8 @@ export class LeaderEditorComponent implements OnChanges {
     this.startingResources.removeAt(index);
   }
 
-  getFormData(): any {
-    return this.leaderForm.value;
+  getFormData(): FormGroup {
+    return this.leaderForm;
   }
 
   public getEffectTypePath(effectType: EffectType) {

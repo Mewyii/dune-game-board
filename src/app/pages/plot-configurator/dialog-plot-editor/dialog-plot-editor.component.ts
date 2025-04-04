@@ -33,6 +33,8 @@ export class DialogPlotEditorComponent {
   onSave(): void {
     const formData = this.plotEditorComponent.getFormData();
 
-    this.dialogRef.close(formData);
+    if (formData.valid) {
+      this.dialogRef.close(formData.value);
+    }
   }
 }

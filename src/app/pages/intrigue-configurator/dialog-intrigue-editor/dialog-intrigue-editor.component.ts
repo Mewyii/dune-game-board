@@ -32,7 +32,8 @@ export class DialogIntrigueEditorComponent {
 
   onSave(): void {
     const formData = this.intrigueEditorComponent.getFormData();
-
-    this.dialogRef.close(formData);
+    if (formData.valid) {
+      this.dialogRef.close(formData.value);
+    }
   }
 }

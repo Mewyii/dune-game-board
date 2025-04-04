@@ -32,6 +32,8 @@ export class DialogLeaderEditorComponent {
 
   onSave(): void {
     const formData = this.leaderEditorComponent.getFormData();
-    this.dialogRef.close(formData);
+    if (formData.valid) {
+      this.dialogRef.close(formData.value);
+    }
   }
 }

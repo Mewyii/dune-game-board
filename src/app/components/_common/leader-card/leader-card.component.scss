@@ -1,159 +1,158 @@
 .leader-card {
-    width: 600px;
-    height: 420px;
-    border-radius: 8px;
-    position: relative;
-    background-size: 100%;
-    color: #fffcfa;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    background-position-y: 16px;
+  width: 600px;
+  height: 420px;
+  border-radius: 8px;
+  position: relative;
+  background-size: 100%;
+  color: #fffcfa;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  background-position-y: 16px;
 }
 
 .leader-frame {
-    background-image: url(/assets/images/leaders/_leader_frame.png);
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 8px;
-    z-index: 2;
-    position: relative;
+  background-image: url(/assets/images/leaders/_leader_frame.png);
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  z-index: 2;
+  position: relative;
 }
 
 .leader-title {
-    padding: 12px 12px 5px 16px;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
-    font-size: 28px;
+  padding: 12px 12px 5px 16px;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  font-size: 28px;
 }
 
 .underline {
-    width: 95%;
-    height: 1px;
-    margin-left: 12px;
-    background: linear-gradient(45deg, rgba(255, 165, 0, 0.5), rgba(255, 206, 115, 0.5) 25%,transparent 75%);
+  width: 95%;
+  height: 1px;
+  margin-left: 12px;
+  background: linear-gradient(45deg, rgba(255, 165, 0, 0.5), rgba(255, 206, 115, 0.5) 25%, transparent 75%);
 }
 
 .leader-house {
-    padding: 2px 18px;
-    color: #878787;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  padding: 2px 18px;
+  color: #878787;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
 }
 
 .leader-passive {
-    position: absolute;
-    bottom: 48px;
-    padding: 16px;
-    background: #00000080;
-    width: calc(100% - 32px);
-    text-align: center;
+  position: absolute;
+  bottom: 48px;
+  padding: 16px;
+  background: #00000080;
+  width: calc(100% - 32px);
+  text-align: center;
 }
 
 .deck-indicator {
-    position: absolute;
-    top: calc(50% - 66px);
-    left: 0px;
-    width: auto;
-    height: 100px;
-    text-align: center;
-    padding: 16px 8px;
-    border-radius: 0px 8px 8px 0px;
-    color: #c7c7c7;
-    background-color: #272727;
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.231372549));
-    writing-mode: vertical-lr;
+  position: absolute;
+  top: calc(50% - 66px);
+  left: 0px;
+  width: auto;
+  height: 100px;
+  text-align: center;
+  padding: 16px 8px;
+  border-radius: 0px 8px 8px 0px;
+  color: #c7c7c7;
+  background-color: #272727;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.231372549));
+  writing-mode: vertical-lr;
 }
 
 .discard-indicator {
-    position: absolute;
-    top: calc(50% - 66px);
-    right: 0px;
-    width: auto;
-    height: 100px;
-    text-align: center;
-    padding: 16px 8px;
-    border-radius: 0px 8px 8px 0px;
-    color: #c7c7c7;
-    background-color: #272727;
-    filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.231372549));
-    writing-mode: vertical-lr;
-    transform: rotate(180deg);
+  position: absolute;
+  top: calc(50% - 66px);
+  right: 0px;
+  width: auto;
+  height: 100px;
+  text-align: center;
+  padding: 16px 8px;
+  border-radius: 0px 8px 8px 0px;
+  color: #c7c7c7;
+  background-color: #272727;
+  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.231372549));
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
 }
 
 .leader-passive-container {
-    position: absolute;
-    border-radius: 0px 6px 0px 8px;
-    left: 40px;
-    bottom: 0;
-    padding: 12px;
-    width: 41%;
+  position: absolute;
+  border-radius: 0px 6px 0px 8px;
+  left: 40px;
+  bottom: 0;
+  padding: 12px;
+  width: 41%;
 }
 
 .leader-signet-container {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding: 12px;
-    width: 38%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 12px;
+  width: 38%;
 }
 
 .leader-passive-name,
 .leader-signet-name {
-    font-size: 12px;
-    margin-bottom: 1px;
-    margin-left: 4px;
+  font-size: 12px;
+  margin-bottom: 1px;
+  margin-left: 4px;
 }
 
 .leader-signet-name {
-    color: #e1c0ba;
+  color: #e1c0ba;
 }
-
 
 .leader-passive-description-container,
 .leader-signet-description-container {
-    height: 62px;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    font-size: small;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  font-size: small;
 }
 
 .leader-passive-description,
 .leader-signet-description {
-    font-weight: initial;
-    color: #e1e1e1;
-    white-space: pre-wrap;
+  font-weight: initial;
+  color: #e1e1e1;
+  white-space: pre-wrap;
 }
 
 .leader-signet-name {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .signet-ring {
-    height: 15px;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
-    margin-top: 1px;
+  height: 15px;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  margin-top: 1px;
 }
 
 .card-aquire-effect-container {
-    position: absolute;
-    top: 65px;
-    left: 11px;
-    width: 28px;
-    padding: 6px;
-    padding-top: 10px;
-    padding-bottom: 32px;
-    font-family: "Roboto", "Verdana";
-    font-weight: initial;
-    font-size: small;
-    color: #e1e1e1;
-    white-space: pre-wrap;
-    background-image: linear-gradient(#1d1c1b, 33%, #4a423a);
-    background-size: cover;
-    background-position-y: bottom;
-    z-index: 1;
-    border: 1px solid rgba(111, 111, 111, 0.3490196078);
-    clip-path: polygon(0px 0%, 100% 0%, 100% 66%, 0px 100%);
+  position: absolute;
+  top: 65px;
+  left: 11px;
+  width: 28px;
+  padding: 6px;
+  padding-top: 16px;
+  padding-bottom: 32px;
+  font-family: 'Roboto', 'Verdana';
+  font-weight: initial;
+  font-size: small;
+  color: #e1e1e1;
+  white-space: pre-wrap;
+  background-image: linear-gradient(#1d1c1b, 33%, #4a423a);
+  background-size: cover;
+  background-position-y: bottom;
+  z-index: 1;
+  border: 1px solid rgba(111, 111, 111, 0.3490196078);
+  clip-path: polygon(0px 0%, 100% 0%, 100% 66%, 0px 100%);
 }

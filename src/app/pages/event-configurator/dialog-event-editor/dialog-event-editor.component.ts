@@ -32,6 +32,9 @@ export class DialogEventEditorComponent {
 
   onSave(): void {
     const formData = this.eventEditorComponent.getFormData();
-    this.dialogRef.close(formData);
+
+    if (formData.valid) {
+      this.dialogRef.close(formData.value);
+    }
   }
 }

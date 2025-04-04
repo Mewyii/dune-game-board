@@ -6,11 +6,11 @@
         <mat-icon>add</mat-icon>
       </button>
       <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Cards">
-        <mat-icon>download</mat-icon>
+        <mat-icon>folder_open</mat-icon>
       </button>
       <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
       <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()" matTooltip="Export Cards">
-        <mat-icon>upload</mat-icon>
+        <mat-icon>download</mat-icon>
       </button>
       <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
         <mat-icon>hide_source</mat-icon>

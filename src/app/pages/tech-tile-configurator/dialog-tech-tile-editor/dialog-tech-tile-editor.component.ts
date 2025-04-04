@@ -33,6 +33,8 @@ export class DialogTechTileEditorComponent {
   onSave(): void {
     const formData = this.techTileEditorComponent.getFormData();
 
-    this.dialogRef.close(formData);
+    if (formData.valid) {
+      this.dialogRef.close(formData.value);
+    }
   }
 }

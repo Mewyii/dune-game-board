@@ -32,7 +32,8 @@ export class DialogCardEditorComponent {
 
   onSave(): void {
     const formData = this.cardEditorComponent.getFormData();
-
-    this.dialogRef.close(formData);
+    if (formData.valid) {
+      this.dialogRef.close(formData.value);
+    }
   }
 }

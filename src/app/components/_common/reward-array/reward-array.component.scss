@@ -49,7 +49,6 @@
 .text {
   color: #101010;
   width: max-content;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.66));
 }
 
 .text.heading {
@@ -61,10 +60,12 @@
 
 .text.white {
   color: #e1e1e1;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.66));
 }
 
 .text.white-clear {
   color: #fff;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.66));
 }
 
 .faction {

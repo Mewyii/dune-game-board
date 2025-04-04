@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { combatUnitTypes, EffectType, resourceTypes, EffectRewardType, effectRewards, effectChoices } from 'src/app/models';
 import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
@@ -55,7 +55,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
   initForm() {
     this.intrigueForm = this.fb.group({
       name: this.fb.group({
-        en: '',
+        en: new FormControl('', Validators.required),
         de: '',
       }),
       type: 'complot',
@@ -69,8 +69,8 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  getFormData(): any {
-    return this.intrigueForm.value;
+  getFormData(): FormGroup {
+    return this.intrigueForm;
   }
 
   // Effects

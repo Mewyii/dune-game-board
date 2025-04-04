@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import {
   activeFactionTypes,
@@ -89,7 +89,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
   initForm() {
     this.techTileForm = this.fb.group({
       name: this.fb.group({
-        en: '',
+        en: new FormControl('', Validators.required),
         de: '',
       }),
       faction: '',
@@ -108,8 +108,8 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  getFormData(): any {
-    return this.techTileForm.value;
+  getFormData() {
+    return this.techTileForm;
   }
 
   get fieldAccess() {

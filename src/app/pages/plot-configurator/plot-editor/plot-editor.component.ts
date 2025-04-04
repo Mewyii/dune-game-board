@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import {
   activeFactionTypes,
@@ -49,7 +49,7 @@ export class PlotEditorComponent implements OnInit, OnChanges {
   initForm() {
     this.imperiumPlotForm = this.fb.group({
       name: this.fb.group({
-        en: '',
+        en: new FormControl('', Validators.required),
         de: '',
       }),
       faction: '',
@@ -65,8 +65,8 @@ export class PlotEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  getFormData(): any {
-    return this.imperiumPlotForm.value;
+  getFormData() {
+    return this.imperiumPlotForm;
   }
 
   // Reveal Effects

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DuneEvent } from 'src/app/constants/events';
 
 @Component({
@@ -33,7 +33,7 @@ export class EventEditorComponent implements OnChanges {
   initForm() {
     this.eventForm = this.fb.group({
       title: this.fb.group({
-        en: '',
+        en: new FormControl('', Validators.required),
         de: '',
       }),
       description: this.fb.group({
@@ -49,7 +49,7 @@ export class EventEditorComponent implements OnChanges {
     }
   }
 
-  getFormData(): any {
-    return this.eventForm.value;
+  getFormData() {
+    return this.eventForm;
   }
 }
