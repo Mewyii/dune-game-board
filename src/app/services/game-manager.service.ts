@@ -66,6 +66,7 @@ import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
 import { NotificationService } from './notification.service';
 import { techTileAiEvaluations } from '../constants/tech-tiles-ai-evaluations';
+import { ImperiumPlot } from '../models/imperium-plot';
 
 export interface AgentOnField {
   fieldId: string;
@@ -1000,6 +1001,7 @@ export class GameManager {
               if (boardField && cardAndField) {
                 this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
                 this.loggingService.logPlayerPlayedCard(playerId, this.t.translateLS(cardAndField.cardToPlay.name));
+                this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsPlayedThisTurn: [cardAndField.cardToPlay] });
                 this.addAgentToField(boardField);
 
                 couldPlaceAgent = true;
@@ -1014,6 +1016,11 @@ export class GameManager {
           if (player.turnState === 'reveal') {
             const playerPersuasionAvailable = this.playerManager.getPlayerPersuasion(playerId);
             this.aiBuyImperiumCards(playerId, playerPersuasionAvailable);
+
+            const playerPersuasionLeft = this.playerManager.getPlayerPersuasion(playerId);
+            if (playerPersuasionLeft > 0) {
+              this.aiBuyPlotCards(playerId, playerPersuasionLeft);
+            }
 
             const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
             this.aiUseFocusTokens(playerId, playerFocusTokens);
@@ -1564,10 +1571,6 @@ export class GameManager {
     }
 
     if (turnInfo.canEnterCombat) {
-      this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-        type: 'combat',
-      });
-      this.turnInfoService.setPlayerTurnInfo(player.id, { canEnterCombat: false });
     }
   }
 
@@ -1785,7 +1788,7 @@ export class GameManager {
 
     const availableCards = [...imperiumRow, ...recruitableCards, ...shuffle(alwaysBuyableCards)];
 
-    const cardToBuy = this.aIManager.getCardToBuy(
+    const cardToBuy = this.aIManager.getImperiumCardToBuy(
       availablePersuasion,
       availableCards,
       player,
@@ -1822,6 +1825,34 @@ export class GameManager {
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(cardToBuy.name));
 
       this.aiBuyImperiumCards(playerId, availablePersuasion - ((cardToBuy.persuasionCosts ?? 0) + costModifier));
+    }
+  }
+
+  private aiBuyPlotCards(playerId: number, availablePersuasion: number) {
+    const player = this.playerManager.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+
+    const imperiumRowPlots = this.cardsService.imperiumRow.filter((x) => x.type === 'plot') as ImperiumRowPlot[];
+    const imperiumRowModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'imperiumRow');
+
+    const plotToBuy = this.aIManager.getPlotToBuy(availablePersuasion, imperiumRowPlots, player, imperiumRowModifiers);
+    if (plotToBuy) {
+      const costModifier = getCardCostModifier(plotToBuy, imperiumRowModifiers);
+      if (plotToBuy.persuasionCosts) {
+        this.playerManager.addPersuasionSpentToPlayer(playerId, plotToBuy.persuasionCosts + costModifier);
+      }
+      // if (cardToBuy.buyEffects) {
+      //   for (const effect of cardToBuy.buyEffects) {
+      //     this.addRewardToPlayer(player, effect);
+      //   }
+      // }
+
+      // this.aiResolveRewardChoices(player);
+      this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, plotToBuy);
+
+      this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(plotToBuy.name));
     }
   }
 
@@ -1973,6 +2004,12 @@ export class GameManager {
   acquirePlayerTechTile(playerId: number, techTile: TechTileCard) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
+      return;
+    }
+
+    const canBuyTech = this.turnInfoService.getPlayerTurnInfo(playerId)?.canBuyTech;
+    if (!canBuyTech) {
+      this.notificationService.showWarning(this.t.translate('techBoardWarningNoTechGainedThisTurn'));
       return;
     }
 
@@ -2519,6 +2556,7 @@ export class GameManager {
       if (element.type === 'tech-tile') {
         this.techTilesService.flipTechTile(element.object.id);
         this.audioManager.playSound('tech-tile');
+        this.turnInfoService.updatePlayerTurnInfo(player.id, { techTilesFlippedThisTurn: [element.object] });
         this.loggingService.logPlayerPlayedTechTile(player.id, this.t.translateLS(element.object.name));
       }
     } else if (reward.type === 'combat') {
@@ -2595,6 +2633,8 @@ export class GameManager {
     } else if (costType === 'tech-tile-flip' && element) {
       if (element.type === 'tech-tile') {
         this.techTilesService.flipTechTile(element.object.id);
+        this.audioManager.playSound('tech-tile');
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { techTilesFlippedThisTurn: [element.object] });
         this.loggingService.logPlayerPlayedTechTile(playerId, this.t.translateLS(element.object.name));
       }
     }

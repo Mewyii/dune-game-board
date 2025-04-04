@@ -28,6 +28,8 @@ export const deLocale: Locale = {
   playerboardWarningNotEnoughResources: 'Du hast zu wenig Resourcen ',
   playerboardWarningCardNeededToPlaceAgent: 'Spiele eine Karte um einen Agenten zu platzieren',
   playerboardWarningCardNeedsToHaveFieldAccess: 'Du kannst mit dieser Karte keinen Agenten auf diesem Feld platzieren',
+  techBoardWarningNoTechGainedThisTurn:
+    'Du kannst keine Technologieplättchen kaufen, da du in diesem Zug keine Technologie erhalten hast',
   imperiumrowHeading: 'Imperium-Reihe',
   gamemanualFullscreenHeading: 'Vollbild',
   gamemanualFullscreenText: 'Verwende diese App am besten im Vollbild-Modus.',
@@ -39,6 +41,7 @@ export const deLocale: Locale = {
   turninfosCardsBought: 'Erworbene Karten',
   turninfosCardsTrashed: 'Entsorgte Karten',
   turninfosIntriguesPlayed: 'Gespielte Intrigen',
+  turninfosTechTilesFlipped: 'Aktivierte Tech-Plättchen',
   turninfosTechTilesBought: 'Gekaufte Tech-Plättchen',
   turninfosFieldsVisited: 'Besuchte Felder',
   gameSummaryDialogTitle: 'Spielübersicht',

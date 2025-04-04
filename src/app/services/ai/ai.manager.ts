@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { getNumberAverage, normalizeNumber, randomizeArray } from '../../helpers/common';
 import { GameState, AIGoals, AIPersonality, FieldsForGoals, GoalModifier } from './models';
@@ -20,7 +20,7 @@ import {
   StructuredChoiceEffect,
 } from 'src/app/models';
 import { getAccumulatedSpice, getDesire, getResourceAmount } from './shared/ai-goal-functions';
-import { ImperiumDeckCard, ImperiumRowCard } from '../cards.service';
+import { ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from '../cards.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
@@ -570,7 +570,7 @@ export class AIManager {
     return undefined;
   }
 
-  getCardToBuy(
+  getImperiumCardToBuy(
     availablePersuasion: number,
     cards: ImperiumDeckCard[],
     player: Player,
@@ -587,6 +587,21 @@ export class AIManager {
       });
       cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
       return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
+  getPlotToBuy(
+    availablePersuasion: number,
+    cards: ImperiumRowPlot[],
+    player: Player,
+    imperiumRowModifiers?: ImperiumRowModifier[]
+  ) {
+    const buyableCards = cards.filter(
+      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion
+    );
+    if (buyableCards.length > 0) {
+      return shuffle(buyableCards)[0];
     }
     return undefined;
   }

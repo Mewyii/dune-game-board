@@ -8,7 +8,11 @@
       <div class="card-area" [style]="'margin-top: 25px'"></div>
       <div class="card-area"></div>
       <div class="card-area"></div>
-      <div class="agent-area" (click)="onAddTechAgentClicked()" (contextmenu)="onRemoveTechAgentClicked()">
+      <div
+        [class]="'agent-area ' + (playerCanBuyTech ? 'active' : '')"
+        (click)="onAddTechAgentClicked()"
+        (contextmenu)="onRemoveTechAgentClicked()"
+      >
         <div class="agent-container"></div>
         <div class="logo-container">
           <div class="logo" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>

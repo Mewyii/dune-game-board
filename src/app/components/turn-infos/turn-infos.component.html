@@ -1,11 +1,19 @@
 @if (playerTurnInfo) {
 <div class="turn-infos-container font-scifi">
-  @if (playerTurnInfo.fieldsVisitedThisTurn.length > 0) {
+  @if (playerTurnInfo.cardsPlayedThisTurn.length > 0 && playerTurnInfo.fieldsVisitedThisTurn.length > 0) {
   <div class="turn-info-container">
     <div class="turn-info-title">{{ t.translate('turninfosFieldsVisited') }}</div>
     <div class="cards-container">
-      @for (field of playerTurnInfo.fieldsVisitedThisTurn; track $index) {
-      <app-dune-action [actionField]="field" [disabled]="true" [backgroundColor]="getColor(field)"></app-dune-action>
+      @for (field of playerTurnInfo.fieldsVisitedThisTurn; track $index;let i = $index) {
+      <div class="agent-placement-container">
+        @if (playerTurnInfo.cardsPlayedThisTurn[i]) {
+        <div class="card-container">
+          <dune-imperium-row-card class="small" [card]="playerTurnInfo.cardsPlayedThisTurn[i]"></dune-imperium-row-card>
+        </div>
+        <img class="reward" [src]="getEffectTypePath('helper-trade')" />
+        }
+        <app-dune-action [actionField]="field" [disabled]="true" [backgroundColor]="getColor(field)"></app-dune-action>
+      </div>
       }
     </div>
   </div>
@@ -16,7 +24,9 @@
       @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) { @if (card.type === 'imperium-card') {
       <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
       } @if (card.type === 'plot') {
-      <dune-plot-card [plot]="card"></dune-plot-card>
+      <div class="card-container">
+        <dune-plot-card [plot]="card"></dune-plot-card>
+      </div>
       } }
     </div>
   </div>
@@ -25,7 +35,9 @@
     <div class="turn-info-title">{{ t.translate('turninfosCardsTrashed') }}</div>
     <div class="cards-container">
       @for (card of playerTurnInfo.cardsTrashedThisTurn; track $index) {
-      <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+      <div class="card-container">
+        <dune-imperium-row-card class="small" [card]="card"></dune-imperium-row-card>
+      </div>
       }
     </div>
   </div>
@@ -34,7 +46,18 @@
     <div class="turn-info-title">{{ t.translate('turninfosIntriguesPlayed') }}</div>
     <div class="cards-container">
       @for (card of playerTurnInfo.intriguesPlayedThisTurn; track $index) {
-      <dune-intrigue-card [card]="card"></dune-intrigue-card>
+      <div class="intrigue-card-container">
+        <dune-intrigue-card [card]="card"></dune-intrigue-card>
+      </div>
+      }
+    </div>
+  </div>
+  } @if (playerTurnInfo.techTilesFlippedThisTurn.length > 0) {
+  <div class="turn-info-container">
+    <div class="turn-info-title">{{ t.translate('turninfosTechTilesFlipped') }}</div>
+    <div class="cards-container">
+      @for (card of playerTurnInfo.techTilesFlippedThisTurn; track $index) {
+      <dune-tech-tile [card]="card"></dune-tech-tile>
       }
     </div>
   </div>

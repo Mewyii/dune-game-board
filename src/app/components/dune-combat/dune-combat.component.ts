@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { EffectType, EffectRewardType } from 'src/app/models';
+import { EffectType } from 'src/app/models';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
@@ -9,6 +9,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SettingsService } from 'src/app/services/settings.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { Player } from 'src/app/models/player';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 export interface CombatScore {
   playerId: number;
@@ -42,7 +43,8 @@ export class DuneCombatComponent implements OnInit {
     public combatManager: CombatManager,
     public playerManager: PlayersService,
     public settingsService: SettingsService,
-    private audioManager: AudioManager
+    private audioManager: AudioManager,
+    private turnInfoService: TurnInfoService
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +57,10 @@ export class DuneCombatComponent implements OnInit {
 
     this.playerManager.players$.subscribe((players) => {
       this.players = players;
+    });
+
+    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+      this.activeGarrisonPlayerId = turnInfos.find((x) => x.canEnterCombat)?.playerId ?? 0;
     });
   }
 
@@ -78,25 +84,6 @@ export class DuneCombatComponent implements OnInit {
     this.audioManager.playSound('click');
     this.combatManager.removePlayerShipsFromCombat(playerId, 1);
     return false;
-  }
-
-  public onAddAdditionalCombatPowerToPlayer(playerId: number) {
-    this.audioManager.playSound('sword');
-    this.combatManager.addAdditionalCombatPowerToPlayer(playerId, 1);
-  }
-
-  public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
-    this.audioManager.playSound('sword');
-    this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
-    return false;
-  }
-
-  public setActiveGarrisonPlayerId(playerId: number) {
-    if (this.activeGarrisonPlayerId !== playerId) {
-      this.activeGarrisonPlayerId = playerId;
-    } else {
-      this.activeGarrisonPlayerId = 0;
-    }
   }
 
   public getEffectTypePath(effectType: EffectType) {

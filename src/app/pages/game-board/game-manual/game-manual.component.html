@@ -47,7 +47,7 @@
     <br />
     <div
       [innerHTML]="
-        '{resource:focus}: You get one focus. At your reveal turn, you can use it to trash a card. This way, you still get the reveal effect of a card before trashing it.'
+        '{resource:focus}: You get one focus. At your reveal turn, you can use it to trash a card. You still get the cards reveal effect.'
           | duneSymbols : '24px'
       "
     ></div>
@@ -65,7 +65,7 @@
       "
     ></div>
     <br />
-    <div [innerHTML]="'{resource:trash-self}: Immediately trash the played card.' | duneSymbols : '24px'"></div>
+    <div [innerHTML]="'{resource:trash-self}: Immediately trash this card.' | duneSymbols : '24px'"></div>
     <br />
     <div
       [innerHTML]="
@@ -74,11 +74,9 @@
       "
     ></div>
     <br />
-    <div [innerHTML]="'{resource:card-round-start}: Draw one additional card at round start.' | duneSymbols : '24px'"></div>
-    <br />
     <div
       [innerHTML]="
-        '{resource:tech}: You can decide wether to buy a tech tile or add one technology token to the ix board.'
+        '{resource:tech}: Get one technology. Whenever you gain technology, you can buy tech tiles with it.'
           | duneSymbols : '24px'
       "
     ></div>

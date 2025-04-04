@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isActiveFactionType, isFactionType } from 'src/app/helpers/faction-types';
-import { ActionField, ActionType, FactionType } from 'src/app/models';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { ActionField, ActionType, EffectType, FactionType } from 'src/app/models';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -46,5 +47,9 @@ export class TurnInfosComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  public getEffectTypePath(effectType: EffectType) {
+    return getEffectTypePath(effectType);
   }
 }

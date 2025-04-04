@@ -16,19 +16,58 @@
 
 .turn-info-container {
   background-color: #45382f;
-  padding: 16px;
+  padding: 24px;
   border-radius: 5px;
   filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
   z-index: 3;
 }
 
 .turn-info-title {
-  margin-bottom: 12px;
+  margin-bottom: 24px;
   text-align: center;
+  font-size: large;
 }
 
 .cards-container {
   display: flex;
   justify-content: center;
   gap: 16px;
+}
+
+.agent-placement-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reward {
+  height: 48px;
+}
+
+.card-container {
+  height: 274px;
+  width: 189px;
+  position: relative;
+}
+
+dune-imperium-row-card.small {
+  display: block;
+  transform: scale(0.75);
+  position: absolute;
+  top: -45px;
+  left: -30px;
+}
+
+.intrigue-card-container {
+  height: 192px;
+  width: 128px;
+  position: relative;
+}
+
+dune-intrigue-card {
+  display: block;
+  transform: scale(0.75);
+  position: absolute;
+  top: -30px;
+  left: -20px;
 }

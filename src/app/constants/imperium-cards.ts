@@ -141,7 +141,7 @@ export const imperiumCards: ImperiumCard[] = [
       en: 'Twisted Mentat',
       de: 'Verderbter Mentat',
     },
-    persuasionCosts: 6,
+    persuasionCosts: 7,
     fieldAccess: ['landsraad'],
     imageUrl: '/assets/images/action-backgrounds/twisted_mentat.png',
     cardAmount: 2,

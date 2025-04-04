@@ -356,6 +356,25 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
+  public onAddAdditionalCombatPowerToPlayer(playerId: number) {
+    this.audioManager.playSound('sword');
+    this.combatManager.addAdditionalCombatPowerToPlayer(playerId, 1);
+  }
+
+  public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
+    this.audioManager.playSound('sword');
+    this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
+    return false;
+  }
+
+  public onPlayerCanEnterCombatClicked(playerId: number) {
+    this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: !this.turnInfos?.canEnterCombat });
+  }
+
+  public onPlayerCanBuyTechClicked(playerId: number) {
+    this.turnInfoService.setPlayerTurnInfo(playerId, { canBuyTech: !this.turnInfos?.canBuyTech });
+  }
+
   public onAIIncreaseInfluenceChoiceClicked(playerId: number) {
     this.gameManager.aiIncreaseInfluenceChoice(playerId);
   }

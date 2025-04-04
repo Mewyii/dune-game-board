@@ -75,7 +75,24 @@
           </div>
         </div>
       </div>
-      <div class="info-container"></div>
+      <div class="info-container">
+        <div class="resource-container">
+          <div class="resource-display" (click)="onPlayerCanEnterCombatClicked(currentPlayer.id)">
+            <img
+              [class]="'resource ' + (turnInfos?.canEnterCombat ? 'enabled' : 'disabled')"
+              [src]="getEffectTypePath('combat')"
+            />
+          </div>
+        </div>
+        <div class="resource-container">
+          <div class="resource-display" (click)="onPlayerCanBuyTechClicked(currentPlayer.id)">
+            <img
+              [class]="'resource ' + (turnInfos?.canBuyTech ? 'enabled' : 'disabled')"
+              [src]="getEffectTypePath('tech-tile')"
+            />
+          </div>
+        </div>
+      </div>
       <div class="info-container right">
         <div class="resource-container">
           <div
@@ -165,6 +182,18 @@
             <img class="resource" [src]="getEffectTypePath('persuasion')" />
             <div class="resource-amount on-background">
               <span>{{ currentPlayer.persuasionGainedThisRound }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="resource-container">
+          <div
+            class="resource-display swords-button"
+            (click)="onAddAdditionalCombatPowerToPlayer(currentPlayer.id)"
+            (contextmenu)="onRemoveAdditionalCombatPowerFromPlayer(currentPlayer.id)"
+            stopPropagationClick
+          >
+            <div class="resource-amount on-background">
+              <span>{{ currentPlayerCombatUnits?.additionalCombatPower }}</span>
             </div>
           </div>
         </div>

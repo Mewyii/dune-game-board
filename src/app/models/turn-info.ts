@@ -24,9 +24,11 @@ export interface TurnInfo {
   locationControlAmount: number;
   signetRingAmount: number;
   factionRecruitment: ActiveFactionType[];
+  cardsPlayedThisTurn: ImperiumDeckCard[];
   cardsBoughtThisTurn: (ImperiumDeckCard | ImperiumDeckPlot)[];
   cardsTrashedThisTurn: ImperiumDeckCard[];
   intriguesPlayedThisTurn: IntrigueDeckCard[];
+  techTilesFlippedThisTurn: TechTileCard[];
   techTilesBoughtThisTurn: TechTileCard[];
   fieldsVisitedThisTurn: ActionField[];
   isDoingAIActions: boolean;

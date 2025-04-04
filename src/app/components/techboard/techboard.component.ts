@@ -4,6 +4,7 @@ import { PlayersService } from 'src/app/services/players.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
   selector: 'app-techboard',
@@ -17,11 +18,14 @@ export class TechboardComponent implements OnInit {
   public activePlayerId = 0;
   public playerTech: { playerId: number; amount: number }[] = [];
 
+  public playerCanBuyTech = false;
+
   constructor(
     public playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     private gameManager: GameManager,
-    private audioManager: AudioManager
+    private audioManager: AudioManager,
+    private turnInfoService: TurnInfoService
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +35,10 @@ export class TechboardComponent implements OnInit {
 
     this.playerManager.players$.subscribe((players) => {
       this.playerTech = players.map((x) => ({ playerId: x.id, amount: x.tech }));
+    });
+
+    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+      this.playerCanBuyTech = turnInfos.some((x) => x.canBuyTech);
     });
   }
 
