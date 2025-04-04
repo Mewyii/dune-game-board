@@ -38,7 +38,7 @@
   box-shadow: inset 0px 0px 20px 2px #e7dbbb;
   backdrop-filter: blur(5px);
   filter: blur(4px);
-  transition: 0.66s;
+  transition: 0.7s;
 }
 
 .units-gathering-area:hover,
@@ -190,7 +190,7 @@
   flex-wrap: wrap;
   width: 175px;
   gap: 2px;
-  transition: 0.66s;
+  transition: 0.7s;
 }
 
 .units-in-garrison-container:hover {
@@ -286,7 +286,7 @@
   mask-mode: luminance;
   z-index: 1;
   background-color: #830e0e;
-  transition: 0.66s;
+  transition: 0.7s;
 }
 
 .ship-button {
@@ -299,7 +299,7 @@
   mask-mode: luminance;
   z-index: 1;
   background-color: #830e0e;
-  transition: 0.66s;
+  transition: 0.7s;
 }
 
 .troop-button:hover,
@@ -318,7 +318,7 @@
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  transition: 0.66s;
+  transition: 0.7s;
 }
 
 .swords-button:hover {
