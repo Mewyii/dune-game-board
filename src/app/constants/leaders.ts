@@ -70,8 +70,8 @@ export const leaders: Leader[] = [
       de: 'Pflanzen des Paradieses',
     },
     signetDescription: {
-      en: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:2}{resource:helper-trade}{resource:victory-point}',
-      de: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:2}{resource:helper-trade}{resource:victory-point}',
+      en: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:3}{resource:helper-trade}{resource:victory-point}',
+      de: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:3}{resource:helper-trade}{resource:victory-point}',
     },
     imageUrl: '/assets/images/leaders/liet.png',
     playableByAI: true,
@@ -113,16 +113,16 @@ export const leaders: Leader[] = [
       de: 'Fremenbande',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: Fremen cards cost {resource:persuasion;amount:1} less to acquire (min. 1).',
-      de: '<b>Aufdeckzug</b>: Du kannst Fremen-Karten für {resource:persuasion;amount:1} weniger erwerben (min. 1).',
+      en: 'Fremen cards cost {resource:persuasion;amount:1} less to acquire (min. 1).',
+      de: 'Du kannst Fremen-Karten für {resource:persuasion;amount:1} weniger erwerben (min. 1).',
     },
     signetName: {
       en: 'Child of the desert',
       de: 'Kind der Wüste',
     },
     signetDescription: {
-      en: 'Access to {faction:spice} board spaces costs {resource:water} less.',
-      de: 'Der Zugang zu {faction:spice}-Feldern kostet {resource:water} weniger.',
+      en: '{resource:signet-token}. You may trash it to reduce {resource:water}-costs of {faction:spice} board spaces by <b>1</b>.',
+      de: '{resource:signet-token}. Du kannst es entsorgen, um {resource:water}-Kosten für {faction:spice}-Felder um <b>1</b> zu reduzieren.',
     },
     imageUrl: '/assets/images/leaders/chani.png',
     playableByAI: true,
@@ -477,7 +477,7 @@ export const leaders: Leader[] = [
       en: 'Thorough approach',
     },
     signetDescription: {
-      de: '{resource:signet-token}. Du kannst ihn entsorgen, wenn du {resource:solari}, {resource:spice} oder {resource:water} erhältst, um davon 1 mehr zu erhalten.',
+      de: '{resource:signet-token}. Du kannst es entsorgen, wenn du {resource:solari}, {resource:spice} oder {resource:water} erhältst, um davon 1 mehr zu erhalten.',
       en: '{resource:signet-token}. You may trash it when you receive {resource:solari}, {resource:spice} or {resource:water} to get +1 of it.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',

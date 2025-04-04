@@ -14,7 +14,7 @@ export interface PlayerLeader {
   providedIn: 'root',
 })
 export class LeadersService {
-  private leadersSubject = new BehaviorSubject<Leader[]>([...leaders]);
+  private leadersSubject = new BehaviorSubject<Leader[]>(leaders);
   public leaders$ = this.leadersSubject.asObservable();
   public leaders: Leader[] = [];
 
@@ -25,12 +25,12 @@ export class LeadersService {
   constructor() {
     const leadersString = localStorage.getItem('leaders');
     if (leadersString) {
-      const leaderss = JSON.parse(leadersString) as Leader[];
+      const storedLeaders = JSON.parse(leadersString) as Leader[];
 
       // Workaround for local storage not being able to store functions
-      const realLeaders = leaderss.map((x) => {
-        const techTile = [...leaders].find((y) => y.name.en === x.name.en);
-        return techTile ?? x;
+      const realLeaders = storedLeaders.map((x) => {
+        const leader = leaders.find((y) => y.name.en === x.name.en);
+        return { ...leader, ...x };
       });
 
       this.leadersSubject.next(realLeaders);
