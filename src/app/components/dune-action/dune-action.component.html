@@ -25,19 +25,19 @@
             </div>
           </div>
         </ng-container>
-        <ng-container *ngFor="let costs of actionCosts">
-          <ng-container *ngIf="!costs.amount">
-            <img [class]="'costs ' + costs.modifier" [src]="getEffectTypePath(costs.type)" />
-          </ng-container>
-          <ng-container *ngIf="costs.amount">
-            <div class="costs-container">
-              <img [class]="'costs ' + costs.modifier" [src]="getEffectTypePath(costs.type)" />
-              <div [class]="'costs-amount '">
-                {{ costs.amount }}
-              </div>
-            </div>
-          </ng-container>
+        @for (costs of actionCosts; track $index) {
+        <ng-container *ngIf="!costs.amount">
+          <img [class]="'costs ' + costs.modifier" [src]="getEffectTypePath(costs.type)" />
         </ng-container>
+        <ng-container *ngIf="costs.amount">
+          <div class="costs-container">
+            <img [class]="'costs ' + costs.modifier" [src]="getEffectTypePath(costs.type)" />
+            <div [class]="'costs-amount '">
+              {{ costs.amount }}
+            </div>
+          </div>
+        </ng-container>
+        }
       </div>
     </div>
     <div
@@ -48,51 +48,53 @@
       [style.column-gap]="actionField.noColumnGap ? '0px' : ''"
       [style.backgroundImage]="backgroundGradient"
     >
-      <ng-container *ngFor="let rewardType of actionRewards">
-        <div
-          [class]="'reward-container ' + rewardType.type"
-          [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
-        >
-          <img
-            [class]="
-              'reward ' +
-              rewardType.type +
-              ' ' +
-              rewardType.modifier +
-              (rewardType.type === 'spice-accumulation' ? ' pointer' : '')
-            "
-            [src]="getEffectTypePath(rewardType.type)"
-            [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
-            [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
-            (click)="onRewardClicked(actionField.title.en, rewardType.type)"
-            (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
-          />
-          <div *ngIf="rewardType.amount" class="reward-amount">
-            <span>{{ rewardType.amount }}</span>
-          </div>
+      @for (rewardType of actionRewards; track $index) {
+      <div
+        [class]="'reward-container ' + rewardType.type"
+        [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+      >
+        <img
+          [class]="
+            'reward ' +
+            rewardType.type +
+            ' ' +
+            rewardType.modifier +
+            (rewardType.type === 'spice-accumulation' ? ' pointer' : '')
+          "
+          [src]="getEffectTypePath(rewardType.type)"
+          [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+          [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
+          (click)="onRewardClicked(actionField.title.en, rewardType.type)"
+          (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
+        />
+        <div *ngIf="rewardType.amount" class="reward-amount">
+          <span>{{ rewardType.amount }}</span>
         </div>
-      </ng-container>
+      </div>
+      }
       <div class="conversions-container" *ngIf="actionField.conversionOptions">
-        <div class="conversion-container" *ngFor="let conversion of actionField.conversionOptions">
-          <ng-container *ngFor="let rewardType of conversion">
-            <div
-              [class]="'reward-container ' + rewardType.type"
-              [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
-            >
-              <img
-                [class]="'reward '"
-                [src]="getEffectTypePath(rewardType.type)"
-                [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
-                [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
-                (click)="onRewardClicked(actionField.title.en, rewardType.type)"
-                (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
-              />
-              <div *ngIf="rewardType.amount" class="reward-amount">
-                <span>{{ rewardType.amount }}</span>
-              </div>
+        @for (conversion of actionField.conversionOptions; track $index) {
+        <div class="conversion-container">
+          @for (rewardType of conversion; track $index) {
+          <div
+            [class]="'reward-container ' + rewardType.type"
+            [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+          >
+            <img
+              [class]="'reward '"
+              [src]="getEffectTypePath(rewardType.type)"
+              [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+              [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
+              (click)="onRewardClicked(actionField.title.en, rewardType.type)"
+              (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
+            />
+            <div *ngIf="rewardType.amount" class="reward-amount">
+              <span>{{ rewardType.amount }}</span>
             </div>
-          </ng-container>
+          </div>
+          }
         </div>
+        }
       </div>
     </div>
   </div>
@@ -104,20 +106,20 @@
   >
     <dune-marker [type]="'ornithopter'"></dune-marker>
   </div>
-  <ng-container *ngFor="let player of additionalPlayersOnField; let i = index; trackBy: trackPlayersOnField">
-    <div class="player-marker small" [style.color]="player.color" [style.top]="40 + i * 35 + 'px'">
-      <dune-marker [type]="'ornithopter'"></dune-marker>
-    </div>
-  </ng-container>
+  @for (player of additionalPlayersOnField; track trackPlayersOnField; let i = $index) {
+  <div class="player-marker small" [style.color]="player.color" [style.top]="40 + i * 35 + 'px'">
+    <dune-marker [type]="'ornithopter'"></dune-marker>
+  </div>
+  }
   <div class="spice-accumulation-area" *ngIf="accumulatedSpice">
-    <ng-container *ngFor="let spice of accumulatedSpice | numberToArray; trackBy: trackSpiceOnField">
-      <div class="spice-accumulation-marker"></div>
-    </ng-container>
+    @for (spice of accumulatedSpice | numberToArray; track trackSpiceOnField) {
+    <div class="spice-accumulation-marker"></div>
+    }
   </div>
   <div class="high-council-indicator-area" *ngIf="isHighCouncilField">
-    <ng-container *ngFor="let seatColor of highCouncilSeats">
-      <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
-    </ng-container>
+    @for (seatColor of highCouncilSeats; track $index) {
+    <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
+    }
   </div>
   <ng-container *ngIf="!disabled && canPlaceFieldMarkers">
     <button

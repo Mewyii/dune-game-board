@@ -34,12 +34,11 @@
       [options]="spiceGlitter"
       [particlesInit]="initSpiceGlitter"
     ></ng-particles>
-    <ng-container *ngFor="let faction of gameContent.factions">
-      <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
-    </ng-container>
-    <ng-container *ngFor="let location of gameContent.locations">
-      <app-dune-location [location]="location"></app-dune-location>
-    </ng-container>
+    @for (faction of gameContent.factions; track $index) {
+    <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
+    } @for (location of gameContent.locations; track $index) {
+    <app-dune-location [location]="location"></app-dune-location>
+    }
     <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
     <app-scoreboard [mode]="mode"></app-scoreboard>
     <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>

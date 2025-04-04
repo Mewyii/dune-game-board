@@ -11,13 +11,13 @@
       {{ factionName.toUpperCase() }}
     </div>
     <div class="field-access-container">
-      <ng-container *ngFor="let access of card.fieldAccess">
-        <div [class]="'field-access ' + (card.canInfiltrate ? 'infiltration' : '')">
-          <img class="field-access-image" [src]="getActionTypePath(access)" />
-          @if (card.canInfiltrate) {
-          <img class="field-access-image" [src]="'assets/images/action-types/action_type_infiltration.png'" /> }
-        </div>
-      </ng-container>
+      @for (access of card.fieldAccess; track $index) {
+      <div [class]="'field-access ' + (card.canInfiltrate ? 'infiltration' : '')">
+        <img class="field-access-image" [src]="getActionTypePath(access)" />
+        @if (card.canInfiltrate) {
+        <img class="field-access-image" [src]="'assets/images/action-types/action_type_infiltration.png'" /> }
+      </div>
+      }
     </div>
   </div>
   <div

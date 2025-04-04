@@ -45,7 +45,8 @@
   <ng-container *ngIf="playerRewardChoices">
     @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
     <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
-      <div *ngFor="let reward of rewardsChoice.choice">
+      @for (reward of rewardsChoice.choice; track $index) {
+      <div>
         <div class="reward-container">
           <img class="reward" [src]="getEffectTypePath(reward.type)" />
           <ng-container *ngIf="reward.amount">
@@ -55,6 +56,7 @@
           </ng-container>
         </div>
       </div>
+      }
     </div>
     } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
     <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">

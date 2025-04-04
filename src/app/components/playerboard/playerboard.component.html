@@ -30,7 +30,8 @@
       <div class="turn-state font-medieval">{{ turnState.toUpperCase() }}</div>
     </div>
   </div>
-  <div class="player-container" *ngFor="let player of players">
+  @for (player of players; track $index) {
+  <div class="player-container">
     <div class="player-heading font-medieval">
       <div
         class="player-name {{ player.id === gameManager.activePlayerId ? 'highlighted' : '' }}"
@@ -52,15 +53,15 @@
       <div *ngIf="gameManager.currentRound != 0 && player.isAI" class="ai-label">AI</div>
     </div>
     <div class="agent-area">
-      <ng-container *ngFor="let object of player.agents + 1 | numberToArray; let i = index">
-        <div class="agents-icon-container">
-          <div
-            class="agents-icon"
-            [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
-            [style.background-color]="player.color"
-          ></div>
-        </div>
-      </ng-container>
+      @for (object of player.agents + 1 | numberToArray; track $index; let i = $index) {
+      <div class="agents-icon-container">
+        <div
+          class="agents-icon"
+          [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
+          [style.background-color]="player.color"
+        ></div>
+      </div>
+      }
     </div>
     <div class="cards-area">
       <div class="resource-display">
@@ -83,7 +84,8 @@
       </div>
     </div>
     <div class="resource-area">
-      <div class="resource-container" *ngFor="let resource of player.resources">
+      @for (resource of player.resources; track $index) {
+      <div class="resource-container">
         <div class="resource-display">
           <img class="resource" [src]="getEffectTypePath(resource.type)" />
           <div class="resource-amount">
@@ -91,6 +93,7 @@
           </div>
         </div>
       </div>
+      }
     </div>
     <div class="cards-area">
       <div class="resource-display">
@@ -101,6 +104,7 @@
       </div>
     </div>
   </div>
+  }
   <div class="action-container" [style]="'padding-bottom: 48px'">
     <button
       *ngIf="!currentTurn"

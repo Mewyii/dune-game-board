@@ -13,17 +13,17 @@
         <div class="logo-container">
           <div class="logo" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
         </div>
-        <ng-container *ngFor="let tech of playerTech; let i = index">
-          <div
-            class="tech-agent-container"
-            [style.bottom]="10 + (i > 0 && i < 3 ? 60 : 0) + 'px'"
-            [style.left]="10 + (i > 1 ? 95 : 0) + 'px'"
-          >
-            <ng-container *ngFor="let ship of tech.amount | numberToArray; let is = index">
-              <div class="tech-agent-marker" [style.background-color]="getPlayerColor(tech.playerId)"></div>
-            </ng-container>
-          </div>
-        </ng-container>
+        @for (tech of playerTech; track $index; let i = $index) {
+        <div
+          class="tech-agent-container"
+          [style.bottom]="10 + (i > 0 && i < 3 ? 60 : 0) + 'px'"
+          [style.left]="10 + (i > 1 ? 95 : 0) + 'px'"
+        >
+          @for (marker of tech.amount | numberToArray; track $index; let is = $index) {
+          <div class="tech-agent-marker" [style.background-color]="getPlayerColor(tech.playerId)"></div>
+          }
+        </div>
+        }
       </div>
     </ng-container>
   </div>

@@ -1,39 +1,39 @@
 <div class="scoreboard-tile top">
-  <ng-container *ngFor="let score of scoreArray; let i = index; let last = last">
-    <div
-      class="score-element light"
-      [class.finale-four-players]="i > finaleTrigger - 1"
-      [class.finale-three-players]="i > finaleTrigger"
+  @for (score of scoreArray; track $index; let i = $index; let last = $last) {
+  <div
+    class="score-element light"
+    [class.finale-four-players]="i > finaleTrigger - 1"
+    [class.finale-three-players]="i > finaleTrigger"
+  >
+    <div class="score">{{ i }}</div>
+    <ng-container *ngIf="victoryPointBoni"
+      ><ng-container *ngIf="scoreHasReward(i)">
+        <div class="reward-container">
+          <img class="reward" [src]="getEffectTypePath(i)" />
+          <ng-container *ngIf="getRewardAmount(i)">
+            <div class="reward-amount">
+              {{ getRewardAmount(i) }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container></ng-container
     >
-      <div class="score">{{ i }}</div>
-      <ng-container *ngIf="victoryPointBoni"
-        ><ng-container *ngIf="scoreHasReward(i)">
-          <div class="reward-container">
-            <img class="reward" [src]="getEffectTypePath(i)" />
-            <ng-container *ngIf="getRewardAmount(i)">
-              <div class="reward-amount">
-                {{ getRewardAmount(i) }}
-              </div>
-            </ng-container>
-          </div>
-        </ng-container></ng-container
-      >
-    </div>
-    <div
-      *ngIf="!last"
-      class="divider light"
-      [class.finale-four-players]="i === finaleTrigger - 1"
-      [class.finale-three-players]="i === finaleTrigger"
-    ></div>
-  </ng-container>
+  </div>
+  <div
+    *ngIf="!last"
+    class="divider light"
+    [class.finale-four-players]="i === finaleTrigger - 1"
+    [class.finale-three-players]="i === finaleTrigger"
+  ></div>
+  }
   <ng-container *ngIf="mode === 'game'">
-    <ng-container *ngFor="let playerScore of playerVictoryPoints; let i = index; trackBy: trackPlayerScore">
-      <div
-        class="score-marker"
-        [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 163 + 'px'"
-        [style.top]="10 + (i % 2 === 0 ? 0 : 40) + 'px'"
-        [style.background-color]="getPlayerColor(playerScore.playerId)"
-      ></div>
-    </ng-container>
+    @for (playerScore of playerVictoryPoints; track trackPlayerScore; let i = $index) {
+    <div
+      class="score-marker"
+      [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 163 + 'px'"
+      [style.top]="10 + (i % 2 === 0 ? 0 : 40) + 'px'"
+      [style.background-color]="getPlayerColor(playerScore.playerId)"
+    ></div>
+    }
   </ng-container>
 </div>
