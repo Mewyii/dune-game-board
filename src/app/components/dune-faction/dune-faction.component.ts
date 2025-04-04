@@ -127,7 +127,7 @@ export class DuneFactionComponent implements OnInit {
     return this.excludedPlayers.includes(playerId);
   }
 
-  public trackPlayerScore(index: number, playerScore: { playerId: number; score: number }) {
+  public trackPlayerScore(playerScore: { playerId: number; score: number }) {
     return playerScore.playerId * 100 + playerScore.score;
   }
 }

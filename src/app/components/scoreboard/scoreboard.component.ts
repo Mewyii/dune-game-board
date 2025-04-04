@@ -60,7 +60,7 @@ export class ScoreboardComponent implements OnInit {
     return reward ? getEffectTypePath(reward.reward.type) : '';
   }
 
-  public trackPlayerScore(index: number, playerScore: { playerId: number; amount: number }) {
+  public trackPlayerScore(playerScore: { playerId: number; amount: number }) {
     return playerScore.playerId * 100 + playerScore.amount;
   }
 }

@@ -21,13 +21,13 @@
       ></div>
     </div>
     <ng-container *ngIf="settingsService.mode === 'game'">
-      @for (combatUnits of playerCombatUnits; track trackCombatUnits; let i = $index) {
+      @for (combatUnits of playerCombatUnits; track trackCombatUnits(combatUnits); let i = $index) {
       <div
         class="units-in-timeout-container"
         [style.top]="190 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
         [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
       >
-        @for (ship of combatUnits.shipsInTimeout | numberToArray; track trackCount; let is = $index) {
+        @for (ship of combatUnits.shipsInTimeout | numberToArray; track $index; let is = $index) {
         <div class="ship-marker timeout"></div>
         }
       </div>
@@ -37,11 +37,11 @@
         [style.left]="55 + (i > 0 ? 215 : 0) + (i > 1 ? 430 : 0) + (i > 2 ? 200 : 0) + 'px'"
         (click)="setActiveGarrisonPlayerId(combatUnits.playerId)"
       >
-        @for (ship of combatUnits.shipsInGarrison | numberToArray; track trackCount; let is = $index) {
+        @for (ship of combatUnits.shipsInGarrison | numberToArray; track $index; let is = $index) {
         <div class="ship-marker-container">
           <div class="ship-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
         </div>
-        } @for (troop of combatUnits.troopsInGarrison | numberToArray; track trackCount; let it = $index) {
+        } @for (troop of combatUnits.troopsInGarrison | numberToArray; track $index; let it = $index) {
         <div class="troop-marker-container">
           <div class="troop-marker" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
         </div>
@@ -78,11 +78,11 @@
         [style.top]="260 - (i > 0 && i < 3 ? 95 : 0) + 'px'"
         [style.left]="290 - (i > 0 && i < 3 ? 15 : 0) + (i > 1 ? 320 : 0) + 'px'"
       >
-        @for (ship of combatUnits.shipsInCombat | numberToArray; track trackCount; let is = $index) {
+        @for (ship of combatUnits.shipsInCombat | numberToArray; track $index; let is = $index) {
         <div class="ship-marker-container">
           <div class="ship-marker combat" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
         </div>
-        } @for (troop of combatUnits.troopsInCombat | numberToArray; track trackCount; let it = $index) {
+        } @for (troop of combatUnits.troopsInCombat | numberToArray; track $index; let it = $index) {
         <div class="troop-marker-container">
           <div class="troop-marker combat" [style.background-color]="getPlayerColor(combatUnits.playerId)"></div>
         </div>
@@ -99,7 +99,7 @@
       <div class="score">0</div>
       <ng-container *ngIf="settingsService.mode === 'game'">
         <div class="score-container large">
-          @for (playerScore of combatScores; track trackPlayerScore; let i = $index) {
+          @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
           <div
             *ngIf="playerScore.score === 0"
             class="score-marker"
@@ -118,7 +118,7 @@
         <div class="score">{{ scoreIndex + 1 }}</div>
         <ng-container *ngIf="settingsService.mode === 'game'">
           <div class="score-container">
-            @for (playerScore of combatScores; track trackPlayerScore; let i = $index) {
+            @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
             <div
               *ngIf="playerScore.score === scoreIndex + 1"
               class="score-marker"

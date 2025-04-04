@@ -120,19 +120,11 @@ export class DuneCombatComponent implements OnInit {
     return this.playerManager.getPlayerColor(playerId);
   }
 
-  public trackCombatUnits(index: number, combatUnits: PlayerCombatUnits) {
+  public trackCombatUnits(combatUnits: PlayerCombatUnits) {
     return combatUnits.playerId;
   }
 
-  public trackPlayer(index: number, player: Player) {
-    return player.id;
-  }
-
-  public trackCount(index: number, player: Player) {
-    return index;
-  }
-
-  public trackPlayerScore(index: number, playerScore: CombatScore) {
+  public trackPlayerScore(playerScore: CombatScore) {
     return playerScore.playerId * 100 + playerScore.score;
   }
 }
