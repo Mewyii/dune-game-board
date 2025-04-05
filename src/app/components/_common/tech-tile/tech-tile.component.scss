@@ -31,7 +31,7 @@
 .card-img {
   flex: 1 1;
   background-size: cover;
-  border-top: 2px solid rgb(179, 207, 255);
+  border-top: 2px solid rgb(191, 215, 255);
   position: relative;
   background-position: top;
   border-radius: 0px 0px 8px 8px;
@@ -56,7 +56,14 @@
   min-height: 30px;
   padding: 8px;
   background-size: cover;
-  background: linear-gradient(rgba(152, 176, 217, 0.9), 5%, rgba(27, 31, 38, 0.45), 95%, rgba(26, 34, 51, 0.9));
+  background: linear-gradient(
+    rgb(191, 215, 255) -4%,
+    rgba(133, 159, 204, 0.9),
+    5%,
+    rgba(27, 31, 38, 0.45),
+    95%,
+    rgba(26, 34, 51, 0.9)
+  );
   box-sizing: border-box;
   border-radius: 0px 0px 8px 8px;
   flex-wrap: wrap;

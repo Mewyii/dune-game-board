@@ -265,9 +265,8 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddTechClicked() {
-    this.audioManager.playSound('tech-agent');
-    this.playerManager.addTechToPlayer(this.activePlayerId, 1);
+  onAddTechClicked(player: Player) {
+    this.gameManager.addRewardToPlayer(player, { type: 'tech' });
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
