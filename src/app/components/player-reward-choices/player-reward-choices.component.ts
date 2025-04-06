@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, EffectRewardType } from 'src/app/models';
+import { EffectType } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
-import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
+import { PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
 
 @Component({
@@ -10,18 +10,12 @@ import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/service
   templateUrl: './player-reward-choices.component.html',
   styleUrl: './player-reward-choices.component.scss',
 })
-export class PlayerRewardChoicesComponent implements OnInit, AfterViewInit {
-  @ViewChildren('rewardLogs') rewardLogElements!: QueryList<ElementRef>;
-
+export class PlayerRewardChoicesComponent implements OnInit {
   public activePlayerId: number = 0;
   public playerRewardChoices: PlayerRewardChoices | undefined;
   public playerActionLog: PlayerActionLog[] = [];
 
-  constructor(
-    private gameManager: GameManager,
-    private playerRewardChoicesService: PlayerRewardChoicesService,
-    private logService: LoggingService
-  ) {}
+  constructor(private gameManager: GameManager, private playerRewardChoicesService: PlayerRewardChoicesService) {}
 
   ngOnInit(): void {
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
@@ -33,23 +27,6 @@ export class PlayerRewardChoicesComponent implements OnInit, AfterViewInit {
 
     this.playerRewardChoicesService.playerRewardChoices$.subscribe((playerRewardChoices) => {
       this.playerRewardChoices = playerRewardChoices.find((x) => x.playerId === this.activePlayerId);
-    });
-
-    this.logService.playerActionLog$.subscribe((playerActionLog) => {
-      this.playerActionLog = playerActionLog;
-    });
-  }
-
-  ngAfterViewInit() {
-    this.rewardLogElements.changes.subscribe((res) => {
-      setTimeout(() => {
-        if (res.last && res.last.nativeElement) {
-          const parent = (res.last.nativeElement as HTMLDivElement).parentElement;
-          if (parent) {
-            parent.scrollTo({ top: parent.scrollHeight, behavior: 'smooth' });
-          }
-        }
-      });
     });
   }
 

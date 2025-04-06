@@ -108,6 +108,8 @@ export class TurnInfoService {
       techTilesBoughtThisTurn: [],
       fieldsVisitedThisTurn: [],
       isDoingAIActions: false,
+      effectOptions: [],
+      effectConversions: [],
     };
   }
 }

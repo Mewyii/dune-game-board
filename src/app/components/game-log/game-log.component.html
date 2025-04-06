@@ -1,0 +1,54 @@
+<div class="choices-board">
+  <div class="reward-log-container">
+    <div>Game Action Log</div>
+    <br />
+    @for (logEntry of playerActionLog; track $index) {
+    <div #rewardLogs class="reward-log">
+      <ng-container *ngIf="logEntry.type === 'field-visit'">
+        Player {{ logEntry.playerId }} sent an agent to field {{ logEntry.fieldName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'reward-gain'">
+        Player {{ logEntry.playerId }} got: {{ logEntry.amount }}
+        <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'reward-pay'">
+        Player {{ logEntry.playerId }} paid: {{ logEntry.amount }}
+        <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-buy'">
+        Player {{ logEntry.playerId }} acquired card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-play'">
+        Player {{ logEntry.playerId }} played card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-trash'">
+        Player {{ logEntry.playerId }} trashed card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'card-discard'">
+        Player {{ logEntry.playerId }} discarded card {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'intrigue-play'">
+        Player {{ logEntry.playerId }} played intrigue {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'intrigue-trash'">
+        Player {{ logEntry.playerId }} trashed intrigue {{ logEntry.cardName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'intrigue-steal'">
+        Player {{ logEntry.playerId }} stole an intrigue from player {{ logEntry.enemyPlayerId }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'victory-point-gain'">
+        Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getEffectTypePath('victory-point')" />
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'tech-tile-buy'">
+        Player {{ logEntry.playerId }} acquired tech tile {{ logEntry.techTileName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'tech-tile-play'">
+        Player {{ logEntry.playerId }} activated tech tile {{ logEntry.techTileName }}.
+      </ng-container>
+      <ng-container *ngIf="logEntry.type === 'tech-tile-trash'">
+        Player {{ logEntry.playerId }} trashed tech tile {{ logEntry.techTileName }}.
+      </ng-container>
+    </div>
+    }
+  </div>
+</div>

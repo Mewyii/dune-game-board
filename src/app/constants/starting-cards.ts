@@ -155,7 +155,7 @@ export const startingCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
+        amount: 2,
       },
       {
         type: 'trash-self',

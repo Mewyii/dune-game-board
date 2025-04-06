@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Player } from 'src/app/models/player';
 import { AIManager, AIPlayer } from 'src/app/services/ai/ai.manager';
 import { aiPersonalities } from 'src/app/services/ai/constants';
@@ -12,11 +12,11 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./ai-tile.component.scss'],
 })
 export class AITileComponent implements OnInit {
+  @Input() showDetails = false;
+
   public currentAIPlayerId: number = 0;
   public currentPlayer: Player | undefined;
   public currentAIPlayer: AIPlayer | undefined;
-
-  public showDetails = false;
 
   constructor(
     public t: TranslateService,

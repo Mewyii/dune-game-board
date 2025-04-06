@@ -1,9 +1,14 @@
 import { ImperiumDeckCard, ImperiumDeckPlot } from '../services/cards.service';
+import { GameElement } from '../services/game-manager.service';
 import { ActiveFactionType } from './faction';
 import { IntrigueDeckCard } from './intrigue';
 import { ActionField } from './location';
+import { StructuredChoiceEffect } from './reward';
 import { TechTileCard } from './tech-tile';
 
+export interface StructuredChoiceEffectWithGameElement extends StructuredChoiceEffect {
+  element?: GameElement;
+}
 export interface TurnInfo {
   playerId: number;
   agentPlacedOnFieldId: string;
@@ -33,4 +38,6 @@ export interface TurnInfo {
   techTilesBoughtThisTurn: TechTileCard[];
   fieldsVisitedThisTurn: ActionField[];
   isDoingAIActions: boolean;
+  effectOptions: StructuredChoiceEffectWithGameElement[];
+  effectConversions: StructuredChoiceEffectWithGameElement[];
 }

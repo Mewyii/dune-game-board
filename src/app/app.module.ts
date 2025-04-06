@@ -54,6 +54,7 @@ import { BoardEvaluationComponent } from './components/board-evaluation/board-ev
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { ConflictsComponent } from './components/conflicts/conflicts.component';
 import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
+import { GameLogComponent } from './components/game-log/game-log.component';
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { LeadersComponent } from './components/leaders/leaders.component';
@@ -166,6 +167,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     PlotConfiguratorComponent,
     PlotEditorComponent,
     DialogPlotEditorComponent,
+    GameLogComponent,
   ],
   imports: [
     BrowserModule,

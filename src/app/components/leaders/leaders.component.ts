@@ -58,6 +58,8 @@ export class LeadersComponent implements OnInit {
 
   public turnInfos: TurnInfo | undefined;
 
+  public showAIDetails = false;
+
   constructor(
     public leadersService: LeadersService,
     public t: TranslateService,
@@ -239,7 +241,7 @@ export class LeadersComponent implements OnInit {
       this.audioManager.playSound('spice');
     }
 
-    this.gameManager.addRewardToPlayer(player, { type });
+    this.gameManager.addRewardToPlayer(player.id, { type });
 
     this.gameManager.setPreferredFieldsForAIPlayer(player.id);
 
@@ -255,7 +257,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddSignetTokenClicked(player: Player) {
-    this.gameManager.addRewardToPlayer(player, { type: 'signet-token' });
+    this.gameManager.addRewardToPlayer(player.id, { type: 'signet-token' });
 
     this.gameManager.setPreferredFieldsForAIPlayer(player.id);
   }
@@ -269,7 +271,7 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddTechClicked(player: Player) {
-    this.gameManager.addRewardToPlayer(player, { type: 'tech' });
+    this.gameManager.addRewardToPlayer(player.id, { type: 'tech' });
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }

@@ -1,80 +1,35 @@
-<div class="choices-board">
-  <div class="reward-log-container">
-    <div>Game Action Log</div>
-    <br />
-    @for (logEntry of playerActionLog; track $index) {
-    <div #rewardLogs class="reward-log">
-      <ng-container *ngIf="logEntry.type === 'field-visit'">
-        Player {{ logEntry.playerId }} sent an agent to field {{ logEntry.fieldName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'reward-gain'">
-        Player {{ logEntry.playerId }} got: {{ logEntry.amount }}
-        <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'reward-pay'">
-        Player {{ logEntry.playerId }} paid: {{ logEntry.amount }}
-        <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'card-buy'">
-        Player {{ logEntry.playerId }} bought card {{ logEntry.cardName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'card-play'">
-        Player {{ logEntry.playerId }} played card {{ logEntry.cardName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'card-trash'">
-        Player {{ logEntry.playerId }} trashed card {{ logEntry.cardName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'card-discard'">
-        Player {{ logEntry.playerId }} discarded card {{ logEntry.cardName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'intrigue-play'">
-        Player {{ logEntry.playerId }} played intrigue {{ logEntry.cardName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'intrigue-trash'">
-        Player {{ logEntry.playerId }} trashed intrigue {{ logEntry.cardName }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'intrigue-steal'">
-        Player {{ logEntry.playerId }} stole an intrigue from player {{ logEntry.enemyPlayerId }}.
-      </ng-container>
-      <ng-container *ngIf="logEntry.type === 'victory-point-gain'">
-        Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getEffectTypePath('victory-point')" />
-      </ng-container>
-    </div>
-    }
-  </div>
-  <ng-container *ngIf="playerRewardChoices">
-    @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
-    <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
-      @for (reward of rewardsChoice.choice; track $index) {
-      <div>
-        <div class="reward-container">
-          <img class="reward" [src]="getEffectTypePath(reward.type)" />
-          <ng-container *ngIf="reward.amount">
-            <div class="reward-amount">
-              {{ reward.amount }}
-            </div>
-          </ng-container>
-        </div>
-      </div>
-      }
-    </div>
-    } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
-    <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
+<ng-container *ngIf="playerRewardChoices">
+  @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
+  <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
+    @for (reward of rewardsChoice.choice; track $index) {
+    <div>
       <div class="reward-container">
-        <img class="reward" [src]="getEffectTypePath(rewardChoice.choice.type)" />
-        <ng-container *ngIf="rewardChoice.choice.amount">
+        <img class="reward" [src]="getEffectTypePath(reward.type)" />
+        <ng-container *ngIf="reward.amount">
           <div class="reward-amount">
-            {{ rewardChoice.choice.amount }}
+            {{ reward.amount }}
           </div>
         </ng-container>
       </div>
     </div>
-    } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
-    <div
-      class="reward-choice"
-      [innerHTML]="rewardChoice.choice | duneSymbols : '22px'"
-      (click)="onCustomChoiceClicked(rewardChoice.id)"
-    ></div>
     }
-  </ng-container>
-</div>
+  </div>
+  } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
+  <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
+    <div class="reward-container">
+      <img class="reward" [src]="getEffectTypePath(rewardChoice.choice.type)" />
+      <ng-container *ngIf="rewardChoice.choice.amount">
+        <div class="reward-amount">
+          {{ rewardChoice.choice.amount }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
+  <div
+    class="reward-choice"
+    [innerHTML]="rewardChoice.choice | duneSymbols : '22px'"
+    (click)="onCustomChoiceClicked(rewardChoice.id)"
+  ></div>
+  }
+</ng-container>

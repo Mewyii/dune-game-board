@@ -1,15 +1,21 @@
 .leader-board {
-  background: rgba(64, 51, 40, 0.8);
+  background: rgba(64, 50, 40, 0.8);
+  max-width: 900px;
+  max-height: 1444px;
+  color: #fffcfa;
+  padding: 32px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  overflow-y: auto;
+}
+
+.leader-container {
   display: flex;
   flex-wrap: wrap;
   max-width: 900px;
   gap: 32px;
   justify-content: center;
   align-items: center;
-  color: #fffcfa;
-  padding: 32px;
-  box-sizing: border-box;
-  border-radius: 5px;
 }
 
 .leader-viewer {
@@ -23,7 +29,7 @@
 }
 
 .leader-list {
-  background: rgba(64, 51, 40, 0.8);
+  background: rgba(64, 50, 40, 0.8);
   display: grid;
   grid-gap: 16px;
   grid-area: 3 3;
@@ -86,7 +92,7 @@ dune-leader-card {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 64px;
+  gap: 16px;
 }
 
 .info-container {
@@ -390,11 +396,9 @@ dune-tech-tile.active,
 }
 
 .swords-button {
-  width: 40px;
+  width: 55px;
   height: 55px;
-  border-radius: 25%;
   filter: drop-shadow(0px 0px 5px black);
-  left: calc(50% - 13px);
   background-image: url(/assets/images/reward-markers/marker_sword.png);
   background-size: contain;
   background-position: center;

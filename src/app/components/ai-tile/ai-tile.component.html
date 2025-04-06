@@ -1,13 +1,5 @@
-<div class="event-board" *ngIf="currentPlayer && currentAIPlayer">
-  <div class="heading-container">
-    <mat-slide-toggle
-      *ngIf="currentAIPlayer"
-      [color]="'accent'"
-      [checked]="showDetails"
-      (change)="showDetails = !showDetails"
-      >AI Details</mat-slide-toggle
-    >
-  </div>
+@if (currentPlayer && currentAIPlayer) {
+<div class="ai-container">
   <div class="heading-container" *ngIf="currentAIPlayer && showDetails">
     <div class="info-container">
       <div>personality</div>
@@ -28,21 +20,7 @@
       >
     </div>
   </div>
-  <!-- <div class="game-state-container">
-    <div class="info-container">
-      <div class="game-state-name">imperium row</div>
-      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'good'" (change)="setAIVariable('imperiumRow', 'good')"
-        >Good</mat-checkbox
-      >
-      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'okay'" (change)="setAIVariable('imperiumRow', 'okay')"
-        >Okay</mat-checkbox
-      >
-      <mat-checkbox [checked]="getAIVariable('imperiumRow') === 'bad'" (change)="setAIVariable('imperiumRow', 'bad')"
-        >Bad</mat-checkbox
-      >
-    </div>
-  </div> -->
-  <div class="decision-container" *ngIf="currentPlayer.isAI && currentAIPlayer">
+  <div class="decision-container" *ngIf="currentPlayer.isAI && currentAIPlayer && showDetails">
     <div class="preferred-fields-container" *ngIf="showDetails">
       <div
         *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first"
@@ -58,3 +36,4 @@
     </div>
   </div>
 </div>
+}

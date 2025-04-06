@@ -557,7 +557,7 @@ export class AIManager {
 
       if (usableCards.length > 0) {
         const evaluations = usableCards.map((cardEvaluation) => {
-          const evaluation = cardEvaluation.evaluationValue - fieldIndex * 1.33;
+          const evaluation = cardEvaluation.evaluationValue - fieldIndex * 1.25;
           return { field: preferredField, evaluation, card: cardEvaluation.card };
         });
 
@@ -941,13 +941,13 @@ export class AIManager {
     if (card.structuredRevealEffects) {
       const revealEffects = card.structuredRevealEffects;
       if (revealEffects.rewards) {
-        evaluationValue -= this.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState);
+        evaluationValue -= this.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState) * 0.75;
       }
       for (const choiceEffect of revealEffects.choiceEffects) {
-        evaluationValue -= this.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState);
+        evaluationValue -= this.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState) * 0.75;
       }
       for (const conditionEffect of revealEffects.conditionalEffects) {
-        evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState);
+        evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState) * 0.75;
       }
     }
     if (card.customRevealEffect) {
@@ -968,7 +968,8 @@ export class AIManager {
     if (card.buyEffects) {
       const { hasRewardOptions, hasRewardConversion } = this.getRewardArrayAIInfos(card.buyEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
-        evaluationValue += this.getRewardArrayEvaluation(card.buyEffects, player, gameState);
+        evaluationValue +=
+          this.getRewardArrayEvaluation(card.buyEffects, player, gameState) * 0.75 + 0.05 * (gameState.currentRound - 1);
       }
     }
     if (card.fieldAccess) {
@@ -1240,9 +1241,9 @@ export class AIManager {
       case 'intrigue':
         return 1.75 + 0.1 * (gameState.currentRound - 1);
       case 'persuasion':
-        return 2.0 - 0.15 * (gameState.currentRound - 1);
+        return 2.25 - 0.15 * (gameState.currentRound - 1);
       case 'foldspace':
-        return 2.25 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
+        return 2.5 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
       case 'council-seat-small':
       case 'council-seat-large':
         return !player.hasCouncilSeat ? 12 - 1 * (gameState.currentRound - 1) : 0;
@@ -1256,7 +1257,7 @@ export class AIManager {
       case 'victory-point':
         return 9 + 1.25 * (gameState.currentRound - 1);
       case 'sword':
-        return 1;
+        return 1 + 0.05 * (gameState.currentRound - 1);
       case 'combat':
         return 1 + 0.2 * (gameState.currentRound - 1);
       case 'intrigue-trash':
@@ -1300,7 +1301,7 @@ export class AIManager {
       case 'loose-troop':
         return -1.5 + 0.1 * (gameState.currentRound - 1);
       case 'trash-self':
-        return -1;
+        return -1.25;
       default:
         return 0;
     }
@@ -1383,7 +1384,7 @@ export class AIManager {
       case 'faction-influence-down-fremen':
         return value;
       case 'agent-lift':
-        return hasPlacedAgents ? value : 0;
+        return hasPlacedAgents && hasAgentsLeftToPlace ? value : 0;
       case 'buildup':
         return value;
       case 'signet-token':
