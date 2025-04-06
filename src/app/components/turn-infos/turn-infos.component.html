@@ -1,8 +1,13 @@
 @if (playerTurnInfo) {
 <div class="turn-infos-container font-scifi">
-  @if (playerTurnInfo.cardsPlayedThisTurn.length > 0 && playerTurnInfo.fieldsVisitedThisTurn.length > 0) {
+  @if (showCardsPlayedThisTurn && playerTurnInfo.cardsPlayedThisTurn.length > 0 &&
+  playerTurnInfo.fieldsVisitedThisTurn.length > 0) {
   <div class="turn-info-container">
-    <div class="turn-info-title">{{ t.translate('turninfosFieldsVisited') }}</div>
+    <div class="turn-info-title">
+      <div class="spacer"></div>
+      {{ t.translate('turninfosFieldsVisited') }}
+      <div class="spacer" (click)="showCardsPlayedThisTurn = false"><mat-icon>close</mat-icon></div>
+    </div>
     <div class="cards-container">
       @for (field of playerTurnInfo.fieldsVisitedThisTurn; track $index;let i = $index) {
       <div class="agent-placement-container">
@@ -17,9 +22,13 @@
       }
     </div>
   </div>
-  } @if (playerTurnInfo.cardsBoughtThisTurn.length > 0) {
+  } @if (showCardsBoughtThisTurn && playerTurnInfo.cardsBoughtThisTurn.length > 0) {
   <div class="turn-info-container">
-    <div class="turn-info-title">{{ t.translate('turninfosCardsBought') }}</div>
+    <div class="turn-info-title">
+      <div class="spacer"></div>
+      {{ t.translate('turninfosCardsBought') }}
+      <div class="spacer" (click)="showCardsBoughtThisTurn = false"><mat-icon>close</mat-icon></div>
+    </div>
     <div class="cards-container">
       @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) { @if (card.type === 'imperium-card') {
       <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
@@ -30,9 +39,13 @@
       } }
     </div>
   </div>
-  } @if (playerTurnInfo.cardsTrashedThisTurn.length > 0) {
+  } @if (showCardsTrashedThisTurn && playerTurnInfo.cardsTrashedThisTurn.length > 0) {
   <div class="turn-info-container">
-    <div class="turn-info-title">{{ t.translate('turninfosCardsTrashed') }}</div>
+    <div class="turn-info-title">
+      <div class="spacer"></div>
+      {{ t.translate('turninfosCardsTrashed') }}
+      <div class="spacer" (click)="showCardsTrashedThisTurn = false"><mat-icon>close</mat-icon></div>
+    </div>
     <div class="cards-container">
       @for (card of playerTurnInfo.cardsTrashedThisTurn; track $index) {
       <div class="card-container">
@@ -41,9 +54,13 @@
       }
     </div>
   </div>
-  } @if (playerTurnInfo.intriguesPlayedThisTurn.length > 0) {
+  } @if (showIntriguesPlayedThisTurn && playerTurnInfo.intriguesPlayedThisTurn.length > 0) {
   <div class="turn-info-container">
-    <div class="turn-info-title">{{ t.translate('turninfosIntriguesPlayed') }}</div>
+    <div class="turn-info-title">
+      <div class="spacer"></div>
+      {{ t.translate('turninfosIntriguesPlayed') }}
+      <div class="spacer" (click)="showIntriguesPlayedThisTurn = false"><mat-icon>close</mat-icon></div>
+    </div>
     <div class="cards-container">
       @for (card of playerTurnInfo.intriguesPlayedThisTurn; track $index) {
       <div class="intrigue-card-container">
@@ -52,18 +69,26 @@
       }
     </div>
   </div>
-  } @if (playerTurnInfo.techTilesFlippedThisTurn.length > 0) {
+  } @if (showTechTilesFlippedThisTurn && playerTurnInfo.techTilesFlippedThisTurn.length > 0) {
   <div class="turn-info-container">
-    <div class="turn-info-title">{{ t.translate('turninfosTechTilesFlipped') }}</div>
+    <div class="turn-info-title">
+      <div class="spacer"></div>
+      {{ t.translate('turninfosTechTilesFlipped') }}
+      <div class="spacer" (click)="showTechTilesFlippedThisTurn = false"><mat-icon>close</mat-icon></div>
+    </div>
     <div class="cards-container">
       @for (card of playerTurnInfo.techTilesFlippedThisTurn; track $index) {
       <dune-tech-tile [card]="card"></dune-tech-tile>
       }
     </div>
   </div>
-  } @if (playerTurnInfo.techTilesBoughtThisTurn.length > 0) {
+  } @if (showTechTilesBoughtThisTurn && playerTurnInfo.techTilesBoughtThisTurn.length > 0) {
   <div class="turn-info-container">
-    <div class="turn-info-title">{{ t.translate('turninfosTechTilesBought') }}</div>
+    <div class="turn-info-title">
+      <div class="spacer"></div>
+      {{ t.translate('turninfosTechTilesBought') }}
+      <div class="spacer" (click)="showTechTilesBoughtThisTurn = false"><mat-icon>close</mat-icon></div>
+    </div>
     <div class="cards-container">
       @for (card of playerTurnInfo.techTilesBoughtThisTurn; track $index) {
       <dune-tech-tile [card]="card"></dune-tech-tile>

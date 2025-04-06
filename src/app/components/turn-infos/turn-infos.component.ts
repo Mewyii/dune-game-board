@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { isActiveFactionType, isFactionType } from 'src/app/helpers/faction-types';
+import { isFactionType } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActionField, ActionType, EffectType, FactionType } from 'src/app/models';
+import { ActionField, EffectType } from 'src/app/models';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -16,6 +16,13 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
 export class TurnInfosComponent implements OnInit {
   activePlayerId = 0;
   playerTurnInfo: TurnInfo | undefined;
+  showCardsPlayedThisTurn = false;
+  showCardsBoughtThisTurn = false;
+  showCardsTrashedThisTurn = false;
+  showTechTilesFlippedThisTurn = false;
+  showTechTilesBoughtThisTurn = false;
+  showIntriguesPlayedThisTurn = false;
+
   constructor(
     private gameManager: GameManager,
     private turnInfoService: TurnInfoService,
@@ -26,6 +33,7 @@ export class TurnInfosComponent implements OnInit {
   ngOnInit(): void {
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
+      this.showTurnInfos();
 
       this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
     });
@@ -47,6 +55,15 @@ export class TurnInfosComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  public showTurnInfos() {
+    this.showCardsPlayedThisTurn = true;
+    this.showCardsBoughtThisTurn = true;
+    this.showCardsTrashedThisTurn = true;
+    this.showTechTilesFlippedThisTurn = true;
+    this.showTechTilesBoughtThisTurn = true;
+    this.showIntriguesPlayedThisTurn = true;
   }
 
   public getEffectTypePath(effectType: EffectType) {

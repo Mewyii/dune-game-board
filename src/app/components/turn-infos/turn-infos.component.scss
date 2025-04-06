@@ -26,6 +26,9 @@
   margin-bottom: 24px;
   text-align: center;
   font-size: large;
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
 }
 
 .cards-container {
@@ -70,4 +73,17 @@ dune-intrigue-card {
   position: absolute;
   top: -30px;
   left: -20px;
+}
+
+.spacer {
+  min-width: 35px;
+  text-align: end;
+  font-size: large;
+  transform: scale(1.5);
+  transition: 0.5s;
+}
+
+.spacer:hover {
+  transform: scale(1.75);
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
 }
