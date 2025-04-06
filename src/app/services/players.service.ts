@@ -25,7 +25,6 @@ export class PlayersService {
     });
   }
 
-  /** Use with care. Players object gets cloned eachtime it is used but is immutable. */
   public getPlayers() {
     return cloneDeep(this.playersSubject.value);
   }
@@ -51,14 +50,14 @@ export class PlayersService {
     return player ? cloneDeep(player.color) : '';
   }
 
-  getPlayerPersuasion(playerId: number) {
-    const player = this.getPlayer(playerId);
+  public getPlayerPersuasion(playerId: number) {
+    const player = this.playersSubject.value.find((x) => x.id === playerId);
     return player ? player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound : 0;
   }
 
-  getPlayerFocusTokens(playerId: number) {
-    const player = this.getPlayer(playerId);
-    return player ? player.focusTokens : 0;
+  public getPlayerFocusTokens(playerId: number) {
+    const player = this.playersSubject.value.find((x) => x.id === playerId);
+    return player ? cloneDeep(player.focusTokens) : 0;
   }
 
   public addPlayer() {

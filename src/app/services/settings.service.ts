@@ -81,6 +81,14 @@ export class SettingsService {
     return cloneDeep(this.fields);
   }
 
+  getFactionName(factionType: FactionType) {
+    return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === factionType)?.title);
+  }
+
+  getFactionColor(factionType: FactionType) {
+    return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === factionType)?.primaryColor);
+  }
+
   public getBoardField(id: string) {
     return this.fields.find((x) => x.title.en === id);
   }
@@ -145,6 +153,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.imperiumRowCards);
   }
 
+  getCustomCards() {
+    return cloneDeep(this.settingsSubject.value.gameContent.customCards);
+  }
+
   public setFields() {
     const gameContent = this.gameContent;
     const result: ActionField[] = [];
@@ -165,27 +177,15 @@ export class SettingsService {
     this.spiceAccumulationFields = this.fields
       .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
       .map((x) => x.title.en);
-    this.controllableLocations = this.gameContent.locations.filter((x) => x.ownerReward).map((x) => x.actionField.title.en);
+    this.controllableLocations = gameContent.locations.filter((x) => x.ownerReward).map((x) => x.actionField.title.en);
 
     this.factionInfluenceRewards = gameContent.factions
       .filter((x) => x.influenceRewards)
       .map((x) => ({ factionId: x.type, rewards: x.influenceRewards! }));
   }
 
-  getFactionName(factionType: FactionType) {
-    return this.gameContent.factions.find((x) => x.type === factionType)?.title;
-  }
-
-  getFactionColor(factionType: FactionType) {
-    return this.gameContent.factions.find((x) => x.type === factionType)?.primaryColor;
-  }
-
   changeLanguage(lang: LanguageType) {
     this.settingsSubject.next({ ...this.settings, language: lang });
-  }
-
-  getCustomCards() {
-    return this.gameContent.customCards;
   }
 
   setGameContent(name: string) {

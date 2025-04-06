@@ -1299,7 +1299,7 @@ export class AIManager {
       case 'signet-token':
         return 0;
       case 'signet-ring':
-        return 3 - 0.1 * (gameState.currentRound - 1);
+        return 3;
       case 'location-control':
         return 6 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
@@ -1366,7 +1366,7 @@ export class AIManager {
       case 'intrigue-draw':
         return value + 2 * gameState.playerIntrigueStealAmount;
       case 'tech':
-        return value + 0.25 * player.tech;
+        return value + 0.2 * player.tech;
       case 'card-round-start':
         return value;
       case 'shipping':
@@ -1400,10 +1400,10 @@ export class AIManager {
           gameState.freeLocations.some((y) => x.fieldId === y)
         );
         const controllableEnemyLocations =
-          gameState.playerAgentsOnFields.some((x) => gameState.occupiedLocations.some((y) => x.fieldId === y)) &&
+          gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
-        return controllableFreeLocations || controllableEnemyLocations ? value : value / 3;
+        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : 0;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':

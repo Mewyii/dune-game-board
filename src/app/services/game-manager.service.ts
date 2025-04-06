@@ -546,7 +546,7 @@ export class GameManager {
             playerHand.cards.filter((x) => x.id !== card.id)
           );
         }
-        if (card.customRevealEffect) {
+        if (card.customRevealEffect?.en) {
           const localizedString = this.t.translateLS(card.customRevealEffect);
           this.playerRewardChoicesService.addPlayerCustomChoice(playerId, localizedString);
         }
@@ -1843,13 +1843,6 @@ export class GameManager {
       if (plotToBuy.persuasionCosts) {
         this.playerManager.addPersuasionSpentToPlayer(playerId, plotToBuy.persuasionCosts + costModifier);
       }
-      // if (cardToBuy.buyEffects) {
-      //   for (const effect of cardToBuy.buyEffects) {
-      //     this.addRewardToPlayer(player, effect);
-      //   }
-      // }
-
-      // this.aiResolveRewardChoices(player);
       this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, plotToBuy);
 
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(plotToBuy.name));
@@ -2106,8 +2099,15 @@ export class GameManager {
       .getEnemyIntrigues(player.id)
       .filter((x) => x.intrigues.length > 3).length;
 
-    const occupiedLocations = this.locationManager.ownedLocations.map((x) => x.locationId);
-    const freeLocations = this.settingsService.controllableLocations.filter((x) => !occupiedLocations.includes(x));
+    const playerLocations = this.locationManager.ownedLocations
+      .filter((x) => x.playerId === player.id)
+      .map((x) => x.locationId);
+    const enemyLocations = this.locationManager.ownedLocations
+      .filter((x) => x.playerId !== player.id)
+      .map((x) => x.locationId);
+    const freeLocations = this.settingsService.controllableLocations.filter(
+      (x) => !playerLocations.includes(x) && !enemyLocations.includes(x)
+    );
 
     const enemyScore = this.playerScoreManager.getEnemyScore(player.id)!;
 
@@ -2157,7 +2157,8 @@ export class GameManager {
       playerIntrigueCount,
       playerCombatIntrigueCount,
       playerIntrigueStealAmount,
-      occupiedLocations,
+      playerLocations,
+      enemyLocations,
       freeLocations,
       rival,
       playerTurnInfos,

@@ -228,12 +228,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
     return this.playerManager.getPlayerColor(playerId);
   }
 
-  public trackPlayersOnField(index: number, playerOnField: Player) {
-    return playerOnField.id;
-  }
-
   public trackSpiceOnField(index: number, spiceOnField: number) {
-    return spiceOnField;
+    return index * 100 + spiceOnField;
   }
 
   public onFieldMarkerChangeClicked(changeAmount: number) {

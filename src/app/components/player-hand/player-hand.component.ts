@@ -36,6 +36,8 @@ export class PlayerHandComponent implements OnInit {
   public showCards = false;
   public cardsShown: 'hand' | 'discard' | 'deck' = 'hand';
 
+  public revealPlots = false;
+
   constructor(
     private playerManager: PlayersService,
     public gameManager: GameManager,
@@ -66,6 +68,10 @@ export class PlayerHandComponent implements OnInit {
       this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
       this.showCards = false;
       this.cardsShown = 'hand';
+    });
+
+    this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
+      this.revealPlots = roundPhase === 'combat-resolvement' && this.gameManager.isFinale;
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {

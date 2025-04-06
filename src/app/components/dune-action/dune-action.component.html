@@ -106,13 +106,13 @@
   >
     <dune-marker [type]="'ornithopter'"></dune-marker>
   </div>
-  @for (player of additionalPlayersOnField; track trackPlayersOnField; let i = $index) {
+  @for (player of additionalPlayersOnField; track $index; let i = $index) {
   <div class="player-marker small" [style.color]="player.color" [style.top]="40 + i * 35 + 'px'">
     <dune-marker [type]="'ornithopter'"></dune-marker>
   </div>
   }
   <div class="spice-accumulation-area" *ngIf="accumulatedSpice">
-    @for (spice of accumulatedSpice | numberToArray; track trackSpiceOnField) {
+    @for (spice of accumulatedSpice | numberToArray; track trackSpiceOnField($index, spice)) {
     <div class="spice-accumulation-marker"></div>
     }
   </div>

@@ -56,11 +56,15 @@ export class TechTilesService {
   }
 
   public get buyableTechTiles() {
-    return cloneDeep(this.availableTechTiles.slice(0, 3));
+    return cloneDeep(this.availableTechTilesSubject.value.slice(0, 3));
   }
 
   public get playerTechTiles() {
     return cloneDeep(this.playerTechTilesSubject.value);
+  }
+
+  getPlayerTechTiles(playerId: number) {
+    return cloneDeep(this.playerTechTilesSubject.value.filter((x) => x.playerId === playerId));
   }
 
   setInitialAvailableTechTiles() {
@@ -78,39 +82,16 @@ export class TechTilesService {
     this.availableTechTilesSubject.next([]);
   }
 
-  getPlayerTechTiles(playerId: number) {
-    return this.playerTechTiles.filter((x) => x.playerId === playerId);
-  }
-
   setPlayerTechTile(playerId: number, techTileId: string) {
-    const techTile = this.availableTechTiles.find((x) => x.name.en === techTileId);
-    const techTileIndex = this.availableTechTiles.findIndex((x) => x.name.en === techTileId);
+    const techTiles = this.availableTechTiles;
+    const techTile = techTiles.find((x) => x.name.en === techTileId);
+    const techTileIndex = techTiles.findIndex((x) => x.name.en === techTileId);
     if (!techTile || techTileIndex < 0) {
       return;
     }
 
-    const filteredAvailableTechTiles = this.availableTechTiles.filter((x) => x.name.en !== techTile.name.en);
-    const filteredAvailableTechTileIds = filteredAvailableTechTiles.map((y) => y.name.en);
-
-    const newTakenTechTiles = [...this.playerTechTiles, { playerId, techTile: techTile, isFlipped: false }];
-
-    const availableTechTiles = this.techTilesConfigService.techTiles.filter(
-      (x) =>
-        !newTakenTechTiles.some((y) => y.techTile.name.en === x.name.en) && !filteredAvailableTechTileIds.includes(x.name.en)
-    );
-
-    const newAvailableTechTile = shuffle(availableTechTiles).pop();
-
-    if (techTileIndex > -1 && newAvailableTechTile) {
-      const newAvailableTechTiles = this.availableTechTiles;
-      newAvailableTechTiles[techTileIndex] = this.instantiateTechTile(newAvailableTechTile);
-
-      this.playerTechTilesSubject.next(newTakenTechTiles);
-      this.availableTechTilesSubject.next(newAvailableTechTiles);
-    } else {
-      this.playerTechTilesSubject.next(newTakenTechTiles);
-      this.availableTechTilesSubject.next([...filteredAvailableTechTiles]);
-    }
+    this.playerTechTilesSubject.next([...this.playerTechTiles, { playerId, techTile: techTile, isFlipped: false }]);
+    this.availableTechTilesSubject.next(techTiles.filter((x) => x.name.en !== techTile.name.en));
   }
 
   flipTechTile(techTileId: string) {

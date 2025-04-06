@@ -32,6 +32,7 @@
       [disabled]="
         (currentRoundPhase === 'agent-placement' && currentPlayer.turnState === 'revealed') ||
         (currentRoundPhase === 'combat' && currentPlayer.turnState === 'done') ||
+        currentRoundPhase === 'combat-resolvement' ||
         (turnInfos && (turnInfos.fieldsVisitedThisTurn.length > 0 || turnInfos.isDoingAIActions))
       "
       *ngIf="currentPlayer.isAI"

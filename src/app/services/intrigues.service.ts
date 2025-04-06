@@ -46,6 +46,27 @@ export class IntriguesService {
     return cloneDeep(this.playerIntriguesSubject.value);
   }
 
+  public getPlayerIntrigues(playerId: number, type?: IntrigueType) {
+    const playerIntrigues = this.playerIntriguesSubject.value.find((x) => x.playerId === playerId);
+    if (!playerIntrigues) {
+      return undefined;
+    }
+
+    if (type) {
+      return cloneDeep(playerIntrigues.intrigues.filter((y) => y.type === type));
+    } else {
+      return cloneDeep(playerIntrigues.intrigues);
+    }
+  }
+
+  public getEnemyIntrigues(playerId: number) {
+    return cloneDeep(this.playerIntriguesSubject.value.filter((x) => x.playerId !== playerId));
+  }
+
+  public getPlayerIntrigueCount(playerId: number) {
+    return this.playerIntriguesSubject.value.find((x) => x.playerId === playerId)?.intrigues.length ?? 0;
+  }
+
   public setInitialIntrigueDeck() {
     this.playerIntriguesSubject.next([]);
     const intrigueDeck: IntrigueDeckCard[] = [];
@@ -118,22 +139,6 @@ export class IntriguesService {
   clearIntrigueDeck() {
     this.playerIntriguesSubject.next([]);
     this.intrigueDeckSubject.next([]);
-  }
-
-  getPlayerIntrigues(playerId: number, type?: IntrigueType) {
-    if (type) {
-      return this.playerIntrigues.find((x) => x.playerId === playerId)?.intrigues.filter((y) => y.type === type);
-    } else {
-      return this.playerIntrigues.find((x) => x.playerId === playerId)?.intrigues;
-    }
-  }
-
-  getEnemyIntrigues(playerId: number) {
-    return this.playerIntrigues.filter((x) => x.playerId !== playerId);
-  }
-
-  getPlayerIntrigueCount(playerId: number) {
-    return this.playerIntrigues.find((x) => x.playerId === playerId)?.intrigues.length ?? 0;
   }
 
   public instantiateIntrigueCard(card: IntrigueCard): IntrigueDeckCard {

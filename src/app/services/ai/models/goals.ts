@@ -85,7 +85,8 @@ export type GameState = Readonly<{
   playerCombatIntrigueCount: number;
   playerIntrigueStealAmount: number;
   freeLocations: string[];
-  occupiedLocations: string[];
+  playerLocations: string[];
+  enemyLocations: string[];
   rival?: Player;
   playerTurnInfos?: TurnInfo;
   playerCardsFactions: PlayerCardsFactions;

@@ -59,12 +59,12 @@
         (click)="setCardActive(plot.id)"
       >
         <dune-plot-card
-          *ngIf="!currentPlayer?.isAI"
+          *ngIf="!currentPlayer?.isAI || revealPlots"
           [plot]="plot"
           [class]="plot.id === activeCardId ? 'active' : ''"
         ></dune-plot-card>
         <div
-          *ngIf="currentPlayer?.isAI"
+          *ngIf="currentPlayer?.isAI && !revealPlots"
           [class]="'imperium-card background' + (plot.id === activeCardId ? ' active' : '')"
         ></div>
         <div class="card-action-container" *ngIf="plot.id === activeCardId"></div>

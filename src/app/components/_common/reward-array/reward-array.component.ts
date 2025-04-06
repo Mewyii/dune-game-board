@@ -24,6 +24,9 @@ export class RewardArrayComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.effectArrays = getSeparatedEffectArrays(this.rewards);
+    this.fontSize = 'calc(' + this.size + ' - ' + this.size + ' / 3.75)';
+    this.rewardAmountFontSize = 'calc(' + this.size + ' - ' + this.size + ' / 2.25)';
+    this.marginBottom = '0px';
   }
 
   ngOnInit(): void {
