@@ -118,7 +118,7 @@ export class TechTilesService {
     return {
       ...card,
       id: crypto.randomUUID(),
-      structuredEffects: card.effects ? getStructuredEffectArrayInfos(card.effects) : undefined,
+      structuredEffects: card.effects && card.effects.length > 0 ? getStructuredEffectArrayInfos(card.effects) : undefined,
     };
   }
 }

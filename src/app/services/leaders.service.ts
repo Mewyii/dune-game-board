@@ -124,8 +124,14 @@ export class LeadersService {
     return {
       ...leader,
       id: crypto.randomUUID(),
-      structuredPassiveEffects: leader.passiveEffects ? getStructuredEffectArrayInfos(leader.passiveEffects) : undefined,
-      structuredSignetEffects: leader.signetEffects ? getStructuredEffectArrayInfos(leader.signetEffects) : undefined,
+      structuredPassiveEffects:
+        leader.passiveEffects && leader.passiveEffects.length > 0
+          ? getStructuredEffectArrayInfos(leader.passiveEffects)
+          : undefined,
+      structuredSignetEffects:
+        leader.signetEffects && leader.signetEffects.length > 0
+          ? getStructuredEffectArrayInfos(leader.signetEffects)
+          : undefined,
     };
   }
 }

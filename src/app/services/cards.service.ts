@@ -706,8 +706,10 @@ export class CardsService {
       type: 'imperium-card',
       id: crypto.randomUUID(),
       cardAmount: 1,
-      structuredAgentEffects: card.agentEffects ? getStructuredEffectArrayInfos(card.agentEffects) : undefined,
-      structuredRevealEffects: card.revealEffects ? getStructuredEffectArrayInfos(card.revealEffects) : undefined,
+      structuredAgentEffects:
+        card.agentEffects && card.agentEffects.length > 0 ? getStructuredEffectArrayInfos(card.agentEffects) : undefined,
+      structuredRevealEffects:
+        card.revealEffects && card.revealEffects.length > 0 ? getStructuredEffectArrayInfos(card.revealEffects) : undefined,
     };
   }
 

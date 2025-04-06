@@ -1608,9 +1608,10 @@ export class GameManager {
           if (playerLeader.structuredSignetEffects) {
             this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player.id, gameState);
           } else if (playerLeader.signetDescription.en) {
-            this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-              type: 'signet-ring',
-            });
+            this.playerRewardChoicesService.addPlayerCustomChoice(
+              player.id,
+              this.t.translateLS(playerLeader.signetDescription)
+            );
           }
         } else {
           this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
@@ -1699,9 +1700,10 @@ export class GameManager {
           if (playerLeader.structuredSignetEffects) {
             this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player.id, gameState);
           } else if (playerLeader.signetDescription.en) {
-            this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-              type: 'signet-ring',
-            });
+            this.playerRewardChoicesService.addPlayerCustomChoice(
+              player.id,
+              this.t.translateLS(playerLeader.signetDescription)
+            );
           }
         } else {
           this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
