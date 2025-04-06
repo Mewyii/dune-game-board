@@ -1,16 +1,15 @@
-import { Leader } from 'src/app/constants/leaders';
-import { PlayerCombatUnits } from '../../combat-manager.service';
-import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
-import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
-import { ActionField, ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
 import { DuneEvent } from 'src/app/constants/events';
-import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../../cards.service';
-import { TurnInfo } from 'src/app/models/turn-info';
+import { Leader } from 'src/app/constants/leaders';
+import { ActionField, ActionType, ActiveFactionType, EffectRewardType, StructuredEffects } from 'src/app/models';
+import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
-import { TechTileCard } from 'src/app/models/tech-tile';
-import { Conflict } from 'src/app/models/conflict';
+import { TurnInfo } from 'src/app/models/turn-info';
+import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../../cards.service';
+import { PlayerCombatUnits } from '../../combat-manager.service';
+import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { PlayerGameModifiers } from '../../game-modifier.service';
+import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
 import { TechTileDeckCard } from '../../tech-tiles.service';
 
 export type AIGoals =
@@ -60,6 +59,7 @@ export type GameState = Readonly<{
   isFinale: boolean;
   enemyPlayers: Player[];
   playerLeader: Leader;
+  playerLeaderSignetRingEffects: StructuredEffects | undefined;
   conflict: Conflict;
   availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;

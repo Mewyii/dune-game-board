@@ -16,23 +16,32 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   @Input() size: string = '32px';
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
   @Input() arraySeparationGap = '4px';
+  @Input() wrap = true;
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';
+  public iconMinWidth = '';
+  public effectGap = '4px';
 
   constructor(public t: TranslateService) {}
 
   ngOnChanges(): void {
     this.effectArrays = getSeparatedEffectArrays(this.rewards);
-    this.fontSize = 'calc(' + this.size + ' - ' + this.size + ' / 3.75)';
-    this.rewardAmountFontSize = 'calc(' + this.size + ' - ' + this.size + ' / 2.25)';
+    const sizeNumber = parseInt(this.size);
+    this.fontSize = Math.round(sizeNumber - sizeNumber / 3.75) + 'px';
+    this.iconMinWidth = Math.round(sizeNumber / 1.33) + 'px';
+    this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
+    this.effectGap = Math.round(sizeNumber / 6) + 'px';
     this.marginBottom = '0px';
   }
 
   ngOnInit(): void {
     this.effectArrays = getSeparatedEffectArrays(this.rewards);
-    this.fontSize = 'calc(' + this.size + ' - ' + this.size + ' / 3.75)';
-    this.rewardAmountFontSize = 'calc(' + this.size + ' - ' + this.size + ' / 2.25)';
+    const sizeNumber = parseInt(this.size);
+    this.fontSize = Math.round(sizeNumber - sizeNumber / 3.75) + 'px';
+    this.iconMinWidth = Math.round(sizeNumber / 1.33) + 'px';
+    this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
+    this.effectGap = Math.round(sizeNumber / 6) + 'px';
     this.marginBottom = '0px';
   }
 
@@ -46,6 +55,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
 
   public isConditionalEffect(effect: Effect) {
     return isConditionalEffect(effect);
+  }
+
+  public isGameStartTiming(type: EffectType) {
+    return type === 'timing-game-start';
   }
 
   public isRoundStartTiming(type: EffectType) {

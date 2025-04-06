@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { SettingsService } from './settings.service';
-import { LanguageString, LanguageType } from '../models';
 import { deLocale, enLocale, LocaleType } from '../locales';
+import { LanguageString, LanguageType } from '../models';
+import { SettingsService } from './settings.service';
 
 export type Locale = { [key: string]: string };
 

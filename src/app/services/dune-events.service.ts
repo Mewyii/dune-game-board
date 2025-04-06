@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
-import { BehaviorSubject, first, map } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { DuneEvent, duneEvents } from '../constants/events';
 
 export interface DuneEventCard extends DuneEvent {

@@ -1,13 +1,17 @@
 <div class="effect-arrays-container" [style.gap]="arraySeparationGap">
   @for (effects of effectArrays; track $index) {
-  <div class="effects-container">
-    @for (reward of effects; track $index) { @if (isTimingEffect(reward)) { @if (isRoundStartTiming(reward.type)) {
+  <div [class]="'effects-container ' + (wrap ? 'wrap' : 'nowrap')" [style.gap]="effectGap">
+    @for (reward of effects; track $index) { @if (isTimingEffect(reward)) { @if (isGameStartTiming(reward.type)) {
     <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
-      {{ t.translate('commongEffectTimingRoundStart') }}:
+      {{ t.translate('commonEffectTimingGameStart') }}:
+    </div>
+    } @else if (isRoundStartTiming(reward.type)) {
+    <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+      {{ t.translate('commonEffectTimingRoundStart') }}:
     </div>
     } @else if (isRevealTurnTiming(reward.type)) {
     <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
-      {{ t.translate('commongEffectTimingRevealTurn') }}:
+      {{ t.translate('commonEffectTimingRevealTurn') }}:
     </div>
     } } @else if(isConditionalEffect(reward)) { @if (isInfluenceType(reward.type)) {
     <div class="condition-container">
@@ -25,7 +29,7 @@
     </div>
     } } @else {
     <div class="reward-container" [style.height]="size">
-      <img class="reward" [src]="getEffectTypePath(reward.type)" [style.height]="size" />
+      <img class="reward" [src]="getEffectTypePath(reward.type)" [style.height]="size" [style.minWidth]="iconMinWidth" />
       <div class="reward-amount" *ngIf="reward.amount">
         <div [style.fontSize]="rewardAmountFontSize">
           {{ reward.amount }}

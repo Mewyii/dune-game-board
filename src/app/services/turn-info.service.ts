@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { mergeObjects } from '../helpers/common';
-import { cloneDeep } from 'lodash';
 import { TurnInfo } from '../models/turn-info';
 
 @Injectable({
@@ -91,6 +91,7 @@ export class TurnInfoService {
       deployedTroopsThisTurn: 0,
       deployedDreadnoughtsThisTurn: 0,
       cardDrawOrDestroyAmount: 0,
+      cardDiscardAmount: 0,
       canLiftAgent: false,
       factionInfluenceUpChoiceAmount: 0,
       factionInfluenceUpChoiceTwiceAmount: 0,

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
-import { ActionField, FactionInfluenceReward, FactionType, LanguageType } from '../models';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
+import { AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
 import { gameContentCustomBeginner, gameContentCustomExpert, gameContentOriginal } from '../constants/game-content';
+import { ActionField, FactionInfluenceReward, FactionType, LanguageType } from '../models';
 
 @Injectable({
   providedIn: 'root',

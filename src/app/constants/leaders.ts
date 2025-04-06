@@ -1,4 +1,5 @@
-import { LanguageString, Effect, EffectReward } from '../models';
+import { Effect, EffectReward, LanguageString } from '../models';
+import { EffectSizeType } from '../models/imperium-card';
 import { AIAdjustments } from '../services/ai/models';
 import { GameModifiers } from '../services/game-modifier.service';
 
@@ -8,8 +9,12 @@ export interface Leader {
   house: LanguageString;
   startingResources: EffectReward[];
   passiveName: LanguageString;
+  passiveEffects?: Effect[];
+  passiveEffectSize?: EffectSizeType;
   passiveDescription: LanguageString;
   signetName: LanguageString;
+  signetEffects?: Effect[];
+  signetEffectSize?: EffectSizeType;
   signetDescription: LanguageString;
   imageUrl: string;
   playableByAI?: boolean;
@@ -20,33 +25,44 @@ export interface Leader {
 export const leaders: Leader[] = [
   {
     name: {
-      de: 'Stilgar',
       en: 'Stilgar',
+      de: 'Stilgar',
     },
     house: {
-      de: 'fremen',
       en: 'fremen',
+      de: 'fremen',
     },
     passiveName: {
-      de: 'Naib von Sietch Tabr',
       en: 'Naib of Sietch Tabr',
+      de: 'Naib von Sietch Tabr',
     },
     passiveDescription: {
-      de: 'Du beginnst das Spiel mit 2 {faction:fremen}-Einfluss.',
       en: 'You start the game with 2 {faction:fremen}-influence.',
+      de: 'Du beginnst das Spiel mit 2 {faction:fremen}-Einfluss.',
     },
     signetName: {
-      de: 'Die Wege der Fremen',
       en: 'The fremen ways',
+      de: 'Die Wege der Fremen',
     },
     signetDescription: {
-      de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst es jederzeit entsorgen, um {resource:sword}{resource:sword}{resource:sword} zu erhalten.',
       en: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. You may trash it at any time to get {resource:sword}{resource:sword}{resource:sword}.',
+      de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst es jederzeit entsorgen, um {resource:sword}{resource:sword}{resource:sword} zu erhalten.',
     },
-    type: 'new',
     imageUrl: '/assets/images/leaders/stilgar.png',
-    playableByAI: true,
-    startingResources: [{ type: 'water' }, { type: 'troop', amount: 3 }],
+    type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
+    startingResources: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -75,9 +91,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/liet.png',
     playableByAI: true,
-    aiAdjustments: {
-      fieldEvaluationModifier: (player, gameState, field) => (field.actionType === 'fremen' ? 0.025 : 0.0),
-    },
+    aiAdjustments: {},
     gameModifiers: {
       factionInfluence: [
         {
@@ -97,7 +111,15 @@ export const leaders: Leader[] = [
       ],
     },
     type: 'new',
-    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
+    startingResources: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'troop',
+        amount: 2,
+      },
+    ],
   },
   {
     name: {
@@ -137,7 +159,18 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'water' }, { type: 'troop' }],
+    startingResources: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -161,12 +194,38 @@ export const leaders: Leader[] = [
       de: 'Ego-Erinnerungen',
     },
     signetDescription: {
-      en: 'If this field is a {faction:town} field: {resource:loose-troop}<br>If not: {resource:card-discard}{resource:card-discard}',
-      de: '{resource:spice;amount:-1}{resource:helper-or}{resource:card-discard}{resource:card-discard}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/alia.png',
     type: 'new',
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
+    passiveEffects: [],
+    signetEffects: [
+      {
+        type: 'spice',
+        amount: -1,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'card-discard',
+      },
+    ],
   },
   {
     name: {
@@ -195,7 +254,14 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/preacher.png',
     type: 'new',
-    startingResources: [{ type: 'solari' }, { type: 'troop' }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+      },
+    ],
   },
   {
     name: {
@@ -242,78 +308,110 @@ export const leaders: Leader[] = [
           factionType: 'emperor',
         },
       ],
-      customActions: [{ id: 'irulan-field-history', action: 'field-marker' }],
+      customActions: [
+        {
+          id: 'irulan-field-history',
+          action: 'field-marker',
+        },
+      ],
     },
     startingResources: [
-      { type: 'solari', amount: 2 },
-      { type: 'troop', amount: 2 },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+        amount: 2,
+      },
     ],
   },
   {
     name: {
-      de: 'Feyd-Rautha Harkonnen',
       en: 'Feyd-Rautha Harkonnen',
+      de: 'Feyd-Rautha Harkonnen',
     },
     house: {
-      de: 'haus harkonnen',
       en: 'house harkonnen',
+      de: 'haus harkonnen',
     },
     passiveName: {
-      de: 'Rücksichtsloser Ehrgeiz',
       en: 'Ruthless ambition',
+      de: 'Rücksichtsloser Ehrgeiz',
     },
     passiveDescription: {
-      de: 'Immer wenn du eine Intrige ziehst: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
       en: 'Every time you draw an intrigue card: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
+      de: 'Immer wenn du eine Intrige ziehst: <br>{resource:solari}{resource:helper-trade}{resource:intrigue}{resource:intrigue-trash}',
     },
     signetName: {
-      de: 'Verstecktes Gift',
       en: 'Hidden poison',
+      de: 'Verstecktes Gift',
     },
     signetDescription: {
+      en: ' {resource:signet-token}. You may trash it during combat to get {resource:sword}.',
       de: '{resource:signet-token}. Du kannst es während des Kampfes entsorgen, um {resource:sword} zu erhalten.',
-      en: '{resource:signet-token}. You may trash it during combat to get {resource:sword}.',
     },
-    type: 'new',
     imageUrl: '/assets/images/leaders/feyd.png',
-    playableByAI: true,
+    type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 4,
+      },
+    ],
+    passiveEffects: [],
+    signetEffects: [],
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => (field.rewards.some((x) => x.type === 'intrigue') ? 0.05 : 0.0),
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 4 }],
   },
   {
     name: {
-      de: 'Graf Hasimir Fenring',
       en: 'Count Hasimir Fenring',
+      de: 'Graf Hasimir Fenring',
     },
     house: {
-      de: 'haus fenring',
       en: 'house fenring',
+      de: 'haus fenring',
     },
     passiveName: {
-      de: 'Agent des Imperators',
       en: 'Agent of the emperor',
+      de: 'Agent des Imperators',
     },
     passiveDescription: {
-      de: 'Du beginnst das Spiel mit 1 {faction:emperor}-Einfluss und 2 {resource:foldspace}-Karten in deinem Deck.',
       en: 'You start the game with 1 {faction:emperor}-influence and 2 {resource:foldspace}-cards in your deck.',
+      de: 'Du beginnst das Spiel mit 1 {faction:emperor}-Einfluss und 2 {resource:foldspace}-Karten in deinem Deck.',
     },
     signetName: {
-      de: 'Inszenierte Schwächlichkeit',
       en: 'Orchestrated weakness',
+      de: 'Inszenierte Schwächlichkeit',
     },
     signetDescription: {
-      de: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Entsorge es an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
-      en: '{resource:card-discard} {resource:helper-trade} {resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue}.',
+      en: '{resource:card-discard}{resource:helper-trade}{resource:signet-token}. Trash it at your reveal turn to get {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue}.',
+      de: '{resource:card-discard}{resource:helper-trade}{resource:signet-token}. Entsorge es an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/hasimir.png',
     playableByAI: true,
     startingResources: [
-      { type: 'solari', amount: 2 },
-      { type: 'troop', amount: 2 },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+        amount: 2,
+      },
     ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -352,8 +450,14 @@ export const leaders: Leader[] = [
       ],
     },
     startingResources: [
-      { type: 'solari', amount: 2 },
-      { type: 'troop', amount: 2 },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+        amount: 2,
+      },
     ],
   },
   {
@@ -384,11 +488,16 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',
     playableByAI: true,
-    aiAdjustments: {
-      fieldEvaluationModifier: (player, gameState, field) =>
-        field.rewards.some((x) => x.type === 'persuasion') ? 0.025 : 0.0,
-    },
-    startingResources: [{ type: 'tech' }, { type: 'troop', amount: 3 }],
+    aiAdjustments: {},
+    startingResources: [
+      {
+        type: 'tech',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
   },
   {
     name: {
@@ -404,21 +513,43 @@ export const leaders: Leader[] = [
       de: 'Kybernetische Implantate',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: {resource:signet-token} <br><br>You may at any time: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
-      de: '<b>Rundenbeginn</b>: {resource:signet-token} <br><br>Du kannst jederzeit: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
+      en: 'You may at any time: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
+      de: 'Du kannst jederzeit: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
     },
     signetName: {
       en: 'Earl of ix',
       de: 'Graf von Ix',
     },
     signetDescription: {
-      en: '{resource:tech}',
-      de: '{resource:tech}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
-    playableByAI: true,
-    startingResources: [{ type: 'tech' }, { type: 'troop', amount: 3 }],
+    passiveEffectSize: 'small',
+    signetEffectSize: 'large',
+    startingResources: [
+      {
+        type: 'tech',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'signet-token',
+      },
+    ],
+    signetEffects: [
+      {
+        type: 'tech',
+      },
+    ],
   },
   {
     name: {
@@ -447,42 +578,63 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
+
     aiAdjustments: {
       goalEvaluationModifier: () => [{ type: 'high-council', modifier: -0.2 }],
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
   },
   {
     name: {
-      de: 'Lunara Metulli',
       en: 'Lunara Metulli',
+      de: 'Lunara Metulli',
     },
     type: 'new',
     house: {
-      de: 'haus metulli',
       en: 'house metulli',
+      de: 'haus metulli',
     },
     passiveName: {
-      de: 'Bedrängtes Haus',
       en: 'Struggling house',
+      de: 'Bedrängtes Haus',
     },
     passiveDescription: {
-      de: '<b>Spielbeginn</b>: {resource:signet-token}. Entferne alle {resource:persuasion;amount:2}-Karten aus deinem Deck.',
       en: '<b>Game start</b>: {resource:signet-token}. Remove all {resource:persuasion;amount:2}-cards from your deck.',
+      de: '<b>Spielbeginn</b>: {resource:signet-token}. Entferne alle {resource:persuasion;amount:2}-Karten aus deinem Deck.',
     },
     signetName: {
-      de: 'Sorgfältiges Vorgehen',
       en: 'Thorough approach',
+      de: 'Sorgfältiges Vorgehen',
     },
     signetDescription: {
-      de: '{resource:signet-token}. Du kannst es entsorgen, wenn du {resource:solari}, {resource:spice} oder {resource:water} erhältst, um davon 1 mehr zu erhalten.',
       en: '{resource:signet-token}. You may trash it when you receive {resource:solari}, {resource:spice} or {resource:water} to get +1 of it.',
+      de: '{resource:signet-token}. Du kannst es entsorgen, wenn du {resource:solari}, {resource:spice} oder {resource:water} erhältst, um davon 1 mehr zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     playableByAI: true,
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -498,8 +650,8 @@ export const leaders: Leader[] = [
       de: 'Atreides-Ausbildung',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: {resource:card-draw}{resource:helper-trade}{resource:card-discard}',
-      de: '<b>Rundenbeginn</b>: {resource:card-draw}{resource:helper-trade}{resource:card-discard}',
+      en: '',
+      de: '',
     },
     signetName: {
       en: 'Dreams',
@@ -511,20 +663,29 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/paul_atreides.png',
     type: 'new',
-    playableByAI: true,
-    gameModifiers: {
-      customActions: [
-        {
-          id: 'muadib-vision-deck',
-          action: 'vision-deck',
-        },
-        {
-          id: 'muadib-vision-intrigues',
-          action: 'vision-intrigues',
-        },
-      ],
-    },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-discard',
+      },
+    ],
+    signetEffects: [],
   },
   {
     name: {
@@ -548,25 +709,34 @@ export const leaders: Leader[] = [
       de: 'Lisan al Gaib',
     },
     signetDescription: {
-      en: '{resource:card-draw} {resource:helper-or} {resource:troop}',
-      de: '{resource:card-draw} {resource:helper-or} {resource:troop}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/paul_muaddib.png',
     type: 'new',
-    playableByAI: true,
-    gameModifiers: {
-      customActions: [
-        {
-          id: 'muadib-vision-deck',
-          action: 'vision-deck',
-        },
-        {
-          id: 'muadib-vision-intrigues',
-          action: 'vision-intrigues',
-        },
-      ],
-    },
-    startingResources: [{ type: 'water' }, { type: 'troop', amount: 2 }],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'large',
+    startingResources: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'troop',
+        amount: 2,
+      },
+    ],
+    passiveEffects: [],
+    signetEffects: [
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'troop',
+      },
+    ],
   },
   {
     name: {
@@ -590,8 +760,8 @@ export const leaders: Leader[] = [
       de: 'Umsichtige Planung',
     },
     signetDescription: {
-      en: '{resource:spice} {resource:helper-trade} {resource:intrigue}',
-      de: '{resource:spice} {resource:helper-trade} {resource:intrigue}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/paul_emperor.png',
     type: 'new',
@@ -611,7 +781,29 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'spice' }, { type: 'troop', amount: 3 }],
+    startingResources: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'large',
+    passiveEffects: [],
+    signetEffects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
   },
   {
     name: {
@@ -635,13 +827,35 @@ export const leaders: Leader[] = [
       de: 'Grenzenlose Gier',
     },
     signetDescription: {
-      en: '{resource:loose-troop} {resource:helper-trade} {resource:spice}',
-      de: '{resource:loose-troop} {resource:helper-trade} {resource:spice}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/vlad.png',
     type: 'new',
     playableByAI: true,
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 4 }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 4,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'large',
+    passiveEffects: [],
+    signetEffects: [
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'spice',
+      },
+    ],
   },
   {
     name: {
@@ -657,8 +871,8 @@ export const leaders: Leader[] = [
       de: 'Gerechter Anführer',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: {resource:persuasion;amount:1}',
-      de: '<b>Aufdeckzug</b>: {resource:persuasion;amount:1}',
+      en: '',
+      de: '',
     },
     signetName: {
       en: 'Inspiring loyalty',
@@ -679,7 +893,27 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
+    passiveEffects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
+    signetEffects: [],
   },
   {
     name: {
@@ -709,7 +943,19 @@ export const leaders: Leader[] = [
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
     playableByAI: true,
-    startingResources: [{ type: 'spice' }, { type: 'troop', amount: 4 }],
+    startingResources: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'troop',
+        amount: 4,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -725,8 +971,8 @@ export const leaders: Leader[] = [
       de: 'Renommiertes Haus',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: {resource:faction-influence-up-choice}',
-      de: '<b>Spielbeginn</b>: {resource:faction-influence-up-choice}',
+      en: '',
+      de: '',
     },
     signetName: {
       en: 'Battle-hardened',
@@ -740,9 +986,26 @@ export const leaders: Leader[] = [
     type: 'new',
     playableByAI: true,
     startingResources: [
-      { type: 'solari', amount: 3 },
-      { type: 'troop', amount: 3 },
+      {
+        type: 'solari',
+        amount: 3,
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
     ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
+    passiveEffects: [
+      {
+        type: 'timing-game-start',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    signetEffects: [],
   },
   {
     name: {
@@ -769,11 +1032,17 @@ export const leaders: Leader[] = [
       en: 'Place {resource:signet-token} on a board space that has one of your agents on it. If you have troops in combat: {resource:spice}',
       de: 'Lege {resource:signet-token} auf ein {faction:town}-Feld mit einem deiner Agenten. Wenn ein Spieler dort einen Agent platziert, erhältst du und der Spieler jeweils {resource:solari}.',
     },
-
     imageUrl: '/assets/images/leaders/yuna_2.png',
     type: 'new',
     playableByAI: true,
-    startingResources: [{ type: 'solari' }, { type: 'troop' }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     gameModifiers: {
       customActions: [
         {
@@ -819,7 +1088,14 @@ export const leaders: Leader[] = [
         },
       ],
     },
-    startingResources: [{ type: 'solari' }, { type: 'troop' }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+      },
+    ],
   },
   {
     name: {
@@ -843,13 +1119,29 @@ export const leaders: Leader[] = [
       de: 'Schmuggler-Verbindungen',
     },
     signetDescription: {
-      en: '{resource:solari;amount:2}',
-      de: '{resource:solari;amount:2}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/memnon.png',
     type: 'new',
-    playableByAI: true,
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'large',
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffects: [],
+    signetEffects: [
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
   },
   {
     name: {
@@ -865,20 +1157,49 @@ export const leaders: Leader[] = [
       de: 'Spice-Empfänglich',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: {resource:spice}{resource:helper-trade}{resource:focus}',
-      de: '<b>Rundenbeginn</b>: {resource:spice}{resource:helper-trade}{resource:focus}',
+      en: '',
+      de: '',
     },
     signetName: {
       en: 'Equipment production',
       de: 'Ausrüstungsproduktion',
     },
     signetDescription: {
-      en: '{resource:water}',
-      de: '{resource:water}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/ariana_4.png',
     type: 'new',
     playableByAI: true,
-    startingResources: [{ type: 'solari' }, { type: 'troop', amount: 3 }],
+    startingResources: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+        amount: 3,
+      },
+    ],
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'large',
+    passiveEffects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'focus',
+      },
+    ],
+    signetEffects: [
+      {
+        type: 'water',
+      },
+    ],
   },
 ];

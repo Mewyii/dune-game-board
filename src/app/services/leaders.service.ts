@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Leader, leaders } from '../constants/leaders';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
+import { BehaviorSubject } from 'rxjs';
+import { Leader, leaders } from '../constants/leaders';
+import { getStructuredEffectArrayInfos } from '../helpers/rewards';
+import { StructuredEffects } from '../models';
 import { Player } from '../models/player';
+import { LeaderConfiguratorService } from './configurators/leader.service';
+
+export interface LeaderDeckCard extends Leader {
+  id: string;
+  structuredPassiveEffects?: StructuredEffects;
+  structuredSignetEffects?: StructuredEffects;
+}
 
 export interface PlayerLeader {
   playerId: number;
-  leaderName: string;
+  leader: LeaderDeckCard;
   isLockedIn?: boolean;
 }
 
@@ -14,18 +23,17 @@ export interface PlayerLeader {
   providedIn: 'root',
 })
 export class LeadersService {
-  private leadersSubject = new BehaviorSubject<Leader[]>(leaders);
-  public leaders$ = this.leadersSubject.asObservable();
-  public leaders: Leader[] = [];
+  private leaderDeckSubject = new BehaviorSubject<LeaderDeckCard[]>([]);
+  public leaderDeck$ = this.leaderDeckSubject.asObservable();
 
   private playerLeadersSubject = new BehaviorSubject<PlayerLeader[]>([]);
   public playerLeaders$ = this.playerLeadersSubject.asObservable();
   public playerLeaders: PlayerLeader[] = [];
 
-  constructor() {
-    const leadersString = localStorage.getItem('leaders');
-    if (leadersString) {
-      const storedLeaders = JSON.parse(leadersString) as Leader[];
+  constructor(private leaderConfiguratorService: LeaderConfiguratorService) {
+    const leaderDeckString = localStorage.getItem('leaderDeck');
+    if (leaderDeckString) {
+      const storedLeaders = JSON.parse(leaderDeckString) as LeaderDeckCard[];
 
       // Workaround for local storage not being able to store functions
       const realLeaders = storedLeaders.map((x) => {
@@ -33,12 +41,11 @@ export class LeadersService {
         return { ...leader, ...x };
       });
 
-      this.leadersSubject.next(realLeaders);
+      this.leaderDeckSubject.next(realLeaders);
     }
 
-    this.leaders$.subscribe((leaders) => {
-      this.leaders = cloneDeep(leaders);
-      localStorage.setItem('leaders', JSON.stringify(leaders));
+    this.leaderDeck$.subscribe((leaderDeck) => {
+      localStorage.setItem('leaderDeck', JSON.stringify(leaderDeck));
     });
 
     const playersLeadersString = localStorage.getItem('playerLeaders');
@@ -53,58 +60,45 @@ export class LeadersService {
     });
   }
 
+  private get leaderDeck() {
+    return cloneDeep(this.leaderDeckSubject.value);
+  }
+
   getLeader(playerId: number) {
-    const playerLeader = this.playerLeaders.find((x) => x.playerId === playerId);
-    return this.leaders.find((x) => x.name.en === playerLeader?.leaderName);
+    return cloneDeep(this.playerLeaders.find((x) => x.playerId === playerId)?.leader);
   }
 
-  addLeader(card: Leader) {
-    this.leadersSubject.next([...this.leaders, card]);
-  }
-
-  editLeader(card: Leader) {
-    const cardId = card.name.en;
-
-    const leaders = this.leaders;
-    const cardIndex = leaders.findIndex((x) => x.name.en === cardId);
-    leaders[cardIndex] = card;
-
-    this.leadersSubject.next(leaders);
-  }
-
-  deleteLeader(id: string) {
-    this.leadersSubject.next(this.leaders.filter((x) => x.name.en !== id));
-  }
-
-  setLeaders(leaders: Leader[]) {
-    this.leadersSubject.next([...leaders]);
+  createLeaderDeck() {
+    const techTiles = this.leaderConfiguratorService.leaders;
+    this.playerLeadersSubject.next([]);
+    this.leaderDeckSubject.next(techTiles.map((x) => this.instantiateLeader(x)));
   }
 
   assignRandomLeadersToPlayers(players: Player[]) {
     const playerLeaders: PlayerLeader[] = [];
 
-    const leaders = cloneDeep(this.leaders.filter((x) => x.playableByAI));
-    const shuffledLeaders = shuffle(leaders);
+    const leaderDeck = cloneDeep(this.leaderDeck.filter((x) => x.playableByAI));
+    const shuffledLeaders = shuffle(leaderDeck);
 
     for (const player of players) {
       const leader = shuffledLeaders.pop();
       if (leader) {
-        playerLeaders.push({ playerId: player.id, leaderName: leader?.name.en });
+        playerLeaders.push({ playerId: player.id, leader: leader });
       }
     }
 
     this.playerLeadersSubject.next(playerLeaders);
   }
 
-  assignLeaderToPlayer(playerId: number, leaderName: string) {
+  assignLeaderToPlayer(playerId: number, leaderId: string) {
     const playerLeaders = this.playerLeaders;
 
-    const leader = this.leaders.find((x) => x.name.en === leaderName);
+    const leader = this.leaderDeck.find((x) => x.id === leaderId);
 
     const playerLeaderIndex = playerLeaders.findIndex((x) => x.playerId === playerId);
 
     if (leader && playerLeaderIndex > -1) {
-      playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], leaderName: leader.name.en };
+      playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], leader: leader };
       this.playerLeadersSubject.next(playerLeaders);
     }
   }
@@ -114,12 +108,24 @@ export class LeadersService {
     const playerLeaderIndex = playerLeaders.findIndex((x) => x.playerId === playerId);
 
     if (playerLeaderIndex > -1) {
-      playerLeaders[playerLeaderIndex] = { ...playerLeaders[playerLeaderIndex], isLockedIn: true };
+      const playerLeader = playerLeaders[playerLeaderIndex];
+      playerLeaders[playerLeaderIndex] = { ...playerLeader, isLockedIn: true };
+
       this.playerLeadersSubject.next(playerLeaders);
+      this.leaderDeckSubject.next(shuffle(this.leaderDeck.filter((x) => x.id !== playerLeader.leader.id)));
     }
   }
 
   resetLeaders() {
     this.playerLeadersSubject.next([]);
+  }
+
+  private instantiateLeader(leader: Leader): LeaderDeckCard {
+    return {
+      ...leader,
+      id: crypto.randomUUID(),
+      structuredPassiveEffects: leader.passiveEffects ? getStructuredEffectArrayInfos(leader.passiveEffects) : undefined,
+      structuredSignetEffects: leader.signetEffects ? getStructuredEffectArrayInfos(leader.signetEffects) : undefined,
+    };
   }
 }

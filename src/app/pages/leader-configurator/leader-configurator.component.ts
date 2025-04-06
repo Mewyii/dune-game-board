@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
-import { LeadersService } from 'src/app/services/leaders.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leader-editor.component';
 import * as htmlToImage from 'html-to-image';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { LeaderConfiguratorService } from 'src/app/services/configurators/leader.service';
 
 @Component({
   selector: 'dune-leader-configurator',
@@ -17,7 +17,7 @@ export class LeaderConfiguratorComponent {
   public showControls = true;
   public imagePadding = 0;
 
-  constructor(public t: TranslateService, public leadersService: LeadersService, public dialog: MatDialog) {}
+  constructor(public t: TranslateService, public leadersService: LeaderConfiguratorService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.leadersService.leaders$.subscribe((leaders) => {

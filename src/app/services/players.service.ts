@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Resource, ResourceType } from '../models';
-import { SettingsService } from './settings.service';
 import { Player, PlayerTurnState } from '../models/player';
+import { SettingsService } from './settings.service';
 
 @Injectable({
   providedIn: 'root',

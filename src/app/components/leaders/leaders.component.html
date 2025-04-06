@@ -5,8 +5,11 @@
     </div>
     <dune-leader-card *ngIf="activeLeader.type === 'new'" [leader]="activeLeader"></dune-leader-card>
     <div class="leader-action-container" *ngIf="!playerLeader?.isLockedIn">
-      <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()" matTooltip="Select">
+      <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()" matTooltip="Lock In">
         <mat-icon>check</mat-icon>
+      </button>
+      <button class="buy-button" mat-fab [color]="'accent'" (click)="onSelectRandomLeaderClicked()" matTooltip="Randomize">
+        <mat-icon>shuffle</mat-icon>
       </button>
     </div>
     <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setNextLeader()">
@@ -66,7 +69,7 @@
         <div class="resource-container">
           <div
             class="resource-display"
-            (click)="onAddSignetTokenClicked(currentPlayer.id)"
+            (click)="onAddSignetTokenClicked(currentPlayer)"
             (contextmenu)="onRemoveSignetTokenClicked(currentPlayer.id)"
           >
             <img class="resource intrigue" [src]="getEffectTypePath('signet-token')" />

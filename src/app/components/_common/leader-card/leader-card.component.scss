@@ -7,6 +7,7 @@
   color: #fffcfa;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
   background-position-y: 16px;
+  background-color: #45382f;
 }
 
 .leader-frame {
@@ -115,6 +116,7 @@
   align-items: center;
   padding: 4px;
   font-size: small;
+  flex-wrap: wrap;
 }
 
 .leader-passive-description,

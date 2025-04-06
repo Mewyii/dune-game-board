@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { SettingsService } from './settings.service';
 import { Player } from '../models/player';
+import { SettingsService } from './settings.service';
 
 export interface PlayerCombatUnits {
   playerId: number;

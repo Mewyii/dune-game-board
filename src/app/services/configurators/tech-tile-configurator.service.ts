@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { TechTileCard } from 'src/app/models/tech-tile';
+import { BehaviorSubject } from 'rxjs';
 import { techTiles } from 'src/app/constants/tech-tiles';
+import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Injectable({
   providedIn: 'root',

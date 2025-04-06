@@ -16,6 +16,7 @@ export interface TurnInfo {
   deployedTroopsThisTurn: number;
   deployedDreadnoughtsThisTurn: number;
   cardDrawOrDestroyAmount: number;
+  cardDiscardAmount: number;
   canLiftAgent: boolean;
   factionInfluenceUpChoiceAmount: number;
   factionInfluenceUpChoiceTwiceAmount: number;

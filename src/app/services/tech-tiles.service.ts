@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
-import { techTiles } from '../constants/tech-tiles';
-import { TechTileCard } from '../models/tech-tile';
-import { StructuredEffects } from '../models';
+import { BehaviorSubject, map } from 'rxjs';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
+import { StructuredEffects } from '../models';
+import { TechTileCard } from '../models/tech-tile';
 import { TechTileConfiguratorService } from './configurators/tech-tile-configurator.service';
 
 export interface TechTileDeckCard extends TechTileCard {
@@ -67,7 +66,7 @@ export class TechTilesService {
     return cloneDeep(this.playerTechTilesSubject.value.filter((x) => x.playerId === playerId));
   }
 
-  setInitialAvailableTechTiles() {
+  createTechTileDeck() {
     const techTiles = this.techTilesConfigService.techTiles;
     this.playerTechTilesSubject.next([]);
     this.availableTechTilesSubject.next(shuffle(techTiles.map((x) => this.instantiateTechTile(x))));
@@ -115,7 +114,7 @@ export class TechTilesService {
     this.playerTechTilesSubject.next(this.playerTechTiles.filter((x) => x.techTile.id !== techTileId));
   }
 
-  public instantiateTechTile(card: TechTileCard): TechTileDeckCard {
+  private instantiateTechTile(card: TechTileCard): TechTileDeckCard {
     return {
       ...card,
       id: crypto.randomUUID(),

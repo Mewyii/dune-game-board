@@ -53,7 +53,7 @@ export const effectRewards = [
   'beetle',
 ] as const;
 
-export const effectTimings = ['timing-round-start', 'timing-reveal-turn'] as const;
+export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-reveal-turn'] as const;
 
 export const effectSeparators = ['helper-separator'] as const;
 

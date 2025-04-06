@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
-import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
-import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
+import { BehaviorSubject } from 'rxjs';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
+import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
+import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
 
 @Injectable({
   providedIn: 'root',
@@ -67,7 +67,7 @@ export class IntriguesService {
     return this.playerIntriguesSubject.value.find((x) => x.playerId === playerId)?.intrigues.length ?? 0;
   }
 
-  public setInitialIntrigueDeck() {
+  public createIntrigueDeck() {
     this.playerIntriguesSubject.next([]);
     const intrigueDeck: IntrigueDeckCard[] = [];
     const intriguesCards = this.intrigueConfigService.intrigues;

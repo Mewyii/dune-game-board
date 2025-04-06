@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
+import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { cloneDeep } from 'lodash';
-import { shuffle } from 'lodash';
-import { PlayersService } from './players.service';
-import { CardConfiguratorService } from './configurators/card-configurator.service';
-import { ActionType, FactionType, StructuredEffects } from '../models';
-import { SettingsService } from './settings.service';
-import { ImperiumCard } from '../models/imperium-card';
-import { PlotConfiguratorService } from './configurators/plot-configurator.service';
-import { ImperiumPlot } from '../models/imperium-plot';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
+import { ActionType, FactionType, StructuredEffects } from '../models';
+import { ImperiumCard } from '../models/imperium-card';
+import { ImperiumPlot } from '../models/imperium-plot';
+import { CardConfiguratorService } from './configurators/card-configurator.service';
+import { PlotConfiguratorService } from './configurators/plot-configurator.service';
+import { PlayersService } from './players.service';
+import { SettingsService } from './settings.service';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
@@ -262,7 +261,7 @@ export class CardsService {
     return this.playedPlayerCards.find((x) => x.playerId === playerId);
   }
 
-  setImperiumDeck() {
+  createImperiumDeck() {
     const imperiumDeckCards: (ImperiumDeckCard | ImperiumDeckPlot)[] = [];
     const imperiumCards = this.cardConfiguratorService.imperiumCards;
     const plotCards = this.plotConfiguratorService.imperiumPlots;

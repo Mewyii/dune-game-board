@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 import { ActionField, EffectRewardType } from '../models';
 
 export interface FieldLog {

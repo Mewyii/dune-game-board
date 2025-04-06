@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { ActionType, EffectReward, FactionType } from '../models';
+import { Player } from '../models/player';
+import { CombatManager } from './combat-manager.service';
+import { LoggingService } from './log.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
-import { ActionType, FactionType, Effect, EffectReward } from '../models';
-import { CombatManager } from './combat-manager.service';
-import { Player } from '../models/player';
-import { LoggingService } from './log.service';
 
 export interface PlayerScore {
   playerId: number;

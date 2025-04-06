@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
+import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
-import { cloneDeep } from 'lodash';
 import { conflicts } from '../constants/conflicts';
-import { shuffle } from 'lodash';
 import { Conflict } from '../models/conflict';
 
 @Injectable({
@@ -37,7 +36,7 @@ export class ConflictsService {
     return cloneDeep(this.conflictStackSubject.value);
   }
 
-  setInitialConflictStack() {
+  createConflictDeck() {
     const secondLevelConflicts = this.conflicts.filter((x) => x.lvl === 1);
     const thirdLevelConflicts = this.conflicts.filter((x) => x.lvl === 2);
 

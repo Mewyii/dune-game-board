@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { TranslateService } from '../translate-service';
-import { ImperiumPlot } from 'src/app/models/imperium-plot';
+import { BehaviorSubject } from 'rxjs';
 import { imperiumPlots } from 'src/app/constants/imperium-plots';
+import { ImperiumPlot } from 'src/app/models/imperium-plot';
+import { TranslateService } from '../translate-service';
 
 @Injectable({
   providedIn: 'root',

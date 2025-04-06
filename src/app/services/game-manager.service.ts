@@ -1,52 +1,10 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, flatten, max, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { isResource, isResourceType } from '../helpers/resources';
-import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
-import { LoggingService } from './log.service';
-import { PlayersService } from './players.service';
-import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
-import { LocationManager } from './location-manager.service';
-import { DuneEventsManager } from './dune-events.service';
-import {
-  ActionField,
-  ActionType,
-  DuneLocation,
-  Effect,
-  EffectReward,
-  EffectRewardOrChoice,
-  EffectRewardType,
-  StructuredChoiceEffect,
-  StructuredConditionalEffect,
-  StructuredEffects,
-  StructuredTimingEffect,
-} from '../models';
-import { AIManager } from './ai/ai.manager';
-import { LeadersService } from './leaders.service';
-import { ConflictsService } from './conflicts.service';
-import { MinorHousesService } from './minor-houses.service';
-import { TechTileDeckCard, TechTilesService } from './tech-tiles.service';
-import { AudioManager } from './audio-manager.service';
-import { SettingsService } from './settings.service';
-import { getRandomElementFromArray, sum } from '../helpers/common';
-import { GameState, PlayerCardsFactions as Factions, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
-import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
-import {
-  getStructuredChoiceEffectIfPossible,
-  isConditionalEffect,
-  isConversionEffectType,
-  isFactionScoreCostType,
-  isFactionScoreRewardType,
-  isOptionEffectType,
-  isRewardEffect,
-  isRewardEffectType,
-  isStructuredChoiceEffect,
-  isStructuredConditionalEffect,
-} from '../helpers/rewards';
-import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
-import { Leader } from '../constants/leaders';
-import { GameModifiersService } from './game-modifier.service';
+import { getRandomElementFromArray, sum } from '../helpers/common';
+import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
+import { isActiveFactionType } from '../helpers/faction-types';
 import {
   getCardCostModifier,
   getFactionInfluenceModifier,
@@ -56,17 +14,53 @@ import {
   getTechTileCostModifier,
   hasFactionInfluenceModifier,
 } from '../helpers/game-modifiers';
-import { isActiveFactionType } from '../helpers/faction-types';
-import { PlayerRewardChoicesService } from './player-reward-choices.service';
-import { TranslateService } from './translate-service';
-import { IntriguesService } from './intrigues.service';
-import { TurnInfoService } from './turn-info.service';
+import { isResource, isResourceType } from '../helpers/resources';
+import {
+  getStructuredChoiceEffectIfPossible,
+  isConversionEffectType,
+  isFactionScoreCostType,
+  isFactionScoreRewardType,
+  isOptionEffectType,
+  isRewardEffect,
+  isStructuredChoiceEffect,
+  isStructuredConditionalEffect,
+} from '../helpers/rewards';
+import {
+  ActionField,
+  ActionType,
+  DuneLocation,
+  Effect,
+  EffectReward,
+  EffectRewardType,
+  StructuredChoiceEffect,
+  StructuredConditionalEffect,
+  StructuredEffects,
+  StructuredTimingEffect,
+} from '../models';
 import { IntrigueDeckCard } from '../models/intrigue';
 import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
+import { AIManager } from './ai/ai.manager';
+import { PlayerCardsFactions as Factions, GameState, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
+import { AudioManager } from './audio-manager.service';
+import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
+import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
+import { ConflictsService } from './conflicts.service';
+import { DuneEventsManager } from './dune-events.service';
+import { GameModifiersService } from './game-modifier.service';
+import { IntriguesService } from './intrigues.service';
+import { LeaderDeckCard, LeadersService } from './leaders.service';
+import { LocationManager } from './location-manager.service';
+import { LoggingService } from './log.service';
+import { MinorHousesService } from './minor-houses.service';
 import { NotificationService } from './notification.service';
-import { techTileAiEvaluations } from '../constants/tech-tiles-ai-evaluations';
-import { ImperiumPlot } from '../models/imperium-plot';
+import { PlayerRewardChoicesService } from './player-reward-choices.service';
+import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
+import { PlayersService } from './players.service';
+import { SettingsService } from './settings.service';
+import { TechTileDeckCard, TechTilesService } from './tech-tiles.service';
+import { TranslateService } from './translate-service';
+import { TurnInfoService } from './turn-info.service';
 
 export interface AgentOnField {
   fieldId: string;
@@ -149,7 +143,7 @@ export class GameManager {
     private turnInfoService: TurnInfoService,
     private notificationService: NotificationService
   ) {
-    const currentRoundString = localStorage.getItem('currentTurn');
+    const currentRoundString = localStorage.getItem('currentRound');
     if (currentRoundString) {
       const currentRound = JSON.parse(currentRoundString) as number;
       this.currentRoundSubject.next(currentRound);
@@ -197,8 +191,8 @@ export class GameManager {
       this.isFinaleSubject.next(isFinale);
     }
 
-    this.currentRound$.subscribe((currentTurn) => {
-      localStorage.setItem('currentTurn', JSON.stringify(currentTurn));
+    this.currentRound$.subscribe((currentRound) => {
+      localStorage.setItem('currentRound', JSON.stringify(currentRound));
     });
 
     this.startingPlayerId$.subscribe((startingPlayerId) => {
@@ -307,14 +301,15 @@ export class GameManager {
 
     this.cardsService.setLimitedCustomCards();
     this.cardsService.setUnlimitedCustomCards();
-    this.cardsService.setImperiumDeck();
+    this.cardsService.createImperiumDeck();
     this.cardsService.setInitialPlayerDecks();
-    this.intriguesService.setInitialIntrigueDeck();
+    this.intriguesService.createIntrigueDeck();
     this.aIManager.assignPersonalitiesToAIPlayers(newPlayers);
+    this.leadersService.createLeaderDeck();
     this.leadersService.assignRandomLeadersToPlayers(newPlayers);
-    this.conflictsService.setInitialConflictStack();
+    this.conflictsService.createConflictDeck();
     this.minorHousesService.setInitialAvailableHouses();
-    this.techTilesService.setInitialAvailableTechTiles();
+    this.techTilesService.createTechTileDeck();
 
     this.currentRoundSubject.next(1);
     this.currentRoundPhaseSubject.next('agent-placement');
@@ -349,7 +344,7 @@ export class GameManager {
           }
           if (event.immediatePlayerEffects) {
             const gameState = this.getGameState(player);
-            this.resolveStructuredEffects(event.immediatePlayerEffects, player, gameState);
+            this.resolveStructuredEffects(event.immediatePlayerEffects, player.id, gameState);
           }
         }
       }
@@ -385,7 +380,7 @@ export class GameManager {
             }
 
             if (!player.isAI) {
-              this.showPlayerRewardChoices(player);
+              this.resolvePlayerRewardChoices(player);
             } else {
               this.aiResolveRewardChoices(player);
             }
@@ -404,7 +399,7 @@ export class GameManager {
           }
 
           if (!player.isAI) {
-            this.showPlayerRewardChoices(player);
+            this.resolvePlayerRewardChoices(player);
           } else {
             this.aiResolveRewardChoices(player);
           }
@@ -467,6 +462,7 @@ export class GameManager {
     this.cardsService.churnAndClearImperiumRow();
     this.cardsService.discardAllPlayerHandCards();
     this.cardsService.shufflePlayerDiscardPilesUnderDecks();
+
     for (const player of this.playerManager.getPlayers()) {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
@@ -479,19 +475,36 @@ export class GameManager {
     this.techTilesService.unFlipTechTiles();
 
     const nextEvent = this.duneEventsManager.setNextEvent();
-    if (nextEvent) {
-      const players = this.playerManager.getPlayers();
-      if (nextEvent.gameEffects) {
-        this.resolveGameEffects(nextEvent.gameEffects);
-      }
-      for (const player of players) {
+    if (nextEvent && nextEvent.gameEffects) {
+      this.resolveGameEffects(nextEvent.gameEffects);
+    }
+
+    const players = this.playerManager.getPlayers();
+    for (const player of players) {
+      if (nextEvent) {
         if (nextEvent.gameModifiers) {
           this.gameModifiersService.addPlayerGameModifiers(player.id, nextEvent.gameModifiers);
         }
         if (nextEvent.immediatePlayerEffects) {
           const gameState = this.getGameState(player);
-          this.resolveStructuredEffects(nextEvent.immediatePlayerEffects, player, gameState);
+          this.resolveStructuredEffects(nextEvent.immediatePlayerEffects, player.id, gameState);
         }
+      }
+
+      const playerLeader = this.leadersService.getLeader(player.id);
+      const leaderPassiveTimingEffects = playerLeader?.structuredPassiveEffects?.timingEffects;
+      if (leaderPassiveTimingEffects) {
+        const gameState = this.getGameState(player);
+
+        for (const effect of leaderPassiveTimingEffects) {
+          this.resolveStructuredTimingEffects(effect, player, gameState);
+        }
+      }
+
+      if (!player.isAI) {
+        this.resolvePlayerRewardChoices(player);
+      } else {
+        this.aiResolveRewardChoices(player);
       }
     }
   }
@@ -540,7 +553,7 @@ export class GameManager {
 
           this.resolveStructuredEffects(
             card.structuredRevealEffects,
-            player,
+            player.id,
             gameState,
             { type: 'card', object: card },
             playerHand.cards.filter((x) => x.id !== card.id)
@@ -551,12 +564,24 @@ export class GameManager {
           this.playerRewardChoicesService.addPlayerCustomChoice(playerId, localizedString);
         }
       }
+    }
 
-      if (!player.isAI) {
-        this.showPlayerRewardChoices(player);
-      } else {
-        this.aiResolveRewardChoices(player);
+    const playerLeader = this.leadersService.getLeader(player.id);
+    const leaderPassiveTimingEffects = playerLeader?.structuredPassiveEffects?.timingEffects;
+    if (leaderPassiveTimingEffects) {
+      const gameState = this.getGameState(player);
+      const updatedPlayer = this.playerManager.getPlayer(playerId);
+      if (updatedPlayer) {
+        for (const effect of leaderPassiveTimingEffects) {
+          this.resolveStructuredTimingEffects(effect, updatedPlayer, gameState);
+        }
       }
+    }
+
+    if (!player.isAI) {
+      this.resolvePlayerRewardChoices(player);
+    } else {
+      this.aiResolveRewardChoices(player);
     }
   }
 
@@ -708,7 +733,7 @@ export class GameManager {
         }
       }
 
-      this.showPlayerRewardChoices(activePlayer);
+      this.resolvePlayerRewardChoices(activePlayer);
     } else if (activePlayer.isAI) {
       const aiPlayer = this.aIManager.getAIPlayer(activePlayer.id);
 
@@ -773,7 +798,7 @@ export class GameManager {
     if (card.structuredAgentEffects) {
       const gameState = this.getGameState(player);
 
-      this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, { type: 'card', object: card });
+      this.resolveStructuredEffects(card.structuredAgentEffects, player.id, gameState, { type: 'card', object: card });
     }
     if (card.customAgentEffect) {
       const localizedString = this.t.translateLS(card.customAgentEffect);
@@ -1189,7 +1214,7 @@ export class GameManager {
         const effects = playerTechTile.techTile.structuredEffects;
         if (effects) {
           const gameState = this.getGameState(player);
-          this.resolveStructuredEffects(effects, player, gameState, {
+          this.resolveStructuredEffects(effects, player.id, gameState, {
             type: 'tech-tile',
             object: playerTechTile.techTile,
           });
@@ -1377,11 +1402,16 @@ export class GameManager {
 
   private resolveStructuredEffects(
     structuredEffects: StructuredEffects,
-    player: Player,
+    playerId: number,
     gameState: GameState,
     element?: GameElement,
     additionalCardsInPlay?: ImperiumDeckCard[]
   ) {
+    const player = this.playerManager.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+
     const effects = structuredEffects;
     for (const reward of effects.rewards) {
       this.addRewardToPlayer(player, reward, element);
@@ -1392,8 +1422,10 @@ export class GameManager {
     for (const conditionalEffect of effects.conditionalEffects) {
       this.resolveStructuredConditionEffects(conditionalEffect, player, gameState, element, additionalCardsInPlay);
     }
-    for (const timingEffect of effects.timingEffects) {
-      this.resolveStructuredTimingEffects(timingEffect, player, gameState, element, additionalCardsInPlay);
+    if (effects.timingEffects) {
+      for (const timingEffect of effects.timingEffects) {
+        this.resolveStructuredTimingEffects(timingEffect, player, gameState, element, additionalCardsInPlay);
+      }
     }
   }
 
@@ -1406,6 +1438,12 @@ export class GameManager {
   ) {
     let conditionFullfilled = false;
 
+    if (timingEffect.type === 'timing-game-start') {
+      const hasPlacedAgentThisRound = this.agentsOnFields.filter((x) => x.playerId === player.id).length > 0;
+      if (this.currentRound === 1 && player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+        conditionFullfilled = true;
+      }
+    }
     if (timingEffect.type === 'timing-round-start') {
       const hasPlacedAgentThisRound = this.agentsOnFields.filter((x) => x.playerId === player.id).length > 0;
       if (player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
@@ -1496,11 +1534,13 @@ export class GameManager {
     }
   }
 
-  private showPlayerRewardChoices(player: Player) {
+  private resolvePlayerRewardChoices(player: Player) {
     const turnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
     if (!turnInfo) {
       return;
     }
+
+    const gameState = this.getGameState(player);
 
     if (turnInfo.cardDrawOrDestroyAmount > 0) {
       for (let i = 0; i < turnInfo.cardDrawOrDestroyAmount; i++) {
@@ -1510,7 +1550,14 @@ export class GameManager {
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 0 });
     }
-
+    if (turnInfo.cardDiscardAmount) {
+      for (let i = 0; i < turnInfo.cardDiscardAmount; i++) {
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'card-discard',
+        });
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
+    }
     if (turnInfo.shippingAmount > 0) {
       this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
         type: 'shipping',
@@ -1556,9 +1603,20 @@ export class GameManager {
 
     if (turnInfo.signetRingAmount > 0) {
       for (let i = 0; i < turnInfo.signetRingAmount; i++) {
-        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-          type: 'signet-ring',
-        });
+        const playerLeader = this.leadersService.getLeader(player.id);
+        if (playerLeader) {
+          if (playerLeader.structuredSignetEffects) {
+            this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player.id, gameState);
+          } else if (playerLeader.signetDescription.en) {
+            this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+              type: 'signet-ring',
+            });
+          }
+        } else {
+          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+            type: 'signet-ring',
+          });
+        }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
@@ -1596,7 +1654,12 @@ export class GameManager {
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 0 });
     }
-
+    if (turnInfo.cardDiscardAmount) {
+      for (let i = 0; i < turnInfo.cardDiscardAmount; i++) {
+        this.aiDiscardHandCard(player.id);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
+    }
     if (turnInfo.shippingAmount > 0) {
       const spiceEvaluation = this.aIManager.getEffectEvaluationForTurnState('spice', player, gameState);
       const waterEvaluation = this.aIManager.getEffectEvaluationForTurnState('water', player, gameState);
@@ -1631,9 +1694,20 @@ export class GameManager {
     }
     if (turnInfo.signetRingAmount > 0) {
       for (let i = 0; i < turnInfo.signetRingAmount; i++) {
-        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-          type: 'signet-ring',
-        });
+        const playerLeader = this.leadersService.getLeader(player.id);
+        if (playerLeader) {
+          if (playerLeader.structuredSignetEffects) {
+            this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player.id, gameState);
+          } else if (playerLeader.signetDescription.en) {
+            this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+              type: 'signet-ring',
+            });
+          }
+        } else {
+          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+            type: 'signet-ring',
+          });
+        }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
@@ -1910,7 +1984,7 @@ export class GameManager {
             this.addRewardToPlayer(player, effect);
           }
           if (!player.isAI) {
-            this.showPlayerRewardChoices(player);
+            this.resolvePlayerRewardChoices(player);
           } else {
             this.aiResolveRewardChoices(player);
           }
@@ -1946,7 +2020,7 @@ export class GameManager {
           this.addRewardToPlayer(player, effect);
         }
         if (!player.isAI) {
-          this.showPlayerRewardChoices(player);
+          this.resolvePlayerRewardChoices(player);
         } else {
           this.aiResolveRewardChoices(player);
         }
@@ -1982,7 +2056,7 @@ export class GameManager {
           this.addRewardToPlayer(player, effect);
         }
         if (!player.isAI) {
-          this.showPlayerRewardChoices(player);
+          this.resolvePlayerRewardChoices(player);
         } else {
           this.aiResolveRewardChoices(player);
         }
@@ -2114,6 +2188,7 @@ export class GameManager {
     const rivalId = enemyScore.sort((a, b) => b.victoryPoints - a.victoryPoints)[0];
     const rival = this.playerManager.getPlayer(rivalId.playerId);
 
+    const playerLeader = this.leadersService.getLeader(player.id);
     const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(player.id);
 
     return {
@@ -2131,7 +2206,8 @@ export class GameManager {
       isOpeningTurn: this.isOpeningTurn(player.id),
       isFinale: this.isFinale,
       enemyPlayers: this.playerManager.getEnemyPlayers(player.id),
-      playerLeader: this.leadersService.getLeader(player.id)!,
+      playerLeader: playerLeader!,
+      playerLeaderSignetRingEffects: playerLeader?.structuredSignetEffects,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.buyableTechTiles,
       currentEvent: this.duneEventsManager.eventDeck[this.currentRound - 1],
@@ -2399,7 +2475,7 @@ export class GameManager {
       }
 
       if (!player.isAI) {
-        this.showPlayerRewardChoices(player);
+        this.resolvePlayerRewardChoices(player);
       } else {
         this.aiResolveRewardChoices(player);
       }
@@ -2504,6 +2580,8 @@ export class GameManager {
       this.playerManager.addFocusTokens(player.id, rewardAmount);
     } else if (rewardType == 'card-draw-or-destroy') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 1 });
+    } else if (rewardType === 'card-discard') {
+      this.turnInfoService.updatePlayerTurnInfo(player.id, { cardDiscardAmount: 1 });
     } else if (rewardType === 'focus') {
       this.audioManager.playSound('focus');
       this.playerManager.addFocusTokens(player.id, rewardAmount);
@@ -2545,6 +2623,9 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { locationControlAmount: 1 });
     } else if (rewardType === 'signet-ring') {
       this.turnInfoService.updatePlayerTurnInfo(player.id, { signetRingAmount: 1 });
+    } else if (rewardType === 'signet-token') {
+      this.audioManager.playSound('signet');
+      this.playerManager.addSignetTokensToPlayer(player.id, rewardAmount);
     } else if (rewardType === 'trash-self' && element) {
       if (element.type === 'card') {
         this.cardsService.trashPlayerHandCard(player.id, element.object);
@@ -2615,7 +2696,7 @@ export class GameManager {
     } else if (costType === 'dreadnought') {
       this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
     } else if (costType === 'card-discard') {
-      this.aiDiscardHandCard(playerId);
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: 1 });
     } else if (costType === 'card-destroy' || costType === 'focus') {
       this.playerManager.addFocusTokens(playerId, costAmount);
     } else if (costType === 'persuasion') {
@@ -2643,27 +2724,30 @@ export class GameManager {
     this.loggingService.logPlayerResourcePaid(playerId, costType, cost.amount);
   }
 
-  lockInLeader(playerId: number, leader: Leader | undefined) {
+  lockInLeader(playerId: number, leader: LeaderDeckCard) {
+    const player = this.playerManager.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
     this.leadersService.lockInLeader(playerId);
 
-    if (leader) {
-      if (leader.startingResources) {
-        const player = this.playerManager.getPlayer(playerId);
-        if (player) {
-          for (const startingResource of leader.startingResources) {
-            this.addRewardToPlayer(player, startingResource);
-          }
+    if (leader.startingResources) {
+      for (const startingResource of leader.startingResources) {
+        this.addRewardToPlayer(player, startingResource);
+      }
+    }
+    if (leader.gameModifiers) {
+      this.gameModifiersService.addPlayerGameModifiers(playerId, leader.gameModifiers);
+    }
+    if (leader.structuredPassiveEffects) {
+      const gameState = this.getGameState(player);
+      this.resolveStructuredEffects(leader.structuredPassiveEffects, player.id, gameState);
+    }
 
-          if (!player.isAI) {
-            this.showPlayerRewardChoices(player);
-          } else {
-            this.aiResolveRewardChoices(player);
-          }
-        }
-      }
-      if (leader.gameModifiers) {
-        this.gameModifiersService.addPlayerGameModifiers(playerId, leader.gameModifiers);
-      }
+    if (!player.isAI) {
+      this.resolvePlayerRewardChoices(player);
+    } else {
+      this.aiResolveRewardChoices(player);
     }
   }
 

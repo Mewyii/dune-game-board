@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep, shuffle } from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 import { House, minorHouses } from '../constants/minor-houses';
 
 export interface PlayerHouse {

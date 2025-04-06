@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, compact, flatten, isArray, min, sum } from 'lodash';
+import { cloneDeep, compact, flatten, isArray, sum } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { mergeObjects } from '../helpers/common';
 import {
-  ActionField,
   ActionType,
   ActiveFactionType,
+  EffectReward,
+  EffectRewardOrChoice,
+  EffectRewardType,
   FactionType,
   ResourceType,
-  Effect,
-  EffectReward,
-  EffectRewardType,
-  EffectRewardOrChoice,
 } from '../models';
-import { mergeObjects } from '../helpers/common';
 import { Player } from '../models/player';
 
 export interface GameModifier {

@@ -1,26 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Leader } from 'src/app/constants/leaders';
+import { shuffle } from 'lodash';
 import { House } from 'src/app/constants/minor-houses';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, FactionType, LanguageString, ResourceType, EffectRewardType } from 'src/app/models';
-import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
-import { LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
-import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
-import { PlayersService } from 'src/app/services/players.service';
-import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
-import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
-import { TranslateService } from 'src/app/services/translate-service';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { EffectRewardType, EffectType, FactionType, LanguageString, ResourceType } from 'src/app/models';
+import { Player } from 'src/app/models/player';
+import { TurnInfo } from 'src/app/models/turn-info';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
+import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
+import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
-import { Player } from 'src/app/models/player';
-import { TechTileCard } from 'src/app/models/tech-tile';
+import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
+import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
+import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
+import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
-import { TurnInfo } from 'src/app/models/turn-info';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'dune-leaders',
@@ -28,8 +27,7 @@ import { TurnInfo } from 'src/app/models/turn-info';
   styleUrls: ['./leaders.component.scss'],
 })
 export class LeadersComponent implements OnInit {
-  public leaders: Leader[] = [];
-  public newLeaders: Leader[] = [];
+  public leaders: LeaderDeckCard[] = [];
 
   public currentRound = 0;
 
@@ -38,7 +36,7 @@ export class LeadersComponent implements OnInit {
   public playerLeader: PlayerLeader | undefined;
   public activePlayerId: number = 0;
 
-  public activeLeader: Leader | undefined;
+  public activeLeader: LeaderDeckCard | undefined;
 
   public currentPlayer: Player | undefined;
 
@@ -77,14 +75,13 @@ export class LeadersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.leaders = this.leadersService.leaders;
-    this.newLeaders = this.leaders.filter((x) => x.type === 'new') as Leader[];
-
+    this.leadersService.leaderDeck$.subscribe((leaderDeck) => {
+      this.leaders = leaderDeck;
+    });
     this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
       this.playerLeader = playerLeaders.find((x) => x.playerId === this.activePlayerId);
 
-      const activeLeaderName = this.playerLeader?.leaderName;
-      this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
+      this.activeLeader = this.playerLeader?.leader;
     });
 
     this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
@@ -95,8 +92,7 @@ export class LeadersComponent implements OnInit {
       this.activePlayerId = activePlayerId;
       this.playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === activePlayerId);
 
-      const activeLeaderName = this.playerLeader?.leaderName;
-      this.activeLeader = this.leaders.find((x) => x.name.en === activeLeaderName);
+      this.activeLeader = this.playerLeader?.leader;
 
       this.currentPlayer = this.playerManager.getPlayer(this.activePlayerId);
 
@@ -156,35 +152,43 @@ export class LeadersComponent implements OnInit {
 
   setNextLeader() {
     this.audioManager.playSound('click-soft');
-    const leaderIndex = this.leaders.findIndex((x) => x.name === this.activeLeader?.name);
+    const leaderIndex = this.leaders.findIndex((x) => x.id === this.activeLeader?.id);
     if (leaderIndex > -1) {
       if (leaderIndex + 1 < this.leaders.length) {
         const nextLeader = this.leaders[leaderIndex + 1];
-        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.name.en);
+        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.id);
       } else {
         const nextLeader = this.leaders[0];
-        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.name.en);
+        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.id);
       }
     }
   }
 
   setPreviousLeader() {
     this.audioManager.playSound('click-soft');
-    const leaderIndex = this.leaders.findIndex((x) => x.name === this.activeLeader?.name);
+    const leaderIndex = this.leaders.findIndex((x) => x.id === this.activeLeader?.id);
     if (leaderIndex > -1) {
       if (leaderIndex > 0) {
         const nextLeader = this.leaders[leaderIndex - 1];
-        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.name.en);
+        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.id);
       } else {
         const nextLeader = this.leaders[this.leaders.length - 1];
-        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.name.en);
+        this.leadersService.assignLeaderToPlayer(this.activePlayerId, nextLeader.id);
       }
     }
   }
 
+  onSelectRandomLeaderClicked() {
+    const newLeader = shuffle(this.leaders);
+    this.audioManager.playSound('click');
+    this.leadersService.assignLeaderToPlayer(this.activePlayerId, newLeader[0].id);
+  }
+
   onLockInLeaderClicked() {
     this.audioManager.playSound('click');
-    this.gameManager.lockInLeader(this.activePlayerId, this.activeLeader);
+    if (this.activeLeader) {
+      this.gameManager.lockInLeader(this.activePlayerId, this.activeLeader);
+    }
   }
 
   onAddFocusTokenClicked(id: number) {
@@ -250,11 +254,10 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddSignetTokenClicked(id: number) {
-    this.audioManager.playSound('signet');
-    this.playerManager.addSignetTokensToPlayer(id, 1);
+  onAddSignetTokenClicked(player: Player) {
+    this.gameManager.addRewardToPlayer(player, { type: 'signet-token' });
 
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
+    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   onRemoveSignetTokenClicked(id: number) {

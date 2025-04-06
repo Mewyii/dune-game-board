@@ -11,8 +11,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+}
+
+.effects-container.wrap {
   flex-wrap: wrap;
+}
+
+.effects-container.nowrap {
+  flex-wrap: nowrap;
+
+  .text.heading {
+    margin-right: 4px;
+  }
 }
 
 .reward-container {
@@ -22,6 +32,7 @@
 }
 
 .reward {
+  object-fit: scale-down;
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
 

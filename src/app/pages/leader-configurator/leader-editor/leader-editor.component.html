@@ -64,65 +64,163 @@
     </div>
   </div>
 
-  <div class="title-container">
-    <span class="card-effect-title"> Passive </span>
-    <mat-icon
-      [style]="'margin-left: 4px'"
-      matTooltip="In the description you can use use icons with the syntax {resource:troops} or {faction:bene} f.e.."
-      >info</mat-icon
-    >
+  <!-- Passive Effects -->
+  <div class="card-effect-container margin-top">
+    <div class="title-container">
+      <span class="card-effect-title"> Passive Effects </span>
+    </div>
+    <div formArrayName="passiveEffects">
+      <div class="form-group wrap" *ngFor="let passiveEffect of passiveEffects.controls; let i = index">
+        <mat-form-field class="big-text-field">
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getPassiveEffectTypeControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getEffectTypePath(getPassiveEffectTypeControl(i).value)" />
+                <span class="reward-label">{{ getPassiveEffectTypeControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
+              ><div class="reward-container">
+                <img class="reward" [src]="getEffectTypePath(effectType)" />
+                <span class="reward-label">{{ effectType }}</span>
+              </div></mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="small-text-field">
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getPassiveEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <mat-form-field class="small-text-field">
+          <mat-label>Faction</mat-label>
+          <mat-select [formControl]="getPassiveEffectFactionControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(getPassiveEffectFactionControl(i).value)" />
+                <span class="reward-label">{{ getPassiveEffectFactionControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let faction of factions" [value]="faction"
+              ><div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(faction)" />
+                <span class="reward-label">{{ faction }}</span>
+              </div></mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemovePassiveEffectClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddPassiveEffectClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Passive Effect Size</mat-label>
+      <mat-select formControlName="passiveEffectSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select> </mat-form-field
+    ><br /><br />
+    <div class="text-container">
+      Custom Passive Effect Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <br />
+    <div class="form-group wrap" formGroupName="passiveDescription">
+      <mat-form-field class="large-text-field flex">
+        <mat-label>English</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="large-text-field flex">
+        <mat-label>German</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+    </div>
   </div>
 
-  <div class="form-group" formGroupName="passiveName">
-    <mat-form-field class="medium-text-field flex">
-      <mat-label>Name (English)</mat-label>
-      <input matInput formControlName="en" />
-    </mat-form-field>
-    <mat-form-field class="medium-text-field flex">
-      <mat-label>Name (German)</mat-label>
-      <input matInput formControlName="de" />
-    </mat-form-field>
-  </div>
-
-  <div class="form-group wrap" formGroupName="passiveDescription">
-    <mat-form-field class="large-text-field flex">
-      <mat-label>Description (English)</mat-label>
-      <input matInput formControlName="en" />
-    </mat-form-field>
-    <mat-form-field class="large-text-field flex">
-      <mat-label>Description (German)</mat-label>
-      <input matInput formControlName="de" />
-    </mat-form-field>
-  </div>
-
-  <div class="title-container">
-    <span class="card-effect-title"> Signet Ring Ability </span>
-    <mat-icon
-      [style]="'margin-left: 4px'"
-      matTooltip="In the description you can use use icons with the syntax {resource:troops} or {faction:bene} f.e.."
-      >info</mat-icon
-    >
-  </div>
-
-  <div class="form-group" formGroupName="signetName">
-    <mat-form-field class="medium-text-field flex">
-      <mat-label>Name (English)</mat-label>
-      <input matInput formControlName="en" />
-    </mat-form-field>
-    <mat-form-field class="medium-text-field flex">
-      <mat-label>Name (German)</mat-label>
-      <input matInput formControlName="de" />
-    </mat-form-field>
-  </div>
-
-  <div class="form-group wrap" formGroupName="signetDescription">
-    <mat-form-field class="large-text-field flex">
-      <mat-label>Description (English)</mat-label>
-      <input matInput formControlName="en" />
-    </mat-form-field>
-    <mat-form-field class="large-text-field flex">
-      <mat-label>Description (German)</mat-label>
-      <input matInput formControlName="de" />
-    </mat-form-field>
+  <!-- Signet Effects -->
+  <div class="card-effect-container margin-top">
+    <div class="title-container">
+      <span class="card-effect-title"> Signet Effects </span>
+    </div>
+    <div formArrayName="signetEffects">
+      <div class="form-group wrap" *ngFor="let signetEffect of signetEffects.controls; let i = index">
+        <mat-form-field class="big-text-field">
+          <mat-label>Effect Type</mat-label>
+          <mat-select [formControl]="getSignetEffectTypeControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getEffectTypePath(getSignetEffectTypeControl(i).value)" />
+                <span class="reward-label">{{ getSignetEffectTypeControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
+              ><div class="reward-container">
+                <img class="reward" [src]="getEffectTypePath(effectType)" />
+                <span class="reward-label">{{ effectType }}</span>
+              </div></mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="small-text-field">
+          <mat-label>Amount</mat-label>
+          <input matInput [formControl]="getSignetEffectAmountControl(i)" type="number" />
+        </mat-form-field>
+        <mat-form-field class="small-text-field">
+          <mat-label>Faction</mat-label>
+          <mat-select [formControl]="getSignetEffectFactionControl(i)">
+            <mat-select-trigger>
+              <div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(getSignetEffectFactionControl(i).value)" />
+                <span class="reward-label">{{ getSignetEffectFactionControl(i).value }}</span>
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let faction of factions" [value]="faction"
+              ><div class="reward-container">
+                <img class="reward" [src]="getFactionTypePath(faction)" />
+                <span class="reward-label">{{ faction }}</span>
+              </div></mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <button mat-mini-fab [color]="'accent'" (click)="onRemoveSignetEffectClicked(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddSignetEffectClicked()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Signet Effect Size</mat-label>
+      <mat-select formControlName="signetEffectSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select> </mat-form-field
+    ><br /><br />
+    <div class="text-container">
+      Custom Signet Effect Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <br />
+    <div class="form-group wrap" formGroupName="signetDescription">
+      <mat-form-field class="large-text-field flex">
+        <mat-label>English</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="large-text-field flex">
+        <mat-label>German</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+    </div>
   </div>
 </form>

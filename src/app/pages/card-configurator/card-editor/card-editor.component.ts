@@ -203,10 +203,6 @@ export class CardEditorComponent implements OnInit, OnChanges {
     return this.imperiumCardForm.get('agentEffects') as FormArray;
   }
 
-  get customAgentEffect() {
-    return this.imperiumCardForm.get('customAgentEffect') as FormGroup;
-  }
-
   getAgentEffectTypeControl(index: number): FormControl {
     return this.agentEffects.at(index).get('type') as FormControl;
   }
@@ -249,10 +245,6 @@ export class CardEditorComponent implements OnInit, OnChanges {
   // Reveal Effects
   get revealEffects() {
     return this.imperiumCardForm.get('revealEffects') as FormArray;
-  }
-
-  get customRevealEffect() {
-    return this.imperiumCardForm.get('customRevealEffect') as FormGroup;
   }
 
   getRevealEffectTypeControl(index: number): FormControl {

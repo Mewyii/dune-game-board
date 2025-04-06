@@ -12,6 +12,14 @@
         {{ t.translateLS(leader.passiveName) }}
       </div>
       <div class="leader-signet-description-container font-text">
+        @if(leader.passiveEffects && leader.passiveEffects.length > 0) {
+        <dune-reward-array
+          [rewards]="leader.passiveEffects"
+          [size]="passiveEffectSize"
+          [textColor]="'white'"
+          [wrap]="false"
+        ></dune-reward-array>
+        }
         <div class="leader-passive-description" [innerHTML]="t.translateLS(leader.passiveDescription) | duneSymbols"></div>
       </div>
     </div>
@@ -20,6 +28,14 @@
         {{ t.translateLS(leader.signetName) }}
       </div>
       <div class="leader-signet-description-container font-text">
+        @if(leader.signetEffects && leader.signetEffects.length > 0) {
+        <dune-reward-array
+          [rewards]="leader.signetEffects"
+          [size]="signetEffectSize"
+          [textColor]="'white'"
+          [wrap]="false"
+        ></dune-reward-array>
+        }
         <div class="leader-signet-description" [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols"></div>
       </div>
     </div>
