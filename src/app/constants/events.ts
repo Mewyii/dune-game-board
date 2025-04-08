@@ -31,7 +31,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Sandstürme',
     },
     description: {
-      en: '{faction:spice}-fields cost an additional {resource:water}.',
+      en: '{faction:spice} board spaces cost an additional {resource:water}.',
       de: '{faction:spice}-Felder kosten zusätzlich {resource:water}.',
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
@@ -54,7 +54,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Urgroßmuttersturm',
     },
     description: {
-      en: '{faction:spice}-fields are blocked.',
+      en: '{faction:spice} board spaces are blocked.',
       de: '{faction:spice}-Felder sind blockiert.',
     },
     imagePath: 'assets/images/action-backgrounds/sandstorm.png',
@@ -110,7 +110,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Spice-Explosionen',
     },
     description: {
-      en: 'Put 1 bonus spice on all {faction:spice}-fields.',
+      en: 'Put 1 bonus spice on all {faction:spice} board spaces.',
       de: 'Setze 1 Bonus-Spice auf alle {faction:spice}-Felder.',
     },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
@@ -128,7 +128,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Sandwürmer',
     },
     description: {
-      en: '{faction:spice}-fields yield -1 spice.',
+      en: '{faction:spice} board spaces yield -1 spice.',
       de: '{faction:spice}-Felder bringen -1 Spice ein.',
     },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
@@ -187,7 +187,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Orbitaler Heighliner',
     },
     description: {
-      en: 'Ziehe <b>3</b> zusätzliche Karten für die Imperium-Reihe in dieser Runde.',
+      en: 'Draw an additional <b>3</b> cards to the imperium row this round.',
       de: 'Ziehe <b>3</b> zusätzliche Karten für die Imperium-Reihe in dieser Runde.',
     },
     imagePath: '/assets/images/action-backgrounds/highliner_2.png',
@@ -205,7 +205,7 @@ export const duneEvents: DuneEvent[] = [
       de: "Muad'Dib",
     },
     description: {
-      en: '{faction:spice}-fields cost {resource:water} less.',
+      en: '{faction:spice} board spaces cost {resource:water} less.',
       de: '{faction:spice}-Felder kosten {resource:water} weniger.',
     },
     imagePath: '/assets/images/action-backgrounds/muaddib.png',

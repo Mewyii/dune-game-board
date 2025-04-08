@@ -234,7 +234,7 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '<b>When you place an agent <br>on a {faction:spice}-field:</b><br>{resource:spice}',
+      en: '<b>When you place an agent <br>on a {faction:spice} board space:</b><br>{resource:spice}',
       de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
       fontSize: 'small',
     },
