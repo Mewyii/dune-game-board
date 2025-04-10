@@ -138,38 +138,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Twisted Mentat',
-      de: 'Verderbter Mentat',
-    },
-    persuasionCosts: 7,
-    fieldAccess: ['landsraad'],
-    imageUrl: '/assets/images/action-backgrounds/twisted_mentat.png',
-    cardAmount: 2,
-    buyEffects: [
-      {
-        type: 'agent',
-      },
-    ],
-    agentEffects: [
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'card-draw',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Swordmaster',
       de: 'Schwertmeister',
     },
@@ -206,6 +174,38 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Twisted Mentat',
+      de: 'Verderbter Mentat',
+    },
+    persuasionCosts: 7,
+    fieldAccess: ['landsraad'],
+    imageUrl: '/assets/images/action-backgrounds/twisted_mentat.png',
+    cardAmount: 2,
+    buyEffects: [
+      {
+        type: 'agent',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
       },
     ],
   },
@@ -436,11 +436,21 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'bene',
     persuasionCosts: 2,
     fieldAccess: ['landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_8.png',
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_19.png',
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
       {
@@ -595,35 +605,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Bene Gesserit Sister',
-      de: 'Bene Gesserit Schwester',
-    },
-    faction: 'bene',
-    persuasionCosts: 4,
-    fieldAccess: ['bene', 'landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_14.png',
-    cardAmount: 2,
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'signet-ring',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'recruitment-bene',
-      },
-      {
-        type: 'focus',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Prana Bindu combat training',
       de: 'Prana Bindu Kampfausbildung',
     },
@@ -664,6 +645,48 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Bene Gesserit Sister',
+      de: 'Bene Gesserit Schwester',
+    },
+    faction: 'bene',
+    persuasionCosts: 4,
+    fieldAccess: ['bene', 'landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_20.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'signet-ring',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'recruitment-bene',
+      },
+      {
+        type: 'focus',
       },
     ],
   },
@@ -927,6 +950,38 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Bene Gesserit Archivar',
+      de: 'Bene Gesserit Archivarin',
+    },
+    faction: 'bene',
+    persuasionCosts: 5,
+    fieldAccess: ['bene', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_17.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: 'For each of your agents on board spaces: {resource:solari}',
+      de: 'Für jeden deiner Agenten auf Feldern: {resource:solari}',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 3,
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Reverend Mother',
       de: 'Ehrwürdige Mutter',
     },
@@ -1036,6 +1091,19 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/leaders/mohiam.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: 'You may look at the top card of the intrigue deck as well as the conflict deck.',
+      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'faction-influence-up-bene',
@@ -1044,20 +1112,19 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-bene',
       },
     ],
+    agentEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
         amount: 2,
       },
       {
+        type: 'recruitment-bene',
+      },
+      {
         type: 'intrigue',
       },
     ],
-    customAgentEffect: {
-      en: 'You may look at the top card of the intrigue deck as well as the conflict deck.',
-      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
-      fontSize: 'small',
-    },
   },
   {
     name: {
@@ -1225,6 +1292,33 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'tech',
       },
     ],
+  },
+  {
+    name: {
+      en: 'Imperial Spy',
+      de: 'Imperialer Spion',
+    },
+    faction: 'emperor',
+    persuasionCosts: 2,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '',
+    cardAmount: 2,
+    canInfiltrate: true,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [],
   },
   {
     name: {
@@ -2343,7 +2437,7 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 4,
     fieldAccess: ['spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/harkonnen_soldier.png',
-    cardAmount: 2,
+    cardAmount: 1,
     canInfiltrate: true,
     agentEffectSize: 'large',
     customAgentEffect: {
@@ -2860,6 +2954,44 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Destruction of the spice harvest',
+      de: 'Vernichtung der Spice-Ernte',
+    },
+    faction: 'fremen',
+    persuasionCosts: 7,
+    fieldAccess: ['spice'],
+    imageUrl: '/assets/images/action-backgrounds/lasguns.png',
+    cardAmount: 1,
+    canInfiltrate: true,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: 'Each opponent on {faction:spice} fields loses {resource:spice;amount:2} and you gain {resource:spice;amount:2}.',
+      de: 'Jeder Gegner auf {faction:spice}-Feldern verliert {resource:spice;amount:2} und du erhältst {resource:spice;amount:2}.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'spice',
+        amount: 3,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Water of Life',
       de: 'Wasser des Lebens',
     },
@@ -2898,44 +3030,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'faction-influence-up-fremen',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Destruction of the spice harvest',
-      de: 'Vernichtung der Spice-Ernte',
-    },
-    faction: 'fremen',
-    persuasionCosts: 7,
-    fieldAccess: ['spice'],
-    imageUrl: '/assets/images/action-backgrounds/lasguns.png',
-    cardAmount: 1,
-    canInfiltrate: true,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: 'Each opponent on {faction:spice} fields loses {resource:spice;amount:2} and you gain {resource:spice;amount:2}.',
-      de: 'Jeder Gegner auf {faction:spice}-Feldern verliert {resource:spice;amount:2} und du erhältst {resource:spice;amount:2}.',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'spice',
-        amount: 3,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'victory-point',
       },
     ],
   },
@@ -3130,11 +3224,73 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Smuggling Operation',
+      de: 'Schmuggeloperation',
+    },
+    faction: 'guild',
+    persuasionCosts: 2,
+    fieldAccess: ['spice'],
+    imageUrl: '/assets/images/action-backgrounds/sandcrawler.png',
+    cardAmount: 2,
+    buyEffects: [
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'tech',
+        amount: 2,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Guild Adjutant',
+      de: 'Gilden Adjutant',
+    },
+    faction: 'guild',
+    persuasionCosts: 2,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_adjutant_3.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [],
+  },
+  {
+    name: {
       en: 'Transport Agreement',
       de: 'Transportabkommen',
     },
     faction: 'guild',
-    persuasionCosts: 2,
+    persuasionCosts: 3,
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
     cardAmount: 2,
@@ -3168,41 +3324,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'shipping',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Smuggling Operation',
-      de: 'Schmuggeloperation',
-    },
-    faction: 'guild',
-    persuasionCosts: 2,
-    fieldAccess: ['spice'],
-    imageUrl: '/assets/images/action-backgrounds/sandcrawler.png',
-    cardAmount: 2,
-    buyEffects: [
-      {
-        type: 'solari',
-        amount: 2,
-      },
-    ],
-    agentEffects: [
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'tech',
-        amount: 2,
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'solari',
-        amount: 2,
       },
     ],
   },
@@ -3317,7 +3438,7 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 4,
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/guild_banker.png',
-    cardAmount: 2,
+    cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
     customAgentEffect: {
@@ -3342,6 +3463,33 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-guild',
       },
     ],
+  },
+  {
+    name: {
+      en: 'Guild Officer',
+      de: 'Gilden Offizier',
+    },
+    faction: 'guild',
+    persuasionCosts: 4,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_officer_2.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [],
   },
   {
     name: {
@@ -3383,7 +3531,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Gilden Navigator',
     },
     faction: 'guild',
-    persuasionCosts: 5,
+    persuasionCosts: 6,
     fieldAccess: ['emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/guild_navigators_3.png',
     cardAmount: 2,
@@ -3428,12 +3576,75 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Embargo',
+      de: 'Embargo',
+    },
+    faction: 'guild',
+    persuasionCosts: 6,
+    fieldAccess: ['bene', 'emperor', 'guild', 'landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/highliner_2.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: 'Board spaces of this type are blocked for all opponents this round.',
+      de: 'Felder dieses Typs sind für alle Gegner in dieser Runde blockiert.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 3,
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Guild Captain',
+      de: 'Gilden Kapitän',
+    },
+    faction: 'guild',
+    persuasionCosts: 6,
+    fieldAccess: ['guild', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_captain_1.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [],
+  },
+  {
+    name: {
       en: 'Edric, Guild Navigator',
       de: 'Edric, Gilden Navigator',
     },
     faction: 'guild',
-    persuasionCosts: 6,
-    fieldAccess: ['guild', 'landsraad', 'town'],
+    persuasionCosts: 7,
+    fieldAccess: ['bene', 'emperor', 'guild', 'town'],
     imageUrl: '/assets/images/action-backgrounds/guild_navigators.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -3466,42 +3677,6 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'solari',
         amount: 2,
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Embargo',
-      de: 'Embargo',
-    },
-    faction: 'guild',
-    persuasionCosts: 6,
-    fieldAccess: ['bene', 'emperor', 'guild', 'landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/highliner_2.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'medium',
-    customAgentEffect: {
-      en: 'Board spaces of this type are blocked for all opponents this round.',
-      de: 'Felder dieses Typs sind für alle Gegner in dieser Runde blockiert.',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'card-draw',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 3,
       },
     ],
   },

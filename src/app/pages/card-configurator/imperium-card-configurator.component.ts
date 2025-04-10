@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import * as htmlToImage from 'html-to-image';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { ActionType, ActiveFactionType } from 'src/app/models';
+import { ImperiumCard } from 'src/app/models/imperium-card';
 import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
-import { MatDialog } from '@angular/material/dialog';
-import * as htmlToImage from 'html-to-image';
-import { ActionType, ActiveFactionType } from 'src/app/models';
-import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
-import { ImperiumCard } from 'src/app/models/imperium-card';
 
 @Component({
   selector: 'dune-card-configurator',
@@ -49,6 +49,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   };
 
   public totalCardAmount = 0;
+  public uniqueCardAmount = 0;
 
   constructor(
     public t: TranslateService,
@@ -61,6 +62,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
       this.imperiumCards = imperiumCards;
 
       this.totalCardAmount = 0;
+      this.uniqueCardAmount = 0;
       this.factions = {
         emperor: 0,
         guild: 0,
@@ -93,6 +95,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
       };
 
       for (const card of imperiumCards) {
+        this.uniqueCardAmount += 1;
         this.totalCardAmount += card.cardAmount ?? 1;
 
         if (card.faction) {

@@ -26,7 +26,8 @@
       </div>
     </div>
     <div class="action-bar">
-      <div>Total {{ totalCardAmount }} cards</div>
+      <div>Total cards: {{ totalCardAmount }}</div>
+      <div>Unique cards: {{ uniqueCardAmount }}</div>
     </div>
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
