@@ -398,25 +398,35 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
-      {
-        type: 'condition-connection',
-        faction: 'fremen',
-      },
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'helper-separator',
-      },
       {
         type: 'condition-connection',
         faction: 'bene',
       },
       {
         type: 'faction-influence-up-fremen',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'fremen',
+      },
+      {
+        type: 'card-draw',
       },
     ],
     revealEffects: [
@@ -645,6 +655,58 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Whispers of prophecies',
+      de: 'Geflüster von Prophezeiungen',
+    },
+    faction: 'bene',
+    persuasionCosts: 3,
+    fieldAccess: ['bene', 'fremen'],
+    imageUrl: '/assets/images/action-backgrounds/paul_2.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-connection',
+        faction: 'bene',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'fremen',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'faction-influence-up-fremen',
+      },
+      {
+        type: 'recruitment-fremen',
       },
     ],
   },
@@ -1263,9 +1325,9 @@ export const imperiumCards: ImperiumCard[] = [
     canInfiltrate: false,
     agentEffectSize: 'medium',
     customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
+      en: 'Deploy or retreat up to <b>1</b> troop.',
+      de: 'Setze bis zu <b>1</b> Truppe ein oder ziehe sie zurück.',
+      fontSize: 'small',
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
@@ -1274,22 +1336,14 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
     buyEffects: [],
-    agentEffects: [
-      {
-        type: 'condition-connection',
-        faction: 'emperor',
-      },
-      {
-        type: 'card-draw',
-      },
-    ],
+    agentEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
         amount: 1,
       },
       {
-        type: 'tech',
+        type: 'sword',
       },
     ],
   },
@@ -1300,15 +1354,15 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'emperor',
     persuasionCosts: 2,
-    fieldAccess: ['landsraad', 'town'],
-    imageUrl: '',
+    fieldAccess: ['fremen', 'landsraad'],
+    imageUrl: '/assets/images/action-backgrounds/fremen_6.png',
     cardAmount: 2,
     canInfiltrate: true,
     agentEffectSize: 'large',
     customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
+      en: 'For each opponent on board spaces of this type: {resource:card-draw}',
+      de: 'Für jeden Gegner auf Feldern dieses Typs: {resource:card-draw}',
+      fontSize: 'small',
     },
     revealEffectSize: 'large',
     customRevealEffect: {
@@ -1318,7 +1372,21 @@ export const imperiumCards: ImperiumCard[] = [
     },
     buyEffects: [],
     agentEffects: [],
-    revealEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
   },
   {
     name: {
@@ -3116,10 +3184,30 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'spice',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'condition-influence',
+        amount: 2,
+        faction: 'guild',
+      },
+      {
+        type: 'solari',
       },
     ],
     revealEffects: [
@@ -3131,17 +3219,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'tech',
-        amount: 2,
-      },
-    ],
-    agentEffects: [
-      {
-        type: 'condition-influence',
-        amount: 2,
-        faction: 'guild',
-      },
-      {
-        type: 'solari',
       },
     ],
   },
@@ -3224,14 +3301,58 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Guild Adjutant',
+      de: 'Gilden Adjutant',
+    },
+    faction: 'guild',
+    persuasionCosts: 1,
+    fieldAccess: ['landsraad'],
+    imageUrl: '/assets/images/action-backgrounds/guild_adjutant_3.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: 'For each dreadnought in your garrison: {resource:shipping}',
+      de: 'Für jedes deiner Schlachtschiffe in deiner Garnison: {resource:shipping}',
+      fontSize: 'small',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'foldspace',
+      },
+    ],
+    revealEffects: [],
+  },
+  {
+    name: {
       en: 'Smuggling Operation',
       de: 'Schmuggeloperation',
     },
     faction: 'guild',
     persuasionCosts: 2,
-    fieldAccess: ['spice'],
+    fieldAccess: ['guild', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/sandcrawler.png',
     cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'solari',
@@ -3256,33 +3377,6 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
     ],
-  },
-  {
-    name: {
-      en: 'Guild Adjutant',
-      de: 'Gilden Adjutant',
-    },
-    faction: 'guild',
-    persuasionCosts: 2,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/guild_adjutant_3.png',
-    cardAmount: 2,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
   },
   {
     name: {
@@ -3394,6 +3488,45 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Guild Officer',
+      de: 'Gilden Offizier',
+    },
+    faction: 'guild',
+    persuasionCosts: 3,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_adjutant_1.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'small',
+    customAgentEffect: {
+      en: 'Deploy or retreat up to <b>1</b> dreadnought.',
+      de: 'Setze bis zu <b>1</b> Schlachtschiff ein oder ziehe es zurück.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: 'For each dreadnought in your garrison: {resource:troop}',
+      de: 'Für jedes deiner Schlachtschiffe in deiner Garnison: {resource:troop}',
+      fontSize: 'small',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Privilege',
       de: 'Bevorzugung',
     },
@@ -3436,7 +3569,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'guild',
     persuasionCosts: 4,
-    fieldAccess: ['landsraad', 'town'],
+    fieldAccess: ['emperor', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/guild_banker.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -3463,33 +3596,6 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-guild',
       },
     ],
-  },
-  {
-    name: {
-      en: 'Guild Officer',
-      de: 'Gilden Offizier',
-    },
-    faction: 'guild',
-    persuasionCosts: 4,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/guild_officer_2.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
   },
   {
     name: {
@@ -3521,6 +3627,42 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'spice',
+        amount: 2,
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Guild Captain',
+      de: 'Gilden Kapitän',
+    },
+    faction: 'guild',
+    persuasionCosts: 5,
+    fieldAccess: ['guild', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_officer_2.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: 'For each of your dreadnoughts: {resource:card-draw}',
+      de: 'Für jedes deiner Schlachtschiffe: {resource:card-draw}',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: 'For each of your dreadnoughts in conflict: {resource:sword}{resource:sword}',
+      de: 'Für jedes deiner Schlachtschiffe im Konflikt: {resource:sword}{resource:sword}',
+      fontSize: 'small',
+    },
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
         amount: 2,
       },
     ],
@@ -3612,33 +3754,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Guild Captain',
-      de: 'Gilden Kapitän',
-    },
-    faction: 'guild',
-    persuasionCosts: 6,
-    fieldAccess: ['guild', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/guild_captain_1.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [],
-  },
-  {
-    name: {
       en: 'Edric, Guild Navigator',
       de: 'Edric, Gilden Navigator',
     },
@@ -3691,10 +3806,22 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
     canInfiltrate: true,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
       {
-        type: 'card-draw',
+        type: 'foldspace',
       },
       {
         type: 'agent-lift',
@@ -3706,6 +3833,56 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'tech',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Guild Admiral',
+      de: 'Gilden Admiral',
+    },
+    faction: 'guild',
+    persuasionCosts: 7,
+    fieldAccess: ['emperor', 'guild', 'landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_captain_1.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: 'Deploy or retreat up to <b>2</b> dreadnought.',
+      de: 'Setze bis zu <b>2</b> Schlachtschiffe ein oder ziehe es zurück.',
+      fontSize: 'small',
+    },
+    buyEffects: [
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'dreadnought',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
       },
     ],
   },

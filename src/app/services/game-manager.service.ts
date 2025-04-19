@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, flatten, max, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { hasCustomAgentEffect, hasCustomRevealEffect } from '../helpers/cards';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { getRandomElementFromArray, sum } from '../helpers/common';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
@@ -29,9 +30,7 @@ import {
   ActionField,
   ActionType,
   DuneLocation,
-  Effect,
   EffectReward,
-  EffectRewardType,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
   StructuredEffects,
@@ -547,7 +546,7 @@ export class GameManager {
             playerHand.cards.filter((x) => x.id !== card.id)
           );
         }
-        if (card.customRevealEffect?.en) {
+        if (hasCustomRevealEffect(card)) {
           const localizedString = this.t.translateLS(card.customRevealEffect);
           this.playerRewardChoicesService.addPlayerCustomChoice(playerId, localizedString);
         }
@@ -782,7 +781,7 @@ export class GameManager {
 
       this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, { type: 'card', object: card });
     }
-    if (card.customAgentEffect) {
+    if (hasCustomAgentEffect(card)) {
       const localizedString = this.t.translateLS(card.customAgentEffect);
       this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
     }
@@ -1591,6 +1590,13 @@ export class GameManager {
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
+    if (turnInfo.intrigueTrashAmount > 0) {
+      this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+        type: 'intrigue-trash',
+      });
+
+      this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
+    }
     if (turnInfo.effectOptions.length > 0) {
       for (const effectOption of turnInfo.effectOptions) {
         this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, [
@@ -1701,6 +1707,10 @@ export class GameManager {
         }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
+    }
+    if (turnInfo.intrigueTrashAmount > 0) {
+      this.aiTrashIntrigue(player.id);
+      this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
     }
     if (turnInfo.effectOptions.length > 0) {
       for (const effectOption of turnInfo.effectOptions) {
@@ -2582,6 +2592,8 @@ export class GameManager {
     } else if (rewardType === 'intrigue') {
       this.audioManager.playSound('intrigue', rewardAmount);
       this.intriguesService.drawPlayerIntriguesFromDeck(playerId, rewardAmount);
+    } else if (rewardType === 'intrigue-trash') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { intrigueTrashAmount: 1 });
     } else if (rewardType === 'troop') {
       this.audioManager.playSound('troops', rewardAmount);
       this.combatManager.addPlayerTroopsToGarrison(playerId, rewardAmount);
@@ -2699,7 +2711,7 @@ export class GameManager {
     } else if (costType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: 1 });
     } else if (costType === 'intrigue' || costType === 'intrigue-trash') {
-      this.aiTrashIntrigue(playerId);
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { intrigueTrashAmount: 1 });
     } else if (costType === 'sword') {
       this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, costAmount);
     } else if (costType === 'troop' || costType === 'loose-troop') {
@@ -2875,37 +2887,6 @@ export class GameManager {
         }
       }
     }
-  }
-
-  private getExtractedRewardsFromCustomAgentEffect(customAgentEffect: string) {
-    const rewards: Effect[] = [];
-    let restString = customAgentEffect;
-
-    const potentialReward = customAgentEffect.slice(0, customAgentEffect.indexOf('}') + 1).trim();
-
-    const resourceRegExp = /^{resource:.*?}/g;
-    const isReward = resourceRegExp.test(potentialReward);
-    if (isReward) {
-      const amountRegExp = /;amount:.*?}/g;
-      const amountString = potentialReward.match(amountRegExp);
-      if (!amountString) {
-        const resource = potentialReward.substring(10, potentialReward.length - 1) as EffectRewardType;
-        rewards.push({ type: resource, amount: 1 });
-      } else {
-        const amount = amountString[0].substring(8, amountString[0].length - 1);
-        const amountNumber = parseInt(amount);
-
-        const resource = potentialReward.substring(10, potentialReward.length - amount.length - 9) as EffectRewardType;
-        rewards.push({ type: resource, amount: amountNumber });
-      }
-      restString = customAgentEffect.slice(customAgentEffect.indexOf('}') + 1).trim();
-      if (restString.length > 0) {
-        const newResult = this.getExtractedRewardsFromCustomAgentEffect(restString);
-        rewards.push(...newResult.rewards);
-        restString = newResult.restString;
-      }
-    }
-    return { rewards: rewards, restString: restString };
   }
 
   private getFactionFriendships(playerScore: PlayerScore) {

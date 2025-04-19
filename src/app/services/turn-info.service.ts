@@ -99,6 +99,7 @@ export class TurnInfoService {
       shippingAmount: 0,
       locationControlAmount: 0,
       signetRingAmount: 0,
+      intrigueTrashAmount: 0,
       factionRecruitment: [],
       cardsPlayedThisTurn: [],
       cardsBoughtThisTurn: [],

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { techTileAiEvaluations } from 'src/app/constants/tech-tiles-ai-evaluations';
-import { getCardsFieldAccess } from 'src/app/helpers/cards';
+import { getCardsFieldAccess, hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getCardCostModifier, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
@@ -934,8 +934,12 @@ export class AIManager {
     if (card.structuredAgentEffects) {
       evaluationValue += this.getStructuredEffectsEvaluationForTurnState(card.structuredAgentEffects, player, gameState);
     }
-    if (card.customAgentEffect) {
-      evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 0);
+    if (hasCustomAgentEffect(card)) {
+      let evaluationEstimation = 0.5;
+      if (card.structuredAgentEffects) {
+        evaluationEstimation = 0.33;
+      }
+      evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     if (card.structuredRevealEffects) {
@@ -950,8 +954,12 @@ export class AIManager {
         evaluationValue -= this.getConditionEffectEvaluation(conditionEffect, player, gameState) * 0.75;
       }
     }
-    if (card.customRevealEffect) {
-      evaluationValue -= 2 + 0.5 * (card.persuasionCosts ?? 0);
+    if (hasCustomRevealEffect(card)) {
+      let evaluationEstimation = 0.5;
+      if (card.structuredRevealEffects) {
+        evaluationEstimation = 0.33;
+      }
+      evaluationValue += 2 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     return evaluationValue;
@@ -984,15 +992,23 @@ export class AIManager {
     if (card.structuredAgentEffects) {
       evaluationValue += this.getStructuredEffectsEvaluation(card.structuredAgentEffects, player, gameState);
     }
-    if (card.customAgentEffect) {
-      evaluationValue += 1 + 0.5 * (card.persuasionCosts ?? 0);
+    if (hasCustomAgentEffect(card)) {
+      let evaluationEstimation = 0.5;
+      if (card.structuredAgentEffects) {
+        evaluationEstimation = 0.33;
+      }
+      evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     if (card.structuredRevealEffects) {
       evaluationValue += this.getStructuredEffectsEvaluation(card.structuredRevealEffects, player, gameState);
     }
-    if (card.customRevealEffect) {
-      evaluationValue += 2 + 0.5 * (card.persuasionCosts ?? 0);
+    if (hasCustomRevealEffect(card)) {
+      let evaluationEstimation = 0.5;
+      if (card.structuredRevealEffects) {
+        evaluationEstimation = 0.33;
+      }
+      evaluationValue += 2 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     return evaluationValue;
@@ -1019,17 +1035,23 @@ export class AIManager {
     if (card.structuredAgentEffects) {
       evaluationValue -= this.getStructuredEffectsEvaluation(card.structuredAgentEffects, player, gameState);
     }
-    if (card.customAgentEffect) {
-      evaluationValue -= 1 + 0.5 * (card.persuasionCosts ?? 0);
+    if (hasCustomAgentEffect(card)) {
+      let evaluationEstimation = 0.5;
+      if (card.structuredAgentEffects) {
+        evaluationEstimation = 0.33;
+      }
+      evaluationValue -= 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     if (card.structuredRevealEffects) {
-      if (card.structuredRevealEffects) {
-        evaluationValue -= this.getStructuredEffectsEvaluation(card.structuredRevealEffects, player, gameState);
-      }
+      evaluationValue -= this.getStructuredEffectsEvaluation(card.structuredRevealEffects, player, gameState);
     }
-    if (card.customRevealEffect) {
-      evaluationValue -= 2 + 0.5 * (card.persuasionCosts ?? 0);
+    if (hasCustomRevealEffect(card)) {
+      let evaluationEstimation = 0.5;
+      if (card.structuredRevealEffects) {
+        evaluationEstimation = 0.33;
+      }
+      evaluationValue -= 2 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     return evaluationValue;
@@ -1255,7 +1277,7 @@ export class AIManager {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 9 + 1.25 * (gameState.currentRound - 1);
+        return 9 + 1.33 * (gameState.currentRound - 1);
       case 'sword':
         return 1 + 0.05 * (gameState.currentRound - 1);
       case 'combat':
