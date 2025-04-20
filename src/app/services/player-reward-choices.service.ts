@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Effect } from '../models';
+import { Effect, StructuredChoiceEffect, StructuredEffects } from '../models';
 
 export interface PlayerRewardChoice<T> {
   id: string;
@@ -12,6 +12,7 @@ export interface PlayerRewardChoices {
   playerId: number;
   rewardChoices: PlayerRewardChoice<Effect>[];
   rewardsChoices: PlayerRewardChoice<Effect[]>[];
+  effectChoices: StructuredEffects;
   customChoices: PlayerRewardChoice<string>[];
 }
 
@@ -55,12 +56,10 @@ export class PlayerRewardChoicesService {
       playerRewardChoices[index].rewardChoices.push({ id: crypto.randomUUID(), choice: reward });
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     } else {
-      playerRewardChoices.push({
-        playerId,
-        rewardChoices: [{ id: crypto.randomUUID(), choice: reward }],
-        rewardsChoices: [],
-        customChoices: [],
-      });
+      const newPlayerRewardChoices = this.getInitialPlayerRewardChoices(playerId);
+      newPlayerRewardChoices.rewardChoices.push({ id: crypto.randomUUID(), choice: reward });
+      playerRewardChoices.push(newPlayerRewardChoices);
+
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     }
   }
@@ -74,12 +73,10 @@ export class PlayerRewardChoicesService {
       playerRewardChoices[index].rewardsChoices.push({ id: crypto.randomUUID(), choice: rewards });
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     } else {
-      playerRewardChoices.push({
-        playerId,
-        rewardChoices: [],
-        rewardsChoices: [{ id: crypto.randomUUID(), choice: rewards }],
-        customChoices: [],
-      });
+      const newPlayerRewardChoices = this.getInitialPlayerRewardChoices(playerId);
+      newPlayerRewardChoices.rewardsChoices.push({ id: crypto.randomUUID(), choice: rewards });
+      playerRewardChoices.push(newPlayerRewardChoices);
+
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     }
   }
@@ -93,12 +90,27 @@ export class PlayerRewardChoicesService {
       playerRewardChoices[index].customChoices.push({ id: crypto.randomUUID(), choice: customChoice });
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     } else {
-      playerRewardChoices.push({
-        playerId,
-        rewardChoices: [],
-        rewardsChoices: [],
-        customChoices: [{ id: crypto.randomUUID(), choice: customChoice }],
-      });
+      const newPlayerRewardChoices = this.getInitialPlayerRewardChoices(playerId);
+      newPlayerRewardChoices.customChoices.push({ id: crypto.randomUUID(), choice: customChoice });
+      playerRewardChoices.push(newPlayerRewardChoices);
+
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    }
+  }
+
+  public addPlayerConversionChoice(playerId: number, conversionChoice: StructuredChoiceEffect) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
+
+    if (index > -1) {
+      playerRewardChoices[index].effectChoices.choiceEffects.push(conversionChoice);
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    } else {
+      const newPlayerRewardChoices = this.getInitialPlayerRewardChoices(playerId);
+      newPlayerRewardChoices.effectChoices.choiceEffects.push(conversionChoice);
+      playerRewardChoices.push(newPlayerRewardChoices);
+
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     }
   }
@@ -134,5 +146,29 @@ export class PlayerRewardChoicesService {
       playerRewardChoices[index].customChoices = playerRewardChoices[index].customChoices.filter((x) => x.id !== id);
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     }
+  }
+
+  public removePlayerConversionChoice(playerId: number, index: number) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    playerRewardChoices[index].effectChoices.choiceEffects = playerRewardChoices[index].effectChoices.choiceEffects.filter(
+      (x, idx) => idx !== index
+    );
+    this.playerRewardChoicesSubject.next(playerRewardChoices);
+  }
+
+  public getInitialPlayerRewardChoices(playerId: number): PlayerRewardChoices {
+    return {
+      playerId,
+      rewardChoices: [],
+      rewardsChoices: [],
+      customChoices: [],
+      effectChoices: {
+        rewards: [],
+        choiceEffects: [],
+        conditionalEffects: [],
+        timingEffects: [],
+      },
+    };
   }
 }

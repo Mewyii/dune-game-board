@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { EffectType } from 'src/app/models';
+import { StructuredChoiceEffectWithGameElement } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
   selector: 'dune-player-reward-choices',
@@ -14,11 +16,21 @@ export class PlayerRewardChoicesComponent implements OnInit {
   public activePlayerId: number = 0;
   public playerRewardChoices: PlayerRewardChoices | undefined;
   public playerActionLog: PlayerActionLog[] = [];
+  public playerEffectConversions: StructuredChoiceEffectWithGameElement[] = [];
+  public playerEffectOptions: StructuredChoiceEffectWithGameElement[] = [];
 
-  constructor(private gameManager: GameManager, private playerRewardChoicesService: PlayerRewardChoicesService) {}
+  public activeEffectId = '';
+
+  constructor(
+    private gameManager: GameManager,
+    private playerRewardChoicesService: PlayerRewardChoicesService,
+    private turnInfoService: TurnInfoService
+  ) {}
 
   ngOnInit(): void {
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+      this.activeEffectId = '';
+
       this.activePlayerId = activePlayerId;
       this.playerRewardChoices = this.playerRewardChoicesService.playerRewardChoices.find(
         (x) => x.playerId === this.activePlayerId
@@ -27,6 +39,12 @@ export class PlayerRewardChoicesComponent implements OnInit {
 
     this.playerRewardChoicesService.playerRewardChoices$.subscribe((playerRewardChoices) => {
       this.playerRewardChoices = playerRewardChoices.find((x) => x.playerId === this.activePlayerId);
+    });
+
+    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+      const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
+      this.playerEffectOptions = playerTurnInfos?.effectOptions ?? [];
+      this.playerEffectConversions = playerTurnInfos?.effectConversions ?? [];
     });
   }
 
@@ -40,6 +58,47 @@ export class PlayerRewardChoicesComponent implements OnInit {
 
   onCustomChoiceClicked(id: string) {
     this.playerRewardChoicesService.removePlayerCustomChoice(this.activePlayerId, id);
+  }
+
+  setEffectActive(id: string) {
+    if (this.activeEffectId !== id) {
+      this.activeEffectId = id;
+    } else {
+      this.activeEffectId = '';
+    }
+  }
+
+  onOptionEffectRightClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
+    const optionSuccessFull = this.gameManager.resolveEffectOption(this.activePlayerId, effect, 'right');
+    if (optionSuccessFull) {
+      this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
+        effectOptions: this.playerEffectOptions.filter((x, idx) => idx !== index),
+      });
+    }
+  }
+
+  onOptionEffectLeftClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
+    const optionSuccessFull = this.gameManager.resolveEffectOption(this.activePlayerId, effect, 'left');
+    if (optionSuccessFull) {
+      this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
+        effectOptions: this.playerEffectOptions.filter((x, idx) => idx !== index),
+      });
+    }
+  }
+
+  onConvertEffectClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
+    const conversionSuccessFull = this.gameManager.resolveEffectConversionIfPossible(this.activePlayerId, effect);
+    if (conversionSuccessFull) {
+      this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
+        effectConversions: this.playerEffectConversions.filter((x, idx) => idx !== index),
+      });
+    }
+  }
+
+  onDenyConversionClicked(index: number) {
+    this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
+      effectConversions: this.playerEffectConversions.filter((x, idx) => idx !== index),
+    });
   }
 
   public getEffectTypePath(effectType: EffectType) {

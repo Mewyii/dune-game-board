@@ -1,35 +1,112 @@
-<ng-container *ngIf="playerRewardChoices">
-  @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
-  <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
-    @for (reward of rewardsChoice.choice; track $index) {
-    <div>
+<div class="reward-choices-container">
+  <ng-container *ngIf="playerRewardChoices">
+    @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
+    <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
+      @for (reward of rewardsChoice.choice; track $index) {
+      <div>
+        <div class="reward-container">
+          <img class="reward" [src]="getEffectTypePath(reward.type)" />
+          <ng-container *ngIf="reward.amount">
+            <div class="reward-amount">
+              {{ reward.amount }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      }
+    </div>
+    } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
+    <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
       <div class="reward-container">
-        <img class="reward" [src]="getEffectTypePath(reward.type)" />
-        <ng-container *ngIf="reward.amount">
+        <img class="reward" [src]="getEffectTypePath(rewardChoice.choice.type)" />
+        <ng-container *ngIf="rewardChoice.choice.amount">
           <div class="reward-amount">
-            {{ reward.amount }}
+            {{ rewardChoice.choice.amount }}
           </div>
         </ng-container>
       </div>
     </div>
+    } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
+    <div
+      class="reward-choice"
+      [innerHTML]="rewardChoice.choice | duneSymbols : '22px'"
+      (click)="onCustomChoiceClicked(rewardChoice.id)"
+    ></div>
     }
-  </div>
-  } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
-  <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
+  </ng-container>
+  @for (effectOption of playerEffectOptions; track $index; let idx = $index) {
+  <div
+    [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
+    (click)="setEffectActive('option' + idx)"
+  >
+    @for (leftEffect of effectOption.left; track $index) {
     <div class="reward-container">
-      <img class="reward" [src]="getEffectTypePath(rewardChoice.choice.type)" />
-      <ng-container *ngIf="rewardChoice.choice.amount">
+      <img class="reward" [src]="getEffectTypePath(leftEffect.type)" />
+      <ng-container *ngIf="leftEffect.amount">
         <div class="reward-amount">
-          {{ rewardChoice.choice.amount }}
+          {{ leftEffect.amount }}
         </div>
       </ng-container>
     </div>
+    }
+    <div class="reward-container">
+      <img class="reward" [src]="getEffectTypePath('helper-or')" />
+    </div>
+    @for (rightEffect of effectOption.right; track $index) {
+    <div class="reward-container">
+      <img class="reward" [src]="getEffectTypePath(rightEffect.type)" />
+      <ng-container *ngIf="rightEffect.amount">
+        <div class="reward-amount">
+          {{ rightEffect.amount }}
+        </div>
+      </ng-container>
+    </div>
+    }
+    <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption, idx)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption, idx)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
   </div>
-  } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
+  }@for (effectConversion of playerEffectConversions; track $index; let idx = $index) {
   <div
-    class="reward-choice"
-    [innerHTML]="rewardChoice.choice | duneSymbols : '22px'"
-    (click)="onCustomChoiceClicked(rewardChoice.id)"
-  ></div>
+    [class]="'rewards-choice ' + (activeEffectId === 'conversion' + idx ? 'active' : '')"
+    (click)="setEffectActive('conversion' + idx)"
+  >
+    @for (leftEffect of effectConversion.left; track $index) {
+    <div class="reward-container">
+      <img class="reward" [src]="getEffectTypePath(leftEffect.type)" />
+      <ng-container *ngIf="leftEffect.amount">
+        <div class="reward-amount">
+          {{ leftEffect.amount }}
+        </div>
+      </ng-container>
+    </div>
+    }
+    <div class="reward-container">
+      <img class="reward" [src]="getEffectTypePath('helper-trade')" />
+    </div>
+    @for (rightEffect of effectConversion.right; track $index) {
+    <div class="reward-container">
+      <img class="reward" [src]="getEffectTypePath(rightEffect.type)" />
+      <ng-container *ngIf="rightEffect.amount">
+        <div class="reward-amount">
+          {{ rightEffect.amount }}
+        </div>
+      </ng-container>
+    </div>
+    }
+    <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion, idx)">
+        <mat-icon>check</mat-icon>
+      </button>
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(idx)">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </div>
   }
-</ng-container>
+</div>

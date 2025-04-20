@@ -1,3 +1,9 @@
+.reward-choices-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .reward-choice {
   font-family: 'Roboto', 'Verdana';
   font-weight: initial;
@@ -48,8 +54,21 @@
   transition: 0.7s;
   display: flex;
   gap: 2px;
+  width: min-content;
 }
 
-.rewards-choice:hover {
+.rewards-choice:hover,
+.rewards-choice.active {
   transform: scale(1.1);
+}
+
+.control-bar {
+  width: 100%;
+  position: absolute;
+  top: -40px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  z-index: 3;
 }

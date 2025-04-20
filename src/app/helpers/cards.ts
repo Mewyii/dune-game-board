@@ -27,11 +27,19 @@ export function isImperiumDeckCard(card: ImperiumCard | ImperiumDeckCard): card 
 export function hasCustomAgentEffect<T extends ImperiumCard | ImperiumDeckCard>(
   card: T
 ): card is T & HasCustomAgentEffect<T> {
-  return card.customAgentEffect !== undefined && card.customAgentEffect.en !== undefined;
+  if (card.customAgentEffect && card.customAgentEffect.en) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export function hasCustomRevealEffect<T extends ImperiumCard | ImperiumDeckCard>(
   card: T
 ): card is T & HasCustomRevealEffect<T> {
-  return card.customRevealEffect !== undefined && card.customRevealEffect.en !== undefined;
+  if (card.customRevealEffect && card.customRevealEffect.en) {
+    return true;
+  } else {
+    return false;
+  }
 }
