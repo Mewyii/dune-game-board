@@ -705,15 +705,18 @@ export class GameManager {
 
     if (!activePlayer.isAI) {
       if (hasRewardOptions && rewardOptionLeft && rewardOptionRight) {
-        this.playerRewardChoicesService.addPlayerRewardsChoice(activePlayer.id, [
-          rewardOptionLeft,
-          { type: 'helper-or' },
-          rewardOptionRight,
-        ]);
+        this.turnInfoService.updatePlayerTurnInfo(activePlayer.id, {
+          effectOptions: [{ choiceType: 'helper-or', left: [rewardOptionLeft], right: [rewardOptionRight] }],
+        });
       }
       if (field.conversionOptions) {
         for (const option of field.conversionOptions) {
-          this.playerRewardChoicesService.addPlayerRewardsChoice(activePlayer.id, option);
+          const [_, choiceEffect] = getStructuredChoiceEffectIfPossible(option);
+          if (choiceEffect) {
+            this.turnInfoService.updatePlayerTurnInfo(activePlayer.id, {
+              effectConversions: [{ choiceType: 'helper-trade', left: choiceEffect.left, right: choiceEffect.right }],
+            });
+          }
         }
       }
     } else if (activePlayer.isAI) {
