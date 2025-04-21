@@ -1,6 +1,7 @@
 import { Conflict } from '../models/conflict';
 
 export const conflicts: Conflict[] = [
+  // LVL 1
   {
     name: { de: 'Schlacht von Arrakeen', en: 'Battle of Arrakeen' },
     lvl: 1,
@@ -55,7 +56,25 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Vorherrschaft über den Wasserhandel', en: 'Supremacyover the Water Trade' },
+    name: { de: 'Eroberung der Schmuggler-Sietches', en: "Conquest of the Smuggler's Sietches" },
+    lvl: 1,
+    rewards: [
+      [{ type: 'victory-point' }, { type: 'solari', amount: 2 }],
+      [{ type: 'solari', amount: 5 }],
+      [{ type: 'solari', amount: 2 }],
+    ],
+  },
+  {
+    name: { de: 'Eroberung der Spice-Läger', en: 'Conquest of the Spice Depots' },
+    lvl: 1,
+    rewards: [
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
+      [{ type: 'spice', amount: 3 }],
+      [{ type: 'spice' }],
+    ],
+  },
+  {
+    name: { de: 'Vorherrschaft über den Wasserhandel', en: 'Supremacy over the Water Trade' },
     lvl: 1,
     rewards: [
       [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'water' }],
@@ -72,21 +91,7 @@ export const conflicts: Conflict[] = [
       [{ type: 'spice' }],
     ],
   },
-  {
-    name: { de: 'Eroberung der Spice-Läger', en: 'Conquest of the Spice Depots' },
-    lvl: 1,
-    rewards: [[{ type: 'spice', amount: 4 }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
-  },
-  {
-    name: { de: 'Eroberung der Schmuggler-Sietches', en: "Conquest of the Smuggler's Sietches" },
-    lvl: 1,
-    rewards: [
-      [{ type: 'victory-point' }, { type: 'solari', amount: 2 }],
-      [{ type: 'solari', amount: 5 }],
-      [{ type: 'solari', amount: 2 }],
-    ],
-  },
-
+  // LVL 2
   {
     name: { de: 'Schlacht von Carthag', en: 'Battle of Carthag' },
     lvl: 2,

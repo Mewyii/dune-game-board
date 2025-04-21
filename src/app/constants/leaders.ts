@@ -256,10 +256,7 @@ export const leaders: Leader[] = [
     type: 'new',
     startingResources: [
       {
-        type: 'solari',
-      },
-      {
-        type: 'troop',
+        type: 'water',
       },
     ],
   },
@@ -1037,9 +1034,6 @@ export const leaders: Leader[] = [
     playableByAI: true,
     startingResources: [
       {
-        type: 'solari',
-      },
-      {
         type: 'troop',
       },
     ],
@@ -1091,9 +1085,6 @@ export const leaders: Leader[] = [
     startingResources: [
       {
         type: 'solari',
-      },
-      {
-        type: 'troop',
       },
     ],
   },
