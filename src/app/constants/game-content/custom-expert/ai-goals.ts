@@ -1,4 +1,9 @@
 import { clamp } from 'lodash';
+import { normalizeNumber } from 'src/app/helpers/common';
+import { isResourceArray } from 'src/app/helpers/resources';
+import { ActionField } from 'src/app/models/location';
+import { Player } from 'src/app/models/player';
+import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import {
   enemyIsCloseToPlayerFactionScore,
   getCostAdjustedDesire,
@@ -12,12 +17,7 @@ import {
   playerCanGetAllianceThisTurn,
   playerLikelyWinsCombat,
 } from 'src/app/services/ai/shared';
-import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
-import { ActionField } from 'src/app/models/location';
-import { FactionType, Resource, EffectRewardType } from '../../../models';
-import { isResourceArray } from 'src/app/helpers/resources';
-import { normalizeNumber } from 'src/app/helpers/common';
-import { Player } from 'src/app/models/player';
+import { EffectRewardType, FactionType, Resource } from '../../../models';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
   'get-victory-points': {
@@ -110,7 +110,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.01 * gameState.currentRound : 0),
+      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.015 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.fremen > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'fremen'),
@@ -123,7 +123,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.01 * gameState.currentRound : 0),
+      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.015 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.bene > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'bene'),
@@ -136,7 +136,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.01 * gameState.currentRound : 0),
+      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.015 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.guild > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'guild'),
@@ -149,7 +149,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
       (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.01 * gameState.currentRound : 0),
+      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.015 * gameState.currentRound : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
       gameState.playerScore.emperor > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'emperor'),
@@ -202,9 +202,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   intrigues: {
-    baseDesire: 0.3,
-    desireModifier: (player, gameState, goals) =>
-      0.01 * (gameState.currentRound - 1) - 0.033 * gameState.playerIntrigueCount,
+    baseDesire: 0.4,
+    desireModifier: (player, gameState, goals) => 0.01 * (gameState.currentRound - 1) - 0.05 * gameState.playerIntrigueCount,
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerIntrigueCount > 2,
     viableFields: (fields) => ({
@@ -221,7 +220,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   'fold-space': {
-    baseDesire: 0.15,
+    baseDesire: 0.2,
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.2 : 0) -
       0.0125 * gameState.playerCardsBought -

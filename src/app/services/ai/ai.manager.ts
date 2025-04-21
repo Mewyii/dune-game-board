@@ -187,20 +187,16 @@ export class AIManager {
   public setPreferredFieldsForAIPlayer(player: Player, gameState: GameState) {
     const boardFields = this.getFieldsWithAdjustedRewardsAndCosts(
       gameState,
-      this.getFieldsWithChoices(this.settingsService.boardFields)
+      this.getFieldsSplitByRewardChoices(this.settingsService.boardFields)
     );
     const aiPlayers = this.aiPlayers;
     const aiPlayer = aiPlayers.find((x) => x.playerId === player.id);
 
-    const gameEvent = gameState.currentEvent;
     const playerLeader = gameState.playerLeader;
 
     if (!aiPlayer || !this.aiGoals || !gameState.playerHandCards) {
       return;
     }
-
-    const fieldEvaluations: FieldEvaluation[] = [];
-    const decisions: string[] = [];
 
     const conflictEvaluation = this.getNormalizedRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState, 24);
     const techEvaluation = Math.max(
@@ -215,6 +211,58 @@ export class AIManager {
     let leaderGoalModifiers: GoalModifier[] = [];
     if (playerLeader.aiAdjustments && playerLeader.aiAdjustments.goalEvaluationModifier) {
       leaderGoalModifiers = playerLeader.aiAdjustments.goalEvaluationModifier(player, gameState);
+    }
+
+    const { fieldEvaluations, decisions } = this.getEvaluatedFieldsByGoals(
+      player,
+      aiPlayer,
+      gameState,
+      leaderGoalModifiers,
+      boardFields,
+      conflictEvaluation,
+      techEvaluation,
+      imperiumRowEvaluation
+    );
+
+    const adjustedFieldEvaluations = fieldEvaluations.map((x) => ({
+      ...x,
+      value: gameState.playerGameModifiers?.fieldMarkers?.some((y) => x.fieldId.includes(y.fieldId) && y.amount > 0)
+        ? x.value + 0.1
+        : x.value,
+    }));
+
+    const accessibleFields = this.getAccessibleFields(boardFields, adjustedFieldEvaluations, gameState, aiPlayer);
+
+    const randomFactor = gameState.isOpeningTurn
+      ? 0.66
+      : this.aiDifficulty === 'hard'
+      ? 0.1
+      : this.aiDifficulty === 'medium'
+      ? 0.2
+      : 0.3;
+    const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
+
+    aiPlayer.preferredFields = slightlyRandomizedFields;
+    aiPlayer.decisions = decisions;
+
+    this.aiPlayersSubject.next(aiPlayers);
+  }
+
+  private getEvaluatedFieldsByGoals(
+    player: Player,
+    aiPlayer: AIPlayer,
+    gameState: GameState,
+    leaderGoalModifiers: GoalModifier[],
+    boardFields: ActionField[],
+    conflictEvaluation: number,
+    techEvaluation: number,
+    imperiumRowEvaluation: number
+  ) {
+    const fieldEvaluations: FieldEvaluation[] = [];
+    const decisions: string[] = [];
+
+    if (!this.aiGoals) {
+      return { fieldEvaluations, decisions };
     }
 
     for (let [goalId, goal] of Object.entries(this.aiGoals)) {
@@ -267,22 +315,7 @@ export class AIManager {
         }
       }
     }
-
-    const accessibleFields = this.getAccessibleFields(boardFields, fieldEvaluations, gameState, aiPlayer);
-
-    const randomFactor = gameState.isOpeningTurn
-      ? 0.66
-      : this.aiDifficulty === 'hard'
-      ? 0.1
-      : this.aiDifficulty === 'medium'
-      ? 0.2
-      : 0.3;
-    const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
-
-    aiPlayer.preferredFields = slightlyRandomizedFields;
-    aiPlayer.decisions = decisions;
-
-    this.aiPlayersSubject.next(aiPlayers);
+    return { fieldEvaluations, decisions };
   }
 
   private getAccessibleFields(
@@ -700,7 +733,7 @@ export class AIManager {
     return combatPower;
   }
 
-  getFieldsWithChoices(fields: ActionField[]) {
+  getFieldsSplitByRewardChoices(fields: ActionField[]) {
     const result: ActionField[] = [];
     for (const field of fields) {
       if (field.rewards.some((x) => x.type === 'card-draw-or-destroy')) {
@@ -760,7 +793,7 @@ export class AIManager {
     return result;
   }
 
-  getFieldsWithAdjustedRewardsAndCosts(gameState: GameState, fields: ActionField[]) {
+  getFieldsWithAdjustedRewardsAndCosts(gameState: GameState, fields: ActionField[]): ActionField[] {
     return fields.map((field) => {
       // Game Modifier Reward Adjustments
       const fieldRewards = getModifiedRewardsForField(field, gameState.playerGameModifiers?.fieldReward);
@@ -811,7 +844,7 @@ export class AIManager {
         }
         const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
         if (intrigueRewards) {
-          modifier = modifier + 0.075 * (intrigueRewards.amount ?? 1);
+          modifier = modifier + 0.05 * (intrigueRewards.amount ?? 1);
         }
 
         fieldRewards[combatRewardIndex].amount = modifier;
