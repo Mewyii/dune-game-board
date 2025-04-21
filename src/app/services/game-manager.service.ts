@@ -1359,8 +1359,13 @@ export class GameManager {
     const conversionIsUseful =
       this.aIManager.getRewardArrayEvaluationForTurnState(rewards, player, gameState) - costsEvaluation > 0;
 
-    if (conversionIsUseful) {
-      this.resolveEffectConversionIfPossible(player.id, effect);
+    if (conversionIsUseful && this.playerCanPayCosts(player.id, costs)) {
+      for (const cost of costs) {
+        this.payCostForPlayer(player.id, cost, undefined, effect.element);
+      }
+      for (const reward of rewards) {
+        this.addRewardToPlayer(player.id, reward, effect.element);
+      }
     }
   }
 

@@ -10,6 +10,6 @@ export class AppComponent {
   constructor(private title: Title) {}
 
   ngOnInit(): void {
-    this.title.setTitle('Dune Imperium: Alliances');
+    this.title.setTitle('Dune Imperium: Sands of Arrakis');
   }
 }
