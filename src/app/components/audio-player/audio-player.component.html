@@ -6,16 +6,19 @@
     </button>
   </div>
   <div [class]="'player-container ' + (showAudioSelection ? 'shown' : 'hidden')">
+    <mat-slide-toggle [color]="'accent'" [checked]="autoplayMusic" (change)="onAutoplayMusicClicked()"
+      >Autplay Music</mat-slide-toggle
+    >
     <dune-soundcloud-player
       [musicId]="1935683711"
       [type]="'playlists'"
-      [autoplay]="true"
+      [autoplay]="autoplayMusic"
       [volume]="30"
     ></dune-soundcloud-player>
     <dune-soundcloud-player
       [musicId]="1985154320"
       [type]="'playlists'"
-      [autoplay]="true"
+      [autoplay]="autoplayMusic"
       [volume]="40"
     ></dune-soundcloud-player>
   </div>

@@ -36,6 +36,10 @@ export class SettingsService {
     map((x) => x.eventsEnabled),
     distinctUntilChanged()
   );
+  public autoplayMusic$ = this.settings$.pipe(
+    map((x) => x.autoplayMusic),
+    distinctUntilChanged()
+  );
 
   constructor() {
     const settingsString = localStorage.getItem('settings');
@@ -186,6 +190,10 @@ export class SettingsService {
 
   changeLanguage(lang: LanguageType) {
     this.settingsSubject.next({ ...this.settings, language: lang });
+  }
+
+  setAutoplayMusic(autoplayMusic: boolean) {
+    this.settingsSubject.next({ ...this.settings, autoplayMusic });
   }
 
   setGameContent(name: string) {

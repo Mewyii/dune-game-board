@@ -1,4 +1,4 @@
-import { ActionField, DuneLocation, Faction, LanguageType, Effect } from '../models';
+import { ActionField, DuneLocation, Effect, Faction, LanguageType } from '../models';
 import { CustomCard } from '../models/imperium-card';
 import { FieldsForGoals } from '../services/ai/models';
 import { gameContentCustomExpert } from './game-content';
@@ -38,6 +38,7 @@ export interface Settings {
   language: LanguageType;
   gameContent: GameContent;
   eventsEnabled: boolean;
+  autoplayMusic: boolean;
 }
 
 export const boardSettings: Settings = {
@@ -45,4 +46,5 @@ export const boardSettings: Settings = {
   language: 'en',
   gameContent: gameContentCustomExpert,
   eventsEnabled: true,
+  autoplayMusic: true,
 };
