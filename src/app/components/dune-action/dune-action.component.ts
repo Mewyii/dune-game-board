@@ -1,20 +1,21 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ActionField, EffectType, FactionType, EffectRewardType } from 'src/app/models';
-import { getActionTypePath } from 'src/app/helpers/action-types';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { boardSettings } from 'src/app/constants/board-settings';
+import { getActionTypePath } from 'src/app/helpers/action-types';
+import { getCardsFieldAccess } from 'src/app/helpers/cards';
+import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
+import { getFieldIsBlocked, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { GameManager } from 'src/app/services/game-manager.service';
-import { TranslateService } from 'src/app/services/translate-service';
+import { getFlattenedEffectRewardArray } from 'src/app/helpers/rewards';
+import { ActionField, EffectType, FactionType, Resource } from 'src/app/models';
+import { Player, PlayerTurnState } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
-import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
-import { isFactionScoreType } from 'src/app/helpers/faction-score';
-import { getCardsFactionAndFieldAccess, getCardsFieldAccess } from 'src/app/helpers/cards';
+import { GameManager } from 'src/app/services/game-manager.service';
 import { EffectWithModifier, GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
-import { Player, PlayerTurnState } from 'src/app/models/player';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
-import { getFieldIsBlocked, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'app-dune-action',
@@ -48,6 +49,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
   public activePlayerId: number = 0;
   public activePlayerTurnState: PlayerTurnState | undefined;
+  public activePlayerResources: Resource[] = [];
 
   public isAccessibleByPlayer = false;
 
@@ -103,8 +105,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
     this.gameManager.activePlayerId$.subscribe((playerId) => {
       this.activePlayerId = playerId;
+      const player = this.playerManager.getPlayer(this.activePlayerId);
 
-      this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+      this.activePlayerTurnState = player?.turnState;
+      this.activePlayerResources = player?.resources ?? [];
 
       this.isAccessibleByPlayer = this.getPlayerAccessibility();
 
@@ -133,7 +137,12 @@ export class DuneActionComponent implements OnInit, OnChanges {
     });
 
     this.playerManager.players$.subscribe((players) => {
-      this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+      const player = this.playerManager.getPlayer(this.activePlayerId);
+
+      this.activePlayerTurnState = player?.turnState;
+      this.activePlayerResources = player?.resources ?? [];
+
+      this.isAccessibleByPlayer = this.getPlayerAccessibility();
     });
 
     this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {
@@ -240,26 +249,29 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   private getPlayerAccessibility() {
-    const factionRequiredType = this.actionField.requiresInfluence?.type;
+    const factionInfluenceRequired = this.actionField.requiresInfluence?.type;
+    const costs = this.actionField.costs ?? [];
     const playerHand = this.cardsService.getPlayerHand(this.activePlayerId);
     if (!playerHand) {
       return false;
     }
 
-    if (!factionRequiredType || !isFactionScoreType(factionRequiredType)) {
-      return getCardsFieldAccess(playerHand.cards).includes(this.actionField.actionType);
-    } else {
+    if (factionInfluenceRequired && isFactionScoreType(factionInfluenceRequired)) {
       const playerScore = this.playerScoreManager.getPlayerScore(this.activePlayerId);
-      if (playerScore) {
-        if (playerScore[factionRequiredType] > 1) {
-          return getCardsFieldAccess(playerHand.cards).includes(this.actionField.actionType);
-        }
+      if (!playerScore || playerScore[factionInfluenceRequired] < 2) {
+        return false;
       }
-      return getCardsFactionAndFieldAccess(playerHand.cards).some(
-        (x) => x.faction === factionRequiredType && x.actionType.includes(this.actionField.actionType)
-      );
     }
-    return false;
+
+    for (const cost of getFlattenedEffectRewardArray(costs)) {
+      const costAmount = cost.amount ?? 1;
+      const playerResourceAmount = this.activePlayerResources.find((x) => x.type === cost.type)?.amount ?? 0;
+      if (playerResourceAmount < costAmount) {
+        return false;
+      }
+    }
+
+    return getCardsFieldAccess(playerHand.cards).includes(this.actionField.actionType);
   }
 
   private adjustRGBColor(rgb: string, amount: number) {

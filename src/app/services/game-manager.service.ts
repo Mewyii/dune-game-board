@@ -17,6 +17,7 @@ import {
 } from '../helpers/game-modifiers';
 import { isResource, isResourceType } from '../helpers/resources';
 import {
+  getFlattenedEffectRewardArray,
   getRewardArrayAIInfos,
   getStructuredChoiceEffectIfPossible,
   isConversionEffectType,
@@ -2352,22 +2353,17 @@ export class GameManager {
     let canPayCosts = true;
     const player = this.playerManager.getPlayer(playerId);
     const playerScore = this.playerScoreManager.getPlayerScore(playerId);
-    const playerCombatUnits = this.combatManager.getPlayerCombatUnits(playerId);
-    let playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId);
-    let playerCombatScore = this.combatManager.getPlayerCombatScore(playerId);
-    const playerHandCards = this.cardsService.getPlayerHand(playerId)?.cards;
 
     if (player) {
-      for (let cost of costs) {
+      for (let cost of getFlattenedEffectRewardArray(costs)) {
         const costType = cost.type;
         const costAmount = cost.amount ?? 1;
+
         if (isResourceType(costType)) {
           const resourceIndex = player.resources.findIndex((x) => x.type === cost.type);
-          const currentResourceAmount = player.resources[resourceIndex].amount;
+          const currentResourceAmount = player.resources[resourceIndex].amount ?? 0;
 
-          if (currentResourceAmount && currentResourceAmount >= costAmount) {
-            player.resources[resourceIndex].amount = currentResourceAmount - costAmount;
-          } else {
+          if (currentResourceAmount < costAmount) {
             canPayCosts = false;
           }
         } else if (costType === 'tech') {
@@ -2375,9 +2371,9 @@ export class GameManager {
             canPayCosts = false;
           }
         } else if (costType === 'card-discard') {
-          if (playerHandCards && playerHandCards.length >= costAmount) {
-            playerHandCards.splice(0, costAmount);
-          } else {
+          const playerHandCards = this.cardsService.getPlayerHand(playerId)?.cards;
+
+          if (!playerHandCards || playerHandCards.length < costAmount) {
             canPayCosts = false;
           }
         } else if (costType === 'persuasion') {
@@ -2386,20 +2382,20 @@ export class GameManager {
             canPayCosts = false;
           }
         } else if (costType === 'sword') {
-          if (playerCombatScore >= costAmount) {
-            playerCombatScore -= 1;
-          } else {
+          const playerCombatScore = this.combatManager.getPlayerCombatScore(playerId);
+
+          if (playerCombatScore < costAmount) {
             canPayCosts = false;
           }
         } else if (costType === 'troop' || costType === 'loose-troop') {
-          if (playerCombatUnits && playerCombatUnits.troopsInGarrison >= costAmount) {
-            playerCombatUnits.troopsInGarrison -= costAmount;
-          } else {
+          const playerCombatUnits = this.combatManager.getPlayerCombatUnits(playerId);
+
+          if (!playerCombatUnits || playerCombatUnits.troopsInGarrison < costAmount) {
             canPayCosts = false;
           }
         } else if (costType === 'intrigue-trash') {
-          playerIntrigueCount -= 1;
-          if (playerIntrigueCount < 0) {
+          const playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId);
+          if (playerIntrigueCount < costAmount) {
             canPayCosts = false;
           }
         } else if (isFactionScoreCostType(costType)) {

@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import {
   combatUnitTypes,
   Effect,
@@ -125,6 +126,25 @@ export function isRewardEffectType(type: EffectType): type is EffectRewardType {
   return (
     effectRewards.some((x) => x === type) || resourceTypes.some((x) => x === type) || combatUnitTypes.some((x) => x === type)
   );
+}
+
+export function getFlattenedEffectRewardArray(array: EffectReward[]) {
+  const clonedArray = cloneDeep(array);
+  const result: EffectReward[] = [];
+  for (const item of clonedArray) {
+    const index = result.findIndex((x) => x.type === item.type);
+    const resultItem = result[index];
+    if (resultItem) {
+      if (resultItem.amount) {
+        resultItem.amount += item.amount ?? 1;
+      } else {
+        resultItem.amount = 1 + (item.amount ?? 1);
+      }
+    } else {
+      result.push(item);
+    }
+  }
+  return result;
 }
 
 export function getStructuredEffectArrayInfos(effects: Effect[]) {
