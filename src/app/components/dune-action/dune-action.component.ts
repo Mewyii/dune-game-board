@@ -77,9 +77,9 @@ export class DuneActionComponent implements OnInit, OnChanges {
     this.actionRewards = this.actionField.rewards ?? [];
     this.pathToActionType = getActionTypePath(this.actionField.actionType);
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
-    const gradientColor1 = this.adjustRGBColor(this.backgroundColor, -15);
-    const gradientColor2 = this.adjustRGBColor(this.backgroundColor, -20);
-    const gradientColor3 = this.adjustRGBColor(this.backgroundColor, -30);
+    const gradientColor1 = this.adjustRGBColor(this.backgroundColor, -16);
+    const gradientColor2 = this.adjustRGBColor(this.backgroundColor, -24);
+    const gradientColor3 = this.adjustRGBColor(this.backgroundColor, -32);
     this.backgroundGradient =
       'linear-gradient(' + gradientColor1 + ', 5%, ' + gradientColor2 + ', 70%, ' + gradientColor3 + ')';
 
