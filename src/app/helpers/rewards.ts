@@ -2,24 +2,25 @@ import {
   combatUnitTypes,
   Effect,
   EffectChoice,
-  EffectCondition,
-  EffectReward,
-  EffectType,
-  EffectRewardChoiceOrCondition,
-  EffectRewardOrChoice,
-  resourceTypes,
   effectChoices,
   EffectChoiceType,
+  EffectCondition,
   effectConditions,
-  EffectRewardType,
+  EffectReward,
+  EffectRewardChoiceOrCondition,
+  EffectRewardOrChoice,
   effectRewards,
+  EffectRewardType,
+  EffectTiming,
+  EffectTimingRewardChoiceOrCondition,
+  effectTimings,
+  EffectType,
+  resourceTypes,
+  RewardArrayInfo,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
   StructuredEffects,
-  EffectTimingRewardChoiceOrCondition,
   StructuredTimingEffect,
-  EffectTiming,
-  effectTimings,
 } from '../models';
 
 export function isFactionScoreReward(reward: Effect) {
@@ -222,4 +223,13 @@ export function getStructuredChoiceEffectIfPossible(
     }
   }
   return [effects as EffectReward[], undefined];
+}
+
+export function getRewardArrayAIInfos(rewards: Effect[]): RewardArrayInfo {
+  const rewardOptionIndex = rewards.findIndex((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal');
+  const hasRewardOptions = rewardOptionIndex > -1;
+
+  const rewardConversionIndex = rewards.findIndex((x) => x.type === 'helper-trade' || x.type === 'helper-trade-horizontal');
+  const hasRewardConversion = rewardConversionIndex > -1;
+  return { hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex };
 }

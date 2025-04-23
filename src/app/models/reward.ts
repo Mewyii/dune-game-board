@@ -127,3 +127,10 @@ export interface StructuredChoiceEffect {
   left: EffectReward[];
   right: EffectReward[];
 }
+
+export interface RewardArrayInfo {
+  hasRewardOptions: boolean;
+  hasRewardConversion: boolean;
+  rewardConversionIndex: number;
+  rewardOptionIndex: number;
+}

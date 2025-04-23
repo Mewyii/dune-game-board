@@ -17,6 +17,7 @@ import {
 } from '../helpers/game-modifiers';
 import { isResource, isResourceType } from '../helpers/resources';
 import {
+  getRewardArrayAIInfos,
   getStructuredChoiceEffectIfPossible,
   isConversionEffectType,
   isFactionScoreCostType,
@@ -645,7 +646,7 @@ export class GameManager {
 
     const fieldRewards = getModifiedRewardsForField(field, gameModifiers?.fieldReward);
 
-    const { rewardOptionIndex, hasRewardOptions } = this.aIManager.getRewardArrayAIInfos(fieldRewards);
+    const { rewardOptionIndex, hasRewardOptions } = getRewardArrayAIInfos(fieldRewards);
     let rewards: EffectReward[] = [];
     let rewardOptionLeft: EffectReward | undefined = undefined;
     let rewardOptionRight: EffectReward | undefined = undefined;
@@ -742,14 +743,12 @@ export class GameManager {
             const [_, choiceEffect] = getStructuredChoiceEffectIfPossible(conversionOption);
             if (choiceEffect) {
               if (this.playerCanPayCosts(activePlayer.id, choiceEffect.left)) {
-                const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(
-                  choiceEffect.left,
+                const conversionValue = this.aIManager.getEffectConversionValue(
                   activePlayer,
-                  gameState
+                  gameState,
+                  choiceEffect.left,
+                  choiceEffect.right
                 );
-                const conversionValue =
-                  this.aIManager.getRewardArrayEvaluationForTurnState(choiceEffect.right, activePlayer, gameState) -
-                  costsEvaluation;
 
                 if (conversionValue > favoredConversionValue) {
                   favoredConversionValue = conversionValue;
@@ -1202,34 +1201,16 @@ export class GameManager {
       return playableAndUsefulIntrigues;
     }
     for (const intrigue of intrigues) {
-      const intrigueEffects = intrigue.structuredEffects;
+      let { isUseful, costs } = this.aIManager.getIntrigueEvaluation(intrigue, player, gameState);
 
-      if (intrigueEffects) {
-        let isUseful = this.aIManager.getRewardArrayEvaluationForTurnState(intrigueEffects.rewards, player, gameState) > 0;
-
-        for (const choiceEffect of intrigueEffects.choiceEffects) {
-          if (isConversionEffectType(choiceEffect.choiceType)) {
-            const costs = choiceEffect.left;
-            const rewards = choiceEffect.right;
-            if (rewards.some((x) => x.type === 'location-control')) {
-              if (gameState.freeLocations.length < 1) {
-                costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
-              }
-            }
-
-            const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
-            const conversionIsUseful =
-              this.aIManager.getRewardArrayEvaluationForTurnState(rewards, player, gameState) - costsEvaluation > 0;
-
-            if (conversionIsUseful && this.playerCanPayCosts(player.id, costs)) {
-              isUseful = true;
-            }
-          }
+      let playerCanPayCosts = false;
+      for (const cost of costs) {
+        if (this.playerCanPayCosts(player.id, cost)) {
+          playerCanPayCosts = true;
         }
-
-        if (isUseful) {
-          playableAndUsefulIntrigues.push(intrigue);
-        }
+      }
+      if (isUseful && playerCanPayCosts) {
+        playableAndUsefulIntrigues.push(intrigue);
       }
     }
 
@@ -1358,9 +1339,7 @@ export class GameManager {
     const costs = effect.left;
     const rewards = effect.right;
 
-    const costsEvaluation = this.aIManager.getCostsArrayEvaluationForTurnState(costs, player, gameState);
-    const conversionIsUseful =
-      this.aIManager.getRewardArrayEvaluationForTurnState(rewards, player, gameState) - costsEvaluation > 0;
+    const conversionIsUseful = this.aIManager.getEffectConversionDecision(player, gameState, costs, rewards);
 
     if (conversionIsUseful && this.playerCanPayCosts(player.id, costs)) {
       for (const cost of costs) {
@@ -1379,17 +1358,10 @@ export class GameManager {
     gameState: GameState,
     element?: GameElement
   ) {
-    const leftSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(leftSideRewards, player, gameState);
-    const rightSideEvaluation = this.aIManager.getRewardArrayEvaluationForTurnState(rightSideRewards, player, gameState);
+    const chosenRewards = this.aIManager.getEffectOptionChoice(player, gameState, leftSideRewards, rightSideRewards);
 
-    if (leftSideEvaluation >= rightSideEvaluation) {
-      for (const reward of leftSideRewards) {
-        this.addRewardToPlayer(player.id, reward, element);
-      }
-    } else {
-      for (const reward of rightSideRewards) {
-        this.addRewardToPlayer(player.id, reward, element);
-      }
+    for (const reward of chosenRewards) {
+      this.addRewardToPlayer(player.id, reward, element);
     }
   }
 
@@ -1646,27 +1618,6 @@ export class GameManager {
 
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
-    // if (turnInfo.effectOptions.length > 0) {
-    //   for (const effectOption of turnInfo.effectOptions) {
-    //     this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, [
-    //       ...effectOption.left,
-    //       { type: effectOption.choiceType },
-    //       ...effectOption.right,
-    //     ]);
-    //   }
-    //   this.turnInfoService.setPlayerTurnInfo(player.id, { effectOptions: [] });
-    // }
-    // if (turnInfo.effectConversions.length > 0) {
-    //   for (const effectConversion of turnInfo.effectConversions) {
-    //     this.playerRewardChoicesService.addPlayerRewardsChoice(player.id, [
-    //       ...effectConversion.left,
-    //       { type: effectConversion.choiceType },
-    //       ...effectConversion.right,
-    //     ]);
-    //   }
-    //   this.turnInfoService.setPlayerTurnInfo(player.id, { effectConversions: [] });
-    // }
-
     if (turnInfo.canLiftAgent) {
       this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
         type: 'agent-lift',
@@ -1688,14 +1639,10 @@ export class GameManager {
 
     if (turnInfo.cardDrawOrDestroyAmount > 0) {
       for (let i = 0; i < turnInfo.cardDrawOrDestroyAmount; i++) {
-        const drawEvaluation = this.aIManager.getEffectEvaluationForTurnState('card-draw', player, gameState);
-        const focusEvaluation = this.aIManager.getEffectEvaluationForTurnState('focus', player, gameState);
+        const decision = this.aIManager.getEffectTypesDecision(player, gameState, ['card-draw', 'focus']);
 
-        if (drawEvaluation > focusEvaluation) {
-          this.audioManager.playSound('card-draw');
-          this.cardsService.drawPlayerCardsFromDeck(player.id, 1);
-        } else {
-          this.playerManager.addFocusTokens(player.id, 1);
+        if (decision) {
+          this.addRewardToPlayer(player.id, { type: decision, amount: 1 });
         }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 0 });
@@ -1707,14 +1654,10 @@ export class GameManager {
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
     }
     if (turnInfo.shippingAmount > 0) {
-      const spiceEvaluation = this.aIManager.getEffectEvaluationForTurnState('spice', player, gameState);
-      const waterEvaluation = this.aIManager.getEffectEvaluationForTurnState('water', player, gameState);
+      const decision = this.aIManager.getEffectTypesDecision(player, gameState, ['spice', 'water', 'solari']);
 
-      if (spiceEvaluation >= waterEvaluation) {
-        this.addRewardToPlayer(player.id, { type: 'spice', amount: turnInfo.shippingAmount });
-      } else {
-        this.playerManager.addFocusTokens(player.id, 1);
-        this.addRewardToPlayer(player.id, { type: 'water', amount: turnInfo.shippingAmount });
+      if (decision) {
+        this.addRewardToPlayer(player.id, { type: decision, amount: turnInfo.shippingAmount });
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { shippingAmount: 0 });
     }
