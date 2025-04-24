@@ -28,7 +28,7 @@
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
       <div *ngFor="let item of costs | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalTechTileAmount | number : '1.2-2' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalTechTileAmount | number : '1.1-1' }}%)
       </div>
     </div>
     <div class="cards-preview-container">

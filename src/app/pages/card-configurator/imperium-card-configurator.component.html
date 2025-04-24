@@ -32,20 +32,33 @@
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
       <div *ngFor="let item of costs | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.2-2' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.1-1' }}%)
       </div>
     </div>
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByFactionsClicked()">card-factions:</div>
-      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalCardAmount | number : '1.2-2' }}%)</div>
+      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalCardAmount | number : '1.1-1' }}%)</div>
       <div *ngFor="let item of factions | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.2-2' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.1-1' }}%)
       </div>
     </div>
-    <div class="action-bar" [style.gap]="'32px'">
+    <div class="action-bar center" [style.gap]="'32px'">
       <div>card-access:</div>
-      <div *ngFor="let item of fieldAccessess | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.2-2' }}%)
+      <div class="icon-and-string-container" *ngFor="let item of fieldAccessess | keyvalue">
+        <img class="field-access-image" [src]="getActionTypePath(item.key)" /> {{ item.value }} ({{
+          (item.value * 100) / totalCardAmount | number : '1.1-1'
+        }}%)
+      </div>
+    </div>
+    <div class="action-bar center" [style.gap]="'32px'">
+      <div>reveal-resources:</div>
+      <div class="icon-and-string-container" *ngFor="let item of revealResources">
+        <dune-reward-array
+          [rewards]="[{ type: item.resourceType, amount: item.amount }]"
+          [size]="'16px'"
+          [textColor]="'white'"
+        ></dune-reward-array>
+        {{ item.count }} ({{ (item.count * 100) / totalCardAmount | number : '1.1-1' }}%)
       </div>
     </div>
     <div class="cards-preview-container">

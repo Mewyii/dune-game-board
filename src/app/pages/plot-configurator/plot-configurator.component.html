@@ -31,14 +31,14 @@
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
       <div *ngFor="let item of costs | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalPlotAmount | number : '1.2-2' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalPlotAmount | number : '1.1-1' }}%)
       </div>
     </div>
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByFactionsClicked()">plot-factions:</div>
-      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalPlotAmount | number : '1.2-2' }}%)</div>
+      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalPlotAmount | number : '1.1-1' }}%)</div>
       <div *ngFor="let item of factions | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalPlotAmount | number : '1.2-2' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalPlotAmount | number : '1.1-1' }}%)
       </div>
     </div>
     <div class="cards-preview-container">

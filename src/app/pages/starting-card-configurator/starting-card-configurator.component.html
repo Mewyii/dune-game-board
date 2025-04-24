@@ -28,7 +28,7 @@
     <div class="action-bar" [style.gap]="'32px'">
       <div>card-access:</div>
       <div *ngFor="let item of fieldAccessess | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.2-2' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.1-1' }}%)
       </div>
     </div>
     <div class="cards-preview-container">

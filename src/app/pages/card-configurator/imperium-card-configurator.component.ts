@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
-import { ActionType, ActiveFactionType } from 'src/app/models';
+import { getActionTypePath } from 'src/app/helpers/action-types';
+import { getFlattenedEffectRewardArray, isRewardEffect } from 'src/app/helpers/rewards';
+import { ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -51,6 +53,8 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   public totalCardAmount = 0;
   public uniqueCardAmount = 0;
 
+  public revealResources: { resourceType: EffectRewardType; amount: number; count: number }[] = [];
+
   constructor(
     public t: TranslateService,
     public cardConfiguratorService: CardConfiguratorService,
@@ -94,26 +98,61 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
         9: 0,
       };
 
+      this.revealResources = [];
+
       for (const card of imperiumCards) {
+        const cardAmount = card.cardAmount ?? 1;
         this.uniqueCardAmount += 1;
-        this.totalCardAmount += card.cardAmount ?? 1;
+        this.totalCardAmount += cardAmount;
 
         if (card.faction) {
-          this.factions[card.faction] += card.cardAmount ?? 1;
+          this.factions[card.faction] += cardAmount;
         } else {
-          this.noFactions += card.cardAmount ?? 1;
+          this.noFactions += cardAmount;
         }
 
         if (card.fieldAccess) {
           for (const access of card.fieldAccess) {
-            this.fieldAccessess[access] += card.cardAmount ?? 1;
+            this.fieldAccessess[access] += cardAmount;
           }
         }
 
         if (card.persuasionCosts) {
-          this.costs[card.persuasionCosts] += card.cardAmount ?? 1;
+          this.costs[card.persuasionCosts] += cardAmount;
+        }
+
+        let cardHasPersuasion = false;
+        if (card.revealEffects) {
+          for (const effect of getFlattenedEffectRewardArray(card.revealEffects.filter((x) => isRewardEffect(x)) as any[])) {
+            const amount = effect.amount ?? 1;
+
+            const index = this.revealResources.findIndex((x) => x.resourceType === effect.type && x.amount === amount);
+            if (index > -1) {
+              this.revealResources[index].count += cardAmount;
+            } else {
+              this.revealResources.push({ resourceType: effect.type, amount, count: cardAmount });
+            }
+
+            if (effect.type === 'persuasion') {
+              cardHasPersuasion = true;
+            }
+          }
+        }
+        if (cardHasPersuasion === false) {
+          const index = this.revealResources.findIndex((x) => x.resourceType === 'persuasion' && x.amount === 0);
+          if (index > -1) {
+            this.revealResources[index].count += cardAmount;
+          } else {
+            this.revealResources.push({ resourceType: 'persuasion', amount: 0, count: cardAmount });
+          }
         }
       }
+
+      this.revealResources = this.revealResources.filter(
+        (x) => x.resourceType === 'persuasion' || x.resourceType === 'sword' || x.resourceType.includes('recruitment')
+      );
+      this.revealResources.sort((a, b) => a.amount - b.amount);
+      this.revealResources.sort((a, b) => a.resourceType.localeCompare(b.resourceType));
     });
   }
 
@@ -234,6 +273,10 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
 
   onSortByFactionsClicked() {
     this.cardConfiguratorService.sortImperiumCards('faction', 'asc');
+  }
+
+  public getActionTypePath(actionType: string) {
+    return getActionTypePath(actionType as any);
   }
 
   private createEmptyImperiumCard(): ImperiumCard {
