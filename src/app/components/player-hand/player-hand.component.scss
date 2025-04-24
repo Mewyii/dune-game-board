@@ -68,7 +68,7 @@ dune-imperium-row-card:hover,
 dune-imperium-row-card.active,
 dune-plot-card:hover,
 dune-plot-card.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
   transform: scale(1.3) translate(0rem, -40px);
   z-index: 3;
   position: relative;
@@ -162,7 +162,7 @@ dune-intrigue-card:hover,
 dune-intrigue-card.active,
 .intrigue-card:hover,
 .intrigue-card.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73));
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
   transform: scale(1.3) translate(0rem, -30px);
   z-index: 3;
   position: relative;
@@ -207,7 +207,7 @@ dune-intrigue-card.not-played {
   background-color: #101010;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
   line-height: initial;
-  background-image: url(/assets/images/card-backgrounds/_backside.jpg);
+  background-image: url(/assets/images/card-backgrounds/backside.png);
   background-size: cover;
   background-position: center;
 }

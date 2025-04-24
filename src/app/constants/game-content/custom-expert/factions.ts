@@ -24,7 +24,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Fremen.png',
-    primaryColor: 'rgb(45, 77, 140)',
+    primaryColor: 'rgb(42, 72, 133)',
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -64,7 +64,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Bene_Gesserit.png',
-    primaryColor: 'rgb(89, 82, 102)',
+    primaryColor: 'rgb(84, 78, 97)',
     secondaryColor: '#1f192eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -109,7 +109,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Spacing_Guild.png',
-    primaryColor: 'rgb(135, 36, 36)',
+    primaryColor: 'rgb(128, 34, 34)',
     secondaryColor: '#2e1919b8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -148,7 +148,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(75, 75, 75)',
+    primaryColor: 'rgb(69, 69, 69)',
     secondaryColor: '#1e1e1eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -213,7 +213,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
-    primaryColor: 'rgb(76, 94, 74)',
+    primaryColor: 'rgb(72, 89, 71)',
     secondaryColor: '#192e19b8',
   },
   {
@@ -260,7 +260,7 @@ export const factionsCustomExpert: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',
-    primaryColor: 'rgb(150, 73, 9)',
+    primaryColor: 'rgb(143, 69, 9)',
     secondaryColor: '#2e2419b8',
   },
 ];
