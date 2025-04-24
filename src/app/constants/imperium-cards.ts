@@ -1075,6 +1075,9 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'recruitment-bene',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -1250,8 +1253,22 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'medium',
-    buyEffects: [],
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [
+      {
+        type: 'focus',
+      },
+    ],
     agentEffects: [],
     revealEffects: [
       {
@@ -1923,7 +1940,7 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
+        amount: 2,
       },
     ],
   },
@@ -2540,7 +2557,17 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
       {
@@ -2550,7 +2577,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'water',
       },
       {
-        type: 'card-discard',
+        type: 'water',
       },
       {
         type: 'helper-trade',
@@ -2562,7 +2589,7 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
+        amount: 2,
       },
       {
         type: 'recruitment-fremen',
@@ -3316,7 +3343,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    revealEffectSize: 'large',
+    revealEffectSize: 'medium',
     customRevealEffect: {
       en: 'For each dreadnought in your garrison: {resource:shipping}',
       de: 'Für jedes deiner Schlachtschiffe in deiner Garnison: {resource:shipping}',
@@ -3328,7 +3355,11 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'foldspace',
       },
     ],
-    revealEffects: [],
+    revealEffects: [
+      {
+        type: 'sword',
+      },
+    ],
   },
   {
     name: {
@@ -3431,6 +3462,19 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['guild', 'landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/staban.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
       {
@@ -3448,6 +3492,9 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'spice',
