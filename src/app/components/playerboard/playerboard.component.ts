@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { EffectType, FactionType, LanguageString, ResourceType, EffectRewardType } from 'src/app/models';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
-import { PlayersService } from 'src/app/services/players.service';
-import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { LeadersService } from 'src/app/services/leaders.service';
-import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { AudioManager } from 'src/app/services/audio-manager.service';
-import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
-import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
-import { IntriguesService } from 'src/app/services/intrigues.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { getFactionTypePath } from 'src/app/helpers/faction-types';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectType, FactionType, LanguageString } from 'src/app/models';
 import { PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
+import { AudioManager } from 'src/app/services/audio-manager.service';
+import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
+import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
+import { IntriguesService } from 'src/app/services/intrigues.service';
+import { LeadersService } from 'src/app/services/leaders.service';
+import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { TranslateService } from 'src/app/services/translate-service';
 import { GameSummaryDialogComponent } from '../_common/dialogs/game-summary-dialog/game-summary-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 
 @Component({
   selector: 'app-playerboard',
@@ -125,12 +125,12 @@ export class PlayerboardComponent implements OnInit {
   }
 
   onBeginCombatClicked() {
-    const currentPlayer = this.gameManager.getActivePlayer();
-    if (currentPlayer && currentPlayer.turnState === 'reveal') {
-      const playerHand = this.cardsService.getPlayerHand(currentPlayer.id);
+    const activePlayer = this.gameManager.getActivePlayer();
+    if (activePlayer && activePlayer.turnState === 'reveal') {
+      const playerHand = this.cardsService.getPlayerHand(activePlayer.id);
       if (playerHand && playerHand.cards) {
-        this.cardsService.discardPlayerHandCards(currentPlayer.id);
-        this.playerManager.setTurnStateForPlayer(currentPlayer.id, 'revealed');
+        this.cardsService.discardPlayerHandCards(activePlayer.id);
+        this.playerManager.setTurnStateForPlayer(activePlayer.id, 'revealed');
       }
     }
     this.gameManager.setRoundStateToCombat();

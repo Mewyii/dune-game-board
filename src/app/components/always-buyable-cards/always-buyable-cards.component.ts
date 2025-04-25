@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { AppMode } from 'src/app/constants/board-settings';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, EffectRewardType } from 'src/app/models';
+import { EffectType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { LoggingService } from 'src/app/services/log.service';
-import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -36,7 +35,6 @@ export class AlwaysBuyableCardsComponent {
 
   constructor(
     private settingsService: SettingsService,
-    private playerManager: PlayersService,
     private gameManager: GameManager,
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,
@@ -67,20 +65,12 @@ export class AlwaysBuyableCardsComponent {
       }
     });
 
-    this.playerManager.players$.subscribe((players) => {
-      this.activePlayer = players.find((x) => x.id === this.activePlayerId);
-      if (this.activePlayer) {
-        this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+      this.activePlayer = activePlayer;
+      this.activePlayerId = activePlayer?.id ?? 0;
 
-        this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
-      }
-    });
-
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
-      this.activePlayerId = activePlayerId;
-      this.activePlayer = this.playerManager.getPlayer(activePlayerId);
       if (this.activePlayer) {
-        this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+        this.activePlayerTurnState = this.activePlayer.turnState;
 
         this.activePlayerPersuasion = this.getPlayerPersuasion(this.activePlayer);
 

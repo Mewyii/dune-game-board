@@ -47,8 +47,8 @@ export class AIManager {
   private aiPlayersSubject = new BehaviorSubject<AIPlayer[]>([]);
   public aiPlayers$ = this.aiPlayersSubject.asObservable();
 
-  private currentAIPlayerIdSubject = new BehaviorSubject<number>(0);
-  public currentAIPlayerId$ = this.currentAIPlayerIdSubject.asObservable();
+  private activeAIPlayerIdSubject = new BehaviorSubject<number>(0);
+  public activeAIPlayerId$ = this.activeAIPlayerIdSubject.asObservable();
 
   private aiDifficultySubject = new BehaviorSubject<AIDIfficultyTypes>('medium');
   public aiDifficulty$ = this.aiDifficultySubject.asObservable();
@@ -68,14 +68,14 @@ export class AIManager {
       localStorage.setItem('aiPlayers', JSON.stringify(aiPlayers));
     });
 
-    const currentAIPlayerIdString = localStorage.getItem('currentAIPlayerId');
-    if (currentAIPlayerIdString) {
-      const currentAIPlayerId = JSON.parse(currentAIPlayerIdString) as number;
-      this.currentAIPlayerIdSubject.next(currentAIPlayerId);
+    const activeAIPlayerIdString = localStorage.getItem('activeAIPlayerId');
+    if (activeAIPlayerIdString) {
+      const activeAIPlayerId = JSON.parse(activeAIPlayerIdString) as number;
+      this.activeAIPlayerIdSubject.next(activeAIPlayerId);
     }
 
-    this.currentAIPlayerId$.subscribe((currentAIPlayerId) => {
-      localStorage.setItem('currentAIPlayerId', JSON.stringify(currentAIPlayerId));
+    this.activeAIPlayerId$.subscribe((activeAIPlayerId) => {
+      localStorage.setItem('activeAIPlayerId', JSON.stringify(activeAIPlayerId));
     });
 
     const aiDifficultyString = localStorage.getItem('aiDifficulty');
@@ -101,8 +101,8 @@ export class AIManager {
     return this.aiPlayers.find((x) => x.playerId === playerId);
   }
 
-  public get currentAIPlayerId() {
-    return cloneDeep(this.currentAIPlayerIdSubject.value);
+  public get activeAIPlayerId() {
+    return cloneDeep(this.activeAIPlayerIdSubject.value);
   }
 
   public assignPersonalitiesToAIPlayers(players: Player[]) {
@@ -146,8 +146,8 @@ export class AIManager {
     this.aiPlayersSubject.next(aiPlayers);
   }
 
-  public setCurrentAIPlayerId(id: number) {
-    this.currentAIPlayerIdSubject.next(id);
+  public setactiveAIPlayerId(id: number) {
+    this.activeAIPlayerIdSubject.next(id);
   }
 
   public setAIDifficulty(value: AIDIfficultyTypes) {

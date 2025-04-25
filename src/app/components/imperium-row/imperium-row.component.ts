@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActiveFactionType, EffectType, EffectRewardType } from 'src/app/models';
+import { ActiveFactionType, EffectType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { PlayersService } from 'src/app/services/players.service';
-import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
-import { TurnInfoService } from 'src/app/services/turn-info.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
+import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 
 @Component({
   selector: 'dune-imperium-row',
@@ -53,23 +53,12 @@ export class ImperiumRowComponent implements OnInit {
       });
     });
 
-    this.playerManager.players$.subscribe((players) => {
-      this.activePlayer = players.find((x) => x.id === this.activePlayerId);
-      if (this.activePlayer) {
-        this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+      this.activePlayer = activePlayer;
+      this.activePlayerId = activePlayer?.id ?? 0;
 
-        this.activePlayerPersuasion =
-          this.activePlayer.persuasionGainedThisRound +
-          this.activePlayer.permanentPersuasion -
-          this.activePlayer.persuasionSpentThisRound;
-      }
-    });
-
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
-      this.activePlayerId = activePlayerId;
-      this.activePlayer = this.playerManager.getPlayer(activePlayerId);
       if (this.activePlayer) {
-        this.activePlayerTurnState = this.playerManager.getPlayer(this.activePlayerId)?.turnState;
+        this.activePlayerTurnState = this.activePlayer.turnState;
 
         this.activePlayerPersuasion = this.playerManager.getPlayerPersuasion(this.activePlayer.id);
 

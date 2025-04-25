@@ -17,19 +17,19 @@
         <mat-icon>navigate_next</mat-icon>
       </div>
     </div>
-    <div class="control-bar center" *ngIf="currentPlayer">
+    <div class="control-bar center" *ngIf="activePlayer">
       <div class="line">
         <div class="info-container left">
           <div
             class="resource-display"
-            (click)="onAddPlayerAgentClicked(currentPlayer.id)"
-            (contextmenu)="onRemovePlayerAgentClicked(currentPlayer.id)"
+            (click)="onAddPlayerAgentClicked(activePlayer.id)"
+            (contextmenu)="onRemovePlayerAgentClicked(activePlayer.id)"
           >
             <div class="agents-icon-container">
-              <div class="agents-icon" [style.background-color]="currentPlayer.color"></div>
+              <div class="agents-icon" [style.background-color]="activePlayer.color"></div>
             </div>
             <div class="resource-amount on-background">
-              <span>{{ currentPlayerAvailableAgents?.agentAmount }}</span>
+              <span>{{ activePlayerAvailableAgents?.agentAmount }}</span>
             </div>
           </div>
         </div>
@@ -38,89 +38,86 @@
             *ngIf="currentRound"
             mat-fab
             color="accent"
-            (click)="onEndTurnClicked(currentPlayer.id)"
+            (click)="onEndTurnClicked(activePlayer.id)"
             matTooltip="End Turn"
-            [disabled]="currentPlayer.isAI && (currentPlayer.turnState === 'reveal' || turnInfos?.isDoingAIActions)"
+            [disabled]="activePlayer.isAI && (activePlayer.turnState === 'reveal' || turnInfos?.isDoingAIActions)"
           >
             <mat-icon>keyboard_arrow_right</mat-icon>
           </button>
           <button
             mat-fab
             [color]="'accent'"
-            (click)="onAiActionClicked(currentPlayer.id)"
+            (click)="onAiActionClicked(activePlayer.id)"
             matTooltip="AI"
             [disabled]="
-              (currentRoundPhase === 'agent-placement' && currentPlayer.turnState === 'revealed') ||
-              (currentRoundPhase === 'combat' && currentPlayer.turnState === 'done') ||
+              (currentRoundPhase === 'agent-placement' && activePlayer.turnState === 'revealed') ||
+              (currentRoundPhase === 'combat' && activePlayer.turnState === 'done') ||
               currentRoundPhase === 'combat-resolvement' ||
               (turnInfos && (turnInfos.fieldsVisitedThisTurn.length > 0 || turnInfos.isDoingAIActions))
             "
-            *ngIf="currentPlayer.isAI"
+            *ngIf="activePlayer.isAI"
           >
             <mat-icon>hourglass_empty</mat-icon>
           </button>
           <button
-            *ngIf="!currentPlayer.isAI && currentRoundPhase === 'agent-placement'"
+            *ngIf="!activePlayer.isAI && currentRoundPhase === 'agent-placement'"
             mat-fab
             [color]="'accent'"
-            (click)="onRevealCardsClicked(currentPlayer.id)"
+            (click)="onRevealCardsClicked(activePlayer.id)"
             matTooltip="Reveal"
             [disabled]="
-              currentPlayer.turnState !== 'agent-placement' || (turnInfos && turnInfos.fieldsVisitedThisTurn.length > 0)
+              activePlayer.turnState !== 'agent-placement' || (turnInfos && turnInfos.fieldsVisitedThisTurn.length > 0)
             "
           >
             <mat-icon>hdr_strong</mat-icon>
           </button>
           <button
-            *ngIf="!currentPlayer.isAI && currentRoundPhase === 'combat'"
+            *ngIf="!activePlayer.isAI && currentRoundPhase === 'combat'"
             mat-fab
             [color]="'accent'"
-            (click)="onPassConflictClicked(currentPlayer.id)"
+            (click)="onPassConflictClicked(activePlayer.id)"
             matTooltip="Pass"
-            [disabled]="currentPlayer.turnState === 'done'"
+            [disabled]="activePlayer.turnState === 'done'"
           >
             <mat-icon>fast_forward</mat-icon>
           </button>
         </div>
         <div class="info-container right">
-          <div class="resource-container">
-            <div
-              class="resource-display"
-              (click)="onAddRewardClicked(currentPlayer, 'victory-point')"
-              (contextmenu)="onRemovePlayerScoreClicked(currentPlayer.id, 'victoryPoints')"
-            >
-              <img class="resource dark" [src]="getEffectTypePath('victory-point')" />
-              <div class="resource-amount on-background">
-                <span>{{ getPlayerScore('victoryPoints') }}</span>
-              </div>
-            </div>
-          </div>
+          <button
+            *ngIf="currentRound"
+            mat-fab
+            color="accent"
+            (click)="onShowAdditionalPlayerActionsClicked()"
+            matTooltip="Show Additional Player Actions"
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
         </div>
       </div>
     </div>
-    <div class="control-bar" *ngIf="currentPlayer">
+    <div class="control-bar" *ngIf="activePlayer">
       <div class="line">
         <div class="info-container left">
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddSignetTokenClicked(currentPlayer)"
-              (contextmenu)="onRemoveSignetTokenClicked(currentPlayer.id)"
+              (click)="onAddSignetTokenClicked(activePlayer)"
+              (contextmenu)="onRemoveSignetTokenClicked(activePlayer.id)"
             >
               <img class="resource intrigue" [src]="getEffectTypePath('signet-token')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayer.signetTokenCount }}</span>
+                <span>{{ activePlayer.signetTokenCount }}</span>
               </div>
             </div>
           </div>
         </div>
         <div class="info-container">
-          @for (resource of currentPlayer.resources; track $index) {
+          @for (resource of activePlayer.resources; track $index) {
           <div [class]="'resource-container'">
             <div
               class="resource-display"
-              (click)="onAddRewardClicked(currentPlayer, resource.type)"
-              (contextmenu)="onRemoveResourceClicked(currentPlayer, resource.type)"
+              (click)="onAddRewardClicked(activePlayer, resource.type)"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, resource.type)"
             >
               <img [class]="'resource ' + resource.type" [src]="getEffectTypePath(resource.type)" />
               <div class="resource-amount on-background">
@@ -130,10 +127,10 @@
           </div>
           }
           <div [class]="'resource-container'">
-            <div class="resource-display" (click)="onAddTechClicked(currentPlayer)" (contextmenu)="onRemoveTechClicked()">
+            <div class="resource-display" (click)="onAddTechClicked(activePlayer)" (contextmenu)="onRemoveTechClicked()">
               <img [class]="'resource tech'" [src]="getEffectTypePath('tech')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayer.tech }}</span>
+                <span>{{ activePlayer.tech }}</span>
               </div>
             </div>
           </div>
@@ -142,12 +139,12 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddFocusTokenClicked(currentPlayer.id)"
-              (contextmenu)="onRemoveFocusTokenClicked(currentPlayer.id)"
+              (click)="onAddRewardClicked(activePlayer, 'victory-point')"
+              (contextmenu)="onRemovePlayerScoreClicked(activePlayer.id, 'victoryPoints')"
             >
-              <img class="resource focus dark" [src]="getEffectTypePath('focus')" />
+              <img class="resource dark" [src]="getEffectTypePath('victory-point')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayer.focusTokens }}</span>
+                <span>{{ getPlayerScore('victoryPoints') }}</span>
               </div>
             </div>
           </div>
@@ -158,19 +155,19 @@
           <div class="units-control-bar">
             <div
               class="resource-display"
-              (click)="onAddTroopToGarrisonClicked(currentPlayer.id)"
-              (contextmenu)="onRemoveTroopFromGarrisonClicked(currentPlayer.id)"
+              (click)="onAddTroopToGarrisonClicked(activePlayer.id)"
+              (contextmenu)="onRemoveTroopFromGarrisonClicked(activePlayer.id)"
             >
               <img class="resource" [src]="getEffectTypePath('troop')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayerCombatUnits?.troopsInGarrison }}</span>
+                <span>{{ activePlayerCombatUnits?.troopsInGarrison }}</span>
               </div>
             </div>
           </div>
         </div>
         <div class="info-container">
           <div class="resource-container">
-            <div class="resource-display" (click)="onPlayerCanEnterCombatClicked(currentPlayer.id)">
+            <div class="resource-display" (click)="onPlayerCanEnterCombatClicked(activePlayer.id)">
               <img
                 [class]="'resource ' + (turnInfos?.canEnterCombat ? 'enabled' : 'disabled')"
                 [src]="getEffectTypePath('combat')"
@@ -178,7 +175,7 @@
             </div>
           </div>
           <div class="resource-container">
-            <div class="resource-display" (click)="onPlayerCanBuyTechClicked(currentPlayer.id)">
+            <div class="resource-display" (click)="onPlayerCanBuyTechClicked(activePlayer.id)">
               <img
                 [class]="'resource ' + (turnInfos?.canBuyTech ? 'enabled' : 'disabled')"
                 [src]="getEffectTypePath('tech-tile')"
@@ -190,24 +187,12 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddPersuasionGainedThisRoundClicked(currentPlayer.id)"
-              (contextmenu)="onRemovePersuasionGainedThisRoundClicked(currentPlayer.id)"
+              (click)="onAddFocusTokenClicked(activePlayer.id)"
+              (contextmenu)="onRemoveFocusTokenClicked(activePlayer.id)"
             >
-              <img class="resource" [src]="getEffectTypePath('persuasion')" />
+              <img class="resource focus dark" [src]="getEffectTypePath('focus')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayer.persuasionGainedThisRound }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="resource-container">
-            <div
-              class="resource-display swords-button"
-              (click)="onAddAdditionalCombatPowerToPlayer(currentPlayer.id)"
-              (contextmenu)="onRemoveAdditionalCombatPowerFromPlayer(currentPlayer.id)"
-              stopPropagationClick
-            >
-              <div class="resource-amount on-background">
-                <span>{{ currentPlayerCombatUnits?.additionalCombatPower }}</span>
+                <span>{{ activePlayer.focusTokens }}</span>
               </div>
             </div>
           </div>
@@ -219,12 +204,12 @@
           <div class="units-control-bar">
             <div
               class="resource-display"
-              (click)="onAddShipToGarrisonClicked(currentPlayer.id)"
-              (contextmenu)="onRemoveShipFromGarrisonClicked(currentPlayer.id)"
+              (click)="onAddShipToGarrisonClicked(activePlayer.id)"
+              (contextmenu)="onRemoveShipFromGarrisonClicked(activePlayer.id)"
             >
               <img class="resource" [src]="getEffectTypePath('dreadnought')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayerCombatUnits?.shipsInGarrison }}</span>
+                <span>{{ activePlayerCombatUnits?.shipsInGarrison }}</span>
               </div>
             </div>
           </div>
@@ -233,8 +218,8 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-fremen')"
-              (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-fremen')"
+              (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-fremen')"
+              (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-fremen')"
             >
               <img class="resource dark" [src]="getFactionTypePath('fremen')" />
               <div class="resource-amount on-background">
@@ -245,8 +230,8 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-bene')"
-              (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-bene')"
+              (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-bene')"
+              (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-bene')"
             >
               <img class="resource dark" [src]="getFactionTypePath('bene')" />
               <div class="resource-amount on-background">
@@ -257,8 +242,8 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-guild')"
-              (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-guild')"
+              (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-guild')"
+              (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-guild')"
             >
               <img class="resource dark" [src]="getFactionTypePath('guild')" />
               <div class="resource-amount on-background">
@@ -269,8 +254,8 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddRewardClicked(currentPlayer, 'faction-influence-up-emperor')"
-              (contextmenu)="onAddRewardClicked(currentPlayer, 'faction-influence-down-emperor')"
+              (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-emperor')"
+              (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-emperor')"
             >
               <img class="resource dark" [src]="getFactionTypePath('emperor')" />
               <div class="resource-amount on-background">
@@ -283,28 +268,39 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              [style]="'filter: saturate(0.25);'"
-              (click)="onAddPermanentPersuasionClicked(currentPlayer.id)"
-              (contextmenu)="onRemovePermanentPersuasionClicked(currentPlayer.id)"
+              (click)="onAddPersuasionGainedThisRoundClicked(activePlayer.id)"
+              (contextmenu)="onRemovePersuasionGainedThisRoundClicked(activePlayer.id)"
             >
               <img class="resource" [src]="getEffectTypePath('persuasion')" />
               <div class="resource-amount on-background">
-                <span>{{ currentPlayer.permanentPersuasion }}</span>
+                <span>{{ activePlayer.persuasionGainedThisRound }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="resource-container">
+            <div
+              class="resource-display swords-button"
+              (click)="onAddAdditionalCombatPowerToPlayer(activePlayer.id)"
+              (contextmenu)="onRemoveAdditionalCombatPowerFromPlayer(activePlayer.id)"
+              stopPropagationClick
+            >
+              <div class="resource-amount on-background">
+                <span>{{ activePlayerCombatUnits?.additionalCombatPower }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="line" *ngIf="currentPlayer.isAI">
+      <div class="line" *ngIf="activePlayer.isAI">
         <div class="info-container left"></div>
         <div class="info-container">
           <div class="resource-container">
-            <div class="resource-display" (click)="onAIIncreaseInfluenceChoiceClicked(currentPlayer.id)">
+            <div class="resource-display" (click)="onAIIncreaseInfluenceChoiceClicked(activePlayer.id)">
               <img class="resource" [src]="getEffectTypePath('faction-influence-up-choice')" />
             </div>
           </div>
           <div class="resource-container">
-            <div class="resource-display" (click)="onAIDecreaseInfluenceChoiceClicked(currentPlayer.id)">
+            <div class="resource-display" (click)="onAIDecreaseInfluenceChoiceClicked(activePlayer.id)">
               <img class="resource" [src]="getEffectTypePath('faction-influence-down-choice')" />
             </div>
           </div>
@@ -312,7 +308,7 @@
         <div class="info-container right">
           <div [style.width]="'max-content'">
             <mat-slide-toggle
-              *ngIf="currentPlayer.isAI"
+              *ngIf="activePlayer.isAI"
               [color]="'accent'"
               [checked]="showAIDetails"
               (change)="showAIDetails = !showAIDetails"
@@ -346,13 +342,13 @@
           <div
             class="house-marker"
             *ngIf="getPlayerHouseLevel(house.name.en) === 2"
-            [style.background-color]="currentPlayer?.color"
+            [style.background-color]="activePlayer?.color"
             [style.bottom]="'174px'"
           ></div>
           <div
             class="house-marker"
             *ngIf="getPlayerHouseLevel(house.name.en) === 1"
-            [style.background-color]="currentPlayer?.color"
+            [style.background-color]="activePlayer?.color"
             [style.bottom]="'56px'"
           ></div>
         </div>

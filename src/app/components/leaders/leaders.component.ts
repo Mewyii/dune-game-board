@@ -19,6 +19,7 @@ import { PlayersService } from 'src/app/services/players.service';
 import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
+import { AdditionalPlayerActionsDialogComponent } from '../_common/dialogs/additional-player-actions-dialog/additional-player-actions-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -38,15 +39,15 @@ export class LeadersComponent implements OnInit {
 
   public activeLeader: LeaderDeckCard | undefined;
 
-  public currentPlayer: Player | undefined;
+  public activePlayer: Player | undefined;
 
-  public currentPlayerScore: PlayerScore | undefined;
+  public activePlayerScore: PlayerScore | undefined;
 
-  public currentPlayerCombatUnits: PlayerCombatUnits | undefined;
+  public activePlayerCombatUnits: PlayerCombatUnits | undefined;
 
-  public currentPlayerAvailableAgents: PlayerAgents | undefined;
+  public activePlayerAvailableAgents: PlayerAgents | undefined;
 
-  public currentPlayerIntrigueCount: number | undefined;
+  public activePlayerIntrigueCount: number | undefined;
 
   public houses: House[] = [];
   public playerHouses: PlayerHouse[] = [];
@@ -90,43 +91,39 @@ export class LeadersComponent implements OnInit {
       this.currentRoundPhase = roundPhase;
     });
 
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
-      this.activePlayerId = activePlayerId;
-      this.playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === activePlayerId);
+    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+      this.activePlayer = activePlayer;
+      this.activePlayerId = activePlayer?.id ?? 0;
+
+      this.playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId);
 
       this.activeLeader = this.playerLeader?.leader;
 
-      this.currentPlayer = this.playerManager.getPlayer(this.activePlayerId);
+      this.activePlayerScore = this.playerScoreManager.playerScores.find((x) => x.playerId === this.activePlayerId);
 
-      this.currentPlayerScore = this.playerScoreManager.playerScores.find((x) => x.playerId === this.activePlayerId);
-
-      this.currentPlayerCombatUnits = this.combatManager.getPlayerCombatUnits(this.activePlayerId);
+      this.activePlayerCombatUnits = this.combatManager.getPlayerCombatUnits(this.activePlayerId);
 
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
 
       this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId).map((x) => x.techTile);
 
-      this.currentPlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
+      this.activePlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
         (x) => x.playerId === this.activePlayerId
       );
 
-      this.currentPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
-    });
-
-    this.playerManager.players$.subscribe((players) => {
-      this.currentPlayer = players.find((x) => x.id === this.activePlayerId);
+      this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
 
     this.playerScoreManager.playerScores$.subscribe((playerScores) => {
-      this.currentPlayerScore = playerScores.find((x) => x.playerId === this.activePlayerId);
+      this.activePlayerScore = playerScores.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
-      this.currentPlayerCombatUnits = playerCombatUnits.find((x) => x.playerId === this.activePlayerId);
+      this.activePlayerCombatUnits = playerCombatUnits.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.gameManager.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
-      this.currentPlayerAvailableAgents = availablePlayerAgents.find((x) => x.playerId === this.activePlayerId);
+      this.activePlayerAvailableAgents = availablePlayerAgents.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.minorHouseService.playerHouses$.subscribe((playerHouses) => {
@@ -144,7 +141,7 @@ export class LeadersComponent implements OnInit {
     });
 
     this.intriguesService.playerIntrigues$.subscribe(() => {
-      this.currentPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
+      this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
 
     this.turnInfoService.turnInfos$.subscribe(() => {
@@ -330,21 +327,6 @@ export class LeadersComponent implements OnInit {
     });
   }
 
-  public onAddPermanentPersuasionClicked(playerId: number) {
-    this.audioManager.playSound('click-soft');
-    this.playerManager.addPermanentPersuasionToPlayer(playerId, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
-  }
-
-  public onRemovePermanentPersuasionClicked(playerId: number) {
-    this.audioManager.playSound('click-reverse');
-    this.playerManager.removePermanentPersuasionFromPlayer(playerId, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
-    return false;
-  }
-
   public onAddPersuasionGainedThisRoundClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.playerManager.addPersuasionGainedToPlayer(playerId, 1);
@@ -418,6 +400,12 @@ export class LeadersComponent implements OnInit {
     this.gameManager.playerPassedConflict(playerId);
   }
 
+  public onShowAdditionalPlayerActionsClicked() {
+    const dialogRef = this.dialog.open(AdditionalPlayerActionsDialogComponent);
+
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
   setTechTileActive(techTileId: string) {
     if (this.activeTechTileId !== techTileId) {
       this.activeTechTileId = techTileId;
@@ -431,7 +419,7 @@ export class LeadersComponent implements OnInit {
   }
 
   public getPlayerScore(scoreType: PlayerScoreType) {
-    return this.currentPlayerScore ? this.currentPlayerScore[scoreType] : 0;
+    return this.activePlayerScore ? this.activePlayerScore[scoreType] : 0;
   }
 
   public getPlayerHouseLevel(houseId: string) {

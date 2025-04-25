@@ -210,6 +210,10 @@ dune-intrigue-card.not-played {
   background-image: url(/assets/images/card-backgrounds/backside.png);
   background-size: cover;
   background-position: center;
+  user-select: none;
+  animation-name: card-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1s;
 }
 
 .action-container {

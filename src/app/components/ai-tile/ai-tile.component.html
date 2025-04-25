@@ -1,9 +1,9 @@
-@if (currentPlayer && currentAIPlayer) {
+@if (activePlayer && activeAIPlayer) {
 <div class="ai-container">
-  <div class="heading-container" *ngIf="currentAIPlayer && showDetails">
+  <div class="heading-container" *ngIf="activeAIPlayer && showDetails">
     <div class="info-container">
       <div>personality</div>
-      <div class="ai-name">{{ currentAIPlayer.name }}</div>
+      <div class="ai-name">{{ activeAIPlayer.name }}</div>
       <button mat-mini-fab [color]="'accent'" (click)="onSetPreviousAIPersonalityClicked()">
         <mat-icon>remove</mat-icon>
       </button>
@@ -14,23 +14,23 @@
     <div class="info-container">
       <mat-slide-toggle
         [color]="'accent'"
-        [checked]="currentAIPlayer.canAccessBlockedFields"
-        (change)="onChangeFieldAccessClicked(!currentAIPlayer.canAccessBlockedFields)"
+        [checked]="activeAIPlayer.canAccessBlockedFields"
+        (change)="onChangeFieldAccessClicked(!activeAIPlayer.canAccessBlockedFields)"
         >can access blocked fields</mat-slide-toggle
       >
     </div>
   </div>
-  <div class="decision-container" *ngIf="currentPlayer.isAI && currentAIPlayer && showDetails">
+  <div class="decision-container" *ngIf="activePlayer.isAI && activeAIPlayer && showDetails">
     <div class="preferred-fields-container" *ngIf="showDetails">
       <div
-        *ngFor="let field of currentAIPlayer.preferredFields; let i = index; let isFirst = first"
+        *ngFor="let field of activeAIPlayer.preferredFields; let i = index; let isFirst = first"
         [class]="'field ' + (i < 3 ? 'good ' : i < 6 ? 'medium ' : 'bad ') + (isFirst ? 'first' : '')"
       >
         {{ field.fieldId }} <span *ngIf="showDetails"> {{ field.value }}</span>
       </div>
     </div>
     <div class="ai-strategy-container">
-      <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of currentAIPlayer.decisions">
+      <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of activeAIPlayer.decisions">
         {{ decision }}
       </div>
     </div>

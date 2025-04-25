@@ -336,9 +336,9 @@ export class PlayersService {
     return cloneDeep(this.playersSubject.value[0].id);
   }
 
-  public getNextPlayerId(currentPlayerId?: number) {
-    if (currentPlayerId) {
-      const nextPlayerId = currentPlayerId + 1;
+  public getNextPlayerId(activePlayerId?: number) {
+    if (activePlayerId) {
+      const nextPlayerId = activePlayerId + 1;
       if (nextPlayerId > this.getPlayerCount()) {
         return 1;
       } else {
@@ -349,9 +349,9 @@ export class PlayersService {
     }
   }
 
-  public isLastPlayer(currentPlayerId?: number) {
-    if (currentPlayerId) {
-      const nextPlayerId = currentPlayerId + 1;
+  public isLastPlayer(activePlayerId?: number) {
+    if (activePlayerId) {
+      const nextPlayerId = activePlayerId + 1;
       if (nextPlayerId > this.getPlayerCount()) {
         return true;
       }

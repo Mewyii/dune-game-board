@@ -270,6 +270,19 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
+  public removePlayerGameModifier(playerId: number, modifierType: keyof GameModifiers, modifierId: string) {
+    const playerGameModifiers = this.playerGameModifiers;
+    const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
+    if (playerGameModifierIndex > -1) {
+      const playerModifiers = playerGameModifiers[playerGameModifierIndex];
+      let modifier = playerModifiers[modifierType];
+      if (isArray(modifier)) {
+        playerModifiers[modifierType] = modifier.filter((x) => x.id !== modifierId) as any;
+      }
+    }
+    this.playerGameModifiersSubject.next(playerGameModifiers);
+  }
+
   public removeTemporaryGameModifiers() {
     const playerModifiers = this.playerGameModifiers;
     for (const modifiers of playerModifiers) {

@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, EffectRewardType } from 'src/app/models';
+import { EffectType } from 'src/app/models';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, ImperiumDeckCard, PlayerCardStack, PlayerPlotStack } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { IntriguesService } from 'src/app/services/intrigues.service';
+import { LoggingService } from 'src/app/services/log.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { LoggingService } from 'src/app/services/log.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { IntriguesService } from 'src/app/services/intrigues.service';
-import { PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
-import { IntrigueDeckCard } from 'src/app/models/intrigue';
-import { Player } from 'src/app/models/player';
+import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 
 @Component({
   selector: 'dune-player-hand',
@@ -21,8 +20,9 @@ import { Player } from 'src/app/models/player';
   styleUrls: ['./player-hand.component.scss'],
 })
 export class PlayerHandComponent implements OnInit {
-  public currentPlayer: Player | undefined;
+  public activePlayer: Player | undefined;
   public activePlayerId: number = 0;
+
   public playerHandCards: PlayerCardStack | undefined;
   public playerDiscardPiles: PlayerCardStack | undefined;
   public activeCardId = '';
@@ -51,14 +51,9 @@ export class PlayerHandComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.playerManager.players$.subscribe((players) => {
-      this.currentPlayer = players.find((x) => x.id === this.activePlayerId);
-    });
-
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
-      this.activePlayerId = activePlayerId;
-
-      this.currentPlayer = this.playerManager.getPlayer(this.activePlayerId);
+    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+      this.activePlayer = activePlayer;
+      this.activePlayerId = activePlayer?.id ?? 0;
 
       this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
       this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
@@ -181,20 +176,20 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onReturnDiscardedCardToHandClicked(card: ImperiumDeckCard) {
-    if (this.currentPlayer) {
+    if (this.activePlayer) {
       this.cardsService.returnDiscardedPlayerCardToHand(this.activePlayerId, card);
       this.activeCardId = '';
     }
   }
 
   onTrashHandCardClicked(card: ImperiumDeckCard) {
-    if (this.currentPlayer) {
-      if (this.currentPlayer.turnState === 'agent-placement') {
+    if (this.activePlayer) {
+      if (this.activePlayer.turnState === 'agent-placement') {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.activeCardId = '';
 
         this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      } else if (this.currentPlayer.focusTokens > 0) {
+      } else if (this.activePlayer.focusTokens > 0) {
         this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
@@ -205,13 +200,13 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onTrashDiscardedCardClicked(card: ImperiumDeckCard) {
-    if (this.currentPlayer) {
-      if (this.currentPlayer.turnState === 'agent-placement') {
+    if (this.activePlayer) {
+      if (this.activePlayer.turnState === 'agent-placement') {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.activeCardId = '';
 
         this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      } else if (this.currentPlayer.focusTokens > 0) {
+      } else if (this.activePlayer.focusTokens > 0) {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
         this.playerManager.removeFocusTokens(this.activePlayerId, 1);
         this.activeCardId = '';
@@ -222,14 +217,14 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onShuffleDiscardPileUnderDeckClicked() {
-    if (this.currentPlayer) {
+    if (this.activePlayer) {
       this.cardsService.shufflePlayerDiscardPileUnderDeck(this.activePlayerId);
     }
   }
 
   onShowTopCardClicked() {
-    if (this.currentPlayer) {
-      const deck = this.cardsService.getPlayerDeck(this.currentPlayer.id)?.cards;
+    if (this.activePlayer) {
+      const deck = this.cardsService.getPlayerDeck(this.activePlayer.id)?.cards;
       if (deck && deck.length > 0) {
         const topCard = deck[0];
 
@@ -244,7 +239,7 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onShuffleDeckClicked() {
-    if (this.currentPlayer) {
+    if (this.activePlayer) {
       this.cardsService.shufflePlayerDeck(this.activePlayerId);
     }
   }

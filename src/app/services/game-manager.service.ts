@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, flatten, max, shuffle } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from '../helpers/cards';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { getRandomElementFromArray, sum } from '../helpers/common';
@@ -110,6 +110,9 @@ export class GameManager {
 
   private activePlayerIdSubject = new BehaviorSubject<number>(0);
   public activePlayerId$ = this.activePlayerIdSubject.asObservable();
+  public activePlayer$ = combineLatest([this.activePlayerIdSubject.asObservable(), this.playerManager.players$]).pipe(
+    map(([activePlayerId, players]) => players.find((player) => player.id === activePlayerId))
+  );
 
   private availablePlayerAgentsSubject = new BehaviorSubject<PlayerAgents[]>([]);
   public availablePlayerAgents$ = this.availablePlayerAgentsSubject.asObservable();
@@ -322,7 +325,7 @@ export class GameManager {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
       if (player.isAI && player.id === this.startingPlayerId) {
-        this.setCurrentAIPlayer(this.startingPlayerId);
+        this.setactiveAIPlayer(this.startingPlayerId);
 
         this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
       }
@@ -460,7 +463,7 @@ export class GameManager {
     for (const player of this.playerManager.getPlayers()) {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
-      this.setCurrentAIPlayer(this.startingPlayerId);
+      this.setactiveAIPlayer(this.startingPlayerId);
       if (player.isAI && player.id === this.startingPlayerId) {
         this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
       }
@@ -875,7 +878,7 @@ export class GameManager {
     if (nextPlayer) {
       this.activePlayerIdSubject.next(nextPlayer.id);
 
-      this.setCurrentAIPlayer(nextPlayer.id);
+      this.setactiveAIPlayer(nextPlayer.id);
       if (nextPlayer.isAI) {
         this.setPreferredFieldsForAIPlayer(nextPlayer.id);
       }
@@ -901,8 +904,8 @@ export class GameManager {
     }
   }
 
-  public setCurrentAIPlayer(playerId: number) {
-    this.aIManager.setCurrentAIPlayerId(playerId);
+  public setactiveAIPlayer(playerId: number) {
+    this.aIManager.setactiveAIPlayerId(playerId);
   }
 
   public setPreferredFieldsForAIPlayer(playerId: number) {

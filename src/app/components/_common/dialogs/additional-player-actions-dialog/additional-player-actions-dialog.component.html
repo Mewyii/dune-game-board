@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>{{ t.translate('dialogAdditionalPlayerActionsTitle') }}</h1>
+<div mat-dialog-content>
+  @if (activePlayer) {
+  <br />
+  <div class="action-container">
+    <div class="action-heading">
+      {{ t.translate('dialogAdditionalPlayerActionsPermanentPersuasion') }}
+    </div>
+    <div class="action-content">
+      <div class="resource-container">
+        <div
+          class="resource-display"
+          [style]="'filter: saturate(0.25);'"
+          (click)="onAddPermanentPersuasionClicked(activePlayer.id)"
+          (contextmenu)="onRemovePermanentPersuasionClicked(activePlayer.id)"
+        >
+          <img class="resource" [src]="getEffectTypePath('persuasion')" />
+          <div class="resource-amount on-background">
+            <span>{{ activePlayer.permanentPersuasion }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="action-container">
+    <div class="action-heading">
+      {{ t.translate('dialogAdditionalPlayerActionsBlockedFields') }}
+    </div>
+    <div class="action-content">
+      @for (boardField of boardFields; track $index) {
+      <div
+        [class]="'field-chip ' + (fieldIsBlocked(boardField) ? 'active' : '')"
+        [style.backgroundColor]="getColor(boardField)"
+        (click)="onToggleFieldBlockClicked(boardField)"
+      >
+        {{ t.translateLS(boardField.title) }}
+      </div>
+      }
+    </div>
+  </div>
+  <br />
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">{{ t.translate('commonCancel') }}</button>
+</div>
