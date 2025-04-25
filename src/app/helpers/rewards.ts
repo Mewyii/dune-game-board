@@ -128,9 +128,9 @@ export function isRewardEffectType(type: EffectType): type is EffectRewardType {
   );
 }
 
-export function getFlattenedEffectRewardArray(array: EffectReward[]) {
+export function getFlattenedEffectRewardArray<T extends EffectReward>(array: T[]) {
   const clonedArray = cloneDeep(array);
-  const result: EffectReward[] = [];
+  const result: T[] = [];
   for (const item of clonedArray) {
     const index = result.findIndex((x) => x.type === item.type);
     const resultItem = result[index];

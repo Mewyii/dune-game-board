@@ -1,4 +1,4 @@
-import { cloneDeep, min, sum } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { ActionField, FactionType } from '../models';
 import { ImperiumCard } from '../models/imperium-card';
 import { TechTileCard } from '../models/tech-tile';
@@ -14,6 +14,7 @@ import {
   TechTileModifier,
 } from '../services/game-modifier.service';
 import { isImperiumDeckCard } from './cards';
+import { getFlattenedEffectRewardArray } from './rewards';
 
 export function hasFactionInfluenceModifier(
   playerGameModifier: PlayerGameModifiers | undefined,
@@ -82,50 +83,66 @@ export function getTechTileCostModifier(card: TechTileCard, modifiers?: TechTile
 }
 
 export function getModifiedCostsForField(actionField: ActionField, modifiers?: FieldCostsModifier[]): RewardWithModifier[] {
-  if (!modifiers || !actionField.costs || actionField.costs.length < 1) {
+  if (!modifiers) {
     return actionField.costs ?? [];
   }
 
-  const actionCosts = cloneDeep(actionField.costs);
-  const fieldCostsType = actionCosts[0].type;
+  const flattenedModifiers = getFlattenedCostModifiers(modifiers);
 
-  const filteredModifiers = modifiers.filter(
-    (x) =>
-      x.costType === fieldCostsType &&
-      (!x.actionType || x.actionType === actionField.actionType) &&
-      (!x.fieldId || x.fieldId === actionField.title.en)
+  const actionCosts: RewardWithModifier[] = (cloneDeep(actionField.costs) as RewardWithModifier[]) ?? [];
+  const filteredModifiers = flattenedModifiers.filter(
+    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
   );
+  if (actionCosts.length < 1) {
+    for (const modifier of filteredModifiers) {
+      if (modifier.amount > 0) {
+        actionCosts.push({
+          type: modifier.costType,
+          amount: modifier.amount > 1 ? modifier.amount : undefined,
+          modifier: 'negative',
+        });
+      }
+    }
+    return actionCosts;
+  }
 
-  const costsModifier = sum(filteredModifiers.map((x) => x.amount));
-  const minCostAmount = min(filteredModifiers.filter((x) => x.minCosts !== undefined).map((x) => x.minCosts));
+  const flattenedCostsArray = getFlattenedEffectRewardArray(actionCosts);
+  const existingCostModifiers = filteredModifiers.filter((x) => actionCosts.some((y) => y.type === x.costType));
 
-  let remainingCostModifier = costsModifier;
-
-  for (const costs of actionCosts as RewardWithModifier[]) {
-    const costAmount = costs.amount ?? 1;
-
-    if (remainingCostModifier > 0) {
-      costs.amount = costAmount + remainingCostModifier;
-      costs.modifier = 'negative';
-      break;
-    } else if (remainingCostModifier < 0) {
-      if (Math.abs(remainingCostModifier) >= costAmount) {
-        if (!minCostAmount) {
-          actionCosts.shift();
-          remainingCostModifier -= costAmount;
-        }
-      } else {
-        if (minCostAmount && minCostAmount >= costAmount + remainingCostModifier) {
-          costs.amount = minCostAmount;
+  if (existingCostModifiers.length > 0) {
+    for (const costs of flattenedCostsArray) {
+      const fieldCostsAmount = costs.amount ?? 1;
+      const fieldCostsModifier = existingCostModifiers.find((x) => x.costType === costs.type);
+      if (fieldCostsModifier) {
+        if (fieldCostsModifier.amount > 0) {
+          costs.amount = fieldCostsAmount + fieldCostsModifier.amount;
+          costs.modifier = 'negative';
         } else {
-          costs.amount = costAmount + remainingCostModifier;
-          costs.modifier = 'positive';
+          const newFieldCostsAmount = fieldCostsAmount + fieldCostsModifier.amount;
+
+          if (newFieldCostsAmount > (fieldCostsModifier.minCosts ?? 0)) {
+            costs.amount = newFieldCostsAmount > 1 ? newFieldCostsAmount : undefined;
+            costs.modifier = 'positive';
+          } else {
+            flattenedCostsArray.shift();
+          }
         }
-        break;
       }
     }
   }
-  return actionCosts;
+
+  const newCostModifiers = filteredModifiers.filter((x) => !actionCosts.some((y) => y.type === x.costType));
+  for (const modifier of newCostModifiers) {
+    if (modifier.amount > 0) {
+      flattenedCostsArray.push({
+        type: modifier.costType,
+        amount: modifier.amount > 1 ? modifier.amount : undefined,
+        modifier: 'negative',
+      });
+    }
+  }
+
+  return flattenedCostsArray;
 }
 
 export function getModifiedRewardsForField(
@@ -136,9 +153,11 @@ export function getModifiedRewardsForField(
     return actionField.rewards;
   }
 
+  const flattenedModifiers = getFlattenedRewardModifiers(modifiers);
+
   const actionRewards = cloneDeep(actionField.rewards);
 
-  const filteredModifiers = modifiers.filter(
+  const filteredModifiers = flattenedModifiers.filter(
     (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
   );
 
@@ -189,4 +208,47 @@ export function getFieldIsBlocked(actionField: ActionField, modifiers?: FieldBlo
   );
 
   return filteredModifiers.length > 0;
+}
+
+function getFlattenedCostModifiers<T extends FieldCostsModifier>(array: T[]) {
+  const clonedArray = cloneDeep(array);
+  const result: T[] = [];
+  for (const item of clonedArray) {
+    const index = result.findIndex((x) => x.costType === item.costType);
+    const resultItem = result[index];
+    if (resultItem) {
+      if (resultItem.amount) {
+        resultItem.amount += item.amount ?? 1;
+      } else {
+        resultItem.amount = 1 + (item.amount ?? 1);
+      }
+      if (item.minCosts) {
+        if (!resultItem.minCosts || item.minCosts < resultItem.minCosts) {
+          resultItem.minCosts = item.minCosts;
+        }
+      }
+    } else {
+      result.push(item);
+    }
+  }
+  return result;
+}
+
+function getFlattenedRewardModifiers<T extends FieldRewardsModifier>(array: T[]) {
+  const clonedArray = cloneDeep(array);
+  const result: T[] = [];
+  for (const item of clonedArray) {
+    const index = result.findIndex((x) => x.rewardType === item.rewardType);
+    const resultItem = result[index];
+    if (resultItem) {
+      if (resultItem.amount) {
+        resultItem.amount += item.amount ?? 1;
+      } else {
+        resultItem.amount = 1 + (item.amount ?? 1);
+      }
+    } else {
+      result.push(item);
+    }
+  }
+  return result;
 }
