@@ -312,8 +312,8 @@ export const techTiles: TechTileCard[] = [
     imagePosition: 'center',
     buyEffects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Choose any board space. It is blocked this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
-      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Wähle ein beliebiges Feld. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
+      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
+      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
       fontSize: 'small',
     },
     aiEvaluation: 'barrage-rockets',

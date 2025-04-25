@@ -3770,14 +3770,14 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'guild',
     persuasionCosts: 6,
-    fieldAccess: ['bene', 'emperor', 'guild', 'landsraad', 'town'],
+    fieldAccess: ['guild'],
     imageUrl: '/assets/images/action-backgrounds/highliner_2.png',
     cardAmount: 1,
-    canInfiltrate: false,
+    canInfiltrate: true,
     agentEffectSize: 'medium',
     customAgentEffect: {
-      en: 'Board spaces of this type are blocked for all opponents this round.',
-      de: 'Felder dieses Typs sind für alle Gegner in dieser Runde blockiert.',
+      en: 'Put {resource:troop} on up to <b>3</b> board spaces of your choice. They are blocked for this round.',
+      de: 'Lege {resource:troop} auf bis zu <b>3</b> Felder deiner Wahl. Sie sind für diese Runde blockiert.',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -3788,6 +3788,12 @@ export const imperiumCards: ImperiumCard[] = [
     },
     buyEffects: [],
     agentEffects: [
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'card-draw',
+      },
       {
         type: 'card-draw',
       },
@@ -3848,7 +3854,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Geheime Transporte',
     },
     faction: 'guild',
-    persuasionCosts: 7,
+    persuasionCosts: 8,
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,

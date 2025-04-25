@@ -38,10 +38,16 @@
 }
 
 dune-leader-card {
+  transition: 0.9s;
   animation-name: leader-glow-anim;
   animation-timing-function: ease-in-out;
   animation-duration: 15s;
   animation-iteration-count: infinite;
+}
+
+dune-leader-card:hover {
+  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  transform: scale(1.05);
 }
 
 .leader-card.full-picture {
