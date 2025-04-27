@@ -32,6 +32,8 @@ export const enLocale = {
   playerboardWarningCardNeedsToHaveFieldAccess: 'You cannot place an agent on this board space with this card',
   techBoardWarningNoTechGainedThisTurn: 'You cannot buy tech tiles since you did not gain any tech this turn',
   imperiumrowHeading: 'Imperium Row',
+  intrigueWarningComplotWrongRoundPhase: 'Complot intrigues have to be played during the agent placement phase',
+  intrigueWarningCombatWrongRoundPhase: 'Combat intrigues have to be played during the combat phase',
   gamemanualFullscreenHeading: 'Fullscreen',
   gamemanualFullscreenText: 'This app is best used in fullscreen mode.',
   gamemanualFullscreenExitTooltip: 'Exit fullscreen mode',

@@ -35,6 +35,9 @@ export const deLocale: Locale = {
   techBoardWarningNoTechGainedThisTurn:
     'Du kannst keine Technologieplättchen kaufen, da du in diesem Zug keine Technologie erhalten hast',
   imperiumrowHeading: 'Imperium-Reihe',
+  intrigueWarningComplotWrongRoundPhase:
+    'Komplott-Intrigen können nur während der Agenten-Platzierungsphase gespielt werden',
+  intrigueWarningCombatWrongRoundPhase: 'Kampf-Intrigen können nur während der Kampfphase gespielt werden',
   gamemanualFullscreenHeading: 'Vollbild',
   gamemanualFullscreenText: 'Verwende diese App am besten im Vollbild-Modus.',
   gamemanualFullscreenExitTooltip: 'Vollbild-Modus beenden',

@@ -291,7 +291,11 @@ export class AIEffectEvaluationService {
       case 'dreadnought':
         return value + 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'card-draw':
-        return gameState.playerDeckCards.length > 0 ? value : 0;
+        if (player.turnState === 'reveal') {
+          return -5;
+        } else {
+          return gameState.playerDeckCards.length > 0 ? value : 0;
+        }
       case 'card-discard':
         return value;
       case 'card-destroy':
@@ -350,7 +354,11 @@ export class AIEffectEvaluationService {
       case 'faction-influence-down-fremen':
         return value;
       case 'agent-lift':
-        return hasPlacedAgents && hasAgentsLeftToPlace ? value : 0;
+        if (player.turnState === 'reveal') {
+          return -5;
+        } else {
+          return hasPlacedAgents && hasAgentsLeftToPlace ? value : 0;
+        }
       case 'buildup':
         return value;
       case 'signet-token':
@@ -367,7 +375,7 @@ export class AIEffectEvaluationService {
           gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
-        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : 0;
+        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -5;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':

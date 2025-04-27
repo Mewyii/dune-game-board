@@ -6,6 +6,13 @@ dune-conflict-card,
   border-radius: 10px;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
   transition: 0.9s;
+  user-select: none;
+}
+
+dune-conflict-card {
+  animation-name: conflict-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 4s;
 }
 
 dune-conflict-card:hover,
@@ -56,4 +63,27 @@ dune-conflict-card.active {
   align-items: center;
   gap: 16px;
   z-index: 3;
+}
+
+@keyframes conflict-anim {
+  0% {
+    opacity: 0;
+    filter: brightness(0) drop-shadow(0px 0px 10px rgb(255, 166, 166));
+  }
+  25% {
+    opacity: 0;
+    filter: brightness(0) drop-shadow(0px 0px 10px rgb(255, 166, 166));
+  }
+  50% {
+    opacity: 0.1;
+    filter: brightness(0) drop-shadow(0px 0px 10px rgb(255, 166, 166));
+  }
+  75% {
+    opacity: 0.25;
+    filter: brightness(0.66) drop-shadow(0px 0px 5px rgb(180, 41, 41));
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  }
 }
