@@ -196,7 +196,12 @@ export class AIEffectEvaluationService {
       case 'dreadnought':
         return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 7 : 0) + 0.25 * (gameState.currentRound - 1);
       case 'card-draw':
-        return 1.75 + 0.1 * gameState.playerCardsBought + 0.1 * gameState.playerCardsTrashed;
+        return (
+          1.75 +
+          0.1 * gameState.playerCardsBought +
+          0.1 * gameState.playerCardsTrashed +
+          0.033 * (7 - gameState.playerCardsFieldAccess.length)
+        );
       case 'card-discard':
         return -1.66 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
       case 'card-destroy':
@@ -209,7 +214,12 @@ export class AIEffectEvaluationService {
       case 'persuasion':
         return 2.25 - 0.15 * (gameState.currentRound - 1);
       case 'foldspace':
-        return 2.5 - 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
+        return (
+          2.5 -
+          0.1 * gameState.playerCardsBought -
+          0.1 * gameState.playerCardsTrashed +
+          0.1 * (7 - gameState.playerCardsFieldAccess.length)
+        );
       case 'council-seat-small':
       case 'council-seat-large':
         return !player.hasCouncilSeat ? 12 - 1 * (gameState.currentRound - 1) : 0;

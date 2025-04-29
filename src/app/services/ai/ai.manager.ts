@@ -707,7 +707,7 @@ export class AIManager {
     }
     if (card.fieldAccess) {
       for (const access of card.fieldAccess) {
-        evaluationValue += gameState.playerCardsFieldAccess[access] < 2 ? 1.5 : 0.75;
+        evaluationValue += gameState.playerCardsFieldAccessCounts[access] < 2 ? 2 : 0.5;
       }
     }
     if (card.canInfiltrate) {
@@ -758,7 +758,7 @@ export class AIManager {
     }
     if (card.fieldAccess) {
       for (const access of card.fieldAccess) {
-        evaluationValue -= gameState.playerCardsFieldAccess[access] < 2 ? 1.5 : 0.75;
+        evaluationValue -= gameState.playerCardsFieldAccessCounts[access] < 2 ? 1.5 : 0.75;
       }
     }
     if (card.canInfiltrate) {

@@ -202,7 +202,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   intrigues: {
-    baseDesire: 0.4,
+    baseDesire: 0.35,
     desireModifier: (player, gameState, goals) => 0.01 * (gameState.currentRound - 1) - 0.05 * gameState.playerIntrigueCount,
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerIntrigueCount > 2,
@@ -224,7 +224,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.2 : 0) -
       0.0125 * gameState.playerCardsBought -
-      0.0125 * (gameState.playerCardsTrashed + player.focusTokens),
+      0.0125 * (gameState.playerCardsTrashed + player.focusTokens) +
+      +0.05 * (7 - gameState.playerCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -252,7 +253,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
               (player.hasCouncilSeat ? 0.1 : 0) -
               0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
               0.033 * gameState.playerCardsBought +
-              0.025 * (gameState.playerCardsTrashed + player.focusTokens),
+              0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
+              0.025 * (7 - gameState.playerCardsFieldAccess.length),
             0,
             0.6
           )
@@ -264,7 +266,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
               0.1 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
                 0.05 * gameState.playerCardsBought +
-                0.05 * (gameState.playerCardsTrashed + player.focusTokens),
+                0.05 * (gameState.playerCardsTrashed + player.focusTokens) +
+                0.025 * (7 - gameState.playerCardsFieldAccess.length),
               0,
               0.6
             )

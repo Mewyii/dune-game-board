@@ -93,7 +93,8 @@ export type GameState = Readonly<{
   playerCardsRewards: PlayerCardsRewards;
   playerCardsFactionsInPlay: PlayerCardsFactions;
   playerTechTilesFactions: PlayerCardsFactions;
-  playerCardsFieldAccess: PlayerCardsFieldAccess;
+  playerCardsFieldAccess: ActionType[];
+  playerCardsFieldAccessCounts: PlayerCardsFieldAccess;
   playerGameModifiers?: PlayerGameModifiers;
 }>;
 

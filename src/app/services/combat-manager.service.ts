@@ -210,7 +210,7 @@ export class CombatManager {
 
     if (combatUnits.troopsInGarrison > 0) {
       const troopsToAdd =
-        combatUnits.troopsInGarrison <= troopsGainedThisTurn ? combatUnits.troopsInGarrison : troopsGainedThisTurn;
+        combatUnits.troopsInGarrison > troopsGainedThisTurn ? troopsGainedThisTurn : combatUnits.troopsInGarrison;
 
       this.addPlayerTroopsToCombat(playerId, troopsToAdd);
 
@@ -227,7 +227,7 @@ export class CombatManager {
     }
     if (combatUnits.shipsInGarrison > 0) {
       const shipsToAdd =
-        combatUnits.shipsInGarrison <= dreadnoughtsGainedThisTurn ? combatUnits.shipsInGarrison : dreadnoughtsGainedThisTurn;
+        combatUnits.shipsInGarrison > dreadnoughtsGainedThisTurn ? dreadnoughtsGainedThisTurn : combatUnits.shipsInGarrison;
 
       this.addPlayerShipsToCombat(playerId, shipsToAdd);
       return shipsToAdd;
@@ -246,15 +246,15 @@ export class CombatManager {
     let unitsAllowedToEnterCombat = deployableUnitAmount;
     if (combatUnits.shipsInGarrison > 0) {
       const shipsToAdd =
-        combatUnits.shipsInGarrison <= unitsAllowedToEnterCombat ? combatUnits.shipsInGarrison : unitsAllowedToEnterCombat;
+        combatUnits.shipsInGarrison > unitsAllowedToEnterCombat ? unitsAllowedToEnterCombat : combatUnits.shipsInGarrison;
 
       this.addPlayerShipsToCombat(playerId, shipsToAdd);
       unitsAllowedToEnterCombat -= shipsToAdd;
       addedUnits += shipsToAdd;
     }
-    if (combatUnits.troopsInGarrison > 0) {
+    if (unitsAllowedToEnterCombat > 0 && combatUnits.troopsInGarrison > 0) {
       const troopsToAdd =
-        combatUnits.troopsInGarrison <= unitsAllowedToEnterCombat ? combatUnits.troopsInGarrison : unitsAllowedToEnterCombat;
+        combatUnits.troopsInGarrison > unitsAllowedToEnterCombat ? unitsAllowedToEnterCombat : combatUnits.troopsInGarrison;
 
       this.addPlayerTroopsToCombat(playerId, troopsToAdd);
       addedUnits += troopsToAdd;

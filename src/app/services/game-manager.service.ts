@@ -1847,7 +1847,7 @@ export class GameManager {
 
     if (enemyLocations.length > 0) {
       const playerTroopAmount = this.combatManager.getPlayerTroopsInGarrison(player.id);
-      const stealChance = 0.2 * playerTroopAmount + 0.1 * (gameState.currentRound - 1);
+      const stealChance = 0.5 * playerTroopAmount + 0.1 * (gameState.currentRound - 1);
       const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts() ?? 0;
 
       if (playerTroopAmount >= locationTakeoverTroopCosts && stealChance > Math.random()) {
@@ -2131,7 +2131,8 @@ export class GameManager {
     const playerCards = [...playerDeckCards, ...playerHandCards, ...playerDiscardPileCards];
 
     const playerCardsFactions = this.getInitialFactions();
-    const playerCardsFieldAccess = this.getInitialPlayerCardsFieldAccess();
+    const playerCardsFieldAccess: ActionType[] = [];
+    const playerCardsFieldAccessCounts = this.getInitialPlayerCardsFieldAccess();
     const playerCardsRewards = this.getInitialPlayerCardsRewards();
 
     const playerGameModifiers = this.gameModifiersService.getPlayerGameModifiers(player.id);
@@ -2142,7 +2143,10 @@ export class GameManager {
       }
       if (playerCard.fieldAccess) {
         for (const access of playerCard.fieldAccess) {
-          playerCardsFieldAccess[access] += 1;
+          if (!playerCardsFieldAccess.includes(access)) {
+            playerCardsFieldAccess.push(access);
+          }
+          playerCardsFieldAccessCounts[access] += 1;
         }
       }
       if (playerCard.structuredAgentEffects?.rewards) {
@@ -2269,6 +2273,7 @@ export class GameManager {
       playerTurnInfos,
       playerCardsFactions,
       playerCardsFieldAccess,
+      playerCardsFieldAccessCounts,
       playerCardsRewards,
       playerCardsFactionsInPlay,
       playerGameModifiers,
