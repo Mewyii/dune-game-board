@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { isActiveFactionType } from 'src/app/helpers/faction-types';
 import { ActionField, Effect } from 'src/app/models';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -41,6 +42,10 @@ export class BoardEvaluationComponent implements OnInit {
           const fieldRewards = this.getRewardValue(actionField.rewards);
           let fieldValue = fieldRewards - fieldCosts;
 
+          if (isActiveFactionType(actionField.actionType)) {
+            fieldValue += 1.5;
+          }
+
           this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
         } else if (fieldHasRewardOptions) {
           const optionalRewards = actionField.rewards.filter(
@@ -59,6 +64,10 @@ export class BoardEvaluationComponent implements OnInit {
             }
           }
           let fieldValue = nonOptionalRewards + highestOptionalRewardValue - fieldCosts;
+
+          if (isActiveFactionType(actionField.actionType)) {
+            fieldValue += 1.5;
+          }
 
           this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
         } else if (actionField.conversionOptions) {
@@ -127,7 +136,7 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'council-seat-small':
         case 'council-seat-large':
-          value += 3.5 * amount;
+          value += 3.5 * amount + this.getRewardValue([{ type: 'faction-influence-up-choice' }]);
           break;
         case 'sword-master':
         case 'agent':
@@ -137,7 +146,7 @@ export class BoardEvaluationComponent implements OnInit {
           value += 0.1 * amount;
           break;
         case 'tech':
-          value += 1.66 * amount;
+          value += 1.65 * amount;
           break;
         case 'combat':
           if (rewards.some((x) => x.type === 'troop')) {
