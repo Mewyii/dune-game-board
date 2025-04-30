@@ -314,7 +314,7 @@ export class AIEffectEvaluationService {
       case 'card-draw-or-destroy':
         return gameState.playerDeckCards.length > 0 || gameState.playerDeckSizeTotal > 6 ? value : 0;
       case 'intrigue':
-        return value - 0.25 * gameState.playerIntrigueCount;
+        return value - 0.33 * gameState.playerIntrigueCount;
       case 'persuasion':
         return value;
       case 'foldspace':
@@ -334,9 +334,8 @@ export class AIEffectEvaluationService {
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 ? (hasAgentsLeftToPlace ? value : 0.66 * value) : 0;
       case 'combat':
-        return (
-          value + 0.5 * gameState.playerCombatUnits.troopsInGarrison + 0.5 * gameState.playerCombatUnits.shipsInGarrison
-        );
+        const unitsInGarrison = gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison;
+        return unitsInGarrison > 0 ? 0.5 * unitsInGarrison : -1;
       case 'intrigue-trash':
         return value;
       case 'intrigue-draw':

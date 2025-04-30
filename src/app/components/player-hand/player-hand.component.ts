@@ -52,17 +52,19 @@ export class PlayerHandComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameManager.activePlayer$.subscribe((activePlayer) => {
-      this.activePlayer = activePlayer;
-      this.activePlayerId = activePlayer?.id ?? 0;
+      if (!this.activePlayer || activePlayer?.id !== this.activePlayer?.id) {
+        this.activePlayer = activePlayer;
+        this.activePlayerId = activePlayer?.id ?? 0;
 
-      this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
-      this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
+        this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
+        this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
 
-      this.playerPlots = this.cardsService.playerPlots.find((x) => x.playerId === this.activePlayerId);
+        this.playerPlots = this.cardsService.playerPlots.find((x) => x.playerId === this.activePlayerId);
 
-      this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
-      this.showCards = false;
-      this.cardsShown = 'hand';
+        this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
+        this.showCards = false;
+        this.cardsShown = 'hand';
+      }
     });
 
     this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
