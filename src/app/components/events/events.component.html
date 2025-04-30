@@ -1,3 +1,7 @@
-<div class="event-board" *ngIf="event">
+<div class="event-board">
+  @if (event) {
   <dune-event-card [event]="event"></dune-event-card>
+  } @else {
+  <div class="event-card-backside"></div>
+  }
 </div>

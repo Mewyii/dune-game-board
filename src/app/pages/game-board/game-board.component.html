@@ -51,8 +51,8 @@
   <dune-turn-infos *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-turn-infos>
   <dune-imperium-row *ngIf="mode === 'game'"></dune-imperium-row>
   <div class="sideboard-container">
+    <dune-events *ngIf="mode === 'game' && eventsEnabled"></dune-events>
     <dune-game-manual *ngIf="mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
-    <dune-events *ngIf="mode === 'game' && gameManager.currentRound !== 0 && eventsEnabled"></dune-events>
     <!-- <dune-minor-houses *ngIf="mode=== 'game'"></dune-minor-houses> -->
     <dune-leaders *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-leaders>
     <dune-game-log *ngIf="mode === 'game'"></dune-game-log>

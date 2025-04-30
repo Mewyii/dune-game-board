@@ -361,7 +361,6 @@
         <div
           *ngIf="getIsTechTileFlipped(techTile.id)"
           [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
-          [style.background-image]="'url(/assets/images/tech-tiles/tech-background.png)'"
         ></div>
         <dune-tech-tile
           *ngIf="!getIsTechTileFlipped(techTile.id)"

@@ -2,7 +2,6 @@
   position: absolute;
   top: 423px;
   right: 49px;
-  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -42,6 +41,20 @@ dune-tech-tile.active {
   justify-content: center;
   gap: 16px;
   z-index: 3;
+}
+
+.tech-tile-backside {
+  display: block;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  width: 255px;
+  height: 170px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 12px;
+  background-image: url('/assets/images/tech-tiles/tech-background.png');
+  animation-name: tech-tile-row-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 3s;
 }
 
 @keyframes tech-tile-row-anim {

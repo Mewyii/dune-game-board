@@ -18,3 +18,16 @@ dune-event-card:hover {
   filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
   transform: scale(1.05);
 }
+
+.event-card-backside {
+  width: 600px;
+  height: 375px;
+  border-radius: 8px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  color: #fffcfa;
+  text-align: center;
+  background-image: url('/assets/images/events/event-background.png');
+}

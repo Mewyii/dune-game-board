@@ -513,12 +513,15 @@ export class GameManager {
     this.currentRoundPhaseSubject.next('none');
     this.startingPlayerIdSubject.next(0);
     this.activePlayerIdSubject.next(0);
+    this.setactiveAIPlayer(0);
     this.duneEventsManager.resetEventDeck();
     this.leadersService.resetLeaders();
     this.conflictsService.resetConflicts();
     this.cardsService.resetPlayerHandCards();
     this.cardsService.resetPlayerPlots();
     this.cardsService.resetPlayerTrashPiles();
+    this.cardsService.resetImperiumRowCards();
+    this.techTilesService.resetAvailableTechTiles();
 
     this.isFinaleSubject.next(false);
   }

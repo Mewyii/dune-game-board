@@ -15,5 +15,7 @@
       </button>
     </div>
   </div>
-  }
+  } @if (!activePlayerId && availableTechTiles.length < 1) { @for (techBackside of ["", "", ""]; track $index) {
+  <div class="tech-tile-backside"></div>
+  } }
 </div>

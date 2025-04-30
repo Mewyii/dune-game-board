@@ -34,6 +34,17 @@ export class GameLogComponent implements OnInit, AfterViewInit {
     });
   }
 
+  onDownloadLogClicked() {
+    const jsonContent = JSON.stringify(this.playerActionLog, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'game_log.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   public getEffectTypePath(effectType: EffectType) {
     return getEffectTypePath(effectType);
   }

@@ -40,7 +40,7 @@ dune-plot-card {
   user-select: none;
   animation-name: card-row-anim;
   animation-timing-function: ease-in-out;
-  animation-duration: 2s;
+  animation-duration: 3s;
 }
 
 dune-imperium-row-card.desaturated,
@@ -163,16 +163,35 @@ dune-plot-card.active {
   z-index: 3;
 }
 
+.imperium-card-backside {
+  display: block;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
+  width: 190px;
+  height: 274px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 8px;
+  background-image: url('/assets/images/card-backgrounds/backside.png');
+  animation-name: card-row-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 3s;
+}
+
 @keyframes card-row-anim {
   0% {
     opacity: 0;
-    filter: brightness(0);
+    filter: brightness(0) drop-shadow(0px 0px 10px rgb(170, 166, 255));
   }
-  50% {
+  33% {
+    opacity: 0.1;
+    filter: brightness(0) drop-shadow(0px 0px 10px rgb(166, 166, 255));
+  }
+  66% {
     opacity: 0.25;
-    filter: brightness(0.66);
+    filter: brightness(0.66) drop-shadow(0px 0px 5px rgb(55, 41, 180));
   }
   100% {
     opacity: 1;
+    filter: brightness(1) drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
   }
 }

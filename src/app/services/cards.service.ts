@@ -339,6 +339,10 @@ export class CardsService {
     }
   }
 
+  resetImperiumRowCards() {
+    this.imperiumRowSubject.next([]);
+  }
+
   removeCardFromLimitedCustomCards(card: ImperiumDeckCard) {
     this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x) => x.id !== card.id)]);
   }

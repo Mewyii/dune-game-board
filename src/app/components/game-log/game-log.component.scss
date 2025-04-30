@@ -1,4 +1,5 @@
 .choices-board {
+  position: relative;
   background: rgba(64, 50, 40, 0.8);
   display: flex;
   flex-wrap: wrap;
@@ -57,4 +58,11 @@
 .reward-small {
   height: 24px;
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
+}
+
+.download-icon {
+  position: absolute;
+  bottom: 40px;
+  right: 70px;
+  color: #6c6c6c;
 }

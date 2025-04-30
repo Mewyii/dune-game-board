@@ -95,6 +95,9 @@
         </button>
       </div>
     </div>
-    }
+    } @if (!activePlayerId && imperiumRowCards.length < 1) { @for (imperiumCardBackside of ["", "", "", "", "", ""]; track
+    $index) {
+    <div class="imperium-card-backside"></div>
+    } }
   </div>
 </div>
