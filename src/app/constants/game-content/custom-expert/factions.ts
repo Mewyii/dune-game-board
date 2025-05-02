@@ -52,8 +52,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Hellsicht', en: 'Truthsay' },
         actionType: 'bene',
-        costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-discard' }, { type: 'agent-lift' }],
+        costs: [{ type: 'spice' }],
+        rewards: [{ type: 'card-draw' }, { type: 'card-discard' }, { type: 'agent-lift' }],
         pathToImage: 'assets/images/action-backgrounds/bene_gesserit_4.png',
       },
       {
@@ -96,7 +96,7 @@ export const factionsCustomExpert: Faction[] = [
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
         rewards: [
-          { type: 'card-draw', amount: 2 },
+          { type: 'tech', amount: 2 },
           { type: 'troop', amount: 5 },
         ],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
@@ -178,7 +178,10 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 3 }],
-        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 3 }],
+        rewards: [
+          { type: 'card-draw', amount: 2 },
+          { type: 'troop', amount: 2 },
+        ],
         requiresInfluence: { type: 'bene' },
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
       },
@@ -238,12 +241,12 @@ export const factionsCustomExpert: Faction[] = [
           [
             { type: 'spice', amount: 2, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 8, width: 45 },
+            { type: 'solari', amount: 7, width: 45 },
           ],
           [
             { type: 'spice', amount: 3, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 10, width: 45 },
+            { type: 'solari', amount: 9, width: 45 },
           ],
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
@@ -253,7 +256,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 2 }],
+        costs: [{ type: 'solari', amount: 3 }],
         rewards: [{ type: 'water' }, { type: 'water' }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         requiresInfluence: { type: 'emperor' },

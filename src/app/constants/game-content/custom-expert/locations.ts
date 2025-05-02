@@ -10,7 +10,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
-      rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'tech' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
     },
     ownerReward: { type: 'solari', amount: 2 },
@@ -25,7 +25,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'tech', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
+      rewards: [{ type: 'spice', amount: 2 }, { type: 'tech' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },
@@ -54,7 +54,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     actionField: {
       title: { de: 'Raumhafen', en: 'Space Port' },
       actionType: 'town',
-      rewards: [{ type: 'solari', amount: 2 }, { type: 'foldspace' }, { type: 'tech' }],
+      rewards: [{ type: 'card-draw' }, { type: 'foldspace' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/troops.png',
     },
     ownerReward: { type: 'tech' },
