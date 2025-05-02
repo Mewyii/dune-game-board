@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, FactionType, LanguageString, EffectRewardType } from 'src/app/models';
+import { EffectType, FactionType, LanguageString } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, TechTileModifier } from 'src/app/services/game-modifier.service';
-import { TechTilesService } from 'src/app/services/tech-tiles.service';
+import { TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -15,7 +15,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./tech-tiles.component.scss'],
 })
 export class TechTilesComponent {
-  public availableTechTiles: TechTileCard[] = [];
+  public availableTechTiles: TechTileDeckCard[] = [];
   public title: LanguageString = { de: 'haus', en: 'house' };
   public activeTechTileId = '';
 
@@ -43,7 +43,7 @@ export class TechTilesComponent {
     });
   }
 
-  onTakeCardClicked(techTile: TechTileCard) {
+  onTakeCardClicked(techTile: TechTileDeckCard) {
     this.gameManager.acquirePlayerTechTile(this.gameManager.activePlayerId, techTile);
   }
 

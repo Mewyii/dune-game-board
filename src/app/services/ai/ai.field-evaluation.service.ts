@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { Leader } from 'src/app/constants/leaders';
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { randomizeArray } from 'src/app/helpers/common';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
@@ -8,6 +7,7 @@ import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/he
 import { getRewardArrayAIInfos } from 'src/app/helpers/rewards';
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
 import { Player } from 'src/app/models/player';
+import { LeaderDeckCard } from '../leaders.service';
 import { SettingsService } from '../settings.service';
 import { AIPlayer } from './ai.manager';
 import { AIGoals, FieldsForGoals, GameState, GoalModifier } from './models';
@@ -42,7 +42,7 @@ export class AIFieldEvaluationService {
   public getPreferredFieldsForAIPlayer(
     player: Player,
     gameState: GameState,
-    playerLeader: Leader,
+    playerLeader: LeaderDeckCard,
     aiPlayer: AIPlayer,
     conflictEvaluation: number,
     techEvaluation: number,

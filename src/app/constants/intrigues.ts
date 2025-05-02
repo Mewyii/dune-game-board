@@ -206,13 +206,17 @@ export const intrigues: IntrigueCard[] = [
     amount: 3,
     effects: [
       {
-        type: 'tech',
-      },
-      {
         type: 'sword',
       },
       {
         type: 'sword',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'solari',
+        amount: 4,
       },
     ],
   },
@@ -246,6 +250,7 @@ export const intrigues: IntrigueCard[] = [
     effects: [
       {
         type: 'spice',
+        amount: 2,
       },
       {
         type: 'helper-trade',
@@ -439,7 +444,13 @@ export const intrigues: IntrigueCard[] = [
         type: 'water',
       },
       {
+        type: 'water',
+      },
+      {
         type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
       },
       {
         type: 'agent-lift',

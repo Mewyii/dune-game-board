@@ -1,5 +1,3 @@
-import { TechTileAIEvaluationType } from '../constants/tech-tiles-ai-evaluations';
-import { GameModifiers } from '../services/game-modifier.service';
 import { ActiveFactionType } from './faction';
 import { EffectSizeType, LanguageStringAndFontSize } from './imperium-card';
 import { LanguageString } from './language';
@@ -15,6 +13,4 @@ export interface TechTileCard {
   buyEffects?: EffectReward[];
   imageUrl?: string;
   imagePosition?: 'top' | 'center' | 'bottom';
-  aiEvaluation?: TechTileAIEvaluationType;
-  gameModifiers?: GameModifiers;
 }

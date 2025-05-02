@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { techTileAiEvaluations } from 'src/app/constants/tech-tiles-ai-evaluations';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardArrayAIInfos, isConversionEffectType } from 'src/app/helpers/rewards';
@@ -813,12 +812,7 @@ export class AIManager {
   }
 
   public getTechTileEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
-    let value = 0;
-    if (techTile.aiEvaluation) {
-      value += techTileAiEvaluations[techTile.aiEvaluation](player, gameState);
-    }
-
-    return value;
+    return techTile.aiEvaluation ? techTile.aiEvaluation(player, gameState) : 0;
   }
 
   public getIntrigueEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {

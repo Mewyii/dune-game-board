@@ -40,7 +40,6 @@ import {
 } from '../models';
 import { IntrigueDeckCard } from '../models/intrigue';
 import { Player } from '../models/player';
-import { TechTileCard } from '../models/tech-tile';
 import { StructuredChoiceEffectWithGameElement } from '../models/turn-info';
 import { AIManager } from './ai/ai.manager';
 import { PlayerCardsFactions as Factions, GameState, PlayerCardsFieldAccess, PlayerCardsRewards } from './ai/models';
@@ -2100,7 +2099,7 @@ export class GameManager {
     }
   }
 
-  acquirePlayerTechTile(playerId: number, techTile: TechTileCard) {
+  acquirePlayerTechTile(playerId: number, techTile: TechTileDeckCard) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
       return;
@@ -2486,7 +2485,7 @@ export class GameManager {
     }
   }
 
-  private buyTechTileForPlayer(player: Player, techTile: TechTileCard, techAmount: number, discount: number) {
+  private buyTechTileForPlayer(player: Player, techTile: TechTileDeckCard, techAmount: number, discount: number) {
     const effectiveCosts = techTile.costs - discount;
 
     if (effectiveCosts > 0) {

@@ -15,7 +15,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
       fontSize: 'medium',
     },
-    aiEvaluation: 'maula-pistol-works',
   },
   {
     name: {
@@ -55,7 +54,6 @@ export const techTiles: TechTileCard[] = [
         amount: 2,
       },
     ],
-    aiEvaluation: 'smuggler-outposts',
   },
   {
     name: {
@@ -96,7 +94,6 @@ export const techTiles: TechTileCard[] = [
         type: 'troop',
       },
     ],
-    aiEvaluation: 'imperial-barracks',
   },
   {
     name: {
@@ -112,17 +109,6 @@ export const techTiles: TechTileCard[] = [
       de: 'Der Zugang zu {faction:spice}-Feldern kostet {resource:water} weniger.',
       fontSize: 'medium',
     },
-    gameModifiers: {
-      fieldCost: [
-        {
-          id: 'carryall-suspensors',
-          actionType: 'spice',
-          costType: 'water',
-          amount: -1,
-        },
-      ],
-    },
-    aiEvaluation: 'upgrade-carryall-suspensors',
   },
   {
     name: {
@@ -138,7 +124,6 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
       fontSize: 'medium',
     },
-    aiEvaluation: 'spice-transport-modules',
   },
   {
     name: {
@@ -154,7 +139,6 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
       fontSize: 'medium',
     },
-    aiEvaluation: 'spy-modules',
   },
   {
     name: {
@@ -171,7 +155,6 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
       fontSize: 'medium',
     },
-    aiEvaluation: 'spy-network',
   },
   {
     name: {
@@ -206,7 +189,6 @@ export const techTiles: TechTileCard[] = [
         type: 'water',
       },
     ],
-    aiEvaluation: 'wind-traps',
   },
   {
     name: {
@@ -222,7 +204,6 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner {resource:card-discard} für jedes deiner {resource:dreadnought} im Konflikt.',
       fontSize: 'medium',
     },
-    aiEvaluation: 'heavy-lasguns',
   },
   {
     name: {
@@ -238,17 +219,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
       fontSize: 'small',
     },
-    gameModifiers: {
-      fieldReward: [
-        {
-          id: 'sandcrawler-engines',
-          actionType: 'spice',
-          rewardType: 'spice',
-          amount: 1,
-        },
-      ],
-    },
-    aiEvaluation: 'enhanced-sandcrawler-engines',
   },
   {
     name: {
@@ -284,7 +254,6 @@ export const techTiles: TechTileCard[] = [
         amount: 3,
       },
     ],
-    aiEvaluation: 'trade-port',
   },
   {
     name: {
@@ -300,7 +269,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-trade}Behalte die dafür gespielte Karte auf deiner Hand.',
       fontSize: 'small',
     },
-    aiEvaluation: 'upgraded-ornithoper-engines',
   },
   {
     name: {
@@ -316,7 +284,6 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
       fontSize: 'small',
     },
-    aiEvaluation: 'barrage-rockets',
   },
   {
     name: {
@@ -351,7 +318,6 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
-    aiEvaluation: 'artillery-arsenal',
   },
   {
     name: {
@@ -382,7 +348,6 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'small',
     },
-    aiEvaluation: 'ornithopter-hangar',
   },
   {
     name: {
@@ -398,7 +363,6 @@ export const techTiles: TechTileCard[] = [
       de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner {resource:dreadnought} im Konflikt: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
       fontSize: 'small',
     },
-    aiEvaluation: 'shieldbreakers',
   },
   {
     name: {
@@ -436,7 +400,6 @@ export const techTiles: TechTileCard[] = [
         type: 'focus',
       },
     ],
-    aiEvaluation: 'botanical-research-station',
   },
   {
     name: {
@@ -475,7 +438,6 @@ export const techTiles: TechTileCard[] = [
         type: 'card-discard',
       },
     ],
-    aiEvaluation: 'sardaukar-commando-post',
   },
   {
     name: {
@@ -510,7 +472,6 @@ export const techTiles: TechTileCard[] = [
         type: 'faction-influence-up-choice',
       },
     ],
-    aiEvaluation: 'missionara-protectiva',
   },
   {
     name: {
@@ -545,7 +506,6 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'small',
     },
-    aiEvaluation: 'stillsuits-factory',
   },
   {
     name: {
@@ -561,24 +521,6 @@ export const techTiles: TechTileCard[] = [
       de: 'Alle {resource:spice} -Kosten sind um 1 reduziert (min. 1).',
       fontSize: 'medium',
     },
-    gameModifiers: {
-      fieldCost: [
-        {
-          id: 'spice-refineries',
-          costType: 'spice',
-          amount: -1,
-          minCosts: 1,
-        },
-      ],
-      techTiles: [
-        {
-          id: 'spice-refineries',
-          spiceAmount: -1,
-          minCosts: 1,
-        },
-      ],
-    },
-    aiEvaluation: 'spice-refineries',
   },
   {
     name: {
@@ -613,7 +555,6 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'small',
     },
-    aiEvaluation: 'ornithopter-squadron',
   },
   {
     name: {
@@ -633,7 +574,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug</b>:<br>{resource:sword}{resource:sword}{resource:helper-or}Entferne die Kontrolle über einen Ort, auf dem sich einer deiner Agenten befindet.',
       fontSize: 'small',
     },
-    aiEvaluation: 'gunship',
   },
   {
     name: {
@@ -693,7 +633,6 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
-    aiEvaluation: 'sietch',
   },
   {
     name: {
@@ -749,7 +688,6 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
-    aiEvaluation: 'guild-bank',
   },
   {
     name: {
@@ -804,7 +742,6 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
-    aiEvaluation: 'governor-palace',
   },
   {
     name: {
@@ -864,7 +801,6 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    aiEvaluation: 'bene-gesserit-conclave',
   },
   {
     name: {
@@ -906,7 +842,6 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
-    aiEvaluation: 'lighter',
   },
   {
     name: {
@@ -947,7 +882,6 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
-    aiEvaluation: 'flagship',
   },
   {
     name: {
@@ -988,7 +922,6 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
-    aiEvaluation: 'landing-ships',
   },
   {
     name: {
@@ -1032,6 +965,5 @@ export const techTiles: TechTileCard[] = [
       de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
       fontSize: 'small',
     },
-    aiEvaluation: 'planetary-surveillance',
   },
 ];

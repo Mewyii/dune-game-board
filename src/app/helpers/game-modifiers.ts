@@ -118,9 +118,11 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
           costs.amount = fieldCostsAmount + fieldCostsModifier.amount;
           costs.modifier = 'negative';
         } else {
-          const newFieldCostsAmount = fieldCostsAmount + fieldCostsModifier.amount;
+          const newCostAmount = fieldCostsAmount + fieldCostsModifier.amount;
+          const minCosts = fieldCostsModifier.minCosts ?? 0;
+          const newFieldCostsAmount = newCostAmount < minCosts ? minCosts : newCostAmount;
 
-          if (newFieldCostsAmount > (fieldCostsModifier.minCosts ?? 0)) {
+          if (newFieldCostsAmount >= 1) {
             costs.amount = newFieldCostsAmount > 1 ? newFieldCostsAmount : undefined;
             costs.modifier = 'positive';
           } else {

@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Leader, leaders } from '../constants/leaders';
+import { Leader } from '../constants/leaders';
+import { leadersGameAdjustments } from '../constants/leaders-game-adjustments';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { StructuredEffects } from '../models';
 import { Player } from '../models/player';
+import { AIAdjustments } from './ai/models';
 import { LeaderConfiguratorService } from './configurators/leader.service';
+import { GameModifiers } from './game-modifier.service';
 
 export interface LeaderDeckCard extends Leader {
   id: string;
   structuredPassiveEffects?: StructuredEffects;
   structuredSignetEffects?: StructuredEffects;
+  aiAdjustments?: AIAdjustments;
+  gameModifiers?: GameModifiers;
 }
 
 export interface PlayerLeader {
@@ -37,8 +42,12 @@ export class LeadersService {
 
       // Workaround for local storage not being able to store functions
       const realLeaders = storedLeaders.map((x) => {
-        const leader = leaders.find((y) => y.name.en === x.name.en);
-        return { ...leader, ...x };
+        const leaderGameAdjustments = leadersGameAdjustments.find((y) => y.id === x.name.en);
+        return {
+          ...x,
+          gameModifiers: leaderGameAdjustments?.gameModifiers,
+          aiAdjustments: leaderGameAdjustments?.aiAdjustments,
+        };
       });
 
       this.leaderDeckSubject.next(realLeaders);
@@ -51,7 +60,20 @@ export class LeadersService {
     const playersLeadersString = localStorage.getItem('playerLeaders');
     if (playersLeadersString) {
       const playerLeaders = JSON.parse(playersLeadersString) as PlayerLeader[];
-      this.playerLeadersSubject.next(playerLeaders);
+
+      // Workaround for local storage not being able to store functions
+      const realPlayerLeaders = playerLeaders.map((x) => {
+        const leaderGameAdjustments = leadersGameAdjustments.find((y) => y.id === x.leader.name.en);
+        return {
+          ...x,
+          leader: {
+            ...x.leader,
+            gameModifiers: leaderGameAdjustments?.gameModifiers,
+            aiAdjustments: leaderGameAdjustments?.aiAdjustments,
+          },
+        };
+      });
+      this.playerLeadersSubject.next(realPlayerLeaders);
     }
 
     this.playerLeaders$.subscribe((playerLeaders) => {
@@ -69,15 +91,15 @@ export class LeadersService {
   }
 
   createLeaderDeck() {
-    const techTiles = this.leaderConfiguratorService.leaders;
+    const leaders = this.leaderConfiguratorService.leaders;
     this.playerLeadersSubject.next([]);
-    this.leaderDeckSubject.next(techTiles.map((x) => this.instantiateLeader(x)));
+    this.leaderDeckSubject.next(leaders.map((x) => this.instantiateLeader(x)));
   }
 
   assignRandomLeadersToPlayers(players: Player[]) {
     const playerLeaders: PlayerLeader[] = [];
 
-    const leaderDeck = cloneDeep(this.leaderDeck.filter((x) => x.playableByAI));
+    const leaderDeck = cloneDeep(this.leaderDeck);
     const shuffledLeaders = shuffle(leaderDeck);
 
     for (const player of players) {
@@ -121,6 +143,8 @@ export class LeadersService {
   }
 
   private instantiateLeader(leader: Leader): LeaderDeckCard {
+    const leaderGameAdjustments = leadersGameAdjustments.find((y) => y.id === leader.name.en);
+
     return {
       ...leader,
       id: crypto.randomUUID(),
@@ -132,6 +156,8 @@ export class LeadersService {
         leader.signetEffects && leader.signetEffects.length > 0
           ? getStructuredEffectArrayInfos(leader.signetEffects)
           : undefined,
+      gameModifiers: leaderGameAdjustments?.gameModifiers,
+      aiAdjustments: leaderGameAdjustments?.aiAdjustments,
     };
   }
 }

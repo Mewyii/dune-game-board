@@ -1,5 +1,4 @@
 import { DuneEvent } from 'src/app/constants/events';
-import { Leader } from 'src/app/constants/leaders';
 import { ActionField, ActionType, ActiveFactionType, EffectRewardType, StructuredEffects } from 'src/app/models';
 import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
@@ -9,6 +8,7 @@ import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../../cards.
 import { PlayerCombatUnits } from '../../combat-manager.service';
 import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
 import { PlayerGameModifiers } from '../../game-modifier.service';
+import { LeaderDeckCard } from '../../leaders.service';
 import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
 import { TechTileDeckCard } from '../../tech-tiles.service';
 
@@ -58,7 +58,7 @@ export type GameState = Readonly<{
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];
-  playerLeader: Leader;
+  playerLeader: LeaderDeckCard;
   playerLeaderSignetRingEffects: StructuredEffects | undefined;
   conflict: Conflict;
   availableTechTiles: TechTileDeckCard[];
