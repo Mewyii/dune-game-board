@@ -58,9 +58,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.4,
+    baseDesire: 0.5,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'spice') + 0.025 * player.tech - 0.01 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'spice') + 0.02 * player.tech - 0.01 * (gameState.currentRound - 1),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -95,15 +95,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       ...getViableBoardFields(fields, 'agent-lift', 0, 1),
     }),
     viableFields: () => ({}),
-  },
-  'fremen-friendship': {
-    baseDesire: 0.1,
-    desireModifier: (player, gameState, goals) => 0.025 * gameState.playerScore.fremen + 0.01 * (gameState.currentRound - 1),
-    goalIsReachable: () => false,
-    reachedGoal: (player, gameState) => gameState.playerScore.fremen > 1 || gameState.isFinale,
-    viableFields: (fields) => ({
-      ...getViableBoardFieldsForFaction(fields, 'fremen'),
-    }),
   },
   'fremen-alliance': {
     baseDesire: 0.25,
@@ -192,9 +183,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   troops: {
-    baseDesire: 0.0,
+    baseDesire: 0.1,
     desireModifier: (player, gameState, goals) =>
-      0.175 * (4 - gameState.playerCombatUnits.troopsInGarrison) + (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0),
+      0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) + (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({
@@ -203,7 +194,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   },
   intrigues: {
     baseDesire: 0.35,
-    desireModifier: (player, gameState, goals) => 0.01 * (gameState.currentRound - 1) - 0.05 * gameState.playerIntrigueCount,
+    desireModifier: (player, gameState, goals) =>
+      0.01 * (gameState.currentRound - 1) - 0.075 * gameState.playerIntrigueCount,
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerIntrigueCount > 2,
     viableFields: (fields) => ({
@@ -212,7 +204,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   },
   'intrigue-steal': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals) => gameState.playerIntrigueStealAmount * 0.25,
+    desireModifier: (player, gameState, goals) => gameState.playerIntrigueStealAmount * 0.3,
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({

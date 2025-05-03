@@ -67,6 +67,13 @@ export class IntriguesService {
     return this.playerIntriguesSubject.value.find((x) => x.playerId === playerId)?.intrigues.length ?? 0;
   }
 
+  public getPlayerCombatIntrigueCount(playerId: number) {
+    return (
+      this.playerIntriguesSubject.value.find((x) => x.playerId === playerId)?.intrigues.filter((y) => y.type === 'combat')
+        .length ?? 0
+    );
+  }
+
   public createIntrigueDeck() {
     this.playerIntriguesSubject.next([]);
     const intrigueDeck: IntrigueDeckCard[] = [];

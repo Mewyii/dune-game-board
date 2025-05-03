@@ -281,7 +281,8 @@ export class AIManager {
     enemyCombatScores: PlayerCombatScore[],
     maxAddableUnits: number,
     playerHasAgentsLeft: boolean,
-    playerHasIntrigues: boolean
+    playerCombatIntrigueCount: number,
+    currentRound: number
   ) {
     if (!playerCombatUnits || !enemyCombatScores) {
       return 'none';
@@ -295,15 +296,14 @@ export class AIManager {
     if (playerCombatPower <= highestEnemyCombatPower) {
       if (
         playerHasAgentsLeft ||
-        playerHasIntrigues ||
-        playerCombatPower + possibleAddedCombatPower > highestEnemyCombatPower
+        playerCombatPower + possibleAddedCombatPower + playerCombatIntrigueCount * 2 > highestEnemyCombatPower
       ) {
         return 'all';
       } else {
         return 'minimum';
       }
-    } else {
-      const maxCombatPowerDifference = 10;
+    } else if (playerCombatPower > highestEnemyCombatPower) {
+      const maxCombatPowerDifference = 8 + currentRound - playerCombatIntrigueCount;
       const combatPowerDifference = playerCombatPower - highestEnemyCombatPower;
 
       if (combatPowerDifference > maxCombatPowerDifference) {
@@ -311,9 +311,9 @@ export class AIManager {
       }
 
       const randomNumber = getRandomInt(maxCombatPowerDifference);
-      if (randomNumber - combatPowerDifference <= 0) {
+      if (combatPowerDifference > randomNumber) {
         return 'minimum';
-      } else if (randomNumber - combatPowerDifference <= 5) {
+      } else {
         return 'all';
       }
     }

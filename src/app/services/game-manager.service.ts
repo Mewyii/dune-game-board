@@ -1774,7 +1774,7 @@ export class GameManager {
 
       const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id);
       const enemyCombatScores = this.combatManager.getEnemyCombatScores(player.id);
-      const playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(player.id);
+      const playerIntrigueCount = this.intriguesService.getPlayerCombatIntrigueCount(player.id);
       const playerHasAgentsLeft = (this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0) > 1;
 
       const combatDecision = aiPlayer.decisions.find((x) => x.includes('conflict'));
@@ -1799,7 +1799,8 @@ export class GameManager {
               enemyCombatScores,
               turnInfo.deployableUnits + turnInfo.troopsGainedThisTurn + turnInfo.dreadnoughtsGainedThisTurn,
               playerHasAgentsLeft,
-              playerIntrigueCount > 2
+              playerIntrigueCount,
+              this.currentRound
             );
 
             if (addUnitsDecision === 'all') {
@@ -2719,7 +2720,10 @@ export class GameManager {
       this.playerScoreManager.removePlayerScore(playerId, scoreType as PlayerFactionScoreType, 1, this.currentRound);
     } else if (costType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: 1 });
-    } else if (costType === 'intrigue' || costType === 'intrigue-trash') {
+    } else if (costType === 'intrigue') {
+      this.audioManager.playSound('intrigue', costAmount);
+      this.intriguesService.drawPlayerIntriguesFromDeck(playerId, costAmount);
+    } else if (costType === 'intrigue-trash') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { intrigueTrashAmount: 1 });
     } else if (costType === 'sword') {
       this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, costAmount);

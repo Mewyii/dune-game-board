@@ -353,11 +353,11 @@ export class AIFieldEvaluationService {
 
         const troopRewards = fieldRewards.find((x) => x.type === 'troop');
         if (troopRewards) {
-          modifier = modifier + 0.15 * (troopRewards.amount ?? 1);
+          modifier = modifier + 0.1 * (troopRewards.amount ?? 1);
         }
         const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought');
         if (dreadnoughtRewards) {
-          modifier = modifier + 0.3 * (dreadnoughtRewards.amount ?? 1);
+          modifier = modifier + 0.2 * (dreadnoughtRewards.amount ?? 1);
         }
         const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
         if (intrigueRewards) {

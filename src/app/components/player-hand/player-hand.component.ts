@@ -53,7 +53,6 @@ export class PlayerHandComponent implements OnInit {
   ngOnInit(): void {
     this.gameManager.activePlayer$.subscribe((activePlayer) => {
       if (!this.activePlayer || activePlayer?.id !== this.activePlayer?.id) {
-        this.activePlayer = activePlayer;
         this.activePlayerId = activePlayer?.id ?? 0;
 
         this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
@@ -65,6 +64,7 @@ export class PlayerHandComponent implements OnInit {
         this.showCards = false;
         this.cardsShown = 'hand';
       }
+      this.activePlayer = activePlayer;
     });
 
     this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
