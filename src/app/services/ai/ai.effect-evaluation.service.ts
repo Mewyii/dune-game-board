@@ -278,6 +278,14 @@ export class AIEffectEvaluationService {
         return -1.5 + 0.1 * (gameState.currentRound - 1);
       case 'trash-self':
         return -1.25;
+      case 'troop-insert':
+      case 'troop-insert-or-retreat':
+      case 'troop-retreat':
+        return 1.5;
+      case 'dreadnought-insert':
+      case 'dreadnought-insert-or-retreat':
+      case 'dreadnought-retreat':
+        return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? 2 : 1;
       default:
         return 0;
     }
@@ -389,6 +397,14 @@ export class AIEffectEvaluationService {
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':
         return value;
+      case 'troop-insert':
+      case 'troop-insert-or-retreat':
+      case 'troop-retreat':
+        return gameState.playerCombatUnits.troopsInGarrison > 0 ? value : 0;
+      case 'dreadnought-insert':
+      case 'dreadnought-insert-or-retreat':
+      case 'dreadnought-retreat':
+        return gameState.playerCombatUnits.shipsInGarrison > 0 ? value : 0;
       default:
         return value;
     }
