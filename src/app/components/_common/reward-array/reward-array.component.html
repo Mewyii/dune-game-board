@@ -1,6 +1,9 @@
 <div class="effect-arrays-container" [style.gap]="arraySeparationGap">
   @for (effects of effectArrays; track $index) {
-  <div [class]="'effects-container ' + (wrap ? 'wrap' : 'nowrap')" [style.gap]="effectGap">
+  <div
+    [class]="'effects-container ' + (wrap ? 'wrap ' : 'nowrap ') + (centerEffectText ? 'center-text' : '')"
+    [style.gap]="effectGap"
+  >
     @for (reward of effects; track $index) { @if (isTimingEffect(reward)) { @if (isGameStartTiming(reward.type)) {
     <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
       {{ t.translate('commonEffectTimingGameStart') }}:
@@ -27,7 +30,57 @@
         -{{ t.translate('commonEffectConditionConnection') }}:
       </div>
     </div>
-    } } @else {
+    } } @else if (reward.type === 'troop-insert') {
+    <div class="condition-container">
+      <div
+        [class]="'text ' + textColor"
+        [style.fontSize]="fontSize"
+        [style.marginBottom]="marginBottom"
+        [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, reward.amount)"
+      ></div>
+    </div>
+    } @else if (reward.type === 'troop-insert-or-retreat') {
+    <div
+      [class]="'text ' + textColor"
+      [style.fontSize]="fontSize"
+      [style.marginBottom]="marginBottom"
+      [innerHTML]="t.translate('commonEffectRewardTroopInsertOrRetreat', true, reward.amount)"
+    ></div>
+    }@else if (reward.type === 'troop-retreat') {
+    <div class="condition-container">
+      <div
+        [class]="'text ' + textColor"
+        [style.fontSize]="fontSize"
+        [style.marginBottom]="marginBottom"
+        [innerHTML]="t.translate('commonEffectRewardTroopRetreat', true, reward.amount)"
+      ></div>
+    </div>
+    }@else if (reward.type === 'dreadnought-insert') {
+    <div class="condition-container">
+      <div
+        [class]="'text ' + textColor"
+        [style.fontSize]="fontSize"
+        [style.marginBottom]="marginBottom"
+        [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, reward.amount)"
+      ></div>
+    </div>
+    } @else if (reward.type === 'dreadnought-insert-or-retreat') {
+    <div
+      [class]="'text ' + textColor"
+      [style.fontSize]="fontSize"
+      [style.marginBottom]="marginBottom"
+      [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsertOrRetreat', true, reward.amount)"
+    ></div>
+    }@else if (reward.type === 'dreadnought-retreat') {
+    <div class="condition-container">
+      <div
+        [class]="'text ' + textColor"
+        [style.fontSize]="fontSize"
+        [style.marginBottom]="marginBottom"
+        [innerHTML]="t.translate('commonEffectRewardDreadnoughtRetreat', true, reward.amount)"
+      ></div>
+    </div>
+    }@else {
     <div class="reward-container" [style.height]="size">
       <img class="reward" [src]="getEffectTypePath(reward.type)" [style.height]="size" [style.minWidth]="iconMinWidth" />
       <div class="reward-amount" *ngIf="reward.amount">

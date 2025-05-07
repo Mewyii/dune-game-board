@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { getSeparatedEffectArrays, isConditionalEffect, isTimingEffect } from 'src/app/helpers/rewards';
-import { Effect, EffectType, EffectRewardChoiceOrCondition, EffectTimingRewardChoiceOrCondition } from 'src/app/models';
+import { Effect, EffectTimingRewardChoiceOrCondition, EffectType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -17,6 +17,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
   @Input() arraySeparationGap = '4px';
   @Input() wrap = true;
+  @Input() centerEffectText = false;
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';

@@ -51,6 +51,12 @@ export const effectRewards = [
   'research',
   'specimen',
   'beetle',
+  'troop-insert',
+  'troop-insert-or-retreat',
+  'troop-retreat',
+  'dreadnought-insert',
+  'dreadnought-insert-or-retreat',
+  'dreadnought-retreat',
 ] as const;
 
 export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-reveal-turn'] as const;

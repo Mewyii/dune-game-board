@@ -28,6 +28,7 @@
       *ngIf="card.agentEffects && card.agentEffects.length > 0"
       [rewards]="card.agentEffects"
       [size]="agentEffectSize"
+      [centerEffectText]="true"
     ></dune-reward-array>
     <div class="card-agent-effect-custom" *ngIf="card.customAgentEffect && card.customAgentEffect.en">
       <div
@@ -52,6 +53,7 @@
       [rewards]="card.revealEffects"
       [size]="revealEffectSize"
       [textColor]="'white'"
+      [centerEffectText]="true"
     ></dune-reward-array>
     <div class="card-reveal-effect-custom" *ngIf="card.customRevealEffect && card.customRevealEffect.en">
       <div

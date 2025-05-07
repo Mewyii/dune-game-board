@@ -25,6 +25,10 @@
   }
 }
 
+.effects-container.center-text {
+  text-align: center;
+}
+
 .reward-container {
   position: relative;
   width: min-content;
@@ -59,7 +63,7 @@
 
 .text {
   color: #101010;
-  width: max-content;
+  // width: max-content;
 }
 
 .text.heading {
