@@ -29,11 +29,6 @@
         {{ field.fieldId }} <span *ngIf="showDetails"> {{ field.value }}</span>
       </div>
     </div>
-    <div class="ai-strategy-container">
-      <div class="field-container" [style.color]="'#ffaa49'" *ngFor="let decision of activeAIPlayer.decisions">
-        {{ decision }}
-      </div>
-    </div>
   </div>
 </div>
 }

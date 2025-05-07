@@ -1,14 +1,15 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
-import { EffectType } from 'src/app/models';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { playerCanEnterCombat } from 'src/app/helpers/turn-infos';
+import { EffectType } from 'src/app/models';
+import { Player } from 'src/app/models/player';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SettingsService } from 'src/app/services/settings.service';
-import { AudioManager } from 'src/app/services/audio-manager.service';
-import { Player } from 'src/app/models/player';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 export interface CombatScore {
@@ -60,7 +61,7 @@ export class DuneCombatComponent implements OnInit {
     });
 
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
-      this.activeGarrisonPlayerId = turnInfos.find((x) => x.canEnterCombat)?.playerId ?? 0;
+      this.activeGarrisonPlayerId = turnInfos.find((x) => playerCanEnterCombat(x))?.playerId ?? 0;
     });
   }
 

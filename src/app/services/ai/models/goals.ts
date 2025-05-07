@@ -100,7 +100,7 @@ export type GameState = Readonly<{
 
 export interface AIGoal {
   baseDesire: number;
-  desireModifier: (player: Player, gameState: GameState, goals: FieldsForGoals) => number | DesireModifierDecisions;
+  desireModifier: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
   maxDesire?: number;
   goalIsReachable: (player: Player, gameState: GameState, goals: FieldsForGoals) => boolean;
   reachedGoal: (player: Player, gameState: GameState, goals: FieldsForGoals) => boolean;
@@ -111,8 +111,6 @@ export interface AIGoal {
     [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
   };
 }
-
-export type DesireModifierDecisions = { name: string; modifier: number };
 
 export type FieldsForGoals = {
   [key in AIGoals]?: AIGoal;

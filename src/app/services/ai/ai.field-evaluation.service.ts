@@ -59,7 +59,7 @@ export class AIFieldEvaluationService {
       leaderGoalModifiers = playerLeader.aiAdjustments.goalEvaluationModifier(player, gameState);
     }
 
-    const { fieldEvaluations, decisions } = this.getEvaluatedFieldsByGoals(
+    const fieldEvaluations = this.getEvaluatedFieldsByGoals(
       player,
       aiPlayer,
       gameState,
@@ -88,7 +88,7 @@ export class AIFieldEvaluationService {
       : 0.3;
     const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
 
-    return { decisions, preferredFields: slightlyRandomizedFields };
+    return { preferredFields: slightlyRandomizedFields };
   }
 
   private getEvaluatedFieldsByGoals(
@@ -102,20 +102,14 @@ export class AIFieldEvaluationService {
     imperiumRowEvaluation: number
   ) {
     const fieldEvaluations: FieldEvaluation[] = [];
-    const decisions: string[] = [];
 
     if (!this.aiGoals) {
-      return { fieldEvaluations, decisions };
+      return fieldEvaluations;
     }
 
     for (let [goalId, goal] of Object.entries(this.aiGoals)) {
       if (!goal.reachedGoal(player, gameState, this.aiGoals)) {
         const aiGoalId = goalId as AIGoals;
-
-        const desireModifier = goal.desireModifier(player, gameState, this.aiGoals);
-        if (typeof desireModifier !== 'number') {
-          decisions.push(desireModifier.name);
-        }
 
         const goalDesire =
           getDesire(goal, player, gameState, this.aiGoals) *
@@ -158,7 +152,7 @@ export class AIFieldEvaluationService {
         }
       }
     }
-    return { fieldEvaluations, decisions };
+    return fieldEvaluations;
   }
 
   private getAccessibleFields(

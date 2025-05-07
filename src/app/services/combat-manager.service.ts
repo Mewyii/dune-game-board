@@ -202,15 +202,14 @@ export class CombatManager {
     }
   }
 
-  public addAllPossibleTroopsToCombat(playerId: number, troopsGainedThisTurn: number) {
+  public addAllPossibleTroopsToCombat(playerId: number, deployableTroops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
     }
 
     if (combatUnits.troopsInGarrison > 0) {
-      const troopsToAdd =
-        combatUnits.troopsInGarrison > troopsGainedThisTurn ? troopsGainedThisTurn : combatUnits.troopsInGarrison;
+      const troopsToAdd = combatUnits.troopsInGarrison > deployableTroops ? deployableTroops : combatUnits.troopsInGarrison;
 
       this.addPlayerTroopsToCombat(playerId, troopsToAdd);
 
@@ -220,14 +219,14 @@ export class CombatManager {
     }
   }
 
-  public addAllPossibleDreadnoughtsToCombat(playerId: number, dreadnoughtsGainedThisTurn: number) {
+  public addAllPossibleDreadnoughtsToCombat(playerId: number, deployableDreadnoughts: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
     }
     if (combatUnits.shipsInGarrison > 0) {
       const shipsToAdd =
-        combatUnits.shipsInGarrison > dreadnoughtsGainedThisTurn ? dreadnoughtsGainedThisTurn : combatUnits.shipsInGarrison;
+        combatUnits.shipsInGarrison > deployableDreadnoughts ? deployableDreadnoughts : combatUnits.shipsInGarrison;
 
       this.addPlayerShipsToCombat(playerId, shipsToAdd);
       return shipsToAdd;

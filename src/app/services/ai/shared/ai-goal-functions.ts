@@ -1,5 +1,5 @@
 import { clamp } from 'lodash';
-import { Resource, ResourceType, Effect, EffectRewardType } from 'src/app/models';
+import { Effect, EffectRewardType, Resource, ResourceType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
@@ -185,11 +185,7 @@ export function getParticipateInCombatDesireModifier(gameState: GameState) {
 
 export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {
   const goalDesire = goal.desireModifier(player, gameState, goals);
-  if (typeof goalDesire === 'number') {
-    return clamp(goal.baseDesire + goalDesire, 0, goal.maxDesire ?? 1);
-  } else {
-    return clamp(goal.baseDesire + goalDesire.modifier, 0, goal.maxDesire ?? 1);
-  }
+  return clamp(goal.baseDesire + goalDesire, 0, goal.maxDesire ?? 1);
 }
 
 export function getMaxDesireOfUnreachableGoal(

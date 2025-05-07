@@ -155,24 +155,17 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       const participateInCombatDesire = getParticipateInCombatDesireModifier(gameState);
 
       let modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
-      const name = winCombatDesire > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
 
       if (gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison < 2) {
         modifier -=
           0.05 * (2 - (gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison));
       }
 
-      // console.log('conflict: win ' + winCombatDesire);
-      // console.log('conflict: participate ' + participateInCombatDesire);
-
       if (gameState.playerTurnInfos?.canEnterCombat) {
-        return { name, modifier: 0 };
+        return 0;
       }
 
-      return {
-        name,
-        modifier,
-      };
+      return modifier;
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => playerLikelyWinsCombat(gameState),
@@ -265,16 +258,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
             )
           : 0;
 
-      // console.log('deckbuilding: ' + deckBuildingDesire);
-      // console.log('spice must flows: ' + getSpiceMustFlowsDesire);
-
       const modifier = deckBuildingDesire > getSpiceMustFlowsDesire ? deckBuildingDesire : getSpiceMustFlowsDesire;
-      const name = deckBuildingDesire > getSpiceMustFlowsDesire ? 'persuasion: build deck' : 'persuasion: spice must flows';
 
-      return {
-        name,
-        modifier,
-      };
+      return modifier;
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => !playerCanDrawCards(gameState, 1),

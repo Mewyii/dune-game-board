@@ -67,12 +67,12 @@ export class TurnInfoService {
 
   getDeployablePlayerUnits(playerId: number) {
     const turnInfo = this.getPlayerTurnInfo(playerId);
-    if (!turnInfo || !turnInfo.canEnterCombat) {
+    if (!turnInfo) {
       return undefined;
     } else {
-      const unitAmount = turnInfo.deployableUnits - turnInfo.deployedUnitsThisTurn;
-      const troopAmount = turnInfo.troopsGainedThisTurn - turnInfo.deployedTroopsThisTurn;
-      const dreadnoughtamount = turnInfo.dreadnoughtsGainedThisTurn - turnInfo.deployedDreadnoughtsThisTurn;
+      const unitAmount = turnInfo.deployableUnits - turnInfo.deployedUnits;
+      const troopAmount = turnInfo.deployableTroops - turnInfo.deployedTroops;
+      const dreadnoughtamount = turnInfo.deployableDreadnoughts - turnInfo.deployedDreadnoughts;
 
       return { unitAmount, troopAmount, dreadnoughtamount };
     }
@@ -85,11 +85,13 @@ export class TurnInfoService {
       canBuyTech: false,
       canEnterCombat: false,
       deployableUnits: 0,
-      troopsGainedThisTurn: 0,
-      dreadnoughtsGainedThisTurn: 0,
-      deployedUnitsThisTurn: 0,
-      deployedTroopsThisTurn: 0,
-      deployedDreadnoughtsThisTurn: 0,
+      troopsGained: 0,
+      dreadnoughtsGained: 0,
+      deployableTroops: 0,
+      deployableDreadnoughts: 0,
+      deployedUnits: 0,
+      deployedTroops: 0,
+      deployedDreadnoughts: 0,
       cardDrawOrDestroyAmount: 0,
       cardDiscardAmount: 0,
       canLiftAgent: false,

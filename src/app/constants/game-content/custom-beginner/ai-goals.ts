@@ -1,7 +1,11 @@
 import { clamp } from 'lodash';
+import { normalizeNumber } from 'src/app/helpers/common';
+import { isResourceArray } from 'src/app/helpers/resources';
+import { ActionField } from 'src/app/models/location';
+import { Player } from 'src/app/models/player';
+import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import {
   enemyIsCloseToPlayerFactionScore,
-  getAccumulatedSpice,
   getCostAdjustedDesire,
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesireModifier,
@@ -15,12 +19,7 @@ import {
   playerCanGetVictoryPointThisTurn,
   playerLikelyWinsCombat,
 } from 'src/app/services/ai/shared';
-import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
-import { ActionField } from 'src/app/models/location';
-import { FactionType, Resource, EffectRewardType } from '../../../models';
-import { isResourceArray } from 'src/app/helpers/resources';
-import { normalizeNumber } from 'src/app/helpers/common';
-import { Player } from 'src/app/models/player';
+import { EffectRewardType, FactionType, Resource } from '../../../models';
 
 export const aiGoalsCustomBeginner: FieldsForGoals = {
   'get-victory-points': {
@@ -157,15 +156,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       const participateInCombatDesire = !alwaysTryToWinCombat ? getParticipateInCombatDesireModifier(gameState) : 0;
 
       const modifier = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
-      const name = winCombatDesire * 3 > participateInCombatDesire ? 'conflict: win' : 'conflict: participate';
 
-      // console.log('conflict: win ' + winCombatDesire * 3);
-      // console.log('conflict: participate ' + participateInCombatDesire);
-
-      return {
-        name,
-        modifier,
-      };
+      return modifier;
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => playerLikelyWinsCombat(gameState),
@@ -254,16 +246,9 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
             )
           : 0;
 
-      // console.log('deckbuilding: ' + deckBuildingDesire);
-      // console.log('spice must flows: ' + getSpiceMustFlowsDesire);
-
       const modifier = deckBuildingDesire > getSpiceMustFlowsDesire ? deckBuildingDesire : getSpiceMustFlowsDesire;
-      const name = deckBuildingDesire > getSpiceMustFlowsDesire ? 'persuasion: build deck' : 'persuasion: spice must flows';
 
-      return {
-        name,
-        modifier,
-      };
+      return modifier;
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => !playerCanDrawCards(gameState, 1),

@@ -31,7 +31,6 @@ export interface AIPlayer {
   name: string;
   personality: AIPersonality;
   preferredFields: ViableField[];
-  decisions: string[];
   canAccessBlockedFields?: boolean;
 }
 
@@ -115,7 +114,7 @@ export class AIManager {
           name = this.getRandomAIName();
           personality = (aiPersonalities as any)[name];
         }
-        aiPlayers.push({ playerId: player.id, name, personality, preferredFields: [], decisions: [] });
+        aiPlayers.push({ playerId: player.id, name, personality, preferredFields: [] });
       }
     }
 
@@ -208,7 +207,7 @@ export class AIManager {
     ).map((x) => this.getImperiumCardBuyEvaluation(x, player, gameState));
     const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 16, 5);
 
-    const { decisions, preferredFields } = this.fieldEvaluationService.getPreferredFieldsForAIPlayer(
+    const { preferredFields } = this.fieldEvaluationService.getPreferredFieldsForAIPlayer(
       player,
       gameState,
       playerLeader,
@@ -219,7 +218,6 @@ export class AIManager {
       this.aiDifficulty
     );
 
-    aiPlayer.decisions = decisions;
     aiPlayer.preferredFields = preferredFields;
 
     this.aiPlayersSubject.next(aiPlayers);
@@ -294,24 +292,22 @@ export class AIManager {
     const highestEnemyCombatPower = Math.max(...enemyCombatScores.map((x) => x.score));
 
     if (playerCombatPower <= highestEnemyCombatPower) {
+      const playerCombatPotential = playerCombatPower + possibleAddedCombatPower + playerCombatIntrigueCount * 2;
       if (
-        playerHasAgentsLeft ||
-        playerCombatPower + possibleAddedCombatPower + playerCombatIntrigueCount * 2 > highestEnemyCombatPower
+        (playerHasAgentsLeft && playerCombatPotential * 2 > highestEnemyCombatPower) ||
+        playerCombatPotential > highestEnemyCombatPower
       ) {
         return 'all';
       } else {
         return 'minimum';
       }
     } else if (playerCombatPower > highestEnemyCombatPower) {
-      const maxCombatPowerDifference = 8 + currentRound - playerCombatIntrigueCount;
+      const safeCombatPowerDifference = 6 + currentRound - playerCombatIntrigueCount;
       const combatPowerDifference = playerCombatPower - highestEnemyCombatPower;
 
-      if (combatPowerDifference > maxCombatPowerDifference) {
+      if (combatPowerDifference > safeCombatPowerDifference) {
         return 'none';
-      }
-
-      const randomNumber = getRandomInt(maxCombatPowerDifference);
-      if (combatPowerDifference > randomNumber) {
+      } else if (combatPowerDifference > safeCombatPowerDifference / 2 && Math.random() > 0.1) {
         return 'minimum';
       } else {
         return 'all';
