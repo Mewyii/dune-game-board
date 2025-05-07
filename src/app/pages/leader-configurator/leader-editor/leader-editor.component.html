@@ -65,9 +65,24 @@
   </div>
 
   <!-- Passive Effects -->
+
   <div class="card-effect-container margin-top">
     <div class="title-container">
-      <span class="card-effect-title"> Passive Effects </span>
+      <span class="card-effect-title"> Passive </span>
+    </div>
+    <div class="form-group" formGroupName="passiveName">
+      <mat-form-field class="medium-text-field flex">
+        <mat-label>Name (English)</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="medium-text-field flex">
+        <mat-label>Name (German)</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+    </div>
+
+    <div class="text-container">
+      <span class="card-effect-title"> Effects </span>
     </div>
     <div formArrayName="passiveEffects">
       <div class="form-group wrap" *ngFor="let passiveEffect of passiveEffects.controls; let i = index">
@@ -124,7 +139,7 @@
       </mat-select> </mat-form-field
     ><br /><br />
     <div class="text-container">
-      Custom Passive Effect Text
+      Custom Effect Text
       <mat-icon
         [style]="'margin-left: 4px'"
         matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
@@ -147,7 +162,20 @@
   <!-- Signet Effects -->
   <div class="card-effect-container margin-top">
     <div class="title-container">
-      <span class="card-effect-title"> Signet Effects </span>
+      <span class="card-effect-title"> Signet Ring </span>
+    </div>
+    <div class="form-group" formGroupName="signetName">
+      <mat-form-field class="medium-text-field flex">
+        <mat-label>Name (English)</mat-label>
+        <input matInput formControlName="en" />
+      </mat-form-field>
+      <mat-form-field class="medium-text-field flex">
+        <mat-label>Name (German)</mat-label>
+        <input matInput formControlName="de" />
+      </mat-form-field>
+    </div>
+    <div class="text-container">
+      <span class="card-effect-title"> Effects </span>
     </div>
     <div formArrayName="signetEffects">
       <div class="form-group wrap" *ngFor="let signetEffect of signetEffects.controls; let i = index">
@@ -204,7 +232,7 @@
       </mat-select> </mat-form-field
     ><br /><br />
     <div class="text-container">
-      Custom Signet Effect Text
+      Custom Effect Text
       <mat-icon
         [style]="'margin-left: 4px'"
         matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
