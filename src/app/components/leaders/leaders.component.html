@@ -50,6 +50,7 @@
             (click)="onAiActionClicked(activePlayer.id)"
             matTooltip="AI"
             [disabled]="
+              !playerLeader?.isLockedIn ||
               (currentRoundPhase === 'agent-placement' && activePlayer.turnState === 'revealed') ||
               (currentRoundPhase === 'combat' && activePlayer.turnState === 'done') ||
               currentRoundPhase === 'combat-resolvement' ||

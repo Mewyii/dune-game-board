@@ -3,6 +3,36 @@ import { TechTileCard } from '../models/tech-tile';
 export const techTiles: TechTileCard[] = [
   {
     name: {
+      en: 'Spice transport modules',
+      de: 'Spice-Transportmodule',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/industry.png',
+    imagePosition: 'top',
+    buyEffects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:spice}.',
+      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Spy modules',
+      de: 'Spionagemodule',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:tech}.',
+      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Maula Pistol Works',
       de: 'Maula-Pistolen Werk',
     },
@@ -112,36 +142,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Spice transport modules',
-      de: 'Spice-Transportmodule',
-    },
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/industry.png',
-    imagePosition: 'top',
-    buyEffects: [],
-    customEffect: {
-      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:spice}.',
-      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
-      fontSize: 'medium',
-    },
-  },
-  {
-    name: {
-      en: 'Spy modules',
-      de: 'Spionagemodule',
-    },
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    customEffect: {
-      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:tech}.',
-      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
-      fontSize: 'medium',
-    },
-  },
-  {
-    name: {
       en: 'Spy Network',
       de: 'Spionage-Netzwerk',
     },
@@ -192,6 +192,81 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Trade Port',
+      de: 'Handelshafen',
+    },
+    faction: 'guild',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/port.png',
+    effectSize: 'small',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'solari',
+        amount: 3,
+      },
+    ],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Landing Ships',
+      de: 'Landungsschiffe',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
+    imagePosition: 'bottom',
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'combat',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Heavy Lasguns',
       de: 'Schwere Lasguns',
     },
@@ -222,41 +297,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Trade Port',
-      de: 'Handelshafen',
-    },
-    faction: 'guild',
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/port.png',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 2 {resource:shipping}{resource:helper-or}3 {resource:shipping}{resource:shipping}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
-    },
-    effectSize: 'small',
-    effects: [
-      {
-        type: 'timing-round-start',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'tech',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'solari',
-        amount: 3,
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Upgraded Ornithoper Engines',
       de: 'Verbesserte Ornithopertriebwerke',
     },
@@ -277,8 +317,10 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/assault.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
+    effects: [],
     customEffect: {
       en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
       de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
@@ -351,35 +393,15 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Shieldbreakers',
-      de: 'Schildbrecher',
-    },
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/shields.png',
-    imagePosition: 'center',
-    buyEffects: [],
-    customEffect: {
-      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your {resource:dreadnought} in conflict: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
-      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner {resource:dreadnought} im Konflikt: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
       en: 'Botanical Research Station',
       de: 'Botanische Forschungsstation',
     },
     faction: 'fremen',
-    costs: 5,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/research_station.png',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [],
-    customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 2 {resource:tech}{resource:helper-or}3 {resource:water}{resource:tech}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
-    },
-    effectSize: 'small',
     effects: [
       {
         type: 'timing-round-start',
@@ -400,6 +422,11 @@ export const techTiles: TechTileCard[] = [
         type: 'focus',
       },
     ],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:tech}{resource:helper-or}2 {resource:water}{resource:tech}{resource:helper-or} 3+ {resource:tech}{resource:tech}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:tech}{resource:helper-or}2 {resource:water}{resource:tech}{resource:helper-or} 3+ {resource:tech}{resource:tech}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -407,20 +434,15 @@ export const techTiles: TechTileCard[] = [
       de: 'Sardaukar Kommando-Posten',
     },
     faction: 'emperor',
-    costs: 5,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/emperor_camp.png',
+    effectSize: 'small',
     imagePosition: 'top',
     buyEffects: [
       {
         type: 'troop',
       },
     ],
-    customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 2 {resource:sword}{resource:sword}{resource:helper-or}3 {resource:sword}{resource:intrigue}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
-    },
-    effectSize: 'small',
     effects: [
       {
         type: 'timing-round-start',
@@ -438,6 +460,11 @@ export const techTiles: TechTileCard[] = [
         type: 'card-discard',
       },
     ],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{faction:emperor} -Connections<br> 1 {resource:sword}{resource:helper-or}2 {resource:sword}{resource:sword}{resource:helper-or} 3+ {resource:sword}{resource:sword}{resource:intrigue}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:emperor} -Verbindungen<br> 1 {resource:sword}{resource:helper-or}2 {resource:sword}{resource:sword}{resource:helper-or} 3+ {resource:sword}{resource:sword}{resource:intrigue}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -445,16 +472,11 @@ export const techTiles: TechTileCard[] = [
       de: 'Missionaria Protectiva',
     },
     faction: 'bene',
-    costs: 5,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
+    effectSize: 'small',
     imagePosition: 'bottom',
     buyEffects: [],
-    customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:bene} -Connections<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 2 {resource:intrigue}{resource:helper-or}3 {resource:faction-influence-up-choice}{resource:helper-or} 4+ {resource:victory-point}',
-      fontSize: 'small',
-    },
-    effectSize: 'small',
     effects: [
       {
         type: 'timing-round-start',
@@ -472,6 +494,28 @@ export const techTiles: TechTileCard[] = [
         type: 'faction-influence-up-choice',
       },
     ],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{faction:bene} -Connections<br> 1 {resource:intrigue-trash}{resource:intrigue}{resource:helper-or}2 {resource:intrigue}{resource:helper-or} 3+ {resource:faction-influence-up-choice}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:bene} -Verbindungen<br> 1 {resource:intrigue-trash}{resource:intrigue}{resource:helper-or}2 {resource:intrigue}{resource:helper-or} 3+ {resource:faction-influence-up-choice}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Shieldbreakers',
+      de: 'Schildbrecher',
+    },
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/shields.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your {resource:dreadnought} in conflict: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
+      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner {resource:dreadnought} im Konflikt: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -529,11 +573,9 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 5,
     imageUrl: '/assets/images/action-backgrounds/ornithopters.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [
-      {
-        type: 'troop',
-      },
       {
         type: 'troop',
       },
@@ -546,10 +588,10 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'combat',
+        type: 'troop-insert-or-retreat',
+        amount: 2,
       },
     ],
-    effectSize: 'large',
     customEffect: {
       en: '',
       de: '',
@@ -845,86 +887,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Flagship',
-      de: 'Flaggschiff',
-    },
-    costs: 9,
-    imageUrl: '/assets/images/action-backgrounds/lighter.png',
-    imagePosition: 'center',
-    buyEffects: [
-      {
-        type: 'troop',
-      },
-      {
-        type: 'troop',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'faction-influence-down-choice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'victory-point',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Landing Ships',
-      de: 'Landungsschiffe',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
-    imagePosition: 'bottom',
-    buyEffects: [
-      {
-        type: 'troop',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'tech',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'combat',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Planetary Surveillance',
       de: 'Planetare Überwachung',
     },
@@ -965,5 +927,45 @@ export const techTiles: TechTileCard[] = [
       de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
       fontSize: 'small',
     },
+  },
+  {
+    name: {
+      en: 'Flagship',
+      de: 'Flaggschiff',
+    },
+    costs: 9,
+    imageUrl: '/assets/images/action-backgrounds/lighter.png',
+    imagePosition: 'center',
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    effectSize: 'medium',
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
   },
 ];

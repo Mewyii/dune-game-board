@@ -249,6 +249,19 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/gurney_5.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'troop',
@@ -265,7 +278,8 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'focus',
       },
       {
-        type: 'combat',
+        type: 'troop-insert',
+        amount: 2,
       },
     ],
     revealEffects: [
@@ -1099,8 +1113,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'Retreat up to <b>4</b> units.',
-      de: 'Ziehe bis zu <b>4</b> eingesetzte Einheiten zurück.',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
     buyEffects: [
@@ -1113,6 +1127,13 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'faction-influence-up-choice',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'troop-retreat',
+        amount: 4,
       },
     ],
   },
@@ -1340,10 +1361,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/pilot.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
-      en: 'Deploy or retreat up to <b>1</b> troop.',
-      de: 'Setze bis zu <b>1</b> Truppe ein oder ziehe sie zurück.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -1353,7 +1374,12 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'troop-insert-or-retreat',
+        amount: 1,
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -2237,10 +2263,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner auf {faction:town}-Feldern verliert {resource:spice}{resource:helper-or}{resource:solari} und du erhältst {resource:tech}.',
       fontSize: 'small',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'Deploy up to <b>1</b> additional troop to the conflict.',
-      de: 'Setze bis zu <b>1</b> Trupp aus deiner Garnison im Konflikt ein.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -2248,6 +2274,13 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'troop-insert',
+        amount: 1,
       },
     ],
   },
@@ -2310,10 +2343,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner auf {faction:spice}-Feldern: {resource:loose-troop}<br>{faction:fremen} -Verbindung: {resource:water}',
       fontSize: 'small',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'Deploy up to <b>2</b> troops from your garrison to the conflict.',
-      de: 'Setze bis zu <b>2</b> Truppen aus deiner Garnison im Konflikt ein.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -2324,6 +2357,10 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'sword',
+      },
+      {
+        type: 'troop-insert',
+        amount: 2,
       },
     ],
   },
@@ -2454,13 +2491,18 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'medium',
-    revealEffectSize: 'large',
-    buyEffects: [],
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'Deploy up to <b>3</b> troops from your garrison to the conflict.',
-      de: 'Setze bis zu <b>3</b> Truppen aus deiner Garnison im Konflikt ein.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
+    buyEffects: [],
     agentEffects: [
       {
         type: 'card-draw',
@@ -2474,6 +2516,12 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'agent-lift',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'troop-insert',
+        amount: 3,
       },
     ],
   },
@@ -2617,10 +2665,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/fremen_warriors_5.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
     customAgentEffect: {
-      en: '{resource:focus}<br>{faction:fremen} -Connection: Each opponent: {resource:loose-troop}',
-      de: '{resource:focus}<br>{faction:fremen} -Verbindung: Jeder Gegner: {resource:loose-troop}',
+      en: '{faction:fremen} -Connection: Each opponent: {resource:loose-troop}',
+      de: '{faction:fremen} -Verbindung: Jeder Gegner: {resource:loose-troop}',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -2630,7 +2678,11 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'focus',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -3546,8 +3598,8 @@ export const imperiumCards: ImperiumCard[] = [
     canInfiltrate: false,
     agentEffectSize: 'small',
     customAgentEffect: {
-      en: 'Deploy or retreat up to <b>1</b> dreadnought.',
-      de: 'Setze bis zu <b>1</b> Schlachtschiff ein oder ziehe es zurück.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -3560,6 +3612,10 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffects: [
       {
         type: 'card-draw',
+      },
+      {
+        type: 'dreadnought-insert-or-retreat',
+        amount: 1,
       },
     ],
     revealEffects: [
@@ -3906,10 +3962,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'Deploy or retreat up to <b>2</b> dreadnought.',
-      de: 'Setze bis zu <b>2</b> Schlachtschiffe ein oder ziehe es zurück.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [
@@ -3935,6 +3991,13 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'dreadnought-insert-or-retreat',
         amount: 2,
       },
     ],

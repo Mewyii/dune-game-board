@@ -31,14 +31,12 @@
       </div>
     </div>
     } } @else if (reward.type === 'troop-insert') {
-    <div class="condition-container">
-      <div
-        [class]="'text ' + textColor"
-        [style.fontSize]="fontSize"
-        [style.marginBottom]="marginBottom"
-        [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, reward.amount)"
-      ></div>
-    </div>
+    <div
+      [class]="'text ' + textColor"
+      [style.fontSize]="fontSize"
+      [style.marginBottom]="marginBottom"
+      [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, reward.amount)"
+    ></div>
     } @else if (reward.type === 'troop-insert-or-retreat') {
     <div
       [class]="'text ' + textColor"
@@ -47,23 +45,19 @@
       [innerHTML]="t.translate('commonEffectRewardTroopInsertOrRetreat', true, reward.amount)"
     ></div>
     }@else if (reward.type === 'troop-retreat') {
-    <div class="condition-container">
-      <div
-        [class]="'text ' + textColor"
-        [style.fontSize]="fontSize"
-        [style.marginBottom]="marginBottom"
-        [innerHTML]="t.translate('commonEffectRewardTroopRetreat', true, reward.amount)"
-      ></div>
-    </div>
+    <div
+      [class]="'text ' + textColor"
+      [style.fontSize]="fontSize"
+      [style.marginBottom]="marginBottom"
+      [innerHTML]="t.translate('commonEffectRewardTroopRetreat', true, reward.amount)"
+    ></div>
     }@else if (reward.type === 'dreadnought-insert') {
-    <div class="condition-container">
-      <div
-        [class]="'text ' + textColor"
-        [style.fontSize]="fontSize"
-        [style.marginBottom]="marginBottom"
-        [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, reward.amount)"
-      ></div>
-    </div>
+    <div
+      [class]="'text ' + textColor"
+      [style.fontSize]="fontSize"
+      [style.marginBottom]="marginBottom"
+      [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, reward.amount)"
+    ></div>
     } @else if (reward.type === 'dreadnought-insert-or-retreat') {
     <div
       [class]="'text ' + textColor"
@@ -72,14 +66,12 @@
       [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsertOrRetreat', true, reward.amount)"
     ></div>
     }@else if (reward.type === 'dreadnought-retreat') {
-    <div class="condition-container">
-      <div
-        [class]="'text ' + textColor"
-        [style.fontSize]="fontSize"
-        [style.marginBottom]="marginBottom"
-        [innerHTML]="t.translate('commonEffectRewardDreadnoughtRetreat', true, reward.amount)"
-      ></div>
-    </div>
+    <div
+      [class]="'text ' + textColor"
+      [style.fontSize]="fontSize"
+      [style.marginBottom]="marginBottom"
+      [innerHTML]="t.translate('commonEffectRewardDreadnoughtRetreat', true, reward.amount)"
+    ></div>
     }@else {
     <div class="reward-container" [style.height]="size">
       <img class="reward" [src]="getEffectTypePath(reward.type)" [style.height]="size" [style.minWidth]="iconMinWidth" />

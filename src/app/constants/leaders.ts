@@ -274,7 +274,6 @@ export const leaders: Leader[] = [
     },
     type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
-
     startingResources: [
       {
         type: 'solari',
@@ -942,11 +941,13 @@ export const leaders: Leader[] = [
       de: 'Kriegserfahren',
     },
     signetDescription: {
-      en: 'You may deploy or retreat one of your troops.',
-      de: 'Du kannst eine deiner Truppen einsetzen oder zurückziehen.',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/armand.png',
     type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
     startingResources: [
       {
         type: 'solari',
@@ -957,8 +958,6 @@ export const leaders: Leader[] = [
         amount: 3,
       },
     ],
-    passiveEffectSize: 'medium',
-    signetEffectSize: 'medium',
     passiveEffects: [
       {
         type: 'timing-game-start',
@@ -967,7 +966,12 @@ export const leaders: Leader[] = [
         type: 'faction-influence-up-choice',
       },
     ],
-    signetEffects: [],
+    signetEffects: [
+      {
+        type: 'troop-insert-or-retreat',
+        amount: 1,
+      },
+    ],
   },
   {
     name: {
