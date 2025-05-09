@@ -12,6 +12,7 @@ export const enLocale = {
   commonEffectTimingRevealTurn: 'Reveal turn',
   commonEffectConditionInfluence: 'Influence',
   commonEffectConditionConnection: 'Connection',
+  commonEffectRewardUnitInsert: 'You may deploy up to {0} of your units.',
   commonEffectRewardTroopInsert: 'You may deploy up to {0} of your troops.',
   commonEffectRewardTroopInsertOrRetreat: 'You may deploy or retreat up to {0} of your troops.',
   commonEffectRewardTroopRetreat: 'You may retreat {0} of your troops.',

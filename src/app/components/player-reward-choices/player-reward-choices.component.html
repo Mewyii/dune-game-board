@@ -108,5 +108,40 @@
       </button>
     </div>
   </div>
+  } @if (deployableUnits) {
+  <div
+    [class]="'reward-choice ' + (activeEffectId === 'deployableUnits' ? 'active' : '')"
+    (click)="setEffectActive('deployableUnits')"
+  >
+    <div [innerHTML]="t.translate('commonEffectRewardUnitInsert', true, deployableUnits)"></div>
+  </div>
+  } @if (deployableTroops) {
+  <div
+    [class]="'reward-choice ' + (activeEffectId === 'deployableTroops' ? 'active' : '')"
+    (click)="setEffectActive('deployableTroops')"
+  >
+    <div [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, deployableTroops)"></div>
+    <div class="control-bar" *ngIf="activeEffectId === 'deployableTroops'">
+      @for (deployAmount of deployableTroops | numberToArray; track $index) {
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployTroopsClicked(deployAmount)">
+        {{ deployAmount }}
+      </button>
+      }
+    </div>
+  </div>
+  } @if (deployableDreadnoughts) {
+  <div
+    [class]="'reward-choice ' + (activeEffectId === 'deployableDreadnoughts' ? 'active' : '')"
+    (click)="setEffectActive('deployableDreadnoughts')"
+  >
+    <div [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, deployableDreadnoughts)"></div>
+    <div class="control-bar" *ngIf="activeEffectId === 'deployableDreadnoughts'">
+      @for (deployAmount of deployableDreadnoughts | numberToArray; track $index) {
+      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployDreadnoughtsClicked(deployAmount)">
+        {{ deployAmount }}
+      </button>
+      }
+    </div>
+  </div>
   }
 </div>

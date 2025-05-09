@@ -1696,26 +1696,6 @@ export class GameManager {
       this.addFactionInfluenceDownChoiceForAI(player.id, turnInfo.factionInfluenceDownChoiceAmount);
       this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 0 });
     }
-    if (turnInfo.signetRingAmount > 0) {
-      for (let i = 0; i < turnInfo.signetRingAmount; i++) {
-        const playerLeader = this.leadersService.getLeader(player.id);
-        if (playerLeader) {
-          if (playerLeader.structuredSignetEffects) {
-            this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player, gameState);
-          } else if (playerLeader.signetDescription.en) {
-            this.playerRewardChoicesService.addPlayerCustomChoice(
-              player.id,
-              this.t.translateLS(playerLeader.signetDescription)
-            );
-          }
-        } else {
-          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-            type: 'signet-ring',
-          });
-        }
-      }
-      this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
-    }
     if (turnInfo.intrigueTrashAmount > 0) {
       this.aiTrashIntrigue(player.id);
       this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
@@ -1773,34 +1753,73 @@ export class GameManager {
       if (playerCombatUnits) {
         const deployableTroops =
           turnInfo.deployableTroops - turnInfo.deployedTroops + (turnInfo.canEnterCombat ? turnInfo.troopsGained : 0);
+        let addableTroops =
+          playerCombatUnits.troopsInGarrison >= deployableTroops ? deployableTroops : playerCombatUnits.troopsInGarrison;
+
         const deployableDreadnoughts =
           turnInfo.deployableDreadnoughts -
           turnInfo.deployedDreadnoughts +
           (turnInfo.canEnterCombat ? turnInfo.dreadnoughtsGained : 0);
-        const deployableUnits = turnInfo.deployableUnits - turnInfo.deployedUnits;
+        let addableDreadnoughts =
+          playerCombatUnits.shipsInGarrison >= deployableDreadnoughts
+            ? deployableDreadnoughts
+            : playerCombatUnits.shipsInGarrison;
+
+        let deployableUnits = turnInfo.deployableUnits - turnInfo.deployedUnits;
+        if (deployableUnits > 0) {
+          const potentialDreadnoughtsToAdd = playerCombatUnits.shipsInGarrison - addableDreadnoughts;
+          if (potentialDreadnoughtsToAdd > 0) {
+            const additionalAddableDreadnoughts =
+              deployableUnits >= potentialDreadnoughtsToAdd ? potentialDreadnoughtsToAdd : deployableUnits;
+            addableDreadnoughts += additionalAddableDreadnoughts;
+            deployableUnits -= additionalAddableDreadnoughts;
+          }
+
+          const potentialTroopsToAdd = playerCombatUnits.troopsInGarrison - addableTroops;
+          if (potentialTroopsToAdd > 0) {
+            const additionalAddableTroops = deployableUnits >= potentialTroopsToAdd ? potentialTroopsToAdd : deployableUnits;
+            addableTroops += additionalAddableTroops;
+            deployableUnits -= additionalAddableTroops;
+          }
+        }
 
         const addUnitsDecision = this.aIManager.getAddAdditionalUnitsToCombatDecision(
           playerCombatUnits,
           enemyCombatScores,
-          deployableTroops + deployableDreadnoughts + deployableUnits,
+          addableTroops + addableDreadnoughts,
           playerHasAgentsLeft,
           playerIntrigueCount,
           this.currentRound
         );
 
         if (addUnitsDecision === 'all' || this.isFinale) {
-          const troopsAdded = this.combatManager.addAllPossibleTroopsToCombat(player.id, deployableTroops);
-          const dreadnoughtsAdded = this.combatManager.addAllPossibleDreadnoughtsToCombat(player.id, deployableDreadnoughts);
-          const unitsAdded = this.combatManager.addAllPossibleUnitsToCombat(player.id, deployableUnits);
-          this.turnInfoService.updatePlayerTurnInfo(player.id, {
-            deployedUnits: unitsAdded,
-            deployedTroops: troopsAdded,
-            deployedDreadnoughts: dreadnoughtsAdded,
-          });
+          this.addUnitsToCombatIfPossible(player.id, 'troop', addableTroops);
+          this.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
         } else if (addUnitsDecision === 'minimum') {
-          this.addMinimumUnitsToCombat(player.id, playerCombatUnits, enemyCombatScores, playerHasAgentsLeft);
+          this.aiAddMinimumUnitsToCombat(player.id, playerCombatUnits, enemyCombatScores, playerHasAgentsLeft);
         }
       }
+    }
+    if (turnInfo.signetRingAmount > 0) {
+      for (let i = 0; i < turnInfo.signetRingAmount; i++) {
+        const playerLeader = this.leadersService.getLeader(player.id);
+        if (playerLeader) {
+          if (playerLeader.structuredSignetEffects) {
+            this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player, gameState);
+          } else if (playerLeader.signetDescription.en) {
+            this.playerRewardChoicesService.addPlayerCustomChoice(
+              player.id,
+              this.t.translateLS(playerLeader.signetDescription)
+            );
+          }
+        } else {
+          this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+            type: 'signet-ring',
+          });
+        }
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
+      this.resolveRewardChoices(player);
     }
     if (turnInfo.canBuyTech) {
       this.aiBuyTechIfPossible(player.id);
@@ -2681,13 +2700,13 @@ export class GameManager {
     } else if (reward.type === 'troop-insert-or-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableTroops: rewardAmount });
     } else if (reward.type === 'troop-retreat') {
-      // this.turnInfoService.updatePlayerTurnInfo(playerId, { factionRecruitment: ['emperor'] });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableTroops: rewardAmount });
     } else if (reward.type === 'dreadnought-insert') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: rewardAmount });
     } else if (reward.type === 'dreadnought-insert-or-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: rewardAmount });
     } else if (reward.type === 'dreadnought-retreat') {
-      // this.turnInfoService.updatePlayerTurnInfo(playerId, { factionRecruitment: ['emperor'] });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableDreadnoughts: rewardAmount });
     }
     this.loggingService.logPlayerResourceGained(playerId, rewardType, rewardAmount);
   }
@@ -2789,7 +2808,98 @@ export class GameManager {
     }
   }
 
-  public addMinimumUnitsToCombat(
+  public addUnitsToCombatIfPossible(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
+    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(playerId);
+    if (!playerTurnInfos) {
+      return;
+    }
+
+    let deployedAmount = 0;
+
+    if (unitType === 'troop') {
+      const deployableTroops =
+        playerTurnInfos.deployableTroops -
+        playerTurnInfos.deployedTroops +
+        (playerTurnInfos.canEnterCombat ? playerTurnInfos.troopsGained : 0);
+      const troopsToDeploy = deployableTroops >= amount ? amount : deployableTroops;
+
+      if (troopsToDeploy > 0) {
+        this.combatManager.addPlayerTroopsToCombat(playerId, troopsToDeploy);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedTroops: troopsToDeploy });
+        deployedAmount += troopsToDeploy;
+      }
+    } else if (unitType === 'dreadnought') {
+      const deployableDreadnoughts =
+        playerTurnInfos.deployableDreadnoughts -
+        playerTurnInfos.deployedDreadnoughts +
+        (playerTurnInfos.canEnterCombat ? playerTurnInfos.dreadnoughtsGained : 0);
+      const dreadnoughtsToDeploy = deployableDreadnoughts >= amount ? amount : deployableDreadnoughts;
+
+      if (dreadnoughtsToDeploy > 0) {
+        this.combatManager.addPlayerShipsToCombat(playerId, dreadnoughtsToDeploy);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: dreadnoughtsToDeploy });
+        deployedAmount += dreadnoughtsToDeploy;
+      }
+    }
+    if (deployedAmount < amount) {
+      const deployableUnits = playerTurnInfos.deployableUnits - playerTurnInfos.deployedUnits;
+      const unitsToDeploy = deployableUnits >= amount ? amount : deployableUnits;
+
+      if (unitsToDeploy > 0) {
+        if (unitType === 'troop') {
+          this.combatManager.addPlayerTroopsToCombat(playerId, unitsToDeploy);
+        } else {
+          this.combatManager.addPlayerShipsToCombat(playerId, unitsToDeploy);
+        }
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedUnits: unitsToDeploy });
+      }
+    }
+  }
+
+  public retreatUnitsIfPossible(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
+    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(playerId);
+    if (!playerTurnInfos) {
+      return;
+    }
+
+    let retreatedAmount = 0;
+
+    if (unitType === 'troop') {
+      const retreatableTroops = playerTurnInfos.deployedTroops;
+      const troopsToRetreat = playerTurnInfos.deployedTroops >= amount ? amount : playerTurnInfos.deployedTroops;
+
+      if (troopsToRetreat > 0) {
+        this.combatManager.removePlayerTroopsFromCombat(playerId, troopsToRetreat);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedTroops: -troopsToRetreat });
+        retreatedAmount += troopsToRetreat;
+      }
+    } else if (unitType === 'dreadnought') {
+      const retretableDreadnoughts = playerTurnInfos.deployedDreadnoughts;
+      const dreadnoughtsToRetreat =
+        playerTurnInfos.deployedDreadnoughts >= amount ? amount : playerTurnInfos.deployedDreadnoughts;
+
+      if (dreadnoughtsToRetreat > 0) {
+        this.combatManager.removePlayerShipsFromCombat(playerId, dreadnoughtsToRetreat);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: -dreadnoughtsToRetreat });
+        retreatedAmount += dreadnoughtsToRetreat;
+      }
+    }
+    if (retreatedAmount < amount) {
+      const retreatableUnits = playerTurnInfos.deployedUnits;
+      const unitsToDeploy = playerTurnInfos.deployedUnits >= amount ? amount : playerTurnInfos.deployedUnits;
+
+      if (unitsToDeploy > 0) {
+        if (unitType === 'troop') {
+          this.combatManager.removePlayerTroopsFromCombat(playerId, unitsToDeploy);
+        } else {
+          this.combatManager.removePlayerShipsFromCombat(playerId, unitsToDeploy);
+        }
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedUnits: -unitsToDeploy });
+      }
+    }
+  }
+
+  public aiAddMinimumUnitsToCombat(
     playerId: number,
     playerCombatUnits: PlayerCombatUnits,
     enemyCombatScores: PlayerCombatScore[],
@@ -2802,13 +2912,13 @@ export class GameManager {
         const maxTroopAddChance = playerCombatUnits.troopsInGarrison * 0.2;
         const troopsToAdd = playerCombatUnits.troopsInGarrison > 1 && Math.random() < maxTroopAddChance ? 2 : 1;
 
-        this.combatManager.addPlayerTroopsToCombat(playerId, troopsToAdd);
+        this.addUnitsToCombatIfPossible(playerId, 'troop', troopsToAdd);
         troopsAdded = troopsToAdd;
       }
 
       if (troopsAdded === 0 && playerCombatUnits.shipsInGarrison > 0) {
         if (playerCombatUnits.shipsInGarrison > 0 || Math.random() > 0.75) {
-          this.combatManager.addPlayerShipsToCombat(playerId, 1);
+          this.addUnitsToCombatIfPossible(playerId, 'dreadnought', 1);
         }
       }
     } else {
@@ -2825,7 +2935,7 @@ export class GameManager {
           troopsToAdd--;
         }
       }
-      this.combatManager.addPlayerTroopsToCombat(playerId, troopsToAdd);
+      this.addUnitsToCombatIfPossible(playerId, 'troop', troopsToAdd);
     }
   }
 

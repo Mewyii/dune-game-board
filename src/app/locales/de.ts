@@ -14,6 +14,7 @@ export const deLocale: Locale = {
   commonEffectTimingGameStart: 'Spielbeginn',
   commonEffectTimingRoundStart: 'Rundenbeginn',
   commonEffectTimingRevealTurn: 'Aufdeckzug',
+  commonEffectRewardUnitInsert: 'Setze bis zu {0} deiner Einheiten ein.',
   commonEffectRewardTroopInsert: 'Setze bis zu {0} deiner Truppen ein.',
   commonEffectRewardTroopInsertOrRetreat: 'Setze bis zu {0} deiner Truppen ein oder ziehe sie zurück.',
   commonEffectRewardTroopRetreat: 'Ziehe bis zu {0} deiner Truppen zurück.',

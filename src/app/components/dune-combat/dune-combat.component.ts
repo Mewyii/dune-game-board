@@ -67,23 +67,23 @@ export class DuneCombatComponent implements OnInit {
 
   public onAddTroopToCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.combatManager.addPlayerTroopsToCombat(playerId, 1);
+    this.gameManager.addUnitsToCombatIfPossible(playerId, 'troop', 1);
   }
 
   public onRemoveTroopFromCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.combatManager.removePlayerTroopsFromCombat(playerId, 1);
+    this.gameManager.retreatUnitsIfPossible(playerId, 'troop', 1);
     return false;
   }
 
   public onAddShipToCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.combatManager.addPlayerShipsToCombat(playerId, 1);
+    this.gameManager.addUnitsToCombatIfPossible(playerId, 'dreadnought', 1);
   }
 
   public onRemoveShipFromCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.combatManager.removePlayerShipsFromCombat(playerId, 1);
+    this.gameManager.retreatUnitsIfPossible(playerId, 'dreadnought', 1);
     return false;
   }
 

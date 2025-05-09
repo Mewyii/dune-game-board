@@ -22,6 +22,8 @@ export interface TurnInfo {
   deployedUnits: number;
   deployedTroops: number;
   deployedDreadnoughts: number;
+  retreatableTroops: number;
+  retreatableDreadnoughts: number;
   cardDrawOrDestroyAmount: number;
   cardDiscardAmount: number;
   canLiftAgent: boolean;

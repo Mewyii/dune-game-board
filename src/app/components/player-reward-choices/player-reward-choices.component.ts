@@ -5,6 +5,7 @@ import { StructuredChoiceEffectWithGameElement } from 'src/app/models/turn-info'
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
+import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
@@ -18,13 +19,17 @@ export class PlayerRewardChoicesComponent implements OnInit {
   public playerActionLog: PlayerActionLog[] = [];
   public playerEffectConversions: StructuredChoiceEffectWithGameElement[] = [];
   public playerEffectOptions: StructuredChoiceEffectWithGameElement[] = [];
+  public deployableUnits = 0;
+  public deployableTroops = 0;
+  public deployableDreadnoughts = 0;
 
   public activeEffectId = '';
 
   constructor(
     private gameManager: GameManager,
     private playerRewardChoicesService: PlayerRewardChoicesService,
-    private turnInfoService: TurnInfoService
+    private turnInfoService: TurnInfoService,
+    public t: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -43,8 +48,25 @@ export class PlayerRewardChoicesComponent implements OnInit {
 
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
-      this.playerEffectOptions = playerTurnInfos?.effectOptions ?? [];
-      this.playerEffectConversions = playerTurnInfos?.effectConversions ?? [];
+      if (playerTurnInfos) {
+        this.playerEffectOptions = playerTurnInfos.effectOptions;
+        this.playerEffectConversions = playerTurnInfos.effectConversions;
+        this.deployableUnits = playerTurnInfos.deployableUnits - playerTurnInfos.deployedUnits;
+        this.deployableTroops =
+          playerTurnInfos.deployableTroops -
+          playerTurnInfos.deployedTroops +
+          (playerTurnInfos.canEnterCombat ? playerTurnInfos.troopsGained : 0);
+        this.deployableDreadnoughts =
+          playerTurnInfos.deployableDreadnoughts -
+          playerTurnInfos.deployedDreadnoughts +
+          (playerTurnInfos.canEnterCombat ? playerTurnInfos.dreadnoughtsGained : 0);
+      } else {
+        this.playerEffectOptions = [];
+        this.playerEffectConversions = [];
+        this.deployableUnits = 0;
+        this.deployableTroops = 0;
+        this.deployableDreadnoughts = 0;
+      }
     });
   }
 
@@ -99,6 +121,14 @@ export class PlayerRewardChoicesComponent implements OnInit {
     this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
       effectConversions: this.playerEffectConversions.filter((x, idx) => idx !== index),
     });
+  }
+
+  onDeployTroopsClicked(amount: number) {
+    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'troop', 1);
+  }
+
+  onDeployDreadnoughtsClicked(amount: number) {
+    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', 1);
   }
 
   public getEffectTypePath(effectType: EffectType) {

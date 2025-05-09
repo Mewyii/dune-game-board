@@ -92,6 +92,8 @@ export class TurnInfoService {
       deployedUnits: 0,
       deployedTroops: 0,
       deployedDreadnoughts: 0,
+      retreatableTroops: 0,
+      retreatableDreadnoughts: 0,
       cardDrawOrDestroyAmount: 0,
       cardDiscardAmount: 0,
       canLiftAgent: false,
