@@ -52,14 +52,8 @@ export class PlayerRewardChoicesComponent implements OnInit {
         this.playerEffectOptions = playerTurnInfos.effectOptions;
         this.playerEffectConversions = playerTurnInfos.effectConversions;
         this.deployableUnits = playerTurnInfos.deployableUnits - playerTurnInfos.deployedUnits;
-        this.deployableTroops =
-          playerTurnInfos.deployableTroops -
-          playerTurnInfos.deployedTroops +
-          (playerTurnInfos.canEnterCombat ? playerTurnInfos.troopsGained : 0);
-        this.deployableDreadnoughts =
-          playerTurnInfos.deployableDreadnoughts -
-          playerTurnInfos.deployedDreadnoughts +
-          (playerTurnInfos.canEnterCombat ? playerTurnInfos.dreadnoughtsGained : 0);
+        this.deployableTroops = playerTurnInfos.deployableTroops - playerTurnInfos.deployedTroops;
+        this.deployableDreadnoughts = playerTurnInfos.deployableDreadnoughts - playerTurnInfos.deployedDreadnoughts;
       } else {
         this.playerEffectOptions = [];
         this.playerEffectConversions = [];

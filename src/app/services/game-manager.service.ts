@@ -1751,8 +1751,7 @@ export class GameManager {
       const playerHasAgentsLeft = (this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0) > 1;
 
       if (playerCombatUnits) {
-        const deployableTroops =
-          turnInfo.deployableTroops - turnInfo.deployedTroops + (turnInfo.canEnterCombat ? turnInfo.troopsGained : 0);
+        const deployableTroops = turnInfo.deployableTroops - turnInfo.deployedTroops;
         let addableTroops =
           playerCombatUnits.troopsInGarrison >= deployableTroops ? deployableTroops : playerCombatUnits.troopsInGarrison;
 
@@ -2817,10 +2816,7 @@ export class GameManager {
     let deployedAmount = 0;
 
     if (unitType === 'troop') {
-      const deployableTroops =
-        playerTurnInfos.deployableTroops -
-        playerTurnInfos.deployedTroops +
-        (playerTurnInfos.canEnterCombat ? playerTurnInfos.troopsGained : 0);
+      const deployableTroops = playerTurnInfos.deployableTroops - playerTurnInfos.deployedTroops;
       const troopsToDeploy = deployableTroops >= amount ? amount : deployableTroops;
 
       if (troopsToDeploy > 0) {
@@ -2829,10 +2825,7 @@ export class GameManager {
         deployedAmount += troopsToDeploy;
       }
     } else if (unitType === 'dreadnought') {
-      const deployableDreadnoughts =
-        playerTurnInfos.deployableDreadnoughts -
-        playerTurnInfos.deployedDreadnoughts +
-        (playerTurnInfos.canEnterCombat ? playerTurnInfos.dreadnoughtsGained : 0);
+      const deployableDreadnoughts = playerTurnInfos.deployableDreadnoughts - playerTurnInfos.deployedDreadnoughts;
       const dreadnoughtsToDeploy = deployableDreadnoughts >= amount ? amount : deployableDreadnoughts;
 
       if (dreadnoughtsToDeploy > 0) {

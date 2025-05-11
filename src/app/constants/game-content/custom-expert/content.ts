@@ -26,7 +26,7 @@ export const gameContentCustomExpert: GameContent = {
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 6,
   locationTakeoverTroopCosts: 1,
-  combatMaxDeployableUnits: 2,
+  combatMaxDeployableUnits: 4,
   factionInfluenceMaxScore: 6,
   factionInfluenceAllianceTreshold: 4,
   imperiumRowCards: 6,
