@@ -98,11 +98,17 @@ export const duneEvents: DuneEvent[] = [
       de: 'Sonnenfinsternis',
     },
     description: {
-      en: 'Each player can put up to 2 troops into the conflict.',
-      de: 'Jeder Spieler darf bis zu 2 Truppen in den Konflikt entsenden.',
+      en: 'Each player can deploy up to 2 troops.',
+      de: 'Jeder Spieler kann bis zu 2 Truppen einsetzen.',
     },
     imagePath: '/assets/images/action-backgrounds/sun.png',
     cardAmount: 1,
+    immediatePlayerEffects: {
+      rewards: [{ type: 'troop-insert', amount: 2 }],
+      conditionalEffects: [],
+      choiceEffects: [],
+      timingEffects: [],
+    },
   },
   {
     title: {

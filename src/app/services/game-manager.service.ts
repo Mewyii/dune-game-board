@@ -576,6 +576,8 @@ export class GameManager {
       }
     }
 
+    this.resolveTechTileEffects(player);
+
     this.resolveRewardChoices(player);
   }
 
@@ -1048,7 +1050,7 @@ export class GameManager {
       const playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
       const hasPlacedAgentsThisTurn = playerTurnInfo && playerTurnInfo.fieldsVisitedThisTurn.length > 0;
       if (!hasPlacedAgentsThisTurn) {
-        this.aiPlayPossibleAndUsefulTechTiles(player);
+        this.resolveTechTileEffects(player);
 
         const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot');
         const playableAndUsefulIntrigues = this.aiGetPlayableAndUsefulIntrigues(player, playerIntrigues, gameState);
@@ -1236,7 +1238,7 @@ export class GameManager {
     return playableAndUsefulIntrigues;
   }
 
-  private aiPlayPossibleAndUsefulTechTiles(player: Player) {
+  private resolveTechTileEffects(player: Player) {
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
     for (const playerTechTile of playerTechTiles) {
       if (!playerTechTile.isFlipped) {
@@ -1251,7 +1253,7 @@ export class GameManager {
       }
     }
 
-    this.aiResolveRewardChoices(player);
+    this.resolveRewardChoices(player);
   }
 
   public aiDiscardHandCard(playerId: number) {
@@ -2701,9 +2703,9 @@ export class GameManager {
     } else if (reward.type === 'troop-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableTroops: rewardAmount });
     } else if (reward.type === 'dreadnought-insert') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: rewardAmount });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableDreadnoughts: rewardAmount });
     } else if (reward.type === 'dreadnought-insert-or-retreat') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: rewardAmount });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableDreadnoughts: rewardAmount });
     } else if (reward.type === 'dreadnought-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableDreadnoughts: rewardAmount });
     }

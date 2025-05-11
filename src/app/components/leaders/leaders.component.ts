@@ -179,7 +179,10 @@ export class LeadersComponent implements OnInit {
     this.audioManager.playSound('click');
     if (this.activeLeader) {
       this.gameManager.lockInLeader(this.activePlayerId, this.activeLeader);
-      this.gameManager.endPlayerTurn(this.activePlayerId);
+
+      if (this.activePlayer?.isAI) {
+        this.gameManager.endPlayerTurn(this.activePlayerId);
+      }
     }
   }
 
