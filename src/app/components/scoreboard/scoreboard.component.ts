@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { PlayersService } from 'src/app/services/players.service';
-import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
-import { SettingsService } from 'src/app/services/settings.service';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { GameManager } from 'src/app/services/game-manager.service';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-scoreboard',
@@ -23,7 +24,8 @@ export class ScoreboardComponent implements OnInit {
   constructor(
     private playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private gameManager: GameManager
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +43,22 @@ export class ScoreboardComponent implements OnInit {
         this.finaleTrigger = x.finaleTrigger;
       }
     });
+  }
+
+  onIncreaseFactionScoreClicked(playerId: number) {
+    this.gameManager.addRewardToPlayer(playerId, {
+      type: 'victory-point',
+    });
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+  }
+
+  onDecreaseFactionScoreClicked(playerId: number) {
+    this.gameManager.payCostForPlayer(playerId, {
+      type: 'victory-point',
+    });
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+
+    return false;
   }
 
   public getPlayerColor(playerId: number) {

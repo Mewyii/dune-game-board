@@ -3,6 +3,7 @@ export const enLocale = {
   commonClose: 'Close',
   commonEndgame: 'Endgame',
   commonVictoryPoints: 'Victorypoints',
+  commonFactionInfluence: 'Faction Influence',
   commonConfirmDialogTitle: 'Please confirm',
   commonConfirmDialogText: 'Are you sure?',
   commonNo: 'No',

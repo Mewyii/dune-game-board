@@ -46,9 +46,11 @@
         <div
           class="score-marker"
           [class.hidden]="isExcluded(playerScore.playerId)"
-          [style.bottom]="15 + playerScore.score * 50 + 'px'"
+          [style.bottom]="15 + playerScore.score * 48 + 'px'"
           [style.left]="15 + i * 35 + 'px'"
           [style.background-color]="getPlayerColor(playerScore.playerId)"
+          (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
+          (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"
         ></div>
         }
       </ng-container>

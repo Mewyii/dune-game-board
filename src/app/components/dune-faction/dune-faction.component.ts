@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Faction, Effect, EffectRewardType, EffectType } from 'src/app/models';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { PlayersService } from 'src/app/services/players.service';
-import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
-import { TranslateService } from 'src/app/services/translate-service';
 import { AppMode } from 'src/app/constants/board-settings';
+import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EffectRewardType, EffectType, Faction } from 'src/app/models';
+import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
   selector: 'app-dune-faction',
@@ -60,7 +61,8 @@ export class DuneFactionComponent implements OnInit {
     public playerScoreManager: PlayerScoreManager,
     public t: TranslateService,
     public gameModifiersService: GameModifiersService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private gameManager: GameManager
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +101,22 @@ export class DuneFactionComponent implements OnInit {
         )
         .map((x) => x.playerId);
     });
+  }
+
+  onIncreaseFactionScoreClicked(playerId: number) {
+    this.gameManager.addRewardToPlayer(playerId, {
+      type: ('faction-influence-up-' + this.faction.type) as EffectRewardType,
+    });
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+  }
+
+  onDecreaseFactionScoreClicked(playerId: number) {
+    this.gameManager.addRewardToPlayer(playerId, {
+      type: ('faction-influence-down-' + this.faction.type) as EffectRewardType,
+    });
+    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+
+    return false;
   }
 
   public getPlayerColor(playerId: number) {

@@ -33,6 +33,8 @@
       [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 163 + 'px'"
       [style.top]="10 + (i % 2 === 0 ? 0 : 40) + 'px'"
       [style.background-color]="getPlayerColor(playerScore.playerId)"
+      (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
+      (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"
     ></div>
     }
   </ng-container>

@@ -14,7 +14,7 @@ import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
-import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -40,8 +40,6 @@ export class LeadersComponent implements OnInit {
   public activeLeader: LeaderDeckCard | undefined;
 
   public activePlayer: Player | undefined;
-
-  public activePlayerScore: PlayerScore | undefined;
 
   public activePlayerCombatUnits: PlayerCombatUnits | undefined;
 
@@ -99,8 +97,6 @@ export class LeadersComponent implements OnInit {
 
       this.activeLeader = this.playerLeader?.leader;
 
-      this.activePlayerScore = this.playerScoreManager.playerScores.find((x) => x.playerId === this.activePlayerId);
-
       this.activePlayerCombatUnits = this.combatManager.getPlayerCombatUnits(this.activePlayerId);
 
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
@@ -112,10 +108,6 @@ export class LeadersComponent implements OnInit {
       );
 
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
-    });
-
-    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
-      this.activePlayerScore = playerScores.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
@@ -282,14 +274,6 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
-    this.audioManager.playSound('click-reverse');
-    this.playerScoreManager.removePlayerScore(id, scoreType, 1, this.gameManager.currentRound);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-    return false;
-  }
-
   onAddPlayerAgentClicked(id: number) {
     this.audioManager.playSound('click-soft');
     this.gameManager.addAgentToPlayer(id);
@@ -417,10 +401,6 @@ export class LeadersComponent implements OnInit {
 
   public getIsTechTileFlipped(techTileId: string) {
     return this.playerTechTiles.find((x) => x.techTile.id === techTileId)?.isFlipped;
-  }
-
-  public getPlayerScore(scoreType: PlayerScoreType) {
-    return this.activePlayerScore ? this.activePlayerScore[scoreType] : 0;
   }
 
   public getPlayerHouseLevel(houseId: string) {

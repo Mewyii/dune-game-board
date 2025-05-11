@@ -5,6 +5,7 @@ export const deLocale: Locale = {
   commonClose: 'Schließen',
   commonEndgame: 'Finale',
   commonVictoryPoints: 'Siegpunkte',
+  commonFactionInfluence: 'Fraktionseinfluss',
   commonConfirmDialogTitle: 'Bitte bestätigen',
   commonConfirmDialogText: 'Bist du sicher?',
   commonNo: 'Nein',

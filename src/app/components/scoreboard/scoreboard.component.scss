@@ -1,105 +1,120 @@
 .scoreboard-tile {
-    position: absolute;
-    bottom: 0;
-    left: 00px;
-    width: 2120px;
-    height: 100px;
-    display: flex;
-    justify-content: space-evenly;
+  position: absolute;
+  bottom: 0;
+  left: 00px;
+  width: 2120px;
+  height: 100px;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .score-element {
-    flex: 1 1;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-wrap: wrap;
-    position: relative;
-    background: #0000000a;
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  background: #0000000a;
 }
 
 .score-element.finale-four-players {
-    background:#ffd88e61;
+  background: #ffd88e61;
 }
 
 .score-element.finale-three-players {
-    background:#ffd88e75;
+  background: #ffd88e75;
 }
 
 .score {
-    // font-size: larger;
+  // font-size: larger;
 }
 
 .divider {
-    width: 1px;
-    background-color: #c5ad8d;
-    box-shadow: 0px 0px 6px 0px #ffefc3;
+  width: 1px;
+  background-color: #c5ad8d;
+  box-shadow: 0px 0px 6px 0px #ffefc3;
 }
 
 .divider.light {
-    background-color: #c5ad8d;
-    box-shadow: 0px 0px 6px 0px #ffefc3;
+  background-color: #c5ad8d;
+  box-shadow: 0px 0px 6px 0px #ffefc3;
 }
 
 .divider.finale-four-players {
-    background: #ffd489de;
-    width: 10px;
-    box-shadow: 0px 0px 6px 0px #ffdf89;
+  background: #ffd489de;
+  width: 10px;
+  box-shadow: 0px 0px 6px 0px #ffdf89;
 }
 
 .divider.finale-three-players {
-    background: #ffd489;
-    width: 10px;
-    box-shadow: 0px 0px 6px 0px #ffdf89;
+  background: #ffd489;
+  width: 10px;
+  box-shadow: 0px 0px 6px 0px #ffdf89;
 }
 
-
 .scoreboard-tile.top {
-    top: 0;
-    color: #e5e5e5
+  top: 0;
+  color: #e5e5e5;
 }
 
 .score-marker {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    z-index: 2;
-    border-radius: 50%;
-    border: 1px solid #2f2112;
-    border-right: 4px solid #2f2112;
-    border-top: 3px solid #2f2112;
-    filter: drop-shadow(0px 0px 5px black);
-    animation-name: marker-anim;
-    animation-timing-function: ease-in-out;
-    animation-duration: 3.0s;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  z-index: 2;
+  border-radius: 50%;
+  border: 1px solid #2f2112;
+  border-right: 4px solid #2f2112;
+  border-top: 3px solid #2f2112;
+  filter: drop-shadow(0px 0px 5px black);
+  animation-name: marker-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 3s;
+  transition: 0.5s;
+}
+
+.score-marker:hover {
+  transform: scale(1.3);
+  filter: brightness(1.4);
+  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
 }
 
 .reward-container {
-    position: absolute;
-    bottom: 0;
-    right: 16px;
-    width: min-content;
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  width: min-content;
 }
 
 .reward {
-    height: 30px;
-    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+  height: 30px;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .reward-amount {
-    position: absolute;
-    top: 4px;
-    right: 0px;
-    width: 100%;
-    color: white;
-    font-size: 20px;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
-    text-align: center;
+  position: absolute;
+  top: 4px;
+  right: 0px;
+  width: 100%;
+  color: white;
+  font-size: 20px;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.75));
+  text-align: center;
 }
 
 @keyframes marker-anim {
-    0%  {filter:  drop-shadow(0px 0px 5px black) brightness(1.0)}
-    10%  {filter:  drop-shadow(0px 0px 5px black) brightness(2.0)}
-    50%  {background-color: gold; filter:  drop-shadow(0px 0px 25px gold) brightness(1.25)}
-    100%  {filter: drop-shadow(0px 0px 5px black) brightness(1.0)}
+  0% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
   }
+  10% {
+    filter: drop-shadow(0px 0px 5px black) brightness(2);
+  }
+  50% {
+    background-color: gold;
+    filter: drop-shadow(0px 0px 25px gold) brightness(1.25);
+  }
+  100% {
+    filter: drop-shadow(0px 0px 5px black) brightness(1);
+  }
+}

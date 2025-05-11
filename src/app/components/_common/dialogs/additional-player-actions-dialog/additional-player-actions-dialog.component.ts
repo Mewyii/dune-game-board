@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { compact } from 'lodash';
-import { isFactionType } from 'src/app/helpers/faction-types';
+import { getFactionTypePath, isFactionType } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActionField, EffectType } from 'src/app/models';
+import { ActionField, EffectRewardType, EffectType, FactionType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { FieldBlockModifier, GameModifiersService } from 'src/app/services/game-modifier.service';
+import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -24,6 +25,8 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
   public boardFields: ActionField[] = [];
   public blockedFieldIds: FieldBlockModifier[] = [];
 
+  public activePlayerScore: PlayerScore | undefined;
+
   constructor(
     public t: TranslateService,
     private dialogRef: MatDialogRef<AdditionalPlayerActionsDialogComponent>,
@@ -31,17 +34,24 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     private gameManager: GameManager,
     private playersService: PlayersService,
     private settingsService: SettingsService,
-    private gameModifiersService: GameModifiersService
+    private gameModifiersService: GameModifiersService,
+    private playerScoreManager: PlayerScoreManager
   ) {}
 
   ngOnInit(): void {
     this.gameManager.activePlayer$.subscribe((activePlayer) => {
       this.activePlayer = activePlayer;
       this.activePlayerId = activePlayer?.id ?? 0;
+
+      this.activePlayerScore = this.playerScoreManager.playerScores.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.gameModifiersService.playerGameModifiers$.subscribe((modifiers) => {
       this.blockedFieldIds = compact(modifiers.flatMap((x) => x.fieldBlock));
+    });
+
+    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
+      this.activePlayerScore = playerScores.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.boardFields = this.settingsService.boardFields;
@@ -90,6 +100,30 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     }
   }
 
+  onAddRewardClicked(player: Player, type: EffectRewardType) {
+    if (type === 'solari') {
+      this.audioManager.playSound('solari');
+    } else if (type === 'water') {
+      this.audioManager.playSound('water');
+    } else if (type === 'spice') {
+      this.audioManager.playSound('spice');
+    }
+
+    this.gameManager.addRewardToPlayer(player.id, { type });
+
+    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
+
+    return false;
+  }
+
+  public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
+    this.audioManager.playSound('click-reverse');
+    this.playerScoreManager.removePlayerScore(id, scoreType, 1, this.gameManager.currentRound);
+
+    this.gameManager.setPreferredFieldsForAIPlayer(id);
+    return false;
+  }
+
   public fieldIsBlocked(actionField: ActionField) {
     return this.blockedFieldIds.some((x) => x.fieldId === actionField.title.en || x.actionType === actionField.actionType);
   }
@@ -110,5 +144,13 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  public getPlayerScore(scoreType: PlayerScoreType) {
+    return this.activePlayerScore ? this.activePlayerScore[scoreType] : 0;
+  }
+
+  public getFactionTypePath(rewardType: FactionType) {
+    return getFactionTypePath(rewardType);
   }
 }

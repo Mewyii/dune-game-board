@@ -25,6 +25,82 @@
   <br />
   <div class="action-container">
     <div class="action-heading">
+      {{ t.translate('commonVictoryPoints') }}
+    </div>
+    <div class="action-content">
+      <div class="resource-container">
+        <div
+          class="resource-display"
+          (click)="onAddRewardClicked(activePlayer, 'victory-point')"
+          (contextmenu)="onRemovePlayerScoreClicked(activePlayer.id, 'victoryPoints')"
+        >
+          <img class="resource dark" [src]="getEffectTypePath('victory-point')" />
+          <div class="resource-amount on-background">
+            <span>{{ getPlayerScore('victoryPoints') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="action-container">
+    <div class="action-heading">
+      {{ t.translate('commonFactionInfluence') }}
+    </div>
+    <div class="action-content">
+      <div class="resource-container">
+        <div
+          class="resource-display"
+          (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-fremen')"
+          (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-fremen')"
+        >
+          <img class="resource dark" [src]="getFactionTypePath('fremen')" />
+          <div class="resource-amount on-background">
+            <span>{{ getPlayerScore('fremen') }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="resource-container">
+        <div
+          class="resource-display"
+          (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-bene')"
+          (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-bene')"
+        >
+          <img class="resource dark" [src]="getFactionTypePath('bene')" />
+          <div class="resource-amount on-background">
+            <span>{{ getPlayerScore('bene') }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="resource-container">
+        <div
+          class="resource-display"
+          (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-guild')"
+          (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-guild')"
+        >
+          <img class="resource dark" [src]="getFactionTypePath('guild')" />
+          <div class="resource-amount on-background">
+            <span>{{ getPlayerScore('guild') }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="resource-container">
+        <div
+          class="resource-display"
+          (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-emperor')"
+          (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-emperor')"
+        >
+          <img class="resource dark" [src]="getFactionTypePath('emperor')" />
+          <div class="resource-amount on-background">
+            <span>{{ getPlayerScore('emperor') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="action-container">
+    <div class="action-heading">
       {{ t.translate('dialogAdditionalPlayerActionsBlockedFields') }}
     </div>
     <div class="action-content">
