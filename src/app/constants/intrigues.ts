@@ -292,13 +292,14 @@ export const intrigues: IntrigueCard[] = [
         type: 'water',
       },
       {
+        type: 'water',
+      },
+      {
         type: 'helper-trade',
       },
       {
         type: 'card-draw',
-      },
-      {
-        type: 'card-draw',
+        amount: 3,
       },
     ],
   },
@@ -444,13 +445,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'water',
       },
       {
-        type: 'water',
-      },
-      {
         type: 'helper-trade',
-      },
-      {
-        type: 'card-draw',
       },
       {
         type: 'agent-lift',

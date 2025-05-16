@@ -17,19 +17,19 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Smuggler outposts',
     aiEvaluation: (player, gameState) =>
-      0.6 - 0.025 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.solari,
+      0.6 - 0.02 * (gameState.currentRound - 1) + 0.066 * gameState.playerCardsRewards.solari,
   },
   {
     id: 'Imperial Barracks',
     aiEvaluation: (player, gameState) =>
-      0.35 +
+      0.4 +
       0.033 * (gameState.currentRound - 1) +
-      0.066 * gameState.playerCardsRewards.solari +
-      0.033 * gameState.playerCardsFactions.emperor,
+      0.066 * gameState.playerCardsRewards.solari -
+      0.033 * gameState.playerCardsRewards.troop,
   },
   {
     id: 'Upgraded Carryall Suspensors',
-    aiEvaluation: (player, gameState) => 0.8 - 0.1 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.8 - 0.2 * (gameState.currentRound - 1),
     gameModifiers: {
       fieldCost: [
         {
@@ -45,18 +45,17 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   { id: 'Spy modules', aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount },
   {
     id: 'Spy Network',
-    aiEvaluation: (player, gameState) =>
-      0.3 + 0.02 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.bene,
+    aiEvaluation: (player, gameState) => 0.3 + 0.02 * (gameState.currentRound - 1),
   },
   {
     id: 'Wind Traps',
     aiEvaluation: (player, gameState) =>
-      0.65 - 0.075 * (gameState.currentRound - 1) + 0.033 * gameState.playerCardsFactions.fremen,
+      0.65 - 0.075 * (gameState.currentRound - 1) - 0.033 * gameState.playerCardsRewards.water,
   },
   { id: 'Heavy Lasguns', aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount },
   {
     id: 'Enhanced Sandcrawler Engines',
-    aiEvaluation: (player, gameState) => 0.85 - 0.125 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 0.85 - 0.15 * (gameState.currentRound - 1),
     gameModifiers: {
       fieldReward: [
         {
@@ -92,7 +91,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Ornithopter Hangar',
-    aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 0.1 : 0.0),
+    aiEvaluation: (player, gameState) => 0.3 + 0.05 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 0.0 : 0.1),
   },
   { id: 'Shieldbreakers', aiEvaluation: (player, gameState) => 0.0 + 0.5 * gameState.playerDreadnoughtCount },
   {
@@ -164,8 +163,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       0.01 * gameState.playerCardsBought +
       0.01 * gameState.playerCardsTrashed +
       (player.hasCouncilSeat ? 0.1 : 0.0) +
-      0.033 * gameState.playerCardsRewards.water +
-      0.033 * gameState.playerCardsFactions.fremen,
+      0.033 * gameState.playerCardsRewards.water,
   },
   {
     id: 'Guild Bank',
@@ -187,8 +185,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       (player.hasSwordmaster ? 0.1 : 0.0) +
       (player.hasCouncilSeat ? 0.1 : 0.0) -
       0.05 * gameState.playerIntrigueCount +
-      0.033 * gameState.playerCardsRewards.solari +
-      0.033 * gameState.playerCardsFactions.emperor,
+      0.033 * gameState.playerCardsRewards.solari,
   },
   {
     id: 'Bene Gesserit Conclave',
@@ -198,16 +195,15 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       0.02 * gameState.playerCardsBought +
       0.01 * gameState.playerCardsTrashed +
       (player.hasSwordmaster ? 0.1 : 0.0) +
-      0.033 * gameState.playerCardsRewards.water +
-      0.033 * gameState.playerCardsFactions.bene,
+      0.033 * gameState.playerCardsRewards.water,
   },
   {
     id: 'Lighter',
     aiEvaluation: (player, gameState) =>
-      0.3 +
+      0.4 +
       0.1 * gameState.playerDreadnoughtCount +
-      0.033 * (gameState.currentRound - 1) +
-      0.025 * gameState.playerCardsRewards.sword,
+      0.025 * gameState.playerCardsRewards.sword +
+      0.01 * (gameState.currentRound - 1),
   },
   {
     id: 'Flagship',
@@ -230,4 +226,5 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       0.025 * gameState.playerCardsRewards.tech,
   },
   { id: 'Planetary Surveillance', aiEvaluation: (player, gameState) => 0.75 - 0.05 * (gameState.currentRound - 1) },
+  { id: 'Satellite Control', aiEvaluation: (player, gameState) => 0.2 + 0.05 * gameState.playerCardsRewards.spice },
 ];

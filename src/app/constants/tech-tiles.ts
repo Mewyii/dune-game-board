@@ -6,10 +6,12 @@ export const techTiles: TechTileCard[] = [
       en: 'Spice transport modules',
       de: 'Spice-Transportmodule',
     },
-    costs: 2,
+    costs: 1,
     imageUrl: '/assets/images/action-backgrounds/industry.png',
+    effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [],
+    effects: [],
     customEffect: {
       en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:spice}.',
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
@@ -21,13 +23,82 @@ export const techTiles: TechTileCard[] = [
       en: 'Spy modules',
       de: 'Spionagemodule',
     },
-    costs: 2,
+    costs: 1,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    effectSize: 'medium',
     imagePosition: 'bottom',
     buyEffects: [],
+    effects: [],
     customEffect: {
       en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:tech}.',
       de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Landing Ships',
+      de: 'Landungsschiffe',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'tech',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'combat',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Wind Traps',
+      de: 'Windfallen',
+    },
+    faction: 'fremen',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/windtraps.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'water',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
   },
@@ -93,14 +164,9 @@ export const techTiles: TechTileCard[] = [
     faction: 'emperor',
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/military_camp.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
     effects: [
       {
         type: 'timing-reveal-turn',
@@ -110,9 +176,7 @@ export const techTiles: TechTileCard[] = [
       },
       {
         type: 'solari',
-      },
-      {
-        type: 'tech',
+        amount: 2,
       },
       {
         type: 'helper-trade',
@@ -124,6 +188,11 @@ export const techTiles: TechTileCard[] = [
         type: 'troop',
       },
     ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
   },
   {
     name: {
@@ -158,37 +227,21 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Wind Traps',
-      de: 'Windfallen',
+      en: 'Satellite Control',
+      de: 'Satellitenkontrolle',
     },
-    faction: 'fremen',
+    faction: 'guild',
     costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/windtraps.png',
-    imagePosition: 'center',
-    buyEffects: [],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
+    imageUrl: '/assets/images/action-backgrounds/dune.png',
     effectSize: 'medium',
-    effects: [
-      {
-        type: 'timing-round-start',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'water',
-      },
-    ],
+    imagePosition: 'top',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '{resource:spice}{resource:helper-trade}Jeder Gegner: {resource:card-discard}',
+      de: '{resource:spice}{resource:helper-trade}Jeder Gegner: {resource:card-discard}',
+      fontSize: 'small',
+    },
   },
   {
     name: {
@@ -196,7 +249,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Handelshafen',
     },
     faction: 'guild',
-    costs: 3,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/port.png',
     effectSize: 'small',
     imagePosition: 'bottom',
@@ -216,7 +269,7 @@ export const techTiles: TechTileCard[] = [
       },
       {
         type: 'solari',
-        amount: 3,
+        amount: 4,
       },
     ],
     customEffect: {
@@ -224,46 +277,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
       fontSize: 'small',
     },
-  },
-  {
-    name: {
-      en: 'Landing Ships',
-      de: 'Landungsschiffe',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
-    imagePosition: 'bottom',
-    buyEffects: [
-      {
-        type: 'troop',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'tech',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'combat',
-      },
-      {
-        type: 'sword',
-      },
-    ],
   },
   {
     name: {
@@ -502,6 +515,23 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Spice Refineries',
+      de: 'Spice Raffinerien',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: 'All {resource:spice} -costs are reduced by 1 (min. 1).',
+      de: 'Alle {resource:spice} -Kosten sind um 1 reduziert (min. 1).',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Shieldbreakers',
       de: 'Schildbrecher',
     },
@@ -549,21 +579,6 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Spice Refineries',
-      de: 'Spice Raffinerien',
-    },
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
-    imagePosition: 'center',
-    buyEffects: [],
-    customEffect: {
-      en: 'All {resource:spice} -costs are reduced by 1 (min. 1).',
-      de: 'Alle {resource:spice} -Kosten sind um 1 reduziert (min. 1).',
-      fontSize: 'medium',
     },
   },
   {
@@ -849,8 +864,9 @@ export const techTiles: TechTileCard[] = [
       en: 'Lighter',
       de: 'Leichter',
     },
-    costs: 7,
+    costs: 6,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
+    effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [
       {
@@ -860,12 +876,6 @@ export const techTiles: TechTileCard[] = [
         type: 'troop',
       },
     ],
-    customEffect: {
-      en: '<br><b>When you win a conflict:</b><br> {resource:location-control}',
-      de: '<br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
-      fontSize: 'small',
-    },
-    effectSize: 'medium',
     effects: [
       {
         type: 'timing-reveal-turn',
@@ -884,6 +894,11 @@ export const techTiles: TechTileCard[] = [
         type: 'sword',
       },
     ],
+    customEffect: {
+      en: '<br><b>When you win a conflict:</b><br> {resource:location-control}',
+      de: '<br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
+      fontSize: 'small',
+    },
   },
   {
     name: {

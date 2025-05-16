@@ -4,15 +4,15 @@ import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import {
   activeFactionTypes,
   combatUnitTypes,
+  effectChoices,
+  effectConditions,
+  effectRewards,
+  effectSeparators,
+  effectTimings,
   EffectType,
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
-  effectRewards,
-  effectSeparators,
-  effectChoices,
-  effectConditions,
-  effectTimings,
 } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
 
@@ -97,7 +97,6 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
       imageUrl: '',
       effectSize: 'medium',
       imagePosition: 'center',
-      aiEvaluation: undefined,
     });
 
     this.addBuyEffectControl();
