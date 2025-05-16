@@ -375,7 +375,7 @@ export class AIManager {
 
       if (usableCards.length > 0) {
         const evaluations = usableCards.map((cardEvaluation) => {
-          const evaluation = cardEvaluation.evaluationValue - fieldIndex * 1.25;
+          const evaluation = cardEvaluation.evaluationValue - fieldIndex * (1 - preferredField.value) * 2;
           return { field: preferredField, evaluation, card: cardEvaluation.card };
         });
 

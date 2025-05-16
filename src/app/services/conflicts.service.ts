@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, shuffle } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
 import { conflicts } from '../constants/conflicts';
+import { shuffleMultipleTimes } from '../helpers/common';
 import { Conflict } from '../models/conflict';
 
 @Injectable({
@@ -40,7 +41,10 @@ export class ConflictsService {
     const secondLevelConflicts = this.conflicts.filter((x) => x.lvl === 1);
     const thirdLevelConflicts = this.conflicts.filter((x) => x.lvl === 2);
 
-    const conflictStack = [...shuffle(secondLevelConflicts).slice(0, 5), ...shuffle(thirdLevelConflicts).slice(0, 5)];
+    const conflictStack = [
+      ...shuffleMultipleTimes(secondLevelConflicts).slice(0, 5),
+      ...shuffleMultipleTimes(thirdLevelConflicts).slice(0, 5),
+    ];
 
     this.conflictStackSubject.next(conflictStack);
   }

@@ -128,6 +128,21 @@ export function isRewardEffectType(type: EffectType): type is EffectRewardType {
   );
 }
 
+export function isNegativeEffect(effect: Effect) {
+  if (
+    effect.type === 'card-discard' ||
+    effect.type === 'card-destroy' ||
+    effect.type === 'loose-troop' ||
+    effect.type === 'intrigue-trash' ||
+    effect.type === 'dreadnought-retreat' ||
+    effect.type === 'troop-retreat'
+  ) {
+    return true;
+  } else {
+    return effect.amount && effect.amount < 0;
+  }
+}
+
 export function getFlattenedEffectRewardArray<T extends EffectReward>(array: T[]) {
   const clonedArray = cloneDeep(array);
   const result: T[] = [];

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, shuffle } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
 import { DuneEvent, duneEvents } from '../constants/events';
+import { shuffleMultipleTimes } from '../helpers/common';
 
 export interface DuneEventCard extends DuneEvent {
   id: string;
@@ -68,7 +69,7 @@ export class DuneEventsManager {
         newEvents.push(this.instantiateEvent(event));
       }
     }
-    this.eventDeckSubject.next(shuffle(newEvents));
+    this.eventDeckSubject.next(shuffleMultipleTimes(newEvents));
   }
 
   public setNextEvent() {

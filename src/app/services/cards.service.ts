@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { ActionType, FactionType, StructuredEffects } from '../models';
 import { ImperiumCard } from '../models/imperium-card';
@@ -278,7 +279,7 @@ export class CardsService {
       }
     }
 
-    const imperiumDeck = shuffle(imperiumDeckCards);
+    const imperiumDeck = shuffleMultipleTimes(imperiumDeckCards);
     const imperiumRowCardAmount = this.settingsService.getImperiumRowCards();
     const imperiumRow: (ImperiumRowCard | ImperiumRowPlot)[] = imperiumDeck
       .slice(0, imperiumRowCardAmount)
@@ -362,7 +363,7 @@ export class CardsService {
           startingCards.push(this.instantiateImperiumCard(startingCard));
         }
       }
-      playerDecks.push({ playerId, cards: shuffle(startingCards) });
+      playerDecks.push({ playerId, cards: shuffleMultipleTimes(startingCards) });
     }
 
     this.playerDecksSubject.next(playerDecks);

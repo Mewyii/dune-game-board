@@ -190,51 +190,48 @@ export class AIFieldEvaluationService {
           return undefined;
         }
 
-        const requiresInfiltration = hasEnemyAgentOnField && hasEnemyAcess;
+        const requiresInfiltration = hasEnemyAgentOnField && !hasEnemyAcess;
 
         const fieldEvaluation = fieldEvaluations.find((y) => y.fieldId === x.title.en);
         if (fieldEvaluation) {
           let accessTrough: 'influence' | 'game-modifiers' | undefined;
-
           const hasCardActionType = fieldAccessFromCards.some((actionType) => x.actionType === actionType);
-          if (hasCardActionType) {
-            if (x.requiresInfluence) {
-              const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
-                (y) => y === x.requiresInfluence!.type
-              );
 
-              if (hasEnoughFactionInfluence) {
-                accessTrough = 'influence';
-              } else {
-                const hasOtherAccess =
-                  gameState.playerFieldUnlocksForFactions.some((y) => y === x.requiresInfluence!.type) ||
-                  gameState.playerFieldUnlocksForIds.some((y) => x.title.en.includes(y));
+          if (x.requiresInfluence) {
+            const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
+              (y) => y === x.requiresInfluence!.type
+            );
 
-                if (hasOtherAccess) {
-                  accessTrough = 'game-modifiers';
-                }
-              }
+            if (hasEnoughFactionInfluence) {
+              accessTrough = 'influence';
+            } else {
+              const hasOtherAccess =
+                gameState.playerFieldUnlocksForFactions.some((y) => y === x.requiresInfluence!.type) ||
+                gameState.playerFieldUnlocksForIds.some((y) => x.title.en.includes(y));
 
-              if (accessTrough) {
-                return {
-                  ...fieldEvaluation,
-                  actionType: x.actionType,
-                  requiresInfluence: x.requiresInfluence,
-                  requiresInfiltration,
-                  accessTrough,
-                };
-              } else {
-                return undefined;
+              if (hasOtherAccess) {
+                accessTrough = 'game-modifiers';
               }
             }
-          }
-          return {
-            ...fieldEvaluation,
-            actionType: x.actionType,
-            requiresInfiltration,
-          };
-        }
 
+            if (hasCardActionType && accessTrough) {
+              return {
+                ...fieldEvaluation,
+                actionType: x.actionType,
+                requiresInfluence: x.requiresInfluence,
+                requiresInfiltration,
+                accessTrough,
+              };
+            }
+          } else if (hasCardActionType) {
+            return {
+              ...fieldEvaluation,
+              actionType: x.actionType,
+              requiresInfluence: x.requiresInfluence,
+              requiresInfiltration,
+            };
+          }
+        }
         return undefined;
       })
       .filter((x) => !!x) as ViableField[];
@@ -347,11 +344,11 @@ export class AIFieldEvaluationService {
 
         const troopRewards = fieldRewards.find((x) => x.type === 'troop');
         if (troopRewards) {
-          modifier = modifier + 0.1 * (troopRewards.amount ?? 1);
+          modifier = modifier + 0.075 * (troopRewards.amount ?? 1);
         }
         const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought');
         if (dreadnoughtRewards) {
-          modifier = modifier + 0.2 * (dreadnoughtRewards.amount ?? 1);
+          modifier = modifier + 0.1 * (dreadnoughtRewards.amount ?? 1);
         }
         const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
         if (intrigueRewards) {
@@ -368,10 +365,6 @@ export class AIFieldEvaluationService {
   }
 
   private getLeaderGoalModifier(goalId: string, goalModifiers: GoalModifier[]) {
-    return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
-  }
-
-  private getEventGoalModifier(goalId: AIGoals, goalModifiers: GoalModifier[]) {
     return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
   }
 

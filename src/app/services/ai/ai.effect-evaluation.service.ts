@@ -12,6 +12,7 @@ import {
 import { Player } from 'src/app/models/player';
 import { SettingsService } from '../settings.service';
 import { GameState } from './models';
+import { getParticipateInCombatDesire, getWinCombatDesire } from './shared';
 import { getResourceAmount } from './shared/ai-goal-functions';
 
 @Injectable({
@@ -212,7 +213,7 @@ export class AIEffectEvaluationService {
       case 'intrigue':
         return 1.75 + 0.1 * (gameState.currentRound - 1);
       case 'persuasion':
-        return 2.25 - 0.15 * (gameState.currentRound - 1);
+        return 2.5 - 0.15 * (gameState.currentRound - 1);
       case 'foldspace':
         return (
           2.5 -
@@ -305,7 +306,7 @@ export class AIEffectEvaluationService {
       case 'solari':
         return value - 0.1 * getResourceAmount(player, 'solari');
       case 'troop':
-        return value - 0.1 * gameState.playerCombatUnits.troopsInGarrison;
+        return value + 0.2 * (3 - gameState.playerCombatUnits.troopsInGarrison);
       case 'dreadnought':
         return value + 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'card-draw':
@@ -342,8 +343,9 @@ export class AIEffectEvaluationService {
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 ? (hasAgentsLeftToPlace ? value : 0.66 * value) : 0;
       case 'combat':
-        const unitsInGarrison = gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison;
-        return unitsInGarrison > 0 ? 0.5 * unitsInGarrison : -1;
+        const participateDesire = getParticipateInCombatDesire(gameState);
+        const winDesire = getWinCombatDesire(gameState);
+        return (winDesire > participateDesire ? winDesire : participateDesire) * 2.5;
       case 'intrigue-trash':
         return value;
       case 'intrigue-draw':

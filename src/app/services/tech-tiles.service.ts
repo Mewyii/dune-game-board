@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, shuffle } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
 import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustments';
+import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { StructuredEffects } from '../models';
 import { Player } from '../models/player';
@@ -99,7 +100,7 @@ export class TechTilesService {
   createTechTileDeck() {
     const techTiles = this.techTilesConfigService.techTiles;
     this.playerTechTilesSubject.next([]);
-    this.availableTechTilesSubject.next(shuffle(techTiles.map((x) => this.instantiateTechTile(x))));
+    this.availableTechTilesSubject.next(shuffleMultipleTimes(techTiles.map((x) => this.instantiateTechTile(x))));
   }
 
   removeAvailableTechTile(techTileId: string) {

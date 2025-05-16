@@ -44,6 +44,7 @@ export type PlayerCardsFactions = { [key in ActiveFactionType]: number };
 export type PlayerCardsFieldAccess = { [key in ActionType]: number };
 
 export type GameState = Readonly<{
+  playersCount: number;
   playerScore: PlayerScore;
   enemyScore: PlayerScore[];
   playerCombatUnits: PlayerCombatUnits;

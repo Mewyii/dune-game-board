@@ -1,4 +1,8 @@
-import { cloneDeep, isArray, isBoolean, isNumber, isObject, result } from 'lodash';
+import { cloneDeep, isArray, isBoolean, isNumber, isObject, shuffle } from 'lodash';
+
+export function shuffleMultipleTimes<T extends object>(array: T[]): T[] {
+  return shuffle(shuffle(shuffle(array)));
+}
 
 export function randomizeArray<T>(a: Array<T>, randomizeFactor: number) {
   const currentArray = cloneDeep(a);

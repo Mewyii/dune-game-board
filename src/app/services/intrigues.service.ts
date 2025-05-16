@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
 import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
@@ -83,7 +84,7 @@ export class IntriguesService {
         intrigueDeck.push(this.instantiateIntrigueCard(intriguesCard));
       }
     }
-    this.intrigueDeckSubject.next(shuffle(intrigueDeck));
+    this.intrigueDeckSubject.next(shuffleMultipleTimes(intrigueDeck));
   }
 
   public shuffleIntrigueDeck() {

@@ -23,12 +23,13 @@ import {
   isConversionEffectType,
   isFactionScoreCostType,
   isFactionScoreRewardType,
+  isNegativeEffect,
   isOptionEffectType,
   isRewardEffect,
   isStructuredChoiceEffect,
   isStructuredConditionalEffect,
 } from '../helpers/rewards';
-import { playerCanEnterCombat } from '../helpers/turn-infos';
+import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn-infos';
 import {
   ActionField,
   ActionType,
@@ -1379,7 +1380,31 @@ export class GameManager {
     gameState: GameState,
     gameElement?: GameElement
   ) {
-    const chosenRewards = this.aIManager.getEffectOptionChoice(player, gameState, leftSideRewards, rightSideRewards);
+    let chosenRewards: EffectReward[] = [];
+
+    let canChooseLeftSide = true;
+    let canChooseRightSide = true;
+    for (const reward of leftSideRewards) {
+      if (isNegativeEffect(reward)) {
+        if (!this.playerCanPayCosts(player.id, [reward])) {
+          canChooseLeftSide = false;
+        }
+      }
+    }
+    for (const reward of rightSideRewards) {
+      if (isNegativeEffect(reward)) {
+        if (!this.playerCanPayCosts(player.id, [reward])) {
+          canChooseRightSide = false;
+        }
+      }
+    }
+    if (canChooseLeftSide && canChooseRightSide) {
+      chosenRewards = this.aIManager.getEffectOptionChoice(player, gameState, leftSideRewards, rightSideRewards);
+    } else if (canChooseLeftSide) {
+      chosenRewards = leftSideRewards;
+    } else if (canChooseRightSide) {
+      chosenRewards = rightSideRewards;
+    }
 
     for (const reward of chosenRewards) {
       this.addRewardToPlayer(player.id, reward, { gameElement });
@@ -1647,9 +1672,9 @@ export class GameManager {
     }
   }
 
-  private aiResolveRewardChoices(player: Player) {
+  private aiResolveRewardChoices(player: Player, depth = 0) {
     const turnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
-    if (!turnInfo) {
+    if (!turnInfo || depth > 2) {
       return;
     }
 
@@ -1820,10 +1845,14 @@ export class GameManager {
         }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
-      this.resolveRewardChoices(player);
     }
     if (turnInfo.canBuyTech) {
       this.aiBuyTechIfPossible(player.id);
+    }
+
+    const newTurnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
+    if (newTurnInfo && turnInfosNeedToBeResolved(newTurnInfo)) {
+      this.aiResolveRewardChoices(player, depth + 1);
     }
   }
 
@@ -2224,6 +2253,7 @@ export class GameManager {
     const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(player.id);
 
     return {
+      playersCount: this.playerManager.getPlayerCount(),
       currentRound: this.currentRound,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
       playerAgentsAvailable: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
@@ -2376,7 +2406,7 @@ export class GameManager {
     if (player) {
       for (let cost of getFlattenedEffectRewardArray(costs)) {
         const costType = cost.type;
-        const costAmount = cost.amount ?? 1;
+        const costAmount = Math.abs(cost.amount ?? 1);
 
         if (isResourceType(costType)) {
           const resourceIndex = player.resources.findIndex((x) => x.type === cost.type);
