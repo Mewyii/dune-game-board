@@ -105,9 +105,12 @@ export class PlayerboardComponent implements OnInit {
     this.playerManager.removePlayer();
   }
 
-  onSetAIActiveClicked(id: number, event: MatSlideToggleChange) {
+  onSetAIActiveClicked(playerId: number, event: MatSlideToggleChange) {
     this.audioManager.playSound('tech-tile');
-    this.playerManager.setAIActiveForPlayer(id, event.checked);
+    this.playerManager.setAIActiveForPlayer(playerId, event.checked);
+    if (event.checked && this.currentTurn > 0) {
+      this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    }
   }
 
   onStartGameClicked() {

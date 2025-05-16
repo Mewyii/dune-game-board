@@ -42,18 +42,12 @@
       </div>
     </div>
     <div class="ai-area font-medieval">
-      <mat-slide-toggle
-        *ngIf="gameManager.currentRound == 0"
-        [color]="'accent'"
-        [checked]="player.isAI"
-        (change)="onSetAIActiveClicked(player.id, $event)"
-        [disabled]="currentTurn > 0"
+      <mat-slide-toggle [color]="'accent'" [checked]="player.isAI" (change)="onSetAIActiveClicked(player.id, $event)"
         >AI</mat-slide-toggle
       >
-      <div *ngIf="gameManager.currentRound != 0 && player.isAI" class="ai-label">AI</div>
     </div>
     <div class="agent-area">
-      @for (object of player.agents + 1 | numberToArray; track $index; let i = $index) {
+      @for (object of player.agents | numberToArray; track $index; let i = $index) {
       <div class="agents-icon-container">
         <div
           class="agents-icon"
