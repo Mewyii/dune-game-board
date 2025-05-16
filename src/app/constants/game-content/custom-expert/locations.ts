@@ -62,7 +62,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 810,
+      marginTop: 800,
       marginLeft: 600,
     },
     actionField: {
@@ -78,7 +78,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1100,
+      marginTop: 1080,
       marginLeft: 1230,
     },
     actionField: {
@@ -87,12 +87,13 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
     },
+    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(176, 147, 109)',
     position: {
       marginTop: 1070,
-      marginLeft: 800,
+      marginLeft: 780,
     },
     actionField: {
       title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
@@ -105,8 +106,8 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1280,
-      marginLeft: 620,
+      marginTop: 1300,
+      marginLeft: 610,
     },
     actionField: {
       title: { de: 'Die grosse Ebene', en: 'The Great Flat' },

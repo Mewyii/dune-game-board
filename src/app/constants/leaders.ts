@@ -649,10 +649,10 @@ export const leaders: Leader[] = [
         type: 'timing-round-start',
       },
       {
-        type: 'card-discard',
+        type: 'card-draw',
       },
       {
-        type: 'card-draw',
+        type: 'card-discard',
       },
     ],
     signetEffects: [],
@@ -809,9 +809,6 @@ export const leaders: Leader[] = [
       },
       {
         type: 'intrigue',
-      },
-      {
-        type: 'helper-trade',
       },
       {
         type: 'intrigue-trash',
