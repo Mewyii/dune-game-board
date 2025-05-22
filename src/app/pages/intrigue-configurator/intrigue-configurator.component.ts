@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
-import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-intrigue-editor.component';
-import { IntrigueConfiguratorService } from 'src/app/services/configurators/intrigue-configurator.service';
-import { IntrigueCard } from 'src/app/models/intrigue';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { IntrigueCard } from 'src/app/models/intrigue';
+import { IntrigueConfiguratorService } from 'src/app/services/configurators/intrigue-configurator.service';
+import { TranslateService } from 'src/app/services/translate-service';
+import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-intrigue-editor.component';
 
 @Component({
   selector: 'dune-intrigue-configurator',
@@ -22,7 +22,7 @@ export class IntrigueConfiguratorComponent implements OnInit {
   constructor(
     public t: TranslateService,
     public intrigueConfigService: IntrigueConfiguratorService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

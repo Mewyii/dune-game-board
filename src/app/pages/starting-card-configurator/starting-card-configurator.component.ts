@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
-import { TranslateService } from 'src/app/services/translate-service';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
-import { ActionType, ActiveFactionType } from 'src/app/models';
-import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
-import { ImperiumCard } from 'src/app/models/imperium-card';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { ActionType, ActiveFactionType } from 'src/app/models';
+import { ImperiumCard } from 'src/app/models/imperium-card';
+import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
+import { TranslateService } from 'src/app/services/translate-service';
+import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
 
 @Component({
   selector: 'dune-starting-card-configurator',
@@ -40,7 +40,7 @@ export class StartingCardConfiguratorComponent implements OnInit {
   constructor(
     public t: TranslateService,
     public cardConfiguratorService: CardConfiguratorService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

@@ -58,7 +58,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   constructor(
     public t: TranslateService,
     public cardConfiguratorService: CardConfiguratorService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

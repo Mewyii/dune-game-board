@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import * as htmlToImage from 'html-to-image';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { ActiveFactionType } from 'src/app/models';
+import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { PlotConfiguratorService } from 'src/app/services/configurators/plot-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogPlotEditorComponent } from './dialog-plot-editor/dialog-plot-editor.component';
-import { MatDialog } from '@angular/material/dialog';
-import * as htmlToImage from 'html-to-image';
-import { ActionType, ActiveFactionType } from 'src/app/models';
-import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
-import { ImperiumPlot } from 'src/app/models/imperium-plot';
 
 @Component({
   selector: 'dune-plot-configurator',
@@ -42,7 +42,7 @@ export class PlotConfiguratorComponent {
   constructor(
     public t: TranslateService,
     public plotConfiguratorService: PlotConfiguratorService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

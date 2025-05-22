@@ -55,6 +55,7 @@ import { BoardEvaluationComponent } from './components/board-evaluation/board-ev
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { ConflictsComponent } from './components/conflicts/conflicts.component';
 import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
+import { DuneVersionUpdaterComponent } from './components/dune-version-updater/dune-version-updater.component';
 import { GameLogComponent } from './components/game-log/game-log.component';
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
@@ -170,6 +171,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     DialogPlotEditorComponent,
     GameLogComponent,
     AdditionalPlayerActionsDialogComponent,
+    DuneVersionUpdaterComponent,
   ],
   imports: [
     BrowserModule,

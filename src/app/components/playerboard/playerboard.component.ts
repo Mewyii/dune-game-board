@@ -49,7 +49,7 @@ export class PlayerboardComponent implements OnInit {
     public intriguesService: IntriguesService,
     public t: TranslateService,
     private audioManager: AudioManager,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

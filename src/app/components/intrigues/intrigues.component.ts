@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
-import { AudioManager } from 'src/app/services/audio-manager.service';
 
 @Component({
   selector: 'dune-intrigues',
@@ -17,7 +17,7 @@ export class IntriguesComponent {
     private gameManager: GameManager,
     private gameModifierService: GameModifiersService,
     private audioManager: AudioManager,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   public activePlayerId = 0;

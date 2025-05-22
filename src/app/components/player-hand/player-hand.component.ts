@@ -45,7 +45,7 @@ export class PlayerHandComponent implements OnInit {
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     private settingsService: SettingsService,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private logService: LoggingService,
     private t: TranslateService
   ) {}

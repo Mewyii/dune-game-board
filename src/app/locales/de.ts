@@ -10,6 +10,9 @@ export const deLocale: Locale = {
   commonConfirmDialogText: 'Bist du sicher?',
   commonNo: 'Nein',
   commonYes: 'Ja',
+  commonNewVersionAvailable: 'Neue Version verfügbar!',
+  commonUpdateWarningText:
+    'Mit dem Update werden alle deine lokalen Daten gelöscht! Bitte speichere deine eigenen Anführer, Tech-Plättchen, Intriguen und Imperium-Karten, bevor du akzeptierst!',
   commonEffectConditionInfluence: 'Einfluss',
   commonEffectConditionConnection: 'Verbindung',
   commonEffectTimingGameStart: 'Spielbeginn',

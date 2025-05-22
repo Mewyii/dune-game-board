@@ -1,0 +1,13 @@
+<div *ngIf="appVersionChanged" [class]="'translation-container '">
+  <div class="control-bar">
+    <button
+      [class]="appVersionChanged ? 'highlighted' : ''"
+      mat-fab
+      [color]="'accent'"
+      (click)="onShowVersionUpdateClicked()"
+      [matTooltip]="t.translate('commonNewVersionAvailable')"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
+  </div>
+</div>

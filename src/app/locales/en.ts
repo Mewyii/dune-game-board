@@ -8,6 +8,9 @@ export const enLocale = {
   commonConfirmDialogText: 'Are you sure?',
   commonNo: 'No',
   commonYes: 'Yes',
+  commonNewVersionAvailable: 'New Version Available!',
+  commonUpdateWarningText:
+    'All your local data will be deleted with the update! Please save your custom leaders, tech tiles, intrigues and imperium cards before you accept!',
   commonEffectTimingGameStart: 'Game start',
   commonEffectTimingRoundStart: 'Round start',
   commonEffectTimingRevealTurn: 'Reveal turn',

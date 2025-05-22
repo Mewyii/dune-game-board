@@ -35,7 +35,7 @@ export class ImperiumRowComponent implements OnInit {
     private gameManager: GameManager,
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private turnInfoService: TurnInfoService,
     private settingsService: SettingsService,
     public t: TranslateService

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Conflict } from 'src/app/models/conflict';
 import { ConflictsService } from 'src/app/services/conflicts.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { ConflictsPreviewDialogComponent } from '../_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { Conflict } from 'src/app/models/conflict';
 
 @Component({
   selector: 'dune-conflicts',
@@ -16,7 +16,7 @@ export class ConflictsComponent implements OnInit {
     public conflictsService: ConflictsService,
     private gameManager: GameManager,
     private gameModifierService: GameModifiersService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   public currentConflict: Conflict | undefined;

@@ -71,7 +71,7 @@ export class LeadersComponent implements OnInit {
     public cardsService: CardsService,
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private turnInfoService: TurnInfoService
   ) {}
 
