@@ -25,6 +25,7 @@ export const deLocale: Locale = {
   commonEffectRewardDreadnoughtInsert: 'Setze bis zu {0} deiner Schlachtschiffe ein.',
   commonEffectRewardDreadnoughtInsertOrRetreat: 'Setze bis zu {0} deiner Schlachtschiffe ein oder ziehe sie zurück.',
   commonEffectRewardDreadnoughtRetreat: 'Ziehe bis zu {0} deiner Schlachtschiffe zurück.',
+  commonEffectEachOpponent: 'Jeder Gegner:',
   dialogAdditionalPlayerActionsTitle: 'Zusätzliche Spieler-Aktionen',
   dialogAdditionalPlayerActionsPermanentPersuasion: 'Permanente Überzeugung',
   dialogAdditionalPlayerActionsBlockedFields: 'Blockierte Felder',

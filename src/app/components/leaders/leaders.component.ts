@@ -296,6 +296,10 @@ export class LeadersComponent implements OnInit {
     this.minorHouseService.removePlayerHouseLevel(this.activePlayerId, houseId);
   }
 
+  onActivateTechClicked(techTile: TechTileDeckCard) {
+    this.gameManager.activatePlayerTechtile(this.activePlayerId, techTile);
+  }
+
   onFlipTechClicked(techTileId: string) {
     this.audioManager.playSound('tech-tile');
     this.techTilesService.flipTechTile(techTileId);

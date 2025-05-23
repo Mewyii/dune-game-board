@@ -58,7 +58,6 @@
 .condition-container {
   display: flex;
   align-items: center;
-  margin-right: 0.1rem;
 }
 
 .text {
@@ -86,4 +85,10 @@
 .faction {
   filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));
   object-fit: scale-down;
+}
+
+.text.custom-with-reward {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }

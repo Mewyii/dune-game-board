@@ -118,11 +118,11 @@ export class PlayerRewardChoicesComponent implements OnInit {
   }
 
   onDeployTroopsClicked(amount: number) {
-    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'troop', 1);
+    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'troop', amount);
   }
 
   onDeployDreadnoughtsClicked(amount: number) {
-    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', 1);
+    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', amount);
   }
 
   public getEffectTypePath(effectType: EffectType) {

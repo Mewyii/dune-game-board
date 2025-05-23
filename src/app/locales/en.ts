@@ -23,6 +23,7 @@ export const enLocale = {
   commonEffectRewardDreadnoughtInsert: 'You may deploy up to {0} of your dreadnoughts.',
   commonEffectRewardDreadnoughtInsertOrRetreat: 'You may deploy or retreat up to {0} of your dreadnoughts.',
   commonEffectRewardDreadnoughtRetreat: 'You may retreat {0} of your dreadnoughts.',
+  commonEffectEachOpponent: 'Each opponent:',
   dialogAdditionalPlayerActionsTitle: 'Additional Player Actions',
   dialogAdditionalPlayerActionsPermanentPersuasion: 'Permanent Persuasion',
   dialogAdditionalPlayerActionsBlockedFields: 'Blocked Board Spaces',

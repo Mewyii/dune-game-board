@@ -1670,6 +1670,17 @@ export class GameManager {
       });
       this.turnInfoService.setPlayerTurnInfo(player.id, { canLiftAgent: false });
     }
+    if (turnInfo.enemiesEffects.length > 0) {
+      const enemies = this.playerManager.getEnemyPlayers(player.id);
+
+      for (const enemy of enemies) {
+        for (const effect of turnInfo.enemiesEffects) {
+          this.addRewardToPlayer(enemy.id, effect);
+        }
+        this.resolveRewardChoices(enemy);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { enemiesEffects: [] });
+    }
   }
 
   private aiResolveRewardChoices(player: Player, depth = 0) {
@@ -1845,6 +1856,17 @@ export class GameManager {
         }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
+    }
+    if (turnInfo.enemiesEffects.length > 0) {
+      const enemies = this.playerManager.getEnemyPlayers(player.id);
+
+      for (const enemy of enemies) {
+        for (const effect of turnInfo.enemiesEffects) {
+          this.addRewardToPlayer(enemy.id, effect);
+        }
+        this.resolveRewardChoices(enemy);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { enemiesEffects: [] });
     }
     if (turnInfo.canBuyTech) {
       this.aiBuyTechIfPossible(player.id);
@@ -2146,6 +2168,22 @@ export class GameManager {
 
     if (playerCanAffordTechTile) {
       this.buyTechTileForPlayer(player, techTile, availablePlayerTech, 0);
+    }
+  }
+
+  activatePlayerTechtile(playerId: number, techTile: TechTileDeckCard) {
+    const player = this.playerManager.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+
+    if (techTile.structuredEffects) {
+      this.resolveStructuredEffects(techTile.structuredEffects, player, this.getGameState(player), {
+        type: 'tech-tile',
+        object: techTile,
+      });
+
+      this.resolveRewardChoices(player);
     }
   }
 
@@ -2738,6 +2776,10 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableDreadnoughts: rewardAmount });
     } else if (reward.type === 'dreadnought-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableDreadnoughts: rewardAmount });
+    } else if (reward.type === 'enemies-troop-destroy') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'loose-troop' }] });
+    } else if (reward.type === 'enemies-card-discard') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'card-discard' }] });
     }
     this.loggingService.logPlayerResourceGained(playerId, rewardType, rewardAmount);
   }
@@ -3121,6 +3163,8 @@ export class GameManager {
       'dreadnought-insert': 0,
       'dreadnought-insert-or-retreat': 0,
       'dreadnought-retreat': 0,
+      'enemies-card-discard': 0,
+      'enemies-troop-destroy': 0,
     };
   }
 }

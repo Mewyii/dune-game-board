@@ -57,6 +57,8 @@ export const effectRewards = [
   'dreadnought-insert',
   'dreadnought-insert-or-retreat',
   'dreadnought-retreat',
+  'enemies-card-discard',
+  'enemies-troop-destroy',
 ] as const;
 
 export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-reveal-turn'] as const;

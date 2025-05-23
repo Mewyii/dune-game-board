@@ -3,7 +3,7 @@ import { GameElement } from '../services/game-manager.service';
 import { ActiveFactionType } from './faction';
 import { IntrigueDeckCard } from './intrigue';
 import { ActionField } from './location';
-import { StructuredChoiceEffect } from './reward';
+import { EffectReward, StructuredChoiceEffect } from './reward';
 import { TechTileCard } from './tech-tile';
 
 export interface StructuredChoiceEffectWithGameElement extends StructuredChoiceEffect {
@@ -45,4 +45,5 @@ export interface TurnInfo {
   isDoingAIActions: boolean;
   effectOptions: StructuredChoiceEffectWithGameElement[];
   effectConversions: StructuredChoiceEffectWithGameElement[];
+  enemiesEffects: EffectReward[];
 }

@@ -166,6 +166,12 @@ export class CombatManager {
           troopsInCombat: troops,
           troopsInGarrison: combatScore.troopsInGarrison - changeOfTroopsInCombat,
         };
+      } else {
+        playerCombatUnits[playerCombatUnitsIndex] = {
+          ...combatScore,
+          troopsInCombat: combatScore.troopsInCombat + combatScore.troopsInGarrison,
+          troopsInGarrison: 0,
+        };
       }
     } else {
       playerCombatUnits.push({
@@ -273,6 +279,12 @@ export class CombatManager {
           ...combatScore,
           shipsInCombat: ships,
           shipsInGarrison: combatScore.shipsInGarrison - changeOfShipsInCombat,
+        };
+      } else {
+        playerCombatUnits[playerCombatUnitsIndex] = {
+          ...combatScore,
+          shipsInCombat: combatScore.shipsInCombat + combatScore.shipsInGarrison,
+          shipsInGarrison: 0,
         };
       }
     } else {
