@@ -56,7 +56,7 @@ export function getPlayerGarrisonStrength(player: PlayerCombatUnits) {
 
 export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {
   const goalDesire = goal.desireModifier(player, gameState, goals);
-  return clamp(goal.baseDesire + goalDesire, 0, goal.maxDesire ?? 1);
+  return clamp(goal.baseDesire + goalDesire, -1, goal.maxDesire ?? 1);
 }
 
 export function getMaxDesireOfUnreachableGoal(
@@ -137,15 +137,9 @@ export function noOneHasMoreInfluence(player: Player, gameState: GameState, fact
 
 export function getCostAdjustedDesire(player: Player, resources: Resource[], desire: number) {
   let desireAdjustment = 1.0;
-  let resourcesUsed: Resource[] = [];
   for (const resource of resources) {
     const costs = resource.amount ?? 1;
     const playerResourceAmount = getResourceAmount(player, resource.type);
-    const alreadyUsedResourceAmount = getResourceAmountFromArray(resourcesUsed, resource.type);
-
-    if (costs > playerResourceAmount - alreadyUsedResourceAmount) {
-      return 0;
-    }
 
     let resourceTypeModifier = 0.015 / desire;
     if (resource.type === 'spice') {
@@ -155,8 +149,6 @@ export function getCostAdjustedDesire(player: Player, resources: Resource[], des
     }
 
     desireAdjustment -= resourceTypeModifier * costs - (resourceTypeModifier / 2) * (playerResourceAmount - costs);
-
-    resourcesUsed.push(resource);
   }
   const minDesireAdjustment = desire * 0.5;
   const maxDesireAdjustment = desire * 1.5 <= 1.0 ? desire * 1.5 : 1.0;
@@ -165,7 +157,7 @@ export function getCostAdjustedDesire(player: Player, resources: Resource[], des
 }
 
 export function playerCanDrawCards(gameState: GameState, amount: number) {
-  return gameState.playerDeckCards && gameState.playerDeckCards.length > 0;
+  return gameState.playerDeckCards && gameState.playerDeckCards.length > amount;
 }
 
 export function getResourceAmountFromArray(resources: Resource[], type: ResourceType) {

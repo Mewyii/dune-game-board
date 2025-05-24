@@ -4,7 +4,7 @@ import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { randomizeArray } from 'src/app/helpers/common';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
-import { getRewardArrayAIInfos } from 'src/app/helpers/rewards';
+import { getFlattenedEffectRewardArray, getRewardArrayAIInfos } from 'src/app/helpers/rewards';
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { LeaderDeckCard } from '../leaders.service';
@@ -77,7 +77,7 @@ export class AIFieldEvaluationService {
         : x.value,
     }));
 
-    const accessibleFields = this.getAccessibleFields(boardFields, adjustedFieldEvaluations, gameState, aiPlayer);
+    const accessibleFields = this.getAccessibleFields(boardFields, adjustedFieldEvaluations, gameState, aiPlayer, player);
 
     const randomFactor = gameState.isOpeningTurn
       ? 0.66
@@ -123,16 +123,14 @@ export class AIFieldEvaluationService {
           for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields(boardFields))) {
             const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
 
-            if (fieldValue > 0) {
-              const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
-              if (index > -1) {
-                fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
-              } else {
-                fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
-              }
-
-              desireCanBeFullfilled = true;
+            const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
+            if (index > -1) {
+              fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
+            } else {
+              fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
             }
+
+            desireCanBeFullfilled = true;
           }
         }
 
@@ -140,13 +138,11 @@ export class AIFieldEvaluationService {
           for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields(boardFields))) {
             const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
 
-            if (fieldValue > 0) {
-              const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
-              if (index > -1) {
-                fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
-              } else {
-                fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
-              }
+            const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
+            if (index > -1) {
+              fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
+            } else {
+              fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
             }
           }
         }
@@ -159,7 +155,8 @@ export class AIFieldEvaluationService {
     boardFields: ActionField[],
     fieldEvaluations: FieldEvaluation[],
     gameState: GameState,
-    aiPlayer: AIPlayer
+    aiPlayer: AIPlayer,
+    player: Player
   ) {
     const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
 
@@ -173,6 +170,21 @@ export class AIFieldEvaluationService {
           return undefined;
         }
 
+        if (x.costs) {
+          let canPayCosts = true;
+          for (const cost of getFlattenedEffectRewardArray(x.costs)) {
+            const costAmount = cost.amount ?? 1;
+            const playerResourceAmount = player.resources.find((x) => x.type === cost.type)?.amount ?? 0;
+            if (playerResourceAmount < costAmount) {
+              canPayCosts = false;
+              break;
+            }
+          }
+          if (!canPayCosts) {
+            return undefined;
+          }
+        }
+
         const hasOwnAgentOnField = gameState.agentsOnFields.some(
           (y) => x.title.en.includes(y.fieldId) && y.playerId === aiPlayer.playerId
         );
@@ -180,17 +192,21 @@ export class AIFieldEvaluationService {
           (y) => x.title.en.includes(y.fieldId) && y.playerId !== aiPlayer.playerId
         );
 
-        const playerFieldEnemyAccessForActionTypes = [
-          ...gameState.playerEnemyFieldTypeAcessTroughCards,
-          ...gameState.playerEnemyFieldTypeAcessTroughGameModifiers,
-        ];
-        const hasEnemyAcess = playerFieldEnemyAccessForActionTypes.some((y) => y === x.actionType);
+        const hasEnemyAcessTroughGameModidifers = gameState.playerEnemyFieldTypeAcessTroughGameModifiers.some(
+          (y) => y === x.actionType
+        );
+        const hasEnemyAcessTroughInfiltration = gameState.playerEnemyFieldTypeAcessTroughCards.some(
+          (y) => y === x.actionType
+        );
 
-        if (hasOwnAgentOnField || (hasEnemyAgentOnField && !hasEnemyAcess)) {
+        if (
+          hasOwnAgentOnField ||
+          (hasEnemyAgentOnField && !hasEnemyAcessTroughGameModidifers && !hasEnemyAcessTroughInfiltration)
+        ) {
           return undefined;
         }
 
-        const requiresInfiltration = hasEnemyAgentOnField && !hasEnemyAcess;
+        const requiresInfiltration = hasEnemyAgentOnField && hasEnemyAcessTroughInfiltration;
 
         const fieldEvaluation = fieldEvaluations.find((y) => y.fieldId === x.title.en);
         if (fieldEvaluation) {

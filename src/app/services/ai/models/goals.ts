@@ -26,6 +26,7 @@ export type AIGoals =
   | 'guild-alliance'
   | 'emperor-alliance'
   | 'draw-cards'
+  | 'discard-cards'
   | 'trim-cards'
   | 'intrigues'
   | 'intrigue-steal'

@@ -236,10 +236,23 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-card-discard',
+      },
+    ],
     customEffect: {
-      en: '{resource:spice}{resource:helper-trade}Jeder Gegner: {resource:card-discard}',
-      de: '{resource:spice}{resource:helper-trade}Jeder Gegner: {resource:card-discard}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },
@@ -299,9 +312,11 @@ export const techTiles: TechTileCard[] = [
       de: 'Verbesserte Sandcrawler- Antriebe',
     },
     costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
-    imagePosition: 'center',
+    imageUrl: '/assets/images/action-backgrounds/tech.png',
+    effectSize: 'medium',
+    imagePosition: 'top',
     buyEffects: [],
+    effects: [],
     customEffect: {
       en: '<b>When you place an agent <br>on a {faction:spice} board space:</b><br>{resource:spice}',
       de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',

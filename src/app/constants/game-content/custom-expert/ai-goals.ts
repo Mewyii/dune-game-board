@@ -35,7 +35,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       0.0175 * (gameState.currentRound - 1) +
       (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
-    reachedGoal: (player, gameState) => player.hasCouncilSeat || gameState.isFinale,
+    reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
     desiredFields: (fields) => ({
       // Three because "amount" is used for the persuasion indicator
       ...getViableBoardFields(fields, 'council-seat-small', 0, 3),
@@ -257,12 +257,18 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState, goals) => !playerCanDrawCards(gameState, 1),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'card-draw', 0, 3),
-      Truthsay: (player, gameState, goals) =>
-        getCostAdjustedDesire(
-          player,
-          [{ type: 'spice', amount: 2 }],
-          clamp(0.5 + 0.025 * gameState.playerCardsBought, 0, 0.7)
-        ),
+    }),
+  },
+  'discard-cards': {
+    baseDesire: -0.1,
+    desireModifier: (player, gameState, goals) =>
+      0.01 * gameState.playerCardsBought -
+      0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
+      0.01 * (7 - gameState.playerCardsFieldAccess.length),
+    goalIsReachable: () => false,
+    reachedGoal: (player, gameState, goals) => gameState.playerHandCards.length < 1,
+    viableFields: (fields) => ({
+      ...getViableBoardFields(fields, 'card-discard', 0, 1),
     }),
   },
   'trim-cards': {

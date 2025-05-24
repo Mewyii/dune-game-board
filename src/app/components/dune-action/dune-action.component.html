@@ -107,7 +107,12 @@
     <dune-marker [type]="'ornithopter'"></dune-marker>
   </div>
   @for (player of additionalPlayersOnField; track $index; let i = $index) {
-  <div class="player-marker small" [style.color]="player.color" [style.top]="40 + i * 35 + 'px'">
+  <div
+    class="player-marker small"
+    [style.color]="player.color"
+    [style.top]="40 + i * 35 + 'px'"
+    (contextmenu)="onPlayerMarkerRightClicked(player.id, actionField.title.en)"
+  >
     <dune-marker [type]="'ornithopter'"></dune-marker>
   </div>
   }
