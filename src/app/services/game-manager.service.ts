@@ -1528,8 +1528,12 @@ export class GameManager {
       ) {
         conditionFullfilled = true;
       }
-    } else if (conditionalEffect.condition === 'condition-influence' && conditionalEffect.amount) {
-      if (gameState.playerScore[conditionalEffect.faction] >= conditionalEffect.amount) {
+    } else if (conditionalEffect.condition === 'condition-influence') {
+      if (conditionalEffect.amount && gameState.playerScore[conditionalEffect.faction] >= conditionalEffect.amount) {
+        conditionFullfilled = true;
+      }
+    } else if (conditionalEffect.condition === 'condition-high-council-seat') {
+      if (player.hasCouncilSeat) {
         conditionFullfilled = true;
       }
     }

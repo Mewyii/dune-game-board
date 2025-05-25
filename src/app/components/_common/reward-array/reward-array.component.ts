@@ -78,6 +78,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return type === 'condition-connection';
   }
 
+  public isHighCouncilConditionType(type: EffectType) {
+    return type === 'condition-high-council-seat';
+  }
+
   public getFactionTypePath(effect: any) {
     return getFactionTypePath(effect.faction);
   }

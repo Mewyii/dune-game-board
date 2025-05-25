@@ -90,12 +90,14 @@ export class AIEffectEvaluationService {
     }
 
     if (conditionEffect.condition === 'condition-connection') {
-      evaluationValue = 0.3 * evaluationValue + 0.15 * gameState.playerCardsFactions[conditionEffect.faction];
-    } else if (conditionEffect.condition === 'condition-influence' && conditionEffect.amount) {
+      evaluationValue = 0.25 * evaluationValue + 0.15 * gameState.playerCardsFactions[conditionEffect.faction];
+    } else if (conditionEffect.condition === 'condition-influence') {
       const factionScore = gameState.playerScore[conditionEffect.faction];
-      if (factionScore < conditionEffect.amount) {
+      if (conditionEffect.amount && factionScore < conditionEffect.amount) {
         evaluationValue = (evaluationValue * factionScore) / conditionEffect.amount;
       }
+    } else if (conditionEffect.condition === 'condition-high-council-seat') {
+      evaluationValue = evaluationValue * (player.hasCouncilSeat ? 1.0 : 0.25);
     }
     return evaluationValue;
   }
@@ -116,11 +118,13 @@ export class AIEffectEvaluationService {
       if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
         return evaluationValue;
       }
-    } else if (conditionEffect.condition === 'condition-influence' && conditionEffect.amount) {
+    } else if (conditionEffect.condition === 'condition-influence') {
       const factionScore = gameState.playerScore[conditionEffect.faction];
-      if (factionScore >= conditionEffect.amount) {
+      if (conditionEffect.amount && factionScore >= conditionEffect.amount) {
         return evaluationValue;
       }
+    } else if (conditionEffect.condition === 'condition-high-council-seat') {
+      return evaluationValue;
     }
     return 0;
   }

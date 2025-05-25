@@ -15,6 +15,7 @@ export const deLocale: Locale = {
     'Mit dem Update werden alle deine lokalen Daten gelöscht! Bitte speichere deine eigenen Anführer, Tech-Plättchen, Intriguen und Imperium-Karten, bevor du akzeptierst!',
   commonEffectConditionInfluence: 'Einfluss',
   commonEffectConditionConnection: 'Verbindung',
+  commonEffectConditionHighCouncilSeat: 'Sitz im hohen Rat',
   commonEffectTimingGameStart: 'Spielbeginn',
   commonEffectTimingRoundStart: 'Rundenbeginn',
   commonEffectTimingRevealTurn: 'Aufdeckzug',

@@ -30,6 +30,12 @@
         -{{ t.translate('commonEffectConditionConnection') }}:
       </div>
     </div>
+    } @else if (isHighCouncilConditionType(reward.type)) {
+    <div class="condition-container">
+      <div [class]="'text ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+        {{ t.translate('commonEffectConditionHighCouncilSeat') }}:
+      </div>
+    </div>
     } } @else if (reward.type === 'troop-insert') {
     <div
       [class]="'text ' + textColor"

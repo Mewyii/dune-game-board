@@ -67,7 +67,7 @@ export const effectSeparators = ['helper-separator'] as const;
 
 export const effectChoices = ['helper-or', 'helper-or-horizontal', 'helper-trade', 'helper-trade-horizontal'] as const;
 
-export const effectConditions = ['condition-influence', 'condition-connection'] as const;
+export const effectConditions = ['condition-influence', 'condition-connection', 'condition-high-council-seat'] as const;
 
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
 
