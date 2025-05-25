@@ -465,6 +465,8 @@ export class GameManager {
 
     this.techTilesService.unFlipTechTiles();
 
+    this.turnInfoService.resetTurnInfos();
+
     const nextEvent = this.duneEventsManager.setNextEvent();
     if (nextEvent && nextEvent.gameEffects) {
       this.resolveGameEffects(nextEvent.gameEffects);

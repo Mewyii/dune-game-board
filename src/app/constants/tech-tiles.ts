@@ -104,6 +104,32 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Personal Suspensors',
+      de: 'Persönliche Suspensoren',
+    },
+    faction: 'emperor',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/jet_packs.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'troop-insert',
+        amount: 1,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Maula Pistol Works',
       de: 'Maula-Pistolen Werk',
     },

@@ -227,4 +227,12 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   { id: 'Planetary Surveillance', aiEvaluation: (player, gameState) => 0.75 - 0.05 * (gameState.currentRound - 1) },
   { id: 'Satellite Control', aiEvaluation: (player, gameState) => 0.2 + 0.05 * gameState.playerCardsRewards.spice },
+  {
+    id: 'Personal Suspensors',
+    aiEvaluation: (player, gameState) =>
+      0.4 +
+      0.025 * gameState.playerCardsRewards.troop -
+      0.01 * (gameState.currentRound - 1) -
+      (player.hasSwordmaster ? 0.0 : 0.1),
+  },
 ];

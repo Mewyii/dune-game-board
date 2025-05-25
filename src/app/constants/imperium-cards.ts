@@ -1464,6 +1464,54 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Ruthless Harvest',
+      de: 'Rücksichtslose Ernte',
+    },
+    faction: 'emperor',
+    persuasionCosts: 1,
+    fieldAccess: ['spice'],
+    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-influence',
+        amount: 2,
+        faction: 'emperor',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Pledge of Loyalty',
       de: 'Loyalitätsbekundung',
     },
@@ -1546,8 +1594,8 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Imperial Spy',
-      de: 'Imperialer Spion',
+      en: 'Imperial Spies',
+      de: 'Imperiale Spione',
     },
     faction: 'emperor',
     persuasionCosts: 2,
@@ -2605,6 +2653,56 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Shadout Mapes, Believer',
+      de: 'Shadout Mapes, Gläubige',
+    },
+    faction: 'fremen',
+    persuasionCosts: 2,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/shadout.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'small',
+    customAgentEffect: {
+      en: 'Each opponent reveals one of his intrigues.',
+      de: 'Jeder Gegner deckt eine seiner Intrigen auf.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'trash-self',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'condition-connection',
+        faction: 'bene',
+      },
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'fremen',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Desert Ambush',
       de: 'Wüsten-Hinterhalt',
     },
@@ -2755,6 +2853,70 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     revealEffects: [],
+  },
+  {
+    name: {
+      en: 'Shishakli, Fedaykin Commando',
+      de: 'Shishakli, Fedaykin Kommando',
+    },
+    faction: 'fremen',
+    persuasionCosts: 3,
+    fieldAccess: ['fremen', 'spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/shishakli.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'fremen',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
   },
   {
     name: {

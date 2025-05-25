@@ -17,7 +17,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           factionType: 'fremen',
           noInfluence: true,
           alternateReward: {
-            type: 'card-draw',
+            type: 'troop',
           },
         },
       ],
