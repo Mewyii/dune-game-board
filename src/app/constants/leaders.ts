@@ -40,8 +40,8 @@ export const leaders: Leader[] = [
       de: 'Die Wege der Fremen',
     },
     signetDescription: {
-      en: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. You may trash it at any time to get {resource:sword}{resource:sword}{resource:sword}.',
-      de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst es jederzeit entsorgen, um {resource:sword}{resource:sword}{resource:sword} zu erhalten.',
+      en: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. You may trash it during combat to get {resource:sword}{resource:sword}{resource:sword}.',
+      de: '{resource:loose-troop}{resource:helper-trade}{resource:signet-token}. Du kannst es während des Kampfes entsorgen, um {resource:sword}{resource:sword}{resource:sword} zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/stilgar.png',
     type: 'new',
@@ -53,6 +53,7 @@ export const leaders: Leader[] = [
       },
       {
         type: 'troop',
+        amount: 2,
       },
     ],
     passiveEffects: [
@@ -224,20 +225,20 @@ export const leaders: Leader[] = [
       de: 'Blind und doch Sehend',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: Before you reveal, you may put <b>1</b> of your cards in play back to your hand.',
-      de: '<b>Aufdeckzug</b>: Bevor du aufdeckst, darfst du <b>1</b> deiner Karten im Spiel zurück auf deine Hand nehmen.',
+      en: '<b>Reveal turn</b>: For each of your agents <br>on {faction:town} board spaces: {resource:persuasion;amount:1}, on {faction:fremen} board spaces: {resource:troop}',
+      de: '<b>Aufdeckzug</b>: Für jeden deiner Agenten auf {faction:town}-Feldern: {resource:persuasion;amount:1}, auf {faction:fremen}-Feldern: {resource:troop}',
     },
     signetName: {
       en: 'Accusing prophet',
       de: 'Anklagender Prophet',
     },
     signetDescription: {
-      en: 'Each player: {resource:card-discard}',
-      de: 'Jeder Spieler: {resource:card-discard}',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/preacher.png',
     type: 'new',
-    passiveEffectSize: 'medium',
+    passiveEffectSize: 'small',
     signetEffectSize: 'medium',
     startingResources: [
       {
@@ -245,7 +246,11 @@ export const leaders: Leader[] = [
       },
     ],
     passiveEffects: [],
-    signetEffects: [],
+    signetEffects: [
+      {
+        type: 'enemies-card-discard',
+      },
+    ],
   },
   {
     name: {
@@ -299,8 +304,8 @@ export const leaders: Leader[] = [
       de: 'Rücksichtsloser Ehrgeiz',
     },
     passiveDescription: {
-      en: 'Every time you draw an intrigue card you may: {resource:solari}{resource:helper-trade}{resource:intrigue-trash}{resource:intrigue}',
-      de: 'Immer wenn du eine Intrige erhältst, kannst du: {resource:solari}{resource:helper-trade}{resource:intrigue-trash}{resource:intrigue}',
+      en: "<b>Round start</b>: If you don't have any intrigues, receive {resource:intrigue} and reveal it.",
+      de: '<b>Rundenbeginn</b>: Wenn du keine Intrigen besitzt, erhalte {resource:intrigue} und decke sie auf.',
     },
     signetName: {
       en: 'Hidden poison',
@@ -312,7 +317,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/feyd.png',
     type: 'new',
-    passiveEffectSize: 'medium',
+    passiveEffectSize: 'small',
     signetEffectSize: 'small',
     startingResources: [
       {
@@ -434,19 +439,21 @@ export const leaders: Leader[] = [
       de: 'Ixianische Geschenke',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: You may trash 1 tech tile to get {resource:faction-influence-up-choice}.',
-      de: '<b>Aufdeckzug</b>: Du kannst 1 Tech-Plättchen entsorgen, um {resource:faction-influence-up-choice} zu erhalten.',
+      en: '<b>Reveal turn</b>: You may trash ein tech tile to get {resource:faction-influence-up-choice}.',
+      de: '<b>Aufdeckzug</b>: Du kannst ein Tech-Plättchen entsorgen, um {resource:faction-influence-up-choice} zu erhalten.',
     },
     signetName: {
       en: 'Inspiring presence',
       de: 'Inspirierende Präsenz',
     },
     signetDescription: {
-      en: '{resource:card-draw}{resource:helper-or}You can activate the agent effect of one of your handcards.',
-      de: '{resource:card-draw}{resource:helper-or}Aktiviere den Agenten-Effekt einer deiner Handkarten.',
+      en: 'Put <b>1</b> of your cards in play back to your hand.',
+      de: 'Nimm <b>1</b> deiner Karten im Spiel zurück auf deine Hand.',
     },
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
     startingResources: [
       {
         type: 'tech',
@@ -456,6 +463,8 @@ export const leaders: Leader[] = [
         amount: 3,
       },
     ],
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -897,8 +906,8 @@ export const leaders: Leader[] = [
       de: 'Unterdrückung',
     },
     signetDescription: {
-      en: '{resource:solari}{resource:helper-or}Receive the bonus of up to <b>2</b> locations under your control.',
-      de: '{resource:solari}{resource:helper-or}Erhalte den Bonus von bis zu <b>2</b> Orten unter deiner Kontrolle.',
+      en: '{resource:spice}{resource:helper-or}Receive the bonus of up to <b>2</b> locations under your control.',
+      de: '{resource:spice}{resource:helper-or}Erhalte den Bonus von bis zu <b>2</b> Orten unter deiner Kontrolle.',
     },
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
@@ -984,24 +993,28 @@ export const leaders: Leader[] = [
       de: 'Zwangsrekrutierung',
     },
     passiveDescription: {
-      en: '<b>Reveal turn:</b> Trash any amount of times one of your {resource:signet-token} to gain {resource:troop}.',
-      de: '<b>Aufdeckzug:</b> Entsorge beliebig viele deiner {resource:signet-token}, um dafür jeweils {resource:troop} zu erhalten.',
+      en: '<b>Reveal turn:</b> You may trash one of your {resource:signet-token} to gain {resource:troop}.',
+      de: '<b>Aufdeckzug:</b> Du kannst eines deiner {resource:signet-token} entsorgen, um dafür {resource:troop} zu erhalten.',
     },
     signetName: {
       en: 'Labour camps',
       de: 'Arbeitslager',
     },
     signetDescription: {
-      en: 'Place {resource:signet-token} on a board space that has one of your agents on it. If you have troops in combat: {resource:spice}',
+      en: 'Place {resource:signet-token} on a board space that has one of your agents on it. If a player places an agent there, you and this player gain {resource:solari}.',
       de: 'Lege {resource:signet-token} auf ein {faction:town}-Feld mit einem deiner Agenten. Wenn ein Spieler dort einen Agent platziert, erhältst du und der Spieler jeweils {resource:solari}.',
     },
     imageUrl: '/assets/images/leaders/yuna_2.png',
     type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
     startingResources: [
       {
         type: 'troop',
       },
     ],
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -1017,8 +1030,8 @@ export const leaders: Leader[] = [
       de: 'In den Schatten',
     },
     passiveDescription: {
-      en: "Enemy agents don't block board spaces for you.",
-      de: 'Gegnerische Agenten blockieren Felder für dich nicht.',
+      en: "Enemy agents don't block board spaces for you.<br><br>All {faction:landsraad} board spaces cost you {resource:solari} more.",
+      de: 'Gegnerische Agenten blockieren Felder für dich nicht.<br><br>{faction:landsraad}-Felder kosten dich zusätzlich {resource:solari}.',
     },
     signetName: {
       en: 'Extortion',

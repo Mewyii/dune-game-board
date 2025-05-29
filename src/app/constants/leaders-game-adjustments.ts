@@ -144,6 +144,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           actionTypes: ['bene', 'choam', 'emperor', 'fremen', 'guild', 'landsraad', 'spice', 'town'],
         },
       ],
+      fieldCost: [{ id: 'dara-landsraad-costs', actionType: 'landsraad', costType: 'solari', amount: 1 }],
     },
   },
 ];
