@@ -18,9 +18,10 @@ import { PlayersService } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'app-dune-action',
-  templateUrl: './dune-action.component.html',
-  styleUrls: ['./dune-action.component.scss'],
+    selector: 'app-dune-action',
+    templateUrl: './dune-action.component.html',
+    styleUrls: ['./dune-action.component.scss'],
+    standalone: false
 })
 export class DuneActionComponent implements OnInit, OnChanges {
   @Input() actionField: ActionField = {

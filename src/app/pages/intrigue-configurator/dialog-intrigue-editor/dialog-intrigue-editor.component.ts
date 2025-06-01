@@ -5,9 +5,10 @@ import { IntrigueCard } from 'src/app/models/intrigue';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-dialog-intrigue-editor',
-  templateUrl: './dialog-intrigue-editor.component.html',
-  styleUrls: ['./dialog-intrigue-editor.component.scss'],
+    selector: 'dune-dialog-intrigue-editor',
+    templateUrl: './dialog-intrigue-editor.component.html',
+    styleUrls: ['./dialog-intrigue-editor.component.scss'],
+    standalone: false
 })
 export class DialogIntrigueEditorComponent {
   @ViewChild(IntrigueEditorComponent) intrigueEditorComponent!: IntrigueEditorComponent;

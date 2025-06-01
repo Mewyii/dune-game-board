@@ -14,9 +14,10 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 
 @Component({
-  selector: 'dune-imperium-row',
-  templateUrl: './imperium-row.component.html',
-  styleUrls: ['./imperium-row.component.scss'],
+    selector: 'dune-imperium-row',
+    templateUrl: './imperium-row.component.html',
+    styleUrls: ['./imperium-row.component.scss'],
+    standalone: false
 })
 export class ImperiumRowComponent implements OnInit {
   public imperiumRowCards: (ImperiumRowCard | ImperiumRowPlot)[] = [];

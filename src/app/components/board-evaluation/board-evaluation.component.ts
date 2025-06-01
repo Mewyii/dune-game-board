@@ -9,9 +9,10 @@ interface FieldValue {
 }
 
 @Component({
-  selector: 'dune-board-evaluation',
-  templateUrl: './board-evaluation.component.html',
-  styleUrls: ['./board-evaluation.component.scss'],
+    selector: 'dune-board-evaluation',
+    templateUrl: './board-evaluation.component.html',
+    styleUrls: ['./board-evaluation.component.scss'],
+    standalone: false
 })
 export class BoardEvaluationComponent implements OnInit {
   public fieldValues: FieldValue[] = [];

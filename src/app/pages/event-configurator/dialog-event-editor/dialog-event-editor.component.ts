@@ -5,9 +5,10 @@ import { EventEditorComponent } from '../event-editor/event-editor.component';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-dialog-event-editor',
-  templateUrl: './dialog-event-editor.component.html',
-  styleUrls: ['./dialog-event-editor.component.scss'],
+    selector: 'dune-dialog-event-editor',
+    templateUrl: './dialog-event-editor.component.html',
+    styleUrls: ['./dialog-event-editor.component.scss'],
+    standalone: false
 })
 export class DialogEventEditorComponent {
   @ViewChild(EventEditorComponent) eventEditorComponent!: EventEditorComponent;

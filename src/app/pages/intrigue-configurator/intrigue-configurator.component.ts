@@ -8,9 +8,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-intrigue-editor.component';
 
 @Component({
-  selector: 'dune-intrigue-configurator',
-  templateUrl: './intrigue-configurator.component.html',
-  styleUrl: './intrigue-configurator.component.scss',
+    selector: 'dune-intrigue-configurator',
+    templateUrl: './intrigue-configurator.component.html',
+    styleUrl: './intrigue-configurator.component.scss',
+    standalone: false
 })
 export class IntrigueConfiguratorComponent implements OnInit {
   public intrigues: IntrigueCard[] = [];

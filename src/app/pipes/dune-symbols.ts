@@ -4,7 +4,10 @@ import { ActionType, EffectRewardType } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { getActionTypePath } from '../helpers/action-types';
 
-@Pipe({ name: 'duneSymbols' })
+@Pipe({
+    name: 'duneSymbols',
+    standalone: false
+})
 export class DuneSymbolsPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 

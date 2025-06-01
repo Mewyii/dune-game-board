@@ -5,9 +5,10 @@ import { NotificationComponent } from '../notification/notification.component';
 import { LanguageType } from 'src/app/models';
 
 @Component({
-  selector: 'dune-translation',
-  templateUrl: './translation.component.html',
-  styleUrl: './translation.component.scss',
+    selector: 'dune-translation',
+    templateUrl: './translation.component.html',
+    styleUrl: './translation.component.scss',
+    standalone: false
 })
 export class TranslationComponent {
   showLanguageSelection = false;

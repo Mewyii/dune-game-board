@@ -7,9 +7,10 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
 
 @Component({
-  selector: 'dune-intrigues',
-  templateUrl: './intrigues.component.html',
-  styleUrl: './intrigues.component.scss',
+    selector: 'dune-intrigues',
+    templateUrl: './intrigues.component.html',
+    styleUrl: './intrigues.component.scss',
+    standalone: false
 })
 export class IntriguesComponent {
   constructor(

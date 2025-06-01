@@ -18,9 +18,10 @@ import {
 import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Component({
-  selector: 'dune-tech-tile-editor',
-  templateUrl: './tech-tile-editor.component.html',
-  styleUrls: ['./tech-tile-editor.component.scss'],
+    selector: 'dune-tech-tile-editor',
+    templateUrl: './tech-tile-editor.component.html',
+    styleUrls: ['./tech-tile-editor.component.scss'],
+    standalone: false
 })
 export class TechTileEditorComponent implements OnInit, OnChanges {
   @Input() techTile: TechTileCard | null = null;

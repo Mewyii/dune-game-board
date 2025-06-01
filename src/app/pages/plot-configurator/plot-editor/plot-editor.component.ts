@@ -14,9 +14,10 @@ import {
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 
 @Component({
-  selector: 'dune-plot-editor',
-  templateUrl: './plot-editor.component.html',
-  styleUrls: ['./plot-editor.component.scss'],
+    selector: 'dune-plot-editor',
+    templateUrl: './plot-editor.component.html',
+    styleUrls: ['./plot-editor.component.scss'],
+    standalone: false
 })
 export class PlotEditorComponent implements OnInit, OnChanges {
   @Input() imperiumPlot: ImperiumPlot | null = null;

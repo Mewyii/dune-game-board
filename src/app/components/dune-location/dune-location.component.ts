@@ -10,9 +10,10 @@ import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { Player } from 'src/app/models/player';
 
 @Component({
-  selector: 'app-dune-location',
-  templateUrl: './dune-location.component.html',
-  styleUrls: ['./dune-location.component.scss'],
+    selector: 'app-dune-location',
+    templateUrl: './dune-location.component.html',
+    styleUrls: ['./dune-location.component.scss'],
+    standalone: false
 })
 export class DuneLocationComponent implements OnInit {
   @Input() location: DuneLocation = {

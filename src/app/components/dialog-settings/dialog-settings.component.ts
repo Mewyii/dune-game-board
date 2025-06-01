@@ -5,9 +5,10 @@ import { AIDIfficultyTypes, AIManager } from 'src/app/services/ai/ai.manager';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
-  selector: 'dune-dialog-settings',
-  templateUrl: './dialog-settings.component.html',
-  styleUrls: ['./dialog-settings.component.scss'],
+    selector: 'dune-dialog-settings',
+    templateUrl: './dialog-settings.component.html',
+    styleUrls: ['./dialog-settings.component.scss'],
+    standalone: false
 })
 export class DialogSettingsComponent {
   public aiDifficulty: AIDIfficultyTypes | undefined;

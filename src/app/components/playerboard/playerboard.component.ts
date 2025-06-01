@@ -19,9 +19,10 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 
 @Component({
-  selector: 'app-playerboard',
-  templateUrl: './playerboard.component.html',
-  styleUrls: ['./playerboard.component.scss'],
+    selector: 'app-playerboard',
+    templateUrl: './playerboard.component.html',
+    styleUrls: ['./playerboard.component.scss'],
+    standalone: false
 })
 export class PlayerboardComponent implements OnInit {
   public players: Player[] = [];

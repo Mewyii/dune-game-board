@@ -4,9 +4,10 @@ import { EffectType } from 'src/app/models';
 import { StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 
 @Component({
-  selector: 'dune-player-effect-conversion',
-  templateUrl: './player-effect-conversion.component.html',
-  styleUrl: './player-effect-conversion.component.scss',
+    selector: 'dune-player-effect-conversion',
+    templateUrl: './player-effect-conversion.component.html',
+    styleUrl: './player-effect-conversion.component.scss',
+    standalone: false
 })
 export class PlayerEffectConversionComponent {
   @Input() effectConversion!: StructuredConversionEffectWithGameElement;

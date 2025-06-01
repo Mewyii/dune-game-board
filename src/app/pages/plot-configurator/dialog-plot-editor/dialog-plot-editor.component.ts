@@ -5,9 +5,10 @@ import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-dialog-plot-editor',
-  templateUrl: './dialog-plot-editor.component.html',
-  styleUrls: ['./dialog-plot-editor.component.scss'],
+    selector: 'dune-dialog-plot-editor',
+    templateUrl: './dialog-plot-editor.component.html',
+    styleUrls: ['./dialog-plot-editor.component.scss'],
+    standalone: false
 })
 export class DialogPlotEditorComponent {
   @ViewChild(PlotEditorComponent) plotEditorComponent!: PlotEditorComponent;

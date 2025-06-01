@@ -6,9 +6,10 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-ai-tile',
-  templateUrl: './ai-tile.component.html',
-  styleUrls: ['./ai-tile.component.scss'],
+    selector: 'dune-ai-tile',
+    templateUrl: './ai-tile.component.html',
+    styleUrls: ['./ai-tile.component.scss'],
+    standalone: false
 })
 export class AITileComponent implements OnInit {
   @Input() showDetails = false;

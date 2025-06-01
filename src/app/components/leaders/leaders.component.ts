@@ -23,9 +23,10 @@ import { AdditionalPlayerActionsDialogComponent } from '../_common/dialogs/addit
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'dune-leaders',
-  templateUrl: './leaders.component.html',
-  styleUrls: ['./leaders.component.scss'],
+    selector: 'dune-leaders',
+    templateUrl: './leaders.component.html',
+    styleUrls: ['./leaders.component.scss'],
+    standalone: false
 })
 export class LeadersComponent implements OnInit {
   public leaders: LeaderDeckCard[] = [];

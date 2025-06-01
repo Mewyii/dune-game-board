@@ -7,9 +7,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-imperium-row-card',
-  templateUrl: './imperium-row-card.component.html',
-  styleUrls: ['./imperium-row-card.component.scss'],
+    selector: 'dune-imperium-row-card',
+    templateUrl: './imperium-row-card.component.html',
+    styleUrls: ['./imperium-row-card.component.scss'],
+    standalone: false
 })
 export class ImperiumRowCardComponent implements OnInit, OnChanges {
   @Input() card!: ImperiumCard;

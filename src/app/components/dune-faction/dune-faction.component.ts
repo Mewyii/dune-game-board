@@ -10,9 +10,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'app-dune-faction',
-  templateUrl: './dune-faction.component.html',
-  styleUrls: ['./dune-faction.component.scss'],
+    selector: 'app-dune-faction',
+    templateUrl: './dune-faction.component.html',
+    styleUrls: ['./dune-faction.component.scss'],
+    standalone: false
 })
 export class DuneFactionComponent implements OnInit {
   @Input() faction: Faction = {

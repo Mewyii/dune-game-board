@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'dune-soundcloud-player',
-  templateUrl: './soundcloud-player.component.html',
-  styleUrl: './soundcloud-player.component.scss',
+    selector: 'dune-soundcloud-player',
+    templateUrl: './soundcloud-player.component.html',
+    styleUrl: './soundcloud-player.component.scss',
+    standalone: false
 })
 export class SoundcloudPlayerComponent implements AfterViewInit {
   @Input() musicId = 0;

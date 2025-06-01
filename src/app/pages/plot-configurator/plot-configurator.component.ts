@@ -9,9 +9,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogPlotEditorComponent } from './dialog-plot-editor/dialog-plot-editor.component';
 
 @Component({
-  selector: 'dune-plot-configurator',
-  templateUrl: './plot-configurator.component.html',
-  styleUrl: './plot-configurator.component.scss',
+    selector: 'dune-plot-configurator',
+    templateUrl: './plot-configurator.component.html',
+    styleUrl: './plot-configurator.component.scss',
+    standalone: false
 })
 export class PlotConfiguratorComponent {
   public imperiumPlots: ImperiumPlot[] = [];

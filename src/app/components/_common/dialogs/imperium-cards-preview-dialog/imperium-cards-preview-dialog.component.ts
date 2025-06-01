@@ -5,9 +5,10 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-imperium-cards-preview-dialog',
-  templateUrl: './imperium-cards-preview-dialog.component.html',
-  styleUrl: './imperium-cards-preview-dialog.component.scss',
+    selector: 'dune-imperium-cards-preview-dialog',
+    templateUrl: './imperium-cards-preview-dialog.component.html',
+    styleUrl: './imperium-cards-preview-dialog.component.scss',
+    standalone: false
 })
 export class ImperiumCardsPreviewDialogComponent implements OnInit {
   public searchString = '';

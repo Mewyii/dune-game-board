@@ -7,9 +7,10 @@ import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { ConflictsPreviewDialogComponent } from '../_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
 
 @Component({
-  selector: 'dune-conflicts',
-  templateUrl: './conflicts.component.html',
-  styleUrls: ['./conflicts.component.scss'],
+    selector: 'dune-conflicts',
+    templateUrl: './conflicts.component.html',
+    styleUrls: ['./conflicts.component.scss'],
+    standalone: false
 })
 export class ConflictsComponent implements OnInit {
   constructor(

@@ -5,9 +5,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'dune-version-updater',
-  templateUrl: './dune-version-updater.component.html',
-  styleUrl: './dune-version-updater.component.scss',
+    selector: 'dune-version-updater',
+    templateUrl: './dune-version-updater.component.html',
+    styleUrl: './dune-version-updater.component.scss',
+    standalone: false
 })
 export class DuneVersionUpdaterComponent {
   public appVersionChanged = false;

@@ -18,9 +18,10 @@ export interface CombatScore {
 }
 
 @Component({
-  selector: 'app-dune-combat',
-  templateUrl: './dune-combat.component.html',
-  styleUrls: ['./dune-combat.component.scss'],
+    selector: 'app-dune-combat',
+    templateUrl: './dune-combat.component.html',
+    styleUrls: ['./dune-combat.component.scss'],
+    standalone: false
 })
 export class DuneCombatComponent implements OnInit {
   @Input() useDreadnoughts = false;

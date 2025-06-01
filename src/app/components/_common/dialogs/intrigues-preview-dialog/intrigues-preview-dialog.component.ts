@@ -5,9 +5,10 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-intrigues-preview-dialog',
-  templateUrl: './intrigues-preview-dialog.component.html',
-  styleUrl: './intrigues-preview-dialog.component.scss',
+    selector: 'dune-intrigues-preview-dialog',
+    templateUrl: './intrigues-preview-dialog.component.html',
+    styleUrl: './intrigues-preview-dialog.component.scss',
+    standalone: false
 })
 export class IntriguesPreviewDialogComponent {
   constructor(

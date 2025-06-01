@@ -4,9 +4,10 @@ import { Conflict } from 'src/app/models/conflict';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-conflicts-preview-dialog',
-  templateUrl: './conflicts-preview-dialog.component.html',
-  styleUrl: './conflicts-preview-dialog.component.scss',
+    selector: 'dune-conflicts-preview-dialog',
+    templateUrl: './conflicts-preview-dialog.component.html',
+    styleUrl: './conflicts-preview-dialog.component.scss',
+    standalone: false
 })
 export class ConflictsPreviewDialogComponent {
   constructor(

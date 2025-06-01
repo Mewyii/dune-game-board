@@ -3,9 +3,10 @@ import { DuneEvent } from 'src/app/constants/events';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-event-card',
-  templateUrl: './event-card.component.html',
-  styleUrls: ['./event-card.component.scss'],
+    selector: 'dune-event-card',
+    templateUrl: './event-card.component.html',
+    styleUrls: ['./event-card.component.scss'],
+    standalone: false
 })
 export class EventCardComponent {
   @Input() event!: DuneEvent;

@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Faction } from 'src/app/models';
 
 @Component({
-  selector: 'dune-alliance-token',
-  templateUrl: './alliance-token.component.html',
-  styleUrls: ['./alliance-token.component.scss'],
+    selector: 'dune-alliance-token',
+    templateUrl: './alliance-token.component.html',
+    styleUrls: ['./alliance-token.component.scss'],
+    standalone: false
 })
 export class AllianceTokenComponent {
   @Input() faction: Faction = {

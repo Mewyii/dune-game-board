@@ -10,9 +10,10 @@ import { TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-tech-tiles',
-  templateUrl: './tech-tiles.component.html',
-  styleUrls: ['./tech-tiles.component.scss'],
+    selector: 'dune-tech-tiles',
+    templateUrl: './tech-tiles.component.html',
+    styleUrls: ['./tech-tiles.component.scss'],
+    standalone: false
 })
 export class TechTilesComponent {
   public availableTechTiles: TechTileDeckCard[] = [];

@@ -5,9 +5,10 @@ import { ImperiumCard } from 'src/app/models/imperium-card';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-dialog-card-editor',
-  templateUrl: './dialog-card-editor.component.html',
-  styleUrls: ['./dialog-card-editor.component.scss'],
+    selector: 'dune-dialog-card-editor',
+    templateUrl: './dialog-card-editor.component.html',
+    styleUrls: ['./dialog-card-editor.component.scss'],
+    standalone: false
 })
 export class DialogCardEditorComponent {
   @ViewChild(CardEditorComponent) cardEditorComponent!: CardEditorComponent;

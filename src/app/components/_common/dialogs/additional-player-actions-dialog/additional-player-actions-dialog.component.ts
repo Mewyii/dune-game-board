@@ -14,9 +14,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-additional-player-actions-dialog',
-  templateUrl: './additional-player-actions-dialog.component.html',
-  styleUrl: './additional-player-actions-dialog.component.scss',
+    selector: 'dune-additional-player-actions-dialog',
+    templateUrl: './additional-player-actions-dialog.component.html',
+    styleUrl: './additional-player-actions-dialog.component.scss',
+    standalone: false
 })
 export class AdditionalPlayerActionsDialogComponent implements OnInit {
   public activePlayer: Player | undefined;

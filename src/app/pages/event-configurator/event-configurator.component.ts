@@ -8,9 +8,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogEventEditorComponent } from './dialog-event-editor/dialog-event-editor.component';
 
 @Component({
-  selector: 'dune-event-configurator',
-  templateUrl: './event-configurator.component.html',
-  styleUrls: ['./event-configurator.component.scss'],
+    selector: 'dune-event-configurator',
+    templateUrl: './event-configurator.component.html',
+    styleUrls: ['./event-configurator.component.scss'],
+    standalone: false
 })
 export class EventConfiguratorComponent {
   public events: DuneEvent[] = [];

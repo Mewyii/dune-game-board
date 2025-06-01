@@ -8,9 +8,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 
 @Component({
-  selector: 'dune-tech-tile-configurator',
-  templateUrl: './tech-tile-configurator.component.html',
-  styleUrl: './tech-tile-configurator.component.scss',
+    selector: 'dune-tech-tile-configurator',
+    templateUrl: './tech-tile-configurator.component.html',
+    styleUrl: './tech-tile-configurator.component.scss',
+    standalone: false
 })
 export class TechTileConfiguratorComponent implements OnInit {
   public techTiles: TechTileCard[] = [];

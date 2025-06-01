@@ -6,9 +6,10 @@ import { Effect, EffectTimingConditionChoiceConversionOrReward, EffectType } fro
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-reward-array',
-  templateUrl: './reward-array.component.html',
-  styleUrl: './reward-array.component.scss',
+    selector: 'dune-reward-array',
+    templateUrl: './reward-array.component.html',
+    styleUrl: './reward-array.component.scss',
+    standalone: false
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
   public effectArrays: EffectTimingConditionChoiceConversionOrReward[][] = [];

@@ -6,9 +6,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-plot-card',
-  templateUrl: './plot-card.component.html',
-  styleUrl: './plot-card.component.scss',
+    selector: 'dune-plot-card',
+    templateUrl: './plot-card.component.html',
+    styleUrl: './plot-card.component.scss',
+    standalone: false
 })
 export class PlotCardComponent {
   @Input() plot!: ImperiumPlot;

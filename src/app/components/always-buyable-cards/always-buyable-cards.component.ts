@@ -13,9 +13,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-always-buyable-cards',
-  templateUrl: './always-buyable-cards.component.html',
-  styleUrls: ['./always-buyable-cards.component.scss'],
+    selector: 'dune-always-buyable-cards',
+    templateUrl: './always-buyable-cards.component.html',
+    styleUrls: ['./always-buyable-cards.component.scss'],
+    standalone: false
 })
 export class AlwaysBuyableCardsComponent {
   public mode: AppMode | undefined;

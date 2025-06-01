@@ -9,9 +9,10 @@ interface HomeworldUpgrade {
 }
 
 @Component({
-  selector: 'dune-homeworld-tile',
-  templateUrl: './homeworld-tile.component.html',
-  styleUrls: ['./homeworld-tile.component.scss'],
+    selector: 'dune-homeworld-tile',
+    templateUrl: './homeworld-tile.component.html',
+    styleUrls: ['./homeworld-tile.component.scss'],
+    standalone: false
 })
 export class HomeworldTileComponent implements OnInit {
   public upgrades: HomeworldUpgrade[] = [

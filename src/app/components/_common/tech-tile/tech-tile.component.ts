@@ -8,9 +8,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-tech-tile',
-  templateUrl: './tech-tile.component.html',
-  styleUrl: './tech-tile.component.scss',
+    selector: 'dune-tech-tile',
+    templateUrl: './tech-tile.component.html',
+    styleUrl: './tech-tile.component.scss',
+    standalone: false
 })
 export class TechTileComponent implements OnInit, OnChanges {
   @Input() card!: TechTileCard;

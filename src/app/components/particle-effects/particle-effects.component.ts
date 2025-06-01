@@ -5,9 +5,10 @@ import { Effect, EffectsService } from 'src/app/services/effects/effects.service
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-particle-effects',
-  templateUrl: './particle-effects.component.html',
-  styleUrls: ['./particle-effects.component.scss'],
+    selector: 'dune-particle-effects',
+    templateUrl: './particle-effects.component.html',
+    styleUrls: ['./particle-effects.component.scss'],
+    standalone: false
 })
 export class ParticleEffectsComponent implements OnInit {
   public combatAnimation: Effect | undefined;

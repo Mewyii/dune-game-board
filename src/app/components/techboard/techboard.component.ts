@@ -7,9 +7,10 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
-  selector: 'app-techboard',
-  templateUrl: './techboard.component.html',
-  styleUrls: ['./techboard.component.scss'],
+    selector: 'app-techboard',
+    templateUrl: './techboard.component.html',
+    styleUrls: ['./techboard.component.scss'],
+    standalone: false
 })
 export class TechboardComponent implements OnInit {
   @Input() ix: ActionField | undefined;

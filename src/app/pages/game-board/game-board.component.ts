@@ -8,9 +8,10 @@ import { Engine } from 'tsparticles-engine';
 import { loadSlim } from 'tsparticles-slim';
 
 @Component({
-  selector: 'dune-game-board',
-  templateUrl: './game-board.component.html',
-  styleUrls: ['./game-board.component.scss'],
+    selector: 'dune-game-board',
+    templateUrl: './game-board.component.html',
+    styleUrls: ['./game-board.component.scss'],
+    standalone: false
 })
 export class GameBoardComponent implements AfterViewInit {
   public gameContent: GameContent | undefined;

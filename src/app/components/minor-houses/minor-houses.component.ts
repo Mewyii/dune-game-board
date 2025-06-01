@@ -10,9 +10,10 @@ import { MinorHousesService } from 'src/app/services/minor-houses.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-minor-houses',
-  templateUrl: './minor-houses.component.html',
-  styleUrls: ['./minor-houses.component.scss'],
+    selector: 'dune-minor-houses',
+    templateUrl: './minor-houses.component.html',
+    styleUrls: ['./minor-houses.component.scss'],
+    standalone: false
 })
 export class MinorHousesComponent implements OnInit {
   public activeMinorHouses: House[] = [];

@@ -9,9 +9,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
 
 @Component({
-  selector: 'dune-starting-card-configurator',
-  templateUrl: './starting-card-configurator.component.html',
-  styleUrls: ['./starting-card-configurator.component.scss'],
+    selector: 'dune-starting-card-configurator',
+    templateUrl: './starting-card-configurator.component.html',
+    styleUrls: ['./starting-card-configurator.component.scss'],
+    standalone: false
 })
 export class StartingCardConfiguratorComponent implements OnInit {
   public startingCards: ImperiumCard[] = [];

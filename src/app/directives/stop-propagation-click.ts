@@ -1,7 +1,8 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[stopPropagationClick]',
+    selector: '[stopPropagationClick]',
+    standalone: false
 })
 export class StopPropagationClickDirective {
   constructor(private el: ElementRef) {}

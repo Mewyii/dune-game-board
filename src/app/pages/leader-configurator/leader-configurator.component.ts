@@ -8,9 +8,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leader-editor.component';
 
 @Component({
-  selector: 'dune-leader-configurator',
-  templateUrl: './leader-configurator.component.html',
-  styleUrls: ['./leader-configurator.component.scss'],
+    selector: 'dune-leader-configurator',
+    templateUrl: './leader-configurator.component.html',
+    styleUrls: ['./leader-configurator.component.scss'],
+    standalone: false
 })
 export class LeaderConfiguratorComponent {
   public leaders: Leader[] = [];

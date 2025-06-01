@@ -5,9 +5,10 @@ import { TechTileCard } from 'src/app/models/tech-tile';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-dialog-tech-tile-editor',
-  templateUrl: './dialog-tech-tile-editor.component.html',
-  styleUrls: ['./dialog-tech-tile-editor.component.scss'],
+    selector: 'dune-dialog-tech-tile-editor',
+    templateUrl: './dialog-tech-tile-editor.component.html',
+    styleUrls: ['./dialog-tech-tile-editor.component.scss'],
+    standalone: false
 })
 export class DialogTechTileEditorComponent {
   @ViewChild(TechTileEditorComponent) techTileEditorComponent!: TechTileEditorComponent;

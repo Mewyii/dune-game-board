@@ -19,9 +19,10 @@ import {
 } from 'src/app/models';
 
 @Component({
-  selector: 'dune-leader-editor',
-  templateUrl: './leader-editor.component.html',
-  styleUrls: ['./leader-editor.component.scss'],
+    selector: 'dune-leader-editor',
+    templateUrl: './leader-editor.component.html',
+    styleUrls: ['./leader-editor.component.scss'],
+    standalone: false
 })
 export class LeaderEditorComponent implements OnChanges {
   @Input() leader: Leader | null = null;

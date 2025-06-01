@@ -5,9 +5,10 @@ import { LeaderEditorComponent } from '../leader-editor/leader-editor.component'
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-dialog-leader-editor',
-  templateUrl: './dialog-leader-editor.component.html',
-  styleUrls: ['./dialog-leader-editor.component.scss'],
+    selector: 'dune-dialog-leader-editor',
+    templateUrl: './dialog-leader-editor.component.html',
+    styleUrls: ['./dialog-leader-editor.component.scss'],
+    standalone: false
 })
 export class DialogLeaderEditorComponent {
   @ViewChild(LeaderEditorComponent) leaderEditorComponent!: LeaderEditorComponent;

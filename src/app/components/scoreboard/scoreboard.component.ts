@@ -7,9 +7,10 @@ import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
-  selector: 'app-scoreboard',
-  templateUrl: './scoreboard.component.html',
-  styleUrls: ['./scoreboard.component.scss'],
+    selector: 'app-scoreboard',
+    templateUrl: './scoreboard.component.html',
+    styleUrls: ['./scoreboard.component.scss'],
+    standalone: false
 })
 export class ScoreboardComponent implements OnInit {
   @Input() mode: AppMode = 'board';

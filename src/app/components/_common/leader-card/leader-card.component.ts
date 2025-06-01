@@ -4,9 +4,10 @@ import { LanguageString } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-leader-card',
-  templateUrl: './leader-card.component.html',
-  styleUrls: ['./leader-card.component.scss'],
+    selector: 'dune-leader-card',
+    templateUrl: './leader-card.component.html',
+    styleUrls: ['./leader-card.component.scss'],
+    standalone: false
 })
 export class LeaderCardComponent implements OnInit, OnChanges {
   @Input() leader!: Leader;

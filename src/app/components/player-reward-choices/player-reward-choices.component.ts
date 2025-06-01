@@ -10,9 +10,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
-  selector: 'dune-player-reward-choices',
-  templateUrl: './player-reward-choices.component.html',
-  styleUrl: './player-reward-choices.component.scss',
+    selector: 'dune-player-reward-choices',
+    templateUrl: './player-reward-choices.component.html',
+    styleUrl: './player-reward-choices.component.scss',
+    standalone: false
 })
 export class PlayerRewardChoicesComponent implements OnInit {
   public activePlayerId: number = 0;

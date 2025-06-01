@@ -21,9 +21,10 @@ import { ImperiumCard } from 'src/app/models/imperium-card';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-card-editor',
-  templateUrl: './card-editor.component.html',
-  styleUrls: ['./card-editor.component.scss'],
+    selector: 'dune-card-editor',
+    templateUrl: './card-editor.component.html',
+    styleUrls: ['./card-editor.component.scss'],
+    standalone: false
 })
 export class CardEditorComponent implements OnInit, OnChanges {
   @Input() imperiumCard: ImperiumCard | null = null;

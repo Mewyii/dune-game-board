@@ -5,9 +5,10 @@ import { EffectType, LanguageString, EffectRewardType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-minor-house-card',
-  templateUrl: './minor-house-card.component.html',
-  styleUrls: ['./minor-house-card.component.scss'],
+    selector: 'dune-minor-house-card',
+    templateUrl: './minor-house-card.component.html',
+    styleUrls: ['./minor-house-card.component.scss'],
+    standalone: false
 })
 export class MinorHouseCardComponent {
   @Input() house: House | undefined;

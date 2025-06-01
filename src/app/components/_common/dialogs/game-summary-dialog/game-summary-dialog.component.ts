@@ -28,9 +28,10 @@ interface PlayerSummary {
 }
 
 @Component({
-  selector: 'dune-game-summary-dialog',
-  templateUrl: './game-summary-dialog.component.html',
-  styleUrl: './game-summary-dialog.component.scss',
+    selector: 'dune-game-summary-dialog',
+    templateUrl: './game-summary-dialog.component.html',
+    styleUrl: './game-summary-dialog.component.scss',
+    standalone: false
 })
 export class GameSummaryDialogComponent implements OnInit {
   public players: Player[] = [];

@@ -5,9 +5,10 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-  selector: 'dune-events',
-  templateUrl: './events.component.html',
-  styleUrls: ['./events.component.scss'],
+    selector: 'dune-events',
+    templateUrl: './events.component.html',
+    styleUrls: ['./events.component.scss'],
+    standalone: false
 })
 export class EventsComponent implements OnInit {
   public event: Omit<DuneEvent, 'cardAmount'> | undefined;

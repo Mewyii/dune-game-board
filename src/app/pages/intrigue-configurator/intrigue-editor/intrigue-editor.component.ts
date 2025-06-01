@@ -5,9 +5,10 @@ import { combatUnitTypes, EffectType, resourceTypes, EffectRewardType, effectRew
 import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
 
 @Component({
-  selector: 'dune-intrigue-editor',
-  templateUrl: './intrigue-editor.component.html',
-  styleUrls: ['./intrigue-editor.component.scss'],
+    selector: 'dune-intrigue-editor',
+    templateUrl: './intrigue-editor.component.html',
+    styleUrls: ['./intrigue-editor.component.scss'],
+    standalone: false
 })
 export class IntrigueEditorComponent implements OnInit, OnChanges {
   @Input() intrigue: IntrigueCard | null = null;
