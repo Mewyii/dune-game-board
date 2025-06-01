@@ -16,6 +16,7 @@ import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/l
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { SettingsService } from 'src/app/services/settings.service';
 import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
@@ -23,10 +24,10 @@ import { AdditionalPlayerActionsDialogComponent } from '../_common/dialogs/addit
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'dune-leaders',
-    templateUrl: './leaders.component.html',
-    styleUrls: ['./leaders.component.scss'],
-    standalone: false
+  selector: 'dune-leaders',
+  templateUrl: './leaders.component.html',
+  styleUrls: ['./leaders.component.scss'],
+  standalone: false,
 })
 export class LeadersComponent implements OnInit {
   public leaders: LeaderDeckCard[] = [];
@@ -73,7 +74,8 @@ export class LeadersComponent implements OnInit {
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     private dialog: MatDialog,
-    private turnInfoService: TurnInfoService
+    private turnInfoService: TurnInfoService,
+    private settingsService: SettingsService
   ) {}
 
   ngOnInit(): void {
@@ -347,7 +349,12 @@ export class LeadersComponent implements OnInit {
   }
 
   public onPlayerCanEnterCombatClicked(playerId: number) {
-    this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: !this.turnInfos?.canEnterCombat });
+    if (!this.turnInfos?.canEnterCombat) {
+      let deployableUnits = this.settingsService.getCombatMaxDeployableUnits();
+      this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: true, deployableUnits });
+    } else {
+      this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: false, deployableUnits: 0 });
+    }
   }
 
   public onPlayerCanBuyTechClicked(playerId: number) {

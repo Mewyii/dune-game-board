@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsService } from 'src/app/services/settings.service';
-import { NotificationComponent } from '../notification/notification.component';
 import { LanguageType } from 'src/app/models';
+import { SettingsService } from 'src/app/services/settings.service';
+import { TranslateService } from 'src/app/services/translate-service';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
-    selector: 'dune-translation',
-    templateUrl: './translation.component.html',
-    styleUrl: './translation.component.scss',
-    standalone: false
+  selector: 'dune-translation',
+  templateUrl: './translation.component.html',
+  styleUrl: './translation.component.scss',
+  standalone: false,
 })
 export class TranslationComponent {
   showLanguageSelection = false;
 
-  constructor(public settingsService: SettingsService, private dialog: MatDialog) {}
+  constructor(public settingsService: SettingsService, private dialog: MatDialog, public t: TranslateService) {}
 
   onSelectLanguageClicked(language: LanguageType) {
     if (this.settingsService.language !== language) {

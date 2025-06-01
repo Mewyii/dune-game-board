@@ -1,6 +1,11 @@
 <div [class]="'audio-container ' + (showAudioSelection ? 'shown' : 'hidden')">
   <div class="control-bar">
-    <button mat-fab [color]="'accent'" (click)="showAudioSelection = !showAudioSelection">
+    <button
+      mat-fab
+      [color]="'accent'"
+      (click)="showAudioSelection = !showAudioSelection"
+      [matTooltip]="t.translate('commonMenuAudio')"
+    >
       <mat-icon *ngIf="!showAudioSelection">music_note</mat-icon>
       <mat-icon *ngIf="showAudioSelection">chevron_left</mat-icon>
     </button>

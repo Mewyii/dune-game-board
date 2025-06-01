@@ -1,0 +1,104 @@
+<h1 mat-dialog-title>{{ t.translate('commonMenuManual') }}</h1>
+<div mat-dialog-content>
+  <mat-tab-group>
+    <mat-tab [label]="'Symbols and Icons'">
+      <div class="content-container">
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:tech}: Get one technology. Whenever you gain technology, you can buy tech tiles with it.'
+              | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:signet-token}: You get one signet. You can use it indiviually for each leader.' | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:focus}: You get one focus. At your reveal turn, you can use it to trash a card. You still get the cards reveal effect.'
+              | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:shipping}: You get a resource ({resource:solari}/{resource:spice}/{resource:water}/{resource:tech}) of your choice. It basically represents a supply shipment now.'
+              | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get one focus.' | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:location-control}: You gain control of a location that has one of your agents on it.'
+              | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div [innerHTML]="'{resource:trash-self}: Immediately trash this card.' | duneSymbols : '24px'"></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:foldspace}: Foldspaces are added to your hand when you get them. They don\'t draw cards anymore.'
+              | duneSymbols : '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{faction:fremen}-Connection: Just a shorthand for: if you have another fremen card in play.'
+              | duneSymbols : '24px'
+          "
+        ></div>
+      </div>
+    </mat-tab>
+    <mat-tab [label]="'Mechanics'">
+      <div class="content-container">
+        <br />
+        <div>
+          <b>Endgame</b> is now triggered when a player has 8 (or 9 in a 3-player-game) victory points at the end of a round.
+          Then, one final round is played, after which the game ends and endgame effects on cards are triggered.
+        </div>
+        <br />
+        <div>
+          <b>Locations</b> now have give the controlling player resources (shown on the left side beside the flag) at their
+          reveal turn. They also give the controlling player a victory point as long as they control the location (similar to
+          the alliance tokens). <br />A Location can get taken with the
+          <span [innerHTML]="'{resource:location-control}' | duneSymbols : '24px'"></span>-symbol. You can only gain control
+          of locations that have at least one of your agents on them. <br />Already occupied locations can get conquered by
+          other players, but in order to do so, they need to pay 1 additional troop from their garrison.
+        </div>
+        <br />
+        <div>
+          <b>Dreadnoughts</b> now have 4 combat strength. <br />They always need to rest one round after they were put into a
+          conflict. <br />When a conflict is won, for each involved dreadnought the player receives
+          <span [innerHTML]="'{resource:location-control}' | duneSymbols : '24px'"></span>.
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab [label]="'AI'">
+      <div class="content-container">
+        <br />
+        <div>
+          The AI will move on its own (depending on its goals and resources) when you click on the hourglass-button below
+          it's leader image. <br /><br />It is able to use standard effects like getting rewards, choosing or converting
+          rewards and resolving timing or condition based effects. <br /><br />It is not able to use text-based effects. For
+          cards, effects that it can't resolve yet will be shown in a blue bar somewhere below the leader image. It is also
+          not able to use text-based leader effects. You will need to keep those in mind for the AI.
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">{{ t.translate('commonClose') }}</button>
+</div>

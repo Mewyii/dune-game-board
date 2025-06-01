@@ -1,56 +1,63 @@
 <div [class]="'navigation-container ' + (showNavigationSelection ? 'shown' : 'hidden')">
   <div class="control-bar">
-    <button mat-fab [color]="'accent'" (click)="showNavigationSelection = !showNavigationSelection">
+    <button
+      mat-fab
+      [color]="'accent'"
+      (click)="showNavigationSelection = !showNavigationSelection"
+      [matTooltip]="t.translate('commonMenuNavigation')"
+    >
       <mat-icon *ngIf="!showNavigationSelection">menu</mat-icon>
       <mat-icon *ngIf="showNavigationSelection">chevron_left</mat-icon>
     </button>
   </div>
   <div [class]="'navigation-item-container ' + (showNavigationSelection ? 'shown' : 'hidden')">
     <div [class]="'navigation-item ' + (url.includes('game-board') ? 'highlighted' : '')" [routerLink]="'game-board'">
-      GAME BOARD
+      {{ t.translate('commonNavigationGameBoard') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('starting-card-configurator') ? 'highlighted' : '')"
       [routerLink]="'starting-card-configurator'"
     >
-      STARTING CARDS
+      {{ t.translate('commonNavigationStartingCards') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('imperium-card-configurator') ? 'highlighted' : '')"
       [routerLink]="'imperium-card-configurator'"
     >
-      IMPERIUM CARDS
+      {{ t.translate('commonNavigationImperiumCards') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('plot-configurator') ? 'highlighted' : '')"
       [routerLink]="'plot-configurator'"
     >
-      PLOTS
+      {{ t.translate('commonNavigationPlots') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('tech-tile-configurator') ? 'highlighted' : '')"
       [routerLink]="'tech-tile-configurator'"
     >
-      TECH TILES
+      {{ t.translate('commonNavigationTechTiles') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('leader-configurator') ? 'highlighted' : '')"
       [routerLink]="'leader-configurator'"
     >
-      LEADERS
+      {{ t.translate('commonNavigationLeaders') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('intrigue-configurator') ? 'highlighted' : '')"
       [routerLink]="'intrigue-configurator'"
     >
-      INTRIGUES
+      {{ t.translate('commonNavigationIntrigues') }}
     </div>
     <div
       [class]="'navigation-item ' + (url.includes('event-configurator') ? 'highlighted' : '')"
       [routerLink]="'event-configurator'"
     >
-      EVENTS
+      {{ t.translate('commonNavigationEvents') }}
     </div>
-    <div [class]="'navigation-item ' + (url.includes('about') ? 'highlighted' : '')" [routerLink]="'about'">ABOUT</div>
+    <div [class]="'navigation-item ' + (url.includes('about') ? 'highlighted' : '')" [routerLink]="'about'">
+      {{ t.translate('commonNavigationAbout') }}
+    </div>
   </div>
 </div>

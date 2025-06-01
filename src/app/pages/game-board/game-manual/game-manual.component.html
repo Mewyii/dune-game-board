@@ -7,84 +7,18 @@
       {{ isFullScreen ? t.translate('gamemanualFullscreenExitTooltip') : t.translate('gamemanualFullscreenEnterTooltip') }}
     </button>
     <br /><br />
+    <div>{{ t.translate('gamemanualZoomText') }}</div>
+    <br /><br />
     <h2>How to play</h2>
-    <div>Add up to four players here, select wether they should be AI-controlled and you're ready to go.</div>
-    <h4>AI</h4>
     <div>
-      The AI will move on its own (depending on its goals and resources) when you click on the hourglass-button below it's
-      leader image. You will be noticed about custom effects it is not able to comprehend yet, like leader or tech tile
-      effects and will need to resolve those for them. When you've done that, just click on the notification to dismiss it.
-    </div>
-    <h4>New mechanics / symbols</h4>
-    <div>
-      <b>Endgame</b> is now triggered when a player has 8 (or 9 in a 3-player-game) victory points at the end of a round.
-      Then, one final round is played, after which the game ends and endgame effects on cards are triggered.
+      {{ t.translate('gamemanualAddingPlayersText') }}
     </div>
     <br />
-    <div>
-      <b>Tech tiles</b> may now have faction-symbols printed on them. Those are tech tiles that are related to those faction.
-      They can be used to activate a connection of a card by flipping them in addition to their printed effects.
-    </div>
+    <div>{{ t.translate('gamemanualFullManualText') }}</div>
     <br />
-    <div>
-      <b>Locations</b> now have give the controlling player resources (on the left side) at their reveal turn. They also give
-      the controlling player a victory point as long as they control the location (similar to the alliance tokens). If a an
-      already occupied location gets taken over by another player, this player has to pay 1 troop from his garrison to take
-      it over.
-    </div>
-    <br />
-    <div>
-      <b>Dreadnoughts</b> now have 4 combat strength. They always need to rest one round after they were put into a conflict.
-      When a conflict is won, for each involved dreadnought the player can get control of a location of their choice.
-    </div>
-    <br />
-    <div
-      [innerHTML]="
-        '{resource:signet-token}: You get one signet token. You can use it indiviually for each leader.'
-          | duneSymbols : '24px'
-      "
-    ></div>
-    <br />
-    <div
-      [innerHTML]="
-        '{resource:focus}: You get one focus. At your reveal turn, you can use it to trash a card. You still get the cards reveal effect.'
-          | duneSymbols : '24px'
-      "
-    ></div>
-    <br />
-    <div
-      [innerHTML]="
-        '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get one focus.' | duneSymbols : '24px'
-      "
-    ></div>
-    <br />
-    <div
-      [innerHTML]="
-        '{resource:location-control}: You gain control of a location that has one of your agents on it.'
-          | duneSymbols : '24px'
-      "
-    ></div>
-    <br />
-    <div [innerHTML]="'{resource:trash-self}: Immediately trash this card.' | duneSymbols : '24px'"></div>
-    <br />
-    <div
-      [innerHTML]="
-        '{resource:foldspace}: Foldspaces are added to your hand when you get them. They don\'t draw cards anymore.'
-          | duneSymbols : '24px'
-      "
-    ></div>
-    <br />
-    <div
-      [innerHTML]="
-        '{resource:tech}: Get one technology. Whenever you gain technology, you can buy tech tiles with it.'
-          | duneSymbols : '24px'
-      "
-    ></div>
-    <br />
-    <div
-      [innerHTML]="
-        '{faction:fremen}-Connection: Just a shorthand for: if you have another fremen card in play.' | duneSymbols : '24px'
-      "
-    ></div>
+    <button mat-raised-button [color]="'accent'" (click)="onShowGameManualClicked()">
+      {{ t.translate('commonMenuManual') }}
+    </button>
+    <br /><br />
   </div>
 </div>

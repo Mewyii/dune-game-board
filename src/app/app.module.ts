@@ -30,6 +30,7 @@ import { ScoreboardComponent } from './components/scoreboard/scoreboard.componen
 import { TechboardComponent } from './components/techboard/techboard.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { NgParticlesModule } from 'ng-particles';
 import { AllianceTokenComponent } from './components/_common/alliance-token/alliance-token.component';
@@ -60,6 +61,8 @@ import { GameLogComponent } from './components/game-log/game-log.component';
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { LeadersComponent } from './components/leaders/leaders.component';
+import { DialogGameManualComponent } from './components/manual/dialog-game-manual/dialog-game-manual.component';
+import { ManualComponent } from './components/manual/manual.component';
 import { MinorHousesComponent } from './components/minor-houses/minor-houses.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { NotificationComponent } from './components/notification/notification.component';
@@ -176,6 +179,8 @@ import { SafeUrlPipe } from './pipes/safe-url';
     DuneVersionUpdaterComponent,
     PlayerEffectChoiceComponent,
     PlayerEffectConversionComponent,
+    ManualComponent,
+    DialogGameManualComponent,
   ],
   imports: [
     BrowserModule,
@@ -195,6 +200,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
+    MatTabsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

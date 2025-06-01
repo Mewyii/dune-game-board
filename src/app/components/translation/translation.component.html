@@ -1,6 +1,11 @@
 <div [class]="'translation-container ' + (showLanguageSelection ? 'shown' : 'hidden')">
   <div class="control-bar">
-    <button mat-fab [color]="'accent'" (click)="showLanguageSelection = !showLanguageSelection">
+    <button
+      mat-fab
+      [color]="'accent'"
+      (click)="showLanguageSelection = !showLanguageSelection"
+      [matTooltip]="t.translate('commonMenuLanguage')"
+    >
       <mat-icon *ngIf="!showLanguageSelection">translate</mat-icon>
       <mat-icon *ngIf="showLanguageSelection">chevron_left</mat-icon>
     </button>
