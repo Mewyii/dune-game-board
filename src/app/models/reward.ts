@@ -61,22 +61,27 @@ export const effectRewards = [
   'enemies-troop-destroy',
 ] as const;
 
-export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-reveal-turn'] as const;
-
 export const effectSeparators = ['helper-separator'] as const;
-
-export const effectChoices = ['helper-or', 'helper-or-horizontal', 'helper-trade', 'helper-trade-horizontal'] as const;
-
+export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-reveal-turn'] as const;
 export const effectConditions = ['condition-influence', 'condition-connection', 'condition-high-council-seat'] as const;
+export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
+export const effectConversions = ['helper-trade', 'helper-trade-horizontal'] as const;
 
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
 
-export type EffectTimingType = (typeof effectTimings)[number];
 export type EffectSeparatorType = (typeof effectSeparators)[number];
+export type EffectTimingType = (typeof effectTimings)[number];
 export type EffectChoiceType = (typeof effectChoices)[number];
 export type EffectConditionType = (typeof effectConditions)[number];
+export type EffectConversionType = (typeof effectConversions)[number];
 
-export type EffectType = EffectTimingType | EffectRewardType | EffectSeparatorType | EffectChoiceType | EffectConditionType;
+export type EffectType =
+  | EffectTimingType
+  | EffectRewardType
+  | EffectSeparatorType
+  | EffectChoiceType
+  | EffectConversionType
+  | EffectConditionType;
 
 interface EffectBase {
   type: EffectType;
@@ -85,20 +90,12 @@ interface EffectBase {
   width?: number;
 }
 
-export interface EffectTiming extends EffectBase {
-  type: EffectTimingType;
-}
-
-export interface EffectReward extends EffectBase {
-  type: EffectRewardType;
-}
-
 export interface EffectSeparator extends EffectBase {
   type: EffectSeparatorType;
 }
 
-export interface EffectChoice extends EffectBase {
-  type: EffectChoiceType;
+export interface EffectTiming extends EffectBase {
+  type: EffectTimingType;
 }
 
 export interface EffectCondition extends EffectBase {
@@ -106,13 +103,32 @@ export interface EffectCondition extends EffectBase {
   faction?: ActiveFactionType;
 }
 
-export type Effect = EffectTiming | EffectReward | EffectSeparator | EffectChoice | EffectCondition;
-export type EffectTimingRewardChoiceOrCondition = EffectTiming | EffectReward | EffectChoice | EffectCondition;
-export type EffectRewardChoiceOrCondition = EffectReward | EffectChoice | EffectCondition;
-export type EffectRewardOrChoice = EffectReward | EffectChoice;
+export interface EffectChoice extends EffectBase {
+  type: EffectChoiceType;
+}
+
+export interface EffectConversion extends EffectBase {
+  type: EffectConversionType;
+}
+
+export interface EffectReward extends EffectBase {
+  type: EffectRewardType;
+}
+
+export type Effect = EffectSeparator | EffectTiming | EffectCondition | EffectChoice | EffectConversion | EffectReward;
+export type EffectTimingConditionChoiceConversionOrReward =
+  | EffectTiming
+  | EffectCondition
+  | EffectChoice
+  | EffectConversion
+  | EffectReward;
+export type EffectConditionChoiceConversionOrReward = EffectCondition | EffectChoice | EffectConversion | EffectReward;
+export type EffectChoiceConversionOrReward = EffectChoice | EffectConversion | EffectReward;
+export type EffectConversionOrReward = EffectConversion | EffectReward;
 
 export interface StructuredEffects {
   rewards: EffectReward[];
+  conversionEffects: StructuredConversionEffect[];
   choiceEffects: StructuredChoiceEffect[];
   conditionalEffects: StructuredConditionalEffect[];
   timingEffects: StructuredTimingEffect[];
@@ -120,25 +136,25 @@ export interface StructuredEffects {
 
 export interface StructuredTimingEffect {
   type: EffectTimingType;
-  effect: StructuredConditionalEffect | StructuredChoiceEffect | EffectReward[];
+  effect: StructuredConditionalEffect | StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
 }
 
 export interface StructuredConditionalEffectConnection {
   condition: 'condition-connection';
   faction: ActiveFactionType;
-  effect: EffectReward[] | StructuredChoiceEffect;
+  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
 }
 
 export interface StructuredConditionalEffectInfluence {
   condition: 'condition-influence';
   amount: number;
   faction: ActiveFactionType;
-  effect: EffectReward[] | StructuredChoiceEffect;
+  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
 }
 
 export interface StructuredConditionalEffectHighCouncilSeat {
   condition: 'condition-high-council-seat';
-  effect: EffectReward[] | StructuredChoiceEffect;
+  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
 }
 
 export type StructuredConditionalEffect =
@@ -148,12 +164,18 @@ export type StructuredConditionalEffect =
 
 export interface StructuredChoiceEffect {
   choiceType: EffectChoiceType;
-  left: EffectReward[];
-  right: EffectReward[];
+  left: EffectReward[] | StructuredConversionEffect;
+  right: EffectReward[] | StructuredConversionEffect;
+}
+
+export interface StructuredConversionEffect {
+  conversionType: EffectConversionType;
+  costs: EffectReward[];
+  rewards: EffectReward[];
 }
 
 export interface RewardArrayInfo {
-  hasRewardOptions: boolean;
+  hasRewardChoice: boolean;
   hasRewardConversion: boolean;
   rewardConversionIndex: number;
   rewardOptionIndex: number;

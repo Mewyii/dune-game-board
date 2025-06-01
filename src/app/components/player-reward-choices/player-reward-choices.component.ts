@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType } from 'src/app/models';
-import { StructuredChoiceEffectWithGameElement } from 'src/app/models/turn-info';
+import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
+import { EffectReward, EffectType, StructuredConversionEffect } from 'src/app/models';
+import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
@@ -17,7 +18,7 @@ export class PlayerRewardChoicesComponent implements OnInit {
   public activePlayerId: number = 0;
   public playerRewardChoices: PlayerRewardChoices | undefined;
   public playerActionLog: PlayerActionLog[] = [];
-  public playerEffectConversions: StructuredChoiceEffectWithGameElement[] = [];
+  public playerEffectConversions: StructuredConversionEffectWithGameElement[] = [];
   public playerEffectOptions: StructuredChoiceEffectWithGameElement[] = [];
   public deployableUnits = 0;
   public deployableTroops = 0;
@@ -49,7 +50,7 @@ export class PlayerRewardChoicesComponent implements OnInit {
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
       if (playerTurnInfos) {
-        this.playerEffectOptions = playerTurnInfos.effectOptions;
+        this.playerEffectOptions = playerTurnInfos.effectChoices;
         this.playerEffectConversions = playerTurnInfos.effectConversions;
         this.deployableUnits = playerTurnInfos.deployableUnits - playerTurnInfos.deployedUnits;
         this.deployableTroops = playerTurnInfos.deployableTroops - playerTurnInfos.deployedTroops;
@@ -85,24 +86,24 @@ export class PlayerRewardChoicesComponent implements OnInit {
   }
 
   onOptionEffectRightClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
-    const optionSuccessFull = this.gameManager.resolveEffectOption(this.activePlayerId, effect, 'right');
+    const optionSuccessFull = this.gameManager.resolveEffectChoice(this.activePlayerId, effect, 'right');
     if (optionSuccessFull) {
       this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-        effectOptions: this.playerEffectOptions.filter((x, idx) => idx !== index),
+        effectChoices: this.playerEffectOptions.filter((x, idx) => idx !== index),
       });
     }
   }
 
   onOptionEffectLeftClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
-    const optionSuccessFull = this.gameManager.resolveEffectOption(this.activePlayerId, effect, 'left');
+    const optionSuccessFull = this.gameManager.resolveEffectChoice(this.activePlayerId, effect, 'left');
     if (optionSuccessFull) {
       this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-        effectOptions: this.playerEffectOptions.filter((x, idx) => idx !== index),
+        effectChoices: this.playerEffectOptions.filter((x, idx) => idx !== index),
       });
     }
   }
 
-  onConvertEffectClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
+  onConvertEffectClicked(effect: StructuredConversionEffectWithGameElement, index: number) {
     const conversionSuccessFull = this.gameManager.resolveEffectConversionIfPossible(this.activePlayerId, effect);
     if (conversionSuccessFull) {
       this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
@@ -123,6 +124,10 @@ export class PlayerRewardChoicesComponent implements OnInit {
 
   onDeployDreadnoughtsClicked(amount: number) {
     this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', amount);
+  }
+
+  public isStructuredConversionEffect(effect: EffectReward[] | StructuredConversionEffect) {
+    return isStructuredConversionEffect(effect);
   }
 
   public getEffectTypePath(effectType: EffectType) {

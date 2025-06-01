@@ -1,12 +1,12 @@
 import { LanguageString } from './language';
-import { EffectRewardOrChoice, StructuredEffects } from './reward';
+import { EffectChoiceConversionOrReward, StructuredEffects } from './reward';
 
 export const intriguesTypes = ['complot', 'combat'] as const;
 export type IntrigueType = (typeof intriguesTypes)[number];
 
 export interface IntrigueCardBase {
   name: LanguageString;
-  effects: EffectRewardOrChoice[];
+  effects: EffectChoiceConversionOrReward[];
   type: IntrigueType;
 }
 

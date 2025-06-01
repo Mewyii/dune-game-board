@@ -23,15 +23,17 @@
     [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
     (click)="setEffectActive('option' + idx)"
   >
-    @for (leftEffect of effectOption.left; track $index) {
+    @if(isStructuredConversionEffect(effectOption.left)) {
+    <dune-player-effect-conversion [effectConversion]="effectOption.left"></dune-player-effect-conversion>
+    } @else { @for (leftEffect of effectOption.left; track $index) {
     <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
-    }
-    <div class="reward-container">
-      <img class="reward" [src]="getEffectTypePath('helper-or')" />
-    </div>
-    @for (rightEffect of effectOption.right; track $index) {
+    } }
+    <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
+    @if(isStructuredConversionEffect(effectOption.right)) {
+    <dune-player-effect-conversion [effectConversion]="effectOption.right"></dune-player-effect-conversion>
+    } @else { @for (rightEffect of effectOption.right; track $index) {
     <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
-    }
+    } }
     <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
       <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption, idx)">
         <mat-icon>chevron_left</mat-icon>
@@ -46,15 +48,7 @@
     [class]="'rewards-choice ' + (activeEffectId === 'conversion' + idx ? 'active' : '')"
     (click)="setEffectActive('conversion' + idx)"
   >
-    @for (leftEffect of effectConversion.left; track $index) {
-    <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
-    }
-    <div class="reward-container">
-      <img class="reward" [src]="getEffectTypePath('helper-trade')" />
-    </div>
-    @for (rightEffect of effectConversion.right; track $index) {
-    <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
-    }
+    <dune-player-effect-conversion [effectConversion]="effectConversion"></dune-player-effect-conversion>
     <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
       <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion, idx)">
         <mat-icon>check</mat-icon>

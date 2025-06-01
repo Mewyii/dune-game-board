@@ -9,6 +9,7 @@ import {
   combatUnitTypes,
   effectChoices,
   effectConditions,
+  effectConversions,
   effectRewards,
   effectSeparators,
   effectTimings,
@@ -31,9 +32,14 @@ export class LeaderEditorComponent implements OnChanges {
 
   factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b)) as FactionType[];
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
-  effectTypes = [...this.rewardTypes, ...effectTimings, ...effectSeparators, ...effectChoices, ...effectConditions].sort(
-    (a, b) => a.localeCompare(b)
-  );
+  effectTypes = [
+    ...this.rewardTypes,
+    ...effectTimings,
+    ...effectSeparators,
+    ...effectChoices,
+    ...effectConversions,
+    ...effectConditions,
+  ].sort((a, b) => a.localeCompare(b));
   fontSizes = ['large', 'medium', 'small'];
 
   constructor(private fb: FormBuilder) {

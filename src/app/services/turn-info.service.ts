@@ -113,7 +113,7 @@ export class TurnInfoService {
       techTilesBoughtThisTurn: [],
       fieldsVisitedThisTurn: [],
       isDoingAIActions: false,
-      effectOptions: [],
+      effectChoices: [],
       effectConversions: [],
       enemiesEffects: [],
     };

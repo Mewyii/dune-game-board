@@ -1,11 +1,10 @@
 import {
+  EffectChoiceConversionOrReward,
+  EffectConversionOrReward,
+  EffectReward,
   FactionInfluence,
   FactionType,
   LanguageString,
-  Effect,
-  EffectReward,
-  EffectRewardType,
-  EffectRewardOrChoice,
 } from '.';
 
 export interface DuneLocation {
@@ -22,8 +21,8 @@ export interface ActionField {
   title: LanguageString;
   actionType: ActionType;
   costs?: EffectReward[];
-  rewards: EffectRewardOrChoice[];
-  conversionOptions?: EffectRewardOrChoice[][];
+  rewards: EffectChoiceConversionOrReward[];
+  conversionOptions?: EffectConversionOrReward[][];
   pathToImage: string;
   isBattlefield?: boolean;
   isNonBlockingField?: boolean;

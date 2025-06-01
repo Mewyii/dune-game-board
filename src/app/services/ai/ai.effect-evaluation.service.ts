@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { normalizeNumber } from 'src/app/helpers/common';
 import {
+  isChoiceEffectType,
   isConversionEffectType,
-  isOptionEffectType,
   isStructuredChoiceEffect,
   isStructuredConditionalEffect,
+  isStructuredConversionEffect,
 } from 'src/app/helpers/rewards';
 import {
   EffectReward,
   EffectRewardType,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
+  StructuredConversionEffect,
   StructuredEffects,
 } from 'src/app/models';
 import { Player } from 'src/app/models/player';
@@ -42,6 +44,8 @@ export class AIEffectEvaluationService {
         evaluationValue += this.getConditionEffectEvaluation(timingEffect.effect, player, gameState);
       } else if (isStructuredChoiceEffect(timingEffect.effect)) {
         evaluationValue += this.getChoiceEffectEvaluation(timingEffect.effect, player, gameState);
+      } else if (isStructuredConversionEffect(timingEffect.effect)) {
+        evaluationValue += this.getConversionEffectEvaluation(timingEffect.effect, player, gameState);
       } else {
         for (const reward of timingEffect.effect) {
           evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
@@ -67,14 +71,41 @@ export class AIEffectEvaluationService {
 
   public getChoiceEffectEvaluation(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
     let evaluationValue = 0;
-    if (isOptionEffectType(choiceEffect.choiceType)) {
-      const leftSideEvaluation = this.getRewardArrayEvaluation(choiceEffect.left, player, gameState);
-      const rightSideEvaluation = this.getRewardArrayEvaluation(choiceEffect.right, player, gameState);
+    if (isChoiceEffectType(choiceEffect.choiceType)) {
+      const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.left)
+        ? this.getConversionEffectEvaluation(choiceEffect.left, player, gameState)
+        : this.getRewardArrayEvaluation(choiceEffect.left, player, gameState);
+      const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.right)
+        ? this.getConversionEffectEvaluation(choiceEffect.right, player, gameState)
+        : this.getRewardArrayEvaluation(choiceEffect.right, player, gameState);
 
       evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-    } else if (isConversionEffectType(choiceEffect.choiceType)) {
-      const costsEvaluation = this.getCostsArrayEvaluation(choiceEffect.left, player, gameState);
-      const rewardsEvaluation = this.getRewardArrayEvaluation(choiceEffect.right, player, gameState);
+    }
+
+    return evaluationValue;
+  }
+
+  public getChoiceEffectEvaluationForTurnState(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    if (isChoiceEffectType(choiceEffect.choiceType)) {
+      const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.left)
+        ? this.getConversionEffectEvaluationForTurnState(choiceEffect.left, player, gameState)
+        : this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
+      const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.right)
+        ? this.getConversionEffectEvaluationForTurnState(choiceEffect.right, player, gameState)
+        : this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
+
+      evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
+    }
+
+    return evaluationValue;
+  }
+
+  public getConversionEffectEvaluation(conversionEffect: StructuredConversionEffect, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+    if (isConversionEffectType(conversionEffect.conversionType)) {
+      const costsEvaluation = this.getCostsArrayEvaluation(conversionEffect.costs, player, gameState);
+      const rewardsEvaluation = this.getRewardArrayEvaluation(conversionEffect.rewards, player, gameState);
 
       if (-costsEvaluation + rewardsEvaluation > 0) {
         evaluationValue += -costsEvaluation + rewardsEvaluation;
@@ -83,16 +114,15 @@ export class AIEffectEvaluationService {
     return evaluationValue;
   }
 
-  public getChoiceEffectEvaluationForTurnState(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
+  public getConversionEffectEvaluationForTurnState(
+    conversionEffect: StructuredConversionEffect,
+    player: Player,
+    gameState: GameState
+  ) {
     let evaluationValue = 0;
-    if (isOptionEffectType(choiceEffect.choiceType)) {
-      const leftSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-      const rightSideEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
-
-      evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
-    } else if (isConversionEffectType(choiceEffect.choiceType)) {
-      const costsEvaluation = this.getCostsArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
-      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
+    if (isConversionEffectType(conversionEffect.conversionType)) {
+      const costsEvaluation = this.getCostsArrayEvaluationForTurnState(conversionEffect.costs, player, gameState);
+      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(conversionEffect.rewards, player, gameState);
 
       evaluationValue += -costsEvaluation + rewardsEvaluation;
     }
@@ -102,9 +132,11 @@ export class AIEffectEvaluationService {
   public getConditionEffectEvaluation(conditionEffect: StructuredConditionalEffect, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (isStructuredChoiceEffect(conditionEffect.effect)) {
-      evaluationValue += this.getChoiceEffectEvaluationForTurnState(conditionEffect.effect, player, gameState);
+      evaluationValue += this.getChoiceEffectEvaluation(conditionEffect.effect, player, gameState);
+    } else if (isStructuredConversionEffect(conditionEffect.effect)) {
+      evaluationValue += this.getConversionEffectEvaluation(conditionEffect.effect, player, gameState);
     } else {
-      evaluationValue += this.getRewardArrayEvaluationForTurnState(conditionEffect.effect, player, gameState);
+      evaluationValue += this.getRewardArrayEvaluation(conditionEffect.effect, player, gameState);
     }
 
     if (conditionEffect.condition === 'condition-connection') {
@@ -128,6 +160,8 @@ export class AIEffectEvaluationService {
     let evaluationValue = 0;
     if (isStructuredChoiceEffect(conditionEffect.effect)) {
       evaluationValue += this.getChoiceEffectEvaluationForTurnState(conditionEffect.effect, player, gameState);
+    } else if (isStructuredConversionEffect(conditionEffect.effect)) {
+      evaluationValue += this.getConversionEffectEvaluationForTurnState(conditionEffect.effect, player, gameState);
     } else {
       evaluationValue += this.getRewardArrayEvaluationForTurnState(conditionEffect.effect, player, gameState);
     }

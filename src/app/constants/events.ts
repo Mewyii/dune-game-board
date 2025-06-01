@@ -106,8 +106,9 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: {
       rewards: [{ type: 'troop-insert', amount: 2 }],
       conditionalEffects: [],
-      choiceEffects: [],
+      conversionEffects: [],
       timingEffects: [],
+      choiceEffects: [],
     },
   },
   {
@@ -177,13 +178,14 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: {
       rewards: [],
       conditionalEffects: [],
-      choiceEffects: [
+      conversionEffects: [
         {
-          choiceType: 'helper-trade',
-          left: [{ type: 'card-discard' }],
-          right: [{ type: 'tech' }],
+          conversionType: 'helper-trade',
+          costs: [{ type: 'card-discard' }],
+          rewards: [{ type: 'tech' }],
         },
       ],
+      choiceEffects: [],
       timingEffects: [],
     },
   },
@@ -242,13 +244,14 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: {
       rewards: [],
       conditionalEffects: [],
-      choiceEffects: [
+      conversionEffects: [
         {
-          choiceType: 'helper-trade',
-          left: [{ type: 'card-discard' }],
-          right: [{ type: 'troop' }, { type: 'solari' }],
+          conversionType: 'helper-trade',
+          costs: [{ type: 'card-discard' }],
+          rewards: [{ type: 'troop' }, { type: 'solari' }],
         },
       ],
+      choiceEffects: [],
       timingEffects: [],
     },
   },
@@ -266,13 +269,14 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: {
       rewards: [],
       conditionalEffects: [],
-      choiceEffects: [
+      conversionEffects: [
         {
-          choiceType: 'helper-trade',
-          left: [{ type: 'card-discard' }],
-          right: [{ type: 'solari', amount: 2 }],
+          conversionType: 'helper-trade',
+          costs: [{ type: 'card-discard' }],
+          rewards: [{ type: 'solari', amount: 2 }],
         },
       ],
+      choiceEffects: [],
       timingEffects: [],
     },
   },
@@ -290,13 +294,14 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: {
       rewards: [],
       conditionalEffects: [],
-      choiceEffects: [
+      conversionEffects: [
         {
-          choiceType: 'helper-trade',
-          left: [{ type: 'card-discard' }],
-          right: [{ type: 'water' }],
+          conversionType: 'helper-trade',
+          costs: [{ type: 'card-discard' }],
+          rewards: [{ type: 'water' }],
         },
       ],
+      choiceEffects: [],
       timingEffects: [],
     },
   },

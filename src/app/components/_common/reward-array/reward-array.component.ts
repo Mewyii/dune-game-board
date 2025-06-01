@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { getSeparatedEffectArrays, isConditionalEffect, isTimingEffect } from 'src/app/helpers/rewards';
-import { Effect, EffectTimingRewardChoiceOrCondition, EffectType } from 'src/app/models';
+import { Effect, EffectTimingConditionChoiceConversionOrReward, EffectType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -11,7 +11,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrl: './reward-array.component.scss',
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
-  public effectArrays: EffectTimingRewardChoiceOrCondition[][] = [];
+  public effectArrays: EffectTimingConditionChoiceConversionOrReward[][] = [];
   @Input() rewards: Effect[] = [];
   @Input() size: string = '32px';
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
@@ -50,7 +50,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return getEffectTypePath(effectType);
   }
 
-  public isTimingEffect(effect: EffectTimingRewardChoiceOrCondition) {
+  public isTimingEffect(effect: EffectTimingConditionChoiceConversionOrReward) {
     return isTimingEffect(effect);
   }
 

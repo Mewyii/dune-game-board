@@ -168,6 +168,7 @@ export class PlayerRewardChoicesService {
         choiceEffects: [],
         conditionalEffects: [],
         timingEffects: [],
+        conversionEffects: [],
       },
     };
   }

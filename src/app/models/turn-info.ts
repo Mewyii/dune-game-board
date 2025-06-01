@@ -3,12 +3,17 @@ import { GameElement } from '../services/game-manager.service';
 import { ActiveFactionType } from './faction';
 import { IntrigueDeckCard } from './intrigue';
 import { ActionField } from './location';
-import { EffectReward, StructuredChoiceEffect } from './reward';
+import { EffectReward, StructuredChoiceEffect, StructuredConversionEffect } from './reward';
 import { TechTileCard } from './tech-tile';
 
 export interface StructuredChoiceEffectWithGameElement extends StructuredChoiceEffect {
   element?: GameElement;
 }
+
+export interface StructuredConversionEffectWithGameElement extends StructuredConversionEffect {
+  element?: GameElement;
+}
+
 export interface TurnInfo {
   playerId: number;
   agentPlacedOnFieldId: string;
@@ -43,7 +48,7 @@ export interface TurnInfo {
   techTilesBoughtThisTurn: TechTileCard[];
   fieldsVisitedThisTurn: ActionField[];
   isDoingAIActions: boolean;
-  effectOptions: StructuredChoiceEffectWithGameElement[];
-  effectConversions: StructuredChoiceEffectWithGameElement[];
+  effectChoices: StructuredChoiceEffectWithGameElement[];
+  effectConversions: StructuredConversionEffectWithGameElement[];
   enemiesEffects: EffectReward[];
 }

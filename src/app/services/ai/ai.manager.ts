@@ -3,7 +3,7 @@ import { clamp, cloneDeep, shuffle, take } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
-import { getRewardArrayAIInfos, isConversionEffectType } from 'src/app/helpers/rewards';
+import { getRewardArrayAIInfos, isStructuredConversionEffect } from 'src/app/helpers/rewards';
 import {
   ActionField,
   ActiveFactionType,
@@ -11,6 +11,7 @@ import {
   DuneLocation,
   EffectReward,
   EffectRewardType,
+  StructuredConversionEffect,
 } from 'src/app/models';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
@@ -590,27 +591,38 @@ export class AIManager {
     return desiredFactionScoreType;
   }
 
-  getEffectOptionChoice(
+  getChoiceEffectDecision(
     player: Player,
     gameState: GameState,
-    leftSideRewards: EffectReward[],
-    rightSideRewards: EffectReward[]
+    leftSideEffect: StructuredConversionEffect | EffectReward[],
+    rightSideEffect: StructuredConversionEffect | EffectReward[]
   ) {
-    const leftSideEvaluation = this.effectEvaluationService.getRewardArrayEvaluationForTurnState(
-      leftSideRewards,
-      player,
-      gameState
-    );
-    const rightSideEvaluation = this.effectEvaluationService.getRewardArrayEvaluationForTurnState(
-      rightSideRewards,
-      player,
-      gameState
-    );
+    let leftSideEvaluation = 0;
+    let rightSideEvaluation = 0;
+
+    if (isStructuredConversionEffect(leftSideEffect)) {
+      leftSideEvaluation = this.getEffectConversionValue(player, gameState, leftSideEffect.costs, leftSideEffect.rewards);
+    } else {
+      leftSideEvaluation = this.effectEvaluationService.getRewardArrayEvaluationForTurnState(
+        leftSideEffect,
+        player,
+        gameState
+      );
+    }
+    if (isStructuredConversionEffect(rightSideEffect)) {
+      rightSideEvaluation = this.getEffectConversionValue(player, gameState, rightSideEffect.costs, rightSideEffect.rewards);
+    } else {
+      rightSideEvaluation = this.effectEvaluationService.getRewardArrayEvaluationForTurnState(
+        rightSideEffect,
+        player,
+        gameState
+      );
+    }
 
     if (leftSideEvaluation >= rightSideEvaluation) {
-      return leftSideRewards;
+      return leftSideEffect;
     } else {
-      return rightSideRewards;
+      return rightSideEffect;
     }
   }
 
@@ -704,7 +716,7 @@ export class AIManager {
       evaluationValue += card.persuasionCosts * 0.1;
     }
     if (card.buyEffects) {
-      const { hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(card.buyEffects);
+      const { hasRewardChoice: hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(card.buyEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
         evaluationValue +=
           this.effectEvaluationService.getRewardArrayEvaluation(card.buyEffects, player, gameState) * 0.75 +
@@ -826,7 +838,7 @@ export class AIManager {
     let evaluationValue = -techCostEvaluation + playerTechAmount * 0.75;
 
     if (techTile.buyEffects) {
-      const { hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(techTile.buyEffects);
+      const { hasRewardChoice: hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(techTile.buyEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
         evaluationValue += this.effectEvaluationService.getRewardArrayEvaluation(techTile.buyEffects, player, gameState);
       }
@@ -860,22 +872,20 @@ export class AIManager {
       let isUseful =
         this.effectEvaluationService.getRewardArrayEvaluationForTurnState(intrigueEffects.rewards, player, gameState) > 0;
       let intrigueCosts: EffectReward[][] = [];
-      for (const choiceEffect of intrigueEffects.choiceEffects) {
-        if (isConversionEffectType(choiceEffect.choiceType)) {
-          const costs = choiceEffect.left;
-          const rewards = choiceEffect.right;
-          if (rewards.some((x) => x.type === 'location-control')) {
-            if (gameState.freeLocations.length < 1) {
-              costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
-            }
+      for (const choiceEffect of intrigueEffects.conversionEffects) {
+        const costs = choiceEffect.costs;
+        const rewards = choiceEffect.rewards;
+        if (rewards.some((x) => x.type === 'location-control')) {
+          if (gameState.freeLocations.length < 1) {
+            costs.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
           }
+        }
 
-          const conversionIsUseful = this.getEffectConversionDecision(player, gameState, costs, rewards);
+        const conversionIsUseful = this.getEffectConversionDecision(player, gameState, costs, rewards);
 
-          if (conversionIsUseful) {
-            isUseful = true;
-            intrigueCosts.push(costs);
-          }
+        if (conversionIsUseful) {
+          isUseful = true;
+          intrigueCosts.push(costs);
         }
       }
 

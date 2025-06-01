@@ -23,7 +23,7 @@ export function turnInfosNeedToBeResolved(turnInfo: TurnInfo) {
     turnInfo.factionInfluenceUpChoiceTwiceAmount > 0 ||
     turnInfo.factionInfluenceDownChoiceAmount > 0 ||
     turnInfo.intrigueTrashAmount > 0 ||
-    turnInfo.effectOptions.length > 0 ||
+    turnInfo.effectChoices.length > 0 ||
     turnInfo.effectConversions.length > 0 ||
     turnInfo.canLiftAgent ||
     turnInfo.signetRingAmount > 0

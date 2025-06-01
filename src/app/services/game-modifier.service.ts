@@ -5,8 +5,8 @@ import { mergeObjects } from '../helpers/common';
 import {
   ActionType,
   ActiveFactionType,
+  EffectChoiceConversionOrReward,
   EffectReward,
-  EffectRewardOrChoice,
   EffectRewardType,
   FactionType,
   ResourceType,
@@ -109,7 +109,7 @@ export type RewardWithModifier = EffectReward & {
   modifier?: 'positive' | 'negative';
 };
 
-export type EffectWithModifier = EffectRewardOrChoice & {
+export type EffectWithModifier = EffectChoiceConversionOrReward & {
   modifier?: 'positive' | 'negative';
 };
 
