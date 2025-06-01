@@ -29,6 +29,11 @@
         {{ field.fieldId }} <span *ngIf="showDetails"> {{ field.value }}</span>
       </div>
     </div>
+    <div>
+      Conflict: {{ activeAIPlayer.gameStateEvaluations.conflictEvaluation | number : '1.2-2' }}, Tech:
+      {{ activeAIPlayer.gameStateEvaluations.techEvaluation | number : '1.2-2' }}, Imperium-Row:
+      {{ activeAIPlayer.gameStateEvaluations.imperiumRowEvaluation | number : '1.2-2' }}
+    </div>
   </div>
 </div>
 }

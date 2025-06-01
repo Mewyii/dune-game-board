@@ -9,7 +9,7 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 2,
     fieldAccess: ['landsraad'],
     imageUrl: '/assets/images/action-backgrounds/suk_doc.png',
-    cardAmount: 2,
+    cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
     customAgentEffect: {
@@ -144,7 +144,20 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 6,
     fieldAccess: ['landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/mentat.png',
-    cardAmount: 2,
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'faction-influence-up-choice',
@@ -185,7 +198,20 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 7,
     fieldAccess: ['landsraad'],
     imageUrl: '/assets/images/action-backgrounds/twisted_mentat.png',
-    cardAmount: 2,
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'agent',
@@ -629,7 +655,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/conspiracy_2.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
       en: '',
       de: '',
@@ -647,6 +673,9 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     agentEffects: [
+      {
+        type: 'condition-high-council-seat',
+      },
       {
         type: 'intrigue-trash',
       },
@@ -812,10 +841,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_15.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
-      en: 'If you have a high council seat: {resource:solari}{resource:troop}',
-      de: 'Wenn du einen Sitz im hohen Rat hast: {resource:solari}{resource:troop}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -825,7 +854,17 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     revealEffects: [],
   },
   {
@@ -1092,13 +1131,19 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'large',
-    revealEffectSize: 'medium',
-    buyEffects: [],
     customAgentEffect: {
       en: '{faction:bene} Einfluss <br>0 {resource:card-draw} {resource:helper-or} 2 {resource:agent-lift} {resource:helper-or} 4 {resource:card-draw}{resource:agent-lift}',
       de: '{faction:bene} Einfluss <br>0 {resource:card-draw} {resource:helper-or} 2 {resource:agent-lift} {resource:helper-or} 4 {resource:card-draw}{resource:agent-lift}',
       fontSize: 'medium',
     },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
@@ -1113,6 +1158,9 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'intrigue-trash',
+      },
+      {
+        type: 'helper-trade',
       },
       {
         type: 'intrigue',
@@ -1427,13 +1475,13 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/emperor.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
       en: '',
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -1444,21 +1492,27 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'focus',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
         amount: 1,
       },
       {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-connection',
-        faction: 'emperor',
-      },
-      {
-        type: 'intrigue',
+        type: 'solari',
       },
     ],
   },
@@ -1629,7 +1683,11 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'trash-self',
       },
       {
-        type: 'faction-influence-up-choice',
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'troop',
       },
     ],
   },
@@ -1644,10 +1702,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/emperor_2.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
-      en: 'If you have a high council seat: {resource:card-draw}{resource:troop}',
-      de: 'Wenn du einen Sitz im hohen Rat hast: {resource:card-draw}{resource:troop}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -1657,7 +1715,17 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -1786,11 +1854,34 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'emperor',
     persuasionCosts: 3,
-    fieldAccess: ['emperor', 'guild', 'town'],
+    fieldAccess: ['emperor', 'guild'],
     imageUrl: '/assets/images/action-backgrounds/sardaukar_5.png',
     cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'emperor',
+      },
       {
         type: 'troop',
       },
@@ -1802,9 +1893,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'recruitment-emperor',
-      },
-      {
-        type: 'sword',
       },
     ],
   },
@@ -1977,7 +2065,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'emperor',
     persuasionCosts: 5,
-    fieldAccess: ['emperor', 'landsraad', 'town'],
+    fieldAccess: ['emperor', 'guild', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/twisted_mentat_2.png',
     cardAmount: 1,
     canInfiltrate: false,

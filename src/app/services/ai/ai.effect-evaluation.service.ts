@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { normalizeNumber } from 'src/app/helpers/common';
-import { isConversionEffectType, isOptionEffectType, isStructuredChoiceEffect } from 'src/app/helpers/rewards';
+import {
+  isConversionEffectType,
+  isOptionEffectType,
+  isStructuredChoiceEffect,
+  isStructuredConditionalEffect,
+} from 'src/app/helpers/rewards';
 import {
   EffectReward,
   EffectRewardType,
@@ -32,6 +37,17 @@ export class AIEffectEvaluationService {
     for (const conditionEffect of effects.conditionalEffects) {
       evaluationValue += this.getConditionEffectEvaluation(conditionEffect, player, gameState);
     }
+    for (const timingEffect of effects.timingEffects) {
+      if (isStructuredConditionalEffect(timingEffect.effect)) {
+        evaluationValue += this.getConditionEffectEvaluation(timingEffect.effect, player, gameState);
+      } else if (isStructuredChoiceEffect(timingEffect.effect)) {
+        evaluationValue += this.getChoiceEffectEvaluation(timingEffect.effect, player, gameState);
+      } else {
+        for (const reward of timingEffect.effect) {
+          evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+        }
+      }
+    }
     return evaluationValue;
   }
 
@@ -60,7 +76,9 @@ export class AIEffectEvaluationService {
       const costsEvaluation = this.getCostsArrayEvaluation(choiceEffect.left, player, gameState);
       const rewardsEvaluation = this.getRewardArrayEvaluation(choiceEffect.right, player, gameState);
 
-      evaluationValue += -costsEvaluation + rewardsEvaluation;
+      if (-costsEvaluation + rewardsEvaluation > 0) {
+        evaluationValue += -costsEvaluation + rewardsEvaluation;
+      }
     }
     return evaluationValue;
   }
@@ -132,7 +150,7 @@ export class AIEffectEvaluationService {
   public getRewardArrayEvaluation(rewards: EffectReward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
-      evaluationValue += this.getEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+      evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
     }
     return evaluationValue;
   }
@@ -140,7 +158,7 @@ export class AIEffectEvaluationService {
   public getCostsArrayEvaluation(rewards: EffectReward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
-      evaluationValue += Math.abs(this.getEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1));
+      evaluationValue += Math.abs(this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1));
     }
     return evaluationValue;
   }
@@ -148,7 +166,7 @@ export class AIEffectEvaluationService {
   public getRewardArrayEvaluationForTurnState(rewards: EffectReward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
-      evaluationValue += this.getEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1);
+      evaluationValue += this.getRewardEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1);
     }
     return evaluationValue;
   }
@@ -157,7 +175,7 @@ export class AIEffectEvaluationService {
     let evaluationValue = 0;
     for (const reward of rewards) {
       evaluationValue += Math.abs(
-        this.getEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1)
+        this.getRewardEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1)
       );
     }
     return evaluationValue;
@@ -172,21 +190,23 @@ export class AIEffectEvaluationService {
     return normalizeNumber(this.getRewardArrayEvaluation(rewards, player, gameState), normalizeMax, 0);
   }
 
-  public getEffectEvaluation(rewardType: EffectRewardType, player: Player, gameState: GameState) {
+  public getRewardEffectEvaluation(rewardType: EffectRewardType, player: Player, gameState: GameState) {
     switch (rewardType) {
       case 'water':
         return (
           3 -
-          (player.hasSwordmaster ? 0.1 : 0) -
-          (player.hasCouncilSeat ? 0.1 : 0) -
-          0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+          (player.hasSwordmaster ? 0.15 : 0) -
+          (player.hasCouncilSeat ? 0.15 : 0) -
+          0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
+          0.025 * gameState.playerCardsRewards.water
         );
       case 'spice':
         return (
           2.5 -
-          (player.hasSwordmaster ? 0.2 : 0) -
-          (player.hasCouncilSeat ? 0.2 : 0) -
-          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits)
+          (player.hasSwordmaster ? 0.225 : 0) -
+          (player.hasCouncilSeat ? 0.225 : 0) -
+          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
+          0.02 * gameState.playerCardsRewards.spice
         );
       case 'solari':
         return (
@@ -194,10 +214,11 @@ export class AIEffectEvaluationService {
           (player.hasSwordmaster ? 0.3 : 0) -
           (player.hasCouncilSeat ? 0.3 : 0) -
           0.15 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-          0.05 * (gameState.currentRound - 1)
+          0.05 * (gameState.currentRound - 1) -
+          0.015 * gameState.playerCardsRewards.solari
         );
       case 'troop':
-        return 1.75;
+        return 1.75 - 0.015 * gameState.playerCardsRewards.troop;
       case 'dreadnought':
         return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 7 : 0) + 0.25 * (gameState.currentRound - 1);
       case 'card-draw':
@@ -205,17 +226,23 @@ export class AIEffectEvaluationService {
           1.75 +
           0.1 * gameState.playerCardsBought +
           0.1 * gameState.playerCardsTrashed +
-          0.033 * (7 - gameState.playerCardsFieldAccess.length)
+          0.033 * (7 - gameState.playerCardsFieldAccess.length) -
+          0.015 * gameState.playerCardsRewards['card-draw']
         );
       case 'card-discard':
         return -1.66 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
       case 'card-destroy':
       case 'focus':
-        return 2 + 0.15 * gameState.playerCardsBought - 0.3 * gameState.playerCardsTrashed;
+        return (
+          2 +
+          0.15 * gameState.playerCardsBought -
+          0.3 * gameState.playerCardsTrashed -
+          0.02 * gameState.playerCardsRewards.focus
+        );
       case 'card-draw-or-destroy':
         return 2 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed;
       case 'intrigue':
-        return 1.75 + 0.1 * (gameState.currentRound - 1);
+        return 1.75 + 0.1 * (gameState.currentRound - 1) - 0.015 * gameState.playerCardsRewards.focus;
       case 'persuasion':
         return 2.5 - 0.15 * (gameState.currentRound - 1);
       case 'foldspace':
@@ -236,7 +263,7 @@ export class AIEffectEvaluationService {
       case 'spice-accumulation':
         return 0;
       case 'victory-point':
-        return 9 + 1.33 * (gameState.currentRound - 1);
+        return 8 + 1.66 * (gameState.currentRound - 1);
       case 'sword':
         return 1 + 0.05 * (gameState.currentRound - 1);
       case 'combat':
@@ -261,7 +288,7 @@ export class AIEffectEvaluationService {
       case 'faction-influence-up-twice-choice':
         return 6;
       case 'faction-influence-down-choice':
-        return -2;
+        return -2.5;
       case 'faction-influence-down-emperor':
       case 'faction-influence-down-guild':
       case 'faction-influence-down-bene':
@@ -286,7 +313,7 @@ export class AIEffectEvaluationService {
       case 'troop-insert':
       case 'troop-insert-or-retreat':
       case 'troop-retreat':
-        return 1.5;
+        return 1.0 + 0.125 * (gameState.currentRound - 1);
       case 'dreadnought-insert':
       case 'dreadnought-insert-or-retreat':
       case 'dreadnought-retreat':
@@ -300,11 +327,11 @@ export class AIEffectEvaluationService {
     }
   }
 
-  public getEffectEvaluationForTurnState(rewardType: EffectRewardType, player: Player, gameState: GameState) {
+  public getRewardEffectEvaluationForTurnState(rewardType: EffectRewardType, player: Player, gameState: GameState) {
     const hasPlacedAgents = gameState.playerAgentsOnFields.length > 0;
     const hasAgentsLeftToPlace = player.agents - gameState.playerAgentsOnFields.length > 0;
 
-    const value = this.getEffectEvaluation(rewardType, player, gameState);
+    const value = this.getRewardEffectEvaluation(rewardType, player, gameState);
 
     switch (rewardType) {
       case 'water':

@@ -103,7 +103,7 @@ export interface EffectChoice extends EffectBase {
 
 export interface EffectCondition extends EffectBase {
   type: EffectConditionType;
-  faction: ActiveFactionType;
+  faction?: ActiveFactionType;
 }
 
 export type Effect = EffectTiming | EffectReward | EffectSeparator | EffectChoice | EffectCondition;
@@ -123,12 +123,28 @@ export interface StructuredTimingEffect {
   effect: StructuredConditionalEffect | StructuredChoiceEffect | EffectReward[];
 }
 
-export interface StructuredConditionalEffect {
-  condition: EffectConditionType;
-  amount?: number;
+export interface StructuredConditionalEffectConnection {
+  condition: 'condition-connection';
   faction: ActiveFactionType;
   effect: EffectReward[] | StructuredChoiceEffect;
 }
+
+export interface StructuredConditionalEffectInfluence {
+  condition: 'condition-influence';
+  amount: number;
+  faction: ActiveFactionType;
+  effect: EffectReward[] | StructuredChoiceEffect;
+}
+
+export interface StructuredConditionalEffectHighCouncilSeat {
+  condition: 'condition-high-council-seat';
+  effect: EffectReward[] | StructuredChoiceEffect;
+}
+
+export type StructuredConditionalEffect =
+  | StructuredConditionalEffectConnection
+  | StructuredConditionalEffectInfluence
+  | StructuredConditionalEffectHighCouncilSeat;
 
 export interface StructuredChoiceEffect {
   choiceType: EffectChoiceType;

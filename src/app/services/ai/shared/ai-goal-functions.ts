@@ -17,7 +17,7 @@ export function getResourceDesire(
   player: Player,
   baseDesire: number,
   influences: {
-    resource: ResourceType | 'tech-agents';
+    resource: ResourceType | 'tech';
     amount: number;
     maxAmount?: number;
     negative?: boolean;
@@ -35,9 +35,9 @@ export function getResourceDesire(
   return clamp(desire, 0, 1);
 }
 
-export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech-agents') {
+export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech') {
   switch (resourceType) {
-    case 'tech-agents':
+    case 'tech':
       return player.tech;
     default:
       const resource = player.resources.find((x) => x.type === resourceType);

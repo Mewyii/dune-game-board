@@ -25,7 +25,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'spice', amount: 2 }, { type: 'tech' }, { type: 'combat' }],
+      rewards: [{ type: 'spice', amount: 2 }, { type: 'troop' }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
     },

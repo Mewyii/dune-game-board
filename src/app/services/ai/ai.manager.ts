@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, shuffle } from 'lodash';
+import { clamp, cloneDeep, shuffle, take } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
@@ -25,6 +25,7 @@ import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 import { AIFieldEvaluationService, ViableField } from './ai.field-evaluation.service';
 import { aiPersonalities } from './constants';
 import { AIPersonality, GameState } from './models';
+import { getResourceAmount } from './shared';
 
 export interface AIPlayer {
   playerId: number;
@@ -32,6 +33,7 @@ export interface AIPlayer {
   personality: AIPersonality;
   preferredFields: ViableField[];
   canAccessBlockedFields?: boolean;
+  gameStateEvaluations: { conflictEvaluation?: number; techEvaluation?: number; imperiumRowEvaluation?: number };
 }
 
 export type AIVariableValues = 'good' | 'okay' | 'bad';
@@ -114,7 +116,7 @@ export class AIManager {
           name = this.getRandomAIName();
           personality = (aiPersonalities as any)[name];
         }
-        aiPlayers.push({ playerId: player.id, name, personality, preferredFields: [] });
+        aiPlayers.push({ playerId: player.id, name, personality, preferredFields: [], gameStateEvaluations: {} });
       }
     }
 
@@ -198,14 +200,22 @@ export class AIManager {
       gameState,
       24
     );
-    const techEvaluation = Math.max(
-      ...gameState.availableTechTiles.map((x) => this.getTechTileEvaluation(x, player, gameState))
+    const techEvaluation = clamp(
+      normalizeNumber(
+        Math.max(...gameState.availableTechTiles.map((x) => this.getTechTileBuyEvaluation(x, player, gameState))),
+        12,
+        0
+      ),
+      0,
+      1
     );
 
     const evaluatedImperiumRowCards = (
       gameState.imperiumRowCards.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[]
     ).map((x) => this.getImperiumCardBuyEvaluation(x, player, gameState));
-    const imperiumRowEvaluation = normalizeNumber(getNumberAverage(evaluatedImperiumRowCards), 16, 5);
+    evaluatedImperiumRowCards.sort((a, b) => b - a);
+    const topThreeImperiumRowCardEvaluations = take(evaluatedImperiumRowCards, 3);
+    const imperiumRowEvaluation = clamp(normalizeNumber(getNumberAverage(topThreeImperiumRowCardEvaluations), 20, 4), 0, 1);
 
     const { preferredFields } = this.fieldEvaluationService.getPreferredFieldsForAIPlayer(
       player,
@@ -219,6 +229,7 @@ export class AIManager {
     );
 
     aiPlayer.preferredFields = preferredFields;
+    aiPlayer.gameStateEvaluations = { conflictEvaluation, techEvaluation, imperiumRowEvaluation };
 
     this.aiPlayersSubject.next(aiPlayers);
   }
@@ -325,7 +336,7 @@ export class AIManager {
       if (location.ownerReward) {
         const locationValue =
           (location.ownerReward.amount ?? 1) *
-          this.effectEvaluationService.getEffectEvaluation(location.ownerReward.type, player, gameState);
+          this.effectEvaluationService.getRewardEffectEvaluation(location.ownerReward.type, player, gameState);
         if (locationValue > preferredLocationValue) {
           preferredLocation = location;
           preferredLocationValue = locationValue;
@@ -619,7 +630,7 @@ export class AIManager {
     let decision: EffectRewardType | undefined = undefined;
     let evaluationValue = 0;
     for (const rewardType of rewardTypes) {
-      const value = this.effectEvaluationService.getEffectEvaluationForTurnState(rewardType, player, gameState);
+      const value = this.effectEvaluationService.getRewardEffectEvaluationForTurnState(rewardType, player, gameState);
       if (value > evaluationValue) {
         evaluationValue = value;
         decision = rewardType;
@@ -807,8 +818,39 @@ export class AIManager {
     return evaluationValue;
   }
 
-  public getTechTileEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
-    return techTile.aiEvaluation ? techTile.aiEvaluation(player, gameState) : 0;
+  public getTechTileBuyEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
+    const techCostEvaluation =
+      this.effectEvaluationService.getRewardEffectEvaluation('tech', player, gameState) * techTile.costs;
+    const playerTechAmount = getResourceAmount(player, 'tech');
+
+    let evaluationValue = -techCostEvaluation + playerTechAmount * 0.75;
+
+    if (techTile.buyEffects) {
+      const { hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(techTile.buyEffects);
+      if (!hasRewardOptions && !hasRewardConversion) {
+        evaluationValue += this.effectEvaluationService.getRewardArrayEvaluation(techTile.buyEffects, player, gameState);
+      }
+    }
+    if (techTile.structuredEffects) {
+      const differentTechTileActivations = techTile.effects?.filter((x) => x.type === 'tech-tile-flip').length ?? 0;
+      const value = this.effectEvaluationService.getStructuredEffectsEvaluation(
+        techTile.structuredEffects,
+        player,
+        gameState
+      );
+      evaluationValue +=
+        (value / (differentTechTileActivations > 0 ? differentTechTileActivations : 1)) *
+        ((10 - gameState.currentRound) / 1.5);
+    }
+    if (techTile.customEffect?.en) {
+      if (techTile.aiEvaluation) {
+        evaluationValue += techTile.aiEvaluation(player, gameState);
+      } else {
+        evaluationValue += 0.25 * techTile.costs;
+      }
+    }
+
+    return evaluationValue;
   }
 
   public getIntrigueEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {

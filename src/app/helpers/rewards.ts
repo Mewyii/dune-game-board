@@ -232,13 +232,28 @@ export function getStructuredConditionalEffectIfPossible(
     if (isConditionalEffect(effect)) {
       const effectsWithoutCondition = effects.slice(index + 1) as EffectRewardOrChoice[];
       const [effectRewards, choiceEffect] = getStructuredChoiceEffectIfPossible(effectsWithoutCondition);
-      const conditionalEffect = {
-        condition: effect.type,
-        faction: effect.faction,
-        effect: choiceEffect || effectRewards,
-        amount: effect.amount,
-      };
-      return [undefined, conditionalEffect];
+      if (effect.type === 'condition-connection') {
+        const conditionalEffect = {
+          condition: effect.type,
+          faction: effect.faction ?? 'emperor',
+          effect: choiceEffect || effectRewards,
+        };
+        return [undefined, conditionalEffect];
+      } else if (effect.type === 'condition-influence') {
+        const conditionalEffect = {
+          condition: effect.type,
+          faction: effect.faction ?? 'emperor',
+          effect: choiceEffect || effectRewards,
+          amount: effect.amount ?? 0,
+        };
+        return [undefined, conditionalEffect];
+      } else if (effect.type === 'condition-high-council-seat') {
+        const conditionalEffect = {
+          condition: effect.type,
+          effect: choiceEffect || effectRewards,
+        };
+        return [undefined, conditionalEffect];
+      }
     }
   }
   return [effects as EffectRewardOrChoice[], undefined];

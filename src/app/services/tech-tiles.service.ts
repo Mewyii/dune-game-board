@@ -28,20 +28,20 @@ export interface PlayerTechTile {
   providedIn: 'root',
 })
 export class TechTilesService {
-  private availableTechTilesSubject = new BehaviorSubject<TechTileDeckCard[]>([]);
-  public availableTechTiles$ = this.availableTechTilesSubject.asObservable();
-  public buyableTechTiles$ = this.availableTechTilesSubject.pipe(map((x) => x.slice(0, 3)));
+  private techTileDeckSubject = new BehaviorSubject<TechTileDeckCard[]>([]);
+  public techTileDeck$ = this.techTileDeckSubject.asObservable();
+  public availableTechTiles$ = this.techTileDeckSubject.pipe(map((x) => x.slice(0, 3)));
 
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
   public playerTechTiles$ = this.playerTechTilesSubject.asObservable();
 
   constructor(private techTilesConfigService: TechTileConfiguratorService) {
-    const availableTechTilesString = localStorage.getItem('availableTechTiles');
-    if (availableTechTilesString) {
-      const availableTechTiles = JSON.parse(availableTechTilesString) as TechTileDeckCard[];
+    const techTileDeckString = localStorage.getItem('techTileDeck');
+    if (techTileDeckString) {
+      const techTileDeck = JSON.parse(techTileDeckString) as TechTileDeckCard[];
 
       // Workaround for local storage not being able to store functions
-      const realTechTiles = availableTechTiles.map((x) => {
+      const realTechTiles = techTileDeck.map((x) => {
         const techTileGameAdjustments = techTilesGameAdjustments.find((y) => y.id === x.name.en);
         return {
           ...x,
@@ -50,11 +50,11 @@ export class TechTilesService {
         };
       });
 
-      this.availableTechTilesSubject.next(realTechTiles);
+      this.techTileDeckSubject.next(realTechTiles);
     }
 
-    this.availableTechTiles$.subscribe((availableTechTiles) => {
-      localStorage.setItem('availableTechTiles', JSON.stringify(availableTechTiles));
+    this.techTileDeck$.subscribe((techTileDeck) => {
+      localStorage.setItem('techTileDeck', JSON.stringify(techTileDeck));
     });
 
     const playerTechTilesString = localStorage.getItem('playerTechTiles');
@@ -81,12 +81,12 @@ export class TechTilesService {
     });
   }
 
-  public get availableTechTiles() {
-    return cloneDeep(this.availableTechTilesSubject.value);
+  public get techTileDeck() {
+    return cloneDeep(this.techTileDeckSubject.value);
   }
 
   public get buyableTechTiles() {
-    return cloneDeep(this.availableTechTilesSubject.value.slice(0, 3));
+    return cloneDeep(this.techTileDeckSubject.value.slice(0, 3));
   }
 
   public get playerTechTiles() {
@@ -100,20 +100,20 @@ export class TechTilesService {
   createTechTileDeck() {
     const techTiles = this.techTilesConfigService.techTiles;
     this.playerTechTilesSubject.next([]);
-    this.availableTechTilesSubject.next(shuffleMultipleTimes(techTiles.map((x) => this.instantiateTechTile(x))));
+    this.techTileDeckSubject.next(shuffleMultipleTimes(techTiles.map((x) => this.instantiateTechTile(x))));
   }
 
   removeAvailableTechTile(techTileId: string) {
-    this.availableTechTilesSubject.next(this.availableTechTiles.filter((x) => x.name.en !== techTileId));
+    this.techTileDeckSubject.next(this.techTileDeck.filter((x) => x.name.en !== techTileId));
   }
 
-  resetAvailableTechTiles() {
+  resetTechTileDeck() {
     this.playerTechTilesSubject.next([]);
-    this.availableTechTilesSubject.next([]);
+    this.techTileDeckSubject.next([]);
   }
 
   setPlayerTechTile(playerId: number, techTileId: string) {
-    const techTiles = this.availableTechTiles;
+    const techTiles = this.techTileDeck;
     const techTile = techTiles.find((x) => x.name.en === techTileId);
     const techTileIndex = techTiles.findIndex((x) => x.name.en === techTileId);
     if (!techTile || techTileIndex < 0) {
@@ -121,7 +121,7 @@ export class TechTilesService {
     }
 
     this.playerTechTilesSubject.next([...this.playerTechTiles, { playerId, techTile: techTile, isFlipped: false }]);
-    this.availableTechTilesSubject.next(techTiles.filter((x) => x.name.en !== techTile.name.en));
+    this.techTileDeckSubject.next(techTiles.filter((x) => x.name.en !== techTile.name.en));
   }
 
   flipTechTile(techTileId: string) {

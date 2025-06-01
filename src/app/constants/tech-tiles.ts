@@ -130,6 +130,46 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Smuggler outposts',
+      de: 'Schmuggler-Aussenposten',
+    },
+    faction: 'guild',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [
+      {
+        type: 'foldspace',
+      },
+    ],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'tech',
+        amount: 2,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Maula Pistol Works',
       de: 'Maula-Pistolen Werk',
     },
@@ -142,45 +182,6 @@ export const techTiles: TechTileCard[] = [
       de: '<b>Aufdeckzug</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
       fontSize: 'medium',
     },
-  },
-  {
-    name: {
-      en: 'Smuggler outposts',
-      de: 'Schmuggler-Aussenposten',
-    },
-    faction: 'guild',
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
-    imagePosition: 'center',
-    buyEffects: [
-      {
-        type: 'foldspace',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'solari',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'tech',
-        amount: 2,
-      },
-    ],
   },
   {
     name: {
@@ -243,8 +244,10 @@ export const techTiles: TechTileCard[] = [
     faction: 'bene',
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
+    effects: [],
     customEffect: {
       en: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
       de: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
@@ -284,6 +287,23 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Heavy Lasguns',
+      de: 'Schwere Lasguns',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent {resource:card-discard} for each of your {resource:dreadnought} in combat.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner {resource:card-discard} für jedes deiner {resource:dreadnought} im Konflikt.',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Trade Port',
       de: 'Handelshafen',
     },
@@ -315,21 +335,6 @@ export const techTiles: TechTileCard[] = [
       en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
       de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
       fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Heavy Lasguns',
-      de: 'Schwere Lasguns',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
-    imagePosition: 'center',
-    buyEffects: [],
-    customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent {resource:card-discard} for each of your {resource:dreadnought} in combat.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner {resource:card-discard} für jedes deiner {resource:dreadnought} im Konflikt.',
-      fontSize: 'medium',
     },
   },
   {
@@ -376,8 +381,8 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
-      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
       fontSize: 'small',
     },
   },
@@ -573,6 +578,38 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Ornithoper Squadron',
+      de: 'Ornithopterstaffel',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/ornithopters.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop-insert-or-retreat',
+        amount: 2,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Shieldbreakers',
       de: 'Schildbrecher',
     },
@@ -624,14 +661,17 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Ornithoper Squadron',
-      de: 'Ornithopterstaffel',
+      en: 'Gunship',
+      de: 'Panzerschiff',
     },
     costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/ornithopters.png',
+    imageUrl: '/assets/images/action-backgrounds/dreadnought.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [
+      {
+        type: 'troop',
+      },
       {
         type: 'troop',
       },
@@ -644,32 +684,15 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'troop-insert-or-retreat',
-        amount: 2,
+        type: 'sword',
       },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Gunship',
-      de: 'Panzerschiff',
-    },
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/dreadnought.png',
-    imagePosition: 'center',
-    buyEffects: [
       {
-        type: 'troop',
+        type: 'sword',
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b><br>{resource:sword}{resource:sword}{resource:helper-or}Remove control of a location where one of your agents is.',
-      de: '<b>Aufdeckzug</b>:<br>{resource:sword}{resource:sword}{resource:helper-or}Entferne die Kontrolle über einen Ort, auf dem sich einer deiner Agenten befindet.',
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>agent from a board space. It is no longer available for this round.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegner-<br>ischen Agenten von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
       fontSize: 'small',
     },
   },
@@ -922,8 +945,14 @@ export const techTiles: TechTileCard[] = [
         type: 'timing-reveal-turn',
       },
       {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
         type: 'persuasion',
-        amount: 2,
+        amount: 3,
       },
       {
         type: 'helper-or',
@@ -934,10 +963,13 @@ export const techTiles: TechTileCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
     customEffect: {
-      en: '<br><b>When you win a conflict:</b><br> {resource:location-control}',
-      de: '<br><b>Wenn du einen Konflikt <br>gewinnst:</b><br> {resource:location-control}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },

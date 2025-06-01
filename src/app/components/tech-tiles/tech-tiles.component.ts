@@ -29,7 +29,7 @@ export class TechTilesComponent {
   ) {}
 
   ngOnInit(): void {
-    this.techTilesService.buyableTechTiles$.subscribe((techTiles) => {
+    this.techTilesService.availableTechTiles$.subscribe((techTiles) => {
       this.availableTechTiles = techTiles;
     });
 

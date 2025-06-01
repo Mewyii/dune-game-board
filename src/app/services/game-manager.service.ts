@@ -524,7 +524,7 @@ export class GameManager {
     this.cardsService.resetPlayerPlots();
     this.cardsService.resetPlayerTrashPiles();
     this.cardsService.resetImperiumRowCards();
-    this.techTilesService.resetAvailableTechTiles();
+    this.techTilesService.resetTechTileDeck();
 
     this.isFinaleSubject.next(false);
   }
@@ -2536,11 +2536,11 @@ export class GameManager {
       const gameState = this.getGameState(player);
       const mostDesiredTechTile = buyableTechTiles.sort(
         (a, b) =>
-          this.aIManager.getTechTileEvaluation(b, player, gameState) -
-          this.aIManager.getTechTileEvaluation(a, player, gameState)
+          this.aIManager.getTechTileBuyEvaluation(b, player, gameState) -
+          this.aIManager.getTechTileBuyEvaluation(a, player, gameState)
       )[0];
 
-      const desire = this.aIManager.getTechTileEvaluation(mostDesiredTechTile, player, gameState);
+      const desire = this.aIManager.getTechTileBuyEvaluation(mostDesiredTechTile, player, gameState);
       const effectiveCosts = mostDesiredTechTile.costs - availablePlayerTech;
 
       if (
