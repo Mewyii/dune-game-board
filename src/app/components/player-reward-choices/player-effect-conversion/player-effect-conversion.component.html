@@ -1,7 +1,9 @@
-@for (leftEffect of effectConversion.costs; track $index) {
-<dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
-}
-<dune-reward-array [rewards]="[{ type: 'helper-trade' }]"></dune-reward-array>
-@for (rightEffect of effectConversion.rewards; track $index) {
-<dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
-}
+<div class="conversion-container">
+  @for (leftEffect of effectConversion.costs; track $index) {
+  <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
+  }
+  <dune-reward-array [rewards]="[{ type: 'helper-trade' }]"></dune-reward-array>
+  @for (rightEffect of effectConversion.rewards; track $index) {
+  <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
+  }
+</div>

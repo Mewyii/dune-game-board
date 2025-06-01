@@ -1005,7 +1005,7 @@ export class GameManager {
     const chosenEffect = choice === 'left' ? effect.left : effect.right;
 
     if (isStructuredConversionEffect(chosenEffect)) {
-      this.resolveEffectConversionIfPossible(playerId, chosenEffect);
+      this.resolveEffectConversionIfPossible(playerId, { ...chosenEffect, element: effect.element });
     } else {
       for (const reward of chosenEffect) {
         this.addRewardToPlayer(player.id, reward, { gameElement: effect.element });
