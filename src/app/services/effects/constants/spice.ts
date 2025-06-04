@@ -7,7 +7,7 @@ export const spice: IParticlesProps = {
   style: {},
   particles: {
     number: {
-      value: 150,
+      value: 500,
       density: {
         enable: true,
       },
@@ -16,14 +16,14 @@ export const spice: IParticlesProps = {
       value: ['#d17c1a', '#e97c00', '#e0a25c', '#ebc79d', '#b5762d'],
     },
     opacity: {
-      value: { min: 0.1, max: 0.5 },
+      value: { min: 0.1, max: 0.6 },
     },
     size: {
-      value: { min: 5, max: 10 },
+      value: { min: 1, max: 2 },
     },
     move: {
       enable: true,
-      speed: 3,
+      speed: 5,
       random: false,
     },
   },

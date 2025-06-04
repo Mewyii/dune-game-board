@@ -205,7 +205,7 @@ export class AIManager {
       gameState.conflict.rewards[0],
       player,
       gameState,
-      25
+      30
     );
     const techEvaluation = clamp(
       normalizeNumber(
@@ -347,14 +347,14 @@ export class AIManager {
 
       const enemyGarrisonStrength = getPlayerGarrisonStrength(highestEnemyCombatScore, gameState);
 
-      if (playerCombatStrengthPotentialAgainstEnemy < 0) {
+      if (playerCombatStrengthPotentialAgainstEnemy < 1) {
         if (enemyCombatScores.filter((x) => x.combatStrength > 0).length < 3 || playerCombatUnits.troopsInGarrison > 4) {
           return 'minimum';
         } else {
           return 'none';
         }
       } else if (
-        playerCombatStrengthPotentialAgainstEnemy >= 0 &&
+        playerCombatStrengthPotentialAgainstEnemy >= 1 &&
         playerCombatStrengthPotentialAgainstEnemy > enemyGarrisonStrength
       ) {
         return playerCombatStrengthPotentialAgainstEnemy + Math.abs(combatPowerDifference);

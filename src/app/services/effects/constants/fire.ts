@@ -7,23 +7,23 @@ export const fire: IParticlesProps = {
   style: {},
   particles: {
     number: {
-      value: 250,
+      value: 500,
       density: {
         enable: true,
       },
     },
     color: {
-      value: ['#fdcf58', '#757676', '#f27d0c', '#800909', '#f07f13'],
+      value: ['#a12916', '#610000', '#ff8d63', '#520606', '#69011a'],
     },
     opacity: {
       value: { min: 0.1, max: 0.5 },
     },
     size: {
-      value: { min: 1, max: 3 },
+      value: { min: 1, max: 4 },
     },
     move: {
       enable: true,
-      speed: 7,
+      speed: 1.25,
       random: false,
     },
   },

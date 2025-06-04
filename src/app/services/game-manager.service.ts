@@ -1169,7 +1169,11 @@ export class GameManager {
                   break;
                 }
               }
-            } else if (intriguesWithCombatScores.length > 0 && Math.random() < 0.15 * intriguesWithCombatScores.length) {
+            } else if (
+              intriguesWithCombatScores.length > 0 &&
+              (this.intriguesService.getPlayerIntrigueCount(player.id) > 2 ||
+                Math.random() < 0.15 * intriguesWithCombatScores.length)
+            ) {
               const beatableCombatScore = enemyCombatScores.find(
                 (x) => x >= playerCombatScore && x < playerCombatScore + maxAdditionalCombatScore
               );

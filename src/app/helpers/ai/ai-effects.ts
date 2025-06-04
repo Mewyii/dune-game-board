@@ -4,15 +4,15 @@ import { PlayerCombatUnits } from '../../services/combat-manager.service';
 import { getPlayerCombatStrength, getPlayerGarrisonStrength } from './ai-goals';
 
 export function getParticipateInCombatDesire(gameState: GameState) {
-  let desire = 0.1;
+  let desire = 0.0;
   if (getPlayerCombatStrength(gameState.playerCombatUnits, gameState) > 0) {
-    desire += 0.033 * gameState.playerCombatUnits.troopsInGarrison;
+    desire += 0.05 * gameState.playerCombatUnits.troopsInGarrison;
     return desire;
   } else {
     if (gameState.playerCombatUnits.troopsInGarrison > 0) {
-      desire += 0.3;
+      desire += 0.2;
     }
-    desire += 0.1 * gameState.playerCombatUnits.troopsInGarrison;
+    desire += 0.066 * gameState.playerCombatUnits.troopsInGarrison;
     desire += 0.1 * (1 - gameState.playerAgentsAvailable);
     desire += 0.02 * gameState.playerCardsRewards.sword;
     desire += 0.04 * gameState.playerTechTilesRewards.sword;
@@ -35,7 +35,7 @@ export function getParticipateInCombatDesire(gameState: GameState) {
 export function getWinCombatDesire(gameState: GameState) {
   let desire = 0.1;
 
-  desire += 0.075 * getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState);
+  desire += 0.05 * getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState);
   desire += 0.05 * gameState.playerAgentsAvailable;
   desire += 0.01 * gameState.playerCardsRewards.sword;
   desire += 0.02 * gameState.playerTechTilesRewards.sword;
@@ -70,7 +70,7 @@ export function getWinCombatDesire(gameState: GameState) {
     }
   } else {
     for (const enemyCombatScore of enemyCombatScores) {
-      desire += 0.02 * playerCombatScore;
+      desire += 0.02 * enemyCombatScore.combatStrength;
 
       const enemyAgentsAvailable =
         gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;

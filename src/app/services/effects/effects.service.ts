@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { fire, spice } from './constants';
 import { IParticlesProps } from 'ng-particles';
-import { GameManager } from '../game-manager.service';
-import { welcome } from './constants/welcome';
+import { BehaviorSubject } from 'rxjs';
 import { LanguageString } from 'src/app/models';
+import { GameManager } from '../game-manager.service';
+import { fire, spice } from './constants';
+import { welcome } from './constants/welcome';
 
 export interface Effect {
   id: string;
@@ -32,7 +32,7 @@ export class EffectsService {
     id: 'combatEffect',
     title: { en: 'Combat', de: 'Kampf' },
     effect: fire,
-    duration: 4,
+    duration: 5,
     show: false,
   });
   public combatAnimation$ = this.combatAnimationSubject.asObservable();
@@ -41,7 +41,7 @@ export class EffectsService {
     id: 'spiceEffect',
     title: { en: 'Round Start', de: 'Rundenbeginn' },
     effect: spice,
-    duration: 4,
+    duration: 5,
     show: false,
   });
   public spiceAnimation$ = this.spiceAnimationSubject.asObservable();

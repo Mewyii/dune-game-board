@@ -53,13 +53,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.5,
+    baseDesire: 0.45,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'spice') +
       0.02 * player.tech -
       0.01 * (gameState.currentRound - 1) +
-      0.2 * gameState.playerIntriguesConversionCosts.tech +
-      0.1 * gameState.playerTechTilesConversionCosts.tech,
+      0.05 * gameState.playerIntriguesConversionCosts.tech +
+      0.025 * gameState.playerTechTilesConversionCosts.tech,
     goalIsReachable: (player) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -175,8 +175,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         return 0;
       }
 
-      const winCombatDesire = getWinCombatDesire(gameState);
-      const participateInCombatDesire = getParticipateInCombatDesire(gameState);
+      const winCombatDesire = clamp(getWinCombatDesire(gameState), 0, 0.9);
+      const participateInCombatDesire = clamp(getParticipateInCombatDesire(gameState), 0, 0.6);
       const desire = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
       console.log('Win Combat Desire: ' + winCombatDesire);
       console.log('Participate in Combat Desire: ' + participateInCombatDesire);
@@ -300,11 +300,11 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   'trim-cards': {
-    baseDesire: 0.25,
+    baseDesire: 0.2,
     desireModifier: (player, gameState, goals) =>
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
-          0.1 * gameState.playerCardsBought -
+          0.125 * gameState.playerCardsBought -
           0.15 * (gameState.playerCardsTrashed + player.focusTokens),
         -0.4,
         0.4
@@ -329,8 +329,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire) +
-        0.2 * gameState.playerIntriguesConversionCosts.water +
-        0.1 * gameState.playerTechTilesConversionCosts.water
+        0.05 * gameState.playerIntriguesConversionCosts.water +
+        0.025 * gameState.playerTechTilesConversionCosts.water
       );
     },
     goalIsReachable: () => false,
@@ -346,16 +346,16 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       const spiceDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
         { type: 'collect-solari', modifier: 0.9 },
-        { type: 'draw-cards', modifier: 0.9 },
-        { type: 'troops', modifier: 0.8 },
-        { type: 'intrigues', modifier: 0.7 },
+        { type: 'draw-cards', modifier: 0.8 },
+        { type: 'troops', modifier: 0.7 },
+        { type: 'intrigues', modifier: 0.6 },
         { type: 'tech', modifier: 0.5 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire) +
-        0.2 * gameState.playerIntriguesConversionCosts.spice +
-        0.1 * gameState.playerTechTilesConversionCosts.spice
+        0.05 * gameState.playerIntriguesConversionCosts.spice +
+        0.025 * gameState.playerTechTilesConversionCosts.spice
       );
     },
     goalIsReachable: (player) => getResourceAmount(player, 'water') > 1,
@@ -378,8 +378,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire) +
-        0.2 * gameState.playerIntriguesConversionCosts.solari +
-        0.1 * gameState.playerTechTilesConversionCosts.solari
+        0.05 * gameState.playerIntriguesConversionCosts.solari +
+        0.025 * gameState.playerTechTilesConversionCosts.solari
       );
     },
     goalIsReachable: (player) => getResourceAmount(player, 'spice') > 2,

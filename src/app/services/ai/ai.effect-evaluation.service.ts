@@ -235,22 +235,24 @@ export class AIEffectEvaluationService {
       case 'water':
         return (
           3 +
-          0.025 * gameState.playerTechTilesConversionCosts.water -
+          0.02 * gameState.playerTechTilesConversionCosts.water -
           (player.hasSwordmaster ? 0.15 : 0) -
           (player.hasCouncilSeat ? 0.15 : 0) -
           0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-          0.025 * gameState.playerCardsRewards.water -
-          0.025 * gameState.playerTechTilesRewards.water
+          0.01 * (gameState.currentRound - 1) -
+          0.02 * gameState.playerCardsRewards.water -
+          0.02 * gameState.playerTechTilesRewards.water
         );
       case 'spice':
         return (
           2.5 +
-          0.0175 * gameState.playerTechTilesConversionCosts.spice -
+          0.015 * gameState.playerTechTilesConversionCosts.spice -
           (player.hasSwordmaster ? 0.225 : 0) -
           (player.hasCouncilSeat ? 0.225 : 0) -
           0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-          0.0175 * gameState.playerCardsRewards.spice -
-          0.0175 * gameState.playerTechTilesRewards.spice
+          0.025 * (gameState.currentRound - 1) -
+          0.015 * gameState.playerCardsRewards.spice -
+          0.015 * gameState.playerTechTilesRewards.spice
         );
       case 'solari':
         return (
@@ -457,7 +459,11 @@ export class AIEffectEvaluationService {
       case 'victory-point':
         return value;
       case 'sword':
-        return gameState.playerCombatUnits.troopsInCombat > 0 ? (hasAgentsLeftToPlace ? value : 0.66 * value) : 0;
+        return gameState.playerCombatUnits.troopsInCombat > 0 || gameState.playerCombatUnits.shipsInCombat > 0
+          ? hasAgentsLeftToPlace
+            ? value
+            : 0.66 * value
+          : 0;
       case 'combat':
         const participateDesire = getParticipateInCombatDesire(gameState);
         const winDesire = getWinCombatDesire(gameState);

@@ -7,7 +7,7 @@ export const welcome: IParticlesProps = {
   style: {},
   particles: {
     number: {
-      value: 25,
+      value: 5,
       density: {
         enable: true,
       },
@@ -19,7 +19,7 @@ export const welcome: IParticlesProps = {
       value: { min: 0.01, max: 0.1 },
     },
     size: {
-      value: { min: 1, max: 250 },
+      value: { min: 1, max: 750 },
     },
     move: {
       enable: true,
