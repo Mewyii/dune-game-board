@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
+import { GameState } from 'src/app/models/ai';
 import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustments';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { StructuredEffects } from '../models';
 import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
-import { GameState } from './ai/models';
 import { TechTileConfiguratorService } from './configurators/tech-tile-configurator.service';
 import { GameModifiers } from './game-modifier.service';
 

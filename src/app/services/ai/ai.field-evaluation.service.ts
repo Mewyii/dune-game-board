@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import { getAccumulatedSpice, getDesire } from 'src/app/helpers/ai';
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { randomizeArray } from 'src/app/helpers/common';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 import { getFlattenedEffectRewardArray, getRewardArrayAIInfos } from 'src/app/helpers/rewards';
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
+import { AIGoals, FieldsForGoals, GameState, GoalModifier } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { LeaderDeckCard } from '../leaders.service';
 import { SettingsService } from '../settings.service';
 import { AIPlayer } from './ai.manager';
-import { AIGoals, FieldsForGoals, GameState, GoalModifier } from './models';
-import { getAccumulatedSpice, getDesire } from './shared';
 
 interface FieldEvaluation {
   fieldId: string;

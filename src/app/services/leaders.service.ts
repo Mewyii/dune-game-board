@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { AIAdjustments } from 'src/app/models/ai';
 import { Leader } from '../constants/leaders';
 import { leadersGameAdjustments } from '../constants/leaders-game-adjustments';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { StructuredEffects } from '../models';
 import { Player } from '../models/player';
-import { AIAdjustments } from './ai/models';
 import { LeaderConfiguratorService } from './configurators/leader.service';
 import { GameModifiers } from './game-modifier.service';
 

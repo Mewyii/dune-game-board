@@ -1,4 +1,4 @@
-import { AIPersonality } from '../models';
+import { AIPersonality } from 'src/app/models/ai';
 
 const fighter: AIPersonality = {
   troops: 1.1,

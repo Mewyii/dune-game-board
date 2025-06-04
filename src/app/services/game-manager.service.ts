@@ -46,12 +46,8 @@ import { IntrigueDeckCard } from '../models/intrigue';
 import { Player } from '../models/player';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from '../models/turn-info';
 import { AIManager } from './ai/ai.manager';
-import {
-  PlayerGameElementFactions as Factions,
-  GameState,
-  PlayerGameElementFieldAccess,
-  PlayerGameElementRewards,
-} from './ai/models';
+
+import { GameState, PlayerGameElementFactions, PlayerGameElementFieldAccess, PlayerGameElementRewards } from '../models/ai';
 import { AudioManager } from './audio-manager.service';
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
 import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
@@ -3203,7 +3199,7 @@ export class GameManager {
     return result;
   }
 
-  private getInitialFactions(): Factions {
+  private getInitialFactions(): PlayerGameElementFactions {
     return {
       bene: 0,
       emperor: 0,

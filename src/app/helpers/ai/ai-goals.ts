@@ -1,7 +1,7 @@
 import { clamp } from 'lodash';
 import { Effect, EffectRewardType, Resource, ResourceType } from 'src/app/models';
+import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
-import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
 
@@ -63,7 +63,7 @@ export function getDesire(goal: AIGoal, player: Player, gameState: GameState, go
   return clamp(goal.baseDesire + goalDesire, -1, goal.maxDesire ?? 1);
 }
 
-export function getMaxDesireOfUnreachableGoal(
+export function getMaxDesireOfUnreachedOrUnreachableGoal(
   player: Player,
   gameState: GameState,
   goals: FieldsForGoals,
@@ -73,7 +73,7 @@ export function getMaxDesireOfUnreachableGoal(
   if (!goal) {
     return 0.0;
   }
-  if (!goal.reachedGoal(player, gameState, goals)) {
+  if (!goal.goalIsReachable(player, gameState, goals) && !goal.reachedGoal(player, gameState, goals)) {
     const goalDesire = getDesire(goal, player, gameState, goals);
 
     return goalDesire * goalType.modifier;
@@ -90,7 +90,7 @@ export function getMaxDesireOfUnreachableGoals(
   currentDesire: number
 ) {
   for (const goalType of goalTypes) {
-    const goalDesire = getMaxDesireOfUnreachableGoal(player, gameState, goals, goalType);
+    const goalDesire = getMaxDesireOfUnreachedOrUnreachableGoal(player, gameState, goals, goalType);
     if (goalDesire > currentDesire) {
       currentDesire = goalDesire;
     }

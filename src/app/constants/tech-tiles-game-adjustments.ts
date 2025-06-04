@@ -1,5 +1,5 @@
+import { GameState } from '../models/ai';
 import { Player } from '../models/player';
-import { GameState } from '../services/ai/models';
 import { GameModifiers } from '../services/game-modifier.service';
 
 export interface TechTileGameAdjustments {

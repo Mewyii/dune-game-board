@@ -1,15 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { aiPersonalities } from 'src/app/constants/ai';
 import { Player } from 'src/app/models/player';
 import { AIManager, AIPlayer } from 'src/app/services/ai/ai.manager';
-import { aiPersonalities } from 'src/app/services/ai/constants';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-ai-tile',
-    templateUrl: './ai-tile.component.html',
-    styleUrls: ['./ai-tile.component.scss'],
-    standalone: false
+  selector: 'dune-ai-tile',
+  templateUrl: './ai-tile.component.html',
+  styleUrls: ['./ai-tile.component.scss'],
+  standalone: false,
 })
 export class AITileComponent implements OnInit {
   @Input() showDetails = false;

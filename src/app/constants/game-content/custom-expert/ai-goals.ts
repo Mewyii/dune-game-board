@@ -1,24 +1,18 @@
 import { clamp } from 'lodash';
-import { getNumberAverage, getNumberMax, normalizeNumber } from 'src/app/helpers/common';
-import { isResourceArray } from 'src/app/helpers/resources';
-import { isChoiceEffect, isConversionEffect } from 'src/app/helpers/rewards';
-import { ActionField } from 'src/app/models/location';
-import { Player } from 'src/app/models/player';
-import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import {
   enemyIsCloseToPlayerFactionScore,
   getAvoidCombatTiesModifier,
-  getCostAdjustedDesire,
-  getMaxDesireOfUnreachableGoals,
+  getMaxDesireOfUnreachableGoals as getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
   getResourceAmount,
-  getRewardAmountFromArray,
   getWinCombatDesire,
   noOneHasMoreInfluence,
   playerCanDrawCards,
   playerCanGetAllianceThisTurn,
-} from 'src/app/services/ai/shared';
-import { EffectRewardType, FactionType, Resource } from '../../../models';
+} from 'src/app/helpers/ai';
+import { getViableBoardFields, getViableBoardFieldsForFaction } from 'src/app/helpers/ai/ai-fields';
+import { AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
+import { Player } from 'src/app/models/player';
 
 export const aiGoalsCustomExpert: FieldsForGoals = {
   'get-victory-points': {
@@ -66,7 +60,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       0.01 * (gameState.currentRound - 1) +
       0.2 * gameState.playerIntriguesConversionCosts.tech +
       0.1 * gameState.playerTechTilesConversionCosts.tech,
-    goalIsReachable: () => false,
+    goalIsReachable: (player) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'tech'),
@@ -116,7 +110,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         0.01 * getResourceAmount(player, 'spice') +
         0.025 * (gameState.currentRound - 1) +
         0.02 * gameState.playerCardsBought),
-    goalIsReachable: () => false,
+    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 0,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'agent-lift'),
@@ -332,7 +326,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       ];
 
       return (
-        getMaxDesireOfUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire) +
+        getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire) +
         0.2 * gameState.playerIntriguesConversionCosts.water +
         0.1 * gameState.playerTechTilesConversionCosts.water
       );
@@ -357,12 +351,12 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       ];
 
       return (
-        getMaxDesireOfUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire) +
+        getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire) +
         0.2 * gameState.playerIntriguesConversionCosts.spice +
         0.1 * gameState.playerTechTilesConversionCosts.spice
       );
     },
-    goalIsReachable: () => false,
+    goalIsReachable: (player) => getResourceAmount(player, 'water') > 1,
     reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'spice') > 3,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'spice'),
@@ -381,12 +375,12 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       ];
 
       return (
-        getMaxDesireOfUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire) +
+        getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire) +
         0.2 * gameState.playerIntriguesConversionCosts.solari +
         0.1 * gameState.playerTechTilesConversionCosts.solari
       );
     },
-    goalIsReachable: () => false,
+    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 2,
     reachedGoal: (player, gameState, goals) =>
       getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
     viableFields: (fields) => ({
@@ -397,81 +391,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
       getResourceAmount(player, 'solari') > 6 && !player.hasSwordmaster ? 0.2 - 0.025 * (gameState.currentRound - 1) : 0,
-    goalIsReachable: () => false,
+    goalIsReachable: (player) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari'),
     }),
   },
 };
-
-function getViableBoardFieldsForFaction(
-  fields: ActionField[],
-  factionType: FactionType
-): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number } {
-  const factionFields = fields.filter((x) => x.actionType === factionType);
-  const viableFields: {
-    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
-  } = {};
-
-  for (const field of factionFields) {
-    const baseFieldDesire = 0.5;
-
-    if (field.costs && isResourceArray(field.costs)) {
-      viableFields[field.title.en] = (player, gameState, goals) =>
-        getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire);
-    } else {
-      viableFields[field.title.en] = () => baseFieldDesire;
-    }
-  }
-
-  return viableFields;
-}
-
-function getViableBoardFields(
-  fields: ActionField[],
-  rewardType: EffectRewardType,
-  adjustForCosts = true,
-  maxRewardAmountOverride?: number
-): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number } {
-  const fieldsWithReward = fields.filter((x) => x.rewards.some((y) => y.type === rewardType));
-  const viableFields: {
-    [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
-  } = {};
-
-  const fieldsRewards = fieldsWithReward.map((x) => x.rewards.filter((x) => x.type === rewardType));
-  let maxRewardAmount = 0;
-
-  if (!maxRewardAmountOverride) {
-    const fieldRewardAmounts: number[] = [];
-    for (const fieldRewards of fieldsRewards) {
-      let fieldRewardAmount = 0;
-      for (const fieldReward of fieldRewards) {
-        if (!isChoiceEffect(fieldReward) && !isConversionEffect(fieldReward)) {
-          fieldRewardAmount += fieldReward.amount ?? 1;
-        }
-      }
-
-      fieldRewardAmounts.push(fieldRewardAmount);
-    }
-
-    const max = getNumberMax(fieldRewardAmounts);
-    const avg = getNumberAverage(fieldRewardAmounts);
-    maxRewardAmount = (max * 2 + avg) / 3;
-  } else {
-    maxRewardAmount = maxRewardAmountOverride;
-  }
-
-  for (const field of fieldsWithReward) {
-    const baseFieldDesire = normalizeNumber(getRewardAmountFromArray(field.rewards, rewardType), maxRewardAmount, 0);
-
-    if (adjustForCosts && field.costs && isResourceArray(field.costs)) {
-      viableFields[field.title.en] = (player, gameState, goals) =>
-        getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire);
-    } else {
-      viableFields[field.title.en] = () => baseFieldDesire;
-    }
-  }
-
-  return viableFields;
-}

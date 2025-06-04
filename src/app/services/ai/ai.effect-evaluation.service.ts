@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { getParticipateInCombatDesire, getWinCombatDesire } from 'src/app/helpers/ai';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import { normalizeNumber } from 'src/app/helpers/common';
 import {
@@ -16,11 +17,10 @@ import {
   StructuredConversionEffect,
   StructuredEffects,
 } from 'src/app/models';
+import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
+import { getResourceAmount } from '../../helpers/ai/ai-goals';
 import { SettingsService } from '../settings.service';
-import { GameState } from './models';
-import { getParticipateInCombatDesire, getWinCombatDesire } from './shared';
-import { getResourceAmount } from './shared/ai-goal-functions';
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,4 @@
 import { clamp } from 'lodash';
-import { normalizeNumber } from 'src/app/helpers/common';
-import { isResourceArray } from 'src/app/helpers/resources';
-import { ActionField } from 'src/app/models/location';
-import { Player } from 'src/app/models/player';
-import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import {
   enemyIsCloseToPlayerFactionScore,
   getCostAdjustedDesire,
@@ -17,7 +12,12 @@ import {
   playerCanDrawCards,
   playerCanGetAllianceThisTurn,
   playerCanGetVictoryPointThisTurn,
-} from 'src/app/services/ai/shared';
+} from 'src/app/helpers/ai';
+import { normalizeNumber } from 'src/app/helpers/common';
+import { isResourceArray } from 'src/app/helpers/resources';
+import { AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
+import { ActionField } from 'src/app/models/location';
+import { Player } from 'src/app/models/player';
 import { EffectRewardType, FactionType, Resource } from '../../../models';
 
 export const aiGoalsCustomBeginner: FieldsForGoals = {

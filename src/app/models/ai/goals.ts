@@ -5,13 +5,13 @@ import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
-import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../../cards.service';
-import { PlayerCombatUnits } from '../../combat-manager.service';
-import { AgentOnField, PlayerAgents, SpiceAccumulation } from '../../game-manager.service';
-import { PlayerGameModifiers } from '../../game-modifier.service';
-import { LeaderDeckCard } from '../../leaders.service';
-import { PlayerFactionScoreType, PlayerScore } from '../../player-score-manager.service';
-import { TechTileDeckCard } from '../../tech-tiles.service';
+import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
+import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
+import { AgentOnField, PlayerAgents, SpiceAccumulation } from 'src/app/services/game-manager.service';
+import { PlayerGameModifiers } from 'src/app/services/game-modifier.service';
+import { LeaderDeckCard } from 'src/app/services/leaders.service';
+import { PlayerFactionScoreType, PlayerScore } from 'src/app/services/player-score-manager.service';
+import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
 
 export type AIGoals =
   | 'high-council'

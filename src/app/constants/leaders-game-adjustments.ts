@@ -1,4 +1,4 @@
-import { AIAdjustments } from '../services/ai/models';
+import { AIAdjustments } from '../models/ai';
 import { GameModifiers } from '../services/game-modifier.service';
 
 export interface LeaderGameAdjustments {

@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { clamp, cloneDeep, shuffle, take } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import {
+  getEnemyCombatStrengthPotentialAgainstPlayer,
+  getPlayerCombatStrength,
+  getPlayerCombatStrengthPotentialAgainstEnemy,
+  getPlayerGarrisonStrength,
+  getResourceAmount,
+} from 'src/app/helpers/ai';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import { getRewardArrayAIInfos, isStructuredConversionEffect } from 'src/app/helpers/rewards';
@@ -13,8 +20,10 @@ import {
   EffectRewardType,
   StructuredConversionEffect,
 } from 'src/app/models';
+import { AIPersonality, GameState } from 'src/app/models/ai';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
+import { aiPersonalities } from '../../constants/ai';
 import { getNumberAverage, normalizeNumber } from '../../helpers/common';
 import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../cards.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
@@ -24,15 +33,6 @@ import { SettingsService } from '../settings.service';
 import { TechTileDeckCard } from '../tech-tiles.service';
 import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 import { AIFieldEvaluationService, ViableField } from './ai.field-evaluation.service';
-import { aiPersonalities } from './constants';
-import { AIPersonality, GameState } from './models';
-import {
-  getEnemyCombatStrengthPotentialAgainstPlayer,
-  getPlayerCombatStrength,
-  getPlayerCombatStrengthPotentialAgainstEnemy,
-  getPlayerGarrisonStrength,
-  getResourceAmount,
-} from './shared';
 
 export interface AIPlayer {
   playerId: number;
