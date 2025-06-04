@@ -393,10 +393,31 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/infrastructure.png',
+    effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [
       {
         type: 'faction-influence-down-choice',
+      },
+    ],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
     ],
     customEffect: {
@@ -404,21 +425,6 @@ export const techTiles: TechTileCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    effectSize: 'medium',
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
   },
   {
     name: {
@@ -678,6 +684,9 @@ export const techTiles: TechTileCard[] = [
     ],
     effects: [
       {
+        type: 'timing-reveal-turn',
+      },
+      {
         type: 'tech-tile-flip',
       },
       {
@@ -692,7 +701,7 @@ export const techTiles: TechTileCard[] = [
     ],
     customEffect: {
       en: '{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>agent from a board space. It is no longer available for this round.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegner-<br>ischen Agenten von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen Agenten von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
       fontSize: 'small',
     },
   },
@@ -956,6 +965,12 @@ export const techTiles: TechTileCard[] = [
       },
       {
         type: 'helper-or',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
       },
       {
         type: 'sword',
