@@ -4,7 +4,7 @@
   [style.left]="location.position.marginLeft + 'px'"
 >
   <app-dune-action [actionField]="location.actionField" [backgroundColor]="location.color"></app-dune-action>
-  <ng-container *ngIf="location.ownerReward">
+  <ng-container *ngIf="location.actionField.ownerReward">
     <div class="location-owning-area">
       <div
         [class]="'location-owner-indicator' + (owner ? ' owned' : '')"
@@ -16,9 +16,9 @@
       <div class="location-owner-reward-area">
         <div class="location-owner-game-reward-area" [style.background-color]="location.color">
           <div class="location-owner-visitor-reward-container">
-            <img class="location-owner-visitor-reward" [src]="getEffectTypePath(location.ownerReward.type)" />
+            <img class="location-owner-visitor-reward" [src]="getEffectTypePath(location.actionField.ownerReward.type)" />
             <div class="location-owner-visitor-reward-amount">
-              {{ location.ownerReward.amount }}
+              {{ location.actionField.ownerReward.amount }}
             </div>
           </div>
         </div>

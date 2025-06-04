@@ -17,7 +17,7 @@ import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { getNumberAverage, normalizeNumber } from '../../helpers/common';
 import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../cards.service';
-import { PlayerCombatScore, PlayerCombatUnits } from '../combat-manager.service';
+import { PlayerCombatUnits } from '../combat-manager.service';
 import { ImperiumRowModifier } from '../game-modifier.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { SettingsService } from '../settings.service';
@@ -26,7 +26,13 @@ import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 import { AIFieldEvaluationService, ViableField } from './ai.field-evaluation.service';
 import { aiPersonalities } from './constants';
 import { AIPersonality, GameState } from './models';
-import { getResourceAmount } from './shared';
+import {
+  getEnemyCombatStrengthPotentialAgainstPlayer,
+  getPlayerCombatStrength,
+  getPlayerCombatStrengthPotentialAgainstEnemy,
+  getPlayerGarrisonStrength,
+  getResourceAmount,
+} from './shared';
 
 export interface AIPlayer {
   playerId: number;
@@ -288,45 +294,74 @@ export class AIManager {
 
   public getAddAdditionalUnitsToCombatDecision(
     playerCombatUnits: PlayerCombatUnits,
-    enemyCombatScores: PlayerCombatScore[],
-    maxAddableUnits: number,
-    playerHasAgentsLeft: boolean,
-    playerCombatIntrigueCount: number,
-    currentRound: number
-  ) {
-    if (!playerCombatUnits || !enemyCombatScores) {
+    gameState: GameState
+  ): 'none' | 'minimum' | 'all' | number {
+    if (!playerCombatUnits || !gameState.enemyCombatUnits) {
       return 'none';
     }
 
-    const playerCombatPower = this.getPlayerCombatPower(playerCombatUnits);
-    const possibleAddedCombatPower = this.getMaxAddableCombatPower(playerCombatUnits, maxAddableUnits);
+    const playerCombatStrength = getPlayerCombatStrength(playerCombatUnits, gameState);
+    const playerGarrisonStrength = getPlayerGarrisonStrength(playerCombatUnits, gameState);
 
-    const highestEnemyCombatPower = Math.max(...enemyCombatScores.map((x) => x.score));
+    const enemyCombatScores = gameState.enemyCombatUnits.map((x) => ({
+      ...x,
+      combatStrength: getPlayerCombatStrength(x, gameState),
+    }));
+    enemyCombatScores.sort((a, b) => b.combatStrength - a.combatStrength);
+    const highestEnemyCombatScore = enemyCombatScores[0];
 
-    if (playerCombatPower <= highestEnemyCombatPower) {
-      const playerCombatPotential = playerCombatPower + possibleAddedCombatPower + playerCombatIntrigueCount * 2;
-      if (
-        (playerHasAgentsLeft && playerCombatPotential * 2 > highestEnemyCombatPower) ||
-        playerCombatPotential > highestEnemyCombatPower
-      ) {
-        return 'all';
-      } else {
-        return 'minimum';
-      }
-    } else if (playerCombatPower > highestEnemyCombatPower) {
-      const safeCombatPowerDifference = 6 + currentRound - playerCombatIntrigueCount;
-      const combatPowerDifference = playerCombatPower - highestEnemyCombatPower;
+    const combatPowerDifference = playerCombatStrength - highestEnemyCombatScore.combatStrength;
 
-      if (combatPowerDifference > safeCombatPowerDifference) {
+    if (combatPowerDifference > 0) {
+      const enemyAgentsAvailable =
+        gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;
+      const enemyIntrigueCount =
+        gameState.enemyIntrigueCounts.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.intrigueCount ?? 0;
+
+      const enemyCombatStrengthPotentialAgainstPlayer = getEnemyCombatStrengthPotentialAgainstPlayer(
+        playerCombatUnits,
+        highestEnemyCombatScore,
+        enemyAgentsAvailable,
+        enemyIntrigueCount,
+        gameState
+      );
+
+      if (enemyCombatStrengthPotentialAgainstPlayer < 0) {
         return 'none';
-      } else if (combatPowerDifference > safeCombatPowerDifference / 2 && Math.random() > 0.1) {
-        return 'minimum';
+      } else if (
+        enemyCombatStrengthPotentialAgainstPlayer >= 0 &&
+        playerGarrisonStrength > enemyCombatStrengthPotentialAgainstPlayer
+      ) {
+        return enemyCombatStrengthPotentialAgainstPlayer;
+      } else {
+        return 'all';
+      }
+    } else {
+      const playerCombatStrengthPotentialAgainstEnemy = getPlayerCombatStrengthPotentialAgainstEnemy(
+        playerCombatUnits,
+        gameState.playerAgentsAvailable + 1,
+        gameState.playerIntrigueCount,
+        highestEnemyCombatScore,
+        gameState
+      );
+
+      const enemyGarrisonStrength = getPlayerGarrisonStrength(highestEnemyCombatScore, gameState);
+
+      if (playerCombatStrengthPotentialAgainstEnemy < 0) {
+        if (enemyCombatScores.filter((x) => x.combatStrength > 0).length < 3 || playerCombatUnits.troopsInGarrison > 4) {
+          return 'minimum';
+        } else {
+          return 'none';
+        }
+      } else if (
+        playerCombatStrengthPotentialAgainstEnemy >= 0 &&
+        playerCombatStrengthPotentialAgainstEnemy > enemyGarrisonStrength
+      ) {
+        return playerCombatStrengthPotentialAgainstEnemy + Math.abs(combatPowerDifference);
       } else {
         return 'all';
       }
     }
-
-    return 'none';
   }
 
   getPreferredLocationForPlayer(player: Player, controllableLocations: DuneLocation[], gameState: GameState) {
@@ -334,10 +369,10 @@ export class AIManager {
     let preferredLocationValue = 0;
 
     for (const location of controllableLocations) {
-      if (location.ownerReward) {
+      if (location.actionField.ownerReward) {
         const locationValue =
-          (location.ownerReward.amount ?? 1) *
-          this.effectEvaluationService.getRewardEffectEvaluation(location.ownerReward.type, player, gameState);
+          (location.actionField.ownerReward.amount ?? 1) *
+          this.effectEvaluationService.getRewardEffectEvaluation(location.actionField.ownerReward.type, player, gameState);
         if (locationValue > preferredLocationValue) {
           preferredLocation = location;
           preferredLocationValue = locationValue;
@@ -387,7 +422,7 @@ export class AIManager {
 
       if (usableCards.length > 0) {
         const evaluations = usableCards.map((cardEvaluation) => {
-          const evaluation = cardEvaluation.evaluationValue - fieldIndex * (1 - preferredField.value) * 2;
+          const evaluation = cardEvaluation.evaluationValue - fieldIndex - fieldIndex * (1 - preferredField.value) * 2;
           return { field: preferredField, evaluation, card: cardEvaluation.card };
         });
 

@@ -1,3 +1,4 @@
+import { GameContent } from 'src/app/constants/board-settings';
 import { DuneEvent } from 'src/app/constants/events';
 import { ActionField, ActionType, ActiveFactionType, EffectRewardType, StructuredEffects } from 'src/app/models';
 import { Conflict } from 'src/app/models/conflict';
@@ -18,6 +19,7 @@ export type AIGoals =
   | 'mentat'
   | 'dreadnought'
   | 'tech'
+  | 'location-control'
   | 'enter-combat'
   | 'troops'
   | 'fremen-friendship'
@@ -40,9 +42,9 @@ export type AIGoals =
   | 'get-board-persuasion'
   | 'get-victory-points';
 
-export type PlayerCardsRewards = { [key in EffectRewardType]: number };
-export type PlayerCardsFactions = { [key in ActiveFactionType]: number };
-export type PlayerCardsFieldAccess = { [key in ActionType]: number };
+export type PlayerGameElementRewards = { [key in EffectRewardType]: number };
+export type PlayerGameElementFactions = { [key in ActiveFactionType]: number };
+export type PlayerGameElementFieldAccess = { [key in ActionType]: number };
 
 export type GameState = Readonly<{
   playersCount: number;
@@ -82,22 +84,28 @@ export type GameState = Readonly<{
   blockedFieldsForIds: string[];
   blockedFieldsForActionTypes: ActionType[];
   playerIntrigues: IntrigueDeckCard[];
+  playerIntriguesRewards: PlayerGameElementRewards;
+  playerIntriguesConversionCosts: PlayerGameElementRewards;
   playerCombatIntrigues: IntrigueDeckCard[];
   playerIntrigueCount: number;
   playerCombatIntrigueCount: number;
   playerIntrigueStealAmount: number;
+  enemyIntrigueCounts: { playerId: number; intrigueCount: number }[];
   freeLocations: string[];
   playerLocations: string[];
   enemyLocations: string[];
   rival?: Player;
   playerTurnInfos?: TurnInfo;
-  playerCardsFactions: PlayerCardsFactions;
-  playerCardsRewards: PlayerCardsRewards;
-  playerCardsFactionsInPlay: PlayerCardsFactions;
-  playerTechTilesFactions: PlayerCardsFactions;
+  playerCardsFactions: PlayerGameElementFactions;
+  playerCardsRewards: PlayerGameElementRewards;
+  playerCardsFactionsInPlay: PlayerGameElementFactions;
+  playerTechTilesFactions: PlayerGameElementFactions;
+  playerTechTilesRewards: PlayerGameElementRewards;
+  playerTechTilesConversionCosts: PlayerGameElementRewards;
   playerCardsFieldAccess: ActionType[];
-  playerCardsFieldAccessCounts: PlayerCardsFieldAccess;
+  playerCardsFieldAccessCounts: PlayerGameElementFieldAccess;
   playerGameModifiers?: PlayerGameModifiers;
+  gameSettings: Pick<GameContent, 'combatMaxDeployableUnits' | 'troopCombatStrength' | 'dreadnoughtCombatStrength'>;
 }>;
 
 export interface AIGoal {

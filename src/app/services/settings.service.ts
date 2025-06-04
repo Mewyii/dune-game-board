@@ -181,7 +181,9 @@ export class SettingsService {
     this.spiceAccumulationFields = this.fields
       .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
       .map((x) => x.title.en);
-    this.controllableLocations = gameContent.locations.filter((x) => x.ownerReward).map((x) => x.actionField.title.en);
+    this.controllableLocations = gameContent.locations
+      .filter((x) => x.actionField.ownerReward)
+      .map((x) => x.actionField.title.en);
 
     this.factionInfluenceRewards = gameContent.factions
       .filter((x) => x.influenceRewards)

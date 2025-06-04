@@ -57,6 +57,7 @@ export const enLocale = {
   playerboardWarningNotEnoughResources: "You don't have enough resources",
   playerboardWarningCardNeededToPlaceAgent: 'Play a card to place an agent',
   playerboardWarningCardNeedsToHaveFieldAccess: 'You cannot place an agent on this board space with this card',
+  playerboardButtonToggleAI: 'Toggle AI',
   techBoardWarningNoTechGainedThisTurn: 'You cannot buy tech tiles since you did not gain any tech this turn',
   imperiumrowHeading: 'Imperium Row',
   intrigueWarningComplotWrongRoundPhase: 'Complot intrigues have to be played during the agent placement phase',

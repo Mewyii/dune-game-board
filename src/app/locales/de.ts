@@ -59,6 +59,7 @@ export const deLocale: Locale = {
   playerboardWarningNotEnoughResources: 'Du hast zu wenig Resourcen ',
   playerboardWarningCardNeededToPlaceAgent: 'Spiele eine Karte um einen Agenten zu platzieren',
   playerboardWarningCardNeedsToHaveFieldAccess: 'Du kannst mit dieser Karte keinen Agenten auf diesem Feld platzieren',
+  playerboardButtonToggleAI: 'KI ein/ausschalten',
   techBoardWarningNoTechGainedThisTurn:
     'Du kannst keine Technologieplättchen kaufen, da du in diesem Zug keine Technologie erhalten hast',
   imperiumrowHeading: 'Imperium-Reihe',

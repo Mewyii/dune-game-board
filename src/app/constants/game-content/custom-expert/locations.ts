@@ -12,8 +12,8 @@ export const locationsCustomExpert: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'tech' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
+      ownerReward: { type: 'solari', amount: 2 },
     },
-    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(176, 147, 109)',
@@ -28,8 +28,8 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'spice', amount: 2 }, { type: 'troop' }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
+      ownerReward: { type: 'spice' },
     },
-    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(74, 58, 46)',
@@ -42,8 +42,8 @@ export const locationsCustomExpert: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
+      ownerReward: { type: 'solari', amount: 2 },
     },
-    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(74, 58, 46)',
@@ -56,8 +56,8 @@ export const locationsCustomExpert: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'card-draw' }, { type: 'foldspace' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/troops.png',
+      ownerReward: { type: 'tech' },
     },
-    ownerReward: { type: 'tech' },
   },
   {
     color: 'rgb(74, 58, 46)',
@@ -72,8 +72,8 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
+      ownerReward: { type: 'troop' },
     },
-    ownerReward: { type: 'troop' },
   },
   {
     color: 'rgb(176, 147, 109)',
@@ -86,8 +86,8 @@ export const locationsCustomExpert: DuneLocation[] = [
       actionType: 'spice',
       rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
+      ownerReward: { type: 'spice' },
     },
-    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(176, 147, 109)',

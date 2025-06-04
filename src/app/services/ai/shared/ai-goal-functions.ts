@@ -46,12 +46,16 @@ export function getResourceAmount(player: Player, resourceType: ResourceType | '
   }
 }
 
-export function getPlayerCombatStrength(player: PlayerCombatUnits) {
-  return player.troopsInCombat * 2 + player.shipsInCombat * 4 + player.additionalCombatPower;
+export function getPlayerCombatStrength(player: PlayerCombatUnits, gamestate: GameState) {
+  return (
+    player.troopsInCombat * gamestate.gameSettings.troopCombatStrength +
+    player.shipsInCombat * 4 +
+    player.additionalCombatPower
+  );
 }
 
-export function getPlayerGarrisonStrength(player: PlayerCombatUnits) {
-  return player.troopsInGarrison * 2 + player.shipsInGarrison * 4;
+export function getPlayerGarrisonStrength(player: PlayerCombatUnits, gamestate: GameState) {
+  return player.troopsInGarrison * gamestate.gameSettings.troopCombatStrength + player.shipsInGarrison * 4;
 }
 
 export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {

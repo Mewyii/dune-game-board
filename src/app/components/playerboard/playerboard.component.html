@@ -42,7 +42,11 @@
       </div>
     </div>
     <div class="ai-area font-medieval">
-      <mat-slide-toggle [color]="'accent'" [checked]="player.isAI" (change)="onSetAIActiveClicked(player.id, $event)"
+      <mat-slide-toggle
+        [color]="'accent'"
+        [checked]="player.isAI"
+        (change)="onSetAIActiveClicked(player.id, $event)"
+        [matTooltip]="t.translate('playerboardButtonToggleAI')"
         >AI</mat-slide-toggle
       >
     </div>

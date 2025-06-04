@@ -12,8 +12,8 @@ export const locationsOriginal: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen.png',
+      ownerReward: { type: 'solari' },
     },
-    ownerReward: { type: 'solari' },
   },
   {
     color: 'rgb(87, 69, 52)',
@@ -26,8 +26,8 @@ export const locationsOriginal: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
+      ownerReward: { type: 'solari' },
     },
-    ownerReward: { type: 'solari' },
   },
   {
     color: 'rgb(87, 69, 52)',
@@ -76,8 +76,8 @@ export const locationsOriginal: DuneLocation[] = [
       actionType: 'spice',
       rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandcrawler.png',
+      ownerReward: { type: 'spice' },
     },
-    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(196, 172, 139)',

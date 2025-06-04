@@ -1,4 +1,4 @@
-import { cloneDeep, isArray, isBoolean, isNumber, isObject, shuffle } from 'lodash';
+import { cloneDeep, isArray, isBoolean, isNumber, isObject, max, shuffle } from 'lodash';
 
 export function shuffleMultipleTimes<T extends object>(array: T[]): T[] {
   return shuffle(shuffle(shuffle(array)));
@@ -59,6 +59,8 @@ export function mergeObjects<T>(existingObject: T, newObject: Partial<T>): T {
 
 export const normalizeNumber = (value: number, max: number, min: number) => (value - min) / (max - min);
 
-export const getNumberAverage = (arr: number[]) => sum(arr) / arr.length;
+export const getNumberAverage = (arr: number[]) => (arr.length > 0 ? sum(arr) / arr.length : 0);
+
+export const getNumberMax = (arr: number[]) => max(arr) ?? 0;
 
 export const sum = (arr: number[]) => arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);

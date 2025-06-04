@@ -5,19 +5,20 @@ import { getPlayerCombatStrength, getPlayerGarrisonStrength } from './ai-goal-fu
 
 export function getParticipateInCombatDesire(gameState: GameState) {
   let desire = 0.1;
-  if (getPlayerCombatStrength(gameState.playerCombatUnits) > 0) {
+  if (getPlayerCombatStrength(gameState.playerCombatUnits, gameState) > 0) {
     desire += 0.033 * gameState.playerCombatUnits.troopsInGarrison;
     return desire;
   } else {
     desire += 0.15 * gameState.playerCombatUnits.troopsInGarrison;
     desire += 0.1 * (1 - gameState.playerAgentsAvailable);
-    desire += 0.03 * gameState.playerCardsRewards.sword;
+    desire += 0.02 * gameState.playerCardsRewards.sword;
+    desire += 0.04 * gameState.playerTechTilesRewards.sword;
     desire += 0.01 * gameState.playerCombatIntrigueCount;
 
     for (const enemy of gameState.enemyCombatUnits) {
-      const enemyCombatStrength = getPlayerCombatStrength(enemy);
+      const enemyCombatStrength = getPlayerCombatStrength(enemy, gameState);
       if (enemyCombatStrength > 0) {
-        desire -= 0.15 + 0.01 * getPlayerCombatStrength(enemy);
+        desire -= 0.15 + 0.01 * getPlayerCombatStrength(enemy, gameState);
       } else {
         const enemyAgentCount = gameState.enemyAgentsAvailable.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
         desire += 0.15 * (2 - enemyAgentCount);
@@ -31,27 +32,34 @@ export function getParticipateInCombatDesire(gameState: GameState) {
 export function getWinCombatDesire(gameState: GameState) {
   let desire = 0.1;
 
-  desire += 0.1 * getPlayerGarrisonStrength(gameState.playerCombatUnits);
+  desire += 0.1 * getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState);
   desire += 0.05 * gameState.playerAgentsAvailable;
   desire += 0.01 * gameState.playerCardsRewards.sword;
+  desire += 0.02 * gameState.playerTechTilesRewards.sword;
   desire += 0.03 * gameState.playerCombatIntrigueCount;
 
-  const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits);
-  const enemyCombatScores = gameState.enemyCombatUnits.map((x) => ({ ...x, combatStrength: getPlayerCombatStrength(x) }));
+  const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+  const enemyCombatScores = gameState.enemyCombatUnits.map((x) => ({
+    ...x,
+    combatStrength: getPlayerCombatStrength(x, gameState),
+  }));
   enemyCombatScores.sort((a, b) => b.combatStrength - a.combatStrength);
   const highestEnemyCombatScore = enemyCombatScores[0];
 
   if (playerCombatScore > highestEnemyCombatScore.combatStrength) {
     const enemyAgentsAvailable =
       gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;
+    const enemyIntrigueCount =
+      gameState.enemyIntrigueCounts.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.intrigueCount ?? 0;
+
     if (
-      enemyCanContestPlayer(
+      getEnemyCombatStrengthPotentialAgainstPlayer(
         gameState.playerCombatUnits,
-        gameState.playerAgentsAvailable,
         highestEnemyCombatScore,
         enemyAgentsAvailable,
+        enemyIntrigueCount,
         gameState
-      )
+      ) > 0
     ) {
       desire += 0.3;
     } else {
@@ -65,18 +73,18 @@ export function getWinCombatDesire(gameState: GameState) {
         gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;
 
       if (
-        !playerCanContestEnemy(
+        getPlayerCombatStrengthPotentialAgainstEnemy(
           gameState.playerCombatUnits,
           gameState.playerAgentsAvailable,
+          gameState.playerIntrigueCount,
           enemyCombatScore,
-          enemyAgentsAvailable,
           gameState
-        )
+        ) < 0
       ) {
         desire = desire - 0.5;
       } else {
         desire += 0.05 * (2 - enemyAgentsAvailable);
-        desire -= 0.005 * getPlayerGarrisonStrength(enemyCombatScore);
+        desire -= 0.005 * getPlayerGarrisonStrength(enemyCombatScore, gameState);
       }
     }
   }
@@ -84,41 +92,73 @@ export function getWinCombatDesire(gameState: GameState) {
   return clamp(desire, 0.0, 1.0);
 }
 
-export function enemyCanContestPlayer(
+export function getEnemyCombatStrengthPotentialAgainstPlayer(
   playerCombatUnits: PlayerCombatUnits,
-  playerAgentsAvailable: number,
   enemyCombatUnits: PlayerCombatUnits,
   enemyAgentsAvailable: number,
+  enemyIntrigueCount: number,
   gameState: GameState
 ) {
-  const playerCombatPower = getPlayerCombatStrength(playerCombatUnits);
-  const enemyCombatPower = getPlayerCombatStrength(enemyCombatUnits);
+  const playerCombatPower = getPlayerCombatStrength(playerCombatUnits, gameState);
+  const enemyCombatPower = getPlayerCombatStrength(enemyCombatUnits, gameState);
 
-  if (enemyAgentsAvailable < 1 && playerCombatPower > enemyCombatPower) {
-    return false;
-  }
+  const enemyCombatStrengthPotential = getPlayerCombatStrengthPotential(
+    enemyCombatUnits,
+    enemyAgentsAvailable,
+    enemyIntrigueCount,
+    gameState
+  );
 
-  const enemyGarrisonStrength = getPlayerGarrisonStrength(enemyCombatUnits);
-  const potentialEnemyCombatStrengthNextTurn = enemyGarrisonStrength > 8 ? 8 : enemyGarrisonStrength;
-  const combatPowerTreshold =
-    potentialEnemyCombatStrengthNextTurn +
-    4 * (playerAgentsAvailable - 1 + Math.random()) +
-    0.5 * (gameState.currentRound - 1);
-
-  if (enemyCombatPower + combatPowerTreshold < playerCombatPower) {
-    return false;
-  }
-
-  return true;
+  return enemyCombatPower + enemyCombatStrengthPotential - playerCombatPower;
 }
 
-export function playerCanContestEnemy(
+export function getPlayerCombatStrengthPotentialAgainstEnemy(
   player: PlayerCombatUnits,
   playerAgentsAvailable: number,
+  playerIntrigueCount: number,
   enemy: PlayerCombatUnits,
-  enemyAgentsAvailable: number,
-  gameState: GameState,
-  countEnemiesNotInCombat?: boolean
+  gameState: GameState
 ) {
-  return enemyCanContestPlayer(enemy, enemyAgentsAvailable, player, playerAgentsAvailable, gameState);
+  return getEnemyCombatStrengthPotentialAgainstPlayer(enemy, player, playerAgentsAvailable, playerIntrigueCount, gameState);
+}
+
+export function getPlayerCombatStrengthPotential(
+  playerCombatUnits: PlayerCombatUnits,
+  playerAgentsAvailable: number,
+  playerIntrigueCount: number,
+  gameState: GameState
+) {
+  const playerGarrisonStrength = getPlayerGarrisonStrength(playerCombatUnits, gameState);
+  const maxAddableTroopCombatStrengthPerTurn =
+    gameState.gameSettings.combatMaxDeployableUnits * gameState.gameSettings.troopCombatStrength;
+  const maxAddableTroopCombatStrengthTotal = maxAddableTroopCombatStrengthPerTurn * playerAgentsAvailable;
+  const troopCombatStrengthPotential =
+    playerGarrisonStrength > maxAddableTroopCombatStrengthTotal
+      ? maxAddableTroopCombatStrengthTotal
+      : playerGarrisonStrength;
+
+  return (
+    troopCombatStrengthPotential +
+    0.5 * playerIntrigueCount +
+    0.15 * gameState.playerCardsRewards.sword +
+    0.3 * gameState.playerTechTilesRewards.sword +
+    1 * (playerAgentsAvailable - 1) * Math.random() +
+    0.25 * (gameState.currentRound - 1)
+  );
+}
+
+export function getAvoidCombatTiesModifier(gameState: GameState) {
+  const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+  if (playerCombatStrength < 1) {
+    return 0;
+  }
+
+  const playerIsTiedToEnemy = gameState.enemyCombatUnits.some(
+    (x) => getPlayerCombatStrength(x, gameState) === playerCombatStrength
+  );
+  if (playerIsTiedToEnemy) {
+    return 0.5 - 0.2 * gameState.playerAgentsAvailable;
+  } else {
+    return 0;
+  }
 }

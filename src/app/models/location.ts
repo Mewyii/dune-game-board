@@ -14,7 +14,6 @@ export interface DuneLocation {
     marginLeft: number;
   };
   actionField: ActionField;
-  ownerReward?: EffectReward;
 }
 
 export interface ActionField {
@@ -23,6 +22,7 @@ export interface ActionField {
   costs?: EffectReward[];
   rewards: EffectChoiceConversionOrReward[];
   conversionOptions?: EffectConversionOrReward[][];
+  ownerReward?: EffectReward;
   pathToImage: string;
   isBattlefield?: boolean;
   isNonBlockingField?: boolean;

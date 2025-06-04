@@ -150,7 +150,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'enter-combat': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) => {
-      const alwaysTryToWinCombat = gameState.isFinale || getPlayerGarrisonStrength(gameState.playerCombatUnits) > 10;
+      const alwaysTryToWinCombat =
+        gameState.isFinale || getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState) > 10;
       const winCombatDesire = 0.33 * getWinCombatDesire(gameState);
       const participateInCombatDesire = !alwaysTryToWinCombat ? getParticipateInCombatDesire(gameState) : 0;
 

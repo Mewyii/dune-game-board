@@ -1,11 +1,13 @@
 import { clamp } from 'lodash';
-import { normalizeNumber } from 'src/app/helpers/common';
+import { getNumberAverage, getNumberMax, normalizeNumber } from 'src/app/helpers/common';
 import { isResourceArray } from 'src/app/helpers/resources';
+import { isChoiceEffect, isConversionEffect } from 'src/app/helpers/rewards';
 import { ActionField } from 'src/app/models/location';
 import { Player } from 'src/app/models/player';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/services/ai/models';
 import {
   enemyIsCloseToPlayerFactionScore,
+  getAvoidCombatTiesModifier,
   getCostAdjustedDesire,
   getMaxDesireOfUnreachableGoals,
   getParticipateInCombatDesire,
@@ -25,7 +27,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'victory-point', 0, 1),
+      ...getViableBoardFields(fields, 'victory-point'),
     }),
   },
   'high-council': {
@@ -38,7 +40,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
     desiredFields: (fields) => ({
       // Three because "amount" is used for the persuasion indicator
-      ...getViableBoardFields(fields, 'council-seat-small', 0, 3),
+      ...getViableBoardFields(fields, 'council-seat-small', false),
     }),
     viableFields: () => ({}),
   },
@@ -51,33 +53,59 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
-      ...getViableBoardFields(fields, 'sword-master', 0, 1),
-      ...getViableBoardFields(fields, 'agent', 0, 1),
+      ...getViableBoardFields(fields, 'sword-master', false),
+      ...getViableBoardFields(fields, 'agent', false),
     }),
     viableFields: () => ({}),
   },
   tech: {
     baseDesire: 0.5,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'spice') + 0.02 * player.tech - 0.01 * (gameState.currentRound - 1),
+      0.01 * getResourceAmount(player, 'spice') +
+      0.02 * player.tech -
+      0.01 * (gameState.currentRound - 1) +
+      0.2 * gameState.playerIntriguesConversionCosts.tech +
+      0.1 * gameState.playerTechTilesConversionCosts.tech,
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'tech', 0, 3),
+      ...getViableBoardFields(fields, 'tech'),
     }),
   },
   dreadnought: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') +
-      0.01 * gameState.playerDreadnoughtCount +
+      0.01 * gameState.playerCombatUnits.troopsInGarrison +
       0.0075 * (gameState.currentRound - 1) -
-      0.01 * gameState.playerCombatUnits.troopsInGarrison,
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 5,
+      0.05 * gameState.playerDreadnoughtCount,
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 4,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1 || gameState.isFinale,
     desiredFields: (fields) => ({
-      ...getViableBoardFields(fields, 'dreadnought', 0, 1),
+      ...getViableBoardFields(fields, 'dreadnought', false),
     }),
+    viableFields: () => ({}),
+  },
+  'location-control': {
+    baseDesire: 0.0,
+    desireModifier: (player, gameState, goals) =>
+      0.2 * gameState.playerIntriguesRewards['location-control'] +
+      0.2 * gameState.playerTechTilesRewards['location-control'] +
+      0.2 * gameState.playerCardsRewards['location-control'],
+    goalIsReachable: (player, gameState, goals) => false,
+    reachedGoal: (player, gameState) => false,
+    desiredFields: (fields) => {
+      const viableFields: {
+        [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
+      } = {};
+
+      const locations = fields.filter((x) => x.ownerReward);
+      for (const location of locations) {
+        viableFields[location.title.en] = () => 1;
+      }
+
+      return viableFields;
+    },
     viableFields: () => ({}),
   },
   mentat: {
@@ -91,7 +119,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'agent-lift', 0, 1),
+      ...getViableBoardFields(fields, 'agent-lift'),
     }),
   },
   'fremen-alliance': {
@@ -155,25 +183,29 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       const winCombatDesire = getWinCombatDesire(gameState);
       const participateInCombatDesire = getParticipateInCombatDesire(gameState);
+      const desire = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
 
-      return winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
+      return desire + getAvoidCombatTiesModifier(gameState);
     },
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       // Influenced by troops, intrigues and dreadnoughts
       // Custom amounts generated by ai manager
-      ...getViableBoardFields(fields, 'combat', 0, 1),
+      ...getViableBoardFields(fields, 'combat', true, 1),
     }),
   },
   troops: {
     baseDesire: 0.1,
     desireModifier: (player, gameState, goals) =>
-      0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) + (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0),
+      0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
+      (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0) +
+      0.2 * gameState.playerIntriguesConversionCosts['loose-troop'] +
+      0.1 * gameState.playerTechTilesConversionCosts['loose-troop'],
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'troop', 0, 4),
+      ...getViableBoardFields(fields, 'troop'),
     }),
   },
   intrigues: {
@@ -183,7 +215,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerIntrigueCount > 2,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'intrigue', 0, 2),
+      ...getViableBoardFields(fields, 'intrigue'),
     }),
   },
   'intrigue-steal': {
@@ -192,20 +224,20 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'intrigue-draw', 0, 1),
+      ...getViableBoardFields(fields, 'intrigue-draw'),
     }),
   },
   'fold-space': {
-    baseDesire: 0.2,
+    baseDesire: 0.1,
     desireModifier: (player, gameState, goals) =>
-      (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.2 : 0) -
-      0.0125 * gameState.playerCardsBought -
-      0.0125 * (gameState.playerCardsTrashed + player.focusTokens) +
-      +0.05 * (7 - gameState.playerCardsFieldAccess.length),
+      (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
+      0.01 * gameState.playerCardsBought -
+      0.01 * (gameState.playerCardsTrashed + player.focusTokens) +
+      +0.033 * (7 - gameState.playerCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'foldspace', 0, 2),
+      ...getViableBoardFields(fields, 'foldspace'),
     }),
   },
   'get-board-persuasion': {
@@ -217,7 +249,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'persuasion', 0, 2),
+      ...getViableBoardFields(fields, 'persuasion'),
     }),
   },
   'draw-cards': {
@@ -256,7 +288,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => !playerCanDrawCards(gameState, 1),
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'card-draw', 0, 3),
+      ...getViableBoardFields(fields, 'card-draw'),
     }),
   },
   'discard-cards': {
@@ -268,11 +300,11 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => gameState.playerHandCards.length < 1,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'card-discard', 0, 1),
+      ...getViableBoardFields(fields, 'card-discard'),
     }),
   },
   'trim-cards': {
-    baseDesire: 0.45,
+    baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
@@ -284,8 +316,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 9 || gameState.isFinale,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'focus', 0, 2),
-      ...getViableBoardFields(fields, 'card-destroy', 0, 2),
+      ...getViableBoardFields(fields, 'focus'),
+      ...getViableBoardFields(fields, 'card-destroy'),
     }),
   },
   'collect-water': {
@@ -299,12 +331,16 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         { type: 'troops', modifier: 0.7 },
       ];
 
-      return getMaxDesireOfUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire);
+      return (
+        getMaxDesireOfUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire) +
+        0.2 * gameState.playerIntriguesConversionCosts.water +
+        0.1 * gameState.playerTechTilesConversionCosts.water
+      );
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'water') > 1,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'water', 0, 2),
+      ...getViableBoardFields(fields, 'water'),
     }),
   },
   'collect-spice': {
@@ -320,12 +356,16 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         { type: 'tech', modifier: 0.5 },
       ];
 
-      return getMaxDesireOfUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire);
+      return (
+        getMaxDesireOfUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire) +
+        0.2 * gameState.playerIntriguesConversionCosts.spice +
+        0.1 * gameState.playerTechTilesConversionCosts.spice
+      );
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'spice') > 3,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'spice', 0, 3),
+      ...getViableBoardFields(fields, 'spice'),
     }),
   },
   'collect-solari': {
@@ -340,13 +380,17 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         { type: 'tech', modifier: 0.8 },
       ];
 
-      return getMaxDesireOfUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire);
+      return (
+        getMaxDesireOfUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire) +
+        0.2 * gameState.playerIntriguesConversionCosts.solari +
+        0.1 * gameState.playerTechTilesConversionCosts.solari
+      );
     },
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) =>
       getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'solari', 0, 6),
+      ...getViableBoardFields(fields, 'solari'),
     }),
   },
   'swordmaster-helper': {
@@ -356,7 +400,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'solari', 0, 6),
+      ...getViableBoardFields(fields, 'solari'),
     }),
   },
 };
@@ -387,18 +431,41 @@ function getViableBoardFieldsForFaction(
 function getViableBoardFields(
   fields: ActionField[],
   rewardType: EffectRewardType,
-  minReward: number,
-  maxReward: number
+  adjustForCosts = true,
+  maxRewardAmountOverride?: number
 ): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number } {
   const fieldsWithReward = fields.filter((x) => x.rewards.some((y) => y.type === rewardType));
   const viableFields: {
     [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number;
   } = {};
 
-  for (const field of fieldsWithReward) {
-    const baseFieldDesire = normalizeNumber(getRewardAmountFromArray(field.rewards, rewardType), maxReward, minReward);
+  const fieldsRewards = fieldsWithReward.map((x) => x.rewards.filter((x) => x.type === rewardType));
+  let maxRewardAmount = 0;
 
-    if (field.costs && isResourceArray(field.costs)) {
+  if (!maxRewardAmountOverride) {
+    const fieldRewardAmounts: number[] = [];
+    for (const fieldRewards of fieldsRewards) {
+      let fieldRewardAmount = 0;
+      for (const fieldReward of fieldRewards) {
+        if (!isChoiceEffect(fieldReward) && !isConversionEffect(fieldReward)) {
+          fieldRewardAmount += fieldReward.amount ?? 1;
+        }
+      }
+
+      fieldRewardAmounts.push(fieldRewardAmount);
+    }
+
+    const max = getNumberMax(fieldRewardAmounts);
+    const avg = getNumberAverage(fieldRewardAmounts);
+    maxRewardAmount = (max * 2 + avg) / 3;
+  } else {
+    maxRewardAmount = maxRewardAmountOverride;
+  }
+
+  for (const field of fieldsWithReward) {
+    const baseFieldDesire = normalizeNumber(getRewardAmountFromArray(field.rewards, rewardType), maxRewardAmount, 0);
+
+    if (adjustForCosts && field.costs && isResourceArray(field.costs)) {
       viableFields[field.title.en] = (player, gameState, goals) =>
         getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire);
     } else {

@@ -369,13 +369,40 @@ export class AIEffectEvaluationService {
 
     switch (rewardType) {
       case 'water':
-        return value - 0.4 * getResourceAmount(player, 'water');
+        return (
+          value -
+          0.4 * getResourceAmount(player, 'water') +
+          0.5 * gameState.playerIntriguesConversionCosts.water +
+          0.5 * gameState.playerTechTilesConversionCosts.water
+        );
       case 'spice':
-        return value - 0.2 * getResourceAmount(player, 'spice');
+        return (
+          value -
+          0.2 * getResourceAmount(player, 'spice') +
+          0.5 * gameState.playerIntriguesConversionCosts.spice +
+          0.5 * gameState.playerTechTilesConversionCosts.spice
+        );
       case 'solari':
-        return value - 0.1 * getResourceAmount(player, 'solari');
+        return (
+          value -
+          0.1 * getResourceAmount(player, 'solari') +
+          0.5 * gameState.playerIntriguesConversionCosts.solari +
+          0.5 * gameState.playerTechTilesConversionCosts.solari
+        );
+      case 'tech':
+        return (
+          value +
+          0.2 * player.tech +
+          0.5 * gameState.playerIntriguesConversionCosts.tech +
+          0.5 * gameState.playerTechTilesConversionCosts.tech
+        );
       case 'troop':
-        return value + 0.2 * (3 - gameState.playerCombatUnits.troopsInGarrison);
+        return (
+          value +
+          0.2 * (3 - gameState.playerCombatUnits.troopsInGarrison) +
+          0.5 * gameState.playerIntriguesConversionCosts['loose-troop'] +
+          0.5 * gameState.playerTechTilesConversionCosts['loose-troop']
+        );
       case 'dreadnought':
         return value + 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'card-draw':
@@ -419,8 +446,6 @@ export class AIEffectEvaluationService {
         return value;
       case 'intrigue-draw':
         return value + 2 * gameState.playerIntrigueStealAmount;
-      case 'tech':
-        return value + 0.2 * player.tech;
       case 'card-round-start':
         return value;
       case 'shipping':

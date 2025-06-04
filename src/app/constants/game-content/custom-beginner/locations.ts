@@ -12,8 +12,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
+      ownerReward: { type: 'persuasion', amount: 1 },
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(183, 153, 114)',
@@ -28,8 +28,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
       rewards: [{ type: 'troop' }, { type: 'spice-accumulation' }, { type: 'faction-influence-up-choice' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
+      ownerReward: { type: 'spice' },
     },
-    ownerReward: { type: 'spice' },
   },
   {
     color: 'rgb(77, 61, 48)',
@@ -42,8 +42,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
+      ownerReward: { type: 'persuasion', amount: 1 },
     },
-    ownerReward: { type: 'persuasion', amount: 1 },
   },
   {
     color: 'rgb(77, 61, 48)',
@@ -56,8 +56,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'solari', amount: 2 }, { type: 'foldspace' }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/troops.png',
+      ownerReward: { type: 'solari', amount: 2 },
     },
-    ownerReward: { type: 'solari', amount: 2 },
   },
   {
     color: 'rgb(77, 61, 48)',
@@ -72,8 +72,8 @@ export const locationsCustomBeginner: DuneLocation[] = [
       rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
+      ownerReward: { type: 'troop' },
     },
-    ownerReward: { type: 'troop' },
   },
   {
     color: 'rgb(183, 153, 114)',
