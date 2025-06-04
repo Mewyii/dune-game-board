@@ -83,7 +83,7 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'troop',
-        amount: 2,
+        amount: 3,
       },
     ],
   },
@@ -209,14 +209,11 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
       {
-        type: 'sword',
-      },
-      {
         type: 'helper-trade',
       },
       {
         type: 'solari',
-        amount: 4,
+        amount: 3,
       },
     ],
   },

@@ -33,6 +33,9 @@ export class AIEffectEvaluationService {
     if (effects.rewards.length > 0) {
       evaluationValue += this.getRewardArrayEvaluation(effects.rewards, player, gameState);
     }
+    for (const conversionEffect of effects.conversionEffects) {
+      evaluationValue += this.getConversionEffectEvaluation(conversionEffect, player, gameState);
+    }
     for (const choiceEffect of effects.choiceEffects) {
       evaluationValue += this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
     }
@@ -59,6 +62,9 @@ export class AIEffectEvaluationService {
     let evaluationValue = 0;
     if (effects.rewards.length > 0) {
       evaluationValue += this.getRewardArrayEvaluationForTurnState(effects.rewards, player, gameState);
+    }
+    for (const conversionEffect of effects.conversionEffects) {
+      evaluationValue += this.getConversionEffectEvaluationForTurnState(conversionEffect, player, gameState);
     }
     for (const choiceEffect of effects.choiceEffects) {
       evaluationValue += this.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState);
@@ -353,7 +359,7 @@ export class AIEffectEvaluationService {
       case 'dreadnought-retreat':
         return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? 2 : 1;
       case 'enemies-card-discard':
-        return 2 + 0.1 * (gameState.currentRound - 1);
+        return 2 + 0.2 * (gameState.currentRound - 1);
       case 'enemies-troop-destroy':
         return 2.5 - 0.1 * (gameState.currentRound - 1);
       default:

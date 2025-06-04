@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { combatUnitTypes, EffectType, resourceTypes, EffectRewardType, effectRewards, effectChoices } from 'src/app/models';
+import { combatUnitTypes, effectChoices, effectConversions, effectRewards, EffectType, resourceTypes } from 'src/app/models';
 import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
 
 @Component({
-    selector: 'dune-intrigue-editor',
-    templateUrl: './intrigue-editor.component.html',
-    styleUrls: ['./intrigue-editor.component.scss'],
-    standalone: false
+  selector: 'dune-intrigue-editor',
+  templateUrl: './intrigue-editor.component.html',
+  styleUrls: ['./intrigue-editor.component.scss'],
+  standalone: false,
 })
 export class IntrigueEditorComponent implements OnInit, OnChanges {
   @Input() intrigue: IntrigueCard | null = null;
@@ -17,8 +17,8 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
 
   editMode = false;
   intrigueTypes = intriguesTypes;
-  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards, ...effectChoices].sort((a, b) =>
-    a.localeCompare(b)
+  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards, ...effectConversions, ...effectChoices].sort(
+    (a, b) => a.localeCompare(b)
   ); // Add other reward types
 
   constructor(private fb: FormBuilder) {

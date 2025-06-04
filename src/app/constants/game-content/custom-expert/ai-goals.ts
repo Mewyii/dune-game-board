@@ -321,7 +321,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       const waterDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
         { type: 'collect-spice', modifier: 0.9 },
-        { type: 'enter-combat', modifier: 0.9 },
+        { type: 'enter-combat', modifier: 0.8 },
         { type: 'troops', modifier: 0.7 },
       ];
 

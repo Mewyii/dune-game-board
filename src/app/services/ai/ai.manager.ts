@@ -205,12 +205,12 @@ export class AIManager {
       gameState.conflict.rewards[0],
       player,
       gameState,
-      24
+      25
     );
     const techEvaluation = clamp(
       normalizeNumber(
         Math.max(...gameState.availableTechTiles.map((x) => this.getTechTileBuyEvaluation(x, player, gameState))),
-        12,
+        15,
         0
       ),
       0,

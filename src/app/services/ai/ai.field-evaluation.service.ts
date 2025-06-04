@@ -80,11 +80,11 @@ export class AIFieldEvaluationService {
     const accessibleFields = this.getAccessibleFields(boardFields, adjustedFieldEvaluations, gameState, aiPlayer, player);
 
     const randomFactor = gameState.isOpeningTurn
-      ? 0.66
+      ? 0.5
       : aiDifficulty === 'hard'
-      ? 0.1
+      ? 0.05
       : aiDifficulty === 'medium'
-      ? 0.2
+      ? 0.15
       : 0.3;
     const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
 
