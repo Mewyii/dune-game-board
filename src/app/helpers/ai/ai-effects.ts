@@ -9,7 +9,10 @@ export function getParticipateInCombatDesire(gameState: GameState) {
     desire += 0.033 * gameState.playerCombatUnits.troopsInGarrison;
     return desire;
   } else {
-    desire += 0.15 * gameState.playerCombatUnits.troopsInGarrison;
+    if (gameState.playerCombatUnits.troopsInGarrison > 0) {
+      desire += 0.3;
+    }
+    desire += 0.1 * gameState.playerCombatUnits.troopsInGarrison;
     desire += 0.1 * (1 - gameState.playerAgentsAvailable);
     desire += 0.02 * gameState.playerCardsRewards.sword;
     desire += 0.04 * gameState.playerTechTilesRewards.sword;
@@ -32,7 +35,7 @@ export function getParticipateInCombatDesire(gameState: GameState) {
 export function getWinCombatDesire(gameState: GameState) {
   let desire = 0.1;
 
-  desire += 0.1 * getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState);
+  desire += 0.075 * getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState);
   desire += 0.05 * gameState.playerAgentsAvailable;
   desire += 0.01 * gameState.playerCardsRewards.sword;
   desire += 0.02 * gameState.playerTechTilesRewards.sword;
@@ -59,7 +62,7 @@ export function getWinCombatDesire(gameState: GameState) {
         enemyAgentsAvailable,
         enemyIntrigueCount,
         gameState
-      ) > 0
+      ) > 1
     ) {
       desire += 0.3;
     } else {
@@ -79,7 +82,7 @@ export function getWinCombatDesire(gameState: GameState) {
           gameState.playerIntrigueCount,
           enemyCombatScore,
           gameState
-        ) < 0
+        ) < 1
       ) {
         desire = desire - 0.5;
       } else {

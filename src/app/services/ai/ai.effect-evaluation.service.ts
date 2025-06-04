@@ -234,31 +234,47 @@ export class AIEffectEvaluationService {
     switch (rewardType) {
       case 'water':
         return (
-          3 -
+          3 +
+          0.025 * gameState.playerTechTilesConversionCosts.water -
           (player.hasSwordmaster ? 0.15 : 0) -
           (player.hasCouncilSeat ? 0.15 : 0) -
           0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-          0.025 * gameState.playerCardsRewards.water
+          0.025 * gameState.playerCardsRewards.water -
+          0.025 * gameState.playerTechTilesRewards.water
         );
       case 'spice':
         return (
-          2.5 -
+          2.5 +
+          0.0175 * gameState.playerTechTilesConversionCosts.spice -
           (player.hasSwordmaster ? 0.225 : 0) -
           (player.hasCouncilSeat ? 0.225 : 0) -
           0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-          0.02 * gameState.playerCardsRewards.spice
+          0.0175 * gameState.playerCardsRewards.spice -
+          0.0175 * gameState.playerTechTilesRewards.spice
         );
       case 'solari':
         return (
-          1.5 -
+          1.5 +
+          0.01 * gameState.playerTechTilesConversionCosts.solari -
           (player.hasSwordmaster ? 0.3 : 0) -
           (player.hasCouncilSeat ? 0.3 : 0) -
           0.15 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
           0.05 * (gameState.currentRound - 1) -
-          0.015 * gameState.playerCardsRewards.solari
+          0.01 * gameState.playerCardsRewards.solari -
+          0.01 * gameState.playerTechTilesRewards.solari
+        );
+      case 'tech':
+        return (
+          2 +
+          0.01 * gameState.playerTechTilesConversionCosts.tech -
+          0.025 * (gameState.currentRound - 1) -
+          0.01 * gameState.playerCardsRewards.tech -
+          0.01 * gameState.playerTechTilesRewards.tech
         );
       case 'troop':
-        return 1.75 - 0.015 * gameState.playerCardsRewards.troop;
+        return (
+          1.75 + 0.015 * gameState.playerTechTilesConversionCosts['loose-troop'] - 0.015 * gameState.playerCardsRewards.troop
+        );
       case 'dreadnought':
         return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 7 : 0) + 0.25 * (gameState.currentRound - 1);
       case 'card-draw':
@@ -312,8 +328,6 @@ export class AIEffectEvaluationService {
         return -1;
       case 'intrigue-draw':
         return 0.25;
-      case 'tech':
-        return 1.75;
       case 'card-round-start':
         return 1.5;
       case 'shipping':

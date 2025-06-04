@@ -326,10 +326,10 @@ export class AIManager {
         gameState
       );
 
-      if (enemyCombatStrengthPotentialAgainstPlayer < 0) {
+      if (enemyCombatStrengthPotentialAgainstPlayer < 1) {
         return 'none';
       } else if (
-        enemyCombatStrengthPotentialAgainstPlayer >= 0 &&
+        enemyCombatStrengthPotentialAgainstPlayer >= 1 &&
         playerGarrisonStrength > enemyCombatStrengthPotentialAgainstPlayer
       ) {
         return enemyCombatStrengthPotentialAgainstPlayer;

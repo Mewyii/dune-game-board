@@ -356,33 +356,21 @@ export class AIFieldEvaluationService {
       const combatRewardIndex = fieldRewards.findIndex((x) => x.type === 'combat');
 
       if (combatRewardIndex > -1) {
-        let modifier = 0.4;
+        let modifier = 0.3;
 
         const playerGarrisonUnits =
           gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison;
-        if (playerGarrisonUnits < gameState.gameSettings.combatMaxDeployableUnits) {
-          const troopRewards = fieldRewards.find((x) => x.type === 'troop');
-          if (troopRewards) {
-            modifier = modifier + 0.075 * (troopRewards.amount ?? 1);
-          }
 
-          const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought');
-          if (dreadnoughtRewards) {
-            modifier = modifier + 0.1 * (dreadnoughtRewards.amount ?? 1);
-          }
-        } else {
-          modifier += 0.2;
+        const troopRewards = fieldRewards.find((x) => x.type === 'troop')?.amount ?? 0;
+        const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought')?.amount ?? 0;
 
-          const troopRewards = fieldRewards.find((x) => x.type === 'troop');
-          if (troopRewards) {
-            modifier = modifier + 0.025 * (troopRewards.amount ?? 1);
-          }
+        const deployableUnits = playerGarrisonUnits + troopRewards + dreadnoughtRewards;
+        const limitedDeployableUnits =
+          deployableUnits > gameState.gameSettings.combatMaxDeployableUnits
+            ? gameState.gameSettings.combatMaxDeployableUnits
+            : deployableUnits;
 
-          const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought');
-          if (dreadnoughtRewards) {
-            modifier = modifier + 0.05 * (dreadnoughtRewards.amount ?? 1);
-          }
-        }
+        modifier = modifier + 0.1 * limitedDeployableUnits;
 
         const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
         if (intrigueRewards) {

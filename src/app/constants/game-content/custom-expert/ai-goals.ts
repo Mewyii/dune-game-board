@@ -178,6 +178,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       const winCombatDesire = getWinCombatDesire(gameState);
       const participateInCombatDesire = getParticipateInCombatDesire(gameState);
       const desire = winCombatDesire > participateInCombatDesire ? winCombatDesire : participateInCombatDesire;
+      console.log('Win Combat Desire: ' + winCombatDesire);
+      console.log('Participate in Combat Desire: ' + participateInCombatDesire);
 
       return desire + getAvoidCombatTiesModifier(gameState);
     },
@@ -368,9 +370,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       let maxDesire = 0.0;
 
       const solariDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
-        { type: 'swordmaster', modifier: 0.9 },
-        { type: 'high-council', modifier: 0.9 },
-        { type: 'dreadnought', modifier: 0.9 },
+        { type: 'swordmaster', modifier: 1.0 },
+        { type: 'high-council', modifier: 1.0 },
+        { type: 'dreadnought', modifier: 1.0 },
         { type: 'tech', modifier: 0.8 },
       ];
 
@@ -390,7 +392,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > 6 && !player.hasSwordmaster ? 0.2 - 0.025 * (gameState.currentRound - 1) : 0,
+      getResourceAmount(player, 'solari') > 6 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
     goalIsReachable: (player) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
