@@ -18,10 +18,10 @@ import { PlayersService } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'app-dune-action',
-    templateUrl: './dune-action.component.html',
-    styleUrls: ['./dune-action.component.scss'],
-    standalone: false
+  selector: 'app-dune-action',
+  templateUrl: './dune-action.component.html',
+  styleUrls: ['./dune-action.component.scss'],
+  standalone: false,
 })
 export class DuneActionComponent implements OnInit, OnChanges {
   @Input() actionField: ActionField = {
@@ -51,6 +51,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
   public activePlayerId: number = 0;
   public activePlayerTurnState: PlayerTurnState | undefined;
   public activePlayerResources: Resource[] = [];
+  public activePlayerIsAI = false;
 
   public isAccessibleByPlayer = false;
 
@@ -110,8 +111,9 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
       this.activePlayerTurnState = player?.turnState;
       this.activePlayerResources = player?.resources ?? [];
+      this.activePlayerIsAI = player?.isAI ?? false;
 
-      this.isAccessibleByPlayer = this.getPlayerAccessibility();
+      this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
 
       const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
       this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
@@ -134,16 +136,17 @@ export class DuneActionComponent implements OnInit, OnChanges {
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
-      this.isAccessibleByPlayer = this.getPlayerAccessibility();
+      this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
     this.playerManager.players$.subscribe((players) => {
       const player = this.playerManager.getPlayer(this.activePlayerId);
+      this.activePlayerIsAI = player?.isAI ?? false;
 
       this.activePlayerTurnState = player?.turnState;
       this.activePlayerResources = player?.resources ?? [];
 
-      this.isAccessibleByPlayer = this.getPlayerAccessibility();
+      this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
     this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {
@@ -152,7 +155,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     });
 
     this.playerScoreManager.playerScores$.subscribe((playerScores) => {
-      this.isAccessibleByPlayer = this.getPlayerAccessibility();
+      this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
     this.gameModifierService.playerGameModifiers$.subscribe((x) => {

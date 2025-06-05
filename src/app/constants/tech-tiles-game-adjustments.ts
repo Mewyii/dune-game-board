@@ -109,4 +109,5 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     aiEvaluation: (player, gameState) => 1 + 0.25 * (gameState.currentRound - 1),
   },
   { id: 'Planetary Surveillance', aiEvaluation: (player, gameState) => 0 + 0.5 * (gameState.currentRound - 1) },
+  { id: 'Improved Projectile Rifles', aiEvaluation: (player, gameState) => 0 + 0.5 * gameState.playerCardsRewards.sword },
 ];

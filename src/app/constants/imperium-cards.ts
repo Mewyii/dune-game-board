@@ -1566,6 +1566,62 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Desert Training',
+      de: 'Wüsten Ausbildung',
+    },
+    faction: 'emperor',
+    persuasionCosts: 1,
+    fieldAccess: ['spice'],
+    imageUrl: '/assets/images/action-backgrounds/assault_trooper_2.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'emperor',
+      },
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop',
+        amount: 2,
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Pledge of Loyalty',
       de: 'Loyalitätsbekundung',
     },
@@ -2431,6 +2487,18 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/ship.png',
     cardAmount: 1,
     canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'dreadnought',

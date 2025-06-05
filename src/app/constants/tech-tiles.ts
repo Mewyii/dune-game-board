@@ -37,6 +37,23 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Improved Projectile Rifles',
+      de: 'Verbesserte Projektilwaffen',
+    },
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/assault_trooper.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Reveal turn</b>: <br>For each card with a {resource:sword}-symbol you have in play: {resource:sword}',
+      de: '<b>Aufdeckzug</b>: <br>Für jede Karte mit {resource:sword}-Symbol, die du im Spiel hast: {resource:sword}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Landing Ships',
       de: 'Landungsschiffe',
     },
@@ -44,7 +61,11 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
     effectSize: 'medium',
     imagePosition: 'bottom',
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
     effects: [
       {
         type: 'timing-round-start',
