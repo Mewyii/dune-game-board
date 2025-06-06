@@ -1,6 +1,8 @@
 import { Locale } from './en';
 
 export const deLocale: Locale = {
+  buyCardWarningNotEnoughPersuasion: 'Du hast nicht genügend Überzeugung um diese Karte zu erwerben',
+  buyTechTileWarningNotEnoughTech: 'Du hast nicht genügend Technologie um dieses Techplättchen zu erwerben',
   commonCancel: 'Abbrechen',
   commonClose: 'Schließen',
   commonEndgame: 'Finale',

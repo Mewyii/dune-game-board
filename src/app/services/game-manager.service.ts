@@ -2145,6 +2145,8 @@ export class GameManager {
 
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
+    } else {
+      this.notificationService.showWarning(this.t.translate('buyCardWarningNotEnoughPersuasion'));
     }
   }
 
@@ -2177,6 +2179,7 @@ export class GameManager {
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
       return true;
     } else {
+      this.notificationService.showWarning(this.t.translate('buyCardWarningNotEnoughPersuasion'));
       return false;
     }
   }
@@ -2208,6 +2211,8 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [card] });
 
       this.loggingService.logPlayerBoughtCard(playerId, this.t.translateLS(card.name));
+    } else {
+      this.notificationService.showWarning(this.t.translate('buyCardWarningNotEnoughPersuasion'));
     }
   }
 
@@ -2232,6 +2237,8 @@ export class GameManager {
 
     if (playerCanAffordTechTile) {
       this.buyTechTileForPlayer(player, techTile, availablePlayerTech, 0);
+    } else {
+      this.notificationService.showWarning(this.t.translate('buyTechTileWarningNotEnoughTech'));
     }
   }
 

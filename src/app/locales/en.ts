@@ -1,4 +1,6 @@
 export const enLocale = {
+  buyCardWarningNotEnoughPersuasion: "You don't have enough persuasion to acquire this card",
+  buyTechTileWarningNotEnoughTech: "You don't have enough tech to acquire this tech tile",
   commonCancel: 'Cancel',
   commonClose: 'Close',
   commonEndgame: 'Endgame',
