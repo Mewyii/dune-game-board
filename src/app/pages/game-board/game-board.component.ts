@@ -85,16 +85,12 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     const zoom = currentWidth / targetHeight;
 
     if (this.isChrome || this.isFirefox) {
-      // Direktes Zoomen via Chrome-spezifische Eigenschaft
       element.style.zoom = zoom.toString();
-      element.style.transform = '';
     } else {
-      // Fallback mit transform: scale()
-      element.style.zoom = '';
-      element.style.transform = `scale(${zoom})`;
-      element.style.transformOrigin = 'top left';
-      // Optional: Layout-Korrektur bei transform
-      element.style.width = `${targetHeight}px`;
+      element.style.zoom = zoom.toString();
+      // element.style.transform = `scale(${zoom})`;
+      // element.style.transformOrigin = 'top left';
+      // element.style.width = `${targetHeight}px`;
     }
   }
 }

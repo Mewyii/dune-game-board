@@ -6,10 +6,22 @@
       </div>
       <dune-leader-card *ngIf="activeLeader.type === 'new'" [leader]="activeLeader"></dune-leader-card>
       <div class="leader-action-container" *ngIf="!playerLeader?.isLockedIn">
-        <button class="buy-button" mat-fab [color]="'accent'" (click)="onLockInLeaderClicked()" matTooltip="Lock In">
+        <button
+          class="buy-button"
+          mat-fab
+          [color]="'accent'"
+          (click)="onLockInLeaderClicked()"
+          [matTooltip]="t.translate('leadersTooltipLockIn')"
+        >
           <mat-icon>check</mat-icon>
         </button>
-        <button class="buy-button" mat-fab [color]="'accent'" (click)="onSelectRandomLeaderClicked()" matTooltip="Randomize">
+        <button
+          class="buy-button"
+          mat-fab
+          [color]="'accent'"
+          (click)="onSelectRandomLeaderClicked()"
+          [matTooltip]="t.translate('leadersTooltipRandomize')"
+        >
           <mat-icon>shuffle</mat-icon>
         </button>
       </div>
@@ -39,7 +51,7 @@
             mat-fab
             color="accent"
             (click)="onEndTurnClicked(activePlayer.id)"
-            matTooltip="End Turn"
+            [matTooltip]="t.translate('leadersTooltipEndTurn')"
             [disabled]="activePlayer.isAI && (activePlayer.turnState === 'reveal' || turnInfos?.isDoingAIActions)"
           >
             <mat-icon>keyboard_arrow_right</mat-icon>
@@ -48,7 +60,7 @@
             mat-fab
             [color]="'accent'"
             (click)="onAiActionClicked(activePlayer.id)"
-            matTooltip="AI"
+            [matTooltip]="t.translate('leadersTooltipAIAction')"
             [disabled]="
               !playerLeader?.isLockedIn ||
               (currentRoundPhase === 'agent-placement' && activePlayer.turnState === 'revealed') ||
@@ -65,7 +77,7 @@
             mat-fab
             [color]="'accent'"
             (click)="onRevealCardsClicked(activePlayer.id)"
-            matTooltip="Reveal"
+            [matTooltip]="t.translate('leadersTooltipReveal')"
             [disabled]="
               activePlayer.turnState !== 'agent-placement' || (turnInfos && turnInfos.fieldsVisitedThisTurn.length > 0)
             "
@@ -77,7 +89,7 @@
             mat-fab
             [color]="'accent'"
             (click)="onPassConflictClicked(activePlayer.id)"
-            matTooltip="Pass"
+            [matTooltip]="t.translate('leadersTooltipPass')"
             [disabled]="activePlayer.turnState === 'done'"
           >
             <mat-icon>fast_forward</mat-icon>
@@ -89,7 +101,7 @@
             mat-fab
             color="accent"
             (click)="onShowAdditionalPlayerActionsClicked()"
-            matTooltip="Show Additional Player Actions"
+            [matTooltip]="t.translate('leadersTooltipShowAdditionalPlayerActions')"
           >
             <mat-icon>more_horiz</mat-icon>
           </button>

@@ -7,10 +7,22 @@
       [costModifier]="getTechTileCostModifier(techTile)"
     ></dune-tech-tile>
     <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTakeCardClicked(techTile)">
+      <button
+        class="tech-buy-button"
+        mat-fab
+        [color]="'accent'"
+        (click)="onTakeCardClicked(techTile)"
+        [matTooltip]="t.translate('techTilesTooltipBuy')"
+      >
         <mat-icon>check</mat-icon>
       </button>
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onTrashCardClicked(techTile.name.en)">
+      <button
+        class="tech-buy-button"
+        mat-fab
+        [color]="'accent'"
+        (click)="onTrashCardClicked(techTile.name.en)"
+        [matTooltip]="t.translate('techTilesTooltipTrash')"
+      >
         <mat-icon>delete</mat-icon>
       </button>
     </div>

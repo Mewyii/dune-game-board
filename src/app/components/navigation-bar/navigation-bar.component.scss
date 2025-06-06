@@ -18,11 +18,12 @@
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
-  padding: 16px;
+  padding: 8px;
   overflow: hidden;
   transition: 0.9s;
   max-width: 500px;
   max-height: 1000px;
+  font-size: small;
 }
 
 .navigation-item-container.hidden {

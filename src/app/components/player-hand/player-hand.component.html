@@ -5,7 +5,7 @@
         *ngIf="cardsShown === 'hand' && activePlayer?.isAI"
         class="draw-card-button"
         (click)="onAITrashIntrigueClicked()"
-        matTooltip="AI trash intrigue"
+        [matTooltip]="t.translate('playerHandTooltipAITrashIntrigue')"
       >
         <img class="draw-card-icon" [src]="getEffectTypePath('intrigue-trash')" />
       </div>
@@ -33,7 +33,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onPlayIntrigueClicked(intrigue)"
-              matTooltip="Play"
+              [matTooltip]="t.translate('playerHandTooltipPlay')"
             >
               <mat-icon>check</mat-icon>
             </button>
@@ -42,7 +42,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onTrashIntrigueClicked(intrigue)"
-              matTooltip="Trash"
+              [matTooltip]="t.translate('playerHandTooltipTrash')"
             >
               <mat-icon>delete</mat-icon>
             </button>
@@ -98,7 +98,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onPlayCardClicked(handCard)"
-              matTooltip="Play"
+              [matTooltip]="t.translate('playerHandTooltipPlay')"
             >
               <mat-icon>check</mat-icon>
             </button>
@@ -108,7 +108,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onUnPlayCardClicked(handCard.id)"
-              matTooltip="Cancel"
+              [matTooltip]="t.translate('playerHandTooltipCancel')"
             >
               <mat-icon>close</mat-icon>
             </button>
@@ -117,7 +117,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onDiscardCardClicked(handCard)"
-              matTooltip="Discard"
+              [matTooltip]="t.translate('playerHandTooltipDiscard')"
             >
               <mat-icon>expand_more</mat-icon>
             </button>
@@ -126,7 +126,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onTrashHandCardClicked(handCard)"
-              matTooltip="Trash"
+              [matTooltip]="t.translate('playerHandTooltipTrash')"
             >
               <mat-icon>delete</mat-icon>
             </button>
@@ -147,11 +147,11 @@
           <dune-imperium-row-card [class]="card.id === activeCardId ? 'active' : ''" [card]="card"></dune-imperium-row-card>
           <div class="card-action-container" *ngIf="card.id === activeCardId">
             <button
-              class="card-remove-button"
+              class="card-activate-button"
               mat-fab
               [color]="'accent'"
               (click)="onReturnDiscardedCardToHandClicked(card)"
-              matTooltip="Return To Hand"
+              [matTooltip]="t.translate('playerHandTooltipReturnToHand')"
             >
               <mat-icon>expand_less</mat-icon>
             </button>
@@ -160,7 +160,7 @@
               mat-fab
               [color]="'accent'"
               (click)="onTrashDiscardedCardClicked(card)"
-              matTooltip="Trash"
+              [matTooltip]="t.translate('playerHandTooltipTrash')"
             >
               <mat-icon>delete</mat-icon>
             </button>
@@ -170,14 +170,19 @@
       </ng-container>
     </div>
     <div class="action-container">
-      <div *ngIf="cardsShown === 'hand'" class="draw-card-button" (click)="onDrawCardClicked()" matTooltip="Draw card">
+      <div
+        *ngIf="cardsShown === 'hand'"
+        class="draw-card-button"
+        (click)="onDrawCardClicked()"
+        [matTooltip]="t.translate('playerHandTooltipDrawCard')"
+      >
         <img class="draw-card-icon" [src]="getEffectTypePath('card-draw')" />
       </div>
       <div
         *ngIf="cardsShown === 'hand'"
         class="draw-card-button"
         (click)="onAddFoldspaceToHandClicked()"
-        matTooltip="Draw Foldspace"
+        [matTooltip]="t.translate('playerHandTooltipDrawFoldspace')"
       >
         <img class="draw-card-icon" [src]="getEffectTypePath('foldspace')" />
       </div>
@@ -185,7 +190,7 @@
         *ngIf="cardsShown === 'hand' && activePlayer?.isAI"
         class="draw-card-button"
         (click)="onAIDiscardCardClicked()"
-        matTooltip="AI Discard card"
+        [matTooltip]="t.translate('playerHandTooltipAIDiscardCard')"
       >
         <img class="draw-card-icon" [src]="getEffectTypePath('card-discard')" />
       </div>
@@ -193,7 +198,7 @@
         *ngIf="cardsShown === 'hand' && activePlayer?.isAI"
         class="draw-card-button"
         (click)="onAITrashCardFromHandClicked()"
-        matTooltip="AI Trash card"
+        [matTooltip]="t.translate('playerHandTooltipAITrashCard')"
       >
         <img class="draw-card-icon" [src]="getEffectTypePath('card-destroy')" />
       </div>
@@ -201,7 +206,7 @@
         *ngIf="cardsShown === 'discard' && activePlayer?.isAI"
         class="draw-card-button"
         (click)="onAITrashCardFromDiscardPileClicked()"
-        matTooltip="AI Trash card"
+        [matTooltip]="t.translate('playerHandTooltipAITrashCard')"
       >
         <img class="draw-card-icon" [src]="getEffectTypePath('card-destroy')" />
       </div>
@@ -210,7 +215,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onAIAddCardToHandFromDiscardPileClicked()"
-        matTooltip="AI add card to hand"
+        [matTooltip]="t.translate('playerHandTooltipAIAddCardToHand')"
       >
         <mat-icon>arrow_upward</mat-icon>
       </button>
@@ -219,7 +224,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onShuffleDiscardPileUnderDeckClicked()"
-        matTooltip="shuffle under deck"
+        [matTooltip]="t.translate('playerHandTooltipShuffleUnderDeck')"
       >
         <mat-icon>redo</mat-icon>
       </button>
@@ -228,7 +233,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onShowTopCardClicked()"
-        matTooltip="show top card"
+        [matTooltip]="t.translate('playerHandTooltipShowTopCard')"
       >
         <mat-icon>visibility</mat-icon>
       </button>
@@ -237,28 +242,28 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onShuffleDeckClicked()"
-        matTooltip="shuffle deck"
+        [matTooltip]="t.translate('playerHandTooltipShuffleDeck')"
       >
         <mat-icon>sync</mat-icon>
       </button>
       <div
         [class]="'draw-card-button' + (cardsShown === 'hand' ? ' active' : '')"
         (click)="onShowHandClicked()"
-        matTooltip="Hand"
+        [matTooltip]="t.translate('playerHandTooltipHand')"
       >
         <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
       </div>
       <div
         [class]="'draw-card-button' + (cardsShown === 'discard' ? ' active' : '')"
         (click)="onShowDiscardPileClicked()"
-        matTooltip="Discard-pile"
+        [matTooltip]="t.translate('playerHandTooltipDiscardPile')"
       >
         <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
       </div>
       <div
         [class]="'draw-card-button' + (cardsShown === 'deck' ? ' active' : '')"
         (click)="onShowDeckClicked()"
-        matTooltip="Deck"
+        [matTooltip]="t.translate('playerHandTooltipDeck')"
       >
         <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
       </div>

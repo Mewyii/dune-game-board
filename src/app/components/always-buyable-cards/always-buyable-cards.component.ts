@@ -8,15 +8,14 @@ import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
-import { LoggingService } from 'src/app/services/log.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-always-buyable-cards',
-    templateUrl: './always-buyable-cards.component.html',
-    styleUrls: ['./always-buyable-cards.component.scss'],
-    standalone: false
+  selector: 'dune-always-buyable-cards',
+  templateUrl: './always-buyable-cards.component.html',
+  styleUrls: ['./always-buyable-cards.component.scss'],
+  standalone: false,
 })
 export class AlwaysBuyableCardsComponent {
   public mode: AppMode | undefined;
@@ -39,8 +38,7 @@ export class AlwaysBuyableCardsComponent {
     private gameManager: GameManager,
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,
-    private logService: LoggingService,
-    private t: TranslateService
+    public t: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -89,21 +87,31 @@ export class AlwaysBuyableCardsComponent {
   }
 
   onShowNextLimitedCustomCardClicked() {
-    if (this.shownLimitedCustomCardIndex < this.limitedCustomCards.length - 1) {
-      this.shownLimitedCustomCardIndex++;
-    } else {
-      this.shownLimitedCustomCardIndex = 0;
+    const currentName = this.shownLimitedCustomCard?.name?.en;
+    const totalCardCount = this.limitedCustomCards.length;
+
+    for (let offset = 1; offset < totalCardCount; offset++) {
+      const i = (this.shownLimitedCustomCardIndex + offset) % totalCardCount;
+      if (this.limitedCustomCards[i].name?.en !== currentName) {
+        this.shownLimitedCustomCardIndex = i;
+        this.shownLimitedCustomCard = this.limitedCustomCards[i];
+        return;
+      }
     }
-    this.shownLimitedCustomCard = this.limitedCustomCards[this.shownLimitedCustomCardIndex];
   }
 
   onShowPreviousLimitedCustomCardClicked() {
-    if (this.shownLimitedCustomCardIndex > 0) {
-      this.shownLimitedCustomCardIndex--;
-    } else {
-      this.shownLimitedCustomCardIndex = this.limitedCustomCards.length - 1;
+    const currentName = this.shownLimitedCustomCard?.name?.en;
+    const total = this.limitedCustomCards.length;
+
+    for (let offset = 1; offset < total; offset++) {
+      const i = (this.shownLimitedCustomCardIndex - offset + total) % total;
+      if (this.limitedCustomCards[i].name?.en !== currentName) {
+        this.shownLimitedCustomCardIndex = i;
+        this.shownLimitedCustomCard = this.limitedCustomCards[i];
+        return;
+      }
     }
-    this.shownLimitedCustomCard = this.limitedCustomCards[this.shownLimitedCustomCardIndex];
   }
 
   onBuyLimitedCustomCardClicked(card: ImperiumDeckCard) {

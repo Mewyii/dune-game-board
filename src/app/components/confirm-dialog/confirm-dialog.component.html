@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>{{ data?.title || t.translate('commonConfirmDialogTitle') }}</h1>
 <div mat-dialog-content>{{ data?.text || t.translate('commonConfirmDialogText') }}</div>
 <div mat-dialog-actions>
-  <button mat-fab [color]="'accent'" (click)="dialogRef.close()">
+  <button mat-mini-fab [color]="'accent'" (click)="dialogRef.close()">
     <mat-icon>close</mat-icon>
   </button>
-  <button mat-fab [color]="'accent'" (click)="dialogRef.close(true)">
+  <button mat-mini-fab [color]="'accent'" (click)="dialogRef.close(true)">
     <mat-icon>done</mat-icon>
   </button>
 </div>

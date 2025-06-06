@@ -20,7 +20,13 @@
     [card]="unlimitedCard"
   ></dune-imperium-row-card>
   <div class="card-action-container" *ngIf="unlimitedCard.name.en === activeCardId">
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyAlwaysAvailableCardClicked(unlimitedCard)">
+    <button
+      class="card-buy-button"
+      mat-fab
+      [color]="'accent'"
+      (click)="onBuyAlwaysAvailableCardClicked(unlimitedCard)"
+      [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+    >
       <mat-icon>check</mat-icon>
     </button>
   </div>
@@ -44,7 +50,13 @@
     [costModifier]="getCardCostModifier(shownLimitedCustomCard)"
   ></dune-imperium-row-card>
   <div class="card-action-container" *ngIf="shownLimitedCustomCard.id === activeCardId">
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowPreviousLimitedCustomCardClicked()">
+    <button
+      class="card-buy-button"
+      mat-fab
+      [color]="'accent'"
+      (click)="onShowPreviousLimitedCustomCardClicked()"
+      [matTooltip]="t.translate('imperiumRowTooltipShowPreviousCard')"
+    >
       <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
     <button
@@ -52,10 +64,17 @@
       mat-fab
       [color]="'accent'"
       (click)="onBuyLimitedCustomCardClicked(shownLimitedCustomCard)"
+      [matTooltip]="t.translate('imperiumRowTooltipBuy')"
     >
       <mat-icon>check</mat-icon>
     </button>
-    <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onShowNextLimitedCustomCardClicked()">
+    <button
+      class="card-buy-button"
+      mat-fab
+      [color]="'accent'"
+      (click)="onShowNextLimitedCustomCardClicked()"
+      [matTooltip]="t.translate('imperiumRowTooltipShowNextCard')"
+    >
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
   </div>

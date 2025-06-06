@@ -15,10 +15,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 
 @Component({
-    selector: 'dune-player-hand',
-    templateUrl: './player-hand.component.html',
-    styleUrls: ['./player-hand.component.scss'],
-    standalone: false
+  selector: 'dune-player-hand',
+  templateUrl: './player-hand.component.html',
+  styleUrls: ['./player-hand.component.scss'],
+  standalone: false,
 })
 export class PlayerHandComponent implements OnInit {
   public activePlayer: Player | undefined;
@@ -48,7 +48,7 @@ export class PlayerHandComponent implements OnInit {
     private settingsService: SettingsService,
     private dialog: MatDialog,
     private logService: LoggingService,
-    private t: TranslateService
+    public t: TranslateService
   ) {}
 
   ngOnInit(): void {
