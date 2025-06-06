@@ -315,7 +315,7 @@ export class GameManager {
     this.cardsService.createImperiumDeck();
     this.cardsService.setInitialPlayerDecks();
     this.intriguesService.createIntrigueDeck();
-    this.aIManager.assignPersonalitiesToAIPlayers(newPlayers);
+    this.aIManager.setAIPlayers(newPlayers);
     this.leadersService.createLeaderDeck();
     this.leadersService.assignRandomLeadersToPlayers(newPlayers);
     this.conflictsService.createConflictDeck();
@@ -331,7 +331,7 @@ export class GameManager {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
       if (player.isAI && player.id === this.startingPlayerId) {
-        this.setactiveAIPlayer(this.startingPlayerId);
+        this.setActiveAIPlayer(this.startingPlayerId);
 
         this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
       }
@@ -503,7 +503,7 @@ export class GameManager {
     for (const player of this.playerManager.getPlayers()) {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
-      this.setactiveAIPlayer(this.startingPlayerId);
+      this.setActiveAIPlayer(this.startingPlayerId);
       if (player.isAI && player.id === this.startingPlayerId) {
         this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
       }
@@ -519,7 +519,7 @@ export class GameManager {
     this.currentRoundPhaseSubject.next('none');
     this.startingPlayerIdSubject.next(0);
     this.activePlayerIdSubject.next(0);
-    this.setactiveAIPlayer(0);
+    this.setActiveAIPlayer(0);
     this.duneEventsManager.resetEventDeck();
     this.leadersService.resetLeaders();
     this.conflictsService.resetConflicts();
@@ -893,7 +893,7 @@ export class GameManager {
     if (nextPlayer) {
       this.activePlayerIdSubject.next(nextPlayer.id);
 
-      this.setactiveAIPlayer(nextPlayer.id);
+      this.setActiveAIPlayer(nextPlayer.id);
       if (nextPlayer.isAI) {
         this.setPreferredFieldsForAIPlayer(nextPlayer.id);
       }
@@ -919,7 +919,17 @@ export class GameManager {
     }
   }
 
-  public setactiveAIPlayer(playerId: number) {
+  public setAIActiveForPlayer(playerId: number, active: boolean) {
+    this.playerManager.setAIActiveForPlayer(playerId, active);
+    if (active) {
+      this.aIManager.addAIPlayer(playerId);
+    } else {
+      this.aIManager.removeAIPlayer(playerId);
+    }
+    this.aIManager.setactiveAIPlayerId(playerId);
+  }
+
+  public setActiveAIPlayer(playerId: number) {
     this.aIManager.setactiveAIPlayerId(playerId);
   }
 

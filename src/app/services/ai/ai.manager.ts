@@ -112,7 +112,7 @@ export class AIManager {
     return cloneDeep(this.activeAIPlayerIdSubject.value);
   }
 
-  public assignPersonalitiesToAIPlayers(players: Player[]) {
+  public setAIPlayers(players: Player[]) {
     const aiPlayers: AIPlayer[] = [];
     for (const player of players) {
       if (player.isAI) {
@@ -128,6 +128,27 @@ export class AIManager {
     }
 
     this.aiPlayersSubject.next(aiPlayers);
+  }
+
+  public addAIPlayer(playerId: number) {
+    const aiPlayers = this.aiPlayers;
+    if (!aiPlayers.some((x) => x.playerId === playerId)) {
+      let name = this.getRandomAIName();
+      let personality = (aiPersonalities as any)[name];
+
+      if (aiPlayers.some((x) => x.personality === personality)) {
+        name = this.getRandomAIName();
+        personality = (aiPersonalities as any)[name];
+      }
+      this.aiPlayersSubject.next([
+        ...aiPlayers,
+        { playerId: playerId, name, personality, preferredFields: [], gameStateEvaluations: {} },
+      ]);
+    }
+  }
+  public removeAIPlayer(playerId: number) {
+    const aiPlayers = this.aiPlayers;
+    this.aiPlayersSubject.next(aiPlayers.filter((x) => x.playerId !== playerId));
   }
 
   public setAIPersonalityToPlayer(playerId: number, personalityName: string, personality: AIPersonality) {

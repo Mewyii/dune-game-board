@@ -19,10 +19,10 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 
 @Component({
-    selector: 'app-playerboard',
-    templateUrl: './playerboard.component.html',
-    styleUrls: ['./playerboard.component.scss'],
-    standalone: false
+  selector: 'app-playerboard',
+  templateUrl: './playerboard.component.html',
+  styleUrls: ['./playerboard.component.scss'],
+  standalone: false,
 })
 export class PlayerboardComponent implements OnInit {
   public players: Player[] = [];
@@ -108,7 +108,7 @@ export class PlayerboardComponent implements OnInit {
 
   onSetAIActiveClicked(playerId: number, event: MatSlideToggleChange) {
     this.audioManager.playSound('tech-tile');
-    this.playerManager.setAIActiveForPlayer(playerId, event.checked);
+    this.gameManager.setAIActiveForPlayer(playerId, event.checked);
     if (event.checked && this.currentTurn > 0) {
       this.gameManager.setPreferredFieldsForAIPlayer(playerId);
     }
