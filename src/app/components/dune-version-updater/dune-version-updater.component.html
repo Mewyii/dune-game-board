@@ -2,7 +2,7 @@
   <div class="control-bar">
     <button
       [class]="appVersionChanged ? 'highlighted' : ''"
-      mat-fab
+      mat-mini-fab
       [color]="'accent'"
       (click)="onShowVersionUpdateClicked()"
       [matTooltip]="t.translate('commonNewVersionAvailable')"
