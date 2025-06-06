@@ -1,7 +1,7 @@
 <div [class]="'audio-container ' + (showAudioSelection ? 'shown' : 'hidden')">
   <div class="control-bar">
     <button
-      mat-fab
+      mat-mini-fab
       [color]="'accent'"
       (click)="showAudioSelection = !showAudioSelection"
       [matTooltip]="t.translate('commonMenuAudio')"

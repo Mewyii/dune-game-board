@@ -1,4 +1,3 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 import { boardSettings } from 'src/app/constants/board-settings';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
@@ -18,10 +17,10 @@ export interface CombatScore {
 }
 
 @Component({
-    selector: 'app-dune-combat',
-    templateUrl: './dune-combat.component.html',
-    styleUrls: ['./dune-combat.component.scss'],
-    standalone: false
+  selector: 'app-dune-combat',
+  templateUrl: './dune-combat.component.html',
+  styleUrls: ['./dune-combat.component.scss'],
+  standalone: false,
 })
 export class DuneCombatComponent implements OnInit {
   @Input() useDreadnoughts = false;
@@ -90,15 +89,6 @@ export class DuneCombatComponent implements OnInit {
 
   public getEffectTypePath(effectType: EffectType) {
     return getEffectTypePath(effectType);
-  }
-
-  public onCombatScoreMarkerDrop(event: CdkDragDrop<number[]>, score: number) {
-    const playerCombatScore = this.combatManager.getPlayerCombatScore(event.item.data);
-    if (playerCombatScore < score) {
-      this.combatManager.addAdditionalCombatPowerToPlayer(event.item.data, score - playerCombatScore);
-    } else if (playerCombatScore > score) {
-      this.combatManager.removeAdditionalCombatPowerFromPlayer(event.item.data, playerCombatScore - score);
-    }
   }
 
   public getPlayersOnScore(score: number) {

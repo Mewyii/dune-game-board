@@ -1,7 +1,7 @@
 <div [class]="'navigation-container ' + (showNavigationSelection ? 'shown' : 'hidden')">
   <div class="control-bar">
     <button
-      mat-fab
+      mat-mini-fab
       [color]="'accent'"
       (click)="showNavigationSelection = !showNavigationSelection"
       [matTooltip]="t.translate('commonMenuNavigation')"

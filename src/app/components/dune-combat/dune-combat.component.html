@@ -73,8 +73,8 @@
   </div>
 </div>
 <div class="score-tile">
-  <div class="lower-row" cdkDropListGroup>
-    <div class="score-element first" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, 0)">
+  <div class="lower-row">
+    <div class="score-element first">
       <div class="score">0</div>
       <ng-container *ngIf="settingsService.mode === 'game'">
         <div class="score-container large">
@@ -84,8 +84,6 @@
             class="score-marker"
             [style.background-color]="getPlayerColor(playerScore.playerId)"
             [style.top]="25 + i * 25 + 'px'"
-            cdkDrag
-            [cdkDragData]="playerScore.playerId"
           ></div>
           }
         </div>
@@ -93,7 +91,7 @@
     </div>
     <div class="combat-score-board">
       @for (score of combatScoreArray; track $index; let scoreIndex = $index; let last = $last) {
-      <div class="score-element" cdkDropList (cdkDropListDropped)="onCombatScoreMarkerDrop($event, scoreIndex + 1)">
+      <div class="score-element">
         <div class="score">{{ scoreIndex + 1 }}</div>
         <ng-container *ngIf="settingsService.mode === 'game'">
           <div class="score-container">
@@ -102,8 +100,6 @@
               *ngIf="playerScore.score === scoreIndex + 1"
               class="score-marker"
               [style.background-color]="getPlayerColor(playerScore.playerId)"
-              cdkDrag
-              [cdkDragData]="playerScore.playerId"
             ></div>
             }
           </div>
