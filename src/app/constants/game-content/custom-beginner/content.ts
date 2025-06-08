@@ -1,9 +1,8 @@
 import { GameContent } from '../../board-settings';
-import { locationsCustomBeginner } from './locations';
+import { customCardsCustomBeginner } from './custom-cards';
 import { factionsCustomBeginner } from './factions';
 import { ixCustomBeginner } from './ix';
-import { aiGoalsCustomBeginner } from './ai-goals';
-import { customCardsCustomBeginner } from './custom-cards';
+import { locationsCustomBeginner } from './locations';
 
 export const gameContentCustomBeginner: GameContent = {
   name: 'custom-beginner',
@@ -23,7 +22,6 @@ export const gameContentCustomBeginner: GameContent = {
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
   startingResources: [],
-  aiGoals: aiGoalsCustomBeginner,
   recruitmentCardAmount: 6,
   combatMaxDeployableUnits: 2,
   factionInfluenceMaxScore: 6,

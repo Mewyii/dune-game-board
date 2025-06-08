@@ -1,15 +1,27 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
+import { AI, AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
 import { gameContentCustomBeginner, gameContentCustomExpert, gameContentOriginal } from '../constants/game-content';
+import { aiCustomBeginner } from '../constants/game-content/custom-beginner/ai';
+import { aiCustomExpert } from '../constants/game-content/custom-expert/ai';
+import { aiOriginal } from '../constants/game-content/original/ai';
 import { ActionField, FactionInfluenceReward, FactionType, LanguageType } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
-  private gameContents: GameContent[] = [gameContentOriginal, gameContentCustomBeginner, gameContentCustomExpert];
+  private AIs = [aiOriginal, aiCustomBeginner, aiCustomExpert];
+  private AISubject = new BehaviorSubject<AI>(aiOriginal);
+  public AI$ = this.AISubject.asObservable();
+
+  private gameContentsSubject = new BehaviorSubject<GameContent[]>([
+    gameContentOriginal,
+    gameContentCustomBeginner,
+    gameContentCustomExpert,
+  ]);
+  public gameContents$ = this.gameContentsSubject.asObservable();
 
   private fields: ActionField[] = [];
   public spiceAccumulationFields: string[] = [];
@@ -42,22 +54,29 @@ export class SettingsService {
   );
 
   constructor() {
+    const gameContentsString = localStorage.getItem('gameContents');
+    if (gameContentsString) {
+      let gameContents = JSON.parse(gameContentsString) as GameContent[];
+
+      this.gameContentsSubject.next(gameContents);
+    }
+
     const settingsString = localStorage.getItem('settings');
     if (settingsString) {
       let settings = JSON.parse(settingsString) as Settings;
 
-      // Workaround for local storage not being able to store functions
-      const gameContent = this.gameContents.find((x) => x.name === settings.gameContent.name);
-      if (gameContent) {
-        settings.gameContent = gameContent;
-      }
-
       this.settingsSubject.next(settings);
+
+      const ai = this.AIs.find((x) => x.gameContentName === settings.gameContent.name);
+      this.AISubject.next(ai ?? aiOriginal);
     }
 
     this.settings$.subscribe((settings) => {
       this.setFields();
       localStorage.setItem('settings', JSON.stringify(settings));
+    });
+    this.gameContents$.subscribe((gameContents) => {
+      localStorage.setItem('gameContents', JSON.stringify(gameContents));
     });
   }
 
@@ -65,8 +84,12 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value);
   }
 
-  private get gameContent() {
+  public get gameContent() {
     return cloneDeep(this.settingsSubject.value.gameContent);
+  }
+
+  public get ai() {
+    return cloneDeep(this.AISubject.value);
   }
 
   public get mode() {
@@ -199,10 +222,26 @@ export class SettingsService {
   }
 
   setGameContent(name: string) {
-    const gameContent = this.gameContents.find((x) => x.name === name);
+    const gameContent = this.gameContentsSubject.value.find((x) => x.name === name);
     if (gameContent) {
       this.settingsSubject.next({ ...this.settings, gameContent });
+      const ai = this.AIs.find((x) => x.gameContentName === name);
+      this.AISubject.next(ai ?? aiOriginal);
     }
+  }
+
+  setCustomGameContent(gameContent: GameContent) {
+    gameContent.name = 'custom';
+
+    const gameContents = this.gameContentsSubject.value;
+    const index = gameContents.findIndex((x) => x.name === gameContent.name);
+    if (index < 0) {
+      this.gameContentsSubject.next([...gameContents, gameContent]);
+    } else {
+      gameContents[index] = gameContent;
+      this.gameContentsSubject.next(gameContents);
+    }
+    this.setGameContent(gameContent.name);
   }
 
   enableEvents(value: boolean) {

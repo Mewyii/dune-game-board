@@ -34,7 +34,7 @@ export class AIFieldEvaluationService {
   public aiGoals: FieldsForGoals | undefined;
 
   constructor(private settingsService: SettingsService) {
-    this.settingsService.gameContent$.subscribe((x) => {
+    this.settingsService.AI$.subscribe((x) => {
       this.aiGoals = x.aiGoals;
     });
   }

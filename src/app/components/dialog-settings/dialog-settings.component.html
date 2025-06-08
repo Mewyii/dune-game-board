@@ -3,35 +3,60 @@
   <div class="setting-container">
     <div>Game Content</div>
     <div class="options-container">
-      <mat-checkbox [checked]="gameContentName === 'original'" (change)="setGameContent('original')">Original</mat-checkbox>
-      <mat-checkbox [checked]="gameContentName === 'custom-beginner'" (change)="setGameContent('custom-beginner')"
+      <mat-checkbox [checked]="gameContentName === 'original'" (click)="onSetGameContentClicked('original')"
+        >Original</mat-checkbox
+      >
+      <mat-checkbox [checked]="gameContentName === 'custom-beginner'" (click)="onSetGameContentClicked('custom-beginner')"
         >Beginner</mat-checkbox
       >
-      <mat-checkbox [checked]="gameContentName === 'custom-expert'" (change)="setGameContent('custom-expert')"
+      <mat-checkbox [checked]="gameContentName === 'custom-expert'" (click)="onSetGameContentClicked('custom-expert')"
         >Expert</mat-checkbox
       >
+      <div [matTooltip]="!hasCustomGameContent ? 'You need to import a custom Game Content before you can select this' : ''">
+        <mat-checkbox
+          [disabled]="!hasCustomGameContent"
+          [checked]="gameContentName === 'custom'"
+          (click)="onSetGameContentClicked('custom')"
+          >Custom</mat-checkbox
+        >
+      </div>
     </div>
+    <div class="options-container">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onExportContentClicked()"
+        matTooltip="Export Currently Selected Gamecontent"
+      >
+        <mat-icon>download</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Custom Gamecontent">
+        <mat-icon>folder_open</mat-icon>
+      </button>
+      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportContentClicked(filePicker)" />
+    </div>
+    <div class="options-container"></div>
   </div>
   <div class="setting-container">
     <div>App Mode</div>
     <div class="options-container">
-      <mat-checkbox [checked]="appMode === 'board'" (change)="setGameMode('board')">Board</mat-checkbox>
-      <mat-checkbox [checked]="appMode === 'game'" (change)="setGameMode('game')">Game</mat-checkbox>
+      <mat-checkbox [checked]="appMode === 'board'" (click)="setGameMode('board')">Board</mat-checkbox>
+      <mat-checkbox [checked]="appMode === 'game'" (click)="setGameMode('game')">Game</mat-checkbox>
     </div>
   </div>
   <div class="setting-container">
     <div>AI Difficulty</div>
     <div class="options-container">
-      <mat-checkbox [checked]="aiDifficulty === 'easy'" (change)="setAIDifficulty('easy')">Easy</mat-checkbox>
-      <mat-checkbox [checked]="aiDifficulty === 'medium'" (change)="setAIDifficulty('medium')">Medium</mat-checkbox>
-      <mat-checkbox [checked]="aiDifficulty === 'hard'" (change)="setAIDifficulty('hard')">Hard</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'easy'" (click)="setAIDifficulty('easy')">Easy</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'medium'" (click)="setAIDifficulty('medium')">Medium</mat-checkbox>
+      <mat-checkbox [checked]="aiDifficulty === 'hard'" (click)="setAIDifficulty('hard')">Hard</mat-checkbox>
     </div>
   </div>
   <div class="setting-container">
     <div>Events</div>
     <div class="options-container">
-      <mat-checkbox [checked]="eventsEnabled === false" (change)="enableEvents(false)">False</mat-checkbox>
-      <mat-checkbox [checked]="eventsEnabled === true" (change)="enableEvents(true)">True</mat-checkbox>
+      <mat-checkbox [checked]="eventsEnabled === false" (click)="enableEvents(false)">False</mat-checkbox>
+      <mat-checkbox [checked]="eventsEnabled === true" (click)="enableEvents(true)">True</mat-checkbox>
     </div>
   </div>
 </div>

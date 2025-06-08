@@ -1,5 +1,4 @@
 import { GameContent } from '../../board-settings';
-import { aiGoalsCustomExpert } from './ai-goals';
 import { customCardsCustomExpert } from './custom-cards';
 import { factionsCustomExpert } from './factions';
 import { ixCustomExpert } from './ix';
@@ -22,7 +21,6 @@ export const gameContentCustomExpert: GameContent = {
   dreadnoughtCombatStrength: 4,
   highCouncilPersuasion: 3,
   startingResources: [],
-  aiGoals: aiGoalsCustomExpert,
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 6,
   locationTakeoverTroopCosts: 1,

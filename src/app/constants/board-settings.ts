@@ -8,6 +8,11 @@ export interface VictoryPointReward {
   reward: Effect;
 }
 
+export interface AI {
+  gameContentName: string;
+  aiGoals: FieldsForGoals;
+}
+
 export interface GameContent {
   name: string;
   factions: Faction[];
@@ -21,7 +26,6 @@ export interface GameContent {
   dreadnoughtCombatStrength: number;
   highCouncilPersuasion: number;
   startingResources: Effect[];
-  aiGoals?: FieldsForGoals;
   customCards?: CustomCard[];
   recruitmentCardAmount: number;
   locationTakeoverTroopCosts?: number;
