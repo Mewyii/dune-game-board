@@ -262,9 +262,9 @@ export class CardsService {
     return this.playedPlayerCards.find((x) => x.playerId === playerId);
   }
 
-  createImperiumDeck() {
+  createImperiumDeck(filter: (imperiumCard: ImperiumCard) => boolean = () => true) {
     const imperiumDeckCards: (ImperiumDeckCard | ImperiumDeckPlot)[] = [];
-    const imperiumCards = this.cardConfiguratorService.imperiumCards;
+    const imperiumCards = this.cardConfiguratorService.imperiumCards.filter((x) => filter(x));
     const plotCards = this.plotConfiguratorService.imperiumPlots;
 
     for (const imperiumCard of imperiumCards) {

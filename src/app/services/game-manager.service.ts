@@ -312,7 +312,18 @@ export class GameManager {
 
     this.cardsService.setLimitedCustomCards();
     this.cardsService.setUnlimitedCustomCards();
-    this.cardsService.createImperiumDeck();
+
+    if (this.settingsService.getUseTechtiles()) {
+      this.cardsService.createImperiumDeck();
+    } else {
+      this.cardsService.createImperiumDeck(
+        (card) =>
+          !card.buyEffects?.some((x) => x.type === 'tech') &&
+          !card.agentEffects?.some((x) => x.type === 'tech') &&
+          !card.revealEffects?.some((x) => x.type === 'tech')
+      );
+    }
+
     this.cardsService.setInitialPlayerDecks();
     this.intriguesService.createIntrigueDeck();
     this.aIManager.setAIPlayers(newPlayers);
@@ -320,7 +331,10 @@ export class GameManager {
     this.leadersService.assignRandomLeadersToPlayers(newPlayers);
     this.conflictsService.createConflictDeck();
     this.minorHousesService.setInitialAvailableHouses();
-    this.techTilesService.createTechTileDeck();
+
+    if (this.settingsService.getUseTechtiles()) {
+      this.techTilesService.createTechTileDeck();
+    }
 
     this.currentRoundSubject.next(1);
     this.currentRoundPhaseSubject.next('agent-placement');
@@ -1532,10 +1546,13 @@ export class GameManager {
       if (this.currentRound === 1 && player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
         conditionFullfilled = true;
       }
-    }
-    if (timingEffect.type === 'timing-round-start') {
+    } else if (timingEffect.type === 'timing-round-start') {
       const hasPlacedAgentThisRound = this.agentsOnFields.filter((x) => x.playerId === player.id).length > 0;
       if (player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+        conditionFullfilled = true;
+      }
+    } else if (timingEffect.type === 'timing-turn-start') {
+      if (player.turnState === 'agent-placement' && !gameState.playerTurnInfos?.agentPlacedOnFieldId) {
         conditionFullfilled = true;
       }
     } else if (timingEffect.type === 'timing-reveal-turn') {
@@ -2680,6 +2697,12 @@ export class GameManager {
           if (!playerCombatUnits || playerCombatUnits.troopsInGarrison < costAmount) {
             canPayCosts = false;
           }
+        } else if (costType === 'dreadnought-retreat') {
+          const playerCombatUnits = this.combatManager.getPlayerCombatUnits(playerId);
+
+          if (!playerCombatUnits || playerCombatUnits.shipsInCombat < costAmount) {
+            canPayCosts = false;
+          }
         } else if (costType === 'intrigue-trash') {
           const playerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId);
           if (playerIntrigueCount < costAmount) {
@@ -3010,6 +3033,8 @@ export class GameManager {
       this.combatManager.removePlayerTroopsFromGarrison(playerId, costAmount);
     } else if (costType === 'dreadnought') {
       this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
+    } else if (costType === 'dreadnought-retreat') {
+      this.combatManager.removePlayerShipsFromCombat(playerId, 1);
     } else if (costType === 'card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: 1 });
     } else if (costType === 'card-destroy' || costType === 'focus') {

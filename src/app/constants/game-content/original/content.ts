@@ -22,4 +22,5 @@ export const gameContentOriginal: GameContent = {
   factionInfluenceMaxScore: 6,
   factionInfluenceAllianceTreshold: 4,
   imperiumRowCards: 5,
+  aiName: 'original',
 };

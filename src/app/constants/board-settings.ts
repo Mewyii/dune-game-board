@@ -9,7 +9,7 @@ export interface VictoryPointReward {
 }
 
 export interface AI {
-  gameContentName: string;
+  name: string;
   aiGoals: FieldsForGoals;
 }
 
@@ -33,6 +33,7 @@ export interface GameContent {
   factionInfluenceMaxScore: number;
   factionInfluenceAllianceTreshold: number;
   imperiumRowCards: number;
+  aiName: string;
 }
 
 export type AppMode = 'board' | 'game';

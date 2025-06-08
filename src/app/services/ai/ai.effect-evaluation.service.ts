@@ -374,8 +374,9 @@ export class AIEffectEvaluationService {
         return 1.0 + 0.125 * (gameState.currentRound - 1);
       case 'dreadnought-insert':
       case 'dreadnought-insert-or-retreat':
-      case 'dreadnought-retreat':
         return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? 2 : 1;
+      case 'dreadnought-retreat':
+        return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? -1 : -3;
       case 'enemies-card-discard':
         return 2 + 0.2 * (gameState.currentRound - 1);
       case 'enemies-troop-destroy':
@@ -527,8 +528,10 @@ export class AIEffectEvaluationService {
         return gameState.playerCombatUnits.troopsInGarrison > 0 ? value : 0;
       case 'dreadnought-insert':
       case 'dreadnought-insert-or-retreat':
-      case 'dreadnought-retreat':
         return gameState.playerCombatUnits.shipsInGarrison > 0 ? value : 0;
+      case 'dreadnought-retreat':
+        const unitsInCombat = gameState.playerCombatUnits.shipsInCombat + gameState.playerCombatUnits.troopsInCombat;
+        return value * (4 - gameState.playerAgentsAvailable / 2) - (unitsInCombat < 2 ? 2 : 0);
       case 'enemies-card-discard':
         return (
           (value * gameState.enemyAgentsAvailable.filter((x) => x.agentAmount > 0).length) / (gameState.playersCount - 1)

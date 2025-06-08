@@ -120,6 +120,8 @@ export function getEffectTypePath(rewardType: EffectType) {
       return 'assets/images/reward-markers/marker_specimen.png';
     case 'beetle':
       return 'assets/images/reward-markers/marker_beetle.png';
+    case 'dreadnought-retreat':
+      return 'assets/images/reward-markers/marker_ship_retreat.png';
     default:
       return '';
   }

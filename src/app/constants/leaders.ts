@@ -480,8 +480,8 @@ export const leaders: Leader[] = [
       de: 'Kybernetische Implantate',
     },
     passiveDescription: {
-      en: 'You may at any time: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
-      de: 'Du kannst jederzeit: {resource:signet-token;amount:3}{resource:helper-trade}{resource:agent-lift}',
+      en: '',
+      de: '',
     },
     signetName: {
       en: 'Earl of ix',
@@ -510,6 +510,28 @@ export const leaders: Leader[] = [
       },
       {
         type: 'signet-token',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'signet-token',
+        amount: 3,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'agent-lift',
       },
     ],
     signetEffects: [

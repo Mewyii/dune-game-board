@@ -1,4 +1,4 @@
-<div class="effect-arrays-container" [style.gap]="arraySeparationGap">
+<div class="effect-arrays-container" [style.gap]="arraySeparationGap" [style.alignItems]="alignItems">
   @for (effects of effectArrays; track $index) {
   <div
     [class]="'effects-container ' + (wrap ? 'wrap ' : 'nowrap ') + (centerEffectText ? 'center-text' : '')"
@@ -12,7 +12,11 @@
     <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
       {{ t.translate('commonEffectTimingRoundStart') }}:
     </div>
-    } @else if (isRevealTurnTiming(reward.type)) {
+    } @else if (isTurnStartTiming(reward.type)) {
+    <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+      {{ t.translate('commonEffectTimingTurnStart') }}:
+    </div>
+    }@else if (isRevealTurnTiming(reward.type)) {
     <div [class]="'text heading ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
       {{ t.translate('commonEffectTimingRevealTurn') }}:
     </div>
@@ -70,13 +74,6 @@
       [style.fontSize]="fontSize"
       [style.marginBottom]="marginBottom"
       [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsertOrRetreat', true, reward.amount)"
-    ></div>
-    }@else if (reward.type === 'dreadnought-retreat') {
-    <div
-      [class]="'text ' + textColor"
-      [style.fontSize]="fontSize"
-      [style.marginBottom]="marginBottom"
-      [innerHTML]="t.translate('commonEffectRewardDreadnoughtRetreat', true, reward.amount)"
     ></div>
     }@else if (reward.type === 'enemies-card-discard') {
     <div [class]="'text custom-with-reward ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">

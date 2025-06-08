@@ -6,10 +6,10 @@ import { Effect, EffectTimingConditionChoiceConversionOrReward, EffectType } fro
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-reward-array',
-    templateUrl: './reward-array.component.html',
-    styleUrl: './reward-array.component.scss',
-    standalone: false
+  selector: 'dune-reward-array',
+  templateUrl: './reward-array.component.html',
+  styleUrl: './reward-array.component.scss',
+  standalone: false,
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
   public effectArrays: EffectTimingConditionChoiceConversionOrReward[][] = [];
@@ -19,6 +19,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   @Input() arraySeparationGap = '4px';
   @Input() wrap = true;
   @Input() centerEffectText = false;
+  @Input() alignItems: 'center' | 'end' | 'start' = 'center';
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';
@@ -65,6 +66,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
 
   public isRoundStartTiming(type: EffectType) {
     return type === 'timing-round-start';
+  }
+
+  public isTurnStartTiming(type: EffectType) {
+    return type === 'timing-turn-start';
   }
 
   public isRevealTurnTiming(type: EffectType) {

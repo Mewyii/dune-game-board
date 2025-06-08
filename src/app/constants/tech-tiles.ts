@@ -11,10 +11,26 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'spice',
+      },
+    ],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:spice}.',
-      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:spice} zu erhalten.',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
   },
@@ -28,16 +44,32 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'bottom',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'tech',
+      },
+    ],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:helper-trade} Retreat a {resource:dreadnought} to gain {resource:tech}.',
-      de: '{resource:tech-tile-flip} {resource:helper-trade} Ziehe ein {resource:dreadnought} zurück, um {resource:tech} zu erhalten.',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
   },
   {
     name: {
-      en: 'Improved Projectile Rifles',
+      en: 'Improved projectile rifles',
       de: 'Verbesserte Projektilwaffen',
     },
     costs: 1,
@@ -311,15 +343,31 @@ export const techTiles: TechTileCard[] = [
       en: 'Heavy Lasguns',
       de: 'Schwere Lasguns',
     },
-    costs: 3,
+    costs: 2,
     imageUrl: '/assets/images/action-backgrounds/lasgun.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-card-discard',
+      },
+    ],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Each opponent {resource:card-discard} for each of your {resource:dreadnought} in combat.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Jeder Gegner {resource:card-discard} für jedes deiner {resource:dreadnought} im Konflikt.',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
   },
@@ -395,15 +443,31 @@ export const techTiles: TechTileCard[] = [
       en: 'Barrage Rockets',
       de: 'Sperrfeuerraketen',
     },
-    costs: 4,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/assault.png',
-    effectSize: 'medium',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-troop-destroy',
+      },
+    ],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.<br><br>{resource:tech-tile-flip}{resource:helper-trade}For each of your {resource:dreadnought} in conflict: Each opponent retreats one troop.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.<br><br>{resource:tech-tile-flip}{resource:helper-trade}Für jedes deiner {resource:dreadnought} im Konflikt: Jeder Gegner zieht einen Trupp zurück.',
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
       fontSize: 'small',
     },
   },
@@ -640,15 +704,37 @@ export const techTiles: TechTileCard[] = [
       en: 'Shieldbreakers',
       de: 'Schildbrecher',
     },
-    costs: 5,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/shields.png',
-    effectSize: 'medium',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} For each of your {resource:dreadnought} in conflict: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
-      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Für jedes deiner {resource:dreadnought} im Konflikt: {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
+      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
+      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
       fontSize: 'small',
     },
   },

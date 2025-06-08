@@ -67,7 +67,7 @@ export class SettingsService {
 
       this.settingsSubject.next(settings);
 
-      const ai = this.AIs.find((x) => x.gameContentName === settings.gameContent.name);
+      const ai = this.AIs.find((x) => x.name === settings.gameContent.aiName);
       this.AISubject.next(ai ?? aiOriginal);
     }
 
@@ -152,6 +152,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.combatMaxDeployableUnits);
   }
 
+  public getUseTechtiles() {
+    return cloneDeep(this.settingsSubject.value.gameContent.useTechTiles);
+  }
+
   public getFactions() {
     return cloneDeep(this.settingsSubject.value.gameContent.factions);
   }
@@ -225,7 +229,7 @@ export class SettingsService {
     const gameContent = this.gameContentsSubject.value.find((x) => x.name === name);
     if (gameContent) {
       this.settingsSubject.next({ ...this.settings, gameContent });
-      const ai = this.AIs.find((x) => x.gameContentName === name);
+      const ai = this.AIs.find((x) => x.name === gameContent.aiName);
       this.AISubject.next(ai ?? aiOriginal);
     }
   }

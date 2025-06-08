@@ -62,7 +62,7 @@ export const effectRewards = [
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;
-export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-reveal-turn'] as const;
+export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-turn-start', 'timing-reveal-turn'] as const;
 export const effectConditions = ['condition-influence', 'condition-connection', 'condition-high-council-seat'] as const;
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
 export const effectConversions = ['helper-trade', 'helper-trade-horizontal'] as const;

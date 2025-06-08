@@ -2,7 +2,7 @@ import { clamp } from 'lodash';
 import {
   enemyIsCloseToPlayerFactionScore,
   getAvoidCombatTiesModifier,
-  getMaxDesireOfUnreachableGoals as getMaxDesireOfUnreachedOrUnreachableGoals,
+  getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
   getPlayerCombatStrength,
   getResourceAmount,

@@ -82,7 +82,7 @@ export function getMaxDesireOfUnreachedOrUnreachableGoal(
   }
 }
 
-export function getMaxDesireOfUnreachableGoals(
+export function getMaxDesireOfUnreachedOrUnreachableGoals(
   player: Player,
   gameState: GameState,
   goals: FieldsForGoals,
