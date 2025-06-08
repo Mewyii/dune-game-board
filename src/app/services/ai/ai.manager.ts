@@ -443,7 +443,7 @@ export class AIManager {
 
       if (usableCards.length > 0) {
         const evaluations = usableCards.map((cardEvaluation) => {
-          const evaluation = cardEvaluation.evaluationValue - fieldIndex - fieldIndex * (1 - preferredField.value) * 2;
+          const evaluation = cardEvaluation.evaluationValue - fieldIndex - fieldIndex * (1 - preferredField.value) * 3;
           return { field: preferredField, evaluation, card: cardEvaluation.card };
         });
 
@@ -712,7 +712,10 @@ export class AIManager {
     let evaluationValue = 0;
     if (card.faction) {
       evaluationValue +=
-        0.5 * (gameState.playerCardsFactions[card.faction] + gameState.playerTechTilesFactions[card.faction]);
+        1 * gameState.playerHandCardsConnectionEffects[card.faction] +
+        0.1 * gameState.playerCardsConnectionEffects[card.faction] +
+        0.33 * gameState.playerHandCardsFactions[card.faction] +
+        0.1 * gameState.playerCardsFactions[card.faction];
     }
     if (card.fieldAccess) {
       evaluationValue -= card.fieldAccess.length * 0.1;
@@ -766,7 +769,10 @@ export class AIManager {
   private getImperiumCardBuyEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (card.faction) {
-      evaluationValue += 1 * (gameState.playerCardsFactions[card.faction] + gameState.playerTechTilesFactions[card.faction]);
+      evaluationValue +=
+        1 * gameState.playerCardsConnectionEffects[card.faction] +
+        0.5 * gameState.playerCardsFactions[card.faction] +
+        0.5 * gameState.playerTechTilesFactions[card.faction];
     }
     if (card.persuasionCosts) {
       evaluationValue += card.persuasionCosts * 0.1;
@@ -825,7 +831,9 @@ export class AIManager {
     let evaluationValue = 0;
     if (card.faction) {
       evaluationValue -=
-        0.5 * (gameState.playerCardsFactions[card.faction] + gameState.playerTechTilesFactions[card.faction]);
+        0.75 * gameState.playerCardsConnectionEffects[card.faction] +
+        0.25 * gameState.playerCardsFactions[card.faction] +
+        0.25 * gameState.playerTechTilesFactions[card.faction];
     }
     if (card.persuasionCosts) {
       evaluationValue -= card.persuasionCosts * 0.1;
@@ -908,7 +916,7 @@ export class AIManager {
       );
       evaluationValue +=
         (value / (differentTechTileActivations > 0 ? differentTechTileActivations : 1)) *
-        ((10 - gameState.currentRound) / 1.5);
+        ((10 - gameState.currentRound) / 1.66);
     }
     if (techTile.customEffect?.en) {
       if (techTile.aiEvaluation) {

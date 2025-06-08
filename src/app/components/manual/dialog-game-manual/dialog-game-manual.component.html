@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{ t.translate('commonMenuManual') }}</h1>
 <div mat-dialog-content>
   <mat-tab-group>
-    <mat-tab [label]="'Symbols and Icons'">
+    <mat-tab [label]="'New Symbols and Icons'">
       <div class="content-container">
         <br />
         <div
@@ -94,6 +94,16 @@
           rewards and resolving timing or condition based effects. <br /><br />It is not able to use text-based effects. For
           cards, effects that it can't resolve yet will be shown in a blue bar somewhere below the leader image. It is also
           not able to use text-based leader effects. You will need to keep those in mind for the AI.
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab [label]="'Original Manual'">
+      <div class="content-container">
+        <br />
+        <div>
+          The original game manuals for <b>Dune: Imperium</b> and <b>Dune: Imperium Rise of Ix</b> can be found here:<br /><br />
+          <a href="https://www.direwolfdigital.com/dune-imperium/resources/rules/" [target]="'_blank'">Original</a><br />
+          <a href="https://www.direwolfdigital.com/dune-imperium/resources/duneix_rules" [target]="'_blank'">Rise of Ix</a>
         </div>
       </div>
     </mat-tab>

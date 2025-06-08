@@ -14,7 +14,8 @@ export function getParticipateInCombatDesire(gameState: GameState) {
     }
     desire += 0.066 * gameState.playerCombatUnits.troopsInGarrison;
     desire += 0.1 * (1 - gameState.playerAgentsAvailable);
-    desire += 0.02 * gameState.playerCardsRewards.sword;
+    desire += 0.025 * gameState.playerHandCardsRewards.sword;
+    desire += 0.005 * gameState.playerCardsRewards.sword;
     desire += 0.04 * gameState.playerTechTilesRewards.sword;
     desire += 0.01 * gameState.playerCombatIntrigueCount;
 
@@ -37,7 +38,8 @@ export function getWinCombatDesire(gameState: GameState) {
 
   desire += 0.05 * getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState);
   desire += 0.05 * gameState.playerAgentsAvailable;
-  desire += 0.01 * gameState.playerCardsRewards.sword;
+  desire += 0.015 * gameState.playerHandCardsRewards.sword;
+  desire += 0.0025 * gameState.playerCardsRewards.sword;
   desire += 0.02 * gameState.playerTechTilesRewards.sword;
   desire += 0.03 * gameState.playerCombatIntrigueCount;
 
@@ -142,8 +144,9 @@ export function getPlayerCombatStrengthPotential(
 
   return (
     troopCombatStrengthPotential +
+    0.5 * gameState.playerHandCardsRewards.sword +
+    0.025 * gameState.playerCardsRewards.sword +
     0.5 * playerIntrigueCount +
-    0.15 * gameState.playerCardsRewards.sword +
     0.3 * gameState.playerTechTilesRewards.sword +
     1 * (playerAgentsAvailable - 1) * Math.random() +
     0.25 * (gameState.currentRound - 1)

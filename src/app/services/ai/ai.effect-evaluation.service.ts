@@ -182,7 +182,9 @@ export class AIEffectEvaluationService {
         return evaluationValue;
       }
     } else if (conditionEffect.condition === 'condition-high-council-seat') {
-      return evaluationValue;
+      if (player.hasCouncilSeat) {
+        return evaluationValue;
+      }
     }
     return 0;
   }
@@ -445,7 +447,7 @@ export class AIEffectEvaluationService {
       case 'persuasion':
         return value;
       case 'foldspace':
-        return hasAgentsLeftToPlace ? value : 0.5 * value;
+        return (hasAgentsLeftToPlace ? value : 0.33 * value) + 0.1 * (7 - gameState.playerCardsFieldAccess.length);
       case 'council-seat-small':
       case 'council-seat-large':
         return value;

@@ -49,7 +49,7 @@ export function getResourceAmount(player: Player, resourceType: ResourceType | '
 export function getPlayerCombatStrength(player: PlayerCombatUnits, gamestate: GameState) {
   return (
     player.troopsInCombat * gamestate.gameSettings.troopCombatStrength +
-    player.shipsInCombat * 4 +
+    player.shipsInCombat * gamestate.gameSettings.dreadnoughtCombatStrength +
     player.additionalCombatPower
   );
 }

@@ -4,6 +4,7 @@ import {
   getAvoidCombatTiesModifier,
   getMaxDesireOfUnreachableGoals as getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
+  getPlayerCombatStrength,
   getResourceAmount,
   getWinCombatDesire,
   noOneHasMoreInfluence,
@@ -82,10 +83,42 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   },
   'location-control': {
     baseDesire: 0.0,
-    desireModifier: (player, gameState, goals) =>
-      0.2 * gameState.playerIntriguesRewards['location-control'] +
-      0.2 * gameState.playerTechTilesRewards['location-control'] +
-      0.2 * gameState.playerCardsRewards['location-control'],
+    desireModifier: (player, gameState, goals) => {
+      let modifier = 0;
+      let possibleLocationControls = 0;
+      if (gameState.playerCombatUnits.shipsInCombat > 0) {
+        possibleLocationControls += gameState.playerCombatUnits.shipsInCombat;
+        modifier += 0.2 * gameState.playerCombatUnits.shipsInCombat;
+      }
+      if (gameState.conflict.rewards[0].some((x) => x.type === 'location-control')) {
+        const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+        possibleLocationControls += 1;
+        modifier += 0.02 * playerCombatStrength;
+      }
+      if (gameState.playerHandCardsRewards['location-control'] > 0) {
+        possibleLocationControls += gameState.playerHandCardsRewards['location-control'];
+        modifier += 0.3 * gameState.playerHandCardsRewards['location-control'];
+      }
+      if (gameState.playerIntriguesRewards['location-control'] > 0) {
+        possibleLocationControls += gameState.playerIntriguesRewards['location-control'];
+        modifier += 0.15 * gameState.playerIntriguesRewards['location-control'];
+      }
+      if (gameState.playerTechTilesRewards['location-control'] > 0) {
+        possibleLocationControls += gameState.playerTechTilesRewards['location-control'];
+        modifier += 0.15 * gameState.playerTechTilesRewards['location-control'];
+      }
+
+      const agentsOnLocations = gameState.playerAgentsOnFields.filter(
+        (x) =>
+          gameState.freeLocations.some((freeLocation) => freeLocation === x.fieldId) ||
+          gameState.enemyLocations.some((enemyLocation) => enemyLocation === x.fieldId)
+      ).length;
+      if (agentsOnLocations >= possibleLocationControls) {
+        return 0;
+      }
+
+      return modifier;
+    },
     goalIsReachable: (player, gameState, goals) => false,
     reachedGoal: (player, gameState) => false,
     desiredFields: (fields) => {
@@ -229,7 +262,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
       0.01 * gameState.playerCardsBought -
       0.01 * (gameState.playerCardsTrashed + player.focusTokens) +
-      +0.033 * (7 - gameState.playerCardsFieldAccess.length),
+      0.033 * (7 - gameState.playerHandCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -258,7 +291,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
               0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
               0.033 * gameState.playerCardsBought +
               0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
-              0.025 * (7 - gameState.playerCardsFieldAccess.length),
+              0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
             0,
             0.6
           )
@@ -271,7 +304,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
                 (player.hasCouncilSeat ? 0.1 : 0) +
                 0.05 * gameState.playerCardsBought +
                 0.05 * (gameState.playerCardsTrashed + player.focusTokens) +
-                0.025 * (7 - gameState.playerCardsFieldAccess.length),
+                0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
               0,
               0.6
             )
@@ -292,7 +325,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * gameState.playerCardsBought -
       0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
-      0.01 * (7 - gameState.playerCardsFieldAccess.length),
+      0.01 * (7 - gameState.playerHandCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => gameState.playerHandCards.length < 1,
     viableFields: (fields) => ({

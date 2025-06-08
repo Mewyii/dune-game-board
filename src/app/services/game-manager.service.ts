@@ -2271,6 +2271,13 @@ export class GameManager {
     const playerCardsFieldAccess: ActionType[] = [];
     const playerCardsFieldAccessCounts = this.getInitialGameElementFieldAccess();
     const playerCardsRewards = this.getInitialGameElementRewards();
+    const playerCardsConnectionEffects = this.getInitialFactions();
+
+    const playerHandCardsFactions = this.getInitialFactions();
+    const playerHandCardsFieldAccess: ActionType[] = [];
+    const playerHandCardsFieldAccessCounts = this.getInitialGameElementFieldAccess();
+    const playerHandCardsRewards = this.getInitialGameElementRewards();
+    const playerHandCardsConnectionEffects = this.getInitialFactions();
 
     const playerGameModifiers = this.gameModifiersService.getPlayerGameModifiers(player.id);
 
@@ -2290,13 +2297,58 @@ export class GameManager {
         for (const reward of playerCard.structuredAgentEffects.rewards) {
           playerCardsRewards[reward.type] += reward.amount ?? 1;
         }
+        for (const effect of playerCard.structuredAgentEffects.conditionalEffects) {
+          if (effect.condition === 'condition-connection') {
+            playerCardsConnectionEffects[effect.faction] += 1;
+          }
+        }
       }
       if (playerCard.structuredRevealEffects) {
         for (const reward of playerCard.structuredRevealEffects.rewards) {
           playerCardsRewards[reward.type] += reward.amount ?? 1;
         }
+        for (const effect of playerCard.structuredRevealEffects.conditionalEffects) {
+          if (effect.condition === 'condition-connection') {
+            playerCardsConnectionEffects[effect.faction] += 1;
+          }
+        }
       }
     }
+
+    for (const playerHandCard of playerHandCards) {
+      if (playerHandCard.faction) {
+        playerHandCardsFactions[playerHandCard.faction] += 1;
+      }
+      if (playerHandCard.fieldAccess) {
+        for (const access of playerHandCard.fieldAccess) {
+          if (!playerHandCardsFieldAccess.includes(access)) {
+            playerHandCardsFieldAccess.push(access);
+          }
+          playerHandCardsFieldAccessCounts[access] += 1;
+        }
+      }
+      if (playerHandCard.structuredAgentEffects) {
+        for (const reward of playerHandCard.structuredAgentEffects.rewards) {
+          playerHandCardsRewards[reward.type] += reward.amount ?? 1;
+        }
+        for (const effect of playerHandCard.structuredAgentEffects.conditionalEffects) {
+          if (effect.condition === 'condition-connection') {
+            playerHandCardsConnectionEffects[effect.faction] += 1;
+          }
+        }
+      }
+      if (playerHandCard.structuredRevealEffects) {
+        for (const reward of playerHandCard.structuredRevealEffects.rewards) {
+          playerHandCardsRewards[reward.type] += reward.amount ?? 1;
+        }
+        for (const effect of playerHandCard.structuredRevealEffects.conditionalEffects) {
+          if (effect.condition === 'condition-connection') {
+            playerHandCardsConnectionEffects[effect.faction] += 1;
+          }
+        }
+      }
+    }
+
     const playerCardsFactionsInPlay = this.getInitialFactions();
     for (const playerCard of playerDiscardPileCards) {
       if (playerCard.faction) {
@@ -2476,6 +2528,12 @@ export class GameManager {
       playerCardsFieldAccess,
       playerCardsFieldAccessCounts,
       playerCardsRewards,
+      playerCardsConnectionEffects,
+      playerHandCardsFactions,
+      playerHandCardsFieldAccess,
+      playerHandCardsFieldAccessCounts,
+      playerHandCardsRewards,
+      playerHandCardsConnectionEffects,
       playerCardsFactionsInPlay,
       playerGameModifiers,
       playerTechTilesFactions,
