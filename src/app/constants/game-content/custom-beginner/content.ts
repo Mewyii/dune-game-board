@@ -10,6 +10,7 @@ export const gameContentCustomBeginner: GameContent = {
   locations: locationsCustomBeginner,
   ix: ixCustomBeginner,
   useTechTiles: false,
+  useDreadnoughts: true,
   customCards: customCardsCustomBeginner,
   finaleTrigger: 8,
   victoryPointBoni: [

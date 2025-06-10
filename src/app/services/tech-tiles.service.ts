@@ -97,8 +97,8 @@ export class TechTilesService {
     return cloneDeep(this.playerTechTilesSubject.value.filter((x) => x.playerId === playerId));
   }
 
-  createTechTileDeck() {
-    const techTiles = this.techTilesConfigService.techTiles;
+  createTechTileDeck(filter: (techTileCard: TechTileCard) => boolean = () => true) {
+    const techTiles = this.techTilesConfigService.techTiles.filter((x) => filter(x));
     this.playerTechTilesSubject.next([]);
     this.techTileDeckSubject.next(shuffleMultipleTimes(techTiles.map((x) => this.instantiateTechTile(x))));
   }

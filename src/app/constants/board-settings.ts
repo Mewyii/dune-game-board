@@ -19,6 +19,7 @@ export interface GameContent {
   locations: DuneLocation[];
   ix?: ActionField;
   useTechTiles: boolean;
+  useDreadnoughts: boolean;
   victoryPointBoni?: VictoryPointReward[];
   maxVictoryPoints?: number;
   finaleTrigger: number;

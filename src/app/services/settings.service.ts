@@ -156,6 +156,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.useTechTiles);
   }
 
+  public getUseDreadnoughts() {
+    return cloneDeep(this.settingsSubject.value.gameContent.useDreadnoughts);
+  }
+
   public getFactions() {
     return cloneDeep(this.settingsSubject.value.gameContent.factions);
   }

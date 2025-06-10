@@ -313,14 +313,42 @@ export class GameManager {
     this.cardsService.setLimitedCustomCards();
     this.cardsService.setUnlimitedCustomCards();
 
-    if (this.settingsService.getUseTechtiles()) {
+    if (this.settingsService.getUseTechtiles() && this.settingsService.getUseDreadnoughts()) {
       this.cardsService.createImperiumDeck();
-    } else {
+      this.techTilesService.createTechTileDeck();
+    } else if (this.settingsService.getUseTechtiles()) {
+      this.techTilesService.createTechTileDeck(
+        (card) =>
+          !card.buyEffects?.some((x) => x.type === 'dreadnought') &&
+          !card.effects?.some((x) => x.type === 'dreadnought-retreat') &&
+          !card.effects?.some((x) => x.type === 'dreadnought-insert-or-retreat') &&
+          !card.effects?.some((x) => x.type === 'dreadnought-insert')
+      );
+
+      this.cardsService.createImperiumDeck(
+        (card) =>
+          !card.buyEffects?.some((x) => x.type === 'dreadnought') &&
+          !card.agentEffects?.some((x) => x.type === 'dreadnought-retreat') &&
+          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert-or-retreat') &&
+          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert')
+      );
+    } else if (this.settingsService.getUseDreadnoughts()) {
       this.cardsService.createImperiumDeck(
         (card) =>
           !card.buyEffects?.some((x) => x.type === 'tech') &&
           !card.agentEffects?.some((x) => x.type === 'tech') &&
           !card.revealEffects?.some((x) => x.type === 'tech')
+      );
+    } else {
+      this.cardsService.createImperiumDeck(
+        (card) =>
+          !card.buyEffects?.some((x) => x.type === 'tech') &&
+          !card.agentEffects?.some((x) => x.type === 'tech') &&
+          !card.revealEffects?.some((x) => x.type === 'tech') &&
+          !card.buyEffects?.some((x) => x.type === 'dreadnought') &&
+          !card.agentEffects?.some((x) => x.type === 'dreadnought-retreat') &&
+          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert-or-retreat') &&
+          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert')
       );
     }
 
@@ -331,10 +359,6 @@ export class GameManager {
     this.leadersService.assignRandomLeadersToPlayers(newPlayers);
     this.conflictsService.createConflictDeck();
     this.minorHousesService.setInitialAvailableHouses();
-
-    if (this.settingsService.getUseTechtiles()) {
-      this.techTilesService.createTechTileDeck();
-    }
 
     this.currentRoundSubject.next(1);
     this.currentRoundPhaseSubject.next('agent-placement');

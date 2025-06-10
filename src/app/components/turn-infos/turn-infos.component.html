@@ -33,9 +33,7 @@
       @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) { @if (card.type === 'imperium-card') {
       <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
       } @if (card.type === 'plot') {
-      <div class="card-container">
-        <dune-plot-card [plot]="card"></dune-plot-card>
-      </div>
+      <dune-plot-card [plot]="card"></dune-plot-card>
       } }
     </div>
   </div>

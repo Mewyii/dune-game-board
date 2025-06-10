@@ -2,9 +2,9 @@ import { DuneLocation } from '../../../models';
 
 export const locationsOriginal: DuneLocation[] = [
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 875,
+      marginTop: 880,
       marginLeft: 1430,
     },
     actionField: {
@@ -16,10 +16,10 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 930,
-      marginLeft: 1090,
+      marginTop: 890,
+      marginLeft: 1010,
     },
     actionField: {
       title: { de: 'Carthag', en: 'Carthag' },
@@ -30,10 +30,10 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 660,
-      marginLeft: 970,
+      marginTop: 670,
+      marginLeft: 1250,
     },
     actionField: {
       title: { de: 'Forschungszentrum', en: 'Research Station' },
@@ -51,9 +51,9 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(87, 69, 52)',
+    color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 850,
+      marginTop: 800,
       marginLeft: 600,
     },
     actionField: {
@@ -66,10 +66,10 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1190,
-      marginLeft: 1260,
+      marginTop: 1080,
+      marginLeft: 1230,
     },
     actionField: {
       title: { de: 'Imperiales Becken', en: 'Imperial basin' },
@@ -80,10 +80,10 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1090,
-      marginLeft: 770,
+      marginTop: 1070,
+      marginLeft: 780,
     },
     actionField: {
       title: { de: 'Hagga-Becken', en: 'Hagga basin' },
@@ -94,10 +94,10 @@ export const locationsOriginal: DuneLocation[] = [
     },
   },
   {
-    color: 'rgb(196, 172, 139)',
+    color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1310,
-      marginLeft: 580,
+      marginTop: 1300,
+      marginLeft: 610,
     },
     actionField: {
       title: { de: 'Die grosse Ebene', en: 'The great flat' },

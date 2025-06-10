@@ -8,6 +8,7 @@ export const gameContentOriginal: GameContent = {
   factions: factionsOriginal,
   locations: locationsOriginal,
   useTechTiles: false,
+  useDreadnoughts: false,
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 3,
   highCouncilPersuasion: 2,

@@ -1448,7 +1448,20 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 1,
     fieldAccess: ['bene', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/wealth_2.png',
-    cardAmount: 2,
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
@@ -3071,6 +3084,91 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Fremen Stillsuits',
+      de: 'Fremen Destillanzüge',
+    },
+    faction: 'fremen',
+    persuasionCosts: 3,
+    fieldAccess: ['spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/stillsuits_2.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-connection',
+        faction: 'fremen',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'water',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Fremen Wormrider',
+      de: 'Fremen Wurmreiter',
+    },
+    faction: 'fremen',
+    persuasionCosts: 3,
+    fieldAccess: ['fremen', 'spice'],
+    imageUrl: '/assets/images/action-backgrounds/worm_rider_3.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'small',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'spice',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'troop-insert',
+        amount: 1,
       },
     ],
   },

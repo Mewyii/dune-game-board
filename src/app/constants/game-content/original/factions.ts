@@ -6,7 +6,7 @@ export const factionsOriginal: Faction[] = [
     type: 'fremen',
     position: {
       marginTop: 1670,
-      marginLeft: 16,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -24,7 +24,7 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Fremen.png',
-    primaryColor: 'rgb(52, 86, 153)',
+    primaryColor: 'rgb(42, 72, 133)',
     secondaryColor: '#191f2eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -44,8 +44,8 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'bene gesserit', en: 'bene gesserit' },
     type: 'bene',
     position: {
-      marginTop: 1175,
-      marginLeft: 16,
+      marginTop: 1170,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -63,7 +63,7 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Bene_Gesserit.png',
-    primaryColor: 'rgb(102, 90, 125)',
+    primaryColor: 'rgb(84, 78, 97)',
     secondaryColor: '#1f192eb8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -83,8 +83,8 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'raumgilde', en: 'spacing guild' },
     type: 'guild',
     position: {
-      marginTop: 680,
-      marginLeft: 16,
+      marginTop: 670,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -102,7 +102,7 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Spacing_Guild.png',
-    primaryColor: 'rgb(135, 36, 36)',
+    primaryColor: 'rgb(128, 34, 34)',
     secondaryColor: '#2e1919b8',
     hasScoreBoard: true,
     influenceRewards: {
@@ -123,8 +123,8 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'imperator', en: 'emperor' },
     type: 'emperor',
     position: {
-      marginTop: 175,
-      marginLeft: 16,
+      marginTop: 170,
+      marginLeft: 10,
     },
     actionFields: [
       {
@@ -142,8 +142,8 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(85, 85, 85)',
-    secondaryColor: '#262626b8',
+    primaryColor: 'rgb(69, 69, 69)',
+    secondaryColor: '#1e1e1eb8',
     hasScoreBoard: true,
     influenceRewards: {
       2: [
@@ -163,7 +163,7 @@ export const factionsOriginal: Faction[] = [
     title: { de: 'landsraad', en: 'landsraad' },
     type: 'landsraad',
     position: {
-      marginTop: 175,
+      marginTop: 170,
       marginLeft: 610,
       width: 910,
     },
@@ -206,14 +206,14 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
-    primaryColor: 'rgb(77, 94, 75)',
+    primaryColor: 'rgb(72, 89, 71)',
     secondaryColor: '#192e19b8',
   },
   {
     title: { de: 'mafea', en: 'choam' },
     type: 'choam',
     position: {
-      marginTop: 175,
+      marginTop: 170,
       marginLeft: 1650,
       width: 400,
     },
@@ -247,7 +247,7 @@ export const factionsOriginal: Faction[] = [
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',
-    primaryColor: 'rgb(150, 73, 9)',
+    primaryColor: 'rgb(143, 69, 9)',
     secondaryColor: '#2e2419b8',
   },
 ];

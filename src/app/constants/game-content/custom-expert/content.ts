@@ -10,6 +10,7 @@ export const gameContentCustomExpert: GameContent = {
   locations: locationsCustomExpert,
   ix: ixCustomExpert,
   useTechTiles: true,
+  useDreadnoughts: true,
   finaleTrigger: 8,
   victoryPointBoni: [
     { score: 2, reward: { type: 'persuasion', amount: 1 } },
