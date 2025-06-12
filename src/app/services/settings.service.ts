@@ -188,6 +188,10 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.imperiumRowCards);
   }
 
+  public getMaxPlayers() {
+    return cloneDeep(this.settingsSubject.value.gameContent.maxPlayers);
+  }
+
   getCustomCards() {
     return cloneDeep(this.settingsSubject.value.gameContent.customCards);
   }

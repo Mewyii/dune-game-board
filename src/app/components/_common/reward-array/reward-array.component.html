@@ -104,6 +104,23 @@
         </div>
       </div>
     </div>
+    }@else if (reward.type === 'enemies-intrigue-trash') {
+    <div [class]="'text custom-with-reward ' + textColor" [style.fontSize]="fontSize" [style.marginBottom]="marginBottom">
+      <div>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</div>
+      <div class="reward-container" [style.height]="size">
+        <img
+          class="reward"
+          [src]="getEffectTypePath('intrigue-trash')"
+          [style.height]="size"
+          [style.minWidth]="iconMinWidth"
+        />
+        <div class="reward-amount" *ngIf="reward.amount">
+          <div [style.fontSize]="rewardAmountFontSize">
+            {{ reward.amount }}
+          </div>
+        </div>
+      </div>
+    </div>
     }@else {
     <div class="reward-container" [style.height]="size">
       <img class="reward" [src]="getEffectTypePath(reward.type)" [style.height]="size" [style.minWidth]="iconMinWidth" />

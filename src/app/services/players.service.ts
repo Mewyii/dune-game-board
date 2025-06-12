@@ -9,7 +9,6 @@ import { SettingsService } from './settings.service';
   providedIn: 'root',
 })
 export class PlayersService {
-  public maxPlayers = 4;
   private playersSubject = new BehaviorSubject<Player[]>([]);
   public players$ = this.playersSubject.asObservable();
 
@@ -63,7 +62,7 @@ export class PlayersService {
   public addPlayer() {
     const players = this.getPlayers();
 
-    if (players.length < this.maxPlayers) {
+    if (players.length < this.settingsService.getMaxPlayers()) {
       players.push({
         id: players.length + 1,
         agents: 2,

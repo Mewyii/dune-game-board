@@ -5,10 +5,10 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-intrigues-preview-dialog',
-    templateUrl: './intrigues-preview-dialog.component.html',
-    styleUrl: './intrigues-preview-dialog.component.scss',
-    standalone: false
+  selector: 'dune-intrigues-preview-dialog',
+  templateUrl: './intrigues-preview-dialog.component.html',
+  styleUrl: './intrigues-preview-dialog.component.scss',
+  standalone: false,
 })
 export class IntriguesPreviewDialogComponent {
   constructor(
@@ -25,6 +25,7 @@ export class IntriguesPreviewDialogComponent {
 
   onBuyCardClicked(card: IntrigueDeckCard) {
     this.intriguesService.addPlayerIntrigue(this.data.playerId, card);
+    this.intriguesService.removeIntrigueFromDeck(card.id);
     this.data.intrigues = this.data.intrigues.filter((x) => x.id !== card.id);
   }
 }

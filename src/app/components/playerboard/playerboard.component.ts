@@ -13,6 +13,7 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { GameSummaryDialogComponent } from '../_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -40,6 +41,7 @@ export class PlayerboardComponent implements OnInit {
   public playerIntrigues: PlayerIntrigueStack[] = [];
 
   public isFinale = false;
+  public maxPlayers = 0;
 
   constructor(
     public gameManager: GameManager,
@@ -50,6 +52,7 @@ export class PlayerboardComponent implements OnInit {
     public intriguesService: IntriguesService,
     public t: TranslateService,
     private audioManager: AudioManager,
+    private settingsService: SettingsService,
     private dialog: MatDialog
   ) {}
 
@@ -93,6 +96,10 @@ export class PlayerboardComponent implements OnInit {
 
     this.gameManager.isFinale$.subscribe((isFinale) => {
       this.isFinale = isFinale;
+    });
+
+    this.settingsService.gameContent$.subscribe((gameContent) => {
+      this.maxPlayers = gameContent.maxPlayers;
     });
   }
 

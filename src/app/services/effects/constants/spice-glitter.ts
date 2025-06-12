@@ -3,7 +3,7 @@ import { IParticlesProps } from 'ng-particles';
 export const spiceGlitter: IParticlesProps = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { position: 'absolute', top: '650px', right: '50px', width: '2000px', height: '880px' },
+  style: { position: 'absolute', bottom: '0px', right: '50px', width: '2000px', height: '1500px' },
   fullScreen: false,
   particles: {
     number: {

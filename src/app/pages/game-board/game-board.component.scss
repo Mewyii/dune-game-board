@@ -20,3 +20,36 @@
 dune-turn-infos {
   display: contents;
 }
+
+.board .overlay {
+  width: 100%;
+  height: 100%;
+  animation-name: conflict-anim;
+  animation-timing-function: ease-in-out;
+  animation-duration: 300s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes conflict-anim {
+  0% {
+    backdrop-filter: brightness(1);
+  }
+  35% {
+    backdrop-filter: brightness(1);
+  }
+  40% {
+    backdrop-filter: brightness(1.05);
+  }
+  45% {
+    backdrop-filter: brightness(1);
+  }
+  60% {
+    backdrop-filter: brightness(1);
+  }
+  80% {
+    backdrop-filter: brightness(0.66);
+  }
+  100% {
+    backdrop-filter: brightness(1);
+  }
+}

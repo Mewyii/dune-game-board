@@ -29,4 +29,5 @@ export const gameContentCustomBeginner: GameContent = {
   factionInfluenceAllianceTreshold: 4,
   imperiumRowCards: 6,
   aiName: 'custom-beginner',
+  maxPlayers: 4,
 };

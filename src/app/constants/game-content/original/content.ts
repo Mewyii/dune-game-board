@@ -24,4 +24,5 @@ export const gameContentOriginal: GameContent = {
   factionInfluenceAllianceTreshold: 4,
   imperiumRowCards: 5,
   aiName: 'original',
+  maxPlayers: 4,
 };

@@ -196,7 +196,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Verderbter Mentat',
     },
     persuasionCosts: 7,
-    fieldAccess: ['landsraad'],
+    fieldAccess: ['emperor', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/twisted_mentat.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -212,17 +212,17 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    buyEffects: [
-      {
-        type: 'agent',
-      },
-    ],
+    buyEffects: [],
     agentEffects: [
       {
         type: 'spice',
+        amount: 2,
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
       },
       {
         type: 'card-draw',
@@ -232,6 +232,21 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'agent',
       },
     ],
   },
@@ -325,14 +340,23 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Piter De Vries, Verderbter Mentat',
     },
     persuasionCosts: 8,
-    fieldAccess: ['emperor', 'landsraad'],
+    fieldAccess: ['bene', 'emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/piter.png',
     cardAmount: 1,
-    buyEffects: [
-      {
-        type: 'agent',
-      },
-    ],
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
     agentEffects: [
       {
         type: 'spice',
@@ -352,6 +376,15 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'persuasion',
         amount: 2,
       },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'agent',
+      },
     ],
   },
   {
@@ -363,21 +396,43 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/thufir_2.png',
     cardAmount: 1,
-    buyEffects: [
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'enemies-intrigue-trash',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'intrigue',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
       {
         type: 'agent',
       },
     ],
-    agentEffects: [
-      {
-        type: 'card-draw',
-      },
-    ],
-    customRevealEffect: {
-      en: 'Each opponent: {resource:intrigue-trash}',
-      de: 'Jeder Gegner: {resource:intrigue-trash}',
-      fontSize: 'medium',
-    },
   },
   {
     name: {

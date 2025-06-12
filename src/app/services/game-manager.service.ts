@@ -34,7 +34,6 @@ import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn
 import {
   ActionField,
   ActionType,
-  DuneLocation,
   EffectReward,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
@@ -454,7 +453,10 @@ export class GameManager {
                   amount: dreadnoughtCount,
                 });
               } else {
-                this.aiControlLocations(player, dreadnoughtCount);
+                for (let i = 0; i < dreadnoughtCount; i++) {
+                  const updatedGameState = this.getGameState(player);
+                  this.aiControlLocation(player, updatedGameState);
+                }
               }
             }
 
@@ -1270,7 +1272,7 @@ export class GameManager {
       }
       for (const choiceEffect of intrigueEffects.conversionEffects) {
         if (isConversionEffectType(choiceEffect.conversionType)) {
-          this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect, gameState);
+          this.aiConvertRewardIfUsefulAndPossible(player, choiceEffect, gameState, true);
         }
       }
     }
@@ -1419,9 +1421,12 @@ export class GameManager {
   private aiConvertRewardIfUsefulAndPossible(
     player: Player,
     effect: StructuredConversionEffectWithGameElement,
-    gameState: GameState
+    gameState: GameState,
+    overrideConversionIsUseful?: boolean
   ) {
-    const conversionIsUseful = this.aIManager.getEffectConversionDecision(player, gameState, effect.costs, effect.rewards);
+    const conversionIsUseful = overrideConversionIsUseful
+      ? overrideConversionIsUseful
+      : this.aIManager.getEffectConversionDecision(player, gameState, effect.costs, effect.rewards);
 
     if (conversionIsUseful && this.playerCanPayCosts(player.id, effect.costs)) {
       for (const cost of effect.costs) {
@@ -1488,23 +1493,6 @@ export class GameManager {
     } else {
       for (const reward of chosenEffect) {
         this.addRewardToPlayer(player.id, reward, { gameElement });
-      }
-    }
-  }
-
-  private aiControlLocations(player: Player, locationsToOccupy: number) {
-    const gameState = this.getGameState(player);
-
-    for (let i = 0; i < locationsToOccupy; i++) {
-      const boardLocations = this.settingsService.getBoardLocations();
-      const playerLocations = this.locationManager.getPlayerLocations(player.id);
-      const controllableLocations = boardLocations.filter(
-        (x) => !playerLocations.some((y) => x.actionField.title.en === y.locationId)
-      );
-
-      const preferredLocation = this.aIManager.getPreferredLocationForPlayer(player, controllableLocations, gameState);
-      if (preferredLocation) {
-        this.changeLocationOwner(preferredLocation.actionField.title.en, player.id);
       }
     }
   }
@@ -1986,40 +1974,47 @@ export class GameManager {
   private aiControlLocation(player: Player, gameState: GameState) {
     const playerAgentsOnFields = this.getPlayerAgentsOnFields(player.id).map((x) => x.fieldId);
 
-    const possibleBoardLocations = this.settingsService
+    const locationsWithPlayerAgents = this.settingsService
       .getBoardLocations()
       .filter((x) => playerAgentsOnFields.includes(x.actionField.title.en));
+
     const playerLocations = this.locationManager.getPlayerLocations(player.id);
     const enemyLocations = this.locationManager.getEnemyLocations(player.id);
-    const freeLocations = possibleBoardLocations.filter(
+
+    const freeControllableLocations = locationsWithPlayerAgents.filter(
       (x) =>
         !playerLocations.some((y) => x.actionField.title.en === y.locationId) &&
         !enemyLocations.some((y) => x.actionField.title.en === y.locationId)
     );
-    const highPriorityLocations = enemyLocations.filter((x) => x.playerId === gameState.rival?.id);
 
-    let controllableLocations: DuneLocation[] = [];
+    const enemyControllableLocations = locationsWithPlayerAgents.filter((x) =>
+      enemyLocations.some((y) => x.actionField.title.en === y.locationId)
+    );
 
-    if (enemyLocations.length > 0) {
-      const playerTroopAmount = this.combatManager.getPlayerTroopsInGarrison(player.id);
-      const stealChance = 0.5 * playerTroopAmount + 0.1 * (gameState.currentRound - 1);
-      const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts() ?? 0;
+    const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts() ?? 0;
+    const playerTroopAmount = this.combatManager.getPlayerTroopsInGarrison(player.id);
+    const playerCanConquerLocations = playerTroopAmount >= locationTakeoverTroopCosts;
 
-      if (playerTroopAmount >= locationTakeoverTroopCosts && stealChance > Math.random()) {
-        if (highPriorityLocations.length > 0) {
-          controllableLocations = possibleBoardLocations.filter((x) =>
-            highPriorityLocations.some((y) => x.actionField.title.en === y.locationId)
+    let controllableLocations = freeControllableLocations;
+
+    if (playerCanConquerLocations && enemyControllableLocations.length > 0) {
+      const conquerDesire = 0.2 * playerTroopAmount + 0.1 * (gameState.currentRound - 1);
+      if (freeControllableLocations.length < 1 || conquerDesire > Math.random()) {
+        if (gameState.rival) {
+          const rivalLocations = this.locationManager.getPlayerLocations(gameState.rival.id);
+          const controllableRivalLocations = locationsWithPlayerAgents.filter((x) =>
+            rivalLocations.some((y) => x.actionField.title.en === y.locationId)
           );
+
+          if (controllableRivalLocations.length > 0) {
+            controllableLocations = controllableRivalLocations;
+          } else {
+            controllableLocations = enemyControllableLocations;
+          }
         } else {
-          controllableLocations = possibleBoardLocations.filter(
-            (x) => !playerLocations.some((y) => x.actionField.title.en === y.locationId)
-          );
+          controllableLocations = enemyControllableLocations;
         }
-      } else {
-        controllableLocations = freeLocations;
       }
-    } else {
-      controllableLocations = freeLocations;
     }
 
     const preferredLocation = this.aIManager.getPreferredLocationForPlayer(player, controllableLocations, gameState);
@@ -2510,7 +2505,7 @@ export class GameManager {
     const enemyScore = this.playerScoreManager.getEnemyScore(player.id)!;
 
     const rivalId = enemyScore.sort((a, b) => b.victoryPoints - a.victoryPoints)[0];
-    const rival = this.playerManager.getPlayer(rivalId.playerId);
+    const rival = this.currentRound > 4 ? this.playerManager.getPlayer(rivalId.playerId) : undefined;
 
     const playerLeader = this.leadersService.getLeader(player.id);
     const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(player.id);
@@ -2518,6 +2513,7 @@ export class GameManager {
     return {
       playersCount: this.playerManager.getPlayerCount(),
       currentRound: this.currentRound,
+      currentRoundPhase: this.currentRoundPhase,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
       playerAgentsAvailable: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
       enemyAgentsAvailable: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
@@ -3027,6 +3023,8 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'loose-troop' }] });
     } else if (reward.type === 'enemies-card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'card-discard' }] });
+    } else if (reward.type === 'enemies-intrigue-trash') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'intrigue-trash' }] });
     }
     this.loggingService.logPlayerResourceGained(playerId, rewardType, rewardAmount);
   }
@@ -3414,6 +3412,7 @@ export class GameManager {
       'dreadnought-retreat': 0,
       'enemies-card-discard': 0,
       'enemies-troop-destroy': 0,
+      'enemies-intrigue-trash': 0,
     };
   }
 }

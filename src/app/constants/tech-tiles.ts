@@ -818,20 +818,15 @@ export const techTiles: TechTileCard[] = [
       de: 'Sietch',
     },
     faction: 'fremen',
-    costs: 6,
+    costs: 5,
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [
       {
         type: 'faction-influence-up-fremen',
       },
     ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
     effects: [
       {
         type: 'timing-round-start',
@@ -870,6 +865,11 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
   },
   {
     name: {
@@ -877,20 +877,15 @@ export const techTiles: TechTileCard[] = [
       de: 'Gilden-Bank',
     },
     faction: 'guild',
-    costs: 6,
+    costs: 5,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [
       {
         type: 'faction-influence-up-guild',
       },
     ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
     effects: [
       {
         type: 'timing-round-start',
@@ -925,6 +920,11 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
   },
   {
     name: {

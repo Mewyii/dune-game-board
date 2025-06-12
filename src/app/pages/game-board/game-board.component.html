@@ -5,49 +5,51 @@
   >
     <app-playerboard></app-playerboard>
     <div class="board">
-      <ng-particles
-        *ngIf="viewInitialized && mode === 'game'"
-        [id]="'stars'"
-        [options]="stars"
-        [particlesInit]="initStars"
-      ></ng-particles>
-      <ng-particles
-        *ngIf="viewInitialized && mode === 'game'"
-        [id]="'ships'"
-        [options]="ships"
-        [particlesInit]="initShips"
-      ></ng-particles>
-      <ng-particles
-        *ngIf="viewInitialized && mode === 'game'"
-        [id]="'dust'"
-        [options]="dust"
-        [particlesInit]="initDust"
-      ></ng-particles>
-      <ng-particles
-        *ngIf="viewInitialized && mode === 'game'"
-        [id]="'sand'"
-        [options]="sand"
-        [particlesInit]="initSand"
-      ></ng-particles>
-      <ng-particles
-        *ngIf="viewInitialized && mode === 'game'"
-        [id]="'spiceGlitter'"
-        [options]="spiceGlitter"
-        [particlesInit]="initSpiceGlitter"
-      ></ng-particles>
-      @for (faction of gameContent.factions; track $index) {
-      <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
-      } @for (location of gameContent.locations; track $index) {
-      <app-dune-location [location]="location"></app-dune-location>
-      }
-      <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
-      <app-scoreboard [mode]="mode"></app-scoreboard>
-      <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
-      <app-card-areas></app-card-areas>
-      <dune-conflicts *ngIf="mode === 'game'"></dune-conflicts>
-      <dune-intrigues *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
-      <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
-      <dune-always-buyable-cards></dune-always-buyable-cards>
+      <div [class]="mode === 'game' ? 'overlay' : ''">
+        <ng-particles
+          *ngIf="viewInitialized && mode === 'game'"
+          [id]="'stars'"
+          [options]="stars"
+          [particlesInit]="initStars"
+        ></ng-particles>
+        <ng-particles
+          *ngIf="viewInitialized && mode === 'game'"
+          [id]="'ships'"
+          [options]="ships"
+          [particlesInit]="initShips"
+        ></ng-particles>
+        <ng-particles
+          *ngIf="viewInitialized && mode === 'game'"
+          [id]="'dust'"
+          [options]="dust"
+          [particlesInit]="initDust"
+        ></ng-particles>
+        <ng-particles
+          *ngIf="viewInitialized && mode === 'game'"
+          [id]="'sand'"
+          [options]="sand"
+          [particlesInit]="initSand"
+        ></ng-particles>
+        <ng-particles
+          *ngIf="viewInitialized && mode === 'game'"
+          [id]="'spiceGlitter'"
+          [options]="spiceGlitter"
+          [particlesInit]="initSpiceGlitter"
+        ></ng-particles>
+        @for (faction of gameContent.factions; track $index) {
+        <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
+        } @for (location of gameContent.locations; track $index) {
+        <app-dune-location [location]="location"></app-dune-location>
+        }
+        <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
+        <app-scoreboard [mode]="mode"></app-scoreboard>
+        <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
+        <app-card-areas></app-card-areas>
+        <dune-conflicts *ngIf="mode === 'game'"></dune-conflicts>
+        <dune-intrigues *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
+        <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
+        <dune-always-buyable-cards></dune-always-buyable-cards>
+      </div>
     </div>
     <dune-turn-infos *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-turn-infos>
     <dune-imperium-row *ngIf="mode === 'game'"></dune-imperium-row>

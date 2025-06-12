@@ -59,6 +59,7 @@ export const effectRewards = [
   'dreadnought-retreat',
   'enemies-card-discard',
   'enemies-troop-destroy',
+  'enemies-intrigue-trash',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;

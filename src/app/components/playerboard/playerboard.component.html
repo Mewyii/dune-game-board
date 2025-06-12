@@ -17,7 +17,7 @@
         mat-mini-fab
         [color]="'accent'"
         (click)="onAddPlayerClicked()"
-        [disabled]="players.length === playerManager.maxPlayers || gameManager.currentRound !== 0"
+        [disabled]="players.length === maxPlayers || gameManager.currentRound !== 0"
       >
         <mat-icon>add</mat-icon>
       </button>

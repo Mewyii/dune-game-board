@@ -7,7 +7,7 @@ import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { AgentOnField, PlayerAgents, SpiceAccumulation } from 'src/app/services/game-manager.service';
+import { AgentOnField, PlayerAgents, RoundPhaseType, SpiceAccumulation } from 'src/app/services/game-manager.service';
 import { PlayerGameModifiers } from 'src/app/services/game-modifier.service';
 import { LeaderDeckCard } from 'src/app/services/leaders.service';
 import { PlayerFactionScoreType, PlayerScore } from 'src/app/services/player-score-manager.service';
@@ -52,6 +52,7 @@ export type GameState = Readonly<{
   enemyScore: PlayerScore[];
   playerCombatUnits: PlayerCombatUnits;
   currentRound: number;
+  currentRoundPhase: RoundPhaseType;
   accumulatedSpiceOnFields: SpiceAccumulation[];
   enemyCombatUnits: PlayerCombatUnits[];
   agentsOnFields: AgentOnField[];

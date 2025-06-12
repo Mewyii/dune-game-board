@@ -30,4 +30,5 @@ export const gameContentCustomExpert: GameContent = {
   factionInfluenceAllianceTreshold: 4,
   imperiumRowCards: 6,
   aiName: 'custom-expert',
+  maxPlayers: 4,
 };

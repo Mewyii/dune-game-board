@@ -236,7 +236,7 @@ export class AIEffectEvaluationService {
     switch (rewardType) {
       case 'water':
         return (
-          3 +
+          2.9 +
           0.02 * gameState.playerTechTilesConversionCosts.water -
           (player.hasSwordmaster ? 0.15 : 0) -
           (player.hasCouncilSeat ? 0.15 : 0) -
@@ -247,7 +247,7 @@ export class AIEffectEvaluationService {
         );
       case 'spice':
         return (
-          2.5 +
+          2.4 +
           0.015 * gameState.playerTechTilesConversionCosts.spice -
           (player.hasSwordmaster ? 0.225 : 0) -
           (player.hasCouncilSeat ? 0.225 : 0) -
@@ -258,7 +258,7 @@ export class AIEffectEvaluationService {
         );
       case 'solari':
         return (
-          1.5 +
+          1.4 +
           0.01 * gameState.playerTechTilesConversionCosts.solari -
           (player.hasSwordmaster ? 0.3 : 0) -
           (player.hasCouncilSeat ? 0.3 : 0) -
@@ -381,6 +381,8 @@ export class AIEffectEvaluationService {
         return 2 + 0.2 * (gameState.currentRound - 1);
       case 'enemies-troop-destroy':
         return 2.5 - 0.1 * (gameState.currentRound - 1);
+      case 'enemies-intrigue-trash':
+        return 2.75;
       default:
         return 0;
     }
@@ -463,9 +465,9 @@ export class AIEffectEvaluationService {
         return value;
       case 'sword':
         return gameState.playerCombatUnits.troopsInCombat > 0 || gameState.playerCombatUnits.shipsInCombat > 0
-          ? hasAgentsLeftToPlace
+          ? hasAgentsLeftToPlace || gameState.currentRoundPhase === 'combat'
             ? value
-            : 0.66 * value
+            : 0.75 * value
           : 0;
       case 'combat':
         const participateDesire = getParticipateInCombatDesire(gameState);
@@ -540,6 +542,10 @@ export class AIEffectEvaluationService {
         return (
           (value * gameState.enemyCombatUnits.filter((x) => x.troopsInCombat > 0 || x.troopsInGarrison > 0).length) /
           (gameState.playersCount - 1)
+        );
+      case 'enemies-intrigue-trash':
+        return (
+          (value * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length) / (gameState.playersCount - 1)
         );
       default:
         return value;

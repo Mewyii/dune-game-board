@@ -141,7 +141,7 @@ export class IntriguesService {
   }
 
   removeIntrigueFromDeck(intrigueId: string) {
-    this.intrigueDeckSubject.next(this.intrigueDeck.filter((x) => x.name.en !== intrigueId));
+    this.intrigueDeckSubject.next(this.intrigueDeck.filter((x) => x.id !== intrigueId));
   }
 
   clearIntrigueDeck() {

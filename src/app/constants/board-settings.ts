@@ -35,6 +35,7 @@ export interface GameContent {
   factionInfluenceAllianceTreshold: number;
   imperiumRowCards: number;
   aiName: string;
+  maxPlayers: number;
 }
 
 export type AppMode = 'board' | 'game';
