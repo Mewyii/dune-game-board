@@ -192,8 +192,21 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.maxPlayers);
   }
 
-  getCustomCards() {
+  public getCustomCards() {
     return cloneDeep(this.settingsSubject.value.gameContent.customCards);
+  }
+
+  public getCardAcquiringRuleFoldspace() {
+    return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.foldspace);
+  }
+  public getCardAcquiringRuleImperiumRow() {
+    return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.imperiumRow);
+  }
+  public getCardAcquiringRuleLimited() {
+    return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.limited);
+  }
+  public getCardAcquiringRuleUnlimited() {
+    return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.unlimited);
   }
 
   public setFields() {

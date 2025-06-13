@@ -80,17 +80,27 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/yueh_2.png',
     cardAmount: 1,
-    buyEffects: [],
+    canInfiltrate: false,
+    agentEffectSize: 'small',
     customAgentEffect: {
-      en: 'You may put <b>1</b> of your cards in play back to your hand.',
-      de: 'Du kannst <b>1</b> Karte im Spiel zurück auf deine Hand nehmen.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: 'You may retreat up to <b>2</b> inserted troops after the combat phase.',
       de: 'Du kannst nach der Kampf-Phase bis zu <b>2</b> eingesetzte Truppen zurückziehen.',
       fontSize: 'small',
     },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'card-return-to-hand',
+        amount: 1,
+      },
+    ],
+    revealEffects: [],
   },
   {
     name: {
@@ -1233,10 +1243,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_10.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
     customAgentEffect: {
-      en: 'For each of your agents on board spaces: {resource:card-draw}',
-      de: 'Für jeden deiner Agenten auf Feldern: {resource:card-draw}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -1246,7 +1256,14 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-agents-on-board-spaces',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -1279,10 +1296,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_17.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
     customAgentEffect: {
-      en: 'For each of your agents on board spaces: {resource:solari}',
-      de: 'Für jeden deiner Agenten auf Feldern: {resource:solari}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -1292,7 +1309,14 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-agents-on-board-spaces',
+      },
+      {
+        type: 'solari',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -1749,8 +1773,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'If you have a dreadnought in conflict: {resource:sword}{resource:sword}',
-      de: 'Wenn du ein Schlachtschiff im Konflikt hast: {resource:sword}{resource:sword}',
+      en: 'If you have a {resource:dreadnought} in conflict: {resource:sword}',
+      de: 'Wenn du ein {resource:dreadnought} im Konflikt hast: {resource:sword}',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -4168,8 +4192,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each dreadnought in your garrison: {resource:shipping}',
-      de: 'Für jedes deiner Schlachtschiffe in deiner Garnison: {resource:shipping}',
+      en: 'For each {resource:dreadnought} in your garrison: {resource:shipping}',
+      de: 'Für jedes {resource:dreadnought} in deiner Garnison: {resource:shipping}',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -4249,10 +4273,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'large',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'For each of your agents on board spaces: {resource:persuasion;amount:1}',
-      de: 'Für jeden deiner Agenten auf Feldern: {resource:persuasion;amount:1}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
     buyEffects: [],
@@ -4267,7 +4291,15 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'enemies-troop-destroy',
       },
     ],
-    revealEffects: [],
+    revealEffects: [
+      {
+        type: 'condition-agents-on-board-spaces',
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
   },
   {
     name: {
@@ -4412,8 +4444,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each dreadnought in your garrison: {resource:troop}',
-      de: 'Für jedes deiner Schlachtschiffe in deiner Garnison: {resource:troop}',
+      en: 'For each {resource:dreadnought} in your garrison: {resource:troop}',
+      de: 'Für jedes {resource:dreadnought} in deiner Garnison: {resource:troop}',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -4565,16 +4597,16 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/guild_officer_2.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
-      en: 'For each of your dreadnoughts: {resource:card-draw}',
-      de: 'Für jedes deiner Schlachtschiffe: {resource:card-draw}',
-      fontSize: 'small',
+      en: '',
+      de: '',
+      fontSize: 'medium',
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each of your dreadnoughts in conflict: {resource:sword}{resource:sword}',
-      de: 'Für jedes deiner Schlachtschiffe im Konflikt: {resource:sword}{resource:sword}',
+      en: 'For each of your {resource:dreadnought} in conflict:     {resource:sword}{resource:sword}',
+      de: 'Für jedes deiner {resource:dreadnought} im Konflikt:       {resource:sword}{resource:sword}',
       fontSize: 'small',
     },
     buyEffects: [
@@ -4582,7 +4614,14 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'troop',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-dreadnought-amount',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',

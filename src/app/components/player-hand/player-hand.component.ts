@@ -106,10 +106,9 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onAddFoldspaceToHandClicked() {
-    const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.name.en.toLocaleLowerCase() === 'foldspace');
+    const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.type === 'foldspace');
     if (foldspaceCard) {
-      this.audioManager.playSound('card-draw');
-      this.cardsService.addCardToPlayerHand(this.activePlayerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
+      this.gameManager.addRewardToPlayer(this.activePlayerId, { type: 'foldspace' });
     }
 
     this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);

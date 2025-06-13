@@ -299,6 +299,18 @@ export function getStructuredConditionalEffectIfPossible(
           effect: conditionFullfilledEffect,
         };
         return [undefined, conditionalEffect];
+      } else if (effect.type === 'condition-agents-on-board-spaces') {
+        const conditionalEffect = {
+          condition: effect.type,
+          effect: conditionFullfilledEffect,
+        };
+        return [undefined, conditionalEffect];
+      } else if (effect.type === 'condition-dreadnought-amount') {
+        const conditionalEffect = {
+          condition: effect.type,
+          effect: conditionFullfilledEffect,
+        };
+        return [undefined, conditionalEffect];
       }
     }
   }

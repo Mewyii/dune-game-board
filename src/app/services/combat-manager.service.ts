@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { Player } from '../models/player';
 import { SettingsService } from './settings.service';
 
@@ -134,7 +135,8 @@ export class CombatManager {
   public addPlayerShipsToGarrison(playerId: number, ships: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
-      const newShipAmount = combatUnits.shipsInGarrison + ships <= 2 ? combatUnits.shipsInGarrison + ships : 2;
+      const existingShips = getPlayerdreadnoughtCount(combatUnits);
+      const newShipAmount = existingShips + ships <= 2 ? existingShips + ships : 2;
       this.setPlayerShipsInGarrison(playerId, newShipAmount);
     } else {
       const newShipAmount = ships <= 2 ? ships : 2;

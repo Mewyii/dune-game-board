@@ -25,4 +25,10 @@ export const gameContentOriginal: GameContent = {
   imperiumRowCards: 5,
   aiName: 'original',
   maxPlayers: 4,
+  cardAcquiringRules: {
+    imperiumRow: 'discard-pile',
+    limited: 'discard-pile',
+    unlimited: 'discard-pile',
+    foldspace: 'discard-pile',
+  },
 };

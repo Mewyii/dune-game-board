@@ -154,6 +154,10 @@ export class AIEffectEvaluationService {
       }
     } else if (conditionEffect.condition === 'condition-high-council-seat') {
       evaluationValue = evaluationValue * (player.hasCouncilSeat ? 1.0 : 0.25);
+    } else if (conditionEffect.condition === 'condition-agents-on-board-spaces') {
+      evaluationValue = evaluationValue * player.agents * 0.75;
+    } else if (conditionEffect.condition === 'condition-dreadnought-amount') {
+      evaluationValue = evaluationValue * getPlayerdreadnoughtCount(gameState.playerCombatUnits);
     }
     return evaluationValue;
   }
@@ -185,6 +189,10 @@ export class AIEffectEvaluationService {
       if (player.hasCouncilSeat) {
         return evaluationValue;
       }
+    } else if (conditionEffect.condition === 'condition-agents-on-board-spaces') {
+      evaluationValue = evaluationValue * gameState.playerAgentsOnFields.length;
+    } else if (conditionEffect.condition === 'condition-dreadnought-amount') {
+      evaluationValue = evaluationValue * getPlayerdreadnoughtCount(gameState.playerCombatUnits);
     }
     return 0;
   }
@@ -383,6 +391,8 @@ export class AIEffectEvaluationService {
         return 2.5 - 0.1 * (gameState.currentRound - 1);
       case 'enemies-intrigue-trash':
         return 2.75;
+      case 'card-return-to-hand':
+        return 2 + 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
       default:
         return 0;
     }
@@ -547,6 +557,9 @@ export class AIEffectEvaluationService {
         return (
           (value * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length) / (gameState.playersCount - 1)
         );
+      case 'card-return-to-hand':
+        const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
+        return playerDiscardPileCount > 0 ? value : 0;
       default:
         return value;
     }

@@ -13,6 +13,15 @@ export interface AI {
   aiGoals: FieldsForGoals;
 }
 
+export type CardAcquiringPlacementType = 'hand' | 'under-deck' | 'discard-pile';
+
+export interface CardAcquiringRules {
+  imperiumRow: CardAcquiringPlacementType;
+  limited: CardAcquiringPlacementType;
+  unlimited: CardAcquiringPlacementType;
+  foldspace: CardAcquiringPlacementType;
+}
+
 export interface GameContent {
   name: string;
   factions: Faction[];
@@ -36,6 +45,7 @@ export interface GameContent {
   imperiumRowCards: number;
   aiName: string;
   maxPlayers: number;
+  cardAcquiringRules: CardAcquiringRules;
 }
 
 export type AppMode = 'board' | 'game';

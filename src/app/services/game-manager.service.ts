@@ -1595,6 +1595,7 @@ export class GameManager {
     additionalCardsInPlay?: ImperiumDeckCard[]
   ) {
     let conditionFullfilled = false;
+    let effectAmount = 1;
 
     if (conditionalEffect.condition === 'condition-connection') {
       if (
@@ -1611,15 +1612,29 @@ export class GameManager {
       if (player.hasCouncilSeat) {
         conditionFullfilled = true;
       }
+    } else if (conditionalEffect.condition === 'condition-agents-on-board-spaces') {
+      const agentsOnBoardSpacesCount = gameState.playerAgentsOnFields.length;
+      if (agentsOnBoardSpacesCount > 0) {
+        conditionFullfilled = true;
+        effectAmount = agentsOnBoardSpacesCount;
+      }
+    } else if (conditionalEffect.condition === 'condition-dreadnought-amount') {
+      const dreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
+      if (dreadnoughtCount > 0) {
+        conditionFullfilled = true;
+        effectAmount = dreadnoughtCount;
+      }
     }
     if (conditionFullfilled) {
-      if (isStructuredChoiceEffect(conditionalEffect.effect)) {
-        this.resolveStructuredChoiceEffect(conditionalEffect.effect, player.id, gameElement);
-      } else if (isStructuredConversionEffect(conditionalEffect.effect)) {
-        this.resolveStructuredConversionEffect(conditionalEffect.effect, player.id, gameElement);
-      } else {
-        for (const reward of conditionalEffect.effect) {
-          this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
+      for (let i = 0; i < effectAmount; i++) {
+        if (isStructuredChoiceEffect(conditionalEffect.effect)) {
+          this.resolveStructuredChoiceEffect(conditionalEffect.effect, player.id, gameElement);
+        } else if (isStructuredConversionEffect(conditionalEffect.effect)) {
+          this.resolveStructuredConversionEffect(conditionalEffect.effect, player.id, gameElement);
+        } else {
+          for (const reward of conditionalEffect.effect) {
+            this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
+          }
         }
       }
     }
@@ -1761,6 +1776,12 @@ export class GameManager {
       });
       this.turnInfoService.setPlayerTurnInfo(player.id, { canLiftAgent: false });
     }
+    if (turnInfo.cardReturnToHandAmount > 0) {
+      this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+        type: 'card-return-to-hand',
+      });
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardReturnToHandAmount: 0 });
+    }
     if (turnInfo.enemiesEffects.length > 0) {
       const enemies = this.playerManager.getEnemyPlayers(player.id);
 
@@ -1867,6 +1888,17 @@ export class GameManager {
         this.removePlayerAgentFromField(player.id, playerAgentsOnOtherFields[0].fieldId);
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { canLiftAgent: false });
+    }
+    if (turnInfo.cardReturnToHandAmount > 0) {
+      const playerDiscardPile = this.cardsService.getPlayerDiscardPile(player.id);
+      if (playerDiscardPile && playerDiscardPile?.cards.length > 0) {
+        const highestEvaluatedCard = this.aIManager.getCardToPlay(playerDiscardPile.cards, player, gameState);
+        if (highestEvaluatedCard) {
+          this.cardsService.returnDiscardedPlayerCardToHand(player.id, highestEvaluatedCard);
+        }
+      }
+
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardReturnToHandAmount: 0 });
     }
     if (playerCanEnterCombat(turnInfo)) {
       const aiPlayer = this.aIManager.getAIPlayer(player.id);
@@ -2080,7 +2112,14 @@ export class GameManager {
         this.cardsService.aquirePlayerCardFromImperiumRow(playerId, cardToBuy);
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
       } else {
-        this.cardsService.shuffleCardsUnderPlayerDeck(playerId, [cardToBuy]);
+        const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
+        if (rule === 'discard-pile') {
+          this.cardsService.addCardToPlayerDiscardPile(playerId, cardToBuy);
+        } else if (rule === 'under-deck') {
+          this.cardsService.addCardUnderPlayerDeck(playerId, cardToBuy);
+        } else {
+          this.cardsService.addCardToPlayerHand(playerId, cardToBuy);
+        }
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
       }
 
@@ -2174,6 +2213,7 @@ export class GameManager {
 
           this.resolveRewardChoices(player);
         }
+
         this.cardsService.aquirePlayerCardFromImperiumRow(playerId, card);
       } else {
         this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, card);
@@ -2951,11 +2991,18 @@ export class GameManager {
       this.loggingService.logPlayerGainedVictoryPoint(playerId, this.currentRound, additionalInfos?.source);
       return;
     } else if (rewardType === 'foldspace') {
-      const foldspaceCard = this.settingsService
-        .getCustomCards()
-        ?.find((x) => x.name.en.toLocaleLowerCase() === 'foldspace');
+      this.audioManager.playSound('card-draw');
+      const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.type === 'foldspace');
+
       if (foldspaceCard) {
-        this.cardsService.addCardToPlayerHand(playerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
+        const rule = this.settingsService.getCardAcquiringRuleFoldspace();
+        if (rule === 'discard-pile') {
+          this.cardsService.addCardToPlayerDiscardPile(playerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
+        } else if (rule === 'under-deck') {
+          this.cardsService.addCardUnderPlayerDeck(playerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
+        } else {
+          this.cardsService.addCardToPlayerHand(playerId, this.cardsService.instantiateImperiumCard(foldspaceCard));
+        }
       }
     } else if (rewardType === 'location-control') {
       this.audioManager.playSound('location-control');
@@ -2974,14 +3021,14 @@ export class GameManager {
         this.techTilesService.trashTechTile(gameElement.object.id);
         this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(gameElement.object.name));
       }
-    } else if (reward.type === 'tech-tile-flip' && gameElement) {
+    } else if (rewardType === 'tech-tile-flip' && gameElement) {
       if (gameElement.type === 'tech-tile') {
         this.techTilesService.flipTechTile(gameElement.object.id);
         this.audioManager.playSound('tech-tile');
         this.turnInfoService.updatePlayerTurnInfo(playerId, { techTilesFlippedThisTurn: [gameElement.object] });
         this.loggingService.logPlayerPlayedTechTile(playerId, this.t.translateLS(gameElement.object.name));
       }
-    } else if (reward.type === 'combat') {
+    } else if (rewardType === 'combat') {
       this.audioManager.playSound('combat');
 
       let deployableUnits = this.settingsService.getCombatMaxDeployableUnits();
@@ -2991,7 +3038,7 @@ export class GameManager {
       }
 
       this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: true, deployableUnits });
-    } else if (reward.type === 'intrigue-draw') {
+    } else if (rewardType === 'intrigue-draw') {
       const enemiesIntrigues = this.intriguesService.getEnemyIntrigues(playerId).filter((x) => x.intrigues.length > 3);
       for (const enemyIntrigues of enemiesIntrigues) {
         const stolenIntrigue = getRandomElementFromArray(enemyIntrigues.intrigues);
@@ -2999,32 +3046,34 @@ export class GameManager {
         this.intriguesService.addPlayerIntrigue(playerId, stolenIntrigue);
         this.loggingService.logPlayerStoleIntrigue(playerId, enemyIntrigues.playerId);
       }
-    } else if (reward.type === 'recruitment-bene') {
+    } else if (rewardType === 'recruitment-bene') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionRecruitment: ['bene'] });
-    } else if (reward.type === 'recruitment-fremen') {
+    } else if (rewardType === 'recruitment-fremen') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionRecruitment: ['fremen'] });
-    } else if (reward.type === 'recruitment-guild') {
+    } else if (rewardType === 'recruitment-guild') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionRecruitment: ['guild'] });
-    } else if (reward.type === 'recruitment-emperor') {
+    } else if (rewardType === 'recruitment-emperor') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionRecruitment: ['emperor'] });
-    } else if (reward.type === 'troop-insert') {
+    } else if (rewardType === 'troop-insert') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableTroops: rewardAmount });
-    } else if (reward.type === 'troop-insert-or-retreat') {
+    } else if (rewardType === 'troop-insert-or-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableTroops: rewardAmount });
-    } else if (reward.type === 'troop-retreat') {
+    } else if (rewardType === 'troop-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableTroops: rewardAmount });
-    } else if (reward.type === 'dreadnought-insert') {
+    } else if (rewardType === 'dreadnought-insert') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableDreadnoughts: rewardAmount });
-    } else if (reward.type === 'dreadnought-insert-or-retreat') {
+    } else if (rewardType === 'dreadnought-insert-or-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableDreadnoughts: rewardAmount });
-    } else if (reward.type === 'dreadnought-retreat') {
+    } else if (rewardType === 'dreadnought-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableDreadnoughts: rewardAmount });
-    } else if (reward.type === 'enemies-troop-destroy') {
+    } else if (rewardType === 'enemies-troop-destroy') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'loose-troop' }] });
-    } else if (reward.type === 'enemies-card-discard') {
+    } else if (rewardType === 'enemies-card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'card-discard' }] });
-    } else if (reward.type === 'enemies-intrigue-trash') {
+    } else if (rewardType === 'enemies-intrigue-trash') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'intrigue-trash' }] });
+    } else if (rewardType === 'card-return-to-hand') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardReturnToHandAmount: rewardAmount });
     }
     this.loggingService.logPlayerResourceGained(playerId, rewardType, rewardAmount);
   }
@@ -3413,6 +3462,7 @@ export class GameManager {
       'enemies-card-discard': 0,
       'enemies-troop-destroy': 0,
       'enemies-intrigue-trash': 0,
+      'card-return-to-hand': 0,
     };
   }
 }

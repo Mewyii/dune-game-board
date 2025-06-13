@@ -590,7 +590,15 @@ export class CardsService {
       this.imperiumRowSubject.next(imperiumRow);
       this.imperiumDeckSubject.next(imperiumDeck);
     }
-    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
+
+    const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
+    if (rule === 'discard-pile') {
+      this.addCardToPlayerDiscardPile(playerId, card);
+    } else if (rule === 'under-deck') {
+      this.addCardUnderPlayerDeck(playerId, card);
+    } else {
+      this.addCardToPlayerHand(playerId, card);
+    }
   }
 
   addCardsToImperiumRow(amount = 1) {
@@ -618,12 +626,28 @@ export class CardsService {
 
   aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
-    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
+
+    const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
+    if (rule === 'discard-pile') {
+      this.addCardToPlayerDiscardPile(playerId, card);
+    } else if (rule === 'under-deck') {
+      this.addCardUnderPlayerDeck(playerId, card);
+    } else {
+      this.addCardToPlayerHand(playerId, card);
+    }
   }
 
   aquirePlayerCardFromLimitedCustomCards(playerId: number, card: ImperiumDeckCard) {
     this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x) => x.id !== card.id)]);
-    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
+
+    const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
+    if (rule === 'discard-pile') {
+      this.addCardToPlayerDiscardPile(playerId, card);
+    } else if (rule === 'under-deck') {
+      this.addCardUnderPlayerDeck(playerId, card);
+    } else {
+      this.addCardToPlayerHand(playerId, card);
+    }
   }
 
   setPlayedPlayerCard(playerId: number, cardId: string) {
@@ -661,6 +685,10 @@ export class CardsService {
       const newDiscardPile: PlayerCardStack = { playerId, cards: [card] };
       this.playerDiscardPilesSubject.next([...this.playerDiscardPiles, newDiscardPile]);
     }
+  }
+
+  addCardUnderPlayerDeck(playerId: number, card: ImperiumDeckCard) {
+    this.shuffleCardsUnderPlayerDeck(playerId, [card]);
   }
 
   addCardsToPlayerDiscardPile(playerId: number, cards: ImperiumDeckCard[]) {

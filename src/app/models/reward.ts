@@ -60,11 +60,18 @@ export const effectRewards = [
   'enemies-card-discard',
   'enemies-troop-destroy',
   'enemies-intrigue-trash',
+  'card-return-to-hand',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;
 export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-turn-start', 'timing-reveal-turn'] as const;
-export const effectConditions = ['condition-influence', 'condition-connection', 'condition-high-council-seat'] as const;
+export const effectConditions = [
+  'condition-influence',
+  'condition-connection',
+  'condition-high-council-seat',
+  'condition-agents-on-board-spaces',
+  'condition-dreadnought-amount',
+] as const;
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
 export const effectConversions = ['helper-trade', 'helper-trade-horizontal'] as const;
 
@@ -158,10 +165,22 @@ export interface StructuredConditionalEffectHighCouncilSeat {
   effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
 }
 
+export interface StructuredConditionalEffectAgentsOnBoardSpaces {
+  condition: 'condition-agents-on-board-spaces';
+  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
+}
+
+export interface StructuredConditionalEffectDreadnoughtAmount {
+  condition: 'condition-dreadnought-amount';
+  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
+}
+
 export type StructuredConditionalEffect =
   | StructuredConditionalEffectConnection
   | StructuredConditionalEffectInfluence
-  | StructuredConditionalEffectHighCouncilSeat;
+  | StructuredConditionalEffectHighCouncilSeat
+  | StructuredConditionalEffectAgentsOnBoardSpaces
+  | StructuredConditionalEffectDreadnoughtAmount;
 
 export interface StructuredChoiceEffect {
   choiceType: EffectChoiceType;

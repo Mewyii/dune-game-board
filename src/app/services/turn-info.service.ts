@@ -116,6 +116,7 @@ export class TurnInfoService {
       effectChoices: [],
       effectConversions: [],
       enemiesEffects: [],
+      cardReturnToHandAmount: 0,
     };
   }
 }

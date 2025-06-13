@@ -88,6 +88,14 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return type === 'condition-high-council-seat';
   }
 
+  public isAgentsOnBoardSpacesConditionType(type: EffectType) {
+    return type === 'condition-agents-on-board-spaces';
+  }
+
+  public isDreadnoughtAmountConditionType(type: EffectType) {
+    return type === 'condition-dreadnought-amount';
+  }
+
   public getFactionTypePath(effect: any) {
     return getFactionTypePath(effect.faction);
   }

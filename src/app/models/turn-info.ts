@@ -42,6 +42,7 @@ export interface TurnInfo {
   cardsPlayedThisTurn: ImperiumDeckCard[];
   cardsBoughtThisTurn: (ImperiumDeckCard | ImperiumDeckPlot)[];
   cardsTrashedThisTurn: ImperiumDeckCard[];
+  cardReturnToHandAmount: number;
   intrigueTrashAmount: number;
   intriguesPlayedThisTurn: IntrigueDeckCard[];
   techTilesFlippedThisTurn: TechTileCard[];

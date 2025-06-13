@@ -44,7 +44,7 @@ export const customCardsOriginal: CustomCard[] = [
     ],
   },
   {
-    type: 'other',
+    type: 'foldspace',
     name: {
       en: 'Foldspace',
       de: 'Faltraum',

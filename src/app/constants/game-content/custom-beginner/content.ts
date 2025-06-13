@@ -30,4 +30,10 @@ export const gameContentCustomBeginner: GameContent = {
   imperiumRowCards: 6,
   aiName: 'custom-beginner',
   maxPlayers: 4,
+  cardAcquiringRules: {
+    imperiumRow: 'under-deck',
+    limited: 'under-deck',
+    unlimited: 'under-deck',
+    foldspace: 'hand',
+  },
 };

@@ -80,16 +80,16 @@ export const leaders: Leader[] = [
       de: 'Anführer der Fremen',
     },
     passiveDescription: {
-      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:troop}<br>Ignore all {faction:fremen} -requirements.",
-      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:troop}<br>Ignoriere alle {faction:fremen} -Bedingungen.',
+      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:card-draw}<br>Ignore all {faction:fremen} -requirements.",
+      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:card-draw}<br>Ignoriere alle {faction:fremen} -Bedingungen.',
     },
     signetName: {
       en: 'Planting the paradise',
       de: 'Pflanzen des Paradieses',
     },
     signetDescription: {
-      en: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:3}{resource:helper-trade}{resource:victory-point}',
-      de: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:loose-troop}{resource:helper-trade}{resource:signet-token;amount:2} {resource:helper-or} {resource:signet-token;amount:3}{resource:helper-trade}{resource:victory-point}',
+      en: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:water}{resource:helper-trade}{resource:signet-token;amount:3} {resource:helper-or} {resource:signet-token;amount:3}{resource:helper-trade}{resource:victory-point}',
+      de: '{resource:signet-token} {resource:helper-or} {resource:water}{resource:water}{resource:helper-trade}{resource:signet-token;amount:3} {resource:helper-or} {resource:signet-token;amount:3}{resource:helper-trade}{resource:victory-point}',
     },
     imageUrl: '/assets/images/leaders/liet.png',
     type: 'new',
@@ -225,8 +225,8 @@ export const leaders: Leader[] = [
       de: 'Blind und doch Sehend',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: For each of your agents <br>on {faction:town} board spaces: {resource:persuasion;amount:1}, on {faction:fremen} board spaces: {resource:troop}',
-      de: '<b>Aufdeckzug</b>: Für jeden deiner Agenten auf {faction:town}-Feldern: {resource:persuasion;amount:1}, auf {faction:fremen}-Feldern: {resource:troop}',
+      en: '<b>Reveal turn</b>: For each of your agents <br>on {faction:town} board spaces: {resource:persuasion;amount:1}. For each of your agentson {faction:fremen} board spaces: {resource:troop}',
+      de: '<b>Aufdeckzug</b>: Für jeden deiner Agenten auf {faction:town}-Feldern: {resource:persuasion;amount:1}. Für jeden deiner Agenten auf {faction:fremen}-Feldern: {resource:troop}',
     },
     signetName: {
       en: 'Accusing prophet',
@@ -447,13 +447,13 @@ export const leaders: Leader[] = [
       de: 'Inspirierende Präsenz',
     },
     signetDescription: {
-      en: 'Put <b>1</b> of your cards in play back to your hand.',
-      de: 'Nimm <b>1</b> deiner Karten im Spiel zurück auf deine Hand.',
+      en: '',
+      de: '',
     },
     imageUrl: '/assets/images/leaders/tessia.png',
     type: 'new',
     passiveEffectSize: 'medium',
-    signetEffectSize: 'medium',
+    signetEffectSize: 'small',
     startingResources: [
       {
         type: 'tech',
@@ -464,7 +464,12 @@ export const leaders: Leader[] = [
       },
     ],
     passiveEffects: [],
-    signetEffects: [],
+    signetEffects: [
+      {
+        type: 'card-return-to-hand',
+        amount: 1,
+      },
+    ],
   },
   {
     name: {
@@ -572,7 +577,7 @@ export const leaders: Leader[] = [
     startingResources: [
       {
         type: 'signet-token',
-        amount: 2,
+        amount: 3,
       },
       {
         type: 'troop',

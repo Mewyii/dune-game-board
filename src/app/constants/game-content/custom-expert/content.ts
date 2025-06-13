@@ -31,4 +31,10 @@ export const gameContentCustomExpert: GameContent = {
   imperiumRowCards: 6,
   aiName: 'custom-expert',
   maxPlayers: 4,
+  cardAcquiringRules: {
+    imperiumRow: 'under-deck',
+    limited: 'under-deck',
+    unlimited: 'under-deck',
+    foldspace: 'hand',
+  },
 };

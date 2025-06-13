@@ -430,11 +430,24 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/ornithopter.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
+    effects: [
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-return-to-hand',
+        amount: 1,
+      },
+    ],
     customEffect: {
-      en: '<b>When you place an agent:</b> <br>{resource:tech-tile-flip}{resource:helper-trade}Keep the played card in your hand.',
-      de: '<b>Wenn du einen Agenten platzierst:</b> <br>{resource:tech-tile-flip}{resource:helper-trade}Behalte die dafür gespielte Karte auf deiner Hand.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },

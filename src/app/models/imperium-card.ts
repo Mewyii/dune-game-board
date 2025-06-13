@@ -26,7 +26,7 @@ export interface ImperiumCard {
   cardAmount?: number;
 }
 
-export type CustomCardType = 'other' | 'unlimited' | 'limited';
+export type CustomCardType = 'foldspace' | 'unlimited' | 'limited';
 
 export interface CustomCard extends ImperiumCard {
   type: CustomCardType;

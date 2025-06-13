@@ -723,7 +723,7 @@ export class AIManager {
     if (card.canInfiltrate) {
       const totalAgents = gameState.playerAgentsOnFields.length + gameState.playerAgentsAvailable;
       const agentsPlaced = gameState.playerAgentsOnFields.length;
-      evaluationValue += 4 * (agentsPlaced / (totalAgents - 1)) - 2;
+      evaluationValue += 4 * (agentsPlaced / (totalAgents - 1)) - 3;
     }
     if (card.structuredAgentEffects) {
       evaluationValue += this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
