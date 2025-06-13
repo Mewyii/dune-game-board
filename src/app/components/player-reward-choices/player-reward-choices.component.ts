@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
 import { EffectReward, EffectType, StructuredConversionEffect } from 'src/app/models';
+import { Player } from 'src/app/models/player';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerActionLog } from 'src/app/services/log.service';
@@ -10,13 +11,14 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
-    selector: 'dune-player-reward-choices',
-    templateUrl: './player-reward-choices.component.html',
-    styleUrl: './player-reward-choices.component.scss',
-    standalone: false
+  selector: 'dune-player-reward-choices',
+  templateUrl: './player-reward-choices.component.html',
+  styleUrl: './player-reward-choices.component.scss',
+  standalone: false,
 })
 export class PlayerRewardChoicesComponent implements OnInit {
   public activePlayerId: number = 0;
+  public activePlayer: Player | undefined;
   public playerRewardChoices: PlayerRewardChoices | undefined;
   public playerActionLog: PlayerActionLog[] = [];
   public playerEffectConversions: StructuredConversionEffectWithGameElement[] = [];
@@ -35,10 +37,11 @@ export class PlayerRewardChoicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+    this.gameManager.activePlayer$.subscribe((activePlayer) => {
       this.activeEffectId = '';
 
-      this.activePlayerId = activePlayerId;
+      this.activePlayerId = activePlayer?.id ?? 0;
+      this.activePlayer = activePlayer;
       this.playerRewardChoices = this.playerRewardChoicesService.playerRewardChoices.find(
         (x) => x.playerId === this.activePlayerId
       );

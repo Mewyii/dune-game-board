@@ -58,14 +58,14 @@
       </button>
     </div>
   </div>
-  } @if (deployableUnits) {
+  } @if (deployableUnits && !activePlayer?.isAI) {
   <div
     [class]="'reward-choice ' + (activeEffectId === 'deployableUnits' ? 'active' : '')"
     (click)="setEffectActive('deployableUnits')"
   >
     <div [innerHTML]="t.translate('commonEffectRewardUnitInsert', true, deployableUnits)"></div>
   </div>
-  } @if (deployableTroops) {
+  } @if (deployableTroops && !activePlayer?.isAI) {
   <div
     [class]="'reward-choice ' + (activeEffectId === 'deployableTroops' ? 'active' : '')"
     (click)="setEffectActive('deployableTroops')"
@@ -79,7 +79,7 @@
       }
     </div>
   </div>
-  } @if (deployableDreadnoughts) {
+  } @if (deployableDreadnoughts && !activePlayer?.isAI) {
   <div
     [class]="'reward-choice ' + (activeEffectId === 'deployableDreadnoughts' ? 'active' : '')"
     (click)="setEffectActive('deployableDreadnoughts')"
