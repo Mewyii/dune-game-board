@@ -12,7 +12,7 @@ export const enLocale = {
   commonYes: 'Yes',
   commonNewVersionAvailable: 'New Version Available!',
   commonUpdateWarningText:
-    'All your local data will be deleted with the update! Please save your custom leaders, tech tiles, intrigues and imperium cards before you accept!',
+    'Version {0} -> Version {1} <br><br>All your local data will be deleted with the update! Please save your custom leaders, tech tiles, intrigues and imperium cards before you accept!',
   commonEffectTimingGameStart: 'Game start',
   commonEffectTimingRoundStart: 'Round start',
   commonEffectTimingTurnStart: 'Turn start',

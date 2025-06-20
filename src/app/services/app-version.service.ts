@@ -8,13 +8,17 @@ import { appVersion } from '../constants/version';
 export class AppVersionService {
   private appVersionChangedSubject = new BehaviorSubject<boolean>(false);
   public appVersionChanged$ = this.appVersionChangedSubject.asObservable();
+  public currentAppVersion = 0;
+  public newAppVersion = 0;
 
   constructor() {
+    this.newAppVersion = appVersion;
+
     const appVersionString = localStorage.getItem('appVersion');
     if (appVersionString) {
-      const appV = JSON.parse(appVersionString) as number;
+      this.currentAppVersion = JSON.parse(appVersionString) as number;
 
-      if (appV !== appVersion) {
+      if (this.currentAppVersion !== this.newAppVersion) {
         this.appVersionChangedSubject.next(true);
       }
     } else {

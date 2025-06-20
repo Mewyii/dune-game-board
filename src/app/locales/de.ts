@@ -14,7 +14,7 @@ export const deLocale: Locale = {
   commonYes: 'Ja',
   commonNewVersionAvailable: 'Neue Version verfügbar!',
   commonUpdateWarningText:
-    'Mit dem Update werden alle deine lokalen Daten gelöscht! Bitte speichere deine eigenen Anführer, Tech-Plättchen, Intriguen und Imperium-Karten, bevor du akzeptierst!',
+    'Version {0} -> Version {1} <br><br>Mit dem Update werden alle deine lokalen Daten gelöscht! Bitte speichere deine eigenen Anführer, Tech-Plättchen, Intriguen und Imperium-Karten, bevor du akzeptierst!',
   commonEffectConditionInfluence: 'Einfluss',
   commonEffectConditionConnection: 'Verbindung',
   commonEffectConditionHighCouncilSeat: 'Sitz im hohen Rat',

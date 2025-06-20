@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{ data?.title || t.translate('commonConfirmDialogTitle') }}</h1>
-<div mat-dialog-content>{{ data?.text || t.translate('commonConfirmDialogText') }}</div>
+<div mat-dialog-content><div [innerHTML]="data?.text || t.translate('commonConfirmDialogText')"></div></div>
 <div mat-dialog-actions>
   <button mat-mini-fab [color]="'accent'" (click)="dialogRef.close()">
     <mat-icon>close</mat-icon>
