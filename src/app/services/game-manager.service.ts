@@ -367,10 +367,15 @@ export class GameManager {
     for (const player of newPlayers) {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
-      if (player.isAI && player.id === this.startingPlayerId) {
-        this.setActiveAIPlayer(this.startingPlayerId);
+      if (player.isAI) {
+        if (this.aIManager.aiDifficulty === 'hard') {
+          this.addRewardToPlayer(player.id, { type: 'victory-point' });
+        }
 
-        this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
+        if (player.id === this.startingPlayerId) {
+          this.setActiveAIPlayer(this.startingPlayerId);
+          this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
+        }
       }
     }
 
@@ -1884,8 +1889,20 @@ export class GameManager {
         (x) => x.playerId === player.id && x.fieldId !== turnInfo.agentPlacedOnFieldId
       );
       if (playerAgentsOnOtherFields.length > 0) {
-        shuffle(playerAgentsOnOtherFields);
-        this.removePlayerAgentFromField(player.id, playerAgentsOnOtherFields[0].fieldId);
+        const locations = playerAgentsOnOtherFields.filter(
+          (x) => this.settingsService.getBoardField(x.fieldId)?.ownerReward
+        );
+        const nonLocations = playerAgentsOnOtherFields.filter(
+          (x) => !this.settingsService.getBoardField(x.fieldId)?.ownerReward
+        );
+
+        if (locations.length > 0) {
+          shuffle(locations);
+          this.removePlayerAgentFromField(player.id, locations[0].fieldId);
+        } else if (nonLocations.length > 0) {
+          shuffle(nonLocations);
+          this.removePlayerAgentFromField(player.id, nonLocations[0].fieldId);
+        }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { canLiftAgent: false });
     }
@@ -2621,6 +2638,8 @@ export class GameManager {
         combatMaxDeployableUnits: this.settingsService.getCombatMaxDeployableUnits(),
         troopCombatStrength: this.settingsService.getTroopStrength(),
         dreadnoughtCombatStrength: this.settingsService.getDreadnoughtStrength(),
+        factionInfluenceMaxScore: this.settingsService.getFactionInfluenceMaxScore(),
+        factionInfluenceAllianceTreshold: this.settingsService.getFactionInfluenceAllianceTreshold(),
       },
     } as GameState;
   }

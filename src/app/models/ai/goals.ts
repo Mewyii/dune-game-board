@@ -112,7 +112,14 @@ export type GameState = Readonly<{
   playerTechTilesRewards: PlayerGameElementRewards;
   playerTechTilesConversionCosts: PlayerGameElementRewards;
   playerGameModifiers?: PlayerGameModifiers;
-  gameSettings: Pick<GameContent, 'combatMaxDeployableUnits' | 'troopCombatStrength' | 'dreadnoughtCombatStrength'>;
+  gameSettings: Pick<
+    GameContent,
+    | 'combatMaxDeployableUnits'
+    | 'troopCombatStrength'
+    | 'dreadnoughtCombatStrength'
+    | 'factionInfluenceMaxScore'
+    | 'factionInfluenceAllianceTreshold'
+  >;
 }>;
 
 export interface AIGoal {

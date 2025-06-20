@@ -222,12 +222,23 @@ export class AIManager {
       return;
     }
 
-    const conflictEvaluation = this.effectEvaluationService.getNormalizedRewardArrayEvaluation(
-      gameState.conflict.rewards[0],
-      player,
-      gameState,
-      30
-    );
+    const conflictEvaluation =
+      (normalizeNumber(
+        this.effectEvaluationService.getRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState),
+        30,
+        0
+      ) +
+        normalizeNumber(
+          this.effectEvaluationService.getRewardArrayEvaluationForTurnState(
+            gameState.conflict.rewards[0],
+            player,
+            gameState
+          ),
+          30,
+          0
+        )) /
+      2;
+
     const techEvaluation = clamp(
       normalizeNumber(
         Math.max(...gameState.availableTechTiles.map((x) => this.getTechTileBuyEvaluation(x, player, gameState))),

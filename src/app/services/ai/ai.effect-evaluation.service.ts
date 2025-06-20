@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getParticipateInCombatDesire, getWinCombatDesire } from 'src/app/helpers/ai';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
-import { normalizeNumber } from 'src/app/helpers/common';
 import {
   isChoiceEffectType,
   isConversionEffectType,
@@ -229,15 +228,6 @@ export class AIEffectEvaluationService {
       );
     }
     return evaluationValue;
-  }
-
-  public getNormalizedRewardArrayEvaluation(
-    rewards: EffectReward[],
-    player: Player,
-    gameState: GameState,
-    normalizeMax = 10
-  ) {
-    return normalizeNumber(this.getRewardArrayEvaluation(rewards, player, gameState), normalizeMax, 0);
   }
 
   public getRewardEffectEvaluation(rewardType: EffectRewardType, player: Player, gameState: GameState) {

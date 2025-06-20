@@ -105,7 +105,7 @@ export function getInactiveEnemyCount(gamestate: GameState) {
 export function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: keyof PlayerScore) {
   const playerScore = gameState.playerScore[faction];
 
-  if (playerScore > 5) {
+  if (playerScore >= gameState.gameSettings.factionInfluenceMaxScore) {
     return false;
   }
 
@@ -121,16 +121,37 @@ export function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: 
 export function playerCanGetAllianceThisTurn(player: Player, gameState: GameState, faction: keyof PlayerScore) {
   const playerScore = gameState.playerScore[faction];
 
-  if (playerScore === 3) {
-    return !gameState.enemyScore.some((x) => x[faction] > 3);
+  if (playerScore === gameState.gameSettings.factionInfluenceAllianceTreshold - 1) {
+    return !gameState.enemyScore.some((x) => x[faction] >= gameState.gameSettings.factionInfluenceAllianceTreshold);
   }
   return false;
 }
 
-export function playerCanGetVictoryPointThisTurn(player: Player, gameState: GameState, faction: keyof PlayerScore) {
+export function playerAllianceIsContested(gameState: GameState, faction: keyof PlayerScore) {
   const playerScore = gameState.playerScore[faction];
 
-  return playerScore === 3;
+  if (
+    playerScore < gameState.gameSettings.factionInfluenceAllianceTreshold ||
+    playerScore >= gameState.gameSettings.factionInfluenceMaxScore ||
+    gameState.enemyScore.some((x) => x[faction] >= gameState.gameSettings.factionInfluenceMaxScore)
+  ) {
+    return false;
+  }
+
+  const enemyIsAheadOfPlayer = gameState.enemyScore.some((x) => x[faction] > playerScore);
+  const enemyIsCloseToPlayer = gameState.enemyScore.some((x) => x[faction] + 2 > playerScore);
+  if (!enemyIsAheadOfPlayer && enemyIsCloseToPlayer) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function playerHasUncontestedAlliance(gameState: GameState, faction: keyof PlayerScore) {
+  return (
+    gameState.playerScore[faction] >= gameState.gameSettings.factionInfluenceAllianceTreshold &&
+    !enemyIsCloseToPlayerFactionScore(gameState, faction)
+  );
 }
 
 export function noOneHasMoreInfluence(player: Player, gameState: GameState, faction: keyof PlayerScore) {
@@ -161,7 +182,7 @@ export function getCostAdjustedDesire(player: Player, resources: Resource[], des
 }
 
 export function playerCanDrawCards(gameState: GameState, amount: number) {
-  return gameState.playerDeckCards && gameState.playerDeckCards.length > amount;
+  return gameState.playerDeckCards && gameState.playerDeckCards.length >= amount;
 }
 
 export function getResourceAmountFromArray(resources: Resource[], type: ResourceType) {

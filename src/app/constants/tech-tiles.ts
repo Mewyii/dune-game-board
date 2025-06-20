@@ -106,7 +106,8 @@ export const techTiles: TechTileCard[] = [
         type: 'tech-tile-flip',
       },
       {
-        type: 'tech',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'helper-trade',
@@ -317,7 +318,11 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/dune.png',
     effectSize: 'medium',
     imagePosition: 'top',
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'card-draw',
+      },
+    ],
     effects: [
       {
         type: 'tech-tile-flip',
@@ -586,8 +591,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:tech}{resource:helper-or}2 {resource:water}{resource:tech}{resource:helper-or} 3+ {resource:tech}{resource:tech}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:tech}{resource:helper-or}2 {resource:water}{resource:tech}{resource:helper-or} 3+ {resource:tech}{resource:tech}',
+      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:tech}{resource:helper-or}2 {resource:focus}{resource:tech}{resource:helper-or} 3+ {resource:water}{resource:tech}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:tech}{resource:helper-or}2 {resource:focus}{resource:tech}{resource:helper-or} 3+ {resource:water}{resource:tech}',
       fontSize: 'small',
     },
   },
@@ -1133,7 +1138,8 @@ export const techTiles: TechTileCard[] = [
         type: 'tech-tile-flip',
       },
       {
-        type: 'tech',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'helper-trade',
