@@ -329,6 +329,9 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'focus',
       },
       {
+        type: 'helper-separator',
+      },
+      {
         type: 'troop-insert',
         amount: 2,
       },
@@ -720,7 +723,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/conspiracy_2.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -906,7 +909,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_15.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -1567,7 +1570,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/emperor.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -1850,7 +1853,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/emperor_2.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3246,6 +3249,9 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
       {
+        type: 'helper-separator',
+      },
+      {
         type: 'troop-insert',
         amount: 1,
       },
@@ -4452,6 +4458,9 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffects: [
       {
         type: 'card-draw',
+      },
+      {
+        type: 'helper-separator',
       },
       {
         type: 'dreadnought-insert-or-retreat',

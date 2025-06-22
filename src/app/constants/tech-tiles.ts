@@ -301,10 +301,29 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'signet-ring',
+      },
+      {
+        type: 'turn-pass',
+      },
+    ],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} and pass your turn.',
-      de: '{resource:tech-tile-flip} {resource:card-discard}{resource:helper-trade}{resource:signet-ring} und<br> passe deinen Zug.',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
   },
@@ -435,7 +454,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/ornithopter.png',
-    effectSize: 'medium',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [],
     effects: [
@@ -692,7 +711,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/ornithopters.png',
-    effectSize: 'medium',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [
       {
@@ -1067,9 +1086,6 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [
-      {
-        type: 'troop',
-      },
       {
         type: 'troop',
       },

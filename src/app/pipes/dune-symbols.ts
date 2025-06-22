@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { getEffectTypePath } from '../helpers/reward-types';
-import { ActionType, EffectRewardType } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { getActionTypePath } from '../helpers/action-types';
+import { getEffectTypePath } from '../helpers/reward-types';
+import { ActionType, EffectRewardType } from '../models';
 
 @Pipe({
-    name: 'duneSymbols',
-    standalone: false
+  name: 'duneSymbols',
+  standalone: false,
 })
 export class DuneSymbolsPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
@@ -25,17 +25,14 @@ export class DuneSymbolsPipe implements PipeTransform {
         const resource = resourceString[0].substring(10, resourceString[0].length - 1) as EffectRewardType;
         const resourceImgPath = getEffectTypePath(resource);
 
-        const ratioFix = Math.ceil(iconSizeNumber / 3);
-
         returnValue = returnValue.replace(
           resourceString[0],
           '<img style="min-width: ' +
             iconSize +
             ';height: ' +
             iconSize +
-            ';object-fit:scale-down; margin-bottom:-' +
-            Math.ceil(ratioFix - ratioFix / 3) +
-            'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
+            ';object-fit:scale-down; vertical-align: text-bottom' +
+            ';filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
             '"/>'
         );
@@ -54,9 +51,8 @@ export class DuneSymbolsPipe implements PipeTransform {
             iconSize +
             ';height: ' +
             iconSize +
-            ';object-fit:scale-down; margin-bottom:-' +
-            Math.ceil(ratioFix - ratioFix / 3) +
-            'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
+            ';object-fit:scale-down; vertical-align: text-bottom' +
+            ';filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
             resourceImgPath +
             '"/><div style="position:absolute;top:0px;left:0px;width:100%' +
             ';height:100%;display:flex;align-items:center;justify-content:center;font-size:' +
@@ -83,9 +79,8 @@ export class DuneSymbolsPipe implements PipeTransform {
           Math.ceil(iconSizeNumber - ratioFix / 3) +
           'px;height:' +
           Math.ceil(iconSizeNumber - ratioFix / 2) +
-          'px;object-fit:scale-down; margin-bottom:-' +
-          Math.ceil(0.4 * ratioFix) +
-          'px;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
+          'px;object-fit:scale-down; vertical-align: sub' +
+          ';filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="' +
           factionImgPath +
           '"/>'
       );

@@ -3482,6 +3482,7 @@ export class GameManager {
       'enemies-troop-destroy': 0,
       'enemies-intrigue-trash': 0,
       'card-return-to-hand': 0,
+      'turn-pass': 0,
     };
   }
 }

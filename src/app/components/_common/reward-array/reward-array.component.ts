@@ -18,8 +18,8 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
   @Input() arraySeparationGap = '4px';
   @Input() wrap = true;
-  @Input() centerEffectText = false;
   @Input() alignItems: 'center' | 'end' | 'start' = 'center';
+  @Input() vertical = false;
   public fontSize = '';
   public rewardAmountFontSize = '';
   public marginBottom = '';
@@ -34,8 +34,8 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     this.fontSize = Math.round(sizeNumber - sizeNumber / 3.75) + 'px';
     this.iconMinWidth = Math.round(sizeNumber / 1.33) + 'px';
     this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
-    this.effectGap = Math.round(sizeNumber / 6) + 'px';
-    this.marginBottom = '0px';
+    this.effectGap = Math.round(sizeNumber / 13) + 'px';
+    this.marginBottom = Math.round(sizeNumber / 6) + 'px';
   }
 
   ngOnInit(): void {
@@ -44,8 +44,8 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     this.fontSize = Math.round(sizeNumber - sizeNumber / 3.75) + 'px';
     this.iconMinWidth = Math.round(sizeNumber / 1.33) + 'px';
     this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
-    this.effectGap = Math.round(sizeNumber / 6) + 'px';
-    this.marginBottom = '0px';
+    this.effectGap = Math.round(sizeNumber / 13) + 'px';
+    this.marginBottom = Math.round(sizeNumber / 6) + 'px';
   }
 
   public getEffectTypePath(effectType: EffectType) {

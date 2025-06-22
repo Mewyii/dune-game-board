@@ -61,6 +61,7 @@ export const effectRewards = [
   'enemies-troop-destroy',
   'enemies-intrigue-trash',
   'card-return-to-hand',
+  'turn-pass',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;
