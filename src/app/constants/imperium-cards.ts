@@ -820,8 +820,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'For each card with a {resource:sword}-symbol you have in play: {resource:sword}',
-      de: 'Für jede Karte mit {resource:sword}-Symbol, die du im Spiel hast: {resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -841,6 +841,15 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     revealEffects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-cards-with-sword',
+      },
       {
         type: 'sword',
       },
@@ -1261,7 +1270,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-agents-on-board-spaces',
+        type: 'multiplier-agents-on-board-spaces',
       },
       {
         type: 'card-draw',
@@ -1314,7 +1323,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-agents-on-board-spaces',
+        type: 'multiplier-agents-on-board-spaces',
       },
       {
         type: 'solari',
@@ -1774,10 +1783,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'If you have a {resource:dreadnought} in conflict: {resource:sword}',
-      de: 'Wenn du ein {resource:dreadnought} im Konflikt hast: {resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -1791,6 +1800,12 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-dreadnought-in-conflict-amount',
       },
       {
         type: 'sword',
@@ -2183,13 +2198,18 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'medium',
-    revealEffectSize: 'large',
-    buyEffects: [],
-    customRevealEffect: {
-      en: 'For each of your troops in conflict: {resource:sword}',
-      de: 'Für jede deiner Truppen im Konflikt: {resource:sword}',
+    customAgentEffect: {
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
     agentEffects: [
       {
         type: 'focus',
@@ -2206,6 +2226,14 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -2337,10 +2365,10 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/sardaukar_9.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
-      en: '{resource:loose-troop}{resource:helper-trade}{resource:helper-trade}{resource:sword} for each of your troops in conflict',
-      de: '{resource:loose-troop}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
     revealEffectSize: 'large',
@@ -2354,7 +2382,20 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'troop',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     revealEffects: [
       {
         type: 'focus',
@@ -2983,6 +3024,9 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'sword',
+      },
+      {
+        type: 'helper-separator',
       },
       {
         type: 'troop-insert',
@@ -3721,17 +3765,33 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: [],
     imageUrl: '/assets/images/action-backgrounds/jihad_2.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'faction-influence-up-bene',
       },
     ],
     agentEffects: [],
-    customRevealEffect: {
-      en: '{resource:sword} for each of your troops in conflict',
-      de: '{resource:sword} für jede deiner Truppen im Konflikt',
-      fontSize: 'medium',
-    },
+    revealEffects: [
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
+      },
+    ],
   },
   {
     name: {
@@ -4196,10 +4256,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'For each {resource:dreadnought} in your garrison: {resource:shipping}',
-      de: 'Für jedes {resource:dreadnought} in deiner Garnison: {resource:shipping}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -4211,6 +4271,15 @@ export const imperiumCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-dreadnought-in-garrison-amount',
+      },
+      {
+        type: 'shipping',
       },
     ],
   },
@@ -4299,7 +4368,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     revealEffects: [
       {
-        type: 'condition-agents-on-board-spaces',
+        type: 'multiplier-agents-on-board-spaces',
       },
       {
         type: 'persuasion',
@@ -4448,10 +4517,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'For each {resource:dreadnought} in your garrison: {resource:troop}',
-      de: 'Für jedes {resource:dreadnought} in deiner Garnison: {resource:troop}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -4474,6 +4543,15 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-dreadnought-in-garrison-amount',
+      },
+      {
+        type: 'troop',
       },
     ],
   },
@@ -4612,10 +4690,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'small',
     customRevealEffect: {
-      en: 'For each of your {resource:dreadnought} in conflict:     {resource:sword}{resource:sword}',
-      de: 'Für jedes deiner {resource:dreadnought} im Konflikt:       {resource:sword}{resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [
@@ -4625,7 +4703,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     agentEffects: [
       {
-        type: 'condition-dreadnought-amount',
+        type: 'multiplier-dreadnought-amount',
       },
       {
         type: 'card-draw',
@@ -4635,6 +4713,18 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 2,
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-dreadnought-in-conflict-amount',
+      },
+      {
+        type: 'sword',
       },
     ],
   },

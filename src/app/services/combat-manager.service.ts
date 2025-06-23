@@ -418,7 +418,7 @@ export class CombatManager {
     const combatunits = playerCombatUnits[combatUnitsIndex];
     playerCombatUnits[combatUnitsIndex] = {
       ...combatunits,
-      additionalCombatPower: combatunits.additionalCombatPower + 1,
+      additionalCombatPower: combatunits.additionalCombatPower + amount,
     };
 
     this.playerCombatUnitsSubject.next(playerCombatUnits);
@@ -430,7 +430,7 @@ export class CombatManager {
     const combatUnits = playerCombatUnits[combatUnitsIndex];
     playerCombatUnits[combatUnitsIndex] = {
       ...combatUnits,
-      additionalCombatPower: combatUnits.additionalCombatPower - 1,
+      additionalCombatPower: combatUnits.additionalCombatPower - amount,
     };
 
     this.playerCombatUnitsSubject.next(playerCombatUnits);

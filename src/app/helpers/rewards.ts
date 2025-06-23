@@ -1,23 +1,27 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isArray } from 'lodash';
 import {
   combatUnitTypes,
   Effect,
   EffectChoice,
-  EffectChoiceConversionOrReward,
+  EffectChoiceConversionMultiplierOrReward,
   effectChoices,
   EffectChoiceType,
   EffectCondition,
-  EffectConditionChoiceConversionOrReward,
+  EffectConditionChoiceConversionMultiplierOrReward,
   effectConditions,
   EffectConversion,
-  EffectConversionOrReward,
+  EffectConversionMultiplierOrReward,
   effectConversions,
   EffectConversionType,
+  EffectMultiplier,
+  EffectMultiplierOrReward,
+  effectMultipliers,
+  EffectMultiplierType,
   EffectReward,
   effectRewards,
   EffectRewardType,
   EffectTiming,
-  EffectTimingConditionChoiceConversionOrReward,
+  EffectTimingConditionChoiceConversionMultiplierOrReward,
   effectTimings,
   EffectType,
   resourceTypes,
@@ -26,8 +30,11 @@ import {
   StructuredConditionalEffect,
   StructuredConversionEffect,
   StructuredEffects,
+  StructuredMultiplierEffect,
   StructuredTimingEffect,
 } from '../models';
+import { GameState } from '../models/ai';
+import { getPlayerdreadnoughtCount } from './combat-units';
 
 export function isFactionScoreReward(reward: Effect) {
   if (
@@ -105,30 +112,49 @@ export function isConversionEffect(reward: Effect): reward is EffectConversion {
   return effectConversions.some((x) => x === reward.type);
 }
 
+export function isMultiplierEffect(reward: Effect): reward is EffectMultiplier {
+  return effectMultipliers.some((x) => x === reward.type);
+}
+
 export function isStructuredConditionalEffect(
-  effect: StructuredConditionalEffect | StructuredChoiceEffect | StructuredConversionEffect | EffectReward[]
+  effect:
+    | StructuredConditionalEffect
+    | StructuredChoiceEffect
+    | StructuredConversionEffect
+    | StructuredMultiplierEffect
+    | EffectReward[]
 ): effect is StructuredConditionalEffect {
   return effect.hasOwnProperty('condition');
 }
 
 export function isStructuredChoiceEffect(
-  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[]
+  effect: StructuredChoiceEffect | StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[]
 ): effect is StructuredChoiceEffect {
   return effect.hasOwnProperty('choiceType') && effect.hasOwnProperty('left') && effect.hasOwnProperty('right');
 }
 
 export function isStructuredConversionEffect(
-  effect: EffectReward[] | StructuredConversionEffect
+  effect: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[]
 ): effect is StructuredConversionEffect {
   return effect.hasOwnProperty('conversionType') && effect.hasOwnProperty('costs') && effect.hasOwnProperty('rewards');
 }
 
+export function isStructuredMultiplierEffect(
+  effect: StructuredMultiplierEffect | EffectReward[]
+): effect is StructuredMultiplierEffect {
+  return effect.hasOwnProperty('multiplier') && effect.hasOwnProperty('rewards');
+}
+
 export function isConversionEffectType(input: string): input is EffectConversionType {
-  return ['helper-trade', 'helper-trade-horizontal'].some((x) => x === input);
+  return effectConversions.some((x) => x === input);
 }
 
 export function isChoiceEffectType(input: string): input is EffectChoiceType {
-  return ['helper-or', 'helper-or-horizontal'].some((x) => x === input);
+  return effectChoices.some((x) => x === input);
+}
+
+export function isMultiplierEffectType(input: string): input is EffectMultiplierType {
+  return effectMultipliers.some((x) => x === input);
 }
 
 export function isRewardEffect(reward: Effect): reward is EffectReward {
@@ -182,6 +208,7 @@ export function getFlattenedEffectRewardArray<T extends EffectReward>(array: T[]
 export function getStructuredEffectArrayInfos(effects: Effect[]) {
   const result: StructuredEffects = {
     rewards: [],
+    multiplierEffects: [],
     conversionEffects: [],
     choiceEffects: [],
     conditionalEffects: [],
@@ -203,11 +230,17 @@ export function getStructuredEffectArrayInfos(effects: Effect[]) {
         if (structuredChoiceEffect) {
           result.choiceEffects.push(structuredChoiceEffect);
         } else {
-          const [effectRewards, structuredConversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffects);
+          const [nonConversionEffects, structuredConversionEffect] =
+            getStructuredConversionEffectIfPossible(nonChoiceEffects);
           if (structuredConversionEffect) {
             result.conversionEffects.push(structuredConversionEffect);
           } else {
-            result.rewards.push(...effectRewards);
+            const [effectRewards, multiplierEffect] = getStructuredMultiplierEffectIfPossible(nonConversionEffects);
+            if (multiplierEffect) {
+              result.multiplierEffects.push(multiplierEffect);
+            } else {
+              result.rewards.push(...effectRewards);
+            }
           }
         }
       }
@@ -217,8 +250,8 @@ export function getStructuredEffectArrayInfos(effects: Effect[]) {
 }
 
 export function getSeparatedEffectArrays(effects: Effect[]) {
-  const result: EffectTimingConditionChoiceConversionOrReward[][] = [];
-  let current: EffectTimingConditionChoiceConversionOrReward[] = [];
+  const result: EffectTimingConditionChoiceConversionMultiplierOrReward[][] = [];
+  let current: EffectTimingConditionChoiceConversionMultiplierOrReward[] = [];
 
   for (const item of effects) {
     if (item.type === 'helper-separator') {
@@ -234,12 +267,12 @@ export function getSeparatedEffectArrays(effects: Effect[]) {
 }
 
 export function getStructuredTimingEffectIfPossible(
-  effects: EffectTimingConditionChoiceConversionOrReward[]
-): [EffectConditionChoiceConversionOrReward[], undefined] | [undefined, StructuredTimingEffect] {
+  effects: EffectTimingConditionChoiceConversionMultiplierOrReward[]
+): [EffectConditionChoiceConversionMultiplierOrReward[], undefined] | [undefined, StructuredTimingEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isTimingEffect(effect)) {
       const type = effect.type;
-      const effectsWithoutTiming = effects.slice(index + 1) as EffectConditionChoiceConversionOrReward[];
+      const effectsWithoutTiming = effects.slice(index + 1) as EffectConditionChoiceConversionMultiplierOrReward[];
       const [nonConditionalEffects, structuredConditionalEffect] =
         getStructuredConditionalEffectIfPossible(effectsWithoutTiming);
       if (structuredConditionalEffect) {
@@ -249,32 +282,38 @@ export function getStructuredTimingEffectIfPossible(
         if (choiceEffect) {
           return [undefined, { type, effect: choiceEffect }];
         } else {
-          const [effectRewards, conversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffects);
-          return [undefined, { type, effect: conversionEffect ?? effectRewards }];
+          const [nonConversionEffects, conversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffects);
+          if (conversionEffect) {
+            return [undefined, { type, effect: conversionEffect }];
+          } else {
+            const [effectRewards, multiplierEffect] = getStructuredMultiplierEffectIfPossible(nonConversionEffects);
+            return [undefined, { type, effect: multiplierEffect ?? effectRewards }];
+          }
         }
       }
     }
   }
-  return [effects as EffectConditionChoiceConversionOrReward[], undefined];
+  return [effects as EffectConditionChoiceConversionMultiplierOrReward[], undefined];
 }
 
 export function getStructuredConditionalEffectIfPossible(
-  effects: EffectConditionChoiceConversionOrReward[]
-): [EffectChoiceConversionOrReward[], undefined] | [undefined, StructuredConditionalEffect] {
+  effects: EffectConditionChoiceConversionMultiplierOrReward[]
+): [EffectChoiceConversionMultiplierOrReward[], undefined] | [undefined, StructuredConditionalEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isConditionalEffect(effect)) {
-      const effectsWithoutCondition = effects.slice(index + 1) as EffectChoiceConversionOrReward[];
+      const effectsWithoutCondition = effects.slice(index + 1) as EffectChoiceConversionMultiplierOrReward[];
 
       let conditionFullfilledEffect = undefined;
       const [nonChoiceEffect, choiceEffect] = getStructuredChoiceEffectIfPossible(effectsWithoutCondition);
       if (choiceEffect) {
         conditionFullfilledEffect = choiceEffect;
       } else {
-        const [effectRewards, conversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffect);
+        const [nonConversionEffect, conversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffect);
         if (conversionEffect) {
           conditionFullfilledEffect = conversionEffect;
         } else {
-          conditionFullfilledEffect = effectRewards;
+          const [effectRewards, multiplierEffect] = getStructuredMultiplierEffectIfPossible(nonConversionEffect);
+          conditionFullfilledEffect = multiplierEffect || effectRewards;
         }
       }
 
@@ -299,37 +338,43 @@ export function getStructuredConditionalEffectIfPossible(
           effect: conditionFullfilledEffect,
         };
         return [undefined, conditionalEffect];
-      } else if (effect.type === 'condition-agents-on-board-spaces') {
-        const conditionalEffect = {
-          condition: effect.type,
-          effect: conditionFullfilledEffect,
-        };
-        return [undefined, conditionalEffect];
-      } else if (effect.type === 'condition-dreadnought-amount') {
-        const conditionalEffect = {
-          condition: effect.type,
-          effect: conditionFullfilledEffect,
-        };
-        return [undefined, conditionalEffect];
       }
     }
   }
-  return [effects as EffectChoiceConversionOrReward[], undefined];
+  return [effects as EffectChoiceConversionMultiplierOrReward[], undefined];
 }
 
 export function getStructuredChoiceEffectIfPossible(
-  effects: EffectChoiceConversionOrReward[]
-): [EffectConversionOrReward[], undefined] | [undefined, StructuredChoiceEffect] {
+  effects: EffectChoiceConversionMultiplierOrReward[]
+): [EffectConversionMultiplierOrReward[], undefined] | [undefined, StructuredChoiceEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isChoiceEffect(effect)) {
-      const leftEffect = effects.slice(0, index) as EffectConversionOrReward[];
-      const rightEffect = effects.slice(index + 1) as EffectConversionOrReward[];
-      const [effectRewardsLeft, conversionEffectLeft] = getStructuredConversionEffectIfPossible(leftEffect);
-      const [effectRewardsRight, conversionEffectRight] = getStructuredConversionEffectIfPossible(rightEffect);
+      let structuredLeftEffect = undefined;
+      let structuredRightEffect = undefined;
+
+      const leftEffects = effects.slice(0, index) as EffectConversionMultiplierOrReward[];
+      const [nonConversionEffectLeft, conversionEffectLeft] = getStructuredConversionEffectIfPossible(leftEffects);
+      if (conversionEffectLeft) {
+        structuredLeftEffect = conversionEffectLeft;
+      } else {
+        const [effectRewardsLeft, multiplierEffectLeft] = getStructuredMultiplierEffectIfPossible(nonConversionEffectLeft);
+        structuredLeftEffect = multiplierEffectLeft || effectRewardsLeft;
+      }
+
+      const rightEffects = effects.slice(index + 1) as EffectConversionMultiplierOrReward[];
+      const [nonConversionEffectRight, conversionEffectRight] = getStructuredConversionEffectIfPossible(rightEffects);
+      if (conversionEffectRight) {
+        structuredRightEffect = conversionEffectRight;
+      } else {
+        const [effectRewardsRight, multiplierEffectRight] =
+          getStructuredMultiplierEffectIfPossible(nonConversionEffectRight);
+        structuredRightEffect = multiplierEffectRight || effectRewardsRight;
+      }
+
       const choiceEffect = {
         choiceType: effect.type,
-        left: conversionEffectLeft || effectRewardsLeft,
-        right: conversionEffectRight || effectRewardsRight,
+        left: structuredLeftEffect,
+        right: structuredRightEffect,
       };
       return [undefined, choiceEffect];
     }
@@ -338,19 +383,91 @@ export function getStructuredChoiceEffectIfPossible(
 }
 
 export function getStructuredConversionEffectIfPossible(
-  effects: EffectConversionOrReward[]
-): [EffectReward[], undefined] | [undefined, StructuredConversionEffect] {
+  effects: EffectConversionMultiplierOrReward[]
+): [EffectMultiplierOrReward[], undefined] | [undefined, StructuredConversionEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isConversionEffect(effect)) {
+      const costsEffect = effects.slice(0, index) as EffectMultiplierOrReward[];
+      const rewardsEffect = effects.slice(index + 1) as EffectMultiplierOrReward[];
+
+      const [costs, multiplierEffectCosts] = getStructuredMultiplierEffectIfPossible(costsEffect);
+      const [rewards, multiplierEffectRewards] = getStructuredMultiplierEffectIfPossible(rewardsEffect);
       const conversionEffect = {
         conversionType: effect.type,
-        costs: effects.slice(0, index) as EffectReward[],
-        rewards: effects.slice(index + 1) as EffectReward[],
+        costs: multiplierEffectCosts || costs,
+        rewards: multiplierEffectRewards || rewards,
       };
       return [undefined, conversionEffect];
     }
   }
   return [effects as EffectReward[], undefined];
+}
+
+export function getStructuredMultiplierEffectIfPossible(
+  effects: EffectMultiplierOrReward[]
+): [EffectReward[], undefined] | [undefined, StructuredMultiplierEffect] {
+  for (const [index, effect] of effects.entries()) {
+    if (isMultiplierEffect(effect)) {
+      const multiplierEffect = {
+        multiplier: effect.type,
+        rewards: effects.slice(index + 1) as EffectReward[],
+      };
+      return [undefined, multiplierEffect];
+    }
+  }
+  return [effects as EffectReward[], undefined];
+}
+
+export function getMultipliedRewardEffects(
+  multiplierEffectOrRewardArray: StructuredMultiplierEffect | EffectReward[],
+  gameState: Pick<GameState, 'playerAgentsOnFields' | 'playerCombatUnits' | 'playerHandCardsRewards'>
+): EffectReward[] {
+  if (isArray(multiplierEffectOrRewardArray)) {
+    return multiplierEffectOrRewardArray;
+  } else {
+    let effectMultiplierAmount = 0;
+    const result: EffectReward[] = [];
+
+    if (multiplierEffectOrRewardArray.multiplier === 'multiplier-agents-on-board-spaces') {
+      const agentsOnBoardSpacesCount = gameState.playerAgentsOnFields.length;
+      if (agentsOnBoardSpacesCount > 0) {
+        effectMultiplierAmount = agentsOnBoardSpacesCount;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-amount') {
+      const dreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
+      if (dreadnoughtCount > 0) {
+        effectMultiplierAmount = dreadnoughtCount;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-in-conflict-amount') {
+      const dreadnoughtCount = gameState.playerCombatUnits.shipsInCombat;
+      if (dreadnoughtCount > 0) {
+        effectMultiplierAmount = dreadnoughtCount;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-in-garrison-amount') {
+      const dreadnoughtCount = gameState.playerCombatUnits.shipsInGarrison;
+      if (dreadnoughtCount > 0) {
+        effectMultiplierAmount = dreadnoughtCount;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-troops-in-conflict') {
+      const troopsInConflict = gameState.playerCombatUnits.troopsInCombat;
+      if (troopsInConflict > 0) {
+        effectMultiplierAmount = troopsInConflict;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-cards-with-sword') {
+      const swordAmount = gameState.playerHandCardsRewards.sword;
+      if (swordAmount > 0) {
+        effectMultiplierAmount = 0.75 * swordAmount;
+      }
+    }
+    if (effectMultiplierAmount > 0) {
+      for (const reward of multiplierEffectOrRewardArray.rewards) {
+        const rewardAmount = reward.amount ?? 1;
+        result.push({ type: reward.type, amount: rewardAmount * effectMultiplierAmount });
+      }
+    }
+
+    return result;
+  }
 }
 
 export function getRewardArrayAIInfos(rewards: Effect[]): RewardArrayInfo {

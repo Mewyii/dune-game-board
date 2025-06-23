@@ -25,13 +25,19 @@
   >
     @if(isStructuredConversionEffect(effectOption.left)) {
     <dune-player-effect-conversion [effectConversion]="effectOption.left"></dune-player-effect-conversion>
+    } @else if (isStructuredMultiplierEffect(effectOption.left)) {
+    <dune-reward-array [rewards]="[{ type: effectOption.left.multiplier }]" [textColor]="'white'"></dune-reward-array>
+    <dune-reward-array [rewards]="effectOption.left.rewards" [textColor]="'white'"></dune-reward-array>
     } @else { @for (leftEffect of effectOption.left; track $index) {
     <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
     } }
     <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
     @if(isStructuredConversionEffect(effectOption.right)) {
     <dune-player-effect-conversion [effectConversion]="effectOption.right"></dune-player-effect-conversion>
-    } @else { @for (rightEffect of effectOption.right; track $index) {
+    } @else if (isStructuredMultiplierEffect(effectOption.right)) {
+    <dune-reward-array [rewards]="[{ type: effectOption.right.multiplier }]" [textColor]="'white'"></dune-reward-array>
+    <dune-reward-array [rewards]="effectOption.right.rewards" [textColor]="'white'"></dune-reward-array>
+    }@else { @for (rightEffect of effectOption.right; track $index) {
     <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
     } }
     <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">

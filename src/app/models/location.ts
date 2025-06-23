@@ -1,6 +1,6 @@
 import {
-  EffectChoiceConversionOrReward,
-  EffectConversionOrReward,
+  EffectChoiceConversionMultiplierOrReward,
+  EffectConversionMultiplierOrReward,
   EffectReward,
   FactionInfluence,
   FactionType,
@@ -20,8 +20,8 @@ export interface ActionField {
   title: LanguageString;
   actionType: ActionType;
   costs?: EffectReward[];
-  rewards: EffectChoiceConversionOrReward[];
-  conversionOptions?: EffectConversionOrReward[][];
+  rewards: EffectChoiceConversionMultiplierOrReward[];
+  conversionOptions?: EffectConversionMultiplierOrReward[][];
   ownerReward?: EffectReward;
   pathToImage: string;
   isBattlefield?: boolean;

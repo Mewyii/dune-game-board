@@ -37,7 +37,7 @@
               <span class="reward-label">{{ getEffectTypeControl(i).value }}</span>
             </div>
           </mat-select-trigger>
-          <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType"
+          <mat-option *ngFor="let rewardType of effectTypes" [value]="rewardType"
             ><div class="reward-container">
               <img class="reward" [src]="getEffectTypePath(rewardType)" />
               <span class="reward-label">{{ rewardType }}</span>

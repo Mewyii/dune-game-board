@@ -108,6 +108,7 @@ export const duneEvents: DuneEvent[] = [
       conditionalEffects: [],
       conversionEffects: [],
       timingEffects: [],
+      multiplierEffects: [],
       choiceEffects: [],
     },
   },
@@ -187,6 +188,7 @@ export const duneEvents: DuneEvent[] = [
       ],
       choiceEffects: [],
       timingEffects: [],
+      multiplierEffects: [],
     },
   },
   {
@@ -253,6 +255,7 @@ export const duneEvents: DuneEvent[] = [
       ],
       choiceEffects: [],
       timingEffects: [],
+      multiplierEffects: [],
     },
   },
   {
@@ -278,6 +281,7 @@ export const duneEvents: DuneEvent[] = [
       ],
       choiceEffects: [],
       timingEffects: [],
+      multiplierEffects: [],
     },
   },
   {
@@ -303,6 +307,7 @@ export const duneEvents: DuneEvent[] = [
       ],
       choiceEffects: [],
       timingEffects: [],
+      multiplierEffects: [],
     },
   },
 ];

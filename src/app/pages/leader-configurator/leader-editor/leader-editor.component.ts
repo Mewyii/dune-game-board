@@ -10,6 +10,7 @@ import {
   effectChoices,
   effectConditions,
   effectConversions,
+  effectMultipliers,
   effectRewards,
   effectSeparators,
   effectTimings,
@@ -19,10 +20,10 @@ import {
 } from 'src/app/models';
 
 @Component({
-    selector: 'dune-leader-editor',
-    templateUrl: './leader-editor.component.html',
-    styleUrls: ['./leader-editor.component.scss'],
-    standalone: false
+  selector: 'dune-leader-editor',
+  templateUrl: './leader-editor.component.html',
+  styleUrls: ['./leader-editor.component.scss'],
+  standalone: false,
 })
 export class LeaderEditorComponent implements OnChanges {
   @Input() leader: Leader | null = null;
@@ -34,13 +35,14 @@ export class LeaderEditorComponent implements OnChanges {
   factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b)) as FactionType[];
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
   effectTypes = [
-    ...this.rewardTypes,
-    ...effectTimings,
     ...effectSeparators,
+    ...effectTimings,
+    ...effectConditions,
     ...effectChoices,
     ...effectConversions,
-    ...effectConditions,
-  ].sort((a, b) => a.localeCompare(b));
+    ...effectMultipliers,
+    ...this.rewardTypes,
+  ];
   fontSizes = ['large', 'medium', 'small'];
 
   constructor(private fb: FormBuilder) {

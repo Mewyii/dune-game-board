@@ -74,13 +74,23 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 1,
     imageUrl: '/assets/images/action-backgrounds/assault_trooper.png',
-    effectSize: 'medium',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'multiplier-cards-with-sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     customEffect: {
-      en: '<b>Reveal turn</b>: <br>For each card with a {resource:sword}-symbol you have in play: {resource:sword}',
-      de: '<b>Aufdeckzug</b>: <br>Für jede Karte mit {resource:sword}-Symbol, die du im Spiel hast: {resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },
@@ -229,11 +239,33 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
+    effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     customEffect: {
-      en: '<b>Reveal turn</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} for each of your troops in conflict',
-      de: '<b>Aufdeckzug</b>:<br>{resource:tech-tile-flip} {resource:solari;amount:2}{resource:helper-trade}{resource:sword} für jede deiner Truppen im Konflikt',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
   },

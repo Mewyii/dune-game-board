@@ -1,7 +1,15 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { combatUnitTypes, effectChoices, effectConversions, effectRewards, EffectType, resourceTypes } from 'src/app/models';
+import {
+  combatUnitTypes,
+  effectChoices,
+  effectConversions,
+  effectMultipliers,
+  effectRewards,
+  EffectType,
+  resourceTypes,
+} from 'src/app/models';
 import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
 
 @Component({
@@ -17,9 +25,8 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
 
   editMode = false;
   intrigueTypes = intriguesTypes;
-  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards, ...effectConversions, ...effectChoices].sort(
-    (a, b) => a.localeCompare(b)
-  ); // Add other reward types
+  rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
+  effectTypes = [...effectChoices, ...effectConversions, ...effectMultipliers, ...this.rewardTypes];
 
   constructor(private fb: FormBuilder) {
     this.initForm();

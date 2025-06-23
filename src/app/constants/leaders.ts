@@ -225,8 +225,8 @@ export const leaders: Leader[] = [
       de: 'Blind und doch Sehend',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: For each of your agents <br>on {faction:town} board spaces: {resource:persuasion;amount:1}. For each of your agentson {faction:fremen} board spaces: {resource:troop}',
-      de: '<b>Aufdeckzug</b>: Für jeden deiner Agenten auf {faction:town}-Feldern: {resource:persuasion;amount:1}. Für jeden deiner Agenten auf {faction:fremen}-Feldern: {resource:troop}',
+      en: '<b>Reveal turn</b>: For each of your {resource:agent} <br>on {faction:town} board spaces: {resource:persuasion;amount:1}, on {faction:fremen} board spaces: {resource:troop}',
+      de: '<b>Aufdeckzug</b>: Für jeden deiner {resource:agent} auf {faction:town}-Feldern: {resource:persuasion;amount:1}, auf {faction:fremen}-Feldern: {resource:troop}',
     },
     signetName: {
       en: 'Accusing prophet',

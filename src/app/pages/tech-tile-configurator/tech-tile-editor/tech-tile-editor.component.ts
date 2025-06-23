@@ -7,6 +7,7 @@ import {
   effectChoices,
   effectConditions,
   effectConversions,
+  effectMultipliers,
   effectRewards,
   effectSeparators,
   effectTimings,
@@ -18,10 +19,10 @@ import {
 import { TechTileCard } from 'src/app/models/tech-tile';
 
 @Component({
-    selector: 'dune-tech-tile-editor',
-    templateUrl: './tech-tile-editor.component.html',
-    styleUrls: ['./tech-tile-editor.component.scss'],
-    standalone: false
+  selector: 'dune-tech-tile-editor',
+  templateUrl: './tech-tile-editor.component.html',
+  styleUrls: ['./tech-tile-editor.component.scss'],
+  standalone: false,
 })
 export class TechTileEditorComponent implements OnInit, OnChanges {
   @Input() techTile: TechTileCard | null = null;
@@ -34,13 +35,14 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
   effectTypes = [
-    ...this.rewardTypes,
-    ...effectTimings,
     ...effectSeparators,
+    ...effectTimings,
+    ...effectConditions,
     ...effectChoices,
     ...effectConversions,
-    ...effectConditions,
-  ].sort((a, b) => a.localeCompare(b));
+    ...effectMultipliers,
+    ...this.rewardTypes,
+  ];
 
   fontSizes = ['large', 'medium', 'small'];
   imagePositions = ['top', 'center', 'bottom'];

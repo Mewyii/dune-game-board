@@ -3,15 +3,23 @@ import { ActiveFactionType, CombatUnitType, ResourceType } from '.';
 export const effectRewards = [
   'agent',
   'agent-lift',
+  'beetle',
   'buildup',
   'card-destroy',
   'card-discard',
   'card-draw',
   'card-draw-or-destroy',
+  'card-return-to-hand',
   'card-round-start',
   'combat',
   'council-seat-large',
   'council-seat-small',
+  'dreadnought-insert',
+  'dreadnought-insert-or-retreat',
+  'dreadnought-retreat',
+  'enemies-card-discard',
+  'enemies-intrigue-trash',
+  'enemies-troop-destroy',
   'faction-influence-down-bene',
   'faction-influence-down-choice',
   'faction-influence-down-emperor',
@@ -33,48 +41,47 @@ export const effectRewards = [
   'mentat',
   'persuasion',
   'placeholder',
+  'recruitment-bene',
+  'recruitment-emperor',
+  'recruitment-fremen',
+  'recruitment-guild',
+  'research',
   'shipping',
   'signet-ring',
   'signet-token',
+  'specimen',
   'spice-accumulation',
   'sword',
   'sword-master',
   'tech',
   'tech-tile',
   'tech-tile-flip',
-  'victory-point',
   'trash-self',
-  'recruitment-emperor',
-  'recruitment-fremen',
-  'recruitment-bene',
-  'recruitment-guild',
-  'research',
-  'specimen',
-  'beetle',
   'troop-insert',
   'troop-insert-or-retreat',
   'troop-retreat',
-  'dreadnought-insert',
-  'dreadnought-insert-or-retreat',
-  'dreadnought-retreat',
-  'enemies-card-discard',
-  'enemies-troop-destroy',
-  'enemies-intrigue-trash',
-  'card-return-to-hand',
   'turn-pass',
+  'victory-point',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;
-export const effectTimings = ['timing-game-start', 'timing-round-start', 'timing-turn-start', 'timing-reveal-turn'] as const;
-export const effectConditions = [
-  'condition-influence',
-  'condition-connection',
-  'condition-high-council-seat',
-  'condition-agents-on-board-spaces',
-  'condition-dreadnought-amount',
-] as const;
+
+export const effectTimings = ['timing-game-start', 'timing-reveal-turn', 'timing-round-start', 'timing-turn-start'] as const;
+
+export const effectConditions = ['condition-connection', 'condition-high-council-seat', 'condition-influence'] as const;
+
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
+
 export const effectConversions = ['helper-trade', 'helper-trade-horizontal'] as const;
+
+export const effectMultipliers = [
+  'multiplier-agents-on-board-spaces',
+  'multiplier-dreadnought-amount',
+  'multiplier-dreadnought-in-conflict-amount',
+  'multiplier-dreadnought-in-garrison-amount',
+  'multiplier-troops-in-conflict',
+  'multiplier-cards-with-sword',
+] as const;
 
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
 
@@ -83,14 +90,16 @@ export type EffectTimingType = (typeof effectTimings)[number];
 export type EffectChoiceType = (typeof effectChoices)[number];
 export type EffectConditionType = (typeof effectConditions)[number];
 export type EffectConversionType = (typeof effectConversions)[number];
+export type EffectMultiplierType = (typeof effectMultipliers)[number];
 
 export type EffectType =
-  | EffectTimingType
-  | EffectRewardType
   | EffectSeparatorType
+  | EffectTimingType
+  | EffectConditionType
   | EffectChoiceType
   | EffectConversionType
-  | EffectConditionType;
+  | EffectMultiplierType
+  | EffectRewardType;
 
 interface EffectBase {
   type: EffectType;
@@ -120,78 +129,95 @@ export interface EffectConversion extends EffectBase {
   type: EffectConversionType;
 }
 
+export interface EffectMultiplier extends EffectBase {
+  type: EffectMultiplierType;
+}
+
 export interface EffectReward extends EffectBase {
   type: EffectRewardType;
 }
 
-export type Effect = EffectSeparator | EffectTiming | EffectCondition | EffectChoice | EffectConversion | EffectReward;
-export type EffectTimingConditionChoiceConversionOrReward =
+export type Effect =
+  | EffectSeparator
   | EffectTiming
   | EffectCondition
   | EffectChoice
   | EffectConversion
+  | EffectMultiplier
   | EffectReward;
-export type EffectConditionChoiceConversionOrReward = EffectCondition | EffectChoice | EffectConversion | EffectReward;
-export type EffectChoiceConversionOrReward = EffectChoice | EffectConversion | EffectReward;
-export type EffectConversionOrReward = EffectConversion | EffectReward;
+export type EffectTimingConditionChoiceConversionMultiplierOrReward =
+  | EffectTiming
+  | EffectCondition
+  | EffectChoice
+  | EffectConversion
+  | EffectMultiplier
+  | EffectReward;
+export type EffectConditionChoiceConversionMultiplierOrReward =
+  | EffectCondition
+  | EffectChoice
+  | EffectConversion
+  | EffectMultiplier
+  | EffectReward;
+export type EffectChoiceConversionMultiplierOrReward = EffectChoice | EffectConversion | EffectMultiplier | EffectReward;
+export type EffectConversionMultiplierOrReward = EffectConversion | EffectMultiplier | EffectReward;
+export type EffectMultiplierOrReward = EffectMultiplier | EffectReward;
 
 export interface StructuredEffects {
-  rewards: EffectReward[];
-  conversionEffects: StructuredConversionEffect[];
-  choiceEffects: StructuredChoiceEffect[];
-  conditionalEffects: StructuredConditionalEffect[];
   timingEffects: StructuredTimingEffect[];
+  conditionalEffects: StructuredConditionalEffect[];
+  choiceEffects: StructuredChoiceEffect[];
+  conversionEffects: StructuredConversionEffect[];
+  multiplierEffects: StructuredMultiplierEffect[];
+  rewards: EffectReward[];
 }
 
 export interface StructuredTimingEffect {
   type: EffectTimingType;
-  effect: StructuredConditionalEffect | StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
+  effect:
+    | StructuredConditionalEffect
+    | StructuredChoiceEffect
+    | StructuredConversionEffect
+    | StructuredMultiplierEffect
+    | EffectReward[];
 }
 
 export interface StructuredConditionalEffectConnection {
   condition: 'condition-connection';
   faction: ActiveFactionType;
-  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
+  effect: StructuredChoiceEffect | StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[];
 }
 
 export interface StructuredConditionalEffectInfluence {
   condition: 'condition-influence';
   amount: number;
   faction: ActiveFactionType;
-  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
+  effect: StructuredChoiceEffect | StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[];
 }
 
 export interface StructuredConditionalEffectHighCouncilSeat {
   condition: 'condition-high-council-seat';
-  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
-}
-
-export interface StructuredConditionalEffectAgentsOnBoardSpaces {
-  condition: 'condition-agents-on-board-spaces';
-  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
-}
-
-export interface StructuredConditionalEffectDreadnoughtAmount {
-  condition: 'condition-dreadnought-amount';
-  effect: StructuredChoiceEffect | StructuredConversionEffect | EffectReward[];
+  effect: StructuredChoiceEffect | StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[];
 }
 
 export type StructuredConditionalEffect =
   | StructuredConditionalEffectConnection
   | StructuredConditionalEffectInfluence
-  | StructuredConditionalEffectHighCouncilSeat
-  | StructuredConditionalEffectAgentsOnBoardSpaces
-  | StructuredConditionalEffectDreadnoughtAmount;
+  | StructuredConditionalEffectHighCouncilSeat;
 
 export interface StructuredChoiceEffect {
   choiceType: EffectChoiceType;
-  left: EffectReward[] | StructuredConversionEffect;
-  right: EffectReward[] | StructuredConversionEffect;
+  left: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[];
+  right: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[];
 }
 
 export interface StructuredConversionEffect {
   conversionType: EffectConversionType;
-  costs: EffectReward[];
+  costs: EffectReward[] | StructuredMultiplierEffect;
+  rewards: EffectReward[] | StructuredMultiplierEffect;
+}
+
+export interface StructuredMultiplierEffect {
+  multiplier: EffectMultiplierType;
   rewards: EffectReward[];
 }
 

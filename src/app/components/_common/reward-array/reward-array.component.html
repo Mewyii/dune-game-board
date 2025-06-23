@@ -53,23 +53,65 @@
         {{ t.translate('commonEffectConditionHighCouncilSeat') }}:
       </div>
     </div>
-    } @else if (isAgentsOnBoardSpacesConditionType(reward.type)) {
+    } } @else if (isAgentsOnBoardSpacesMultiplierType(reward.type)) {
     <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
       <div
         [class]="'text inline ' + textColor"
         [style.fontSize]="fontSize"
-        [innerHTML]="t.translate('commonEffectConditionAgentsOnBoardSpaces', true, reward.amount) + ':' | duneSymbols : size"
+        [innerHTML]="
+          t.translate('commonEffectMultiplierAgentsOnBoardSpaces', true, reward.amount) + ':' | duneSymbols : size
+        "
       ></div>
     </div>
-    } @else if (isDreadnoughtAmountConditionType(reward.type)) {
+    } @else if (isDreadnoughtAmountMultiplierType(reward.type)) {
     <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
       <div
         [class]="'text inline ' + textColor"
         [style.fontSize]="fontSize"
-        [innerHTML]="t.translate('commonEffectConditionDreadnoughtAmount', true, reward.amount) + ' :' | duneSymbols : size"
+        [innerHTML]="t.translate('commonEffectMultiplierDreadnoughtAmount', true, reward.amount) + ' :' | duneSymbols : size"
       ></div>
     </div>
-    } } @else if (reward.type === 'troop-insert') {
+    } @else if (reward.type === 'multiplier-dreadnought-in-conflict-amount') {
+    <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+      <div
+        [class]="'text inline ' + textColor"
+        [style.fontSize]="fontSize"
+        [innerHTML]="
+          t.translate('commonEffectMultiplierDreadnoughtInConflictAmount', true, reward.amount) + ' :' | duneSymbols : size
+        "
+      ></div>
+    </div>
+    } @else if (reward.type === 'multiplier-dreadnought-in-garrison-amount') {
+    <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+      <div
+        [class]="'text inline ' + textColor"
+        [style.fontSize]="fontSize"
+        [innerHTML]="
+          t.translate('commonEffectMultiplierDreadnoughtInGarrisonAmount', true, reward.amount) + ' :' | duneSymbols : size
+        "
+      ></div>
+    </div>
+    } @else if (reward.type === 'multiplier-cards-with-sword') {
+    <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+      <div
+        [class]="'text inline ' + textColor"
+        [style.fontSize]="fontSize"
+        [innerHTML]="
+          t.translate('commonEffectMultiplierCardsWithSwordAmount', true, reward.amount) + ' :' | duneSymbols : size
+        "
+      ></div>
+    </div>
+    } @else if (isTroopsInConflictMultiplierType(reward.type)) {
+    <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+      <div
+        [class]="'text inline ' + textColor"
+        [style.fontSize]="fontSize"
+        [innerHTML]="
+          t.translate('commonEffectMultiplierTroopsInConflictAmount', true, reward.amount) + ':' | duneSymbols : size
+        "
+      ></div>
+    </div>
+    } @else if (reward.type === 'troop-insert') {
     <div
       [class]="'text inline ' + textColor"
       [style.fontSize]="fontSize"

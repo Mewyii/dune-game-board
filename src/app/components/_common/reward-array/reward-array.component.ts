@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import { getSeparatedEffectArrays, isConditionalEffect, isTimingEffect } from 'src/app/helpers/rewards';
-import { Effect, EffectTimingConditionChoiceConversionOrReward, EffectType } from 'src/app/models';
+import { Effect, EffectTimingConditionChoiceConversionMultiplierOrReward, EffectType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -12,7 +12,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
-  public effectArrays: EffectTimingConditionChoiceConversionOrReward[][] = [];
+  public effectArrays: EffectTimingConditionChoiceConversionMultiplierOrReward[][] = [];
   @Input() rewards: Effect[] = [];
   @Input() size: string = '32px';
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
@@ -52,7 +52,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return getEffectTypePath(effectType);
   }
 
-  public isTimingEffect(effect: EffectTimingConditionChoiceConversionOrReward) {
+  public isTimingEffect(effect: EffectTimingConditionChoiceConversionMultiplierOrReward) {
     return isTimingEffect(effect);
   }
 
@@ -88,12 +88,16 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return type === 'condition-high-council-seat';
   }
 
-  public isAgentsOnBoardSpacesConditionType(type: EffectType) {
-    return type === 'condition-agents-on-board-spaces';
+  public isAgentsOnBoardSpacesMultiplierType(type: EffectType) {
+    return type === 'multiplier-agents-on-board-spaces';
   }
 
-  public isDreadnoughtAmountConditionType(type: EffectType) {
-    return type === 'condition-dreadnought-amount';
+  public isDreadnoughtAmountMultiplierType(type: EffectType) {
+    return type === 'multiplier-dreadnought-amount';
+  }
+
+  public isTroopsInConflictMultiplierType(type: EffectType) {
+    return type === 'multiplier-troops-in-conflict';
   }
 
   public getFactionTypePath(effect: any) {

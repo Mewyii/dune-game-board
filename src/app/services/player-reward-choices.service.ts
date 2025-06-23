@@ -164,11 +164,12 @@ export class PlayerRewardChoicesService {
       rewardsChoices: [],
       customChoices: [],
       effectChoices: {
-        rewards: [],
-        choiceEffects: [],
-        conditionalEffects: [],
         timingEffects: [],
+        conditionalEffects: [],
+        choiceEffects: [],
         conversionEffects: [],
+        multiplierEffects: [],
+        rewards: [],
       },
     };
   }

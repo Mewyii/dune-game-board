@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { isArray } from 'lodash';
 import { getParticipateInCombatDesire, getWinCombatDesire } from 'src/app/helpers/ai';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import {
+  getMultipliedRewardEffects,
   isChoiceEffectType,
   isConversionEffectType,
   isStructuredChoiceEffect,
@@ -15,6 +17,7 @@ import {
   StructuredConditionalEffect,
   StructuredConversionEffect,
   StructuredEffects,
+  StructuredMultiplierEffect,
 } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
@@ -41,6 +44,13 @@ export class AIEffectEvaluationService {
     for (const conditionEffect of effects.conditionalEffects) {
       evaluationValue += this.getConditionEffectEvaluation(conditionEffect, player, gameState);
     }
+    for (const multiplierEffect of effects.multiplierEffects) {
+      const rewards = this.getMultipliedRewardEffectEstimation(multiplierEffect, gameState);
+
+      for (const reward of rewards) {
+        evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+      }
+    }
     for (const timingEffect of effects.timingEffects) {
       if (isStructuredConditionalEffect(timingEffect.effect)) {
         evaluationValue += this.getConditionEffectEvaluation(timingEffect.effect, player, gameState);
@@ -49,7 +59,9 @@ export class AIEffectEvaluationService {
       } else if (isStructuredConversionEffect(timingEffect.effect)) {
         evaluationValue += this.getConversionEffectEvaluation(timingEffect.effect, player, gameState);
       } else {
-        for (const reward of timingEffect.effect) {
+        const rewards = this.getMultipliedRewardEffectEstimation(timingEffect.effect, gameState);
+
+        for (const reward of rewards) {
           evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
         }
       }
@@ -71,6 +83,13 @@ export class AIEffectEvaluationService {
     for (const conditionEffect of effects.conditionalEffects) {
       evaluationValue += this.getConditionEffectEvaluationForTurnState(conditionEffect, player, gameState);
     }
+    for (const multiplierEffect of effects.multiplierEffects) {
+      const rewards = getMultipliedRewardEffects(multiplierEffect, gameState);
+
+      for (const reward of rewards) {
+        evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+      }
+    }
     return evaluationValue;
   }
 
@@ -79,10 +98,18 @@ export class AIEffectEvaluationService {
     if (isChoiceEffectType(choiceEffect.choiceType)) {
       const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.left)
         ? this.getConversionEffectEvaluation(choiceEffect.left, player, gameState)
-        : this.getRewardArrayEvaluation(choiceEffect.left, player, gameState);
+        : this.getRewardArrayEvaluation(
+            this.getMultipliedRewardEffectEstimation(choiceEffect.left, gameState),
+            player,
+            gameState
+          );
       const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.right)
         ? this.getConversionEffectEvaluation(choiceEffect.right, player, gameState)
-        : this.getRewardArrayEvaluation(choiceEffect.right, player, gameState);
+        : this.getRewardArrayEvaluation(
+            this.getMultipliedRewardEffectEstimation(choiceEffect.right, gameState),
+            player,
+            gameState
+          );
 
       evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
     }
@@ -95,10 +122,18 @@ export class AIEffectEvaluationService {
     if (isChoiceEffectType(choiceEffect.choiceType)) {
       const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.left)
         ? this.getConversionEffectEvaluationForTurnState(choiceEffect.left, player, gameState)
-        : this.getRewardArrayEvaluationForTurnState(choiceEffect.left, player, gameState);
+        : this.getRewardArrayEvaluationForTurnState(
+            getMultipliedRewardEffects(choiceEffect.left, gameState),
+            player,
+            gameState
+          );
       const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.right)
         ? this.getConversionEffectEvaluationForTurnState(choiceEffect.right, player, gameState)
-        : this.getRewardArrayEvaluationForTurnState(choiceEffect.right, player, gameState);
+        : this.getRewardArrayEvaluationForTurnState(
+            getMultipliedRewardEffects(choiceEffect.right, gameState),
+            player,
+            gameState
+          );
 
       evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
     }
@@ -109,8 +144,11 @@ export class AIEffectEvaluationService {
   public getConversionEffectEvaluation(conversionEffect: StructuredConversionEffect, player: Player, gameState: GameState) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.conversionType)) {
-      const costsEvaluation = this.getCostsArrayEvaluation(conversionEffect.costs, player, gameState);
-      const rewardsEvaluation = this.getRewardArrayEvaluation(conversionEffect.rewards, player, gameState);
+      const costs = this.getMultipliedRewardEffectEstimation(conversionEffect.costs, gameState);
+      const rewards = this.getMultipliedRewardEffectEstimation(conversionEffect.rewards, gameState);
+
+      const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
+      const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
 
       if (-costsEvaluation + rewardsEvaluation > 0) {
         evaluationValue += -costsEvaluation + rewardsEvaluation;
@@ -126,8 +164,11 @@ export class AIEffectEvaluationService {
   ) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.conversionType)) {
-      const costsEvaluation = this.getCostsArrayEvaluationForTurnState(conversionEffect.costs, player, gameState);
-      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(conversionEffect.rewards, player, gameState);
+      const costs = getMultipliedRewardEffects(conversionEffect.costs, gameState);
+      const rewards = getMultipliedRewardEffects(conversionEffect.rewards, gameState);
+
+      const costsEvaluation = this.getCostsArrayEvaluationForTurnState(costs, player, gameState);
+      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
 
       evaluationValue += -costsEvaluation + rewardsEvaluation;
     }
@@ -141,7 +182,9 @@ export class AIEffectEvaluationService {
     } else if (isStructuredConversionEffect(conditionEffect.effect)) {
       evaluationValue += this.getConversionEffectEvaluation(conditionEffect.effect, player, gameState);
     } else {
-      evaluationValue += this.getRewardArrayEvaluation(conditionEffect.effect, player, gameState);
+      const rewards = this.getMultipliedRewardEffectEstimation(conditionEffect.effect, gameState);
+
+      evaluationValue += this.getRewardArrayEvaluation(rewards, player, gameState);
     }
 
     if (conditionEffect.condition === 'condition-connection') {
@@ -153,11 +196,8 @@ export class AIEffectEvaluationService {
       }
     } else if (conditionEffect.condition === 'condition-high-council-seat') {
       evaluationValue = evaluationValue * (player.hasCouncilSeat ? 1.0 : 0.25);
-    } else if (conditionEffect.condition === 'condition-agents-on-board-spaces') {
-      evaluationValue = evaluationValue * player.agents * 0.75;
-    } else if (conditionEffect.condition === 'condition-dreadnought-amount') {
-      evaluationValue = evaluationValue * getPlayerdreadnoughtCount(gameState.playerCombatUnits);
     }
+
     return evaluationValue;
   }
 
@@ -172,7 +212,9 @@ export class AIEffectEvaluationService {
     } else if (isStructuredConversionEffect(conditionEffect.effect)) {
       evaluationValue += this.getConversionEffectEvaluationForTurnState(conditionEffect.effect, player, gameState);
     } else {
-      evaluationValue += this.getRewardArrayEvaluationForTurnState(conditionEffect.effect, player, gameState);
+      const rewards = getMultipliedRewardEffects(conditionEffect.effect, gameState);
+
+      evaluationValue += this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
     }
 
     if (conditionEffect.condition === 'condition-connection') {
@@ -188,12 +230,50 @@ export class AIEffectEvaluationService {
       if (player.hasCouncilSeat) {
         return evaluationValue;
       }
-    } else if (conditionEffect.condition === 'condition-agents-on-board-spaces') {
-      evaluationValue = evaluationValue * gameState.playerAgentsOnFields.length;
-    } else if (conditionEffect.condition === 'condition-dreadnought-amount') {
-      evaluationValue = evaluationValue * getPlayerdreadnoughtCount(gameState.playerCombatUnits);
     }
+
     return 0;
+  }
+
+  private getMultipliedRewardEffectEstimation(
+    multiplierEffectOrRewardArray: StructuredMultiplierEffect | EffectReward[],
+    gameState: GameState
+  ): EffectReward[] {
+    if (isArray(multiplierEffectOrRewardArray)) {
+      return multiplierEffectOrRewardArray;
+    } else {
+      let effectMultiplierAmount = 0;
+      const result: EffectReward[] = [];
+
+      if (multiplierEffectOrRewardArray.multiplier === 'multiplier-agents-on-board-spaces') {
+        const totalAgentCount = gameState.playerAgentsAvailable + gameState.playerAgentsOnFields.length;
+        effectMultiplierAmount = 0.8 * totalAgentCount;
+      } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-amount') {
+        const dreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
+        effectMultiplierAmount = 0.2 + 0.8 * dreadnoughtCount;
+      } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-in-conflict-amount') {
+        const dreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
+        effectMultiplierAmount = 0.2 + 0.6 * dreadnoughtCount;
+      } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-in-garrison-amount') {
+        const dreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
+        effectMultiplierAmount = 0.2 + 0.4 * dreadnoughtCount;
+      } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-troops-in-conflict') {
+        const troops = gameState.playerCombatUnits.troopsInGarrison;
+        effectMultiplierAmount = 2 + 0.5 * troops;
+      } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-cards-with-sword') {
+        const cardSwordAmount = gameState.playerCardsRewards.sword;
+        effectMultiplierAmount = 0.1 + 0.33 * cardSwordAmount;
+      }
+
+      if (effectMultiplierAmount > 0) {
+        for (const reward of multiplierEffectOrRewardArray.rewards) {
+          const rewardAmount = reward.amount ?? 1;
+          result.push({ type: reward.type, amount: rewardAmount * effectMultiplierAmount });
+        }
+      }
+
+      return result;
+    }
   }
 
   public getRewardArrayEvaluation(rewards: EffectReward[], player: Player, gameState: GameState) {

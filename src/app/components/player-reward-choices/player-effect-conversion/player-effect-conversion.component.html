@@ -1,9 +1,15 @@
 <div class="conversion-container">
-  @for (leftEffect of effectConversion.costs; track $index) {
+  @if (isStructuredMultiplierEffect(effectConversion.costs)) {
+  <dune-reward-array [rewards]="[{ type: effectConversion.costs.multiplier }]" [textColor]="'white'"></dune-reward-array>
+  <dune-reward-array [rewards]="effectConversion.costs.rewards" [textColor]="'white'"></dune-reward-array>
+  } @else { @for (leftEffect of effectConversion.costs; track $index) {
   <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
-  }
+  } }
   <dune-reward-array [rewards]="[{ type: 'helper-trade' }]"></dune-reward-array>
-  @for (rightEffect of effectConversion.rewards; track $index) {
-  <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
-  }
+  @if (isStructuredMultiplierEffect(effectConversion.rewards)) {
+  <dune-reward-array [rewards]="[{ type: effectConversion.rewards.multiplier }]" [textColor]="'white'"></dune-reward-array>
+  <dune-reward-array [rewards]="effectConversion.rewards.rewards" [textColor]="'white'"></dune-reward-array>
+  } @else { @for (leftEffect of effectConversion.rewards; track $index) {
+  <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
+  } }
 </div>

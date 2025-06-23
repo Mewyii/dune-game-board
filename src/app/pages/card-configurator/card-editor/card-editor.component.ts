@@ -9,6 +9,7 @@ import {
   effectChoices,
   effectConditions,
   effectConversions,
+  effectMultipliers,
   effectRewards,
   effectSeparators,
   EffectType,
@@ -21,10 +22,10 @@ import { ImperiumCard } from 'src/app/models/imperium-card';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-card-editor',
-    templateUrl: './card-editor.component.html',
-    styleUrls: ['./card-editor.component.scss'],
-    standalone: false
+  selector: 'dune-card-editor',
+  templateUrl: './card-editor.component.html',
+  styleUrls: ['./card-editor.component.scss'],
+  standalone: false,
 })
 export class CardEditorComponent implements OnInit, OnChanges {
   @Input() imperiumCard: ImperiumCard | null = null;
@@ -36,9 +37,14 @@ export class CardEditorComponent implements OnInit, OnChanges {
   factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b)) as FactionType[];
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b)); // Add other reward types
-  effectTypes = [...effectSeparators, ...effectConditions, ...effectChoices, ...effectConversions, ...this.rewardTypes].sort(
-    (a, b) => a.localeCompare(b)
-  );
+  effectTypes = [
+    ...effectSeparators,
+    ...effectConditions,
+    ...effectChoices,
+    ...effectConversions,
+    ...effectMultipliers,
+    ...this.rewardTypes,
+  ];
   fontSizes = ['large', 'medium', 'small'];
 
   constructor(private fb: FormBuilder, public t: TranslateService) {
