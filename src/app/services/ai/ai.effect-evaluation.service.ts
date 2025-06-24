@@ -9,10 +9,12 @@ import {
   isStructuredChoiceEffect,
   isStructuredConditionalEffect,
   isStructuredConversionEffect,
+  isTimingFullfilled,
 } from 'src/app/helpers/rewards';
 import {
   EffectReward,
   EffectRewardType,
+  MultiplierEffectTiming,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
   StructuredConversionEffect,
@@ -21,7 +23,13 @@ import {
 } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
-import { getResourceAmount } from '../../helpers/ai/ai-goals';
+import {
+  getResourceAmount,
+  noOneHasMoreInfluence,
+  playerAllianceIsContested,
+  playerCanGetAllianceThisTurn,
+  playerHasUncontestedAlliance,
+} from '../../helpers/ai/ai-goals';
 import { SettingsService } from '../settings.service';
 
 @Injectable({
@@ -30,22 +38,27 @@ import { SettingsService } from '../settings.service';
 export class AIEffectEvaluationService {
   constructor(private settingsService: SettingsService) {}
 
-  public getStructuredEffectsEvaluation(effects: StructuredEffects, player: Player, gameState: GameState) {
+  public getStructuredEffectsEvaluation(
+    effects: StructuredEffects,
+    player: Player,
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
+  ) {
     let evaluationValue = 0;
     if (effects.rewards.length > 0) {
       evaluationValue += this.getRewardArrayEvaluation(effects.rewards, player, gameState);
     }
     for (const conversionEffect of effects.conversionEffects) {
-      evaluationValue += this.getConversionEffectEvaluation(conversionEffect, player, gameState);
+      evaluationValue += this.getConversionEffectEvaluation(conversionEffect, player, gameState, timing);
     }
     for (const choiceEffect of effects.choiceEffects) {
-      evaluationValue += this.getChoiceEffectEvaluation(choiceEffect, player, gameState);
+      evaluationValue += this.getChoiceEffectEvaluation(choiceEffect, player, gameState, timing);
     }
     for (const conditionEffect of effects.conditionalEffects) {
-      evaluationValue += this.getConditionEffectEvaluation(conditionEffect, player, gameState);
+      evaluationValue += this.getConditionEffectEvaluation(conditionEffect, player, gameState, timing);
     }
     for (const multiplierEffect of effects.multiplierEffects) {
-      const rewards = this.getMultipliedRewardEffectEstimation(multiplierEffect, gameState);
+      const rewards = this.getMultipliedRewardEffectEstimation(multiplierEffect, gameState, timing);
 
       for (const reward of rewards) {
         evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
@@ -53,13 +66,13 @@ export class AIEffectEvaluationService {
     }
     for (const timingEffect of effects.timingEffects) {
       if (isStructuredConditionalEffect(timingEffect.effect)) {
-        evaluationValue += this.getConditionEffectEvaluation(timingEffect.effect, player, gameState);
+        evaluationValue += this.getConditionEffectEvaluation(timingEffect.effect, player, gameState, timing);
       } else if (isStructuredChoiceEffect(timingEffect.effect)) {
-        evaluationValue += this.getChoiceEffectEvaluation(timingEffect.effect, player, gameState);
+        evaluationValue += this.getChoiceEffectEvaluation(timingEffect.effect, player, gameState, timing);
       } else if (isStructuredConversionEffect(timingEffect.effect)) {
-        evaluationValue += this.getConversionEffectEvaluation(timingEffect.effect, player, gameState);
+        evaluationValue += this.getConversionEffectEvaluation(timingEffect.effect, player, gameState, timing);
       } else {
-        const rewards = this.getMultipliedRewardEffectEstimation(timingEffect.effect, gameState);
+        const rewards = this.getMultipliedRewardEffectEstimation(timingEffect.effect, gameState, timing);
 
         for (const reward of rewards) {
           evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
@@ -69,44 +82,73 @@ export class AIEffectEvaluationService {
     return evaluationValue;
   }
 
-  public getStructuredEffectsEvaluationForTurnState(effects: StructuredEffects, player: Player, gameState: GameState) {
+  public getStructuredEffectsEvaluationForTurnState(
+    effects: StructuredEffects,
+    player: Player,
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
+  ) {
     let evaluationValue = 0;
     if (effects.rewards.length > 0) {
       evaluationValue += this.getRewardArrayEvaluationForTurnState(effects.rewards, player, gameState);
     }
     for (const conversionEffect of effects.conversionEffects) {
-      evaluationValue += this.getConversionEffectEvaluationForTurnState(conversionEffect, player, gameState);
+      evaluationValue += this.getConversionEffectEvaluationForTurnState(conversionEffect, player, gameState, timing);
     }
     for (const choiceEffect of effects.choiceEffects) {
-      evaluationValue += this.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState);
+      evaluationValue += this.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState, timing);
     }
     for (const conditionEffect of effects.conditionalEffects) {
-      evaluationValue += this.getConditionEffectEvaluationForTurnState(conditionEffect, player, gameState);
+      evaluationValue += this.getConditionEffectEvaluationForTurnState(conditionEffect, player, gameState, timing);
     }
     for (const multiplierEffect of effects.multiplierEffects) {
-      const rewards = getMultipliedRewardEffects(multiplierEffect, gameState);
+      const rewards = getMultipliedRewardEffects(multiplierEffect, gameState, timing);
 
       for (const reward of rewards) {
         evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
       }
     }
+    for (const timingEffect of effects.timingEffects) {
+      const timingFullfilled = isTimingFullfilled(timingEffect, player, gameState);
+
+      if (timingFullfilled) {
+        if (isStructuredConditionalEffect(timingEffect.effect)) {
+          evaluationValue += this.getConditionEffectEvaluationForTurnState(timingEffect.effect, player, gameState, timing);
+        } else if (isStructuredChoiceEffect(timingEffect.effect)) {
+          evaluationValue += this.getChoiceEffectEvaluationForTurnState(timingEffect.effect, player, gameState, timing);
+        } else if (isStructuredConversionEffect(timingEffect.effect)) {
+          evaluationValue += this.getConversionEffectEvaluationForTurnState(timingEffect.effect, player, gameState, timing);
+        } else {
+          const rewards = getMultipliedRewardEffects(timingEffect.effect, gameState, timing);
+
+          for (const reward of rewards) {
+            evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+          }
+        }
+      }
+    }
     return evaluationValue;
   }
 
-  public getChoiceEffectEvaluation(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
+  public getChoiceEffectEvaluation(
+    choiceEffect: StructuredChoiceEffect,
+    player: Player,
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
+  ) {
     let evaluationValue = 0;
     if (isChoiceEffectType(choiceEffect.choiceType)) {
       const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.left)
-        ? this.getConversionEffectEvaluation(choiceEffect.left, player, gameState)
+        ? this.getConversionEffectEvaluation(choiceEffect.left, player, gameState, timing)
         : this.getRewardArrayEvaluation(
-            this.getMultipliedRewardEffectEstimation(choiceEffect.left, gameState),
+            this.getMultipliedRewardEffectEstimation(choiceEffect.left, gameState, timing),
             player,
             gameState
           );
       const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.right)
-        ? this.getConversionEffectEvaluation(choiceEffect.right, player, gameState)
+        ? this.getConversionEffectEvaluation(choiceEffect.right, player, gameState, timing)
         : this.getRewardArrayEvaluation(
-            this.getMultipliedRewardEffectEstimation(choiceEffect.right, gameState),
+            this.getMultipliedRewardEffectEstimation(choiceEffect.right, gameState, timing),
             player,
             gameState
           );
@@ -117,20 +159,25 @@ export class AIEffectEvaluationService {
     return evaluationValue;
   }
 
-  public getChoiceEffectEvaluationForTurnState(choiceEffect: StructuredChoiceEffect, player: Player, gameState: GameState) {
+  public getChoiceEffectEvaluationForTurnState(
+    choiceEffect: StructuredChoiceEffect,
+    player: Player,
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
+  ) {
     let evaluationValue = 0;
     if (isChoiceEffectType(choiceEffect.choiceType)) {
       const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.left)
-        ? this.getConversionEffectEvaluationForTurnState(choiceEffect.left, player, gameState)
+        ? this.getConversionEffectEvaluationForTurnState(choiceEffect.left, player, gameState, timing)
         : this.getRewardArrayEvaluationForTurnState(
-            getMultipliedRewardEffects(choiceEffect.left, gameState),
+            getMultipliedRewardEffects(choiceEffect.left, gameState, timing),
             player,
             gameState
           );
       const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.right)
-        ? this.getConversionEffectEvaluationForTurnState(choiceEffect.right, player, gameState)
+        ? this.getConversionEffectEvaluationForTurnState(choiceEffect.right, player, gameState, timing)
         : this.getRewardArrayEvaluationForTurnState(
-            getMultipliedRewardEffects(choiceEffect.right, gameState),
+            getMultipliedRewardEffects(choiceEffect.right, gameState, timing),
             player,
             gameState
           );
@@ -141,11 +188,16 @@ export class AIEffectEvaluationService {
     return evaluationValue;
   }
 
-  public getConversionEffectEvaluation(conversionEffect: StructuredConversionEffect, player: Player, gameState: GameState) {
+  public getConversionEffectEvaluation(
+    conversionEffect: StructuredConversionEffect,
+    player: Player,
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
+  ) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.conversionType)) {
-      const costs = this.getMultipliedRewardEffectEstimation(conversionEffect.costs, gameState);
-      const rewards = this.getMultipliedRewardEffectEstimation(conversionEffect.rewards, gameState);
+      const costs = this.getMultipliedRewardEffectEstimation(conversionEffect.costs, gameState, timing);
+      const rewards = this.getMultipliedRewardEffectEstimation(conversionEffect.rewards, gameState, timing);
 
       const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
       const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
@@ -160,12 +212,13 @@ export class AIEffectEvaluationService {
   public getConversionEffectEvaluationForTurnState(
     conversionEffect: StructuredConversionEffect,
     player: Player,
-    gameState: GameState
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.conversionType)) {
-      const costs = getMultipliedRewardEffects(conversionEffect.costs, gameState);
-      const rewards = getMultipliedRewardEffects(conversionEffect.rewards, gameState);
+      const costs = getMultipliedRewardEffects(conversionEffect.costs, gameState, timing);
+      const rewards = getMultipliedRewardEffects(conversionEffect.rewards, gameState, timing);
 
       const costsEvaluation = this.getCostsArrayEvaluationForTurnState(costs, player, gameState);
       const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
@@ -175,14 +228,19 @@ export class AIEffectEvaluationService {
     return evaluationValue;
   }
 
-  public getConditionEffectEvaluation(conditionEffect: StructuredConditionalEffect, player: Player, gameState: GameState) {
+  public getConditionEffectEvaluation(
+    conditionEffect: StructuredConditionalEffect,
+    player: Player,
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
+  ) {
     let evaluationValue = 0;
     if (isStructuredChoiceEffect(conditionEffect.effect)) {
-      evaluationValue += this.getChoiceEffectEvaluation(conditionEffect.effect, player, gameState);
+      evaluationValue += this.getChoiceEffectEvaluation(conditionEffect.effect, player, gameState, timing);
     } else if (isStructuredConversionEffect(conditionEffect.effect)) {
-      evaluationValue += this.getConversionEffectEvaluation(conditionEffect.effect, player, gameState);
+      evaluationValue += this.getConversionEffectEvaluation(conditionEffect.effect, player, gameState, timing);
     } else {
-      const rewards = this.getMultipliedRewardEffectEstimation(conditionEffect.effect, gameState);
+      const rewards = this.getMultipliedRewardEffectEstimation(conditionEffect.effect, gameState, timing);
 
       evaluationValue += this.getRewardArrayEvaluation(rewards, player, gameState);
     }
@@ -204,15 +262,16 @@ export class AIEffectEvaluationService {
   public getConditionEffectEvaluationForTurnState(
     conditionEffect: StructuredConditionalEffect,
     player: Player,
-    gameState: GameState
+    gameState: GameState,
+    timing: MultiplierEffectTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isStructuredChoiceEffect(conditionEffect.effect)) {
-      evaluationValue += this.getChoiceEffectEvaluationForTurnState(conditionEffect.effect, player, gameState);
+      evaluationValue += this.getChoiceEffectEvaluationForTurnState(conditionEffect.effect, player, gameState, timing);
     } else if (isStructuredConversionEffect(conditionEffect.effect)) {
-      evaluationValue += this.getConversionEffectEvaluationForTurnState(conditionEffect.effect, player, gameState);
+      evaluationValue += this.getConversionEffectEvaluationForTurnState(conditionEffect.effect, player, gameState, timing);
     } else {
-      const rewards = getMultipliedRewardEffects(conditionEffect.effect, gameState);
+      const rewards = getMultipliedRewardEffects(conditionEffect.effect, gameState, timing);
 
       evaluationValue += this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
     }
@@ -237,7 +296,8 @@ export class AIEffectEvaluationService {
 
   private getMultipliedRewardEffectEstimation(
     multiplierEffectOrRewardArray: StructuredMultiplierEffect | EffectReward[],
-    gameState: GameState
+    gameState: GameState,
+    timing: 'agent-placement' | 'reveal' = 'agent-placement'
   ): EffectReward[] {
     if (isArray(multiplierEffectOrRewardArray)) {
       return multiplierEffectOrRewardArray;
@@ -263,6 +323,17 @@ export class AIEffectEvaluationService {
       } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-cards-with-sword') {
         const cardSwordAmount = gameState.playerCardsRewards.sword;
         effectMultiplierAmount = 0.1 + 0.33 * cardSwordAmount;
+      } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-connections') {
+        const faction = multiplierEffectOrRewardArray.faction;
+        if (faction) {
+          if (timing === 'agent-placement') {
+            const cardAmount = gameState.playerCardsFactions[faction];
+            effectMultiplierAmount = 0.25 * cardAmount;
+          } else {
+            const cardAmount = gameState.playerCardsFactions[faction];
+            effectMultiplierAmount = 0.5 * cardAmount;
+          }
+        }
       }
 
       if (effectMultiplierAmount > 0) {
@@ -410,17 +481,26 @@ export class AIEffectEvaluationService {
         return -1;
       case 'intrigue-draw':
         return 0.25;
-      case 'card-round-start':
-        return 1.5;
       case 'shipping':
         return 2.5 - 0.1 * getResourceAmount(player, 'water') - 0.1 * getResourceAmount(player, 'spice');
       case 'faction-influence-up-choice':
         return 4;
       case 'faction-influence-up-emperor':
+        return gameState.playerScore.emperor < gameState.gameSettings.factionInfluenceMaxScore
+          ? 3 - 0.1 * gameState.playerScore.emperor - (playerHasUncontestedAlliance(gameState, 'emperor') ? 1 : 0)
+          : 0;
       case 'faction-influence-up-guild':
+        return gameState.playerScore.guild < gameState.gameSettings.factionInfluenceMaxScore
+          ? 3 - 0.1 * gameState.playerScore.guild - (playerHasUncontestedAlliance(gameState, 'guild') ? 1 : 0)
+          : 0;
       case 'faction-influence-up-bene':
+        return gameState.playerScore.bene < gameState.gameSettings.factionInfluenceMaxScore
+          ? 3 - 0.1 * gameState.playerScore.bene - (playerHasUncontestedAlliance(gameState, 'bene') ? 1 : 0)
+          : 0;
       case 'faction-influence-up-fremen':
-        return 3;
+        return gameState.playerScore.fremen < gameState.gameSettings.factionInfluenceMaxScore
+          ? 3 - 0.1 * gameState.playerScore.fremen - (playerHasUncontestedAlliance(gameState, 'fremen') ? 1 : 0)
+          : 0;
       case 'faction-influence-up-twice-choice':
         return 6;
       case 'faction-influence-down-choice':
@@ -432,8 +512,6 @@ export class AIEffectEvaluationService {
         return -3;
       case 'agent-lift':
         return 3 + 0.25 * (gameState.currentRound - 1);
-      case 'buildup':
-        return 0;
       case 'signet-token':
         return 0;
       case 'signet-ring':
@@ -479,36 +557,36 @@ export class AIEffectEvaluationService {
         return (
           value -
           0.4 * getResourceAmount(player, 'water') +
-          0.5 * gameState.playerIntriguesConversionCosts.water +
-          0.5 * gameState.playerTechTilesConversionCosts.water
+          0.3 * gameState.playerIntriguesConversionCosts.water +
+          0.3 * gameState.playerTechTilesConversionCosts.water
         );
       case 'spice':
         return (
           value -
           0.2 * getResourceAmount(player, 'spice') +
-          0.5 * gameState.playerIntriguesConversionCosts.spice +
-          0.5 * gameState.playerTechTilesConversionCosts.spice
+          0.2 * gameState.playerIntriguesConversionCosts.spice +
+          0.2 * gameState.playerTechTilesConversionCosts.spice
         );
       case 'solari':
         return (
           value -
           0.1 * getResourceAmount(player, 'solari') +
-          0.5 * gameState.playerIntriguesConversionCosts.solari +
-          0.5 * gameState.playerTechTilesConversionCosts.solari
+          0.1 * gameState.playerIntriguesConversionCosts.solari +
+          0.1 * gameState.playerTechTilesConversionCosts.solari
         );
       case 'tech':
         return (
           value +
           0.2 * player.tech +
-          0.5 * gameState.playerIntriguesConversionCosts.tech +
-          0.5 * gameState.playerTechTilesConversionCosts.tech
+          0.2 * gameState.playerIntriguesConversionCosts.tech +
+          0.2 * gameState.playerTechTilesConversionCosts.tech
         );
       case 'troop':
         return (
           value +
           0.2 * (3 - gameState.playerCombatUnits.troopsInGarrison) +
-          0.5 * gameState.playerIntriguesConversionCosts['loose-troop'] +
-          0.5 * gameState.playerTechTilesConversionCosts['loose-troop']
+          0.2 * gameState.playerIntriguesConversionCosts['loose-troop'] +
+          0.2 * gameState.playerTechTilesConversionCosts['loose-troop']
         );
       case 'dreadnought':
         return value + 0.1 * gameState.playerCombatUnits.troopsInGarrison;
@@ -557,17 +635,46 @@ export class AIEffectEvaluationService {
         return value;
       case 'intrigue-draw':
         return value + 2 * gameState.playerIntrigueStealAmount;
-      case 'card-round-start':
-        return value;
       case 'shipping':
         return value;
       case 'faction-influence-up-choice':
         return value;
       case 'faction-influence-up-emperor':
+        return (
+          value +
+          0.15 * gameState.playerScore.emperor +
+          (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.05 * gameState.currentRound : 0) +
+          (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 1 : 0) +
+          (playerAllianceIsContested(gameState, 'emperor') ? 1 : 0) -
+          (gameState.enemyScore.some((x) => x.emperor >= gameState.gameSettings.factionInfluenceMaxScore) ? 2 : 0)
+        );
       case 'faction-influence-up-guild':
+        return (
+          value +
+          0.15 * gameState.playerScore.guild +
+          (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.05 * gameState.currentRound : 0) +
+          (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 1 : 0) +
+          (playerAllianceIsContested(gameState, 'guild') ? 1 : 0) -
+          (gameState.enemyScore.some((x) => x.guild >= gameState.gameSettings.factionInfluenceMaxScore) ? 2 : 0)
+        );
       case 'faction-influence-up-bene':
+        return (
+          value +
+          0.15 * gameState.playerScore.bene +
+          (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.05 * gameState.currentRound : 0) +
+          (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 1 : 0) +
+          (playerAllianceIsContested(gameState, 'bene') ? 1 : 0) -
+          (gameState.enemyScore.some((x) => x.bene >= gameState.gameSettings.factionInfluenceMaxScore) ? 2 : 0)
+        );
       case 'faction-influence-up-fremen':
-        return value;
+        return (
+          value +
+          0.15 * gameState.playerScore.fremen +
+          (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.05 * gameState.currentRound : 0) +
+          (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 1 : 0) +
+          (playerAllianceIsContested(gameState, 'fremen') ? 1 : 0) -
+          (gameState.enemyScore.some((x) => x.fremen >= gameState.gameSettings.factionInfluenceMaxScore) ? 2 : 0)
+        );
       case 'faction-influence-up-twice-choice':
         return value;
       case 'faction-influence-down-choice':
@@ -583,8 +690,6 @@ export class AIEffectEvaluationService {
         } else {
           return hasPlacedAgents && hasAgentsLeftToPlace ? value : 0;
         }
-      case 'buildup':
-        return value;
       case 'signet-token':
         return value;
       case 'signet-ring':

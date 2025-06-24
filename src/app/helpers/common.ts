@@ -64,3 +64,7 @@ export const getNumberAverage = (arr: number[]) => (arr.length > 0 ? sum(arr) / 
 export const getNumberMax = (arr: number[]) => max(arr) ?? 0;
 
 export const sum = (arr: number[]) => arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

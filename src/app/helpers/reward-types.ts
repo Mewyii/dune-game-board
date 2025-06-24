@@ -62,12 +62,8 @@ export function getEffectTypePath(rewardType: EffectType) {
       return 'assets/images/reward-markers/marker_separator.png';
     case 'helper-or-horizontal':
       return 'assets/images/reward-markers/marker_separator_horizontal.png';
-    case 'card-round-start':
-      return 'assets/images/reward-markers/marker_card_round_start.png';
     case 'shipping':
       return 'assets/images/reward-markers/marker_shipping.png';
-    case 'buildup':
-      return 'assets/images/reward-markers/marker_planet.png';
     case 'faction-influence-up-choice':
       return 'assets/images/reward-markers/marker_faction_influence_choice.png';
     case 'faction-influence-up-emperor':

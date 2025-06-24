@@ -101,6 +101,17 @@
         "
       ></div>
     </div>
+    } @else if (reward.type === 'multiplier-connections') {
+    <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+      <div
+        [class]="'text inline ' + textColor"
+        [style.fontSize]="fontSize"
+        [innerHTML]="
+          t.translate('commonEffectMultiplierConnections', false, '{faction:' + reward.faction + '}') + ':'
+            | duneSymbols : size
+        "
+      ></div>
+    </div>
     } @else if (isTroopsInConflictMultiplierType(reward.type)) {
     <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
       <div

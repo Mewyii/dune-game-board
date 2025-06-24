@@ -3,7 +3,7 @@ import { cloneDeep, flatten, max, shuffle } from 'lodash';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from '../helpers/cards';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
-import { getRandomElementFromArray, sum } from '../helpers/common';
+import { delay, getRandomElementFromArray, sum } from '../helpers/common';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward, isFactionScoreType } from '../helpers/faction-score';
 import { isActiveFactionType } from '../helpers/faction-types';
 import {
@@ -31,6 +31,7 @@ import {
   isStructuredConditionalEffect,
   isStructuredConversionEffect,
   isStructuredMultiplierEffect,
+  isTimingFullfilled,
 } from '../helpers/rewards';
 import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn-infos';
 import {
@@ -677,8 +678,15 @@ export class GameManager {
       return;
     }
 
-    const agentAlreadyPlacedThisTurn = this.turnInfoService.getPlayerTurnInfo(activePlayer.id)?.agentPlacedOnFieldId;
+    const playerTurnInfo = this.turnInfoService.getPlayerTurnInfos(activePlayer.id);
+    const agentAlreadyPlacedThisTurn = playerTurnInfo?.agentPlacedOnFieldId;
     if (agentAlreadyPlacedThisTurn) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningAgentAlreadyPlacedThisTurn'));
+      return;
+    }
+
+    const playerNeedsToPassTurn = playerTurnInfo?.needsToPassTurn;
+    if (playerNeedsToPassTurn) {
       this.notificationService.showWarning(this.t.translate('playerboardWarningAgentAlreadyPlacedThisTurn'));
       return;
     }
@@ -1118,85 +1126,135 @@ export class GameManager {
     }
   }
 
-  public doAIAction(playerId: number) {
+  public async doAIAction(playerId: number) {
     const player = this.playerManager.getPlayer(playerId);
-    const playerAgentCount = this.getAvailableAgentCountForPlayer(playerId);
-    let couldPlaceAgent = false;
 
     if (!player || player.turnState === 'done') {
       return;
     }
 
-    this.turnInfoService.updatePlayerTurnInfo(player.id, { isDoingAIActions: true });
+    this.turnInfoService.updatePlayerTurnInfo(player.id, { aiStatus: 'working' });
 
     const roundPhase = this.currentRoundPhase;
-    const gameState = this.getGameState(player);
 
     if (roundPhase === 'agent-placement') {
-      const playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
-      const hasPlacedAgentsThisTurn = playerTurnInfo && playerTurnInfo.fieldsVisitedThisTurn.length > 0;
-      if (!hasPlacedAgentsThisTurn) {
-        this.resolveTechTileEffects(player);
+      // AI Play Tech tiles
+      const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
 
-        const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot');
-        const playableAndUsefulIntrigues = this.aiGetPlayableAndUsefulIntrigues(player, playerIntrigues, gameState);
+      let techTilesPlayed = false;
+      for (const playerTechTile of playerTechTiles) {
+        if (!playerTechTile.isFlipped) {
+          const effects = playerTechTile.techTile.structuredEffects;
+          if (effects) {
+            const player = this.playerManager.getPlayer(playerId)!;
+            const gameState = this.getGameState(player);
 
-        if (playableAndUsefulIntrigues.length > 0 && Math.random() < 0.4 + 0.4 * playableAndUsefulIntrigues.length) {
-          this.aiPlayIntrigue(player, playableAndUsefulIntrigues[0], gameState);
-
-          this.setPreferredFieldsForAIPlayer(player.id);
-
-          setTimeout(() => {
-            this.doAIAction(player.id);
-          }, 1500);
-        } else {
-          if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
-            const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards;
-            if (playerHandCards && playerHandCards.length > 0) {
-              const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState);
-
-              const boardField = this.settingsService.boardFields.find((x) =>
-                cardAndField?.preferredField.fieldId.includes(x.title.en)
-              );
-              if (boardField && cardAndField) {
-                this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
-                this.loggingService.logPlayerPlayedCard(playerId, this.t.translateLS(cardAndField.cardToPlay.name));
-                this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsPlayedThisTurn: [cardAndField.cardToPlay] });
-                this.addAgentToField(boardField);
-
-                couldPlaceAgent = true;
-                this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
-              }
-            }
-          }
-          if (!couldPlaceAgent && player.turnState !== 'reveal') {
-            this.setPlayerRevealTurn(playerId);
-            this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
-          }
-          if (player.turnState === 'reveal') {
-            const playerPersuasionAvailable = this.playerManager.getPlayerPersuasion(playerId);
-            this.aiBuyImperiumCards(playerId, playerPersuasionAvailable);
-
-            const playerPersuasionLeft = this.playerManager.getPlayerPersuasion(playerId);
-            if (playerPersuasionLeft > 0) {
-              this.aiBuyPlotCards(playerId, playerPersuasionLeft);
+            const techTilePlayEvaluation = this.aIManager.getTechTilePlayEvaluation(
+              playerTechTile.techTile,
+              player,
+              gameState
+            );
+            if (techTilePlayEvaluation > 0) {
+              this.resolveStructuredEffects(effects, player, gameState, {
+                type: 'tech-tile',
+                object: playerTechTile.techTile,
+              });
+              this.aiResolveRewardChoices(player);
+              techTilesPlayed = true;
+              await delay(2000);
             }
 
-            const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
-            this.aiUseFocusTokens(playerId, playerFocusTokens);
-
-            const playerHand = this.cardsService.getPlayerHand(player.id);
-            if (playerHand && playerHand.cards) {
-              this.cardsService.discardPlayerHandCards(player.id);
-              this.playerManager.setTurnStateForPlayer(player.id, 'revealed');
+            if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
+              this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
+              return;
             }
-            this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
           }
         }
+      }
+
+      // AI Play Intrigues
+      const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot') ?? [];
+
+      let intriguesPlayed = false;
+      for (const intrigue of playerIntrigues) {
+        const player = this.playerManager.getPlayer(playerId)!;
+        const gameState = this.getGameState(player);
+
+        const isPlayableAndUseful = this.aiIsPlayableAndUsefulIntrigue(player, intrigue, gameState);
+        if (isPlayableAndUseful && Math.random() < 0.6 + 0.2 * playerIntrigues.length) {
+          this.aiPlayIntrigue(player, intrigue, gameState);
+          intriguesPlayed = true;
+          await delay(2000);
+
+          if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
+            this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
+            return;
+          }
+        }
+      }
+
+      if (techTilesPlayed || intriguesPlayed) {
+        this.setPreferredFieldsForAIPlayer(player.id);
+      }
+
+      if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
+        this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
+        return;
+      }
+
+      const playerAgentCount = this.getAvailableAgentCountForPlayer(playerId);
+
+      let couldPlaceAgent = false;
+      if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
+        const gameState = this.getGameState(player);
+
+        const playerHandCards = this.cardsService.getPlayerHand(player.id)?.cards;
+        if (playerHandCards && playerHandCards.length > 0) {
+          const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState);
+
+          const boardField = this.settingsService.boardFields.find((x) =>
+            cardAndField?.preferredField.fieldId.includes(x.title.en)
+          );
+          if (boardField && cardAndField) {
+            this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
+            this.loggingService.logPlayerPlayedCard(playerId, this.t.translateLS(cardAndField.cardToPlay.name));
+            this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsPlayedThisTurn: [cardAndField.cardToPlay] });
+            this.addAgentToField(boardField);
+
+            couldPlaceAgent = true;
+            this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
+          }
+        }
+      }
+
+      if (!couldPlaceAgent && player.turnState !== 'reveal') {
+        this.setPlayerRevealTurn(playerId);
+        this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'ready' });
+      }
+      if (player.turnState === 'reveal') {
+        const playerPersuasionAvailable = this.playerManager.getPlayerPersuasion(playerId);
+        this.aiBuyImperiumCards(playerId, playerPersuasionAvailable);
+
+        const playerPersuasionLeft = this.playerManager.getPlayerPersuasion(playerId);
+        if (playerPersuasionLeft > 0) {
+          this.aiBuyPlotCards(playerId, playerPersuasionLeft);
+        }
+
+        const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
+        this.aiUseFocusTokens(playerId, playerFocusTokens);
+
+        const playerHand = this.cardsService.getPlayerHand(player.id);
+        if (playerHand && playerHand.cards) {
+          this.cardsService.discardPlayerHandCards(player.id);
+          this.playerManager.setTurnStateForPlayer(player.id, 'revealed');
+        }
+        this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
       }
     }
     if (roundPhase === 'combat') {
       if (player.turnState === 'revealed') {
+        const gameState = this.getGameState(player);
+
         const playerCombatIntrigues = this.intriguesService.getPlayerIntrigues(playerId, 'combat');
         const playerCombatScore = this.combatManager.getPlayerCombatScore(playerId);
 
@@ -1265,6 +1323,7 @@ export class GameManager {
 
                   const swordAmount = intrigue.effects.filter((x) => x.type === 'sword').length;
                   playerCurrentCombatScore += swordAmount;
+                  await delay(2000);
                   if (playerCurrentCombatScore > beatableCombatScore) {
                     break;
                   }
@@ -1273,6 +1332,7 @@ export class GameManager {
             } else {
               for (const intrigue of intriguesWithoutCombatScores) {
                 this.aiPlayIntrigue(player, intrigue, gameState);
+                await delay(2000);
               }
 
               this.playerManager.setTurnStateForPlayer(playerId, 'done');
@@ -1280,7 +1340,7 @@ export class GameManager {
           }
         }
       }
-      this.turnInfoService.setPlayerTurnInfo(player.id, { isDoingAIActions: false });
+      this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
     }
   }
 
@@ -1317,7 +1377,7 @@ export class GameManager {
       return playableAndUsefulIntrigues;
     }
     for (const intrigue of intrigues) {
-      let { isUseful, costs } = this.aIManager.getIntrigueEvaluation(intrigue, player, gameState);
+      let { isUseful, costs } = this.aIManager.getIntriguePlayEvaluation(intrigue, player, gameState);
 
       let playerCanPayCosts = false;
       for (const cost of costs) {
@@ -1331,6 +1391,22 @@ export class GameManager {
     }
 
     return playableAndUsefulIntrigues;
+  }
+
+  aiIsPlayableAndUsefulIntrigue(player: Player, intrigue: IntrigueDeckCard, gameState: GameState) {
+    let { isUseful, costs } = this.aIManager.getIntriguePlayEvaluation(intrigue, player, gameState);
+
+    let playerCanPayCosts = false;
+    for (const cost of costs) {
+      if (this.playerCanPayCosts(player.id, cost)) {
+        playerCanPayCosts = true;
+      }
+    }
+    if (isUseful && playerCanPayCosts) {
+      return true;
+    }
+
+    return false;
   }
 
   private resolveTechTileEffects(player: Player) {
@@ -1596,28 +1672,9 @@ export class GameManager {
     gameElement?: GameElement,
     additionalCardsInPlay?: ImperiumDeckCard[]
   ) {
-    let conditionFullfilled = false;
+    let timingFullfilled = isTimingFullfilled(timingEffect, player, gameState);
 
-    if (timingEffect.type === 'timing-game-start') {
-      const hasPlacedAgentThisRound = this.agentsOnFields.filter((x) => x.playerId === player.id).length > 0;
-      if (this.currentRound === 1 && player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
-        conditionFullfilled = true;
-      }
-    } else if (timingEffect.type === 'timing-round-start') {
-      const hasPlacedAgentThisRound = this.agentsOnFields.filter((x) => x.playerId === player.id).length > 0;
-      if (player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
-        conditionFullfilled = true;
-      }
-    } else if (timingEffect.type === 'timing-turn-start') {
-      if (player.turnState === 'agent-placement' && !gameState.playerTurnInfos?.agentPlacedOnFieldId) {
-        conditionFullfilled = true;
-      }
-    } else if (timingEffect.type === 'timing-reveal-turn') {
-      if (player.turnState === 'reveal') {
-        conditionFullfilled = true;
-      }
-    }
-    if (conditionFullfilled) {
+    if (timingFullfilled) {
       if (isStructuredConditionalEffect(timingEffect.effect)) {
         this.resolveStructuredConditionEffects(timingEffect.effect, player, gameState, gameElement, additionalCardsInPlay);
       } else if (isStructuredChoiceEffect(timingEffect.effect)) {
@@ -1726,7 +1783,7 @@ export class GameManager {
   }
 
   private resolvePlayerRewardChoices(player: Player) {
-    const turnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
+    const turnInfo = this.turnInfoService.getPlayerTurnInfos(player.id);
     if (!turnInfo) {
       return;
     }
@@ -1845,7 +1902,7 @@ export class GameManager {
   }
 
   private aiResolveRewardChoices(player: Player, depth = 0) {
-    const turnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
+    const turnInfo = this.turnInfoService.getPlayerTurnInfos(player.id);
     if (!turnInfo || depth > 2) {
       return;
     }
@@ -2058,7 +2115,7 @@ export class GameManager {
       this.aiBuyTechIfPossible(player.id);
     }
 
-    const newTurnInfo = this.turnInfoService.getPlayerTurnInfo(player.id);
+    const newTurnInfo = this.turnInfoService.getPlayerTurnInfos(player.id);
     if (newTurnInfo && turnInfosNeedToBeResolved(newTurnInfo)) {
       this.aiResolveRewardChoices(player, depth + 1);
     }
@@ -2133,7 +2190,7 @@ export class GameManager {
     ];
 
     let recruitableCards: ImperiumDeckCard[] = [];
-    const factionRecruitment = this.turnInfoService.getPlayerTurnInfo(playerId)?.factionRecruitment;
+    const factionRecruitment = this.turnInfoService.getPlayerTurnInfo(playerId, 'factionRecruitment');
     if (factionRecruitment && factionRecruitment.length > 0) {
       const recruitmentCardAmount = this.settingsService.getRecruitmentCardAmount();
       recruitableCards = this.cardsService
@@ -2359,7 +2416,7 @@ export class GameManager {
       return;
     }
 
-    const canBuyTech = this.turnInfoService.getPlayerTurnInfo(playerId)?.canBuyTech;
+    const canBuyTech = this.turnInfoService.getPlayerTurnInfo(playerId, 'canBuyTech');
     if (!canBuyTech) {
       this.notificationService.showWarning(this.t.translate('techBoardWarningNoTechGainedThisTurn'));
       return;
@@ -2458,6 +2515,13 @@ export class GameManager {
       }
     }
 
+    const playerCardsFactionsInPlay = this.getInitialFactions();
+    for (const playerCard of playerDiscardPileCards) {
+      if (playerCard.faction) {
+        playerCardsFactionsInPlay[playerCard.faction] += 1;
+      }
+    }
+
     for (const playerHandCard of playerHandCards) {
       if (playerHandCard.faction) {
         playerHandCardsFactions[playerHandCard.faction] += 1;
@@ -2492,17 +2556,19 @@ export class GameManager {
       }
     }
 
-    const playerCardsFactionsInPlay = this.getInitialFactions();
-    for (const playerCard of playerDiscardPileCards) {
-      if (playerCard.faction) {
-        playerCardsFactionsInPlay[playerCard.faction] += 1;
-      }
-    }
-
     const playerTechTilesFactions = this.getInitialFactions();
     const playerTechTilesRewards = this.getInitialGameElementRewards();
     const playerTechTilesConversionCosts = this.getInitialGameElementRewards();
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id).map((x) => x.techTile);
+
+    const partialGameStateForEffectMultipliers = {
+      playerAgentsOnFields,
+      playerCombatUnits,
+      playerHandCardsRewards,
+      playerHandCardsFactions,
+      playerCardsFactionsInPlay,
+    };
+
     for (const techTile of playerTechTiles) {
       if (techTile.faction) {
         playerTechTilesFactions[techTile.faction] += 1;
@@ -2513,12 +2579,12 @@ export class GameManager {
 
         rewards.push(
           ...techTile.structuredEffects.conversionEffects.flatMap((x) =>
-            getMultipliedRewardEffects(x.rewards, { playerAgentsOnFields, playerCombatUnits, playerHandCardsRewards })
+            getMultipliedRewardEffects(x.rewards, partialGameStateForEffectMultipliers)
           )
         );
         conversionCosts.push(
           ...techTile.structuredEffects.conversionEffects.flatMap((x) =>
-            getMultipliedRewardEffects(x.costs, { playerAgentsOnFields, playerCombatUnits, playerHandCardsRewards })
+            getMultipliedRewardEffects(x.costs, partialGameStateForEffectMultipliers)
           )
         );
 
@@ -2527,21 +2593,9 @@ export class GameManager {
           if (isStructuredConditionalEffect(timingEffect.effect)) {
           } else if (isStructuredChoiceEffect(timingEffect.effect)) {
           } else if (isStructuredConversionEffect(timingEffect.effect)) {
-            rewards.push(
-              ...getMultipliedRewardEffects(timingEffect.effect.rewards, {
-                playerAgentsOnFields,
-                playerCombatUnits,
-                playerHandCardsRewards,
-              })
-            );
+            rewards.push(...getMultipliedRewardEffects(timingEffect.effect.rewards, partialGameStateForEffectMultipliers));
           } else {
-            rewards.push(
-              ...getMultipliedRewardEffects(timingEffect.effect, {
-                playerAgentsOnFields,
-                playerCombatUnits,
-                playerHandCardsRewards,
-              })
-            );
+            rewards.push(...getMultipliedRewardEffects(timingEffect.effect, partialGameStateForEffectMultipliers));
           }
         }
 
@@ -2564,12 +2618,12 @@ export class GameManager {
 
         rewards.push(
           ...intrigue.structuredEffects.conversionEffects.flatMap((x) =>
-            getMultipliedRewardEffects(x.rewards, { playerAgentsOnFields, playerCombatUnits, playerHandCardsRewards })
+            getMultipliedRewardEffects(x.rewards, partialGameStateForEffectMultipliers)
           )
         );
         conversionCosts.push(
           ...intrigue.structuredEffects.conversionEffects.flatMap((x) =>
-            getMultipliedRewardEffects(x.costs, { playerAgentsOnFields, playerCombatUnits, playerHandCardsRewards })
+            getMultipliedRewardEffects(x.costs, partialGameStateForEffectMultipliers)
           )
         );
 
@@ -2578,21 +2632,9 @@ export class GameManager {
           if (isStructuredConditionalEffect(timingEffect.effect)) {
           } else if (isStructuredChoiceEffect(timingEffect.effect)) {
           } else if (isStructuredConversionEffect(timingEffect.effect)) {
-            rewards.push(
-              ...getMultipliedRewardEffects(timingEffect.effect.rewards, {
-                playerAgentsOnFields,
-                playerCombatUnits,
-                playerHandCardsRewards,
-              })
-            );
+            rewards.push(...getMultipliedRewardEffects(timingEffect.effect.rewards, partialGameStateForEffectMultipliers));
           } else {
-            rewards.push(
-              ...getMultipliedRewardEffects(timingEffect.effect, {
-                playerAgentsOnFields,
-                playerCombatUnits,
-                playerHandCardsRewards,
-              })
-            );
+            rewards.push(...getMultipliedRewardEffects(timingEffect.effect, partialGameStateForEffectMultipliers));
           }
         }
 
@@ -2652,7 +2694,7 @@ export class GameManager {
     const rival = this.currentRound > 4 ? this.playerManager.getPlayer(rivalId.playerId) : undefined;
 
     const playerLeader = this.leadersService.getLeader(player.id);
-    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(player.id);
+    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(player.id);
 
     return {
       playersCount: this.playerManager.getPlayerCount(),
@@ -3118,17 +3160,17 @@ export class GameManager {
     } else if (rewardType === 'signet-token') {
       this.audioManager.playSound('signet');
       this.playerManager.addSignetTokensToPlayer(playerId, rewardAmount);
-    } else if (rewardType === 'trash-self' && gameElement) {
-      if (gameElement.type === 'imperium-card') {
+    } else if (rewardType === 'trash-self') {
+      if (gameElement && gameElement.type === 'imperium-card') {
         this.cardsService.trashPlayerHandCard(playerId, gameElement.object);
         this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(gameElement.object.name));
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsTrashedThisTurn: [gameElement.object] });
-      } else if (gameElement.type === 'tech-tile') {
+      } else if (gameElement && gameElement.type === 'tech-tile') {
         this.techTilesService.trashTechTile(gameElement.object.id);
         this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(gameElement.object.name));
       }
-    } else if (rewardType === 'tech-tile-flip' && gameElement) {
-      if (gameElement.type === 'tech-tile') {
+    } else if (rewardType === 'tech-tile-flip') {
+      if (gameElement && gameElement.type === 'tech-tile') {
         this.techTilesService.flipTechTile(gameElement.object.id);
         this.audioManager.playSound('tech-tile');
         this.turnInfoService.updatePlayerTurnInfo(playerId, { techTilesFlippedThisTurn: [gameElement.object] });
@@ -3180,6 +3222,8 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'intrigue-trash' }] });
     } else if (rewardType === 'card-return-to-hand') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardReturnToHandAmount: rewardAmount });
+    } else if (rewardType === 'turn-pass') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { needsToPassTurn: true });
     }
     this.loggingService.logPlayerResourceGained(playerId, rewardType, rewardAmount);
   }
@@ -3284,7 +3328,7 @@ export class GameManager {
   }
 
   public addUnitsToCombatIfPossible(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
-    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(playerId);
+    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(playerId);
     if (!playerTurnInfos) {
       return;
     }
@@ -3326,7 +3370,7 @@ export class GameManager {
   }
 
   public retreatUnitsIfPossible(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
-    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(playerId);
+    const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(playerId);
     if (!playerTurnInfos) {
       return;
     }
@@ -3511,12 +3555,10 @@ export class GameManager {
       dreadnought: 0,
       agent: 0,
       'agent-lift': 0,
-      buildup: 0,
       'card-destroy': 0,
       'card-discard': 0,
       'card-draw': 0,
       'card-draw-or-destroy': 0,
-      'card-round-start': 0,
       combat: 0,
       'council-seat-large': 0,
       'council-seat-small': 0,

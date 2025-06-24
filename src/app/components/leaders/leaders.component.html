@@ -52,7 +52,7 @@
             color="accent"
             (click)="onEndTurnClicked(activePlayer.id)"
             [matTooltip]="t.translate('leadersTooltipEndTurn')"
-            [disabled]="activePlayer.isAI && (activePlayer.turnState === 'reveal' || turnInfos?.isDoingAIActions)"
+            [disabled]="activePlayer.isAI && (activePlayer.turnState === 'reveal' || turnInfos?.aiStatus === 'working')"
           >
             <mat-icon>keyboard_arrow_right</mat-icon>
           </button>
@@ -66,7 +66,8 @@
               (currentRoundPhase === 'agent-placement' && activePlayer.turnState === 'revealed') ||
               (currentRoundPhase === 'combat' && activePlayer.turnState === 'done') ||
               currentRoundPhase === 'combat-resolvement' ||
-              (turnInfos && (turnInfos.fieldsVisitedThisTurn.length > 0 || turnInfos.isDoingAIActions))
+              turnInfos?.aiStatus === 'working' ||
+              turnInfos?.aiStatus === 'done'
             "
             *ngIf="activePlayer.isAI"
           >

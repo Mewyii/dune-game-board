@@ -1,4 +1,4 @@
-import { LanguageString, Effect } from '../models';
+import { Effect, LanguageString } from '../models';
 
 export interface House {
   name: LanguageString;
@@ -32,7 +32,7 @@ export const minorHouses: House[] = [
     colorSecondary: '#6dbda6',
     persuasion: 4,
     customFriendshipRequirement: { de: 'Habe einen Sitz im hohen Rat.', en: 'Have a high council seat.' },
-    friendshipReward: [{ type: 'card-round-start' }],
+    friendshipReward: [],
     allianceRequirement: [{ type: 'persuasion', amount: 6 }],
     allianceReward: [{ type: 'victory-point' }],
   },
@@ -61,7 +61,7 @@ export const minorHouses: House[] = [
       de: '{resource:agent} auf 2 oder mehr: Imperiales Becken, Sietch Tabr, Destillanzüge, Forschungszentrum',
       en: '{resource:agent} on 2 or more: Imperial Basin, Sietch Tabr, Stillsuits, Research Station',
     },
-    friendshipReward: [{ type: 'card-round-start' }, { type: 'solari' }],
+    friendshipReward: [{ type: 'solari' }],
     allianceRequirement: [{ type: 'water' }, { type: 'water' }],
     allianceReward: [{ type: 'victory-point' }],
   },
@@ -182,7 +182,7 @@ export const minorHouses: House[] = [
     colorSecondary: '#5a90a6',
     persuasion: 2,
     customFriendshipRequirement: { de: 'Entsorge eine Bene Gesserit Karte.', en: 'Trash a bene gesserit card' },
-    friendshipReward: [{ type: 'card-destroy' }, { type: 'card-round-start' }],
+    friendshipReward: [{ type: 'card-destroy' }],
     customAllianceRequirement: {
       de: 'Verliere einen Bene Gesserit Einfluss.',
       en: 'Lose one bene gesserit influence.',

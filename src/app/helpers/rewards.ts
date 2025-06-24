@@ -24,6 +24,7 @@ import {
   EffectTimingConditionChoiceConversionMultiplierOrReward,
   effectTimings,
   EffectType,
+  MultiplierEffectTiming,
   resourceTypes,
   RewardArrayInfo,
   StructuredChoiceEffect,
@@ -34,6 +35,7 @@ import {
   StructuredTimingEffect,
 } from '../models';
 import { GameState } from '../models/ai';
+import { Player } from '../models/player';
 import { getPlayerdreadnoughtCount } from './combat-units';
 
 export function isFactionScoreReward(reward: Effect) {
@@ -418,9 +420,41 @@ export function getStructuredMultiplierEffectIfPossible(
   return [effects as EffectReward[], undefined];
 }
 
+export function isTimingFullfilled(timingEffect: StructuredTimingEffect, player: Player, gameState: GameState) {
+  let timingFullfilled = false;
+  if (timingEffect.type === 'timing-game-start') {
+    const hasPlacedAgentThisRound = gameState.playerAgentsOnFields.length > 0;
+    if (gameState.currentRound === 1 && player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+      timingFullfilled = true;
+    }
+  } else if (timingEffect.type === 'timing-round-start') {
+    const hasPlacedAgentThisRound = gameState.playerAgentsOnFields.length > 0;
+    if (player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+      timingFullfilled = true;
+    }
+  } else if (timingEffect.type === 'timing-turn-start') {
+    if (player.turnState === 'agent-placement' && !gameState.playerTurnInfos?.agentPlacedOnFieldId) {
+      timingFullfilled = true;
+    }
+  } else if (timingEffect.type === 'timing-reveal-turn') {
+    if (player.turnState === 'reveal') {
+      timingFullfilled = true;
+    }
+  }
+  return timingFullfilled;
+}
+
 export function getMultipliedRewardEffects(
   multiplierEffectOrRewardArray: StructuredMultiplierEffect | EffectReward[],
-  gameState: Pick<GameState, 'playerAgentsOnFields' | 'playerCombatUnits' | 'playerHandCardsRewards'>
+  gameState: Pick<
+    GameState,
+    | 'playerAgentsOnFields'
+    | 'playerCombatUnits'
+    | 'playerHandCardsRewards'
+    | 'playerHandCardsFactions'
+    | 'playerCardsFactionsInPlay'
+  >,
+  timing: MultiplierEffectTiming = 'agent-placement'
 ): EffectReward[] {
   if (isArray(multiplierEffectOrRewardArray)) {
     return multiplierEffectOrRewardArray;
@@ -457,6 +491,20 @@ export function getMultipliedRewardEffects(
       const swordAmount = gameState.playerHandCardsRewards.sword;
       if (swordAmount > 0) {
         effectMultiplierAmount = 0.75 * swordAmount;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-connections') {
+      const faction = multiplierEffectOrRewardArray.faction;
+      if (faction) {
+        if (timing === 'agent-placement') {
+          const handCardAmount = gameState.playerHandCardsFactions[faction];
+          if (handCardAmount > 0) {
+            effectMultiplierAmount = handCardAmount;
+          }
+        } else {
+          const handCardAmount = gameState.playerHandCardsFactions[faction];
+          const cardsInPlayAmount = gameState.playerCardsFactionsInPlay[faction];
+          effectMultiplierAmount = handCardAmount + cardsInPlayAmount;
+        }
       }
     }
     if (effectMultiplierAmount > 0) {

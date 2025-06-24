@@ -140,7 +140,7 @@ export class LeadersComponent implements OnInit {
     });
 
     this.turnInfoService.turnInfos$.subscribe(() => {
-      this.turnInfos = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
+      this.turnInfos = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
     });
   }
 

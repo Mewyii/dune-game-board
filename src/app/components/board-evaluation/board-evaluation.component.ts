@@ -9,10 +9,10 @@ interface FieldValue {
 }
 
 @Component({
-    selector: 'dune-board-evaluation',
-    templateUrl: './board-evaluation.component.html',
-    styleUrls: ['./board-evaluation.component.scss'],
-    standalone: false
+  selector: 'dune-board-evaluation',
+  templateUrl: './board-evaluation.component.html',
+  styleUrls: ['./board-evaluation.component.scss'],
+  standalone: false,
 })
 export class BoardEvaluationComponent implements OnInit {
   public fieldValues: FieldValue[] = [];
@@ -123,9 +123,6 @@ export class BoardEvaluationComponent implements OnInit {
         case 'card-draw-or-destroy':
           value += 2 * amount;
           break;
-        case 'card-round-start':
-          value += 1.5 * amount;
-          break;
         case 'intrigue':
           value += 1.75 * amount;
           break;
@@ -198,7 +195,6 @@ export class BoardEvaluationComponent implements OnInit {
         case 'placeholder':
         case 'helper-or':
         case 'helper-or-horizontal':
-        case 'buildup':
         case 'signet-token':
         default:
           break;

@@ -52,7 +52,7 @@ export class PlayerRewardChoicesComponent implements OnInit {
     });
 
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
-      const playerTurnInfos = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
+      const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
       if (playerTurnInfos) {
         this.playerEffectOptions = playerTurnInfos.effectChoices;
         this.playerEffectConversions = playerTurnInfos.effectConversions;

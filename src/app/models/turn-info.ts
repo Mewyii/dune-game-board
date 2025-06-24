@@ -48,8 +48,9 @@ export interface TurnInfo {
   techTilesFlippedThisTurn: TechTileCard[];
   techTilesBoughtThisTurn: TechTileCard[];
   fieldsVisitedThisTurn: ActionField[];
-  isDoingAIActions: boolean;
+  aiStatus: 'ready' | 'working' | 'done';
   effectChoices: StructuredChoiceEffectWithGameElement[];
   effectConversions: StructuredConversionEffectWithGameElement[];
   enemiesEffects: EffectReward[];
+  needsToPassTurn: boolean;
 }

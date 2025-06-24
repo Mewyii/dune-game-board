@@ -27,8 +27,16 @@ export class TurnInfoService {
     return cloneDeep(this.turnInfosSubject.value);
   }
 
-  getPlayerTurnInfo(playerId: number) {
+  getPlayerTurnInfos(playerId: number) {
     return cloneDeep(this.turnInfosSubject.value.find((x) => x.playerId === playerId));
+  }
+
+  getPlayerTurnInfo<T extends keyof TurnInfo>(playerId: number, property: T) {
+    const playerTurnInfo = this.turnInfosSubject.value.find((x) => x.playerId === playerId);
+    if (playerTurnInfo) {
+      return playerTurnInfo[property];
+    }
+    return undefined;
   }
 
   updatePlayerTurnInfo(playerId: number, turnInfo: Partial<TurnInfo>) {
@@ -66,7 +74,7 @@ export class TurnInfoService {
   }
 
   getDeployablePlayerUnits(playerId: number) {
-    const turnInfo = this.getPlayerTurnInfo(playerId);
+    const turnInfo = this.getPlayerTurnInfos(playerId);
     if (!turnInfo) {
       return undefined;
     } else {
@@ -112,11 +120,12 @@ export class TurnInfoService {
       techTilesFlippedThisTurn: [],
       techTilesBoughtThisTurn: [],
       fieldsVisitedThisTurn: [],
-      isDoingAIActions: false,
+      aiStatus: 'ready',
       effectChoices: [],
       effectConversions: [],
       enemiesEffects: [],
       cardReturnToHandAmount: 0,
+      needsToPassTurn: false,
     };
   }
 }

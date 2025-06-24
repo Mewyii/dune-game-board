@@ -4,13 +4,11 @@ export const effectRewards = [
   'agent',
   'agent-lift',
   'beetle',
-  'buildup',
   'card-destroy',
   'card-discard',
   'card-draw',
   'card-draw-or-destroy',
   'card-return-to-hand',
-  'card-round-start',
   'combat',
   'council-seat-large',
   'council-seat-small',
@@ -76,11 +74,12 @@ export const effectConversions = ['helper-trade', 'helper-trade-horizontal'] as 
 
 export const effectMultipliers = [
   'multiplier-agents-on-board-spaces',
+  'multiplier-cards-with-sword',
+  'multiplier-connections',
   'multiplier-dreadnought-amount',
   'multiplier-dreadnought-in-conflict-amount',
   'multiplier-dreadnought-in-garrison-amount',
   'multiplier-troops-in-conflict',
-  'multiplier-cards-with-sword',
 ] as const;
 
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
@@ -131,6 +130,7 @@ export interface EffectConversion extends EffectBase {
 
 export interface EffectMultiplier extends EffectBase {
   type: EffectMultiplierType;
+  faction?: ActiveFactionType;
 }
 
 export interface EffectReward extends EffectBase {
@@ -219,6 +219,7 @@ export interface StructuredConversionEffect {
 export interface StructuredMultiplierEffect {
   multiplier: EffectMultiplierType;
   rewards: EffectReward[];
+  faction?: ActiveFactionType;
 }
 
 export interface RewardArrayInfo {
@@ -227,3 +228,5 @@ export interface RewardArrayInfo {
   rewardConversionIndex: number;
   rewardOptionIndex: number;
 }
+
+export type MultiplierEffectTiming = 'agent-placement' | 'reveal';

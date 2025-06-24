@@ -760,13 +760,19 @@ export class AIManager {
         evaluationValue -=
           this.effectEvaluationService.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState) * 0.75;
       }
+      for (const multiplierEffect of revealEffects.multiplierEffects) {
+        const rewards = getMultipliedRewardEffects(multiplierEffect, gameState, 'reveal');
+        evaluationValue -=
+          this.effectEvaluationService.getRewardArrayEvaluationForTurnState(rewards, player, gameState) * 0.75;
+      }
       for (const choiceEffect of revealEffects.choiceEffects) {
         evaluationValue -=
-          this.effectEvaluationService.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState) * 0.75;
+          this.effectEvaluationService.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState, 'reveal') *
+          0.75;
       }
       for (const conditionEffect of revealEffects.conditionalEffects) {
         evaluationValue -=
-          this.effectEvaluationService.getConditionEffectEvaluation(conditionEffect, player, gameState) * 0.75;
+          this.effectEvaluationService.getConditionEffectEvaluation(conditionEffect, player, gameState, 'reveal') * 0.75;
       }
     }
     if (hasCustomRevealEffect(card)) {
@@ -795,7 +801,7 @@ export class AIManager {
       const { hasRewardChoice: hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(card.buyEffects);
       if (!hasRewardOptions && !hasRewardConversion) {
         evaluationValue +=
-          this.effectEvaluationService.getRewardArrayEvaluation(card.buyEffects, player, gameState) * 0.75 +
+          this.effectEvaluationService.getRewardArrayEvaluationForTurnState(card.buyEffects, player, gameState) * 0.75 +
           0.05 * (gameState.currentRound - 1);
       }
     }
@@ -827,7 +833,8 @@ export class AIManager {
       evaluationValue += this.effectEvaluationService.getStructuredEffectsEvaluation(
         card.structuredRevealEffects,
         player,
-        gameState
+        gameState,
+        'reveal'
       );
     }
     if (hasCustomRevealEffect(card)) {
@@ -880,7 +887,8 @@ export class AIManager {
       evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
         card.structuredRevealEffects,
         player,
-        gameState
+        gameState,
+        'reveal'
       );
     }
     if (hasCustomRevealEffect(card)) {
@@ -943,7 +951,22 @@ export class AIManager {
     return evaluationValue;
   }
 
-  public getIntrigueEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {
+  public getTechTilePlayEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+
+    if (techTile.structuredEffects) {
+      const value = this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
+        techTile.structuredEffects,
+        player,
+        gameState
+      );
+      evaluationValue += value;
+    }
+
+    return evaluationValue;
+  }
+
+  public getIntriguePlayEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {
     const intrigueEffects = intrigue.structuredEffects;
 
     if (intrigueEffects) {

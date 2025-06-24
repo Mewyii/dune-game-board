@@ -9,10 +9,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
-    selector: 'dune-turn-infos',
-    templateUrl: './turn-infos.component.html',
-    styleUrl: './turn-infos.component.scss',
-    standalone: false
+  selector: 'dune-turn-infos',
+  templateUrl: './turn-infos.component.html',
+  styleUrl: './turn-infos.component.scss',
+  standalone: false,
 })
 export class TurnInfosComponent implements OnInit {
   activePlayerId = 0;
@@ -36,11 +36,11 @@ export class TurnInfosComponent implements OnInit {
       this.activePlayerId = activePlayerId;
       this.showTurnInfos();
 
-      this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
+      this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
     });
 
     this.turnInfoService.turnInfos$.subscribe(() => {
-      this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId);
+      this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
     });
   }
 
