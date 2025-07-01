@@ -10,10 +10,12 @@ export interface Leader {
   passiveEffects?: Effect[];
   passiveEffectSize?: EffectSizeType;
   passiveDescription: LanguageString;
+  passiveDescriptionSize?: EffectSizeType;
   signetName: LanguageString;
   signetEffects?: Effect[];
   signetEffectSize?: EffectSizeType;
   signetDescription: LanguageString;
+  signetDescriptionSize?: EffectSizeType;
   imageUrl: string;
 }
 
@@ -47,6 +49,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'small',
     signetEffectSize: 'small',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'water',
@@ -95,6 +99,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'small',
+    signetDescriptionSize: 'large',
     startingResources: [
       {
         type: 'water',
@@ -135,6 +141,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'small',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'water',
@@ -175,6 +183,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'small',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'small',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'spice',
@@ -240,6 +250,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'small',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'water',
@@ -254,31 +266,35 @@ export const leaders: Leader[] = [
   },
   {
     name: {
-      de: 'Prinzessin Irulan Corrino',
       en: 'Princess Irulan Corrino',
+      de: 'Prinzessin Irulan Corrino',
     },
     house: {
-      de: 'haus corrino',
       en: 'house corrino',
+      de: 'haus corrino',
     },
     passiveName: {
-      de: 'Tochter des Imperators',
       en: 'Daughter of the emperor',
+      de: 'Tochter des Imperators',
     },
     passiveDescription: {
       en: "Don't put a marker on the {faction:emperor}-influence-track. Every time you would gain influence there: {resource:solari}<br>Ignore all {faction:emperor} -requirements.",
       de: 'Lege keinen Marker auf die {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Ignoriere alle {faction:emperor} -Bedingungen.',
     },
     signetName: {
-      de: 'Chronistin',
       en: 'Chronicler',
+      de: 'Chronistin',
     },
     signetDescription: {
       en: 'Place {resource:signet-token} on a board space that has one of your agents on it. Trash it when you place an agent there the next time to get {resource:card-draw}{resource:card-draw}.',
       de: 'Lege {resource:signet-token} auf ein Feld mit einem deiner Agenten. Entsorge es, wenn du dort das nächste Mal einen Agenten platzierst, um {resource:card-draw}{resource:card-draw} zu erhalten.',
     },
-    type: 'new',
     imageUrl: '/assets/images/leaders/irulan.png',
+    type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'medium',
+    passiveDescriptionSize: 'small',
+    signetDescriptionSize: 'small',
     startingResources: [
       {
         type: 'solari',
@@ -289,6 +305,8 @@ export const leaders: Leader[] = [
         amount: 2,
       },
     ],
+    passiveEffects: [],
+    signetEffects: [],
   },
   {
     name: {
@@ -319,6 +337,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'small',
     signetEffectSize: 'small',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'solari',
@@ -574,6 +594,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'small',
     startingResources: [
       {
         type: 'signet-token',
@@ -616,6 +638,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'small',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'signet-token',
@@ -1035,6 +1059,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'small',
     startingResources: [
       {
         type: 'troop',
@@ -1072,6 +1098,8 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'small',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'solari',

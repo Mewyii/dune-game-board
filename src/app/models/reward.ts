@@ -229,4 +229,4 @@ export interface RewardArrayInfo {
   rewardOptionIndex: number;
 }
 
-export type MultiplierEffectTiming = 'agent-placement' | 'reveal';
+export type EffectPlayerTurnTiming = 'agent-placement' | 'reveal';

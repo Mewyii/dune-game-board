@@ -21,7 +21,11 @@
           [alignItems]="'start'"
         ></dune-reward-array>
         }
-        <div class="leader-passive-description" [innerHTML]="t.translateLS(leader.passiveDescription) | duneSymbols"></div>
+        <div
+          class="leader-passive-description"
+          [style.fontSize]="passiveDescriptionSize"
+          [innerHTML]="t.translateLS(leader.passiveDescription) | duneSymbols : passiveDescriptionSymbolSize"
+        ></div>
       </div>
     </div>
     <div class="leader-signet-container">
@@ -38,7 +42,11 @@
           [alignItems]="'start'"
         ></dune-reward-array>
         }
-        <div class="leader-signet-description" [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols"></div>
+        <div
+          class="leader-signet-description"
+          [style.fontSize]="signetDescriptionSize"
+          [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols : signetDescriptionSymbolSize"
+        ></div>
       </div>
     </div>
   </div>

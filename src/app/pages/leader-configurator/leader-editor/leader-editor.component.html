@@ -157,6 +157,12 @@
         <input matInput formControlName="de" />
       </mat-form-field>
     </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Passive Description Size</mat-label>
+      <mat-select formControlName="passiveDescriptionSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <!-- Signet Effects -->
@@ -250,5 +256,11 @@
         <input matInput formControlName="de" />
       </mat-form-field>
     </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Signet Description Size</mat-label>
+      <mat-select formControlName="signetDescriptionSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 </form>

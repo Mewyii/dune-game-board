@@ -712,7 +712,7 @@ export class AIManager {
     let decision: EffectRewardType | undefined = undefined;
     let evaluationValue = 0;
     for (const rewardType of rewardTypes) {
-      const value = this.effectEvaluationService.getRewardEffectEvaluationForTurnState(rewardType, player, gameState);
+      const value = this.effectEvaluationService.getRewardEffectEvaluationForTurnState(rewardType, 1, player, gameState);
       if (value > evaluationValue) {
         evaluationValue = value;
         decision = rewardType;

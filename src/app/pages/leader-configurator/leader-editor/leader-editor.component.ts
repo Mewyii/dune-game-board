@@ -155,6 +155,8 @@ export class LeaderEditorComponent implements OnChanges {
       type: 'new',
       passiveEffectSize: 'medium',
       signetEffectSize: 'medium',
+      passiveDescriptionSize: 'medium',
+      signetDescriptionSize: 'medium',
     });
 
     this.addStartingResourcesControl();

@@ -22,6 +22,7 @@ import {
   getRewardArrayAIInfos,
   getStructuredConversionEffectIfPossible,
   isChoiceEffectType,
+  isConditionFullfilled,
   isConversionEffectType,
   isFactionScoreCostType,
   isFactionScoreRewardType,
@@ -37,6 +38,7 @@ import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn
 import {
   ActionField,
   ActionType,
+  EffectPlayerTurnTiming,
   EffectReward,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
@@ -609,7 +611,7 @@ export class GameManager {
             player,
             gameState,
             { type: 'imperium-card', object: card },
-            playerHand.cards.filter((x) => x.id !== card.id)
+            'reveal'
           );
         }
         if (hasCustomRevealEffect(card)) {
@@ -1636,7 +1638,7 @@ export class GameManager {
     player: Player,
     gameState: GameState,
     gameElement?: GameElement,
-    additionalCardsInPlay?: ImperiumDeckCard[]
+    timing?: EffectPlayerTurnTiming
   ) {
     const effects = structuredEffects;
     for (const reward of effects.rewards) {
@@ -1656,11 +1658,11 @@ export class GameManager {
       this.resolveStructuredChoiceEffect(choiceEffect, player.id, gameElement);
     }
     for (const conditionalEffect of effects.conditionalEffects) {
-      this.resolveStructuredConditionEffects(conditionalEffect, player, gameState, gameElement, additionalCardsInPlay);
+      this.resolveStructuredConditionEffects(conditionalEffect, player, gameState, gameElement, timing);
     }
     if (effects.timingEffects) {
       for (const timingEffect of effects.timingEffects) {
-        this.resolveStructuredTimingEffects(timingEffect, player, gameState, gameElement, additionalCardsInPlay);
+        this.resolveStructuredTimingEffects(timingEffect, player, gameState, gameElement, timing);
       }
     }
   }
@@ -1670,13 +1672,13 @@ export class GameManager {
     player: Player,
     gameState: GameState,
     gameElement?: GameElement,
-    additionalCardsInPlay?: ImperiumDeckCard[]
+    timing?: EffectPlayerTurnTiming
   ) {
     let timingFullfilled = isTimingFullfilled(timingEffect, player, gameState);
 
     if (timingFullfilled) {
       if (isStructuredConditionalEffect(timingEffect.effect)) {
-        this.resolveStructuredConditionEffects(timingEffect.effect, player, gameState, gameElement, additionalCardsInPlay);
+        this.resolveStructuredConditionEffects(timingEffect.effect, player, gameState, gameElement, timing);
       } else if (isStructuredChoiceEffect(timingEffect.effect)) {
         this.resolveStructuredChoiceEffect(timingEffect.effect, player.id, gameElement);
       } else if (isStructuredConversionEffect(timingEffect.effect)) {
@@ -1696,39 +1698,20 @@ export class GameManager {
     player: Player,
     gameState: GameState,
     gameElement?: GameElement,
-    additionalCardsInPlay?: ImperiumDeckCard[]
+    timing?: EffectPlayerTurnTiming
   ) {
-    let conditionFullfilled = false;
-    let effectAmount = 1;
+    let conditionFullfilled = isConditionFullfilled(conditionalEffect, player, gameState, timing);
 
-    if (conditionalEffect.condition === 'condition-connection') {
-      if (
-        gameState.playerCardsFactionsInPlay[conditionalEffect.faction] > 0 ||
-        additionalCardsInPlay?.some((x) => x.faction === conditionalEffect.faction)
-      ) {
-        conditionFullfilled = true;
-      }
-    } else if (conditionalEffect.condition === 'condition-influence') {
-      if (conditionalEffect.amount && gameState.playerScore[conditionalEffect.faction] >= conditionalEffect.amount) {
-        conditionFullfilled = true;
-      }
-    } else if (conditionalEffect.condition === 'condition-high-council-seat') {
-      if (player.hasCouncilSeat) {
-        conditionFullfilled = true;
-      }
-    }
     if (conditionFullfilled) {
-      for (let i = 0; i < effectAmount; i++) {
-        if (isStructuredChoiceEffect(conditionalEffect.effect)) {
-          this.resolveStructuredChoiceEffect(conditionalEffect.effect, player.id, gameElement);
-        } else if (isStructuredConversionEffect(conditionalEffect.effect)) {
-          this.resolveStructuredConversionEffect(conditionalEffect.effect, player.id, gameElement);
-        } else if (isStructuredMultiplierEffect(conditionalEffect.effect)) {
-          this.resolveStructuredMultiplierEffect(conditionalEffect.effect, player.id, gameState, gameElement);
-        } else {
-          for (const reward of conditionalEffect.effect) {
-            this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
-          }
+      if (isStructuredChoiceEffect(conditionalEffect.effect)) {
+        this.resolveStructuredChoiceEffect(conditionalEffect.effect, player.id, gameElement);
+      } else if (isStructuredConversionEffect(conditionalEffect.effect)) {
+        this.resolveStructuredConversionEffect(conditionalEffect.effect, player.id, gameElement);
+      } else if (isStructuredMultiplierEffect(conditionalEffect.effect)) {
+        this.resolveStructuredMultiplierEffect(conditionalEffect.effect, player.id, gameState, gameElement);
+      } else {
+        for (const reward of conditionalEffect.effect) {
+          this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
         }
       }
     }

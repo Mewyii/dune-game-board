@@ -5,6 +5,7 @@ import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
 import {
   getMultipliedRewardEffects,
   isChoiceEffectType,
+  isConditionFullfilled,
   isConversionEffectType,
   isStructuredChoiceEffect,
   isStructuredConditionalEffect,
@@ -12,9 +13,9 @@ import {
   isTimingFullfilled,
 } from 'src/app/helpers/rewards';
 import {
+  EffectPlayerTurnTiming,
   EffectReward,
   EffectRewardType,
-  MultiplierEffectTiming,
   StructuredChoiceEffect,
   StructuredConditionalEffect,
   StructuredConversionEffect,
@@ -24,6 +25,7 @@ import {
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import {
+  getPlayerCombatStrength,
   getResourceAmount,
   noOneHasMoreInfluence,
   playerAllianceIsContested,
@@ -42,7 +44,7 @@ export class AIEffectEvaluationService {
     effects: StructuredEffects,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (effects.rewards.length > 0) {
@@ -86,7 +88,7 @@ export class AIEffectEvaluationService {
     effects: StructuredEffects,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (effects.rewards.length > 0) {
@@ -134,7 +136,7 @@ export class AIEffectEvaluationService {
     choiceEffect: StructuredChoiceEffect,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isChoiceEffectType(choiceEffect.choiceType)) {
@@ -163,7 +165,7 @@ export class AIEffectEvaluationService {
     choiceEffect: StructuredChoiceEffect,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isChoiceEffectType(choiceEffect.choiceType)) {
@@ -192,7 +194,7 @@ export class AIEffectEvaluationService {
     conversionEffect: StructuredConversionEffect,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.conversionType)) {
@@ -213,7 +215,7 @@ export class AIEffectEvaluationService {
     conversionEffect: StructuredConversionEffect,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.conversionType)) {
@@ -232,7 +234,7 @@ export class AIEffectEvaluationService {
     conditionEffect: StructuredConditionalEffect,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isStructuredChoiceEffect(conditionEffect.effect)) {
@@ -263,7 +265,7 @@ export class AIEffectEvaluationService {
     conditionEffect: StructuredConditionalEffect,
     player: Player,
     gameState: GameState,
-    timing: MultiplierEffectTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement'
   ) {
     let evaluationValue = 0;
     if (isStructuredChoiceEffect(conditionEffect.effect)) {
@@ -276,19 +278,8 @@ export class AIEffectEvaluationService {
       evaluationValue += this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
     }
 
-    if (conditionEffect.condition === 'condition-connection') {
-      if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
-        return evaluationValue;
-      }
-    } else if (conditionEffect.condition === 'condition-influence') {
-      const factionScore = gameState.playerScore[conditionEffect.faction];
-      if (conditionEffect.amount && factionScore >= conditionEffect.amount) {
-        return evaluationValue;
-      }
-    } else if (conditionEffect.condition === 'condition-high-council-seat') {
-      if (player.hasCouncilSeat) {
-        return evaluationValue;
-      }
+    if (isConditionFullfilled(conditionEffect, player, gameState)) {
+      return evaluationValue;
     }
 
     return 0;
@@ -366,7 +357,9 @@ export class AIEffectEvaluationService {
   public getRewardArrayEvaluationForTurnState(rewards: EffectReward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
-      evaluationValue += this.getRewardEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1);
+      const rewardAmount = reward.amount ?? 1;
+      evaluationValue +=
+        this.getRewardEffectEvaluationForTurnState(reward.type, rewardAmount, player, gameState) * rewardAmount;
     }
     return evaluationValue;
   }
@@ -374,8 +367,10 @@ export class AIEffectEvaluationService {
   public getCostsArrayEvaluationForTurnState(rewards: EffectReward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
+      const rewardAmount = reward.amount ?? 1;
+
       evaluationValue += Math.abs(
-        this.getRewardEffectEvaluationForTurnState(reward.type, player, gameState) * (reward.amount ?? 1)
+        this.getRewardEffectEvaluationForTurnState(reward.type, rewardAmount, player, gameState) * rewardAmount
       );
     }
     return evaluationValue;
@@ -546,9 +541,14 @@ export class AIEffectEvaluationService {
     }
   }
 
-  public getRewardEffectEvaluationForTurnState(rewardType: EffectRewardType, player: Player, gameState: GameState) {
+  public getRewardEffectEvaluationForTurnState(
+    rewardType: EffectRewardType,
+    rewardAmount: number,
+    player: Player,
+    gameState: GameState
+  ) {
     const hasPlacedAgents = gameState.playerAgentsOnFields.length > 0;
-    const hasAgentsLeftToPlace = player.agents - gameState.playerAgentsOnFields.length > 0;
+    const hasAgentsLeftToPlace = gameState.playerAgentsAvailable > 0;
 
     const value = this.getRewardEffectEvaluation(rewardType, player, gameState);
 
@@ -594,7 +594,11 @@ export class AIEffectEvaluationService {
         if (player.turnState === 'reveal') {
           return -5;
         } else {
-          return gameState.playerDeckCards.length > 0 ? value : 0;
+          const drawableCards =
+            rewardAmount <= gameState.playerDeckCards.length ? rewardAmount : gameState.playerDeckCards.length;
+          const efficiency = drawableCards / rewardAmount;
+
+          return value * efficiency;
         }
       case 'card-discard':
         return value;
@@ -602,7 +606,7 @@ export class AIEffectEvaluationService {
       case 'focus':
         return gameState.playerDeckSizeTotal > 7 ? value : 0;
       case 'card-draw-or-destroy':
-        return gameState.playerDeckCards.length > 0 || gameState.playerDeckSizeTotal > 6 ? value : 0;
+        return gameState.playerDeckCards.length > 0 || gameState.playerDeckSizeTotal > 7 ? value : 0;
       case 'intrigue':
         return value - 0.33 * gameState.playerIntrigueCount;
       case 'persuasion':
@@ -622,11 +626,25 @@ export class AIEffectEvaluationService {
       case 'victory-point':
         return value;
       case 'sword':
-        return gameState.playerCombatUnits.troopsInCombat > 0 || gameState.playerCombatUnits.shipsInCombat > 0
-          ? hasAgentsLeftToPlace || gameState.currentRoundPhase === 'combat'
-            ? value
-            : 0.75 * value
-          : 0;
+        const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+        const playerCanSurpassEnemy = gameState.enemyCombatUnits
+          .map((x) => getPlayerCombatStrength(x, gameState))
+          .some(
+            (enemyCombatStrength) =>
+              enemyCombatStrength >= playerCombatStrength && enemyCombatStrength < playerCombatStrength + rewardAmount
+          );
+        const playerIsInCombat =
+          gameState.playerCombatUnits.troopsInCombat > 0 || gameState.playerCombatUnits.shipsInCombat > 0;
+
+        if (gameState.currentRoundPhase !== 'agent-placement') {
+          return playerIsInCombat
+            ? playerCanSurpassEnemy
+              ? 1.25 * value
+              : value
+            : gameState.playerAgentsAvailable * 0.33 * value;
+        } else {
+          return playerIsInCombat ? (playerCanSurpassEnemy ? 1.25 * value : value) : 0;
+        }
       case 'combat':
         const participateDesire = getParticipateInCombatDesire(gameState);
         const winDesire = getWinCombatDesire(gameState);

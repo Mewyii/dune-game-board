@@ -17,6 +17,7 @@ import {
   EffectMultiplierOrReward,
   effectMultipliers,
   EffectMultiplierType,
+  EffectPlayerTurnTiming,
   EffectReward,
   effectRewards,
   EffectRewardType,
@@ -24,7 +25,6 @@ import {
   EffectTimingConditionChoiceConversionMultiplierOrReward,
   effectTimings,
   EffectType,
-  MultiplierEffectTiming,
   resourceTypes,
   RewardArrayInfo,
   StructuredChoiceEffect,
@@ -444,6 +444,39 @@ export function isTimingFullfilled(timingEffect: StructuredTimingEffect, player:
   return timingFullfilled;
 }
 
+export function isConditionFullfilled(
+  conditionEffect: StructuredConditionalEffect,
+  player: Player,
+  gameState: GameState,
+  timing: EffectPlayerTurnTiming = 'agent-placement'
+) {
+  let conditionFullfilled = false;
+  if (conditionEffect.condition === 'condition-connection') {
+    if (timing === 'agent-placement') {
+      if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
+        conditionFullfilled = true;
+      }
+    } else {
+      if (
+        gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0 ||
+        gameState.playerHandCardsFactions[conditionEffect.faction] > 0
+      ) {
+        conditionFullfilled = true;
+      }
+    }
+  } else if (conditionEffect.condition === 'condition-influence') {
+    const factionScore = gameState.playerScore[conditionEffect.faction];
+    if (conditionEffect.amount && factionScore >= conditionEffect.amount) {
+      conditionFullfilled = true;
+    }
+  } else if (conditionEffect.condition === 'condition-high-council-seat') {
+    if (player.hasCouncilSeat) {
+      conditionFullfilled = true;
+    }
+  }
+  return conditionFullfilled;
+}
+
 export function getMultipliedRewardEffects(
   multiplierEffectOrRewardArray: StructuredMultiplierEffect | EffectReward[],
   gameState: Pick<
@@ -454,7 +487,7 @@ export function getMultipliedRewardEffects(
     | 'playerHandCardsFactions'
     | 'playerCardsFactionsInPlay'
   >,
-  timing: MultiplierEffectTiming = 'agent-placement'
+  timing: EffectPlayerTurnTiming = 'agent-placement'
 ): EffectReward[] {
   if (isArray(multiplierEffectOrRewardArray)) {
     return multiplierEffectOrRewardArray;

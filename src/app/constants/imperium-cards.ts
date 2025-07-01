@@ -1050,10 +1050,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Jeder Gegner auf Feldern dieses Typs entsorgt eine Karte aus seiner Hand.',
       fontSize: 'small',
     },
-    revealEffectSize: 'large',
+    revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each bene gesserit card you have in play: {resource:persuasion;amount:1}',
-      de: 'Für jede Bene-Gesserit-Karte, die du im Spiel hast: {resource:persuasion;amount:1}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [
@@ -1062,7 +1062,23 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     agentEffects: [],
-    revealEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'bene',
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
   },
   {
     name: {
@@ -2157,8 +2173,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each emperor card you have in play: {resource:sword}',
-      de: 'Für jede Imperator-Karte, die du im Spiel hast: {resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [
@@ -2183,6 +2199,16 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'emperor',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -3402,8 +3428,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each fremen card you have in play: {resource:sword}',
-      de: 'Für jede Fremen-Karte, die du im Spiel hast: {resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -3412,6 +3438,16 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'fremen',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -3812,8 +3848,8 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each fremen card you have in play: {resource:persuasion;amount:2}',
-      de: 'Für jede Fremen-Karte, die du im Spiel hast: {resource:persuasion;amount:2}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
     buyEffects: [
@@ -3824,7 +3860,19 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'recruitment-fremen',
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'fremen',
+      },
+      {
+        type: 'persuasion',
+        amount: 2,
       },
     ],
   },
@@ -3935,17 +3983,44 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'town'],
     imageUrl: '/assets/images/action-backgrounds/jessica.png',
     cardAmount: 1,
-    buyEffects: [],
+    canInfiltrate: false,
+    agentEffectSize: 'large',
     customAgentEffect: {
-      en: 'For each fremen card you have in play: {resource:card-draw-or-destroy}',
-      de: 'Für jede Fremen-Karte, die du im Spiel hast: {resource:card-draw-or-destroy}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
+    revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each fremen card you have in play: {resource:persuasion;amount:1}{resource:sword}',
-      de: 'Für jede Fremen-Karte, die du im Spiel hast: {resource:persuasion;amount:1}{resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw-or-destroy',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 3,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'fremen',
+      },
+      {
+        type: 'sword',
+      },
+    ],
   },
   {
     name: {
@@ -4039,16 +4114,16 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/faithful_6.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     customAgentEffect: {
-      en: 'For each fremen card you have in play: {resource:troop}',
-      de: 'Für jede Fremen-Karte, die du im Spiel hast: {resource:troop}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'For each fremen card you have in play: {resource:sword}',
-      de: 'Für jede Fremen-Karte, die du im Spiel hast: {resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [
@@ -4059,14 +4134,39 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-fremen',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'fremen',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 2,
+        amount: 1,
       },
       {
         type: 'recruitment-fremen',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'fremen',
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
       },
     ],
   },
