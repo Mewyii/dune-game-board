@@ -5,7 +5,7 @@ import { ixCustomBeginner } from './ix';
 import { locationsCustomBeginner } from './locations';
 
 export const gameContentCustomBeginner: GameContent = {
-  name: 'custom-beginner',
+  name: 'New Beginnings',
   factions: factionsCustomBeginner,
   locations: locationsCustomBeginner,
   ix: ixCustomBeginner,
@@ -36,4 +36,5 @@ export const gameContentCustomBeginner: GameContent = {
     unlimited: 'under-deck',
     foldspace: 'hand',
   },
+  churnRowCards: true,
 };

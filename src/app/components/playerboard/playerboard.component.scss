@@ -1,24 +1,26 @@
 .player-board-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 250px;
-  height: calc(100% - 64px);
-  padding: 32px;
+  box-sizing: border-box;
+  width: 350px;
+  height: 100%;
+  padding: 64px 32px;
   background: rgba(23, 19, 16, 0.8);
   color: white;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 150px;
+  min-height: 125px;
   font-size: x-large;
+  text-align: center;
 }
 
-.player-area {
+.players-container {
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .player-container {
@@ -89,7 +91,7 @@
 .resource-area {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
   align-items: center;
   margin-top: 16px;
 }
@@ -136,8 +138,8 @@
 
 .turn-area {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  flex-direction: column;
+  gap: 8px;
   align-items: center;
   font-size: xxx-large;
   justify-content: center;
@@ -148,7 +150,7 @@
 }
 
 .turn-state {
-  font-size: large;
+  font-size: 19px;
 }
 
 .ai-container {
@@ -171,17 +173,35 @@
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 
 .cards-area {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
   align-items: center;
   margin-top: 16px;
 }
 
 .endgame {
-  font-size: xxx-large;
+  font-size: 23px;
   color: rgb(255, 170, 73);
+}
+
+.title {
+  font-size: 29px;
+}
+
+.subtitle {
+  font-size: 23px;
+  color: rgb(255, 170, 73);
+}
+
+.players-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }

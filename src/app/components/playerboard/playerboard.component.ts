@@ -31,6 +31,7 @@ export class PlayerboardComponent implements OnInit {
   public turnState = '';
   public canSwitchToCombatPhase = false;
   public availablePlayerAgents: PlayerAgents[] = [];
+  public subTitle = '';
 
   public playerScores: PlayerScore[] = [];
 
@@ -100,6 +101,7 @@ export class PlayerboardComponent implements OnInit {
 
     this.settingsService.gameContent$.subscribe((gameContent) => {
       this.maxPlayers = gameContent.maxPlayers;
+      this.subTitle = gameContent.name;
     });
   }
 
@@ -127,7 +129,7 @@ export class PlayerboardComponent implements OnInit {
 
   showSettingsDialog() {
     const dialogRef = this.dialog.open(DialogSettingsComponent, {
-      width: '500px',
+      width: '600px',
       data: {
         title: 'Settings',
       },

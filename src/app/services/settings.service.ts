@@ -208,6 +208,9 @@ export class SettingsService {
   public getCardAcquiringRuleUnlimited() {
     return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.unlimited);
   }
+  public getChurnRowCards() {
+    return cloneDeep(this.settingsSubject.value.gameContent.churnRowCards);
+  }
 
   public setFields() {
     const gameContent = this.gameContent;

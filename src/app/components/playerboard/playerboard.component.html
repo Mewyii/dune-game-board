@@ -1,109 +1,22 @@
 <div class="player-board-container">
   <div class="heading">
-    <div class="font-scifi" *ngIf="gameManager.currentRound == 0">
-      {{ t.translate('playerboardHeading') }}
+    @if (gameManager.currentRound === 0) {
+    <div class="turn-area">
+      <div class="title font-scifi">DUNE: IMPERIUM</div>
+      <div class="subtitle font-medieval">{{ subTitle.toUpperCase() }}</div>
     </div>
-    <div *ngIf="gameManager.currentRound == 0">
-      <button
-        mat-mini-fab
-        [color]="'accent'"
-        (click)="onRemovePlayerClicked()"
-        [disabled]="players.length === 0 || gameManager.currentRound !== 0"
-        [style]="'margin-right: 6px'"
-      >
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button
-        mat-mini-fab
-        [color]="'accent'"
-        (click)="onAddPlayerClicked()"
-        [disabled]="players.length === maxPlayers || gameManager.currentRound !== 0"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    <div *ngIf="currentTurn" class="turn-area">
+
+    } @else {
+    <div class="turn-area">
       <div class="font-scifi" *ngIf="currentTurn">
         {{ t.translate('playerboardRound') }} <span class="turn">{{ currentTurn }}</span>
       </div>
-      <div *ngIf="isFinale" class="endgame font-medieval">{{ t.translate('commonEndgame') }}</div>
+      <div *ngIf="isFinale" class="endgame font-medieval">{{ t.translate('commonEndgame').toUpperCase() }}</div>
       <div class="turn-state font-medieval">{{ turnState.toUpperCase() }}</div>
     </div>
+    }
   </div>
-  @for (player of players; track $index) {
-  <div class="player-container">
-    <div class="player-heading font-medieval">
-      <div
-        class="player-name {{ player.id === gameManager.activePlayerId ? 'highlighted' : '' }}"
-        [style.color]="player.color"
-      >
-        <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
-        {{ t.translateLS(getPlayerLeaderName(player.id)).toUpperCase() }}
-      </div>
-    </div>
-    <div class="ai-area font-medieval">
-      <mat-slide-toggle
-        [color]="'accent'"
-        [checked]="player.isAI"
-        (change)="onSetAIActiveClicked(player.id, $event)"
-        [matTooltip]="t.translate('playerboardButtonToggleAI')"
-        >AI</mat-slide-toggle
-      >
-    </div>
-    <div class="agent-area">
-      @for (object of player.agents | numberToArray; track $index; let i = $index) {
-      <div class="agents-icon-container">
-        <div
-          class="agents-icon"
-          [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
-          [style.background-color]="player.color"
-        ></div>
-      </div>
-      }
-    </div>
-    <div class="cards-area">
-      <div class="resource-display">
-        <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
-        <div class="resource-amount">
-          <span>{{ getPlayerHandCards(player.id)?.cards?.length }}</span>
-        </div>
-      </div>
-      <div class="resource-display">
-        <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
-        <div class="resource-amount">
-          <span>{{ getPlayerDiscardPile(player.id)?.cards?.length }}</span>
-        </div>
-      </div>
-      <div class="resource-display">
-        <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
-        <div class="resource-amount">
-          <span>{{ getPlayerDeck(player.id)?.cards?.length }}</span>
-        </div>
-      </div>
-    </div>
-    <div class="resource-area">
-      @for (resource of player.resources; track $index) {
-      <div class="resource-container">
-        <div class="resource-display">
-          <img class="resource" [src]="getEffectTypePath(resource.type)" />
-          <div class="resource-amount">
-            <span>{{ resource.amount }}</span>
-          </div>
-        </div>
-      </div>
-      }
-    </div>
-    <div class="cards-area">
-      <div class="resource-display">
-        <img class="resource dark" [src]="getEffectTypePath('intrigue')" />
-        <div class="resource-amount">
-          <span>{{ getPlayerIntrigues(player.id)?.intrigues?.length }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  }
-  <div class="action-container" [style]="'padding-bottom: 48px'">
+  <div class="action-container">
     <button
       *ngIf="!currentTurn"
       mat-fab
@@ -169,5 +82,105 @@
     >
       <mat-icon>emoji_events</mat-icon>
     </button>
+  </div>
+  @if (gameManager.currentRound === 0) {
+  <div class="players-control-bar">
+    <div class="font-scifi">
+      {{ t.translate('playerboardHeading') }}
+    </div>
+    <div>
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onRemovePlayerClicked()"
+        [disabled]="players.length === 0"
+        [style]="'margin-right: 6px'"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerClicked()" [disabled]="players.length === maxPlayers">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  }
+  <div class="players-container">
+    @for (player of players; track $index) {
+    <div class="player-container">
+      <div class="player-heading font-medieval">
+        <div
+          class="player-name {{ player.id === gameManager.activePlayerId ? 'highlighted' : '' }}"
+          [style.color]="player.color"
+        >
+          <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
+          {{ t.translateLS(getPlayerLeaderName(player.id)).toUpperCase() }}
+        </div>
+      </div>
+      <div class="ai-area font-medieval">
+        <mat-slide-toggle
+          [color]="'accent'"
+          [checked]="player.isAI"
+          (change)="onSetAIActiveClicked(player.id, $event)"
+          [matTooltip]="t.translate('playerboardButtonToggleAI')"
+          >AI</mat-slide-toggle
+        >
+      </div>
+      <div class="agent-area">
+        @for (object of player.agents | numberToArray; track $index; let i = $index) {
+        <div class="agents-icon-container">
+          <div
+            class="agents-icon"
+            [class.greyed-out]="getAvailablePlayerAgents(player.id) < i + 1"
+            [style.background-color]="player.color"
+          ></div>
+        </div>
+        }
+      </div>
+      <div class="cards-area">
+        <div class="resource-display">
+          <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
+          <div class="resource-amount">
+            <span>{{ getPlayerHandCards(player.id)?.cards?.length }}</span>
+          </div>
+        </div>
+        <div class="resource-display">
+          <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+          <div class="resource-amount">
+            <span>{{ getPlayerDiscardPile(player.id)?.cards?.length }}</span>
+          </div>
+        </div>
+        <div class="resource-display">
+          <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
+          <div class="resource-amount">
+            <span>{{ getPlayerDeck(player.id)?.cards?.length }}</span>
+          </div>
+        </div>
+        <div class="resource-display">
+          <img class="resource dark" [src]="getEffectTypePath('intrigue')" />
+          <div class="resource-amount">
+            <span>{{ getPlayerIntrigues(player.id)?.intrigues?.length }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="resource-area">
+        @for (resource of player.resources; track $index) {
+        <div class="resource-container">
+          <div class="resource-display">
+            <img class="resource" [src]="getEffectTypePath(resource.type)" />
+            <div class="resource-amount">
+              <span>{{ resource.amount }}</span>
+            </div>
+          </div>
+        </div>
+        }
+        <div class="resource-display">
+          <img class="resource" [src]="getEffectTypePath('tech')" />
+          <div class="resource-amount">
+            <span>{{ player.tech }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
   </div>
 </div>

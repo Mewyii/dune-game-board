@@ -3,14 +3,14 @@
   <div class="setting-container">
     <div>Game Content</div>
     <div class="options-container">
-      <mat-checkbox [checked]="gameContentName === 'original'" (click)="onSetGameContentClicked('original')"
+      <mat-checkbox [checked]="gameContentName === 'Original'" (click)="onSetGameContentClicked('Original')"
         >Original</mat-checkbox
       >
-      <mat-checkbox [checked]="gameContentName === 'custom-beginner'" (click)="onSetGameContentClicked('custom-beginner')"
-        >Beginner</mat-checkbox
+      <mat-checkbox [checked]="gameContentName === 'New Beginnings'" (click)="onSetGameContentClicked('New Beginnings')"
+        >New Beginnings</mat-checkbox
       >
-      <mat-checkbox [checked]="gameContentName === 'custom-expert'" (click)="onSetGameContentClicked('custom-expert')"
-        >Expert</mat-checkbox
+      <mat-checkbox [checked]="gameContentName === 'Sands of Arrakis'" (click)="onSetGameContentClicked('Sands of Arrakis')"
+        >Sands of Arrakis</mat-checkbox
       >
       <div [matTooltip]="!hasCustomGameContent ? 'You need to import a custom Game Content before you can select this' : ''">
         <mat-checkbox

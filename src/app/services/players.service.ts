@@ -366,13 +366,12 @@ export class PlayersService {
       return 'rgb(65 79 98)';
     } else if (id === 3) {
       return 'rgb(36 203 71)';
-    } else {
+    } else if (id === 4) {
       return 'rgb(103 0 0)';
+    } else if (id === 5) {
+      return 'rgb(68, 43, 255)';
+    } else {
+      return 'rgb(0, 230, 214)';
     }
-    // const randomBetween = (min: number, max: number) => min + Math.floor(Math.random() * (max - min + 1));
-    // const r = randomBetween(0, 255);
-    // const g = randomBetween(0, 255);
-    // const b = randomBetween(0, 255);
-    // return `rgb(${r},${g},${b})`;
   }
 }

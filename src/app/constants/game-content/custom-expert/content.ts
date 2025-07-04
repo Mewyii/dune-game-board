@@ -5,7 +5,7 @@ import { ixCustomExpert } from './ix';
 import { locationsCustomExpert } from './locations';
 
 export const gameContentCustomExpert: GameContent = {
-  name: 'custom-expert',
+  name: 'Sands of Arrakis',
   factions: factionsCustomExpert,
   locations: locationsCustomExpert,
   ix: ixCustomExpert,
@@ -37,4 +37,5 @@ export const gameContentCustomExpert: GameContent = {
     unlimited: 'under-deck',
     foldspace: 'hand',
   },
+  churnRowCards: true,
 };

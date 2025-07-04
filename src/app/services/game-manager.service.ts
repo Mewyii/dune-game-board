@@ -513,7 +513,9 @@ export class GameManager {
 
     this.activePlayerIdSubject.next(this.startingPlayerId);
 
-    this.cardsService.churnAndClearImperiumRow();
+    if (this.settingsService.getChurnRowCards()) {
+      this.cardsService.churnAndClearImperiumRow();
+    }
     this.cardsService.discardAllPlayerHandCards();
     this.cardsService.shufflePlayerDiscardPilesUnderDecks();
 

@@ -4,7 +4,7 @@ import { factionsOriginal } from './factions';
 import { locationsOriginal } from './locations';
 
 export const gameContentOriginal: GameContent = {
-  name: 'original',
+  name: 'Original',
   factions: factionsOriginal,
   locations: locationsOriginal,
   useTechTiles: false,
@@ -31,4 +31,5 @@ export const gameContentOriginal: GameContent = {
     unlimited: 'discard-pile',
     foldspace: 'discard-pile',
   },
+  churnRowCards: false,
 };

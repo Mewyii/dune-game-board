@@ -46,6 +46,7 @@ export interface GameContent {
   aiName: string;
   maxPlayers: number;
   cardAcquiringRules: CardAcquiringRules;
+  churnRowCards: boolean;
 }
 
 export type AppMode = 'board' | 'game';
