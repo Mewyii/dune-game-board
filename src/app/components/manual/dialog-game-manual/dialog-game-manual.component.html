@@ -6,7 +6,7 @@
         <br />
         <div
           [innerHTML]="
-            '{resource:tech}: Get one technology. Whenever you gain technology, you can buy tech tiles with it.'
+            '{resource:tech}: Get one technology. Whenever you gain technology, you can buy any amount of tech tiles this turn.'
               | duneSymbols : '24px'
           "
         ></div>
@@ -84,6 +84,11 @@
           <b>Dreadnoughts</b> now have 4 combat strength. <br />They always need to rest one round after they were put into a
           conflict. <br />When a conflict is won, for each involved dreadnought the player receives
           <span [innerHTML]="'{resource:location-control}' | duneSymbols : '24px'"></span>.
+        </div>
+        <br />
+        <div>
+          <b>Tech</b> is still mostly the same, but tech negotiators are removed and tech is an additional resource now.
+          <br />It can still be substituted by spice.
         </div>
       </div>
     </mat-tab>
