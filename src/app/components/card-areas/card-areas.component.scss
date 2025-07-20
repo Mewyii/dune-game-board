@@ -1,38 +1,33 @@
 .cards-area {
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
 }
 
 .cards-area.one {
-    right: 10px;
-    bottom: 10px;
-    width: 352px;
+  right: 15px;
+  bottom: 15px;
+  flex-direction: column;
 }
 
 .cards-area.two {
-    right: 10px;
-    bottom: 620px;
-}
-
-.cards-area.three {
-    right: 10px;
-    bottom: 975px;
+  right: 15px;
+  bottom: 650px;
 }
 
 .card-area {
-    border-radius: 15px;
-    background: #0000001c;
-    box-shadow: inset 0px 0px 2px 0px #00000040;
+  border-radius: 15px;
+  background: #0000001c;
+  box-shadow: inset 0px 0px 2px 0px #00000040;
 }
 
 .card-area.small {
-    width: 160px;
-    height: 250px;
+  width: 170px;
+  height: 250px;
 }
 
 .card-area.large {
-    width: 230px;
-    height: 325px;
+  width: 230px;
+  height: 325px;
 }

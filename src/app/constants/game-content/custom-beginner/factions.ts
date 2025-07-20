@@ -6,7 +6,7 @@ export const factionsCustomBeginner: Faction[] = [
     type: 'fremen',
     position: {
       marginTop: 1670,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -46,7 +46,7 @@ export const factionsCustomBeginner: Faction[] = [
     type: 'bene',
     position: {
       marginTop: 1170,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -88,7 +88,7 @@ export const factionsCustomBeginner: Faction[] = [
     type: 'guild',
     position: {
       marginTop: 670,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -130,7 +130,7 @@ export const factionsCustomBeginner: Faction[] = [
     type: 'emperor',
     position: {
       marginTop: 170,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -170,7 +170,7 @@ export const factionsCustomBeginner: Faction[] = [
     type: 'landsraad',
     position: {
       marginTop: 170,
-      marginLeft: 575,
+      marginLeft: 580,
       width: 662,
     },
     actionFields: [

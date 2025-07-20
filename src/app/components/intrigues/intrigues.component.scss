@@ -1,6 +1,6 @@
 .intrigue-card {
   position: absolute;
-  bottom: 10px;
+  bottom: 650px;
   right: 200px;
   border-radius: 10px;
   background-size: 1000px;
@@ -13,7 +13,7 @@
 }
 
 .intrigue-card.background {
-  right: 10px;
+  right: 15px;
   background-size: cover;
   background-position: center;
   background-image: url('/assets/images/intrigues/_backside.jpg');

@@ -21,26 +21,26 @@ export const customCardsCustomBeginner: CustomCard[] = [
     ],
     cardAmount: 2,
   },
-  {
-    type: 'limited',
-    name: {
-      en: 'Imperial Agent',
-      de: 'Imperialer Agent',
-    },
-    faction: 'emperor',
-    persuasionCosts: 2,
-    fieldAccess: ['landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/mentat_5.png',
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 2,
-      },
-    ],
-    cardAmount: 2,
-  },
+  // {
+  //   type: 'limited',
+  //   name: {
+  //     en: 'Imperial Agent',
+  //     de: 'Imperialer Agent',
+  //   },
+  //   faction: 'emperor',
+  //   persuasionCosts: 2,
+  //   fieldAccess: ['landsraad', 'town'],
+  //   imageUrl: '/assets/images/action-backgrounds/mentat_5.png',
+  //   buyEffects: [],
+  //   agentEffects: [],
+  //   revealEffects: [
+  //     {
+  //       type: 'persuasion',
+  //       amount: 2,
+  //     },
+  //   ],
+  //   cardAmount: 2,
+  // },
   {
     type: 'limited',
     name: {

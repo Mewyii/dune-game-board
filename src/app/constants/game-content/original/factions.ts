@@ -6,7 +6,7 @@ export const factionsOriginal: Faction[] = [
     type: 'fremen',
     position: {
       marginTop: 1670,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -45,7 +45,7 @@ export const factionsOriginal: Faction[] = [
     type: 'bene',
     position: {
       marginTop: 1170,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -84,7 +84,7 @@ export const factionsOriginal: Faction[] = [
     type: 'guild',
     position: {
       marginTop: 670,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {
@@ -124,7 +124,7 @@ export const factionsOriginal: Faction[] = [
     type: 'emperor',
     position: {
       marginTop: 170,
-      marginLeft: 10,
+      marginLeft: 15,
     },
     actionFields: [
       {

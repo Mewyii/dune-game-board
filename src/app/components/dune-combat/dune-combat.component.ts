@@ -25,7 +25,7 @@ export interface CombatScore {
 export class DuneCombatComponent implements OnInit {
   @Input() useDreadnoughts = false;
 
-  public maxCombatScore = 22;
+  public maxCombatScore = 26;
 
   public players: Player[] = [];
 

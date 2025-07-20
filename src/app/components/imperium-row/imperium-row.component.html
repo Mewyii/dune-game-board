@@ -24,100 +24,220 @@
       </div>
     </div>
   </div>
-  <div class="cards-container">
-    <div
-      [class]="'imperium-deck ' + (activeCardId === 'imperium-deck' ? 'active' : '')"
-      (click)="setCardActive('imperium-deck')"
-    >
-      <div class="imperium-deck-action-container" *ngIf="activeCardId === 'imperium-deck'">
-        <button
-          class="card-buy-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onSearchImperiumDeckClicked()"
-          [matTooltip]="t.translate('imperiumRowTooltipSearch')"
+  <div class="imperium-rows-container">
+    <div class="cards-container">
+      <div class="imperium-deck-container">
+        <div
+          [class]="'imperium-deck ' + (activeCardId === 'imperium-deck' ? 'active' : '')"
+          (click)="setCardActive('imperium-deck')"
         >
-          <mat-icon>search</mat-icon>
-        </button>
-        <button
-          *ngIf="activePlayer?.turnState === 'reveal' && factionRecruitment.length > 0"
-          class="card-buy-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onRecruitFromImperiumRowClicked()"
-          [matTooltip]="t.translate('imperiumRowTooltipRecruit')"
-        >
-          <mat-icon>how_to_reg</mat-icon>
-        </button>
+          <div class="imperium-deck-action-container" *ngIf="activeCardId === 'imperium-deck'">
+            <button
+              class="card-buy-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onSearchImperiumDeckClicked()"
+              [matTooltip]="t.translate('imperiumRowTooltipSearch')"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
+            <button
+              *ngIf="activePlayer?.turnState === 'reveal' && factionRecruitment.length > 0"
+              class="card-buy-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onRecruitFromImperiumRowClicked()"
+              [matTooltip]="t.translate('imperiumRowTooltipRecruit')"
+            >
+              <mat-icon>how_to_reg</mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-    @for (card of imperiumRowCards; track card.id) {
-    <div class="card-container" (click)="setCardActive(card.id)">
-      @if (card.type === 'imperium-card') {
-      <dune-imperium-row-card
-        [class]="
-          (card.id === activeCardId ? 'active ' : '') +
-          (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
-          (activePlayerTurnState === 'reveal' &&
-          card.persuasionCosts &&
-          activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
-            ? 'buyable '
-            : '') +
-          card.status
-        "
-        [card]="card"
-        [costModifier]="getCardCostModifier(card)"
-      ></dune-imperium-row-card>
-      } @if (card.type === 'plot') {
-      <dune-plot-card
-        [class]="
-          (card.id === activeCardId ? 'active ' : '') +
-          (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
-          (activePlayerTurnState === 'reveal' &&
-          card.persuasionCosts &&
-          activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
-            ? 'buyable '
-            : '') +
-          card.status
-        "
-        [plot]="card"
-        [costModifier]="getCardCostModifier(card)"
-      ></dune-plot-card>
+      @for (unlimitedCard of unlimitedCustomCards; track $index) {
+      <div class="card-container" (click)="setCardActive(unlimitedCard.name.en)">
+        <dune-imperium-row-card
+          [class]="
+            (unlimitedCard.name.en === activeCardId ? 'active' : '') +
+            (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
+            (activePlayerTurnState === 'reveal' &&
+            unlimitedCard.persuasionCosts &&
+            activePlayerPersuasion >= unlimitedCard.persuasionCosts
+              ? ' buyable'
+              : '')
+          "
+          [card]="unlimitedCard"
+        ></dune-imperium-row-card>
+        <div class="card-action-container" *ngIf="unlimitedCard.name.en === activeCardId">
+          <button
+            class="card-buy-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onBuyAlwaysAvailableCardClicked(unlimitedCard)"
+            [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+      </div>
+      } @for (limitedCard of limitedCustomCards; track $index) {
+      <div class="card-container" (click)="setCardActive(limitedCard.name.en)">
+        <dune-imperium-row-card
+          [class]="
+            (limitedCard.name.en === activeCardId ? 'active' : '') +
+            (activePlayerTurnState !== 'reveal' ? ' desaturated' : '') +
+            (activePlayerTurnState === 'reveal' &&
+            limitedCard.persuasionCosts &&
+            activePlayerPersuasion >= limitedCard.persuasionCosts
+              ? ' buyable'
+              : '')
+          "
+          [card]="limitedCard"
+        ></dune-imperium-row-card>
+        <div class="card-action-container" *ngIf="limitedCard.name.en === activeCardId">
+          <button
+            class="card-buy-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onBuyLimitedCustomCardClicked(limitedCard)"
+            [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+      </div>
+      } @for (card of imperiumRowCardsLeft; track card.id) {
+      <div class="card-container" (click)="setCardActive(card.id)">
+        @if (card.type === 'imperium-card') {
+        <dune-imperium-row-card
+          [class]="
+            (card.id === activeCardId ? 'active ' : '') +
+            (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
+            (activePlayerTurnState === 'reveal' &&
+            card.persuasionCosts &&
+            activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+              ? 'buyable '
+              : '') +
+            card.status
+          "
+          [card]="card"
+          [costModifier]="getCardCostModifier(card)"
+        ></dune-imperium-row-card>
+        } @if (card.type === 'plot') {
+        <dune-plot-card
+          [class]="
+            (card.id === activeCardId ? 'active ' : '') +
+            (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
+            (activePlayerTurnState === 'reveal' &&
+            card.persuasionCosts &&
+            activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+              ? 'buyable '
+              : '') +
+            card.status
+          "
+          [plot]="card"
+          [costModifier]="getCardCostModifier(card)"
+        ></dune-plot-card>
+        }
+        <div class="card-action-container" *ngIf="card.id === activeCardId">
+          <button
+            class="card-buy-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onBuyCardClicked(card)"
+            [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+          <button
+            class="card-remove-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onRemoveCardClicked(card)"
+            [matTooltip]="t.translate('imperiumRowTooltipTrash')"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            *ngIf="playerCanCharm"
+            class="card-remove-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onCharmCardClicked(card)"
+            [matTooltip]="t.translate('imperiumRowTooltipCharm')"
+          >
+            <mat-icon>face_retouching_natural</mat-icon>
+          </button>
+        </div>
+      </div>
       }
-      <div class="card-action-container" *ngIf="card.id === activeCardId">
-        <button
-          class="card-buy-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onBuyCardClicked(card)"
-          [matTooltip]="t.translate('imperiumRowTooltipBuy')"
-        >
-          <mat-icon>check</mat-icon>
-        </button>
-        <button
-          class="card-remove-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onRemoveCardClicked(card)"
-          [matTooltip]="t.translate('imperiumRowTooltipTrash')"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-        <button
-          *ngIf="playerCanCharm"
-          class="card-remove-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onCharmCardClicked(card)"
-          [matTooltip]="t.translate('imperiumRowTooltipCharm')"
-        >
-          <mat-icon>face_retouching_natural</mat-icon>
-        </button>
-      </div>
     </div>
-    } @if (!activePlayerId && imperiumRowCards.length < 1) { @for (imperiumCardBackside of ["", "", "", "", "", ""]; track
-    $index) {
-    <div class="imperium-card-backside"></div>
-    } }
+    <div class="cards-container">
+      @for (card of imperiumRowCardsRight; track card.id) {
+      <div class="card-container" (click)="setCardActive(card.id)">
+        @if (card.type === 'imperium-card') {
+        <dune-imperium-row-card
+          [class]="
+            (card.id === activeCardId ? 'active ' : '') +
+            (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
+            (activePlayerTurnState === 'reveal' &&
+            card.persuasionCosts &&
+            activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+              ? 'buyable '
+              : '') +
+            card.status
+          "
+          [card]="card"
+          [costModifier]="getCardCostModifier(card)"
+        ></dune-imperium-row-card>
+        } @if (card.type === 'plot') {
+        <dune-plot-card
+          [class]="
+            (card.id === activeCardId ? 'active ' : '') +
+            (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
+            (activePlayerTurnState === 'reveal' &&
+            card.persuasionCosts &&
+            activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+              ? 'buyable '
+              : '') +
+            card.status
+          "
+          [plot]="card"
+          [costModifier]="getCardCostModifier(card)"
+        ></dune-plot-card>
+        }
+        <div class="card-action-container" *ngIf="card.id === activeCardId">
+          <button
+            class="card-buy-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onBuyCardClicked(card)"
+            [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+          <button
+            class="card-remove-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onRemoveCardClicked(card)"
+            [matTooltip]="t.translate('imperiumRowTooltipTrash')"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            *ngIf="playerCanCharm"
+            class="card-remove-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onCharmCardClicked(card)"
+            [matTooltip]="t.translate('imperiumRowTooltipCharm')"
+          >
+            <mat-icon>face_retouching_natural</mat-icon>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
   </div>
 </div>

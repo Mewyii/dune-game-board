@@ -1,5 +1,5 @@
 .imperium-row-container {
-  width: 250px;
+  width: 440px;
   height: calc(100% - 64px);
   padding: 32px;
   background: rgba(23, 19, 16, 0.8);
@@ -12,17 +12,23 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  font-size: x-large;
-  height: 118px;
-  padding-bottom: 32px;
+  font-size: 30px;
+  padding-bottom: 150px;
+  gap: 16px;
+}
+
+.imperium-rows-container {
+  display: flex;
+  justify-content: center;
 }
 
 .cards-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 100px;
   align-items: center;
-  height: 1900px;
+  width: 215px;
 }
 
 .card-container {
@@ -30,10 +36,10 @@
 }
 
 dune-imperium-row-card,
-dune-plot-card {
+dune-plot-card,
+.imperium-deck-container {
   transition: 0.9s;
   transform: scale(0.75) translateY(-150px);
-  margin-top: 16px;
   max-height: 200px;
   cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
   display: block;
@@ -99,23 +105,23 @@ dune-plot-card.active {
 }
 
 .resource-display {
-  max-height: 60px;
-  max-width: 60px;
+  max-height: 70px;
+  max-width: 70px;
   position: relative;
   color: white;
 }
 
 .resource {
-  height: 60px;
-  width: 60px;
+  height: 70px;
+  width: 70px;
   object-fit: scale-down;
   filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .resource.small {
   margin-top: 5px;
-  height: 40px;
-  width: 40px;
+  height: 45px;
+  width: 45px;
 }
 
 .resource-amount {
@@ -132,8 +138,8 @@ dune-plot-card.active {
 }
 
 .imperium-deck {
-  height: 171px;
-  width: 115px;
+  height: 342px;
+  width: 230px;
   border: 6px solid #101010;
   border-radius: 8px;
   position: relative;

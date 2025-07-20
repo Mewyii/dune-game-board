@@ -1,8 +1,8 @@
 .combat-tile {
   position: absolute;
-  right: 390px;
+  right: 240px;
   bottom: 240px;
-  width: 1170px;
+  width: 1260px;
   display: flex;
   border-radius: 50%;
 }
@@ -80,7 +80,7 @@
   justify-content: center;
   gap: 48px;
   color: #e5e5e5;
-  z-index: 2;
+  z-index: 1;
 }
 
 .legend-container {
@@ -97,9 +97,9 @@
 
 .score-tile {
   position: absolute;
-  right: 425px;
+  right: 255px;
   bottom: 16px;
-  width: 1100px;
+  width: 1250px;
   display: flex;
   border-radius: 50%;
 }

@@ -2,7 +2,7 @@ dune-conflict-card,
 .conflict-card {
   position: absolute;
   bottom: 295px;
-  right: 200px;
+  right: 15px;
   border-radius: 10px;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
   transition: 0.9s;
@@ -23,20 +23,19 @@ dune-conflict-card.active {
 }
 
 .conflict-card.backside {
-  right: 10px;
+  right: 15px;
   background-position: center;
   background-size: cover;
   height: 255px;
   width: 170px;
+  bottom: 15px;
 }
 
 .conflict-card.backside.one {
-  right: 10px;
   background-image: url('/assets/images/conflicts/_backside_lvl1.jpg');
 }
 
 .conflict-card.backside.two {
-  right: 10px;
   background-image: url('/assets/images/conflicts/_backside_lvl2.png');
 }
 
