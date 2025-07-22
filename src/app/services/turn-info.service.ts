@@ -104,6 +104,7 @@ export class TurnInfoService {
       retreatableDreadnoughts: 0,
       cardDrawOrDestroyAmount: 0,
       cardDiscardAmount: 0,
+      cardDestroyAmount: 0,
       canLiftAgent: false,
       factionInfluenceUpChoiceAmount: 0,
       factionInfluenceUpChoiceTwiceAmount: 0,

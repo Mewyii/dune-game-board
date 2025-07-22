@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { AIAdjustments } from 'src/app/models/ai';
 import { Leader } from '../constants/leaders';
-import { leadersGameAdjustments } from '../constants/leaders-game-adjustments';
+import { LeaderGameAdjustments, leadersGameAdjustments } from '../constants/leaders-game-adjustments';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { StructuredEffects } from '../models';
 import { Player } from '../models/player';
 import { LeaderConfiguratorService } from './configurators/leader.service';
-import { GameModifiers } from './game-modifier.service';
 
-export interface LeaderDeckCard extends Leader {
+export interface LeaderDeckCard extends Leader, LeaderGameAdjustments {
   id: string;
   structuredPassiveEffects?: StructuredEffects;
   structuredSignetEffects?: StructuredEffects;
-  aiAdjustments?: AIAdjustments;
-  gameModifiers?: GameModifiers;
 }
 
 export interface PlayerLeader {
@@ -45,8 +41,7 @@ export class LeadersService {
         const leaderGameAdjustments = leadersGameAdjustments.find((y) => y.id === x.name.en);
         return {
           ...x,
-          gameModifiers: leaderGameAdjustments?.gameModifiers,
-          aiAdjustments: leaderGameAdjustments?.aiAdjustments,
+          ...leaderGameAdjustments,
         };
       });
 
@@ -68,8 +63,7 @@ export class LeadersService {
           ...x,
           leader: {
             ...x.leader,
-            gameModifiers: leaderGameAdjustments?.gameModifiers,
-            aiAdjustments: leaderGameAdjustments?.aiAdjustments,
+            ...leaderGameAdjustments,
           },
         };
       });
@@ -156,8 +150,7 @@ export class LeadersService {
         leader.signetEffects && leader.signetEffects.length > 0
           ? getStructuredEffectArrayInfos(leader.signetEffects)
           : undefined,
-      gameModifiers: leaderGameAdjustments?.gameModifiers,
-      aiAdjustments: leaderGameAdjustments?.aiAdjustments,
+      ...leaderGameAdjustments,
     };
   }
 }

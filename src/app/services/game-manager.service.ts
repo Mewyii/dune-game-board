@@ -1245,7 +1245,14 @@ export class GameManager {
         }
 
         const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
-        this.aiUseFocusTokens(playerId, playerFocusTokens);
+        for (let i = 0; i < playerFocusTokens; i++) {
+          const success = this.aiTrashCardInPlay(playerId);
+          if (success) {
+            this.playerManager.removeFocusTokens(playerId, 1);
+          } else {
+            break;
+          }
+        }
 
         const playerHand = this.cardsService.getPlayerHand(player.id);
         if (playerHand && playerHand.cards) {
@@ -1791,6 +1798,14 @@ export class GameManager {
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
     }
+    if (turnInfo.cardDestroyAmount) {
+      for (let i = 0; i < turnInfo.cardDestroyAmount; i++) {
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'card-destroy',
+        });
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDestroyAmount: 0 });
+    }
     if (turnInfo.shippingAmount > 0) {
       this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
         type: 'shipping',
@@ -1840,6 +1855,8 @@ export class GameManager {
         if (playerLeader) {
           if (playerLeader.structuredSignetEffects) {
             this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player, gameState);
+          } else if (playerLeader.customSignetEffects) {
+            this.resolveStructuredEffects(playerLeader.customSignetEffects, player, gameState);
           } else if (playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
@@ -1859,7 +1876,7 @@ export class GameManager {
         type: 'intrigue-trash',
       });
 
-      this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
+      this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
     }
     if (turnInfo.canLiftAgent) {
       this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
@@ -1909,6 +1926,12 @@ export class GameManager {
         this.aiDiscardHandCard(player.id);
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
+    }
+    if (turnInfo.cardDestroyAmount) {
+      for (let i = 0; i < turnInfo.cardDestroyAmount; i++) {
+        this.aiTrashCardInPlay(player.id);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDestroyAmount: 0 });
     }
     if (turnInfo.shippingAmount > 0) {
       const decision = this.aIManager.getEffectTypesDecision(player, gameState, ['spice', 'water', 'solari']);
@@ -2071,6 +2094,8 @@ export class GameManager {
         if (playerLeader) {
           if (playerLeader.structuredSignetEffects) {
             this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player, gameState);
+          } else if (playerLeader.customSignetEffects) {
+            this.resolveStructuredEffects(playerLeader.customSignetEffects, player, gameState);
           } else if (playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
@@ -2253,7 +2278,7 @@ export class GameManager {
     }
   }
 
-  private aiUseFocusTokens(playerId: number, focusTokens: number) {
+  private aiTrashCardInPlay(playerId: number) {
     const cards: ImperiumDeckCard[] = [];
     const playerHandCards = this.cardsService.getPlayerHand(playerId)?.cards;
     if (playerHandCards) {
@@ -2281,15 +2306,11 @@ export class GameManager {
       this.cardsService.trashDiscardedPlayerCard(playerId, cardToTrash);
       this.cardsService.trashPlayerHandCard(playerId, cardToTrash);
 
-      this.playerManager.removeFocusTokens(playerId, 1);
-
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsTrashedThisTurn: [cardToTrash] });
       this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(cardToTrash.name));
-
-      if (focusTokens > 1) {
-        this.aiUseFocusTokens(playerId, focusTokens - 1);
-      }
+      return true;
     }
+    return false;
   }
 
   acquireImperiumRowCard(playerId: number, card: ImperiumRowCard | ImperiumRowPlot) {
@@ -3096,7 +3117,8 @@ export class GameManager {
       this.audioManager.playSound('card-draw');
       this.cardsService.drawPlayerCardsFromDeck(playerId, rewardAmount);
     } else if (rewardType === 'card-destroy') {
-      this.playerManager.addFocusTokens(playerId, rewardAmount);
+      this.audioManager.playSound('sword');
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDestroyAmount: rewardAmount });
     } else if (rewardType == 'card-draw-or-destroy') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDrawOrDestroyAmount: 1 });
     } else if (rewardType === 'card-discard') {
@@ -3225,25 +3247,32 @@ export class GameManager {
     } else if (isFactionScoreRewardType(costType)) {
       const scoreType = getFactionScoreTypeFromReward(cost);
 
-      this.playerScoreManager.removePlayerScore(playerId, scoreType as PlayerFactionScoreType, 1, this.currentRound);
+      this.playerScoreManager.removePlayerScore(
+        playerId,
+        scoreType as PlayerFactionScoreType,
+        costAmount,
+        this.currentRound
+      );
     } else if (costType === 'faction-influence-down-choice') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: 1 });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: costAmount });
     } else if (costType === 'intrigue') {
       this.audioManager.playSound('intrigue', costAmount);
       this.intriguesService.drawPlayerIntriguesFromDeck(playerId, costAmount);
     } else if (costType === 'intrigue-trash') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { intrigueTrashAmount: 1 });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { intrigueTrashAmount: costAmount });
     } else if (costType === 'sword') {
       this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, costAmount);
     } else if (costType === 'troop' || costType === 'loose-troop') {
       this.combatManager.removePlayerTroopsFromGarrison(playerId, costAmount);
     } else if (costType === 'dreadnought') {
-      this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
+      this.combatManager.removePlayerShipsFromGarrison(playerId, costAmount);
     } else if (costType === 'dreadnought-retreat') {
-      this.combatManager.removePlayerShipsFromCombat(playerId, 1);
+      this.combatManager.removePlayerShipsFromCombat(playerId, costAmount);
     } else if (costType === 'card-discard') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: 1 });
-    } else if (costType === 'card-destroy' || costType === 'focus') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: costAmount });
+    } else if (costType === 'card-destroy') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDestroyAmount: costAmount });
+    } else if (costType === 'focus') {
       this.playerManager.addFocusTokens(playerId, costAmount);
     } else if (costType === 'persuasion') {
       this.playerManager.addPersuasionSpentToPlayer(playerId, costAmount);

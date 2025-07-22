@@ -64,7 +64,13 @@ export const effectRewards = [
 
 export const effectSeparators = ['helper-separator'] as const;
 
-export const effectTimings = ['timing-game-start', 'timing-reveal-turn', 'timing-round-start', 'timing-turn-start'] as const;
+export const effectTimings = [
+  'timing-game-start',
+  'timing-reveal-turn',
+  'timing-round-start',
+  'timing-turn-start',
+  'timing-combat',
+] as const;
 
 export const effectConditions = ['condition-connection', 'condition-high-council-seat', 'condition-influence'] as const;
 

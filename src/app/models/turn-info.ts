@@ -31,6 +31,7 @@ export interface TurnInfo {
   retreatableDreadnoughts: number;
   cardDrawOrDestroyAmount: number;
   cardDiscardAmount: number;
+  cardDestroyAmount: number;
   canLiftAgent: boolean;
   factionInfluenceUpChoiceAmount: number;
   factionInfluenceUpChoiceTwiceAmount: number;
