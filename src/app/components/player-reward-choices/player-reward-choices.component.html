@@ -23,21 +23,27 @@
     [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
     (click)="setEffectActive('option' + idx)"
   >
-    @if(isStructuredConversionEffect(effectOption.left)) {
-    <dune-player-effect-conversion [effectConversion]="effectOption.left"></dune-player-effect-conversion>
-    } @else if (isStructuredMultiplierEffect(effectOption.left)) {
-    <dune-reward-array [rewards]="[{ type: effectOption.left.multiplier }]" [textColor]="'white'"></dune-reward-array>
-    <dune-reward-array [rewards]="effectOption.left.rewards" [textColor]="'white'"></dune-reward-array>
-    } @else { @for (leftEffect of effectOption.left; track $index) {
+    @if(isStructuredConversionEffect(effectOption.effectLeft)) {
+    <dune-player-effect-conversion [effectConversion]="effectOption.effectLeft"></dune-player-effect-conversion>
+    } @else if (effectOption.effectLeft.multiplier) {
+    <dune-reward-array
+      [rewards]="[{ type: effectOption.effectLeft.multiplier.type }]"
+      [textColor]="'white'"
+    ></dune-reward-array>
+    <dune-reward-array [rewards]="effectOption.effectLeft.effectRewards" [textColor]="'white'"></dune-reward-array>
+    } @else { @for (leftEffect of effectOption.effectLeft.effectRewards; track $index) {
     <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
     } }
     <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
-    @if(isStructuredConversionEffect(effectOption.right)) {
-    <dune-player-effect-conversion [effectConversion]="effectOption.right"></dune-player-effect-conversion>
-    } @else if (isStructuredMultiplierEffect(effectOption.right)) {
-    <dune-reward-array [rewards]="[{ type: effectOption.right.multiplier }]" [textColor]="'white'"></dune-reward-array>
-    <dune-reward-array [rewards]="effectOption.right.rewards" [textColor]="'white'"></dune-reward-array>
-    }@else { @for (rightEffect of effectOption.right; track $index) {
+    @if(isStructuredConversionEffect(effectOption.effectRight)) {
+    <dune-player-effect-conversion [effectConversion]="effectOption.effectRight"></dune-player-effect-conversion>
+    } @else if (effectOption.effectRight.multiplier) {
+    <dune-reward-array
+      [rewards]="[{ type: effectOption.effectRight.multiplier.type }]"
+      [textColor]="'white'"
+    ></dune-reward-array>
+    <dune-reward-array [rewards]="effectOption.effectRight.effectRewards" [textColor]="'white'"></dune-reward-array>
+    }@else { @for (rightEffect of effectOption.effectRight.effectRewards; track $index) {
     <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
     } }
     <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">

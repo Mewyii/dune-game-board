@@ -1,4 +1,4 @@
-import { LanguageString, StructuredEffects } from '../models';
+import { LanguageString, StructuredEffect } from '../models';
 import { GameEffects } from '../services/game-manager.service';
 import { GameModifiers } from '../services/game-modifier.service';
 
@@ -9,7 +9,7 @@ export interface DuneEvent {
   cardAmount?: number;
   gameModifiers?: GameModifiers;
   gameEffects?: GameEffects;
-  immediatePlayerEffects?: StructuredEffects;
+  immediatePlayerEffects?: StructuredEffect[];
 }
 
 export const duneEvents: DuneEvent[] = [
@@ -103,14 +103,7 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/sun.png',
     cardAmount: 1,
-    immediatePlayerEffects: {
-      rewards: [{ type: 'troop-insert', amount: 2 }],
-      conditionalEffects: [],
-      conversionEffects: [],
-      timingEffects: [],
-      multiplierEffects: [],
-      choiceEffects: [],
-    },
+    immediatePlayerEffects: [{ type: 'reward', effectRewards: [{ type: 'troop-insert', amount: 2 }] }],
   },
   {
     title: {
@@ -176,20 +169,13 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: 'assets/images/action-backgrounds/port_4.png',
     cardAmount: 1,
-    immediatePlayerEffects: {
-      rewards: [],
-      conditionalEffects: [],
-      conversionEffects: [
-        {
-          conversionType: 'helper-trade',
-          costs: [{ type: 'card-discard' }],
-          rewards: [{ type: 'tech' }],
-        },
-      ],
-      choiceEffects: [],
-      timingEffects: [],
-      multiplierEffects: [],
-    },
+    immediatePlayerEffects: [
+      {
+        type: 'helper-trade',
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'tech' }] },
+      },
+    ],
   },
   {
     title: {
@@ -243,20 +229,13 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/emperor_camp.png',
     cardAmount: 1,
-    immediatePlayerEffects: {
-      rewards: [],
-      conditionalEffects: [],
-      conversionEffects: [
-        {
-          conversionType: 'helper-trade',
-          costs: [{ type: 'card-discard' }],
-          rewards: [{ type: 'troop' }, { type: 'solari' }],
-        },
-      ],
-      choiceEffects: [],
-      timingEffects: [],
-      multiplierEffects: [],
-    },
+    immediatePlayerEffects: [
+      {
+        type: 'helper-trade',
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'troop' }, { type: 'solari' }] },
+      },
+    ],
   },
   {
     title: {
@@ -269,20 +248,13 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/freighter.png',
     cardAmount: 1,
-    immediatePlayerEffects: {
-      rewards: [],
-      conditionalEffects: [],
-      conversionEffects: [
-        {
-          conversionType: 'helper-trade',
-          costs: [{ type: 'card-discard' }],
-          rewards: [{ type: 'solari', amount: 2 }],
-        },
-      ],
-      choiceEffects: [],
-      timingEffects: [],
-      multiplierEffects: [],
-    },
+    immediatePlayerEffects: [
+      {
+        type: 'helper-trade',
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'solari', amount: 2 }] },
+      },
+    ],
   },
   {
     title: {
@@ -295,19 +267,12 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/troops.png',
     cardAmount: 1,
-    immediatePlayerEffects: {
-      rewards: [],
-      conditionalEffects: [],
-      conversionEffects: [
-        {
-          conversionType: 'helper-trade',
-          costs: [{ type: 'card-discard' }],
-          rewards: [{ type: 'water' }],
-        },
-      ],
-      choiceEffects: [],
-      timingEffects: [],
-      multiplierEffects: [],
-    },
+    immediatePlayerEffects: [
+      {
+        type: 'helper-trade',
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'water' }] },
+      },
+    ],
   },
 ];

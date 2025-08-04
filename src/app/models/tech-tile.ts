@@ -1,7 +1,7 @@
+import { Effect, EffectReward } from './effect';
 import { ActiveFactionType } from './faction';
 import { EffectSizeType, LanguageStringAndFontSize } from './imperium-card';
 import { LanguageString } from './language';
-import { Effect, EffectReward } from './reward';
 
 export interface TechTileCard {
   name: LanguageString;

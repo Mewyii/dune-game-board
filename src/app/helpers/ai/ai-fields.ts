@@ -1,9 +1,9 @@
+import { EffectRewardType } from 'src/app/models';
 import { FieldsForGoals, GameState } from 'src/app/models/ai';
 import { FactionType } from '../../models/faction';
 import { ActionField } from '../../models/location';
 import { Player } from '../../models/player';
 import { Resource } from '../../models/resource';
-import { EffectRewardType } from '../../models/reward';
 import { getNumberAverage, getNumberMax, normalizeNumber } from '../common';
 import { isResourceArray } from '../resources';
 import { isChoiceEffect, isConversionEffect } from '../rewards';

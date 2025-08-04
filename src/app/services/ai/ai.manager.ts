@@ -10,7 +10,16 @@ import {
 } from 'src/app/helpers/ai';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
-import { getMultipliedRewardEffects, getRewardArrayAIInfos, isStructuredConversionEffect } from 'src/app/helpers/rewards';
+import {
+  getFlattenedEffectRewardArray,
+  getMultipliedRewardEffects,
+  getRewardArrayAIInfos,
+  isConditionFullfilled,
+  isStructuredChoiceEffect,
+  isStructuredConversionEffect,
+  isStructuredRewardEffect,
+  isTimingFullfilled,
+} from 'src/app/helpers/rewards';
 import {
   ActionField,
   ActiveFactionType,
@@ -18,8 +27,8 @@ import {
   DuneLocation,
   EffectReward,
   EffectRewardType,
-  StructuredConversionEffect,
-  StructuredMultiplierEffect,
+  StructuredConversionOrRewardEffect,
+  StructuredEffect,
 } from 'src/app/models';
 import { AIPersonality, GameState } from 'src/app/models/ai';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
@@ -548,23 +557,6 @@ export class AIManager {
     return Object.keys(aiPersonalities)[randomIndex];
   }
 
-  private getMaxAddableCombatPower(playerCombatUnits: PlayerCombatUnits, maxAddableUnits: number) {
-    let addableUnits = maxAddableUnits;
-    let combatPower = 0;
-
-    addableUnits -= playerCombatUnits.shipsInGarrison;
-    combatPower += playerCombatUnits.shipsInGarrison * this.settingsService.getDreadnoughtStrength();
-
-    if (addableUnits > 0) {
-      if (addableUnits < playerCombatUnits.troopsInGarrison) {
-        combatPower += addableUnits * this.settingsService.getTroopStrength();
-      } else {
-        combatPower += playerCombatUnits.troopsInGarrison * this.settingsService.getTroopStrength();
-      }
-    }
-    return combatPower;
-  }
-
   getMostDesiredFactionScoreType(
     playerId: number,
     playerScores: PlayerScore[],
@@ -662,15 +654,15 @@ export class AIManager {
   getChoiceEffectDecision(
     player: Player,
     gameState: GameState,
-    leftSideEffect: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[],
-    rightSideEffect: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[]
+    leftSideEffect: StructuredConversionOrRewardEffect,
+    rightSideEffect: StructuredConversionOrRewardEffect
   ) {
     let leftSideEvaluation = 0;
     let rightSideEvaluation = 0;
 
     if (isStructuredConversionEffect(leftSideEffect)) {
-      const costEffects = getMultipliedRewardEffects(leftSideEffect.costs, gameState);
-      const rewards = getMultipliedRewardEffects(leftSideEffect.rewards, gameState);
+      const costEffects = getMultipliedRewardEffects(leftSideEffect.effectCosts, gameState);
+      const rewards = getMultipliedRewardEffects(leftSideEffect.effectConversions, gameState);
 
       leftSideEvaluation = this.getEffectConversionValue(player, gameState, costEffects, rewards);
     } else {
@@ -679,8 +671,8 @@ export class AIManager {
       leftSideEvaluation = this.effectEvaluationService.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
     }
     if (isStructuredConversionEffect(rightSideEffect)) {
-      const costEffects = getMultipliedRewardEffects(rightSideEffect.costs, gameState);
-      const rewards = getMultipliedRewardEffects(rightSideEffect.rewards, gameState);
+      const costEffects = getMultipliedRewardEffects(rightSideEffect.effectCosts, gameState);
+      const rewards = getMultipliedRewardEffects(rightSideEffect.effectConversions, gameState);
 
       rightSideEvaluation = this.getEffectConversionValue(player, gameState, costEffects, rewards);
     } else {
@@ -756,23 +748,30 @@ export class AIManager {
 
     if (card.structuredRevealEffects) {
       const revealEffects = card.structuredRevealEffects;
-      if (revealEffects.rewards) {
-        evaluationValue -=
-          this.effectEvaluationService.getRewardArrayEvaluationForTurnState(revealEffects.rewards, player, gameState) * 0.75;
-      }
-      for (const multiplierEffect of revealEffects.multiplierEffects) {
-        const rewards = getMultipliedRewardEffects(multiplierEffect, gameState, 'reveal');
-        evaluationValue -=
-          this.effectEvaluationService.getRewardArrayEvaluationForTurnState(rewards, player, gameState) * 0.75;
-      }
-      for (const choiceEffect of revealEffects.choiceEffects) {
-        evaluationValue -=
-          this.effectEvaluationService.getChoiceEffectEvaluationForTurnState(choiceEffect, player, gameState, 'reveal') *
-          0.75;
-      }
-      for (const conditionEffect of revealEffects.conditionalEffects) {
-        evaluationValue -=
-          this.effectEvaluationService.getConditionEffectEvaluation(conditionEffect, player, gameState, 'reveal') * 0.75;
+      for (const revealEffect of revealEffects) {
+        const conditionMultiplier = revealEffect.condition ? 0.8 : 1;
+        if (isStructuredRewardEffect(revealEffect)) {
+          const rewards = getMultipliedRewardEffects(revealEffect, gameState, 'reveal');
+          evaluationValue -=
+            this.effectEvaluationService.getRewardArrayEvaluationForTurnState(rewards, player, gameState) *
+            0.8 *
+            conditionMultiplier;
+        } else if (isStructuredChoiceEffect(revealEffect)) {
+          evaluationValue -=
+            this.effectEvaluationService.getChoiceEffectEvaluationForTurnState(revealEffect, player, gameState, 'reveal') *
+            0.8 *
+            conditionMultiplier;
+        } else if (isStructuredConversionEffect(revealEffect)) {
+          evaluationValue -=
+            this.effectEvaluationService.getConversionEffectEvaluationForTurnState(
+              revealEffect,
+              player,
+              gameState,
+              'reveal'
+            ) *
+            0.7 *
+            conditionMultiplier;
+        }
       }
     }
     if (hasCustomRevealEffect(card)) {
@@ -971,28 +970,75 @@ export class AIManager {
 
     if (intrigueEffects) {
       let isUseful =
-        this.effectEvaluationService.getRewardArrayEvaluationForTurnState(intrigueEffects.rewards, player, gameState) > 0;
-      let intrigueCosts: EffectReward[][] = [];
-      for (const choiceEffect of intrigueEffects.conversionEffects) {
-        const costEffects = getMultipliedRewardEffects(choiceEffect.costs, gameState);
-        const rewards = getMultipliedRewardEffects(choiceEffect.rewards, gameState);
+        this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(intrigueEffects, player, gameState) > 0;
+      let intrigueCosts: EffectReward[] = [];
 
-        if (rewards.some((x) => x.type === 'location-control')) {
-          if (gameState.freeLocations.length < 1) {
-            costEffects.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
-          }
-        }
-
-        const conversionIsUseful = this.getEffectConversionDecision(player, gameState, costEffects, rewards);
-
-        if (conversionIsUseful) {
-          isUseful = true;
-          intrigueCosts.push(costEffects);
+      const result = this.getAllStructuredEffectsRewardsAndCosts(intrigueEffects, player, gameState);
+      intrigueCosts = result.costs;
+      if (intrigueCosts.some((x) => x.type === 'location-control')) {
+        if (gameState.freeLocations.length < 1) {
+          intrigueCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
         }
       }
 
       return { isUseful, costs: intrigueCosts };
     }
     return { isUseful: false, costs: [] };
+  }
+
+  public getAllStructuredEffectsRewardsAndCosts(
+    structuredEffects: StructuredEffect[],
+    player: Player,
+    gameState: GameState
+  ): { costs: EffectReward[]; rewards: EffectReward[] } {
+    const evaluation: { costs: EffectReward[]; rewards: EffectReward[] } = {
+      costs: [],
+      rewards: [],
+    };
+
+    for (const effect of structuredEffects) {
+      let timingFullfilled = true;
+      let conditionFullfilled = true;
+
+      if (effect.timing) {
+        timingFullfilled = isTimingFullfilled(effect.timing, player, gameState);
+      }
+      if (effect.condition) {
+        conditionFullfilled = isConditionFullfilled(effect.condition, player, gameState);
+      }
+
+      if (timingFullfilled && conditionFullfilled) {
+        if (isStructuredRewardEffect(effect)) {
+          const rewards = getMultipliedRewardEffects(effect, gameState);
+          evaluation.rewards.push(...rewards);
+        } else if (isStructuredChoiceEffect(effect)) {
+          const chosenEffect = this.getChoiceEffectDecision(player, gameState, effect.effectLeft, effect.effectRight);
+
+          if (chosenEffect) {
+            if (isStructuredConversionEffect(chosenEffect)) {
+              const costs = getMultipliedRewardEffects(chosenEffect.effectCosts, gameState);
+              const rewards = getMultipliedRewardEffects(chosenEffect.effectConversions, gameState);
+
+              evaluation.costs.push(...costs);
+              evaluation.rewards.push(...rewards);
+            } else {
+              const rewards = getMultipliedRewardEffects(chosenEffect, gameState);
+              evaluation.rewards.push(...rewards);
+            }
+          }
+        } else if (isStructuredConversionEffect(effect)) {
+          const costs = getMultipliedRewardEffects(effect.effectCosts, gameState);
+          const rewards = getMultipliedRewardEffects(effect.effectConversions, gameState);
+
+          evaluation.costs.push(...costs);
+          evaluation.rewards.push(...rewards);
+        }
+      }
+    }
+
+    return {
+      costs: getFlattenedEffectRewardArray(evaluation.costs),
+      rewards: getFlattenedEffectRewardArray(evaluation.rewards),
+    };
   }
 }

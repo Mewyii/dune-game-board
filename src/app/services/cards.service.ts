@@ -3,7 +3,7 @@ import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
-import { ActionType, FactionType, StructuredEffects } from '../models';
+import { ActionType, FactionType, StructuredEffect } from '../models';
 import { ImperiumCard } from '../models/imperium-card';
 import { ImperiumPlot } from '../models/imperium-plot';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
@@ -14,8 +14,8 @@ import { SettingsService } from './settings.service';
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
   type: 'imperium-card';
-  structuredAgentEffects?: StructuredEffects;
-  structuredRevealEffects?: StructuredEffects;
+  structuredAgentEffects?: StructuredEffect[];
+  structuredRevealEffects?: StructuredEffect[];
 }
 
 export interface ImperiumRowCard extends ImperiumDeckCard {

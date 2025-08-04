@@ -1,5 +1,5 @@
+import { EffectReward } from './effect';
 import { LanguageString } from './language';
-import { Effect, EffectReward } from './reward';
 
 export interface Conflict {
   name: LanguageString;

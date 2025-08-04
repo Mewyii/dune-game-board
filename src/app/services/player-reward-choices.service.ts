@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Effect, StructuredChoiceEffect, StructuredEffects } from '../models';
+import { Effect, StructuredChoiceEffect, StructuredEffect } from '../models';
 
 export interface PlayerRewardChoice<T> {
   id: string;
@@ -12,7 +12,7 @@ export interface PlayerRewardChoices {
   playerId: number;
   rewardChoices: PlayerRewardChoice<Effect>[];
   rewardsChoices: PlayerRewardChoice<Effect[]>[];
-  effectChoices: StructuredEffects;
+  effectChoices: StructuredEffect[];
   customChoices: PlayerRewardChoice<string>[];
 }
 
@@ -104,11 +104,11 @@ export class PlayerRewardChoicesService {
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
 
     if (index > -1) {
-      playerRewardChoices[index].effectChoices.choiceEffects.push(conversionChoice);
+      playerRewardChoices[index].effectChoices.push(conversionChoice);
       this.playerRewardChoicesSubject.next(playerRewardChoices);
     } else {
       const newPlayerRewardChoices = this.getInitialPlayerRewardChoices(playerId);
-      newPlayerRewardChoices.effectChoices.choiceEffects.push(conversionChoice);
+      newPlayerRewardChoices.effectChoices.push(conversionChoice);
       playerRewardChoices.push(newPlayerRewardChoices);
 
       this.playerRewardChoicesSubject.next(playerRewardChoices);
@@ -151,9 +151,7 @@ export class PlayerRewardChoicesService {
   public removePlayerConversionChoice(playerId: number, index: number) {
     const playerRewardChoices = this.playerRewardChoices;
 
-    playerRewardChoices[index].effectChoices.choiceEffects = playerRewardChoices[index].effectChoices.choiceEffects.filter(
-      (x, idx) => idx !== index
-    );
+    playerRewardChoices[index].effectChoices = playerRewardChoices[index].effectChoices.filter((x, idx) => idx !== index);
     this.playerRewardChoicesSubject.next(playerRewardChoices);
   }
 
@@ -163,14 +161,7 @@ export class PlayerRewardChoicesService {
       rewardChoices: [],
       rewardsChoices: [],
       customChoices: [],
-      effectChoices: {
-        timingEffects: [],
-        conditionalEffects: [],
-        choiceEffects: [],
-        conversionEffects: [],
-        multiplierEffects: [],
-        rewards: [],
-      },
+      effectChoices: [],
     };
   }
 }

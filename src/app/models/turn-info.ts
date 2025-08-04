@@ -1,9 +1,9 @@
 import { ImperiumDeckCard, ImperiumDeckPlot } from '../services/cards.service';
 import { GameElement } from '../services/game-manager.service';
+import { EffectReward, StructuredChoiceEffect, StructuredConversionEffect } from './effect';
 import { ActiveFactionType } from './faction';
 import { IntrigueDeckCard } from './intrigue';
 import { ActionField } from './location';
-import { EffectReward, StructuredChoiceEffect, StructuredConversionEffect } from './reward';
 import { TechTileCard } from './tech-tile';
 
 export interface StructuredChoiceEffectWithGameElement extends StructuredChoiceEffect {

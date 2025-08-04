@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { isStructuredConversionEffect, isStructuredMultiplierEffect } from 'src/app/helpers/rewards';
-import { EffectReward, EffectType, StructuredConversionEffect, StructuredMultiplierEffect } from 'src/app/models';
+import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
+import { EffectType, StructuredConversionEffect, StructuredRewardEffect } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -130,12 +130,8 @@ export class PlayerRewardChoicesComponent implements OnInit {
     this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', amount);
   }
 
-  public isStructuredConversionEffect(effect: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[]) {
+  public isStructuredConversionEffect(effect: StructuredConversionEffect | StructuredRewardEffect) {
     return isStructuredConversionEffect(effect);
-  }
-
-  public isStructuredMultiplierEffect(effect: StructuredMultiplierEffect | EffectReward[]) {
-    return isStructuredMultiplierEffect(effect);
   }
 
   public getEffectTypePath(effectType: EffectType) {

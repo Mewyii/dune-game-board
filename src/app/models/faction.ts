@@ -1,4 +1,4 @@
-import { ActionField, LanguageString, Effect, EffectReward } from '.';
+import { ActionField, EffectReward, LanguageString } from '.';
 
 export const passiveFactionTypes = ['landsraad', 'choam'] as const;
 

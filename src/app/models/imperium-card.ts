@@ -1,7 +1,7 @@
+import { Effect, EffectReward } from './effect';
 import { ActiveFactionType } from './faction';
 import { LanguageString } from './language';
 import { ActionType } from './location';
-import { Effect, EffectReward } from './reward';
 
 export type EffectSizeType = 'large' | 'medium' | 'small';
 

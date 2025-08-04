@@ -4,14 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 import { Leader } from '../constants/leaders';
 import { LeaderGameAdjustments, leadersGameAdjustments } from '../constants/leaders-game-adjustments';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
-import { StructuredEffects } from '../models';
+import { StructuredEffect } from '../models';
 import { Player } from '../models/player';
 import { LeaderConfiguratorService } from './configurators/leader.service';
 
 export interface LeaderDeckCard extends Leader, LeaderGameAdjustments {
   id: string;
-  structuredPassiveEffects?: StructuredEffects;
-  structuredSignetEffects?: StructuredEffects;
+  structuredPassiveEffects?: StructuredEffect[];
+  structuredSignetEffects?: StructuredEffect[];
 }
 
 export interface PlayerLeader {

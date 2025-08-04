@@ -1,4 +1,4 @@
-import { cloneDeep, isArray } from 'lodash';
+import { cloneDeep } from 'lodash';
 import {
   combatUnitTypes,
   Effect,
@@ -28,15 +28,18 @@ import {
   resourceTypes,
   RewardArrayInfo,
   StructuredChoiceEffect,
-  StructuredConditionalEffect,
   StructuredConversionEffect,
-  StructuredEffects,
-  StructuredMultiplierEffect,
-  StructuredTimingEffect,
+  StructuredEffect,
+  StructuredEffectCondition,
+  StructuredEffectTiming,
+  StructuredRewardEffect,
 } from '../models';
 import { GameState } from '../models/ai';
 import { Player } from '../models/player';
+import { getPlayerCombatStrength } from './ai';
 import { getPlayerdreadnoughtCount } from './combat-units';
+import { getFactionScoreTypeFromCost } from './faction-score';
+import { isResourceType } from './resources';
 
 export function isFactionScoreReward(reward: Effect) {
   if (
@@ -118,35 +121,6 @@ export function isMultiplierEffect(reward: Effect): reward is EffectMultiplier {
   return effectMultipliers.some((x) => x === reward.type);
 }
 
-export function isStructuredConditionalEffect(
-  effect:
-    | StructuredConditionalEffect
-    | StructuredChoiceEffect
-    | StructuredConversionEffect
-    | StructuredMultiplierEffect
-    | EffectReward[]
-): effect is StructuredConditionalEffect {
-  return effect.hasOwnProperty('condition');
-}
-
-export function isStructuredChoiceEffect(
-  effect: StructuredChoiceEffect | StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[]
-): effect is StructuredChoiceEffect {
-  return effect.hasOwnProperty('choiceType') && effect.hasOwnProperty('left') && effect.hasOwnProperty('right');
-}
-
-export function isStructuredConversionEffect(
-  effect: StructuredConversionEffect | StructuredMultiplierEffect | EffectReward[]
-): effect is StructuredConversionEffect {
-  return effect.hasOwnProperty('conversionType') && effect.hasOwnProperty('costs') && effect.hasOwnProperty('rewards');
-}
-
-export function isStructuredMultiplierEffect(
-  effect: StructuredMultiplierEffect | EffectReward[]
-): effect is StructuredMultiplierEffect {
-  return effect.hasOwnProperty('multiplier') && effect.hasOwnProperty('rewards');
-}
-
 export function isConversionEffectType(input: string): input is EffectConversionType {
   return effectConversions.some((x) => x === input);
 }
@@ -171,6 +145,18 @@ export function isRewardEffectType(type: EffectType): type is EffectRewardType {
   return (
     effectRewards.some((x) => x === type) || resourceTypes.some((x) => x === type) || combatUnitTypes.some((x) => x === type)
   );
+}
+
+export function isStructuredChoiceEffect(effect: StructuredEffect): effect is StructuredChoiceEffect {
+  return effectChoices.some((x) => x === effect.type);
+}
+
+export function isStructuredConversionEffect(effect: StructuredEffect): effect is StructuredConversionEffect {
+  return effectConversions.some((x) => x === effect.type);
+}
+
+export function isStructuredRewardEffect(effect: StructuredEffect): effect is StructuredRewardEffect {
+  return effect.type === 'reward';
 }
 
 export function isNegativeEffect(effect: Effect) {
@@ -208,43 +194,23 @@ export function getFlattenedEffectRewardArray<T extends EffectReward>(array: T[]
 }
 
 export function getStructuredEffectArrayInfos(effects: Effect[]) {
-  const result: StructuredEffects = {
-    rewards: [],
-    multiplierEffects: [],
-    conversionEffects: [],
-    choiceEffects: [],
-    conditionalEffects: [],
-    timingEffects: [],
-  };
+  const result: StructuredEffect[] = [];
 
   const flatEffects = getSeparatedEffectArrays(effects);
   for (const flatEffect of flatEffects) {
-    const [nonTimingEffects, structuredTimingEffect] = getStructuredTimingEffectIfPossible(flatEffect);
-    if (structuredTimingEffect) {
-      result.timingEffects.push(structuredTimingEffect);
+    const [nonTimingEffects, structuredEffectTiming] = getStructuredEffectTimingIfPossible(flatEffect);
+    const [nonConditionalEffects, structuredEffectCondition] = getStructuredEffectConditionIfPossible(nonTimingEffects);
+
+    const [nonChoiceEffects, structuredChoiceEffect] = getStructuredChoiceEffectIfPossible(nonConditionalEffects);
+    if (structuredChoiceEffect) {
+      result.push({ timing: structuredEffectTiming, condition: structuredEffectCondition, ...structuredChoiceEffect });
     } else {
-      const [nonConditionalEffects, structuredConditionalEffect] =
-        getStructuredConditionalEffectIfPossible(nonTimingEffects);
-      if (structuredConditionalEffect) {
-        result.conditionalEffects.push(structuredConditionalEffect);
+      const [nonConversionEffects, structuredConversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffects);
+      if (structuredConversionEffect) {
+        result.push({ timing: structuredEffectTiming, condition: structuredEffectCondition, ...structuredConversionEffect });
       } else {
-        const [nonChoiceEffects, structuredChoiceEffect] = getStructuredChoiceEffectIfPossible(nonConditionalEffects);
-        if (structuredChoiceEffect) {
-          result.choiceEffects.push(structuredChoiceEffect);
-        } else {
-          const [nonConversionEffects, structuredConversionEffect] =
-            getStructuredConversionEffectIfPossible(nonChoiceEffects);
-          if (structuredConversionEffect) {
-            result.conversionEffects.push(structuredConversionEffect);
-          } else {
-            const [effectRewards, multiplierEffect] = getStructuredMultiplierEffectIfPossible(nonConversionEffects);
-            if (multiplierEffect) {
-              result.multiplierEffects.push(multiplierEffect);
-            } else {
-              result.rewards.push(...effectRewards);
-            }
-          }
-        }
+        const structuredEffectRewards = getStructuredEffectReward(nonConversionEffects);
+        result.push({ timing: structuredEffectTiming, condition: structuredEffectCondition, ...structuredEffectRewards });
       }
     }
   }
@@ -268,78 +234,44 @@ export function getSeparatedEffectArrays(effects: Effect[]) {
   return result;
 }
 
-export function getStructuredTimingEffectIfPossible(
+export function getStructuredEffectTimingIfPossible(
   effects: EffectTimingConditionChoiceConversionMultiplierOrReward[]
-): [EffectConditionChoiceConversionMultiplierOrReward[], undefined] | [undefined, StructuredTimingEffect] {
+): [EffectConditionChoiceConversionMultiplierOrReward[], StructuredEffectTiming | undefined] {
   for (const [index, effect] of effects.entries()) {
     if (isTimingEffect(effect)) {
       const type = effect.type;
       const effectsWithoutTiming = effects.slice(index + 1) as EffectConditionChoiceConversionMultiplierOrReward[];
-      const [nonConditionalEffects, structuredConditionalEffect] =
-        getStructuredConditionalEffectIfPossible(effectsWithoutTiming);
-      if (structuredConditionalEffect) {
-        return [undefined, { type, effect: structuredConditionalEffect }];
-      } else {
-        const [nonChoiceEffects, choiceEffect] = getStructuredChoiceEffectIfPossible(nonConditionalEffects);
-        if (choiceEffect) {
-          return [undefined, { type, effect: choiceEffect }];
-        } else {
-          const [nonConversionEffects, conversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffects);
-          if (conversionEffect) {
-            return [undefined, { type, effect: conversionEffect }];
-          } else {
-            const [effectRewards, multiplierEffect] = getStructuredMultiplierEffectIfPossible(nonConversionEffects);
-            return [undefined, { type, effect: multiplierEffect ?? effectRewards }];
-          }
-        }
-      }
+      return [effectsWithoutTiming, { type }];
     }
   }
   return [effects as EffectConditionChoiceConversionMultiplierOrReward[], undefined];
 }
 
-export function getStructuredConditionalEffectIfPossible(
+export function getStructuredEffectConditionIfPossible(
   effects: EffectConditionChoiceConversionMultiplierOrReward[]
-): [EffectChoiceConversionMultiplierOrReward[], undefined] | [undefined, StructuredConditionalEffect] {
+): [EffectChoiceConversionMultiplierOrReward[], StructuredEffectCondition | undefined] {
   for (const [index, effect] of effects.entries()) {
     if (isConditionalEffect(effect)) {
       const effectsWithoutCondition = effects.slice(index + 1) as EffectChoiceConversionMultiplierOrReward[];
 
-      let conditionFullfilledEffect = undefined;
-      const [nonChoiceEffect, choiceEffect] = getStructuredChoiceEffectIfPossible(effectsWithoutCondition);
-      if (choiceEffect) {
-        conditionFullfilledEffect = choiceEffect;
-      } else {
-        const [nonConversionEffect, conversionEffect] = getStructuredConversionEffectIfPossible(nonChoiceEffect);
-        if (conversionEffect) {
-          conditionFullfilledEffect = conversionEffect;
-        } else {
-          const [effectRewards, multiplierEffect] = getStructuredMultiplierEffectIfPossible(nonConversionEffect);
-          conditionFullfilledEffect = multiplierEffect || effectRewards;
-        }
-      }
-
       if (effect.type === 'condition-connection') {
         const conditionalEffect = {
-          condition: effect.type,
+          type: effect.type,
           faction: effect.faction ?? 'emperor',
-          effect: conditionFullfilledEffect,
         };
-        return [undefined, conditionalEffect];
+        return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-influence') {
         const conditionalEffect = {
-          condition: effect.type,
+          type: effect.type,
           faction: effect.faction ?? 'emperor',
-          effect: conditionFullfilledEffect,
           amount: effect.amount ?? 0,
         };
-        return [undefined, conditionalEffect];
+        return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-high-council-seat') {
         const conditionalEffect = {
-          condition: effect.type,
-          effect: conditionFullfilledEffect,
+          type: effect.type,
         };
-        return [undefined, conditionalEffect];
+        return [effectsWithoutCondition, conditionalEffect];
       }
     }
   }
@@ -359,8 +291,7 @@ export function getStructuredChoiceEffectIfPossible(
       if (conversionEffectLeft) {
         structuredLeftEffect = conversionEffectLeft;
       } else {
-        const [effectRewardsLeft, multiplierEffectLeft] = getStructuredMultiplierEffectIfPossible(nonConversionEffectLeft);
-        structuredLeftEffect = multiplierEffectLeft || effectRewardsLeft;
+        structuredLeftEffect = getStructuredEffectReward(nonConversionEffectLeft);
       }
 
       const rightEffects = effects.slice(index + 1) as EffectConversionMultiplierOrReward[];
@@ -368,20 +299,18 @@ export function getStructuredChoiceEffectIfPossible(
       if (conversionEffectRight) {
         structuredRightEffect = conversionEffectRight;
       } else {
-        const [effectRewardsRight, multiplierEffectRight] =
-          getStructuredMultiplierEffectIfPossible(nonConversionEffectRight);
-        structuredRightEffect = multiplierEffectRight || effectRewardsRight;
+        structuredRightEffect = getStructuredEffectReward(nonConversionEffectRight);
       }
 
       const choiceEffect = {
-        choiceType: effect.type,
-        left: structuredLeftEffect,
-        right: structuredRightEffect,
+        type: effect.type,
+        effectLeft: structuredLeftEffect,
+        effectRight: structuredRightEffect,
       };
       return [undefined, choiceEffect];
     }
   }
-  return [effects as EffectReward[], undefined];
+  return [effects as EffectConversionMultiplierOrReward[], undefined];
 }
 
 export function getStructuredConversionEffectIfPossible(
@@ -392,35 +321,38 @@ export function getStructuredConversionEffectIfPossible(
       const costsEffect = effects.slice(0, index) as EffectMultiplierOrReward[];
       const rewardsEffect = effects.slice(index + 1) as EffectMultiplierOrReward[];
 
-      const [costs, multiplierEffectCosts] = getStructuredMultiplierEffectIfPossible(costsEffect);
-      const [rewards, multiplierEffectRewards] = getStructuredMultiplierEffectIfPossible(rewardsEffect);
+      const structuredCosts = getStructuredEffectReward(costsEffect);
+      const structuredRewards = getStructuredEffectReward(rewardsEffect);
       const conversionEffect = {
-        conversionType: effect.type,
-        costs: multiplierEffectCosts || costs,
-        rewards: multiplierEffectRewards || rewards,
+        type: effect.type,
+        effectCosts: structuredCosts,
+        effectConversions: structuredRewards,
       };
       return [undefined, conversionEffect];
     }
   }
-  return [effects as EffectReward[], undefined];
+  return [effects as EffectMultiplierOrReward[], undefined];
 }
 
-export function getStructuredMultiplierEffectIfPossible(
-  effects: EffectMultiplierOrReward[]
-): [EffectReward[], undefined] | [undefined, StructuredMultiplierEffect] {
+export function getStructuredEffectReward(effects: EffectMultiplierOrReward[]): StructuredRewardEffect {
   for (const [index, effect] of effects.entries()) {
     if (isMultiplierEffect(effect)) {
       const multiplierEffect = {
-        multiplier: effect.type,
-        rewards: effects.slice(index + 1) as EffectReward[],
-      };
-      return [undefined, multiplierEffect];
+        type: 'reward',
+        multiplier: effect,
+        effectRewards: effects.slice(index + 1) as EffectReward[],
+      } as StructuredRewardEffect;
+      return multiplierEffect;
     }
   }
-  return [effects as EffectReward[], undefined];
+  return { type: 'reward', effectRewards: effects as EffectReward[] };
 }
 
-export function isTimingFullfilled(timingEffect: StructuredTimingEffect, player: Player, gameState: GameState) {
+export function isTimingFullfilled(
+  timingEffect: StructuredEffectTiming,
+  player: Player,
+  gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos'>
+) {
   let timingFullfilled = false;
   if (timingEffect.type === 'timing-game-start') {
     const hasPlacedAgentThisRound = gameState.playerAgentsOnFields.length > 0;
@@ -445,13 +377,13 @@ export function isTimingFullfilled(timingEffect: StructuredTimingEffect, player:
 }
 
 export function isConditionFullfilled(
-  conditionEffect: StructuredConditionalEffect,
+  conditionEffect: StructuredEffectCondition,
   player: Player,
-  gameState: GameState,
+  gameState: Pick<GameState, 'playerCardsFactionsInPlay' | 'playerHandCardsFactions' | 'playerScore'>,
   timing: EffectPlayerTurnTiming = 'agent-placement'
 ) {
   let conditionFullfilled = false;
-  if (conditionEffect.condition === 'condition-connection') {
+  if (conditionEffect.type === 'condition-connection') {
     if (timing === 'agent-placement') {
       if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
         conditionFullfilled = true;
@@ -464,12 +396,12 @@ export function isConditionFullfilled(
         conditionFullfilled = true;
       }
     }
-  } else if (conditionEffect.condition === 'condition-influence') {
+  } else if (conditionEffect.type === 'condition-influence') {
     const factionScore = gameState.playerScore[conditionEffect.faction];
     if (conditionEffect.amount && factionScore >= conditionEffect.amount) {
       conditionFullfilled = true;
     }
-  } else if (conditionEffect.condition === 'condition-high-council-seat') {
+  } else if (conditionEffect.type === 'condition-high-council-seat') {
     if (player.hasCouncilSeat) {
       conditionFullfilled = true;
     }
@@ -478,7 +410,7 @@ export function isConditionFullfilled(
 }
 
 export function getMultipliedRewardEffects(
-  multiplierEffectOrRewardArray: StructuredMultiplierEffect | EffectReward[],
+  multiplierEffectOrRewardArray: StructuredRewardEffect,
   gameState: Pick<
     GameState,
     | 'playerAgentsOnFields'
@@ -489,44 +421,44 @@ export function getMultipliedRewardEffects(
   >,
   timing: EffectPlayerTurnTiming = 'agent-placement'
 ): EffectReward[] {
-  if (isArray(multiplierEffectOrRewardArray)) {
-    return multiplierEffectOrRewardArray;
+  if (!multiplierEffectOrRewardArray.multiplier) {
+    return multiplierEffectOrRewardArray.effectRewards;
   } else {
     let effectMultiplierAmount = 0;
     const result: EffectReward[] = [];
 
-    if (multiplierEffectOrRewardArray.multiplier === 'multiplier-agents-on-board-spaces') {
+    if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-agents-on-board-spaces') {
       const agentsOnBoardSpacesCount = gameState.playerAgentsOnFields.length;
       if (agentsOnBoardSpacesCount > 0) {
         effectMultiplierAmount = agentsOnBoardSpacesCount;
       }
-    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-amount') {
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-dreadnought-amount') {
       const dreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
       if (dreadnoughtCount > 0) {
         effectMultiplierAmount = dreadnoughtCount;
       }
-    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-in-conflict-amount') {
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-dreadnought-in-conflict-amount') {
       const dreadnoughtCount = gameState.playerCombatUnits.shipsInCombat;
       if (dreadnoughtCount > 0) {
         effectMultiplierAmount = dreadnoughtCount;
       }
-    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-dreadnought-in-garrison-amount') {
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-dreadnought-in-garrison-amount') {
       const dreadnoughtCount = gameState.playerCombatUnits.shipsInGarrison;
       if (dreadnoughtCount > 0) {
         effectMultiplierAmount = dreadnoughtCount;
       }
-    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-troops-in-conflict') {
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-troops-in-conflict') {
       const troopsInConflict = gameState.playerCombatUnits.troopsInCombat;
       if (troopsInConflict > 0) {
         effectMultiplierAmount = troopsInConflict;
       }
-    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-cards-with-sword') {
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-cards-with-sword') {
       const swordAmount = gameState.playerHandCardsRewards.sword;
       if (swordAmount > 0) {
         effectMultiplierAmount = 0.75 * swordAmount;
       }
-    } else if (multiplierEffectOrRewardArray.multiplier === 'multiplier-connections') {
-      const faction = multiplierEffectOrRewardArray.faction;
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-connections') {
+      const faction = multiplierEffectOrRewardArray.multiplier.faction;
       if (faction) {
         if (timing === 'agent-placement') {
           const handCardAmount = gameState.playerHandCardsFactions[faction];
@@ -541,7 +473,7 @@ export function getMultipliedRewardEffects(
       }
     }
     if (effectMultiplierAmount > 0) {
-      for (const reward of multiplierEffectOrRewardArray.rewards) {
+      for (const reward of multiplierEffectOrRewardArray.effectRewards) {
         const rewardAmount = reward.amount ?? 1;
         result.push({ type: reward.type, amount: rewardAmount * effectMultiplierAmount });
       }
@@ -558,4 +490,93 @@ export function getRewardArrayAIInfos(rewards: Effect[]): RewardArrayInfo {
   const rewardConversionIndex = rewards.findIndex((x) => x.type === 'helper-trade' || x.type === 'helper-trade-horizontal');
   const hasRewardConversion = rewardConversionIndex > -1;
   return { hasRewardChoice: hasRewardOptions, hasRewardConversion, rewardOptionIndex, rewardConversionIndex };
+}
+
+export function playerCanPayCosts(
+  costs: EffectReward[],
+  player: Player,
+  gameState: Pick<
+    GameState,
+    | 'playerScore'
+    | 'playerHandCards'
+    | 'playerCombatUnits'
+    | 'playerIntrigueCount'
+    | 'playerCardsFactionsInPlay'
+    | 'gameSettings'
+  >
+) {
+  let canPayCosts = true;
+  const playerScore = gameState.playerScore;
+
+  for (let cost of getFlattenedEffectRewardArray(costs)) {
+    const costType = cost.type;
+    const costAmount = Math.abs(cost.amount ?? 1);
+
+    if (isResourceType(costType)) {
+      const resourceIndex = player.resources.findIndex((x) => x.type === cost.type);
+      const currentResourceAmount = player.resources[resourceIndex].amount ?? 0;
+
+      if (currentResourceAmount < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'signet-token') {
+      if (player.signetTokenCount < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'tech') {
+      if (player.tech < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'card-discard') {
+      if (gameState.playerHandCards.length < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'persuasion') {
+      player.persuasionSpentThisRound += costAmount;
+      if (player.persuasionSpentThisRound > player.permanentPersuasion + player.persuasionGainedThisRound) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'sword') {
+      const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+
+      if (playerCombatStrength < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'troop' || costType === 'loose-troop') {
+      if (gameState.playerCombatUnits.troopsInGarrison < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'dreadnought-retreat') {
+      if (gameState.playerCombatUnits.shipsInCombat < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'intrigue-trash') {
+      if (gameState.playerIntrigueCount < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (isFactionScoreCostType(costType)) {
+      const scoreType = getFactionScoreTypeFromCost(cost);
+      if (scoreType && playerScore && playerScore[scoreType] >= costAmount) {
+        playerScore[scoreType] -= 1;
+      } else {
+        canPayCosts = false;
+      }
+    } else if (costType === 'faction-influence-down-choice') {
+      if (playerScore) {
+        let counter = 0;
+        counter += playerScore.bene > 0 ? 1 : 0;
+        counter += playerScore.fremen > 0 ? 1 : 0;
+        counter += playerScore.emperor > 0 ? 1 : 0;
+        counter += playerScore.guild > 0 ? 1 : 0;
+
+        if (counter < 1) {
+          canPayCosts = false;
+        }
+      } else {
+        canPayCosts = false;
+      }
+    }
+  }
+
+  return canPayCosts;
 }

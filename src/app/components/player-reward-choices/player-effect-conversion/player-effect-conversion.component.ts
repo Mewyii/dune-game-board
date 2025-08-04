@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { isStructuredMultiplierEffect } from 'src/app/helpers/rewards';
-import { EffectReward, EffectType, StructuredMultiplierEffect } from 'src/app/models';
+import { EffectType } from 'src/app/models';
 import { StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 
 @Component({
@@ -15,9 +14,5 @@ export class PlayerEffectConversionComponent {
 
   public getEffectTypePath(effectType: EffectType) {
     return getEffectTypePath(effectType);
-  }
-
-  public isStructuredMultiplierEffect(effect: StructuredMultiplierEffect | EffectReward[]) {
-    return isStructuredMultiplierEffect(effect);
   }
 }

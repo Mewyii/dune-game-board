@@ -1,4 +1,4 @@
-import { StructuredEffects } from '../models';
+import { StructuredEffect } from '../models';
 import { AIAdjustments } from '../models/ai';
 import { GameModifiers } from '../services/game-modifier.service';
 
@@ -6,8 +6,8 @@ export interface LeaderGameAdjustments {
   id: string;
   aiAdjustments?: AIAdjustments;
   gameModifiers?: GameModifiers;
-  customSignetEffects?: StructuredEffects;
-  customEffects?: StructuredEffects;
+  customSignetEffects?: StructuredEffect[];
+  customEffects?: StructuredEffect[];
 }
 
 export const leadersGameAdjustments: LeaderGameAdjustments[] = [
@@ -31,24 +31,17 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetEffects: {
-      choiceEffects: [
-        {
-          choiceType: 'helper-or',
-          left: [{ type: 'signet-token' }],
-          right: {
-            conversionType: 'helper-trade',
-            costs: [{ type: 'signet-token', amount: 3 }],
-            rewards: [{ type: 'victory-point' }],
-          },
+    customSignetEffects: [
+      {
+        type: 'helper-or',
+        effectLeft: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+        effectRight: {
+          type: 'helper-trade',
+          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token', amount: 3 }] },
+          effectConversions: { type: 'reward', effectRewards: [{ type: 'victory-point' }] },
         },
-      ],
-      conditionalEffects: [],
-      conversionEffects: [],
-      multiplierEffects: [],
-      rewards: [],
-      timingEffects: [],
-    },
+      },
+    ],
   },
   {
     id: 'Chani Kynes',
@@ -62,14 +55,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetEffects: {
-      choiceEffects: [],
-      conditionalEffects: [],
-      conversionEffects: [],
-      multiplierEffects: [],
-      rewards: [{ type: 'signet-token' }],
-      timingEffects: [],
-    },
+    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet-token' }] }],
   },
   {
     id: 'Princess Irulan Corrino',
@@ -100,19 +86,15 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Feyd-Rautha Harkonnen',
-    customSignetEffects: {
-      choiceEffects: [],
-      conditionalEffects: [],
-      conversionEffects: [],
-      multiplierEffects: [],
-      rewards: [{ type: 'signet-token' }],
-      timingEffects: [
-        {
-          type: 'timing-combat',
-          effect: { conversionType: 'helper-trade', costs: [{ type: 'signet-token' }], rewards: [{ type: 'sword' }] },
-        },
-      ],
-    },
+    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet-token' }] }],
+    customEffects: [
+      {
+        type: 'helper-trade',
+        timing: { type: 'timing-round-start' },
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword' }] },
+      },
+    ],
   },
   {
     id: 'Lady Margot Fenring',
@@ -124,23 +106,14 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customEffects: {
-      choiceEffects: [],
-      conditionalEffects: [],
-      conversionEffects: [],
-      multiplierEffects: [],
-      rewards: [{ type: 'signet-token' }],
-      timingEffects: [
-        {
-          type: 'timing-round-start',
-          effect: {
-            conversionType: 'helper-trade',
-            costs: [{ type: 'card-discard' }],
-            rewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
-          },
-        },
-      ],
-    },
+    customEffects: [
+      {
+        type: 'helper-trade',
+        timing: { type: 'timing-round-start' },
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }] },
+      },
+    ],
   },
   {
     id: 'Count August Metulli',
@@ -157,14 +130,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
-    customSignetEffects: {
-      choiceEffects: [],
-      conditionalEffects: [],
-      conversionEffects: [],
-      multiplierEffects: [],
-      rewards: [{ type: 'signet-token' }],
-      timingEffects: [],
-    },
+    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet-token' }] }],
   },
   {
     id: 'Emperor Paul Atreides',
@@ -198,14 +164,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Count Glossu Rabban',
-    customEffects: {
-      choiceEffects: [],
-      conditionalEffects: [],
-      conversionEffects: [],
-      multiplierEffects: [],
-      rewards: [{ type: 'signet-token' }],
-      timingEffects: [{ type: 'timing-round-start', effect: [{ type: 'card-destroy' }] }],
-    },
+    customEffects: [{ type: 'reward', timing: { type: 'timing-round-start' }, effectRewards: [{ type: 'card-destroy' }] }],
   },
   {
     id: 'Eva Moritani',

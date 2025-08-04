@@ -5,7 +5,7 @@ import { GameState } from 'src/app/models/ai';
 import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustments';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
-import { StructuredEffects } from '../models';
+import { StructuredEffect } from '../models';
 import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
 import { TechTileConfiguratorService } from './configurators/tech-tile-configurator.service';
@@ -13,7 +13,7 @@ import { GameModifiers } from './game-modifier.service';
 
 export interface TechTileDeckCard extends TechTileCard {
   id: string;
-  structuredEffects?: StructuredEffects;
+  structuredEffects?: StructuredEffect[];
   aiEvaluation?: (player: Player, gameState: GameState) => number;
   gameModifiers?: GameModifiers;
 }
