@@ -191,7 +191,7 @@ export const duneEvents: DuneEvent[] = [
     gameEffects: {
       imperiumRowCards: {
         id: 'orbital-heighliner-imperium-cards',
-        amount: 3,
+        amount: 2,
       },
     },
   },

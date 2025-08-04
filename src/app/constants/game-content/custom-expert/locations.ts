@@ -4,7 +4,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 880,
+      marginTop: 870,
       marginLeft: 1430,
     },
     actionField: {
@@ -19,7 +19,7 @@ export const locationsCustomExpert: DuneLocation[] = [
     color: 'rgb(176, 147, 109)',
     position: {
       marginTop: 1310,
-      marginLeft: 1160,
+      marginLeft: 1380,
     },
     actionField: {
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
@@ -34,7 +34,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 890,
+      marginTop: 880,
       marginLeft: 1010,
     },
     actionField: {
@@ -48,7 +48,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 670,
+      marginTop: 660,
       marginLeft: 1250,
     },
     actionField: {
@@ -78,7 +78,7 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1080,
+      marginTop: 1070,
       marginLeft: 1230,
     },
     actionField: {
@@ -92,8 +92,8 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1070,
-      marginLeft: 780,
+      marginTop: 1080,
+      marginLeft: 790,
     },
     actionField: {
       title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
