@@ -3,14 +3,7 @@
   [style.animation-duration]="combatAnimation.duration + 's'"
   *ngIf="combatAnimation && combatAnimation.show"
 >
-  <ng-particles
-    class="combat-particles"
-    [id]="combatAnimation.id"
-    [options]="combatAnimation.effect"
-    [particlesInit]="combatInit"
-    (particlesLoaded)="particlesLoaded($event)"
-  >
-  </ng-particles>
+  <ngx-particles class="combat-particles" [id]="combatAnimation.id" [options]="combatAnimation.effect"> </ngx-particles>
   <div class="effect-title font-medieval red">{{ t.translateLS(combatAnimation.title) }}</div>
 </div>
 
@@ -19,14 +12,7 @@
   [style.animation-duration]="spiceAnimation.duration + 's'"
   *ngIf="spiceAnimation && spiceAnimation.show"
 >
-  <ng-particles
-    class="spice-particles"
-    [id]="spiceAnimation.id"
-    [options]="spiceAnimation.effect"
-    [particlesInit]="spiceInit"
-    (particlesLoaded)="particlesLoaded($event)"
-  >
-  </ng-particles>
+  <ngx-particles class="spice-particles" [id]="spiceAnimation.id" [options]="spiceAnimation.effect"> </ngx-particles>
   <div class="effect-title font-medieval gold">{{ t.translateLS(spiceAnimation.title) }}</div>
 </div>
 
@@ -35,13 +21,6 @@
   [style.animation-duration]="welcomeAnimation.duration + 's'"
   *ngIf="welcomeAnimation && welcomeAnimation.show"
 >
-  <ng-particles
-    class="spice-particles"
-    [id]="welcomeAnimation.id"
-    [options]="welcomeAnimation.effect"
-    [particlesInit]="spiceInit"
-    (particlesLoaded)="particlesLoaded($event)"
-  >
-  </ng-particles>
+  <ngx-particles class="spice-particles" [id]="welcomeAnimation.id" [options]="welcomeAnimation.effect"> </ngx-particles>
   <div class="effect-title font-medieval gold">{{ t.translateLS(welcomeAnimation.title) }}</div>
 </div>

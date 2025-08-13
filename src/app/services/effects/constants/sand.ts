@@ -1,6 +1,6 @@
-import { IParticlesProps } from 'ng-particles';
+import type { ISourceOptions } from '@tsparticles/engine';
 
-export const sand: IParticlesProps = {
+export const sand: ISourceOptions = {
   autoPlay: true,
   fpsLimit: 40,
   style: { position: 'absolute', bottom: '0px', width: '100%', height: '680px' },
@@ -14,7 +14,7 @@ export const sand: IParticlesProps = {
     },
     opacity: {
       value: { min: 0.25, max: 1 },
-      anim: {
+      animation: {
         enable: true,
         speed: { min: 0.5, max: 2 },
         sync: false,
@@ -22,13 +22,13 @@ export const sand: IParticlesProps = {
     },
     shape: {
       type: 'image',
-      image: {
-        src: '/assets/images/particles/sand.png',
+      options: {
+        image: { src: '/assets/images/particles/sand.png' },
       },
     },
     size: {
       value: { min: 150, max: 300 },
-      anim: {
+      animation: {
         enable: true,
         speed: { min: 0.5, max: 1 },
         sync: false,
@@ -43,16 +43,16 @@ export const sand: IParticlesProps = {
       speed: { min: 5, max: 15 },
       direction: 'left',
       straight: true,
-      outMode: 'out',
+      outModes: 'out',
     },
   },
   interactivity: {
     detect_on: 'canvas',
     events: {
-      onhover: {
+      onHover: {
         enable: false,
       },
-      onclick: {
+      onClick: {
         enable: false,
       },
     },

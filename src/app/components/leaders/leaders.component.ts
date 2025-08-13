@@ -56,6 +56,7 @@ export class LeadersComponent implements OnInit {
   public playerTechTiles: PlayerTechTile[] = [];
   public techTiles: TechTileDeckCard[] = [];
   public activeTechTileId = '';
+  public hoveredTechTileId = '';
 
   public turnInfos: TurnInfo | undefined;
 
@@ -411,6 +412,14 @@ export class LeadersComponent implements OnInit {
       this.activeTechTileId = techTileId;
     } else {
       this.activeTechTileId = '';
+    }
+  }
+
+  setCardHover(cardId: string) {
+    if (this.hoveredTechTileId !== cardId) {
+      this.hoveredTechTileId = cardId;
+    } else {
+      this.hoveredTechTileId = '';
     }
   }
 

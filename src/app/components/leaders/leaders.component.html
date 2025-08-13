@@ -303,17 +303,30 @@
     <dune-player-reward-choices></dune-player-reward-choices>
     <div class="control-bar center" *ngIf="techTiles.length > 0">
       @for (techTile of techTiles; track techTile.name.en) {
-      <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
+      <div
+        class="tech-tile-container"
+        (click)="setTechTileActive(techTile.id)"
+        (mouseenter)="setCardHover(techTile.id)"
+        (mouseleave)="hoveredTechTileId = ''"
+      >
+        <dune-highlighting
+          *ngIf="techTile.id === activeTechTileId || techTile.id === hoveredTechTileId"
+          [id]="techTile.id"
+          [width]="480"
+          [height]="340"
+          [bottom]="-85"
+          [left]="-115"
+        ></dune-highlighting>
         <div
           *ngIf="getIsTechTileFlipped(techTile.id)"
-          [class]="'tech-tile' + (techTile.name.en === activeTechTileId ? ' active' : '')"
+          [class]="'tech-tile' + (techTile.id === activeTechTileId ? ' active' : '')"
         ></div>
         <dune-tech-tile
           *ngIf="!getIsTechTileFlipped(techTile.id)"
-          [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
+          [class]="techTile.id === activeTechTileId ? ' active' : ''"
           [card]="techTile"
         ></dune-tech-tile>
-        <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
+        <div class="tech-tile-action-container" *ngIf="techTile.id === activeTechTileId">
           <button
             *ngIf="techTile.structuredEffects && !getIsTechTileFlipped(techTile.id)"
             class="tech-flip-button"

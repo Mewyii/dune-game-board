@@ -1,65 +1,68 @@
-import { IParticlesProps } from 'ng-particles';
+import type { ISourceOptions } from '@tsparticles/engine';
 
-export const dust: IParticlesProps = {
+export const dust: ISourceOptions = {
   autoPlay: true,
   fpsLimit: 40,
-  style: { position: 'absolute', top: '650px', width: '100%', height: '900px' },
-  fullScreen: false,
+  style: {
+    position: 'absolute',
+    top: '650px',
+    width: '100%',
+    height: '900px',
+  },
+  fullScreen: {
+    enable: false,
+  },
   particles: {
     number: {
-      value: 60,
+      value: 30,
       density: {
         enable: true,
-        value_area: 500,
+        width: 500,
+        height: 500,
       },
     },
     color: {
-      value: '#fff',
+      value: '#ffffff',
     },
     opacity: {
       value: { min: 0.2, max: 1 },
-      anim: {
+      animation: {
         enable: true,
-        speed: { min: 0.25, max: 1 },
+        speed: 1,
         sync: false,
-        mode: 'random',
       },
     },
     shape: {
       type: 'image',
-      image: {
-        src: '/assets/images/particles/dust.png',
+      options: {
+        image: { src: '/assets/images/particles/dust.png' },
       },
     },
     size: {
       value: { min: 50, max: 200 },
-      anim: {
+      animation: {
         enable: true,
-        speed: { min: 0.25, max: 1 },
+        speed: 1,
         sync: false,
-        mode: 'random',
       },
-    },
-    line_linked: {
-      enable: false,
     },
     move: {
       enable: true,
       speed: { min: 0.75, max: 1.5 },
       direction: 'none',
       straight: false,
-      outMode: 'bounce',
+      outModes: {
+        default: 'bounce',
+      },
+    },
+    links: {
+      enable: false,
     },
   },
   interactivity: {
-    detect_on: 'canvas',
     events: {
-      onhover: {
-        enable: false,
-      },
-      onclick: {
-        enable: false,
-      },
+      onHover: { enable: false },
+      onClick: { enable: false },
     },
   },
 };

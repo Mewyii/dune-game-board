@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import type { ISourceOptions } from '@tsparticles/engine';
 import { cloneDeep } from 'lodash';
-import { IParticlesProps } from 'ng-particles';
 import { BehaviorSubject } from 'rxjs';
 import { LanguageString } from 'src/app/models';
 import { GameManager } from '../game-manager.service';
@@ -10,7 +10,7 @@ import { welcome } from './constants/welcome';
 export interface Effect {
   id: string;
   title: LanguageString;
-  effect: IParticlesProps;
+  effect: ISourceOptions;
   duration: number;
   show: boolean;
 }

@@ -24,6 +24,7 @@ export class ImperiumRowComponent implements OnInit {
   imperiumRowCardsLeft: (ImperiumRowCard | ImperiumRowPlot)[] = [];
   imperiumRowCardsRight: (ImperiumRowCard | ImperiumRowPlot)[] = [];
   activeCardId = '';
+  hoveredCardId = '';
 
   activePlayerId: number = 0;
   activePlayer: Player | undefined;
@@ -183,6 +184,14 @@ export class ImperiumRowComponent implements OnInit {
       this.activeCardId = cardId;
     } else {
       this.activeCardId = '';
+    }
+  }
+
+  setCardHover(cardId: string) {
+    if (this.hoveredCardId !== cardId) {
+      this.hoveredCardId = cardId;
+    } else {
+      this.hoveredCardId = '';
     }
   }
 

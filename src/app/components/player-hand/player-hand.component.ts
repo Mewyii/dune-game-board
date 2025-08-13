@@ -27,6 +27,7 @@ export class PlayerHandComponent implements OnInit {
   public playerHandCards: PlayerCardStack | undefined;
   public playerDiscardPiles: PlayerCardStack | undefined;
   public activeCardId = '';
+  public hoveredCardId = '';
   public playedPlayerCardId: string | undefined;
 
   public playerPlots: PlayerPlotStack | undefined;
@@ -259,6 +260,14 @@ export class PlayerHandComponent implements OnInit {
       this.activeCardId = cardId;
     } else {
       this.activeCardId = '';
+    }
+  }
+
+  setCardHover(cardId: string) {
+    if (this.hoveredCardId !== cardId) {
+      this.hoveredCardId = cardId;
+    } else {
+      this.hoveredCardId = '';
     }
   }
 

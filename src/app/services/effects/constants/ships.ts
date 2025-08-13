@@ -1,6 +1,6 @@
-import { IParticlesProps } from 'ng-particles';
+import type { ISourceOptions } from '@tsparticles/engine';
 
-export const ships: IParticlesProps = {
+export const ships: ISourceOptions = {
   autoPlay: true,
   fpsLimit: 40,
   style: { position: 'absolute', top: '600px', right: '350px', width: '800px', height: '750px' },
@@ -13,11 +13,10 @@ export const ships: IParticlesProps = {
       value: { r: { min: 25, max: 125 }, b: { min: 25, max: 125 }, g: { min: 25, max: 125 } },
     },
     opacity: {
-      value: 0.8,
-      anim: {
+      value: { min: 0.4, max: 0.8 },
+      animation: {
         enable: true,
         speed: { min: 0.25, max: 0.75 },
-        opacity_min: 0.4,
         sync: false,
       },
     },
@@ -35,7 +34,7 @@ export const ships: IParticlesProps = {
       speed: { min: 0.2, max: 0.75 },
       direction: 'none',
       straight: false,
-      out_mode: 'out',
+      outModes: 'out',
       angle: { value: 90, offset: 0 },
       path: { clamp: true },
     },
@@ -56,10 +55,10 @@ export const ships: IParticlesProps = {
   interactivity: {
     detect_on: 'canvas',
     events: {
-      onhover: {
+      onHover: {
         enable: false,
       },
-      onclick: {
+      onClick: {
         enable: false,
       },
     },

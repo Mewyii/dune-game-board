@@ -6,37 +6,13 @@
     <app-playerboard></app-playerboard>
     <div class="board">
       <div [class]="mode === 'game' ? 'overlay' : ''">
-        <ng-particles
-          *ngIf="viewInitialized && mode === 'game'"
-          [id]="'stars'"
-          [options]="stars"
-          [particlesInit]="initStars"
-        ></ng-particles>
-        <ng-particles
-          *ngIf="viewInitialized && mode === 'game'"
-          [id]="'ships'"
-          [options]="ships"
-          [particlesInit]="initShips"
-        ></ng-particles>
-        <ng-particles
-          *ngIf="viewInitialized && mode === 'game'"
-          [id]="'dust'"
-          [options]="dust"
-          [particlesInit]="initDust"
-        ></ng-particles>
-        <ng-particles
-          *ngIf="viewInitialized && mode === 'game'"
-          [id]="'sand'"
-          [options]="sand"
-          [particlesInit]="initSand"
-        ></ng-particles>
-        <ng-particles
-          *ngIf="viewInitialized && mode === 'game'"
-          [id]="'spiceGlitter'"
-          [options]="spiceGlitter"
-          [particlesInit]="initSpiceGlitter"
-        ></ng-particles>
-        @for (faction of gameContent.factions; track $index) {
+        @if (viewInitialized && mode === 'game') {
+        <ngx-particles [id]="'stars'" [options]="stars"></ngx-particles>
+        <ngx-particles [id]="'ships'" [options]="ships"></ngx-particles>
+        <ngx-particles [id]="'dust'" [options]="dust"></ngx-particles>
+        <ngx-particles [id]="'sand'" [options]="sand"></ngx-particles>
+        <ngx-particles [id]="'spiceGlitter'" [options]="spiceGlitter"></ngx-particles>
+        } @for (faction of gameContent.factions; track $index) {
         <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
         } @for (location of gameContent.locations; track $index) {
         <app-dune-location [location]="location"></app-dune-location>

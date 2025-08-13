@@ -10,15 +10,16 @@ import { TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-tech-tiles',
-    templateUrl: './tech-tiles.component.html',
-    styleUrls: ['./tech-tiles.component.scss'],
-    standalone: false
+  selector: 'dune-tech-tiles',
+  templateUrl: './tech-tiles.component.html',
+  styleUrls: ['./tech-tiles.component.scss'],
+  standalone: false,
 })
 export class TechTilesComponent {
   public availableTechTiles: TechTileDeckCard[] = [];
   public title: LanguageString = { de: 'haus', en: 'house' };
   public activeTechTileId = '';
+  public hoveredTechTileId = '';
 
   public activePlayerId: number = 0;
   public techTileModifiers: TechTileModifier[] | undefined;
@@ -57,6 +58,14 @@ export class TechTilesComponent {
       this.activeTechTileId = techTileId;
     } else {
       this.activeTechTileId = '';
+    }
+  }
+
+  setCardHover(cardId: string) {
+    if (this.hoveredTechTileId !== cardId) {
+      this.hoveredTechTileId = cardId;
+    } else {
+      this.hoveredTechTileId = '';
     }
   }
 

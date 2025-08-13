@@ -55,7 +55,21 @@
         </div>
       </div>
       @for (unlimitedCard of unlimitedCustomCards; track $index) {
-      <div class="card-container" (click)="setCardActive(unlimitedCard.name.en)">
+      <div
+        class="card-container"
+        (click)="setCardActive(unlimitedCard.name.en)"
+        (mouseenter)="setCardHover(unlimitedCard.name.en)"
+        (mouseleave)="hoveredCardId = ''"
+      >
+        <dune-highlighting
+          *ngIf="unlimitedCard.name.en === activeCardId || unlimitedCard.name.en === hoveredCardId"
+          [id]="unlimitedCard.name.en"
+          [width]="420"
+          [height]="570"
+          [bottom]="-100"
+          [left]="-80"
+        >
+        </dune-highlighting>
         <dune-imperium-row-card
           [class]="
             (unlimitedCard.name.en === activeCardId ? 'active' : '') +
@@ -68,6 +82,7 @@
           "
           [card]="unlimitedCard"
         ></dune-imperium-row-card>
+
         <div class="card-action-container" *ngIf="unlimitedCard.name.en === activeCardId">
           <button
             class="card-buy-button"
@@ -81,7 +96,21 @@
         </div>
       </div>
       } @for (limitedCard of limitedCustomCards; track $index) {
-      <div class="card-container" (click)="setCardActive(limitedCard.name.en)">
+      <div
+        class="card-container"
+        (click)="setCardActive(limitedCard.name.en)"
+        (mouseenter)="setCardHover(limitedCard.name.en)"
+        (mouseleave)="hoveredCardId = ''"
+      >
+        <dune-highlighting
+          *ngIf="limitedCard.name.en === activeCardId || limitedCard.name.en === hoveredCardId"
+          [id]="limitedCard.name.en"
+          [width]="420"
+          [height]="570"
+          [bottom]="-100"
+          [left]="-80"
+        >
+        </dune-highlighting>
         <dune-imperium-row-card
           [class]="
             (limitedCard.name.en === activeCardId ? 'active' : '') +
@@ -107,7 +136,21 @@
         </div>
       </div>
       } @for (card of imperiumRowCardsLeft; track card.id) {
-      <div class="card-container" (click)="setCardActive(card.id)">
+      <div
+        class="card-container"
+        (click)="setCardActive(card.id)"
+        (mouseenter)="setCardHover(card.id)"
+        (mouseleave)="hoveredCardId = ''"
+      >
+        <dune-highlighting
+          *ngIf="card.id === activeCardId || card.id === hoveredCardId"
+          [id]="card.id"
+          [width]="420"
+          [height]="570"
+          [bottom]="-100"
+          [left]="-80"
+        >
+        </dune-highlighting>
         @if (card.type === 'imperium-card') {
         <dune-imperium-row-card
           [class]="
@@ -174,7 +217,21 @@
     </div>
     <div class="cards-container">
       @for (card of imperiumRowCardsRight; track card.id) {
-      <div class="card-container" (click)="setCardActive(card.id)">
+      <div
+        class="card-container"
+        (click)="setCardActive(card.id)"
+        (mouseenter)="setCardHover(card.id)"
+        (mouseleave)="hoveredCardId = ''"
+      >
+        <dune-highlighting
+          *ngIf="card.id === activeCardId || card.id === hoveredCardId"
+          [id]="card.id"
+          [width]="420"
+          [height]="570"
+          [bottom]="-100"
+          [left]="-80"
+        >
+        </dune-highlighting>
         @if (card.type === 'imperium-card') {
         <dune-imperium-row-card
           [class]="

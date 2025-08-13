@@ -1,12 +1,25 @@
 <div class="available-techs">
-  @for (techTile of availableTechTiles; track techTile.name.en) {
-  <div class="tech-tile-container" (click)="setTechTileActive(techTile.name.en)">
+  @for (techTile of availableTechTiles; track techTile.id) {
+  <div
+    class="tech-tile-container"
+    (click)="setTechTileActive(techTile.id)"
+    (mouseenter)="setCardHover(techTile.id)"
+    (mouseleave)="hoveredTechTileId = ''"
+  >
+    <dune-highlighting
+      *ngIf="techTile.id === activeTechTileId || techTile.id === hoveredTechTileId"
+      [id]="techTile.id"
+      [width]="480"
+      [height]="340"
+      [bottom]="-85"
+      [left]="-115"
+    ></dune-highlighting>
     <dune-tech-tile
-      [class]="techTile.name.en === activeTechTileId ? ' active' : ''"
+      [class]="techTile.id === activeTechTileId ? ' active' : ''"
       [card]="techTile"
       [costModifier]="getTechTileCostModifier(techTile)"
     ></dune-tech-tile>
-    <div class="tech-tile-action-container" *ngIf="techTile.name.en === activeTechTileId">
+    <div class="tech-tile-action-container" *ngIf="techTile.id === activeTechTileId">
       <button
         class="tech-buy-button"
         mat-fab

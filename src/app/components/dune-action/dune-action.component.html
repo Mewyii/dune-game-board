@@ -15,6 +15,8 @@
       class="agent-area"
       [style.background-image]="'url(' + actionField.pathToImage + ')'"
       (click)="onActionFieldClicked()"
+      (mouseenter)="mouseHover = true"
+      (mouseleave)="mouseHover = false"
     >
       <div class="costs-area font-text">
         <ng-container *ngIf="actionField.requiresInfluence">
@@ -40,6 +42,14 @@
         }
       </div>
     </div>
+    <dune-highlighting
+      *ngIf="mouseHover === true"
+      [width]="145"
+      [height]="115"
+      [left]="0"
+      [bottom]="6"
+      [direction]="'inwards'"
+    ></dune-highlighting>
     <div
       class="reward-area font-text"
       [style.width]="actionField.customWidth"
@@ -99,7 +109,7 @@
     </div>
   </div>
   <div
-    *ngIf="!disabled && boardSettings.mode === 'game' && playerOnField"
+    *ngIf="!disabled && playerOnField"
     [style.color]="playerOnField.color"
     class="player-marker"
     (contextmenu)="onPlayerMarkerRightClicked(playerOnField.id, actionField.title.en)"

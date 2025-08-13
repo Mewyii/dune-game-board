@@ -32,7 +32,7 @@ import { TechboardComponent } from './components/techboard/techboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { NgParticlesModule } from 'ng-particles';
+import { NgxParticlesModule } from '@tsparticles/angular';
 import { AllianceTokenComponent } from './components/_common/alliance-token/alliance-token.component';
 import { ConflictCardComponent } from './components/_common/conflict-card/conflict-card.component';
 import { AdditionalPlayerActionsDialogComponent } from './components/_common/dialogs/additional-player-actions-dialog/additional-player-actions-dialog.component';
@@ -40,6 +40,7 @@ import { ConflictsPreviewDialogComponent } from './components/_common/dialogs/co
 import { GameSummaryDialogComponent } from './components/_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 import { ImperiumCardsPreviewDialogComponent } from './components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
+import { HighlightingComponent } from './components/_common/effects/highlighting/highlighting.component';
 import { EventCardComponent } from './components/_common/event-card/event-card.component';
 import { ImperiumRowCardComponent } from './components/_common/imperium-row-card/imperium-row-card.component';
 import { IntrigueCardComponent } from './components/_common/intrigue-card/intrigue-card.component';
@@ -181,6 +182,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     PlayerEffectConversionComponent,
     ManualComponent,
     DialogGameManualComponent,
+    HighlightingComponent,
   ],
   imports: [
     BrowserModule,
@@ -193,7 +195,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     MatSlideToggleModule,
     MatCheckboxModule,
     MatDialogModule,
-    NgParticlesModule,
+    NgxParticlesModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,

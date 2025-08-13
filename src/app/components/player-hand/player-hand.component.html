@@ -17,7 +17,17 @@
           [class]="'intrigue-container' + (showCards ? ' ' : ' hidden')"
           [style.left]="(i * 170) / (-0.85 + 0.85 * playerIntrigues.length) + 'px'"
           (click)="setIntrigueActive(intrigue.id)"
+          (mouseenter)="setCardHover(intrigue.id)"
+          (mouseleave)="hoveredCardId = ''"
         >
+          <dune-highlighting
+            *ngIf="intrigue.id === activeIntrigueId || intrigue.id === hoveredCardId"
+            [id]="intrigue.id"
+            [width]="290"
+            [height]="420"
+            [bottom]="-50"
+            [left]="-60"
+          ></dune-highlighting>
           <dune-intrigue-card
             *ngIf="!activePlayer?.isAI"
             [card]="intrigue"
@@ -57,7 +67,17 @@
         [class]="'card-container' + (showCards ? ' ' : ' hidden')"
         [style.left]="(i * 250) / (-1.25 + 1.25 * playerPlots.cards.length) + 'px'"
         (click)="setCardActive(plot.id)"
+        (mouseenter)="setCardHover(plot.id)"
+        (mouseleave)="hoveredCardId = ''"
       >
+        <dune-highlighting
+          *ngIf="plot.id === activeCardId || plot.id === hoveredCardId"
+          [id]="plot.id"
+          [width]="420"
+          [height]="570"
+          [bottom]="-70"
+          [left]="-80"
+        ></dune-highlighting>
         <dune-plot-card
           *ngIf="!activePlayer?.isAI || revealPlots"
           [plot]="plot"
@@ -80,10 +100,20 @@
             (i * 250) / (playerHandCards.cards.length < 5 ? 0.99 : -0.25 + 0.25 * playerHandCards.cards.length) + 'px'
           "
           (click)="setCardActive(handCard.id)"
+          (mouseenter)="setCardHover(handCard.id)"
+          (mouseleave)="hoveredCardId = ''"
         >
           @if (activePlayer?.isAI && activePlayer?.turnState !== 'reveal' && handCard.id !== playedPlayerCardId) {
           <div [class]="'imperium-card background' + (handCard.id === activeCardId ? ' active' : '')"></div>
           } @else {
+          <dune-highlighting
+            *ngIf="handCard.id === activeCardId || handCard.id === hoveredCardId"
+            [id]="handCard.id"
+            [width]="420"
+            [height]="570"
+            [bottom]="-70"
+            [left]="-80"
+          ></dune-highlighting>
           <dune-imperium-row-card
             [class]="
               (handCard.id === activeCardId ? 'active' : '') +

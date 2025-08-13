@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgParticlesService } from '@tsparticles/angular';
 import { AppMode, GameContent } from 'src/app/constants/board-settings';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
 import { spiceGlitter } from 'src/app/services/effects/constants/spice-glitter';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { Engine } from 'tsparticles-engine';
-import { loadSlim } from 'tsparticles-slim';
+import { loadFull } from 'tsparticles';
 
 @Component({
   selector: 'dune-game-board',
@@ -30,7 +30,11 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   isChrome = false;
   isFirefox = false;
 
-  constructor(public settingsService: SettingsService, public gameManager: GameManager) {
+  constructor(
+    public settingsService: SettingsService,
+    public gameManager: GameManager,
+    private readonly ngParticlesService: NgParticlesService
+  ) {
     this.settingsService.gameContent$.subscribe((gameContent) => {
       this.gameContent = gameContent;
     });
@@ -45,6 +49,10 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     this.isFirefox = /Firefox\/\d+/.test(navigator.userAgent);
+
+    this.ngParticlesService.init(async (engine) => {
+      await loadFull(engine);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -56,25 +64,25 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     window.addEventListener('resize', () => this.setZoom());
   }
 
-  async initStars(engine: Engine) {
-    await loadSlim(engine);
-  }
+  // async initStars(engine: Engine) {
+  //   await loadFull(engine);
+  // }
 
-  async initDust(engine: Engine) {
-    await loadSlim(engine);
-  }
+  // async initDust(engine: Engine) {
+  //   await loadFull(engine);
+  // }
 
-  async initShips(engine: Engine) {
-    await loadSlim(engine);
-  }
+  // async initShips(engine: Engine) {
+  //   await loadFull(engine);
+  // }
 
-  async initSand(engine: Engine) {
-    await loadSlim(engine);
-  }
+  // async initSand(engine: Engine) {
+  //   await loadFull(engine);
+  // }
 
-  async initSpiceGlitter(engine: Engine) {
-    await loadSlim(engine);
-  }
+  // async initSpiceGlitter(engine: Engine) {
+  //   await loadFull(engine);
+  // }
 
   private setZoom(): void {
     const element = this.gameBoardRef?.nativeElement;

@@ -1,6 +1,6 @@
-import { IParticlesProps } from 'ng-particles';
+import type { ISourceOptions } from '@tsparticles/engine';
 
-export const spice: IParticlesProps = {
+export const spice: ISourceOptions = {
   autoPlay: true,
   duration: 10,
   fpsLimit: 40,

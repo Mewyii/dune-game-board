@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { boardSettings } from 'src/app/constants/board-settings';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
@@ -38,7 +37,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
   public transparentBackgroundColor: string = '';
   public backgroundGradient: string = '';
   public pathToActionType = '';
-  public boardSettings = boardSettings;
+  public mouseHover = false;
 
   public playerOnField: Player | undefined;
   public additionalPlayersOnField: Player[] = [];

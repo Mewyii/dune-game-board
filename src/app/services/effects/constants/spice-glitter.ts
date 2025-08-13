@@ -1,6 +1,6 @@
-import { IParticlesProps } from 'ng-particles';
+import type { ISourceOptions } from '@tsparticles/engine';
 
-export const spiceGlitter: IParticlesProps = {
+export const spiceGlitter: ISourceOptions = {
   autoPlay: true,
   fpsLimit: 40,
   style: { position: 'absolute', bottom: '0px', right: '50px', width: '2000px', height: '1500px' },
@@ -14,7 +14,7 @@ export const spiceGlitter: IParticlesProps = {
     },
     opacity: {
       value: { min: 0.25, max: 0.75 },
-      anim: {
+      animation: {
         enable: true,
         speed: 2,
       },
@@ -27,7 +27,7 @@ export const spiceGlitter: IParticlesProps = {
       speed: { min: 0.025, max: 0.05 },
       direction: 'none',
       straight: false,
-      outMode: 'bounce',
+      outModes: 'bounce',
     },
     life: {
       duration: {
