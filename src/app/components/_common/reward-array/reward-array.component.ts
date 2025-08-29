@@ -88,6 +88,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return type === 'condition-high-council-seat';
   }
 
+  public isNoHighCouncilConditionType(type: EffectType) {
+    return type === 'condition-no-high-council-seat';
+  }
+
   public isAgentsOnBoardSpacesMultiplierType(type: EffectType) {
     return type === 'multiplier-agents-on-board-spaces';
   }

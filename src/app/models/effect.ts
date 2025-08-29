@@ -56,6 +56,7 @@ export const effectRewards = [
   'tech',
   'tech-tile',
   'tech-tile-flip',
+  'tech-tile-trash',
   'trash-self',
   'troop-insert',
   'troop-insert-or-retreat',
@@ -71,10 +72,16 @@ export const effectTimings = [
   'timing-reveal-turn',
   'timing-round-start',
   'timing-turn-start',
+  'timing-agent-placement',
   'timing-combat',
 ] as const;
 
-export const effectConditions = ['condition-connection', 'condition-high-council-seat', 'condition-influence'] as const;
+export const effectConditions = [
+  'condition-connection',
+  'condition-high-council-seat',
+  'condition-no-high-council-seat',
+  'condition-influence',
+] as const;
 
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
 
@@ -203,7 +210,8 @@ export interface StructuredEffectTiming {
 export type StructuredEffectCondition =
   | EffectConditionConnection
   | EffectConditionInfluence
-  | EffectConditionHighCouncilSeat;
+  | EffectConditionHighCouncilSeat
+  | EffectConditionNoHighCouncilSeat;
 
 export interface EffectConditionConnection {
   type: 'condition-connection';
@@ -218,4 +226,8 @@ export interface EffectConditionInfluence {
 
 export interface EffectConditionHighCouncilSeat {
   type: 'condition-high-council-seat';
+}
+
+export interface EffectConditionNoHighCouncilSeat {
+  type: 'condition-no-high-council-seat';
 }

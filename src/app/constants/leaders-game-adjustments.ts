@@ -8,9 +8,30 @@ export interface LeaderGameAdjustments {
   gameModifiers?: GameModifiers;
   customSignetEffects?: StructuredEffect[];
   customEffects?: StructuredEffect[];
+  signetTokenValue?: number;
 }
 
 export const leadersGameAdjustments: LeaderGameAdjustments[] = [
+  {
+    id: 'Stilgar',
+    customEffects: [
+      {
+        timing: { type: 'timing-combat' },
+        type: 'helper-trade',
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 3 }] },
+      },
+    ],
+    gameModifiers: {
+      fieldFactionAccess: [
+        {
+          id: 'liet-fremen',
+          fieldId: 'Sietch Tabr',
+        },
+      ],
+    },
+    signetTokenValue: 2.5,
+  },
   {
     id: 'Liet Kynes',
     gameModifiers: {
@@ -54,8 +75,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           minCosts: 1,
         },
       ],
+      fieldCost: [{ id: 'chani-spice-field-costs', actionType: 'spice', costType: 'water', amount: -1 }],
+      fieldReward: [{ id: 'chani-spice-field-rewards', actionType: 'spice', rewardType: 'spice', amount: -1 }],
     },
-    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet-token' }] }],
   },
   {
     id: 'Princess Irulan Corrino',
@@ -90,11 +112,32 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customEffects: [
       {
         type: 'helper-trade',
-        timing: { type: 'timing-round-start' },
+        timing: { type: 'timing-combat' },
         effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
         effectConversions: { type: 'reward', effectRewards: [{ type: 'sword' }] },
       },
     ],
+    signetTokenValue: 0.5,
+  },
+  {
+    id: 'Count Hasimir Fenring',
+    customEffects: [
+      {
+        type: 'helper-or',
+        timing: { type: 'timing-reveal-turn' },
+        effectLeft: {
+          type: 'helper-trade',
+          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+          effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
+        },
+        effectRight: {
+          type: 'helper-trade',
+          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+          effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
+        },
+      },
+    ],
+    signetTokenValue: 2.0,
   },
   {
     id: 'Lady Margot Fenring',
@@ -116,6 +159,17 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     ],
   },
   {
+    id: 'Tessia Vernius',
+    customEffects: [
+      {
+        type: 'helper-trade',
+        timing: { type: 'timing-reveal-turn' },
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'tech-tile-trash' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'faction-influence-up-choice' }] },
+      },
+    ],
+  },
+  {
     id: 'Count August Metulli',
     aiAdjustments: {
       goalEvaluationModifier: () => [{ type: 'high-council', modifier: -0.2 }],
@@ -130,7 +184,6 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
-    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet-token' }] }],
   },
   {
     id: 'Emperor Paul Atreides',
@@ -165,6 +218,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Count Glossu Rabban',
     customEffects: [{ type: 'reward', timing: { type: 'timing-round-start' }, effectRewards: [{ type: 'card-destroy' }] }],
+    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'spice' }] }],
   },
   {
     id: 'Eva Moritani',

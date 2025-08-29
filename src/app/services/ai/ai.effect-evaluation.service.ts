@@ -210,6 +210,8 @@ export class AIEffectEvaluationService {
       }
     } else if (effectCondition.type === 'condition-high-council-seat') {
       return player.hasCouncilSeat ? 1.0 : 0.25;
+    } else if (effectCondition.type === 'condition-no-high-council-seat') {
+      return player.hasCouncilSeat ? 0.25 : 1.0;
     }
 
     return 0;
@@ -438,7 +440,7 @@ export class AIEffectEvaluationService {
       case 'agent-lift':
         return 3 + 0.25 * (gameState.currentRound - 1);
       case 'signet-token':
-        return 0;
+        return gameState.playerLeaderSignetTokenValue ?? 0.75;
       case 'signet-ring':
         return gameState.playerLeaderSignetRingEffects
           ? this.getStructuredEffectsEvaluation(gameState.playerLeaderSignetRingEffects, player, gameState)

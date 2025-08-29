@@ -539,11 +539,13 @@ export class GameManager {
       }
 
       const playerLeader = this.leadersService.getLeader(player.id);
-      const leaderPassiveEffects = playerLeader?.structuredPassiveEffects;
-      if (leaderPassiveEffects) {
+      if (playerLeader?.structuredPassiveEffects) {
         const gameState = this.getGameState(player);
-
-        this.resolveStructuredEffects(leaderPassiveEffects, player, gameState);
+        this.resolveStructuredEffects(playerLeader.structuredPassiveEffects, player, gameState);
+      }
+      if (playerLeader?.customEffects) {
+        const gameState = this.getGameState(player);
+        this.resolveStructuredEffects(playerLeader.customEffects, player, gameState);
       }
 
       this.resolveRewardChoices(player);
@@ -620,12 +622,18 @@ export class GameManager {
     }
 
     const playerLeader = this.leadersService.getLeader(player.id);
-    const leaderPassiveEffects = playerLeader?.structuredPassiveEffects;
-    if (leaderPassiveEffects) {
+    if (playerLeader?.structuredPassiveEffects) {
       const gameState = this.getGameState(player);
       const updatedPlayer = this.playerManager.getPlayer(playerId);
       if (updatedPlayer) {
-        this.resolveStructuredEffects(leaderPassiveEffects, updatedPlayer, gameState);
+        this.resolveStructuredEffects(playerLeader.structuredPassiveEffects, updatedPlayer, gameState);
+      }
+    }
+    if (playerLeader?.customEffects) {
+      const gameState = this.getGameState(player);
+      const updatedPlayer = this.playerManager.getPlayer(playerId);
+      if (updatedPlayer) {
+        this.resolveStructuredEffects(playerLeader.customEffects, updatedPlayer, gameState);
       }
     }
 
@@ -1142,6 +1150,17 @@ export class GameManager {
     const roundPhase = this.currentRoundPhase;
 
     if (roundPhase === 'agent-placement') {
+      // AI Use Leader Effects
+      const playerLeader = this.leadersService.getLeader(playerId);
+      if (playerLeader?.structuredPassiveEffects) {
+        const gameState = this.getGameState(player);
+        this.resolveStructuredEffects(playerLeader.structuredPassiveEffects, player, gameState);
+      }
+      if (playerLeader?.customEffects) {
+        const gameState = this.getGameState(player);
+        this.resolveStructuredEffects(playerLeader.customEffects, player, gameState);
+      }
+
       // AI Play Tech tiles
       const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
 
@@ -1269,7 +1288,33 @@ export class GameManager {
         const playerCombatIntrigues = this.intriguesService.getPlayerIntrigues(playerId, 'combat');
         const playerCombatScore = this.combatManager.getPlayerCombatScore(playerId);
 
-        if (!playerCombatIntrigues || playerCombatIntrigues.length < 1 || playerCombatScore < 1) {
+        const playerLeader = this.leadersService.getLeader(playerId);
+        const playerLeaderCombatEffects: { effect: StructuredEffect; score: number }[] = [];
+        if (playerLeader?.structuredPassiveEffects) {
+          for (const effect of playerLeader.structuredPassiveEffects) {
+            let result = this.aIManager.getStructuredEffectRewardsAndCosts(effect, player, gameState);
+
+            let swordAmount = result.rewards.find((x) => x.type === 'sword');
+            if (swordAmount) {
+              playerLeaderCombatEffects.push({ effect, score: swordAmount.amount ?? 1 });
+            }
+          }
+        }
+        if (playerLeader?.customEffects) {
+          for (const effect of playerLeader.customEffects) {
+            let result = this.aIManager.getStructuredEffectRewardsAndCosts(effect, player, gameState);
+
+            let swordAmount = result.rewards.find((x) => x.type === 'sword');
+            if (swordAmount) {
+              playerLeaderCombatEffects.push({ effect, score: swordAmount.amount ?? 1 });
+            }
+          }
+        }
+
+        if (
+          (playerLeaderCombatEffects.length < 1 && (!playerCombatIntrigues || playerCombatIntrigues.length < 1)) ||
+          playerCombatScore < 1
+        ) {
           this.playerManager.setTurnStateForPlayer(playerId, 'done');
         } else {
           const enemyCombatScores = this.combatManager.getEnemyCombatScores(playerId).map((x) => x.score);
@@ -1278,32 +1323,48 @@ export class GameManager {
             const intriguesWithCombatScores: { intrigue: IntrigueDeckCard; score: number }[] = [];
             const intriguesWithoutCombatScores: IntrigueDeckCard[] = [];
 
-            for (const intrigue of playerCombatIntrigues) {
-              if (intrigue.structuredEffects) {
-                let result = this.aIManager.getAllStructuredEffectsRewardsAndCosts(
-                  intrigue.structuredEffects,
-                  player,
-                  gameState
-                );
-                let swordAmount = result.rewards.find((x) => x.type === 'sword')?.amount ?? 1;
+            if (playerCombatIntrigues) {
+              for (const intrigue of playerCombatIntrigues) {
+                if (intrigue.structuredEffects) {
+                  let result = this.aIManager.getAllStructuredEffectsRewardsAndCosts(
+                    intrigue.structuredEffects,
+                    player,
+                    gameState
+                  );
 
-                intriguesWithCombatScores.push({ intrigue, score: swordAmount });
+                  let swordAmount = result.rewards.find((x) => x.type === 'sword');
+                  if (swordAmount) {
+                    intriguesWithCombatScores.push({ intrigue, score: swordAmount.amount ?? 1 });
+                  } else {
+                    intriguesWithoutCombatScores.push(intrigue);
+                  }
+                }
               }
             }
 
-            const maxAdditionalCombatScore = sum(intriguesWithCombatScores.map((x) => x.score));
+            const maxAdditionalCombatScore =
+              sum(intriguesWithCombatScores.map((x) => x.score)) + sum(playerLeaderCombatEffects.map((x) => x.score));
             const playerCanWinCombat = playerCombatScore + maxAdditionalCombatScore > highestEnemyCombatScore;
             if (playerCanWinCombat || this.isFinale) {
               let playerCurrentCombatScore = playerCombatScore;
+              for (const effectWithCombatScore of playerLeaderCombatEffects) {
+                this.resolveStructuredEffects([effectWithCombatScore.effect], player, gameState);
 
-              for (const intrigueWithCombatScore of intriguesWithCombatScores) {
-                const intrigue = intrigueWithCombatScore.intrigue;
-                this.aiPlayIntrigue(player, intrigue, gameState);
-
-                const swordAmount = intrigue.effects.filter((x) => x.type === 'sword').length;
-                playerCurrentCombatScore += swordAmount;
+                playerCurrentCombatScore += effectWithCombatScore.score;
                 if (playerCurrentCombatScore > highestEnemyCombatScore) {
                   break;
+                }
+              }
+
+              if (playerCurrentCombatScore <= highestEnemyCombatScore) {
+                for (const intrigueWithCombatScore of intriguesWithCombatScores) {
+                  const intrigue = intrigueWithCombatScore.intrigue;
+                  this.aiPlayIntrigue(player, intrigue, gameState);
+
+                  playerCurrentCombatScore += intrigueWithCombatScore.score;
+                  if (playerCurrentCombatScore > highestEnemyCombatScore) {
+                    break;
+                  }
                 }
               }
             } else if (
@@ -1321,8 +1382,7 @@ export class GameManager {
                   const intrigue = intrigueWithCombatScore.intrigue;
                   this.aiPlayIntrigue(player, intrigue, gameState);
 
-                  const swordAmount = intrigue.effects.filter((x) => x.type === 'sword').length;
-                  playerCurrentCombatScore += swordAmount;
+                  playerCurrentCombatScore += intrigueWithCombatScore.score;
                   await delay(2000);
                   if (playerCurrentCombatScore > beatableCombatScore) {
                     break;
@@ -2617,6 +2677,7 @@ export class GameManager {
       enemyPlayers: this.playerManager.getEnemyPlayers(player.id),
       playerLeader: playerLeader!,
       playerLeaderSignetRingEffects: playerLeader?.structuredSignetEffects,
+      playerLeaderSignetTokenValue: playerLeader?.signetTokenValue,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.buyableTechTiles,
       currentEvent: this.duneEventsManager.eventDeck[this.currentRound - 1],
@@ -3423,6 +3484,7 @@ export class GameManager {
       tech: 0,
       'tech-tile': 0,
       'tech-tile-flip': 0,
+      'tech-tile-trash': 0,
       'victory-point': 0,
       'trash-self': 0,
       'recruitment-emperor': 0,

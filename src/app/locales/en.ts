@@ -20,6 +20,7 @@ export const enLocale = {
   commonEffectConditionInfluence: 'Influence',
   commonEffectConditionConnection: 'Connection',
   commonEffectConditionHighCouncilSeat: 'When you have a high council seat',
+  commonEffectConditionNoHighCouncilSeat: 'When you have no high council seat',
   commonEffectMultiplierAgentsOnBoardSpaces: 'For each of your {resource:agent} on board spaces',
   commonEffectMultiplierDreadnoughtAmount: 'For each of your {resource:dreadnought}',
   commonEffectMultiplierDreadnoughtInConflictAmount: 'For each of your {resource:dreadnought} in conflict',

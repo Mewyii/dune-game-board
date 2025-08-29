@@ -65,6 +65,7 @@ export type GameState = Readonly<{
   enemyPlayers: Player[];
   playerLeader: LeaderDeckCard;
   playerLeaderSignetRingEffects: StructuredEffect[] | undefined;
+  playerLeaderSignetTokenValue?: number;
   conflict: Conflict;
   availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;

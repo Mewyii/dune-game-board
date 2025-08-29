@@ -272,6 +272,11 @@ export function getStructuredEffectConditionIfPossible(
           type: effect.type,
         };
         return [effectsWithoutCondition, conditionalEffect];
+      } else if (effect.type === 'condition-no-high-council-seat') {
+        const conditionalEffect = {
+          type: effect.type,
+        };
+        return [effectsWithoutCondition, conditionalEffect];
       }
     }
   }
@@ -403,6 +408,10 @@ export function isConditionFullfilled(
     }
   } else if (conditionEffect.type === 'condition-high-council-seat') {
     if (player.hasCouncilSeat) {
+      conditionFullfilled = true;
+    }
+  } else if (conditionEffect.type === 'condition-no-high-council-seat') {
+    if (!player.hasCouncilSeat) {
       conditionFullfilled = true;
     }
   }

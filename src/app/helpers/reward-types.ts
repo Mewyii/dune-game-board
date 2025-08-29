@@ -96,6 +96,8 @@ export function getEffectTypePath(rewardType: EffectType) {
       return 'assets/images/reward-markers/marker_signet_token.png';
     case 'tech-tile-flip':
       return 'assets/images/reward-markers/marker_tech_tile_flip.png';
+    case 'tech-tile-trash':
+      return 'assets/images/reward-markers/marker_tech_tile_trash.png';
     case 'location-control':
       return 'assets/images/reward-markers/marker_location_control.png';
     case 'focus':

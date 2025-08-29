@@ -986,59 +986,72 @@ export class AIManager {
     return { isUseful: false, costs: [] };
   }
 
+  public getStructuredEffectRewardsAndCosts(
+    structuredEffect: StructuredEffect,
+    player: Player,
+    gameState: GameState
+  ): { costs: EffectReward[]; rewards: EffectReward[] } {
+    let costs: EffectReward[] = [];
+    let rewards: EffectReward[] = [];
+
+    let timingFullfilled = true;
+    let conditionFullfilled = true;
+
+    if (structuredEffect.timing) {
+      timingFullfilled = isTimingFullfilled(structuredEffect.timing, player, gameState);
+    }
+    if (structuredEffect.condition) {
+      conditionFullfilled = isConditionFullfilled(structuredEffect.condition, player, gameState);
+    }
+
+    if (timingFullfilled && conditionFullfilled) {
+      if (isStructuredRewardEffect(structuredEffect)) {
+        rewards = getMultipliedRewardEffects(structuredEffect, gameState);
+      } else if (isStructuredChoiceEffect(structuredEffect)) {
+        const chosenEffect = this.getChoiceEffectDecision(
+          player,
+          gameState,
+          structuredEffect.effectLeft,
+          structuredEffect.effectRight
+        );
+
+        if (chosenEffect) {
+          if (isStructuredConversionEffect(chosenEffect)) {
+            costs = getMultipliedRewardEffects(chosenEffect.effectCosts, gameState);
+            rewards = getMultipliedRewardEffects(chosenEffect.effectConversions, gameState);
+          } else {
+            rewards = getMultipliedRewardEffects(chosenEffect, gameState);
+          }
+        }
+      } else if (isStructuredConversionEffect(structuredEffect)) {
+        costs = getMultipliedRewardEffects(structuredEffect.effectCosts, gameState);
+        rewards = getMultipliedRewardEffects(structuredEffect.effectConversions, gameState);
+      }
+    }
+
+    return {
+      costs: getFlattenedEffectRewardArray(costs),
+      rewards: getFlattenedEffectRewardArray(rewards),
+    };
+  }
+
   public getAllStructuredEffectsRewardsAndCosts(
     structuredEffects: StructuredEffect[],
     player: Player,
     gameState: GameState
   ): { costs: EffectReward[]; rewards: EffectReward[] } {
-    const evaluation: { costs: EffectReward[]; rewards: EffectReward[] } = {
-      costs: [],
-      rewards: [],
-    };
+    const rewards: EffectReward[] = [];
+    const costs: EffectReward[] = [];
 
     for (const effect of structuredEffects) {
-      let timingFullfilled = true;
-      let conditionFullfilled = true;
-
-      if (effect.timing) {
-        timingFullfilled = isTimingFullfilled(effect.timing, player, gameState);
-      }
-      if (effect.condition) {
-        conditionFullfilled = isConditionFullfilled(effect.condition, player, gameState);
-      }
-
-      if (timingFullfilled && conditionFullfilled) {
-        if (isStructuredRewardEffect(effect)) {
-          const rewards = getMultipliedRewardEffects(effect, gameState);
-          evaluation.rewards.push(...rewards);
-        } else if (isStructuredChoiceEffect(effect)) {
-          const chosenEffect = this.getChoiceEffectDecision(player, gameState, effect.effectLeft, effect.effectRight);
-
-          if (chosenEffect) {
-            if (isStructuredConversionEffect(chosenEffect)) {
-              const costs = getMultipliedRewardEffects(chosenEffect.effectCosts, gameState);
-              const rewards = getMultipliedRewardEffects(chosenEffect.effectConversions, gameState);
-
-              evaluation.costs.push(...costs);
-              evaluation.rewards.push(...rewards);
-            } else {
-              const rewards = getMultipliedRewardEffects(chosenEffect, gameState);
-              evaluation.rewards.push(...rewards);
-            }
-          }
-        } else if (isStructuredConversionEffect(effect)) {
-          const costs = getMultipliedRewardEffects(effect.effectCosts, gameState);
-          const rewards = getMultipliedRewardEffects(effect.effectConversions, gameState);
-
-          evaluation.costs.push(...costs);
-          evaluation.rewards.push(...rewards);
-        }
-      }
+      const result = this.getStructuredEffectRewardsAndCosts(effect, player, gameState);
+      rewards.push(...result.rewards);
+      costs.push(...result.costs);
     }
 
     return {
-      costs: getFlattenedEffectRewardArray(evaluation.costs),
-      rewards: getFlattenedEffectRewardArray(evaluation.rewards),
+      costs: getFlattenedEffectRewardArray(costs),
+      rewards: getFlattenedEffectRewardArray(rewards),
     };
   }
 }

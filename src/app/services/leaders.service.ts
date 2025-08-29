@@ -128,7 +128,7 @@ export class LeadersService {
       playerLeaders[playerLeaderIndex] = { ...playerLeader, isLockedIn: true };
 
       this.playerLeadersSubject.next(playerLeaders);
-      this.leaderDeckSubject.next(shuffle(this.leaderDeck.filter((x) => x.id !== playerLeader.leader.id)));
+      this.leaderDeckSubject.next(this.leaderDeck.filter((x) => x.id !== playerLeader.leader.id));
     }
   }
 
