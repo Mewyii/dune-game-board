@@ -380,7 +380,7 @@ export class AIEffectEvaluationService {
       case 'intrigue':
         return 1.75 + 0.1 * (gameState.currentRound - 1) - 0.015 * gameState.playerCardsRewards.focus;
       case 'persuasion':
-        return 2.5 - 0.15 * (gameState.currentRound - 1);
+        return 2.75 - 0.175 * (gameState.currentRound - 1);
       case 'foldspace':
         return (
           2.5 -

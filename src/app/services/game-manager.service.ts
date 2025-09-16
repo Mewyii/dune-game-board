@@ -1367,6 +1367,13 @@ export class GameManager {
                   }
                 }
               }
+            } else if (intriguesWithoutCombatScores.length > 0) {
+              for (const intrigue of intriguesWithoutCombatScores) {
+                this.aiPlayIntrigue(player, intrigue, gameState);
+                await delay(2000);
+              }
+
+              this.playerManager.setTurnStateForPlayer(playerId, 'done');
             } else if (
               intriguesWithCombatScores.length > 0 &&
               (this.intriguesService.getPlayerIntrigueCount(player.id) > 2 ||
@@ -1389,13 +1396,6 @@ export class GameManager {
                   }
                 }
               }
-            } else {
-              for (const intrigue of intriguesWithoutCombatScores) {
-                this.aiPlayIntrigue(player, intrigue, gameState);
-                await delay(2000);
-              }
-
-              this.playerManager.setTurnStateForPlayer(playerId, 'done');
             }
           }
         }
