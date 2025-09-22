@@ -9,6 +9,7 @@ import {
   isStructuredConversionEffect,
   isStructuredRewardEffect,
   isTimingFullfilled,
+  playerCanPayCosts,
 } from 'src/app/helpers/rewards';
 import {
   EffectPlayerTurnTiming,
@@ -74,7 +75,8 @@ export class AIEffectEvaluationService {
     effects: StructuredEffect[],
     player: Player,
     gameState: GameState,
-    timing: EffectPlayerTurnTiming = 'agent-placement'
+    timing: EffectPlayerTurnTiming = 'agent-placement',
+    ignoreConversionCosts = false
   ) {
     let evaluationValue = 0;
     for (const effect of effects) {
@@ -96,7 +98,9 @@ export class AIEffectEvaluationService {
         } else if (isStructuredChoiceEffect(effect)) {
           evaluationValue += this.getChoiceEffectEvaluationForTurnState(effect, player, gameState, timing);
         } else if (isStructuredConversionEffect(effect)) {
-          evaluationValue += this.getConversionEffectEvaluationForTurnState(effect, player, gameState, timing);
+          if (ignoreConversionCosts || playerCanPayCosts(effect.effectCosts.effectRewards, player, gameState)) {
+            evaluationValue += this.getConversionEffectEvaluationForTurnState(effect, player, gameState, timing);
+          }
         }
       }
     }

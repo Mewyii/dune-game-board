@@ -107,7 +107,8 @@ export type GameState = Readonly<{
   playerHandCardsRewards: PlayerGameElementRewards;
   playerHandCardsFieldAccess: ActionType[];
   playerHandCardsFieldAccessCounts: PlayerGameElementFieldAccess;
-  playerHandCardsConnectionEffects: PlayerGameElementFactions;
+  playerHandCardsConnectionAgentEffects: PlayerGameElementFactions;
+  playerHandCardsConnectionRevealEffects: PlayerGameElementFactions;
   playerCardsFactionsInPlay: PlayerGameElementFactions;
   playerTechTilesFactions: PlayerGameElementFactions;
   playerTechTilesRewards: PlayerGameElementRewards;

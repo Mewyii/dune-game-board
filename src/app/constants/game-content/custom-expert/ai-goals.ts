@@ -94,7 +94,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       if (gameState.conflict.rewards[0].some((x) => x.type === 'location-control')) {
         const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
         possibleLocationControls += 1;
-        modifier += 0.025 * playerCombatStrength;
+        modifier += 0.033 * playerCombatStrength;
       }
       if (gameState.playerHandCardsRewards['location-control'] > 0) {
         possibleLocationControls += gameState.playerHandCardsRewards['location-control'];
@@ -102,7 +102,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       }
       if (gameState.playerIntriguesRewards['location-control'] > 0) {
         possibleLocationControls += gameState.playerIntriguesRewards['location-control'];
-        modifier += 0.15 * gameState.playerIntriguesRewards['location-control'];
+        modifier += 0.2 * gameState.playerIntriguesRewards['location-control'];
       }
       if (gameState.playerTechTilesRewards['location-control'] > 0) {
         possibleLocationControls += gameState.playerTechTilesRewards['location-control'];

@@ -390,7 +390,10 @@ export class AIManager {
       const enemyGarrisonStrength = getPlayerGarrisonStrength(highestEnemyCombatScore, gameState);
 
       if (playerCombatStrengthPotentialAgainstEnemy < 1) {
-        if (enemyCombatScores.filter((x) => x.combatStrength > 0).length < 3 || playerCombatUnits.troopsInGarrison > 4) {
+        if (
+          (playerCombatStrength < 1 && enemyCombatScores.filter((x) => x.combatStrength > 0).length < 3) ||
+          playerCombatUnits.troopsInGarrison > 4
+        ) {
           return 'minimum';
         } else {
           return 'none';
@@ -718,7 +721,7 @@ export class AIManager {
     let evaluationValue = 0;
     if (card.faction) {
       evaluationValue +=
-        1 * gameState.playerHandCardsConnectionEffects[card.faction] +
+        1 * gameState.playerHandCardsConnectionAgentEffects[card.faction] +
         0.1 * gameState.playerCardsConnectionEffects[card.faction] +
         0.33 * gameState.playerHandCardsFactions[card.faction] +
         0.1 * gameState.playerCardsFactions[card.faction];
@@ -860,7 +863,7 @@ export class AIManager {
     }
     if (card.fieldAccess) {
       for (const access of card.fieldAccess) {
-        evaluationValue -= gameState.playerCardsFieldAccessCounts[access] < 2 ? 1.5 : 0.75;
+        evaluationValue -= gameState.playerCardsFieldAccessCounts[access] < 2 ? 3.0 : 0.75;
       }
     }
     if (card.canInfiltrate) {
@@ -970,7 +973,13 @@ export class AIManager {
 
     if (intrigueEffects) {
       let isUseful =
-        this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(intrigueEffects, player, gameState) > 0;
+        this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
+          intrigueEffects,
+          player,
+          gameState,
+          undefined,
+          true
+        ) > 0;
       let intrigueCosts: EffectReward[] = [];
 
       const result = this.getAllStructuredEffectsRewardsAndCosts(intrigueEffects, player, gameState);

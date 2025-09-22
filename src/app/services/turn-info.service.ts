@@ -16,6 +16,10 @@ export class TurnInfoService {
     if (turnInfosString) {
       const turnInfos = JSON.parse(turnInfosString) as TurnInfo[];
       this.turnInfosSubject.next(turnInfos);
+
+      for (const turnInfo of turnInfos) {
+        this.setPlayerTurnInfo(turnInfo.playerId, { aiStatus: 'ready' });
+      }
     }
 
     this.turnInfos$.subscribe((turnInfos) => {

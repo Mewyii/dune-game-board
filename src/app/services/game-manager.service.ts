@@ -1145,7 +1145,7 @@ export class GameManager {
       return;
     }
 
-    this.turnInfoService.updatePlayerTurnInfo(player.id, { aiStatus: 'working' });
+    this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'working' });
 
     const roundPhase = this.currentRoundPhase;
 
@@ -1998,7 +1998,6 @@ export class GameManager {
 
       const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id);
       const enemyCombatScores = this.combatManager.getEnemyCombatScores(player.id);
-      const playerIntrigueCount = this.intriguesService.getPlayerCombatIntrigueCount(player.id);
       const playerHasAgentsLeft = (this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0) > 1;
 
       if (playerCombatUnits) {
@@ -2447,7 +2446,8 @@ export class GameManager {
     const playerHandCardsFieldAccess: ActionType[] = [];
     const playerHandCardsFieldAccessCounts = this.getInitialGameElementFieldAccess();
     const playerHandCardsRewards = this.getInitialGameElementRewards();
-    const playerHandCardsConnectionEffects = this.getInitialFactions();
+    const playerHandCardsConnectionAgentEffects = this.getInitialFactions();
+    const playerHandCardsConnectionRevealEffects = this.getInitialFactions();
 
     const playerGameModifiers = this.gameModifiersService.getPlayerGameModifiers(player.id);
 
@@ -2516,7 +2516,7 @@ export class GameManager {
         for (const agentEffect of playerHandCard.structuredAgentEffects) {
           if (agentEffect.condition) {
             if (agentEffect.condition.type === 'condition-connection') {
-              playerHandCardsConnectionEffects[agentEffect.condition.faction] += 1;
+              playerHandCardsConnectionAgentEffects[agentEffect.condition.faction] += 1;
             }
           }
           if (!agentEffect.condition && isStructuredRewardEffect(agentEffect)) {
@@ -2530,7 +2530,7 @@ export class GameManager {
         for (const revealEffect of playerHandCard.structuredRevealEffects) {
           if (revealEffect.condition) {
             if (revealEffect.condition.type === 'condition-connection') {
-              playerHandCardsConnectionEffects[revealEffect.condition.faction] += 1;
+              playerHandCardsConnectionRevealEffects[revealEffect.condition.faction] += 1;
             }
           }
           if (!revealEffect.condition && isStructuredRewardEffect(revealEffect)) {
@@ -2719,7 +2719,8 @@ export class GameManager {
       playerHandCardsFieldAccess,
       playerHandCardsFieldAccessCounts,
       playerHandCardsRewards,
-      playerHandCardsConnectionEffects,
+      playerHandCardsConnectionAgentEffects,
+      playerHandCardsConnectionRevealEffects,
       playerCardsFactionsInPlay,
       playerGameModifiers,
       playerTechTilesFactions,
