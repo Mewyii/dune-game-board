@@ -170,9 +170,32 @@ export const startingCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'fremen',
+      },
       {
         type: 'sword',
       },
