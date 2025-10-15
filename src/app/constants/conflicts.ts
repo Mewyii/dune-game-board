@@ -21,15 +21,15 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle of the Spice Fields' },
+    name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle in the Spice Fields' },
     lvl: 1,
     rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
   },
   {
-    name: { de: 'Vorherrschaft über die Handelshäfen', en: 'Supremacy over the trade ports' },
+    name: { de: 'Schlacht an den Raumhäfen', en: 'Battle at the space ports' },
     lvl: 1,
     rewards: [
-      [{ type: 'victory-point' }, { type: 'shipping' }],
+      [{ type: 'location-control' }, { type: 'shipping' }],
       [{ type: 'shipping' }, { type: 'shipping' }],
       [{ type: 'water' }],
     ],
@@ -62,15 +62,6 @@ export const conflicts: Conflict[] = [
       [{ type: 'victory-point' }, { type: 'solari', amount: 2 }],
       [{ type: 'solari', amount: 5 }],
       [{ type: 'solari', amount: 2 }],
-    ],
-  },
-  {
-    name: { de: 'Eroberung der Spice-Läger', en: 'Conquest of the Spice Depots' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
-      [{ type: 'spice', amount: 3 }],
-      [{ type: 'spice' }],
     ],
   },
   {
@@ -129,11 +120,11 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Schlacht um den Raumhafen', en: 'Battle of the Space Port' },
+    name: { de: 'Schlacht um die Raumhäfen', en: 'Battle of the Space Ports' },
     lvl: 2,
     rewards: [
       [{ type: 'faction-influence-up-twice-choice' }, { type: 'tech', amount: 2 }],
-      [{ type: 'victory-point' }],
+      [{ type: 'location-control' }],
       [{ type: 'tech', amount: 2 }],
     ],
   },

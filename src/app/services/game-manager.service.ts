@@ -17,6 +17,7 @@ import {
 } from '../helpers/game-modifiers';
 import { isResource, isResourceType } from '../helpers/resources';
 import {
+  getFlattenedEffectRewardArray,
   getMultipliedRewardEffects,
   getRewardArrayAIInfos,
   getStructuredConversionEffectIfPossible,
@@ -1055,6 +1056,11 @@ export class GameManager {
     }
 
     const roundPhase = this.currentRoundPhase;
+    if (roundPhase !== 'agent-placement' && roundPhase !== 'combat') {
+      this.notificationService.showWarning(this.t.translate('intrigueWarningCombatWrongRoundPhase'));
+      return;
+    }
+
     if (intrigue.type === 'complot' && roundPhase !== 'agent-placement') {
       this.notificationService.showWarning(this.t.translate('intrigueWarningComplotWrongRoundPhase'));
       return;
@@ -1064,8 +1070,14 @@ export class GameManager {
       return;
     }
 
-    if (intrigue.structuredEffects) {
-      this.resolveStructuredEffects(intrigue.structuredEffects, player, this.getGameState(player), {
+    if (roundPhase === 'agent-placement') {
+      this.resolveStructuredEffects(intrigue.structuredPlotEffects, player, this.getGameState(player), {
+        type: 'intrigue',
+        object: intrigue,
+      });
+    }
+    if (roundPhase === 'combat') {
+      this.resolveStructuredEffects(intrigue.structuredCombatEffects, player, this.getGameState(player), {
         type: 'intrigue',
         object: intrigue,
       });
@@ -1311,89 +1323,90 @@ export class GameManager {
           }
         }
 
-        if (
-          (playerLeaderCombatEffects.length < 1 && (!playerCombatIntrigues || playerCombatIntrigues.length < 1)) ||
-          playerCombatScore < 1
-        ) {
+        if ((playerLeaderCombatEffects.length < 1 && playerCombatIntrigues.length < 1) || playerCombatScore < 1) {
           this.playerManager.setTurnStateForPlayer(playerId, 'done');
         } else {
           const enemyCombatScores = this.combatManager.getEnemyCombatScores(playerId).map((x) => x.score);
           const highestEnemyCombatScore = max(enemyCombatScores) ?? 0;
-          if (highestEnemyCombatScore >= playerCombatScore) {
-            const intriguesWithCombatScores: { intrigue: IntrigueDeckCard; score: number }[] = [];
-            const intriguesWithoutCombatScores: IntrigueDeckCard[] = [];
+          const playerIsWinningCombat = playerCombatScore > highestEnemyCombatScore;
+          const intriguesWithCombatScores: { intrigue: IntrigueDeckCard; score: number }[] = [];
+          const intriguesWithoutCombatScores: IntrigueDeckCard[] = [];
+          let trackedCosts: EffectReward[] = [];
 
-            if (playerCombatIntrigues) {
-              for (const intrigue of playerCombatIntrigues) {
-                if (intrigue.structuredEffects) {
-                  let result = this.aIManager.getAllStructuredEffectsRewardsAndCosts(
-                    intrigue.structuredEffects,
-                    player,
-                    gameState
-                  );
+          for (const intrigue of playerCombatIntrigues) {
+            if (intrigue.structuredCombatEffects) {
+              let result = this.aIManager.getAllStructuredEffectsRewardsAndCosts(
+                intrigue.structuredCombatEffects,
+                player,
+                gameState
+              );
 
-                  let swordAmount = result.rewards.find((x) => x.type === 'sword');
-                  if (swordAmount) {
-                    intriguesWithCombatScores.push({ intrigue, score: swordAmount.amount ?? 1 });
-                  } else {
-                    intriguesWithoutCombatScores.push(intrigue);
-                  }
+              const combinedCosts = getFlattenedEffectRewardArray([...trackedCosts, ...result.costs]);
+
+              if (playerCanPayCosts(combinedCosts, player, gameState)) {
+                let swordAmount = result.rewards.find((x) => x.type === 'sword');
+                if (swordAmount) {
+                  trackedCosts = combinedCosts;
+                  intriguesWithCombatScores.push({ intrigue, score: swordAmount.amount ?? 1 });
+                } else {
+                  intriguesWithoutCombatScores.push(intrigue);
                 }
               }
             }
+          }
 
-            const maxAdditionalCombatScore =
-              sum(intriguesWithCombatScores.map((x) => x.score)) + sum(playerLeaderCombatEffects.map((x) => x.score));
-            const playerCanWinCombat = playerCombatScore + maxAdditionalCombatScore > highestEnemyCombatScore;
-            if (playerCanWinCombat || this.isFinale) {
-              let playerCurrentCombatScore = playerCombatScore;
-              for (const effectWithCombatScore of playerLeaderCombatEffects) {
-                this.resolveStructuredEffects([effectWithCombatScore.effect], player, gameState);
+          const maxAdditionalCombatScore =
+            sum(intriguesWithCombatScores.map((x) => x.score)) + sum(playerLeaderCombatEffects.map((x) => x.score));
+          const playerCanWinCombat = playerCombatScore + maxAdditionalCombatScore > highestEnemyCombatScore;
 
-                playerCurrentCombatScore += effectWithCombatScore.score;
+          if ((!playerIsWinningCombat && playerCanWinCombat) || this.isFinale) {
+            let playerCurrentCombatScore = playerCombatScore;
+            for (const effectWithCombatScore of playerLeaderCombatEffects) {
+              this.resolveStructuredEffects([effectWithCombatScore.effect], player, gameState);
+
+              playerCurrentCombatScore += effectWithCombatScore.score;
+              if (playerCurrentCombatScore > highestEnemyCombatScore) {
+                break;
+              }
+            }
+
+            if (playerCurrentCombatScore <= highestEnemyCombatScore) {
+              for (const intrigueWithCombatScore of intriguesWithCombatScores) {
+                const intrigue = intrigueWithCombatScore.intrigue;
+                this.aiPlayIntrigue(player, intrigue, gameState);
+
+                playerCurrentCombatScore += intrigueWithCombatScore.score;
                 if (playerCurrentCombatScore > highestEnemyCombatScore) {
                   break;
                 }
               }
+            }
+          } else if (!playerIsWinningCombat && intriguesWithoutCombatScores.length > 0) {
+            for (const intrigue of intriguesWithoutCombatScores) {
+              this.aiPlayIntrigue(player, intrigue, gameState);
+              await delay(2000);
+            }
 
-              if (playerCurrentCombatScore <= highestEnemyCombatScore) {
-                for (const intrigueWithCombatScore of intriguesWithCombatScores) {
-                  const intrigue = intrigueWithCombatScore.intrigue;
-                  this.aiPlayIntrigue(player, intrigue, gameState);
+            this.playerManager.setTurnStateForPlayer(playerId, 'done');
+          } else if (
+            intriguesWithCombatScores.length > 0 &&
+            (this.intriguesService.getPlayerIntrigueCount(player.id) > 2 ||
+              Math.random() < 0.15 * intriguesWithCombatScores.length)
+          ) {
+            const beatableCombatScore = enemyCombatScores.find(
+              (x) => x >= playerCombatScore && x < playerCombatScore + maxAdditionalCombatScore
+            );
+            if (beatableCombatScore) {
+              let playerCurrentCombatScore = playerCombatScore;
 
-                  playerCurrentCombatScore += intrigueWithCombatScore.score;
-                  if (playerCurrentCombatScore > highestEnemyCombatScore) {
-                    break;
-                  }
-                }
-              }
-            } else if (intriguesWithoutCombatScores.length > 0) {
-              for (const intrigue of intriguesWithoutCombatScores) {
+              for (const intrigueWithCombatScore of intriguesWithCombatScores) {
+                const intrigue = intrigueWithCombatScore.intrigue;
                 this.aiPlayIntrigue(player, intrigue, gameState);
+
+                playerCurrentCombatScore += intrigueWithCombatScore.score;
                 await delay(2000);
-              }
-
-              this.playerManager.setTurnStateForPlayer(playerId, 'done');
-            } else if (
-              intriguesWithCombatScores.length > 0 &&
-              (this.intriguesService.getPlayerIntrigueCount(player.id) > 2 ||
-                Math.random() < 0.15 * intriguesWithCombatScores.length)
-            ) {
-              const beatableCombatScore = enemyCombatScores.find(
-                (x) => x >= playerCombatScore && x < playerCombatScore + maxAdditionalCombatScore
-              );
-              if (beatableCombatScore) {
-                let playerCurrentCombatScore = playerCombatScore;
-
-                for (const intrigueWithCombatScore of intriguesWithCombatScores) {
-                  const intrigue = intrigueWithCombatScore.intrigue;
-                  this.aiPlayIntrigue(player, intrigue, gameState);
-
-                  playerCurrentCombatScore += intrigueWithCombatScore.score;
-                  await delay(2000);
-                  if (playerCurrentCombatScore > beatableCombatScore) {
-                    break;
-                  }
+                if (playerCurrentCombatScore > beatableCombatScore) {
+                  break;
                 }
               }
             }
@@ -1405,7 +1418,8 @@ export class GameManager {
   }
 
   aiPlayIntrigue(player: Player, intrigue: IntrigueDeckCard, gameState: GameState) {
-    const intrigueEffects = intrigue.structuredEffects;
+    const intrigueEffects =
+      gameState.currentRoundPhase === 'agent-placement' ? intrigue.structuredPlotEffects : intrigue.structuredCombatEffects;
 
     this.loggingService.logPlayerPlayedIntrigue(player.id, this.t.translateLS(intrigue.name));
     this.turnInfoService.updatePlayerTurnInfo(player.id, { intriguesPlayedThisTurn: [intrigue] });
@@ -2586,11 +2600,11 @@ export class GameManager {
     const playerIntriguesRewards = this.getInitialGameElementRewards();
     const playerIntriguesConversionCosts = this.getInitialGameElementRewards();
     for (const intrigue of playerIntrigues) {
-      if (intrigue.structuredEffects) {
+      if (intrigue.structuredPlotEffects) {
         const rewards: EffectReward[] = [];
         const conversionCosts: EffectReward[] = [];
 
-        for (const effect of intrigue.structuredEffects) {
+        for (const effect of intrigue.structuredPlotEffects) {
           if (isStructuredRewardEffect(effect)) {
             rewards.push(...getMultipliedRewardEffects(effect, partialGameStateForEffectMultipliers));
           } else if (isStructuredChoiceEffect(effect)) {
@@ -3119,6 +3133,8 @@ export class GameManager {
       this.playerManager.removeResourceFromPlayer(playerId, costType, costAmount);
     } else if (costType === 'signet-token') {
       this.playerManager.removeSignetTokensFromPlayer(playerId, costAmount);
+    } else if (costType === 'focus') {
+      this.playerManager.removeFocusTokens(playerId, costAmount);
     } else if (costType === 'shipping') {
       this.playerManager.removeResourceFromPlayer(playerId, 'water', costAmount);
     } else if (costType === 'tech') {
@@ -3151,8 +3167,6 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: costAmount });
     } else if (costType === 'card-destroy') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDestroyAmount: costAmount });
-    } else if (costType === 'focus') {
-      this.playerManager.addFocusTokens(playerId, costAmount);
     } else if (costType === 'persuasion') {
       this.playerManager.addPersuasionSpentToPlayer(playerId, costAmount);
     } else if (costType === 'victory-point') {

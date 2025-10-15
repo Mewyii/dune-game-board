@@ -28,7 +28,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       rewards: [{ type: 'spice', amount: 2 }, { type: 'troop' }, { type: 'tech' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
-      ownerReward: { type: 'spice' },
+      ownerReward: { type: 'tech' },
     },
   },
   {
@@ -101,6 +101,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       costs: [{ type: 'water' }],
       rewards: [{ type: 'spice', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandworm.png',
+      ownerReward: { type: 'spice' },
     },
   },
   {
@@ -115,6 +116,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       costs: [{ type: 'water' }, { type: 'water' }],
       rewards: [{ type: 'spice', amount: 3 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert.png',
+      ownerReward: { type: 'spice' },
     },
   },
   // 5-6Player Stuff

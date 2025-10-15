@@ -265,17 +265,10 @@ export class CardsService {
   createImperiumDeck(filter: (imperiumCard: ImperiumCard) => boolean = () => true) {
     const imperiumDeckCards: (ImperiumDeckCard | ImperiumDeckPlot)[] = [];
     const imperiumCards = this.cardConfiguratorService.imperiumCards.filter((x) => filter(x));
-    const plotCards = this.plotConfiguratorService.imperiumPlots;
 
     for (const imperiumCard of imperiumCards) {
       for (let i = 0; i < (imperiumCard.cardAmount ?? 1); i++) {
         imperiumDeckCards.push(this.instantiateImperiumCard(imperiumCard));
-      }
-    }
-
-    for (const plotCard of plotCards) {
-      for (let i = 0; i < (plotCard.cardAmount ?? 1); i++) {
-        imperiumDeckCards.push(this.instantiateImperiumPlot(plotCard));
       }
     }
 

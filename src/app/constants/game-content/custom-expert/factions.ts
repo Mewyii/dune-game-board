@@ -72,9 +72,6 @@ export const factionsCustomExpert: Faction[] = [
         {
           type: 'intrigue',
         },
-        {
-          type: 'intrigue-draw',
-        },
       ],
       4: [
         {
@@ -143,7 +140,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'solari' }, { type: 'intrigue' }, { type: 'intrigue-draw' }],
+        rewards: [{ type: 'solari' }, { type: 'intrigue' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],

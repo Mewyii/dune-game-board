@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
 import {
   combatUnitTypes,
@@ -10,7 +11,7 @@ import {
   EffectType,
   resourceTypes,
 } from 'src/app/models';
-import { IntrigueCard, intriguesTypes } from 'src/app/models/intrigue';
+import { IntrigueCard, intriguesTypes, IntrigueType } from 'src/app/models/intrigue';
 
 @Component({
   selector: 'dune-intrigue-editor',
@@ -40,11 +41,25 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
 
       this.intrigueForm.patchValue(newIntrigueCard);
 
-      if (newIntrigueCard.effects) {
-        const effectsArray = this.effects;
+      if (newIntrigueCard.plotEffects) {
+        const effectsArray = this.plotEffects;
 
         effectsArray.clear();
-        newIntrigueCard.effects.forEach((field) => {
+        newIntrigueCard.plotEffects.forEach((field) => {
+          effectsArray.push(
+            this.fb.group({
+              type: field.type,
+              amount: field.amount,
+            })
+          );
+        });
+      }
+
+      if (newIntrigueCard.combatEffects) {
+        const effectsArray = this.combatEffects;
+
+        effectsArray.clear();
+        newIntrigueCard.combatEffects.forEach((field) => {
           effectsArray.push(
             this.fb.group({
               type: field.type,
@@ -70,7 +85,8 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
       amount: 1,
     });
 
-    this.addEffectControl();
+    this.addPlotEffectControl();
+    this.addCombatEffectControl();
 
     if (this.intrigue) {
       this.intrigueForm.patchValue(this.intrigue);
@@ -81,40 +97,93 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
     return this.intrigueForm;
   }
 
-  // Effects
-  get effects() {
-    return this.intrigueForm.get('effects') as FormArray;
+  get type() {
+    return (this.intrigueForm.get('type') as FormControl).value;
   }
 
-  getEffectTypeControl(index: number): FormControl {
-    return this.effects.at(index).get('type') as FormControl;
+  onTypeSelectionChanged(event: MatSelectChange) {
+    const newType = event.value as IntrigueType;
+    if (newType === 'complot') {
+      this.combatEffects.clear();
+    } else if (newType === 'combat') {
+      this.plotEffects.clear();
+    }
   }
 
-  getEffectAmountControl(index: number): FormControl {
-    return this.effects.at(index).get('amount') as FormControl;
+  // Plot Effects
+  get plotEffects() {
+    return this.intrigueForm.get('plotEffects') as FormArray;
   }
 
-  addEffectControl() {
+  getPlotEffectTypeControl(index: number): FormControl {
+    return this.plotEffects.at(index).get('type') as FormControl;
+  }
+
+  getPlotEffectAmountControl(index: number): FormControl {
+    return this.plotEffects.at(index).get('amount') as FormControl;
+  }
+
+  addPlotEffectControl() {
     this.intrigueForm.addControl(
-      'effects',
+      'plotEffects',
       new FormArray([
         this.fb.group({
           type: '',
+          amount: undefined,
         }),
       ])
     );
   }
 
-  onAddEffectClicked() {
-    this.effects.push(
+  onAddPlotEffectClicked() {
+    this.plotEffects.push(
       this.fb.group({
         type: '',
+        amount: undefined,
       })
     );
   }
 
-  onRemoveEffectClicked(index: number) {
-    this.effects.removeAt(index);
+  onRemovePlotEffectClicked(index: number) {
+    this.plotEffects.removeAt(index);
+  }
+
+  // Combat Effects
+  get combatEffects() {
+    return this.intrigueForm.get('combatEffects') as FormArray;
+  }
+
+  getCombatEffectTypeControl(index: number): FormControl {
+    return this.combatEffects.at(index).get('type') as FormControl;
+  }
+
+  getCombatEffectAmountControl(index: number): FormControl {
+    return this.combatEffects.at(index).get('amount') as FormControl;
+  }
+
+  addCombatEffectControl() {
+    this.intrigueForm.addControl(
+      'combatEffects',
+      new FormArray([
+        this.fb.group({
+          type: '',
+          amount: undefined,
+        }),
+      ])
+    );
+  }
+
+  onAddCombatEffectClicked() {
+    this.combatEffects.push(
+      this.fb.group({
+        type: '',
+        amount: undefined,
+      })
+    );
+  }
+
+  onRemoveCombatEffectClicked(index: number) {
+    this.combatEffects.removeAt(index);
   }
 
   public getEffectTypePath(effectType: EffectType) {

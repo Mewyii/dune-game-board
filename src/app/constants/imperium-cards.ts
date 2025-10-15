@@ -1106,7 +1106,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'card-discard',
+        type: 'focus',
       },
       {
         type: 'helper-trade',
@@ -1416,7 +1416,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [
       {
         type: 'solari',
-        amount: 4,
+        amount: 5,
       },
     ],
     agentEffects: [],
@@ -2313,31 +2313,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Enfeoffment by the Emperor',
-      de: 'Belehnung durch den Imperator',
-    },
-    faction: 'emperor',
-    persuasionCosts: 5,
-    fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
-    cardAmount: 1,
-    buyEffects: [
-      {
-        type: 'faction-influence-up-emperor',
-      },
-    ],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'location-control',
-      },
-      {
-        type: 'trash-self',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Imperial Assassin',
       de: 'Imperialer Assassine',
     },
@@ -2431,6 +2406,76 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'troop',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Provoked Hostilities',
+      de: 'Provozierte Feindschaften',
+    },
+    faction: 'emperor',
+    persuasionCosts: 5,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/battle_2.png',
+    cardAmount: 1,
+    canInfiltrate: true,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: 'Each opponent on {faction:town} board spaces: {resource:loose-troop}<br>{faction:emperor} -Connection: {resource:troop}',
+      de: 'Jeder Gegner auf {faction:town}-Feldern: {resource:loose-troop}<br>{faction:emperor} -Verbindung: {resource:troop}',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: 'Each opponent loses one troop in the conflict.',
+      de: 'Jeder Gegner verliert einen Trupp im Konflikt.',
+      fontSize: 'small',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Enfeoffment by the Emperor',
+      de: 'Belehnung durch den Imperator',
+    },
+    faction: 'emperor',
+    persuasionCosts: 6,
+    fieldAccess: [],
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [
+      {
+        type: 'faction-influence-up-emperor',
+      },
+    ],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'location-control',
+      },
+      {
+        type: 'trash-self',
       },
     ],
   },
@@ -2530,38 +2575,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'solari',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Provoked Hostilities',
-      de: 'Provozierte Feindschaften',
-    },
-    faction: 'emperor',
-    persuasionCosts: 6,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/battle_2.png',
-    cardAmount: 1,
-    canInfiltrate: true,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: 'Each opponent on {faction:town} board spaces sends <b>2</b> units into the conflict',
-      de: 'Jeder Gegner auf {faction:town}-Feldern entsendet <b>2</b> Einheiten in den Konflikt.',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'medium',
-    customRevealEffect: {
-      en: 'Each opponent loses one troop in the conflict.',
-      de: 'Jeder Gegner verliert einen Trupp im Konflikt.',
-      fontSize: 'small',
-    },
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 2,
       },
     ],
   },
@@ -3798,7 +3811,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'fremen',
     persuasionCosts: 5,
-    fieldAccess: [],
+    fieldAccess: ['landsraad'],
     imageUrl: '/assets/images/action-backgrounds/jihad_2.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -3819,7 +3832,20 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-bene',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'focus',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     revealEffects: [
       {
         type: 'multiplier-troops-in-conflict',

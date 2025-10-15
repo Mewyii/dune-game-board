@@ -8,10 +8,10 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-intrigue-editor.component';
 
 @Component({
-    selector: 'dune-intrigue-configurator',
-    templateUrl: './intrigue-configurator.component.html',
-    styleUrl: './intrigue-configurator.component.scss',
-    standalone: false
+  selector: 'dune-intrigue-configurator',
+  templateUrl: './intrigue-configurator.component.html',
+  styleUrl: './intrigue-configurator.component.scss',
+  standalone: false,
 })
 export class IntrigueConfiguratorComponent implements OnInit {
   public intrigues: IntrigueCard[] = [];
@@ -149,7 +149,8 @@ export class IntrigueConfiguratorComponent implements OnInit {
       name: { en: '', de: '' },
       type: 'complot',
       amount: 1,
-      effects: [],
+      plotEffects: [],
+      combatEffects: [],
     };
   }
 }

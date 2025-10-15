@@ -8,7 +8,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'loose-troop',
       },
@@ -28,6 +28,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -36,7 +37,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'spice',
         amount: 2,
@@ -63,6 +64,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -71,7 +73,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'sword',
       },
@@ -86,6 +88,7 @@ export const intrigues: IntrigueCard[] = [
         amount: 3,
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -94,7 +97,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'solari',
       },
@@ -114,6 +117,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -122,7 +126,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'faction-influence-down-choice',
       },
@@ -145,6 +149,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -153,7 +158,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'intrigue',
       },
@@ -161,6 +166,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -169,7 +175,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'sword',
       },
@@ -180,6 +186,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -188,7 +195,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'sword',
       },
@@ -196,6 +203,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -204,7 +212,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'combat',
     amount: 3,
-    effects: [
+    combatEffects: [
       {
         type: 'sword',
       },
@@ -216,6 +224,7 @@ export const intrigues: IntrigueCard[] = [
         amount: 3,
       },
     ],
+    plotEffects: [],
   },
   {
     name: {
@@ -224,7 +233,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'spice',
         amount: 3,
@@ -236,6 +245,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'dreadnought',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -244,7 +254,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'spice',
         amount: 2,
@@ -257,6 +267,7 @@ export const intrigues: IntrigueCard[] = [
         amount: 3,
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -265,7 +276,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'spice',
       },
@@ -276,6 +287,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'faction-influence-up-choice',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -284,7 +296,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'water',
       },
@@ -299,6 +311,7 @@ export const intrigues: IntrigueCard[] = [
         amount: 3,
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -307,7 +320,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'loose-troop',
       },
@@ -321,6 +334,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'location-control',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -329,7 +343,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'spice',
       },
@@ -343,6 +357,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'troop',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -351,7 +366,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'faction-influence-down-choice',
       },
@@ -365,6 +380,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'shipping',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -373,7 +389,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'water',
       },
@@ -387,6 +403,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'combat',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -395,7 +412,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'spice',
         amount: 2,
@@ -407,6 +424,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'location-control',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -415,7 +433,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'faction-influence-down-choice',
       },
@@ -429,6 +447,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'faction-influence-up-choice',
       },
     ],
+    combatEffects: [],
   },
   {
     name: {
@@ -437,7 +456,7 @@ export const intrigues: IntrigueCard[] = [
     },
     type: 'complot',
     amount: 3,
-    effects: [
+    plotEffects: [
       {
         type: 'water',
       },
@@ -448,5 +467,6 @@ export const intrigues: IntrigueCard[] = [
         type: 'agent-lift',
       },
     ],
+    combatEffects: [],
   },
 ];

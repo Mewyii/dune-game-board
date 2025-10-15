@@ -9,9 +9,32 @@ export const startingCards: ImperiumCard[] = [
     fieldAccess: ['emperor', 'town'],
     imageUrl: '/assets/images/action-backgrounds/gurney_3.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'emperor',
+      },
       {
         type: 'troop',
       },
@@ -42,11 +65,34 @@ export const startingCards: ImperiumCard[] = [
     fieldAccess: ['guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/meeting_2.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
       {
         type: 'tech',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'guild',
+      },
+      {
+        type: 'solari',
       },
     ],
   },
@@ -75,11 +121,35 @@ export const startingCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'town'],
     imageUrl: '/assets/images/action-backgrounds/mentat_4.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
       {
         type: 'focus',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'bene',
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
       },
     ],
   },

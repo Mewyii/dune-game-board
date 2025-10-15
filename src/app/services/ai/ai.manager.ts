@@ -907,13 +907,17 @@ export class AIManager {
   private getIntrigueCardTrashEvaluation(card: IntrigueDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;
 
-    if (card.structuredEffects) {
-      evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
-        card.structuredEffects,
-        player,
-        gameState
-      );
-    }
+    evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
+      card.structuredPlotEffects,
+      player,
+      gameState
+    );
+
+    evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
+      card.structuredCombatEffects,
+      player,
+      gameState
+    );
 
     return evaluationValue;
   }
@@ -969,7 +973,8 @@ export class AIManager {
   }
 
   public getIntriguePlayEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {
-    const intrigueEffects = intrigue.structuredEffects;
+    const intrigueEffects =
+      gameState.currentRoundPhase === 'agent-placement' ? intrigue.structuredPlotEffects : intrigue.structuredCombatEffects;
 
     if (intrigueEffects) {
       let isUseful =

@@ -108,6 +108,7 @@ export const enLocale = {
   imperiumrowHeading: 'Imperium Row',
   intrigueWarningComplotWrongRoundPhase: 'Complot intrigues have to be played during the agent placement phase',
   intrigueWarningCombatWrongRoundPhase: 'Combat intrigues have to be played during the combat phase',
+  intrigueWarningWrongRoundPhase: 'Intrigues can only be played during agent placement or combat.',
   gamemanualFullscreenHeading: 'Fullscreen',
   gamemanualFullscreenText: 'This app is best used in fullscreen mode.',
   gamemanualFullscreenExitTooltip: 'Exit fullscreen mode',

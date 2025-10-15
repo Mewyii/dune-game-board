@@ -112,6 +112,8 @@ export const deLocale: Locale = {
   intrigueWarningComplotWrongRoundPhase:
     'Komplott-Intrigen können nur während der Agenten-Platzierungsphase gespielt werden',
   intrigueWarningCombatWrongRoundPhase: 'Kampf-Intrigen können nur während der Kampfphase gespielt werden',
+  intrigueWarningWrongRoundPhase:
+    'Intrigen können nur während der Agenten-Platzierungsphase oder während der Kampfphase gespielt werden.',
   gamemanualFullscreenHeading: 'Vollbild',
   gamemanualFullscreenText: 'Verwende diese App am besten im Vollbild-Modus.',
   gamemanualFullscreenExitTooltip: 'Vollbild-Modus beenden',

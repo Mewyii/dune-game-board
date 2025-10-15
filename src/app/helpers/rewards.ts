@@ -532,6 +532,10 @@ export function playerCanPayCosts(
       if (player.signetTokenCount < costAmount) {
         canPayCosts = false;
       }
+    } else if (costType === 'focus') {
+      if (player.focusTokens < costAmount) {
+        canPayCosts = false;
+      }
     } else if (costType === 'tech') {
       if (player.tech < costAmount) {
         canPayCosts = false;

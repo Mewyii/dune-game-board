@@ -4,7 +4,20 @@
       {{ t.translateLS(card.name).toUpperCase() }}
     </span>
   </div>
+  @if (card.type === "complot") {
   <div [class]="'card-content font-text ' + card.type">
-    <dune-reward-array [rewards]="card.effects" [size]="'36px'"></dune-reward-array>
+    <dune-reward-array [rewards]="card.plotEffects" [size]="'36px'"></dune-reward-array>
   </div>
+  } @else if (card.type === "combat") {
+  <div [class]="'card-content font-text ' + card.type">
+    <dune-reward-array [rewards]="card.combatEffects" [size]="'36px'"></dune-reward-array>
+  </div>
+  } @else if (card.type === "combined") {
+  <div [class]="'card-content font-text complot combined'">
+    <dune-reward-array [rewards]="card.plotEffects" [size]="'28px'"></dune-reward-array>
+  </div>
+  <div [class]="'card-content font-text combat combined'">
+    <dune-reward-array [rewards]="card.combatEffects" [size]="'28px'"></dune-reward-array>
+  </div>
+  }
 </div>

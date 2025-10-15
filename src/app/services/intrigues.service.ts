@@ -50,11 +50,11 @@ export class IntriguesService {
   public getPlayerIntrigues(playerId: number, type?: IntrigueType) {
     const playerIntrigues = this.playerIntriguesSubject.value.find((x) => x.playerId === playerId);
     if (!playerIntrigues) {
-      return undefined;
+      return [];
     }
 
     if (type) {
-      return cloneDeep(playerIntrigues.intrigues.filter((y) => y.type === type));
+      return cloneDeep(playerIntrigues.intrigues.filter((y) => y.type === type || y.type === 'combined'));
     } else {
       return cloneDeep(playerIntrigues.intrigues);
     }
@@ -152,10 +152,12 @@ export class IntriguesService {
   public instantiateIntrigueCard(card: IntrigueCard): IntrigueDeckCard {
     return {
       name: card.name,
-      effects: card.effects,
       type: card.type,
       id: crypto.randomUUID(),
-      structuredEffects: getStructuredEffectArrayInfos(card.effects),
+      plotEffects: card.plotEffects,
+      combatEffects: card.combatEffects,
+      structuredCombatEffects: card.combatEffects ? getStructuredEffectArrayInfos(card.combatEffects) : [],
+      structuredPlotEffects: card.plotEffects ? getStructuredEffectArrayInfos(card.plotEffects) : [],
     };
   }
 }
