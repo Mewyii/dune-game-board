@@ -8,17 +8,17 @@
 
     } @else {
     <div class="turn-area">
-      <div class="font-scifi" *ngIf="currentTurn">
-        {{ t.translate('playerboardRound') }} <span class="turn">{{ currentTurn }}</span>
+      <div class="font-scifi" *ngIf="currentRound">
+        {{ t.translate('playerboardRound') }} <span class="turn">{{ currentRound }}</span>
       </div>
       <div *ngIf="isFinale" class="endgame font-medieval">{{ t.translate('commonEndgame').toUpperCase() }}</div>
-      <div class="turn-state font-medieval">{{ turnState.toUpperCase() }}</div>
+      <div class="turn-state font-medieval">{{ currentRoundPhase.toUpperCase() }}</div>
     </div>
     }
   </div>
   <div class="action-container">
     <button
-      *ngIf="!currentTurn"
+      *ngIf="!currentRound"
       mat-fab
       color="accent"
       (click)="showSettingsDialog()"
@@ -28,7 +28,7 @@
     </button>
     <button
       mat-fab
-      *ngIf="currentTurn && turnState === 'agent-placement'"
+      *ngIf="currentRound && currentRoundPhase === 'agent-placement'"
       color="accent"
       (click)="onBeginCombatClicked()"
       [matTooltip]="t.translate('playerboardCombatTooltip')"
@@ -37,7 +37,7 @@
       <mat-icon>flash_on</mat-icon>
     </button>
     <button
-      *ngIf="currentTurn && turnState === 'combat'"
+      *ngIf="currentRound && currentRoundPhase === 'combat'"
       mat-fab
       color="accent"
       (click)="onResolveCombatClicked()"
@@ -46,7 +46,7 @@
       <mat-icon>groups</mat-icon>
     </button>
     <button
-      *ngIf="currentTurn && turnState === 'combat-resolvement' && !isFinale"
+      *ngIf="currentRound && currentRoundPhase === 'combat-resolvement' && !isFinale"
       mat-fab
       color="accent"
       (click)="onNextRoundClicked()"
@@ -55,7 +55,7 @@
       <mat-icon>start</mat-icon>
     </button>
     <button
-      *ngIf="!currentTurn"
+      *ngIf="!currentRound"
       mat-fab
       color="accent"
       (click)="onStartGameClicked()"
@@ -64,8 +64,19 @@
     >
       <mat-icon>play_arrow</mat-icon>
     </button>
+    @if (currentRound === 1 && currentRoundPhase === 'select leaders') {
     <button
-      *ngIf="currentTurn && (turnState !== 'combat-resolvement' || !isFinale)"
+      mat-fab
+      color="accent"
+      (click)="onBeginPlayClicked()"
+      [disabled]="!allLeadersLockedIn"
+      [matTooltip]="t.translate('playerboardBeginGameTooltip')"
+    >
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+    }
+    <button
+      *ngIf="currentRound && (currentRoundPhase !== 'combat-resolvement' || !isFinale)"
       mat-fab
       color="accent"
       (click)="onFinishGameClicked()"
@@ -74,7 +85,7 @@
       <mat-icon>power_settings_new</mat-icon>
     </button>
     <button
-      *ngIf="currentTurn && turnState === 'combat-resolvement' && isFinale"
+      *ngIf="currentRound && currentRoundPhase === 'combat-resolvement' && isFinale"
       mat-fab
       color="accent"
       (click)="onShowGameSummaryClicked()"
@@ -83,7 +94,7 @@
       <mat-icon>emoji_events</mat-icon>
     </button>
   </div>
-  @if (gameManager.currentRound === 0) {
+  @if (currentRound === 0) {
   <div class="players-control-bar">
     <div class="font-scifi">
       {{ t.translate('playerboardHeading') }}

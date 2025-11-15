@@ -96,7 +96,7 @@ export interface GameEffects {
   spiceAccumulation?: BaseGameEffect;
 }
 
-export type RoundPhaseType = 'none' | 'agent-placement' | 'combat' | 'combat-resolvement' | 'done';
+export type RoundPhaseType = 'none' | 'select leaders' | 'agent-placement' | 'combat' | 'combat-resolvement' | 'done';
 
 export type GameElement =
   | { type: 'imperium-card'; object: ImperiumDeckCard }
@@ -365,7 +365,7 @@ export class GameManager {
     this.minorHousesService.setInitialAvailableHouses();
 
     this.currentRoundSubject.next(1);
-    this.currentRoundPhaseSubject.next('agent-placement');
+    this.currentRoundPhaseSubject.next('select leaders');
     this.startingPlayerIdSubject.next(1);
     this.activePlayerIdSubject.next(1);
 
@@ -407,6 +407,13 @@ export class GameManager {
         }
       }
     }
+  }
+
+  public beginPlay() {
+    this.audioManager.playSound('fog');
+    this.currentRoundPhaseSubject.next('agent-placement');
+    this.playerManager.increaseTurnNumberForPlayer(1);
+    this.activePlayerIdSubject.next(1);
   }
 
   public resolveConflict() {
@@ -496,6 +503,7 @@ export class GameManager {
     this.combatManager.resetAdditionalCombatPower();
     this.playerManager.resetPersuasionForPlayers();
     this.playerManager.resetTurnStateForPlayers();
+    this.playerManager.resetTurnNumberForPlayers();
 
     this.conflictsService.setNextConflict();
 
@@ -511,6 +519,7 @@ export class GameManager {
     );
 
     this.activePlayerIdSubject.next(this.startingPlayerId);
+    this.playerManager.increaseTurnNumberForPlayer(this.startingPlayerId);
 
     if (this.settingsService.getChurnRowCards()) {
       this.cardsService.churnAndClearImperiumRow();
@@ -555,8 +564,8 @@ export class GameManager {
     for (const player of this.playerManager.getPlayers()) {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
-      this.setActiveAIPlayer(this.startingPlayerId);
       if (player.isAI && player.id === this.startingPlayerId) {
+        this.setActiveAIPlayer(this.startingPlayerId);
         this.setPreferredFieldsForAIPlayer(this.startingPlayerId);
       }
     }
@@ -694,7 +703,7 @@ export class GameManager {
 
     const playerNeedsToPassTurn = playerTurnInfo?.needsToPassTurn;
     if (playerNeedsToPassTurn) {
-      this.notificationService.showWarning(this.t.translate('playerboardWarningAgentAlreadyPlacedThisTurn'));
+      this.notificationService.showWarning(this.t.translate('playerboardWarningNeedToPassTurn'));
       return;
     }
 
@@ -969,6 +978,9 @@ export class GameManager {
     if (nextPlayer) {
       this.activePlayerIdSubject.next(nextPlayer.id);
 
+      if (roundPhase === 'agent-placement') {
+        this.playerManager.increaseTurnNumberForPlayer(nextPlayer.id);
+      }
       this.setActiveAIPlayer(nextPlayer.id);
       if (nextPlayer.isAI) {
         this.setPreferredFieldsForAIPlayer(nextPlayer.id);
@@ -1167,10 +1179,17 @@ export class GameManager {
       if (playerLeader?.structuredPassiveEffects) {
         const gameState = this.getGameState(player);
         this.resolveStructuredEffects(playerLeader.structuredPassiveEffects, player, gameState);
+        this.aiResolveRewardChoices(player);
       }
       if (playerLeader?.customEffects) {
         const gameState = this.getGameState(player);
         this.resolveStructuredEffects(playerLeader.customEffects, player, gameState);
+        this.aiResolveRewardChoices(player);
+      }
+
+      if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
+        this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
+        return;
       }
 
       // AI Play Tech tiles
@@ -1292,8 +1311,7 @@ export class GameManager {
         }
         this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
       }
-    }
-    if (roundPhase === 'combat') {
+    } else if (roundPhase === 'combat') {
       if (player.turnState === 'revealed') {
         const gameState = this.getGameState(player);
 
@@ -1413,6 +1431,8 @@ export class GameManager {
           }
         }
       }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
+    } else {
       this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
     }
   }
@@ -3121,7 +3141,7 @@ export class GameManager {
     } else if (rewardType === 'card-return-to-hand') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardReturnToHandAmount: rewardAmount });
     } else if (rewardType === 'turn-pass') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { needsToPassTurn: true });
+      this.turnInfoService.setPlayerTurnInfo(playerId, { needsToPassTurn: true });
     }
     this.loggingService.logPlayerResourceGained(playerId, rewardType, rewardAmount);
   }
@@ -3188,6 +3208,8 @@ export class GameManager {
         this.turnInfoService.updatePlayerTurnInfo(playerId, { techTilesFlippedThisTurn: [element.object] });
         this.loggingService.logPlayerPlayedTechTile(playerId, this.t.translateLS(element.object.name));
       }
+    } else if (costType === 'turn-pass') {
+      this.turnInfoService.setPlayerTurnInfo(playerId, { needsToPassTurn: true });
     }
 
     this.loggingService.logPlayerResourcePaid(playerId, costType, cost.amount);

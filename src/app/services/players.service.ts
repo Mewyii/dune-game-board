@@ -81,6 +81,7 @@ export class PlayersService {
         tech: 0,
         permanentPersuasion: 0,
         isAI: true,
+        turnNumber: 0,
       });
     }
 
@@ -121,6 +122,7 @@ export class PlayersService {
       permanentPersuasion: 0,
       hasCouncilSeat: false,
       hasSwordmaster: false,
+      turnNumber: 0,
     }));
     this.playersSubject.next(players);
 
@@ -151,6 +153,21 @@ export class PlayersService {
     }
 
     this.playersSubject.next(players);
+  }
+
+  public increaseTurnNumberForPlayer(id: number) {
+    const players = this.getPlayers();
+
+    const player = players.find((x) => x.id === id);
+    if (player) {
+      player.turnNumber++;
+    }
+
+    this.playersSubject.next(players);
+  }
+
+  public resetTurnNumberForPlayers() {
+    this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, turnNumber: 0 })));
   }
 
   public addResourceToPlayer(id: number, type: ResourceType, amount: number) {

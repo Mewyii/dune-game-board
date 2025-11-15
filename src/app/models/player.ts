@@ -5,6 +5,7 @@ export type PlayerTurnState = 'agent-placement' | 'reveal' | 'revealed' | 'confl
 export interface Player {
   id: number;
   agents: number;
+  turnNumber: number;
   turnState: PlayerTurnState;
   resources: Resource[];
   color: string;

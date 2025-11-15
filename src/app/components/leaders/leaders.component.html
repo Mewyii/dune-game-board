@@ -63,6 +63,7 @@
             [matTooltip]="t.translate('leadersTooltipAIAction')"
             [disabled]="
               !playerLeader?.isLockedIn ||
+              currentRoundPhase === 'select leaders' ||
               (currentRoundPhase === 'agent-placement' && activePlayer.turnState === 'revealed') ||
               (currentRoundPhase === 'combat' && activePlayer.turnState === 'done') ||
               currentRoundPhase === 'combat-resolvement' ||

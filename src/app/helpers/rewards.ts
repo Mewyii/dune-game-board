@@ -356,17 +356,16 @@ export function getStructuredEffectReward(effects: EffectMultiplierOrReward[]): 
 export function isTimingFullfilled(
   timingEffect: StructuredEffectTiming,
   player: Player,
-  gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos'>
+  gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos' | 'currentRoundPhase'>
 ) {
   let timingFullfilled = false;
   if (timingEffect.type === 'timing-game-start') {
-    const hasPlacedAgentThisRound = gameState.playerAgentsOnFields.length > 0;
-    if (gameState.currentRound === 1 && player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+    if (gameState.currentRoundPhase === 'select leaders' && gameState.currentRound === 1) {
       timingFullfilled = true;
     }
   } else if (timingEffect.type === 'timing-round-start') {
     const hasPlacedAgentThisRound = gameState.playerAgentsOnFields.length > 0;
-    if (player.turnState === 'agent-placement' && !hasPlacedAgentThisRound) {
+    if (player.turnState === 'agent-placement' && player.turnNumber < 2 && !hasPlacedAgentThisRound) {
       timingFullfilled = true;
     }
   } else if (timingEffect.type === 'timing-turn-start') {

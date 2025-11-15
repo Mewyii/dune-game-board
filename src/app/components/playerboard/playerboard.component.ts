@@ -27,8 +27,8 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
 })
 export class PlayerboardComponent implements OnInit {
   public players: Player[] = [];
-  public currentTurn = 0;
-  public turnState = '';
+  public currentRound = 0;
+  public currentRoundPhase = '';
   public canSwitchToCombatPhase = false;
   public availablePlayerAgents: PlayerAgents[] = [];
   public subTitle = '';
@@ -43,6 +43,8 @@ export class PlayerboardComponent implements OnInit {
 
   public isFinale = false;
   public maxPlayers = 0;
+
+  public allLeadersLockedIn = false;
 
   constructor(
     public gameManager: GameManager,
@@ -64,11 +66,11 @@ export class PlayerboardComponent implements OnInit {
     });
 
     this.gameManager.currentRound$.subscribe((currentTurn) => {
-      this.currentTurn = currentTurn;
+      this.currentRound = currentTurn;
     });
 
     this.gameManager.currentRoundPhase$.subscribe((currentRoundPhase) => {
-      this.turnState = currentRoundPhase;
+      this.currentRoundPhase = currentRoundPhase;
     });
 
     this.gameManager.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
@@ -103,6 +105,10 @@ export class PlayerboardComponent implements OnInit {
       this.maxPlayers = gameContent.maxPlayers;
       this.subTitle = gameContent.name;
     });
+
+    this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
+      this.allLeadersLockedIn = playerLeaders.filter((x) => x.isLockedIn).length === this.players.length;
+    });
   }
 
   onAddPlayerClicked() {
@@ -118,13 +124,17 @@ export class PlayerboardComponent implements OnInit {
   onSetAIActiveClicked(playerId: number, event: MatSlideToggleChange) {
     this.audioManager.playSound('tech-tile');
     this.gameManager.setAIActiveForPlayer(playerId, event.checked);
-    if (event.checked && this.currentTurn > 0) {
+    if (event.checked && this.currentRound > 0) {
       this.gameManager.setPreferredFieldsForAIPlayer(playerId);
     }
   }
 
   onStartGameClicked() {
     this.gameManager.startGame();
+  }
+
+  onBeginPlayClicked() {
+    this.gameManager.beginPlay();
   }
 
   showSettingsDialog() {

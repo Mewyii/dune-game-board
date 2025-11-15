@@ -349,7 +349,7 @@ export class AIEffectEvaluationService {
         );
       case 'tech':
         return (
-          2 +
+          1.9 +
           0.01 * gameState.playerTechTilesConversionCosts.tech -
           0.025 * (gameState.currentRound - 1) -
           0.01 * gameState.playerCardsRewards.tech -
@@ -357,20 +357,20 @@ export class AIEffectEvaluationService {
         );
       case 'troop':
         return (
-          1.75 + 0.015 * gameState.playerTechTilesConversionCosts['loose-troop'] - 0.015 * gameState.playerCardsRewards.troop
+          1.6 + 0.015 * gameState.playerTechTilesConversionCosts['loose-troop'] - 0.015 * gameState.playerCardsRewards.troop
         );
       case 'dreadnought':
-        return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 7 : 0) + 0.25 * (gameState.currentRound - 1);
+        return (getPlayerdreadnoughtCount(gameState.playerCombatUnits) < 2 ? 8 : 0) + 0.2 * (gameState.currentRound - 1);
       case 'card-draw':
         return (
-          1.75 +
+          1.7 +
           0.1 * gameState.playerCardsBought +
           0.1 * gameState.playerCardsTrashed +
           0.033 * (7 - gameState.playerCardsFieldAccess.length) -
           0.015 * gameState.playerCardsRewards['card-draw']
         );
       case 'card-discard':
-        return -1.66 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
+        return -1.6 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
       case 'card-destroy':
       case 'focus':
         return (
@@ -433,7 +433,7 @@ export class AIEffectEvaluationService {
           ? 3 - 0.1 * gameState.playerScore.fremen - (playerHasUncontestedAlliance(gameState, 'fremen') ? 1 : 0)
           : 0;
       case 'faction-influence-up-twice-choice':
-        return 6;
+        return 6 + 0.2 * (gameState.currentRound - 1);
       case 'faction-influence-down-choice':
         return -2.5;
       case 'faction-influence-down-emperor':
@@ -450,7 +450,7 @@ export class AIEffectEvaluationService {
           ? this.getStructuredEffectsEvaluation(gameState.playerLeaderSignetRingEffects, player, gameState)
           : 3;
       case 'location-control':
-        return 6 + 0.25 * (gameState.currentRound - 1);
+        return 7 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
         return -1.5 + 0.1 * (gameState.currentRound - 1);
       case 'trash-self':
@@ -651,6 +651,7 @@ export class AIEffectEvaluationService {
           ? this.getStructuredEffectsEvaluationForTurnState(gameState.playerLeaderSignetRingEffects, player, gameState)
           : value;
       case 'location-control':
+        const noAgentsPlacedYet = gameState.playerAgentsOnFields.length < 1;
         const controllableFreeLocations = gameState.playerAgentsOnFields.some((x) =>
           gameState.freeLocations.some((y) => x.fieldId === y)
         );
@@ -658,7 +659,7 @@ export class AIEffectEvaluationService {
           gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
-        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -5;
+        return controllableFreeLocations ? value : controllableEnemyLocations || noAgentsPlacedYet ? value * 0.8 : -5;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':
