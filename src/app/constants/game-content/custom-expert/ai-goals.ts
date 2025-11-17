@@ -140,6 +140,12 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
+      (gameState.conflict.rewards[0].some((x) => x.type === 'location-control') &&
+      gameState.playerAgentsOnFields.every(
+        (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId)
+      )
+        ? 0
+        : 1.0) *
       (0.15 +
         0.01 * getResourceAmount(player, 'spice') +
         0.025 * (gameState.currentRound - 1) +

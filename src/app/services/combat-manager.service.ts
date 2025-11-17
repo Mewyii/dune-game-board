@@ -133,13 +133,19 @@ export class CombatManager {
   }
 
   public addPlayerShipsToGarrison(playerId: number, ships: number) {
+    const maxDreadnoughtCount = this.settingsService.getMaxPlayerDreadnoughtCount();
     const combatUnits = this.getPlayerCombatUnits(playerId);
+
     if (combatUnits) {
       const existingShips = getPlayerdreadnoughtCount(combatUnits);
-      const newShipAmount = existingShips + ships <= 2 ? existingShips + ships : 2;
-      this.setPlayerShipsInGarrison(playerId, newShipAmount);
+      if (existingShips + ships <= maxDreadnoughtCount) {
+        const existingShipsInGarrison = combatUnits.shipsInGarrison;
+        this.setPlayerShipsInGarrison(playerId, existingShipsInGarrison + ships);
+      } else {
+        return;
+      }
     } else {
-      const newShipAmount = ships <= 2 ? ships : 2;
+      const newShipAmount = ships <= maxDreadnoughtCount ? ships : maxDreadnoughtCount;
       this.setPlayerShipsInGarrison(playerId, newShipAmount);
     }
   }

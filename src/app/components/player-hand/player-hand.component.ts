@@ -137,11 +137,8 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onDiscardCardClicked(card: ImperiumDeckCard) {
-    this.audioManager.playSound('card-discard');
-    this.cardsService.discardPlayerHandCard(this.activePlayerId, card);
+    this.gameManager.discardImperiumCardFromHand(this.activePlayerId, card);
     this.activeCardId = '';
-
-    this.logService.logPlayerDiscardedCard(this.activePlayerId, this.t.translateLS(card.name));
   }
 
   onAIDiscardCardClicked() {
@@ -248,11 +245,11 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onPlayIntrigueClicked(intrigue: IntrigueDeckCard) {
-    this.gameManager.playIntrigue(this.activePlayerId, intrigue);
+    this.gameManager.playPlayerIntrigue(this.activePlayerId, intrigue);
   }
 
   onTrashIntrigueClicked(intrigue: IntrigueDeckCard) {
-    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
+    this.gameManager.trashPlayerIntrigue(this.activePlayerId, intrigue);
   }
 
   setCardActive(cardId: string) {

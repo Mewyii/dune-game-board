@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Effect, StructuredChoiceEffect, StructuredEffect } from '../models';
+import { Effect, EffectRewardType, StructuredChoiceEffect, StructuredEffect } from '../models';
 
 export interface PlayerRewardChoice<T> {
   id: string;
@@ -153,6 +153,18 @@ export class PlayerRewardChoicesService {
 
     playerRewardChoices[index].effectChoices = playerRewardChoices[index].effectChoices.filter((x, idx) => idx !== index);
     this.playerRewardChoicesSubject.next(playerRewardChoices);
+  }
+
+  public getPlayerRewardChoice(playerId: number, rewardType: EffectRewardType) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    const playerRewardChoice = playerRewardChoices.find((x) => x.playerId === playerId);
+
+    if (playerRewardChoice) {
+      return playerRewardChoice.rewardChoices.find((x) => x.choice.type === rewardType);
+    } else {
+      return undefined;
+    }
   }
 
   public getInitialPlayerRewardChoices(playerId: number): PlayerRewardChoices {

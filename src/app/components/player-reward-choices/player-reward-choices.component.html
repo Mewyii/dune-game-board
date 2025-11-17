@@ -1,109 +1,119 @@
 <div class="reward-choices-container">
   <ng-container *ngIf="playerRewardChoices">
     @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
-    <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
-      @for (reward of rewardsChoice.choice; track $index) {
-      <dune-reward-array [rewards]="rewardsChoice.choice" [textColor]="'white'"></dune-reward-array>
-      }
-    </div>
-    } @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
-    <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
-      <dune-reward-array [rewards]="[rewardChoice.choice]" [textColor]="'white'"></dune-reward-array>
-    </div>
-    } @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
-    <div
-      class="reward-choice"
-      [innerHTML]="rewardChoice.choice | duneSymbols : '22px'"
-      (click)="onCustomChoiceClicked(rewardChoice.id)"
-    ></div>
+      <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
+        @for (reward of rewardsChoice.choice; track $index) {
+          <dune-reward-array [rewards]="rewardsChoice.choice" [textColor]="'white'"></dune-reward-array>
+        }
+      </div>
+    }
+    @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
+      <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
+        <dune-reward-array [rewards]="[rewardChoice.choice]" [textColor]="'white'"></dune-reward-array>
+      </div>
+    }
+    @for (rewardChoice of playerRewardChoices.customChoices; track $index) {
+      <div
+        class="reward-choice"
+        [innerHTML]="rewardChoice.choice | duneSymbols: '22px'"
+        (click)="onCustomChoiceClicked(rewardChoice.id)"
+      ></div>
     }
   </ng-container>
   @for (effectOption of playerEffectOptions; track $index; let idx = $index) {
-  <div
-    [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
-    (click)="setEffectActive('option' + idx)"
-  >
-    @if(isStructuredConversionEffect(effectOption.effectLeft)) {
-    <dune-player-effect-conversion [effectConversion]="effectOption.effectLeft"></dune-player-effect-conversion>
-    } @else if (effectOption.effectLeft.multiplier) {
-    <dune-reward-array
-      [rewards]="[{ type: effectOption.effectLeft.multiplier.type }]"
-      [textColor]="'white'"
-    ></dune-reward-array>
-    <dune-reward-array [rewards]="effectOption.effectLeft.effectRewards" [textColor]="'white'"></dune-reward-array>
-    } @else { @for (leftEffect of effectOption.effectLeft.effectRewards; track $index) {
-    <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
-    } }
-    <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
-    @if(isStructuredConversionEffect(effectOption.effectRight)) {
-    <dune-player-effect-conversion [effectConversion]="effectOption.effectRight"></dune-player-effect-conversion>
-    } @else if (effectOption.effectRight.multiplier) {
-    <dune-reward-array
-      [rewards]="[{ type: effectOption.effectRight.multiplier.type }]"
-      [textColor]="'white'"
-    ></dune-reward-array>
-    <dune-reward-array [rewards]="effectOption.effectRight.effectRewards" [textColor]="'white'"></dune-reward-array>
-    }@else { @for (rightEffect of effectOption.effectRight.effectRewards; track $index) {
-    <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
-    } }
-    <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption, idx)">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption, idx)">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
-  </div>
-  }@for (effectConversion of playerEffectConversions; track $index; let idx = $index) {
-  <div
-    [class]="'rewards-choice ' + (activeEffectId === 'conversion' + idx ? 'active' : '')"
-    (click)="setEffectActive('conversion' + idx)"
-  >
-    <dune-player-effect-conversion [effectConversion]="effectConversion"></dune-player-effect-conversion>
-    <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion, idx)">
-        <mat-icon>check</mat-icon>
-      </button>
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(idx)">
-        <mat-icon>clear</mat-icon>
-      </button>
-    </div>
-  </div>
-  } @if (deployableUnits && !activePlayer?.isAI) {
-  <div
-    [class]="'reward-choice ' + (activeEffectId === 'deployableUnits' ? 'active' : '')"
-    (click)="setEffectActive('deployableUnits')"
-  >
-    <div [innerHTML]="t.translate('commonEffectRewardUnitInsert', true, deployableUnits)"></div>
-  </div>
-  } @if (deployableTroops && !activePlayer?.isAI) {
-  <div
-    [class]="'reward-choice ' + (activeEffectId === 'deployableTroops' ? 'active' : '')"
-    (click)="setEffectActive('deployableTroops')"
-  >
-    <div [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, deployableTroops)"></div>
-    <div class="control-bar" *ngIf="activeEffectId === 'deployableTroops'">
-      @for (deployAmount of deployableTroops | numberToArray; track $index) {
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployTroopsClicked(deployAmount)">
-        {{ deployAmount }}
-      </button>
+    <div
+      [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
+      (click)="setEffectActive('option' + idx)"
+    >
+      @if (isStructuredConversionEffect(effectOption.effectLeft)) {
+        <dune-player-effect-conversion [effectConversion]="effectOption.effectLeft"></dune-player-effect-conversion>
+      } @else if (effectOption.effectLeft.multiplier) {
+        <dune-reward-array
+          [rewards]="[{ type: effectOption.effectLeft.multiplier.type }]"
+          [textColor]="'white'"
+        ></dune-reward-array>
+        <dune-reward-array [rewards]="effectOption.effectLeft.effectRewards" [textColor]="'white'"></dune-reward-array>
+      } @else {
+        @for (leftEffect of effectOption.effectLeft.effectRewards; track $index) {
+          <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
+        }
       }
-    </div>
-  </div>
-  } @if (deployableDreadnoughts && !activePlayer?.isAI) {
-  <div
-    [class]="'reward-choice ' + (activeEffectId === 'deployableDreadnoughts' ? 'active' : '')"
-    (click)="setEffectActive('deployableDreadnoughts')"
-  >
-    <div [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, deployableDreadnoughts)"></div>
-    <div class="control-bar" *ngIf="activeEffectId === 'deployableDreadnoughts'">
-      @for (deployAmount of deployableDreadnoughts | numberToArray; track $index) {
-      <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployDreadnoughtsClicked(deployAmount)">
-        {{ deployAmount }}
-      </button>
+      <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
+      @if (isStructuredConversionEffect(effectOption.effectRight)) {
+        <dune-player-effect-conversion [effectConversion]="effectOption.effectRight"></dune-player-effect-conversion>
+      } @else if (effectOption.effectRight.multiplier) {
+        <dune-reward-array
+          [rewards]="[{ type: effectOption.effectRight.multiplier.type }]"
+          [textColor]="'white'"
+        ></dune-reward-array>
+        <dune-reward-array [rewards]="effectOption.effectRight.effectRewards" [textColor]="'white'"></dune-reward-array>
+      } @else {
+        @for (rightEffect of effectOption.effectRight.effectRewards; track $index) {
+          <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
+        }
       }
+      <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
+        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption, idx)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption, idx)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
     </div>
-  </div>
+  }
+  @for (effectConversion of playerEffectConversions; track $index; let idx = $index) {
+    <div
+      [class]="'rewards-choice ' + (activeEffectId === 'conversion' + idx ? 'active' : '')"
+      (click)="setEffectActive('conversion' + idx)"
+    >
+      <dune-player-effect-conversion [effectConversion]="effectConversion"></dune-player-effect-conversion>
+      <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
+        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion, idx)">
+          <mat-icon>check</mat-icon>
+        </button>
+        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(idx)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+    </div>
+  }
+  @if (deployableUnits && !activePlayer?.isAI) {
+    <div
+      [class]="'reward-choice ' + (activeEffectId === 'deployableUnits' ? 'active' : '')"
+      (click)="setEffectActive('deployableUnits')"
+    >
+      <div [innerHTML]="t.translate('commonEffectRewardUnitInsert', true, deployableUnits)"></div>
+    </div>
+  }
+  @if (deployableTroops && !activePlayer?.isAI) {
+    <div
+      [class]="'reward-choice ' + (activeEffectId === 'deployableTroops' ? 'active' : '')"
+      (click)="setEffectActive('deployableTroops')"
+    >
+      <div [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, deployableTroops)"></div>
+      <div class="control-bar" *ngIf="activeEffectId === 'deployableTroops'">
+        @for (deployAmount of deployableTroops | numberToArray; track $index) {
+          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployTroopsClicked(deployAmount)">
+            {{ deployAmount }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+  @if (deployableDreadnoughts && !activePlayer?.isAI) {
+    <div
+      [class]="'reward-choice ' + (activeEffectId === 'deployableDreadnoughts' ? 'active' : '')"
+      (click)="setEffectActive('deployableDreadnoughts')"
+    >
+      <div [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, deployableDreadnoughts)"></div>
+      <div class="control-bar" *ngIf="activeEffectId === 'deployableDreadnoughts'">
+        @for (deployAmount of deployableDreadnoughts | numberToArray; track $index) {
+          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployDreadnoughtsClicked(deployAmount)">
+            {{ deployAmount }}
+          </button>
+        }
+      </div>
+    </div>
   }
 </div>

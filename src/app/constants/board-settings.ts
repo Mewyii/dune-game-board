@@ -34,6 +34,8 @@ export interface GameContent {
   finaleTrigger: number;
   troopCombatStrength: number;
   dreadnoughtCombatStrength: number;
+  maxPlayerDreadnoughtCount: number;
+  maxPlayerIntrigueCount?: number;
   highCouncilPersuasion: number;
   startingResources: Effect[];
   customCards?: CustomCard[];

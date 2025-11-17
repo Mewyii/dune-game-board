@@ -510,8 +510,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'signet-ring',
       },
       {
-        type: 'solari',
-        amount: 2,
+        type: 'card-draw',
       },
     ],
     combatEffects: [

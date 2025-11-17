@@ -234,6 +234,64 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Heavy Lasguns',
+      de: 'Schwere Lasguns',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-card-discard',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Satellite Control',
+      de: 'Satellitenkontrolle',
+    },
+    faction: 'guild',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/dune.png',
+    effectSize: 'small',
+    imagePosition: 'top',
+    buyEffects: [
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    effects: [],
+    customEffect: {
+      en: '<b>Round start:</b> <br>{resource:tech-tile-flip} {resource:spice}{resource:helper-trade}Remove all units from <br>your garrison for this round. You <br>can use them as if they were in it.',
+      de: '<b>Rundenbeginn:</b> <br>{resource:tech-tile-flip} {resource:spice}{resource:helper-trade}Entferne alle Einheiten<br> für diese Runde aus deiner <br>Garnison. Du kannst sie einsetzen als wären sie darin.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Maula Pistol Works',
       de: 'Maula-Pistolen Werk',
     },
@@ -361,47 +419,29 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Satellite Control',
-      de: 'Satellitenkontrolle',
+      en: 'Enhanced Sandcrawler Engines',
+      de: 'Verbesserte Sandcrawler- Antriebe',
     },
-    faction: 'guild',
     costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/dune.png',
+    imageUrl: '/assets/images/action-backgrounds/tech.png',
     effectSize: 'medium',
     imagePosition: 'top',
-    buyEffects: [
-      {
-        type: 'card-draw',
-      },
-    ],
-    effects: [
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'enemies-card-discard',
-      },
-    ],
+    buyEffects: [],
+    effects: [],
     customEffect: {
-      en: '',
-      de: '',
+      en: '<b>When you place an agent <br>on a {faction:spice} board space:</b><br>{resource:spice}',
+      de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
       fontSize: 'small',
     },
   },
   {
     name: {
-      en: 'Heavy Lasguns',
-      de: 'Schwere Lasguns',
+      en: 'Barrage Rockets',
+      de: 'Sperrfeuerraketen',
     },
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
-    effectSize: 'medium',
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/assault.png',
+    effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [],
     effects: [
@@ -418,13 +458,13 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-card-discard',
+        type: 'enemies-troop-destroy',
       },
     ],
     customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
+      en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
+      de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
+      fontSize: 'small',
     },
   },
   {
@@ -464,23 +504,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Enhanced Sandcrawler Engines',
-      de: 'Verbesserte Sandcrawler- Antriebe',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/tech.png',
-    effectSize: 'medium',
-    imagePosition: 'top',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: '<b>When you place an agent <br>on a {faction:spice} board space:</b><br>{resource:spice}',
-      de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
       en: 'Upgraded Ornithoper Engines',
       de: 'Verbesserte Ornithopertriebwerke',
     },
@@ -504,39 +527,6 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Barrage Rockets',
-      de: 'Sperrfeuerraketen',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/assault.png',
-    effectSize: 'small',
-    imagePosition: 'center',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'timing-turn-start',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'dreadnought-retreat',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'enemies-troop-destroy',
-      },
-    ],
-    customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
       fontSize: 'small',
     },
   },
@@ -587,8 +577,13 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/port_2.png',
+    effectSize: 'large',
     imagePosition: 'center',
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
     effects: [
       {
         type: 'tech-tile-flip',
@@ -603,7 +598,6 @@ export const techTiles: TechTileCard[] = [
         type: 'agent-lift',
       },
     ],
-    effectSize: 'large',
     customEffect: {
       en: '',
       de: '',
@@ -812,8 +806,9 @@ export const techTiles: TechTileCard[] = [
       en: 'Stillsuits Factory',
       de: 'Destillanzugs-Fabrik',
     },
-    costs: 5,
+    costs: 4,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_5.png',
+    effectSize: 'large',
     imagePosition: 'center',
     buyEffects: [],
     effects: [
@@ -834,7 +829,6 @@ export const techTiles: TechTileCard[] = [
         type: 'card-draw',
       },
     ],
-    effectSize: 'large',
     customEffect: {
       en: '',
       de: '',
@@ -1171,6 +1165,9 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'small',
     imagePosition: 'top',
     buyEffects: [
+      {
+        type: 'card-draw',
+      },
       {
         type: 'card-draw',
       },

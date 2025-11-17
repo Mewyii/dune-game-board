@@ -1,21 +1,28 @@
 <div class="conversion-container">
   @if (effectConversion.effectCosts.multiplier) {
-  <dune-reward-array
-    [rewards]="[{ type: effectConversion.effectCosts.multiplier.type }]"
-    [textColor]="'white'"
-  ></dune-reward-array>
-  <dune-reward-array [rewards]="effectConversion.effectCosts.effectRewards" [textColor]="'white'"></dune-reward-array>
-  } @else { @for (effectCost of effectConversion.effectCosts.effectRewards; track $index) {
-  <dune-reward-array [rewards]="[effectCost]" [textColor]="'white'"></dune-reward-array>
-  } }
+    <dune-reward-array
+      [rewards]="[{ type: effectConversion.effectCosts.multiplier.type }]"
+      [textColor]="'white'"
+    ></dune-reward-array>
+    <dune-reward-array [rewards]="effectConversion.effectCosts.effectRewards" [textColor]="'white'"></dune-reward-array>
+  } @else {
+    @for (effectCost of effectConversion.effectCosts.effectRewards; track $index) {
+      <dune-reward-array [rewards]="[effectCost]" [textColor]="'white'"></dune-reward-array>
+    }
+  }
   <dune-reward-array [rewards]="[{ type: 'helper-trade' }]"></dune-reward-array>
   @if (effectConversion.effectConversions.multiplier) {
-  <dune-reward-array
-    [rewards]="[{ type: effectConversion.effectConversions.multiplier.type }]"
-    [textColor]="'white'"
-  ></dune-reward-array>
-  <dune-reward-array [rewards]="effectConversion.effectConversions.effectRewards" [textColor]="'white'"></dune-reward-array>
-  } @else { @for (leftEffect of effectConversion.effectConversions.effectRewards; track $index) {
-  <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
-  } }
+    <dune-reward-array
+      [rewards]="[{ type: effectConversion.effectConversions.multiplier.type }]"
+      [textColor]="'white'"
+    ></dune-reward-array>
+    <dune-reward-array
+      [rewards]="effectConversion.effectConversions.effectRewards"
+      [textColor]="'white'"
+    ></dune-reward-array>
+  } @else {
+    @for (leftEffect of effectConversion.effectConversions.effectRewards; track $index) {
+      <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
+    }
+  }
 </div>

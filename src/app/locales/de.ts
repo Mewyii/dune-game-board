@@ -57,6 +57,7 @@ export const deLocale: Locale = {
   dialogAdditionalPlayerActionsTitle: 'Zusätzliche Spieler-Aktionen',
   dialogAdditionalPlayerActionsPermanentPersuasion: 'Permanente Überzeugung',
   dialogAdditionalPlayerActionsBlockedFields: 'Blockierte Felder',
+  dialogAdditionalPlayerCanRetreatUnits: 'Kann Einheiten zurückziehen',
   imperiumRowTooltipSearch: 'Durchsuchen',
   imperiumRowTooltipRecruit: 'Rekrutieren',
   imperiumRowTooltipBuy: 'Erwerben',

@@ -144,6 +144,14 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.dreadnoughtCombatStrength);
   }
 
+  public getMaxPlayerDreadnoughtCount() {
+    return cloneDeep(this.settingsSubject.value.gameContent.maxPlayerDreadnoughtCount);
+  }
+
+  public getMaxPlayerIntrigueCount() {
+    return cloneDeep(this.settingsSubject.value.gameContent.maxPlayerIntrigueCount);
+  }
+
   public getLocationTakeoverTroopCosts() {
     return cloneDeep(this.settingsSubject.value.gameContent.locationTakeoverTroopCosts);
   }

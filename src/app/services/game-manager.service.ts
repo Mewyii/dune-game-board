@@ -40,6 +40,8 @@ import {
   ActionType,
   EffectPlayerTurnTiming,
   EffectReward,
+  EffectRewardType,
+  FactionType,
   StructuredChoiceEffect,
   StructuredConversionEffect,
   StructuredConversionOrRewardEffect,
@@ -1048,20 +1050,20 @@ export class GameManager {
             this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
             this.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
 
-            this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound);
-            this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
+            this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound, locationId);
+            this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound, locationId);
           }
         }
       } else {
         this.audioManager.playSound('location-control');
         this.locationManager.setLocationOwner(locationId, playerId);
         this.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
-        this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound);
+        this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound, locationId);
       }
     }
   }
 
-  public playIntrigue(playerId: number, intrigue: IntrigueDeckCard) {
+  public playPlayerIntrigue(playerId: number, intrigue: IntrigueDeckCard) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
       return;
@@ -1100,6 +1102,48 @@ export class GameManager {
     this.intriguesService.trashPlayerIntrigue(playerId, intrigue.id);
     this.loggingService.logPlayerPlayedIntrigue(playerId, this.t.translateLS(intrigue.name));
     this.turnInfoService.updatePlayerTurnInfo(playerId, { intriguesPlayedThisTurn: [intrigue] });
+  }
+
+  public trashPlayerIntrigue(playerId: number, intrigue: IntrigueDeckCard) {
+    const intrigueTrashTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'intrigue-trash');
+    if (intrigueTrashTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, intrigueTrashTodo.id);
+    }
+
+    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
+    this.loggingService.logPlayerTrashedIntrigue(playerId, this.t.translateLS(intrigue.name));
+  }
+
+  increasePlayerFactionScore(playerId: number, factionType: FactionType) {
+    const influenceUpChoiceTodo = this.playerRewardChoicesService.getPlayerRewardChoice(
+      playerId,
+      'faction-influence-up-choice'
+    );
+    if (influenceUpChoiceTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, influenceUpChoiceTodo.id);
+    }
+
+    this.addRewardToPlayer(playerId, {
+      type: ('faction-influence-up-' + factionType) as EffectRewardType,
+    });
+
+    this.setPreferredFieldsForAIPlayer(playerId);
+  }
+
+  decreasePlayerFactionScore(playerId: number, factionType: FactionType) {
+    const influenceDownChoiceTodo = this.playerRewardChoicesService.getPlayerRewardChoice(
+      playerId,
+      'faction-influence-down-choice'
+    );
+    if (influenceDownChoiceTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, influenceDownChoiceTodo.id);
+    }
+
+    this.addRewardToPlayer(playerId, {
+      type: ('faction-influence-down-' + factionType) as EffectRewardType,
+    });
+
+    this.setPreferredFieldsForAIPlayer(playerId);
   }
 
   public resolveEffectChoice(
@@ -2413,6 +2457,18 @@ export class GameManager {
     }
   }
 
+  discardImperiumCardFromHand(playerId: number, card: ImperiumDeckCard) {
+    const cardDiscardTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'card-discard');
+    if (cardDiscardTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, cardDiscardTodo.id);
+    }
+
+    this.audioManager.playSound('card-discard');
+    this.cardsService.discardPlayerHandCard(this.activePlayerId, card);
+
+    this.loggingService.logPlayerDiscardedCard(this.activePlayerId, this.t.translateLS(card.name));
+  }
+
   acquirePlayerTechTile(playerId: number, techTile: TechTileDeckCard) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
@@ -3014,6 +3070,14 @@ export class GameManager {
     } else if (rewardType === 'intrigue') {
       this.audioManager.playSound('intrigue', rewardAmount);
       this.intriguesService.drawPlayerIntriguesFromDeck(playerId, rewardAmount);
+
+      const maxPlayerIntrigueCount = this.settingsService.getMaxPlayerIntrigueCount();
+      const newPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId) + rewardAmount;
+      if (maxPlayerIntrigueCount && newPlayerIntrigueCount > maxPlayerIntrigueCount) {
+        this.turnInfoService.updatePlayerTurnInfo(playerId, {
+          intrigueTrashAmount: newPlayerIntrigueCount - maxPlayerIntrigueCount,
+        });
+      }
     } else if (rewardType === 'intrigue-trash') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { intrigueTrashAmount: 1 });
     } else if (rewardType === 'troop') {
@@ -3307,20 +3371,27 @@ export class GameManager {
     let retreatedAmount = 0;
 
     if (unitType === 'troop') {
-      const retreatableTroops = playerTurnInfos.deployedTroops;
-      const troopsToRetreat = playerTurnInfos.deployedTroops >= amount ? amount : playerTurnInfos.deployedTroops;
+      const canRetreatTroops = playerTurnInfos.canRetreatUnits;
+      const troopsToRetreat = canRetreatTroops
+        ? amount
+        : playerTurnInfos.deployedTroops >= amount
+          ? amount
+          : playerTurnInfos.deployedTroops;
 
-      if (troopsToRetreat > 0) {
+      if (canRetreatTroops || troopsToRetreat > 0) {
         this.combatManager.removePlayerTroopsFromCombat(playerId, troopsToRetreat);
         this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedTroops: -troopsToRetreat });
         retreatedAmount += troopsToRetreat;
       }
     } else if (unitType === 'dreadnought') {
-      const retretableDreadnoughts = playerTurnInfos.deployedDreadnoughts;
-      const dreadnoughtsToRetreat =
-        playerTurnInfos.deployedDreadnoughts >= amount ? amount : playerTurnInfos.deployedDreadnoughts;
+      const canRetreatDreadnoughts = playerTurnInfos.canRetreatUnits;
+      const dreadnoughtsToRetreat = canRetreatDreadnoughts
+        ? amount
+        : playerTurnInfos.deployedDreadnoughts >= amount
+          ? amount
+          : playerTurnInfos.deployedDreadnoughts;
 
-      if (dreadnoughtsToRetreat > 0) {
+      if (canRetreatDreadnoughts || dreadnoughtsToRetreat > 0) {
         this.combatManager.removePlayerShipsFromCombat(playerId, dreadnoughtsToRetreat);
         this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedDreadnoughts: -dreadnoughtsToRetreat });
         retreatedAmount += dreadnoughtsToRetreat;

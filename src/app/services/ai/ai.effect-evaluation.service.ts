@@ -528,7 +528,7 @@ export class AIEffectEvaluationService {
         return value + 0.1 * gameState.playerCombatUnits.troopsInGarrison;
       case 'card-draw':
         if (player.turnState === 'reveal') {
-          return -5;
+          return -3;
         } else {
           const drawableCards =
             rewardAmount <= gameState.playerDeckCards.length ? rewardAmount : gameState.playerDeckCards.length;
@@ -640,9 +640,15 @@ export class AIEffectEvaluationService {
         return value;
       case 'agent-lift':
         if (player.turnState === 'reveal') {
-          return -5;
+          return -3;
         } else {
-          return hasPlacedAgents && hasAgentsLeftToPlace ? value : 0;
+          const liftingAgentWouldRemoveLocationControlPosibility =
+            gameState.conflict.rewards[0].some((x) => x.type === 'location-control') &&
+            gameState.playerAgentsOnFields.every(
+              (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId)
+            );
+
+          return hasPlacedAgents && hasAgentsLeftToPlace && !liftingAgentWouldRemoveLocationControlPosibility ? value : 0;
         }
       case 'signet-token':
         return value;
@@ -659,7 +665,7 @@ export class AIEffectEvaluationService {
           gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
-        return controllableFreeLocations ? value : controllableEnemyLocations || noAgentsPlacedYet ? value * 0.8 : -5;
+        return controllableFreeLocations ? value : controllableEnemyLocations || noAgentsPlacedYet ? value * 0.8 : -3;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':

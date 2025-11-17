@@ -20,6 +20,8 @@ export const gameContentCustomExpert: GameContent = {
   ],
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 4,
+  maxPlayerDreadnoughtCount: 2,
+  maxPlayerIntrigueCount: 3,
   highCouncilPersuasion: 3,
   startingResources: [],
   customCards: customCardsCustomExpert,

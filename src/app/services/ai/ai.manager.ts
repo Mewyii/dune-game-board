@@ -246,7 +246,10 @@ export class AIManager {
           ),
           30,
           0
-        )) /
+        ) +
+        (gameState.playerCombatUnits.shipsInCombat *
+          this.effectEvaluationService.getRewardEffectEvaluation('location-control', player, gameState)) /
+          2) /
       2;
 
     const techEvaluation = clamp(
@@ -990,7 +993,11 @@ export class AIManager {
       const result = this.getAllStructuredEffectsRewardsAndCosts(intrigueEffects, player, gameState);
       intrigueCosts = result.costs;
       if (intrigueCosts.some((x) => x.type === 'location-control')) {
-        if (gameState.freeLocations.length < 1) {
+        if (
+          !gameState.playerAgentsOnFields.some((agent) =>
+            gameState.freeLocations.some((locationId) => locationId === agent.fieldId)
+          )
+        ) {
           intrigueCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
         }
       }

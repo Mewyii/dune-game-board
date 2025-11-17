@@ -55,6 +55,7 @@ export const enLocale = {
   dialogAdditionalPlayerActionsTitle: 'Additional Player Actions',
   dialogAdditionalPlayerActionsPermanentPersuasion: 'Permanent Persuasion',
   dialogAdditionalPlayerActionsBlockedFields: 'Blocked Board Spaces',
+  dialogAdditionalPlayerCanRetreatUnits: 'Can retreat units',
   imperiumRowTooltipSearch: 'Search',
   imperiumRowTooltipRecruit: 'Recruit',
   imperiumRowTooltipBuy: 'Acquire',

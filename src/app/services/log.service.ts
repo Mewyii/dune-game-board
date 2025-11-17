@@ -81,10 +81,12 @@ export interface PlayerCombatWinLog extends LogBase {
 
 export interface PlayerLocationControlGainLog extends LogBase {
   type: 'location-control-gain';
+  locationId: string;
 }
 
 export interface PlayerLocationControlLossLog extends LogBase {
   type: 'location-control-loss';
+  locationId: string;
 }
 
 export interface PlayerTechTileBuyLog extends LogBase {
@@ -238,12 +240,18 @@ export class LoggingService {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'combat-win', roundNumber }]);
   }
 
-  logPlayerGainedLocationControl(playerId: number, roundNumber: number) {
-    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'location-control-gain', roundNumber }]);
+  logPlayerGainedLocationControl(playerId: number, roundNumber: number, locationId: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'location-control-gain', roundNumber, locationId },
+    ]);
   }
 
-  logPlayerLostLocationControl(playerId: number, roundNumber: number) {
-    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'location-control-loss', roundNumber }]);
+  logPlayerLostLocationControl(playerId: number, roundNumber: number, locationId: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'location-control-loss', roundNumber, locationId },
+    ]);
   }
 
   logPlayerBoughtTechTile(playerId: number, techTileName: string) {

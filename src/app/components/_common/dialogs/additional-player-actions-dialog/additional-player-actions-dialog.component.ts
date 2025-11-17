@@ -12,12 +12,13 @@ import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/servic
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
+import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
-    selector: 'dune-additional-player-actions-dialog',
-    templateUrl: './additional-player-actions-dialog.component.html',
-    styleUrl: './additional-player-actions-dialog.component.scss',
-    standalone: false
+  selector: 'dune-additional-player-actions-dialog',
+  templateUrl: './additional-player-actions-dialog.component.html',
+  styleUrl: './additional-player-actions-dialog.component.scss',
+  standalone: false,
 })
 export class AdditionalPlayerActionsDialogComponent implements OnInit {
   public activePlayer: Player | undefined;
@@ -27,6 +28,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
   public blockedFieldIds: FieldBlockModifier[] = [];
 
   public activePlayerScore: PlayerScore | undefined;
+  public playerCanRetreatUnits: boolean | undefined;
 
   constructor(
     public t: TranslateService,
@@ -36,7 +38,8 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     private playersService: PlayersService,
     private settingsService: SettingsService,
     private gameModifiersService: GameModifiersService,
-    private playerScoreManager: PlayerScoreManager
+    private playerScoreManager: PlayerScoreManager,
+    private turnInfoService: TurnInfoService
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +48,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       this.activePlayerId = activePlayer?.id ?? 0;
 
       this.activePlayerScore = this.playerScoreManager.playerScores.find((x) => x.playerId === this.activePlayerId);
+      this.playerCanRetreatUnits = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId, 'canRetreatUnits');
     });
 
     this.gameModifiersService.playerGameModifiers$.subscribe((modifiers) => {
@@ -53,6 +57,10 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
     this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       this.activePlayerScore = playerScores.find((x) => x.playerId === this.activePlayerId);
+    });
+
+    this.turnInfoService.turnInfos$.subscribe(() => {
+      this.playerCanRetreatUnits = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId, 'canRetreatUnits');
     });
 
     this.boardFields = this.settingsService.boardFields;
@@ -123,6 +131,10 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
     this.gameManager.setPreferredFieldsForAIPlayer(id);
     return false;
+  }
+
+  public onSetPlayerCanRetreatUnitsClicked() {
+    this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, { canRetreatUnits: !this.playerCanRetreatUnits });
   }
 
   public fieldIsBlocked(actionField: ActionField) {

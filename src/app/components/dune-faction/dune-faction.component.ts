@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppMode } from 'src/app/constants/board-settings';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectRewardType, EffectType, Faction } from 'src/app/models';
+import { EffectType, Faction } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
@@ -10,10 +10,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'app-dune-faction',
-    templateUrl: './dune-faction.component.html',
-    styleUrls: ['./dune-faction.component.scss'],
-    standalone: false
+  selector: 'app-dune-faction',
+  templateUrl: './dune-faction.component.html',
+  styleUrls: ['./dune-faction.component.scss'],
+  standalone: false,
 })
 export class DuneFactionComponent implements OnInit {
   @Input() faction: Faction = {
@@ -105,17 +105,11 @@ export class DuneFactionComponent implements OnInit {
   }
 
   onIncreaseFactionScoreClicked(playerId: number) {
-    this.gameManager.addRewardToPlayer(playerId, {
-      type: ('faction-influence-up-' + this.faction.type) as EffectRewardType,
-    });
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.gameManager.increasePlayerFactionScore(playerId, this.faction.type);
   }
 
   onDecreaseFactionScoreClicked(playerId: number) {
-    this.gameManager.addRewardToPlayer(playerId, {
-      type: ('faction-influence-down-' + this.faction.type) as EffectRewardType,
-    });
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.gameManager.decreasePlayerFactionScore(playerId, this.faction.type);
 
     return false;
   }

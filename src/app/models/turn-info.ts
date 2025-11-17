@@ -33,6 +33,7 @@ export interface TurnInfo {
   cardDiscardAmount: number;
   cardDestroyAmount: number;
   canLiftAgent: boolean;
+  canRetreatUnits: boolean;
   factionInfluenceUpChoiceAmount: number;
   factionInfluenceUpChoiceTwiceAmount: number;
   factionInfluenceDownChoiceAmount: number;

@@ -131,6 +131,7 @@ export class TurnInfoService {
       enemiesEffects: [],
       cardReturnToHandAmount: 0,
       needsToPassTurn: false,
+      canRetreatUnits: false,
     };
   }
 }
