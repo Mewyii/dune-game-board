@@ -94,8 +94,8 @@ export const leaders: Leader[] = [
       de: 'Anführer der Fremen',
     },
     passiveDescription: {
-      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:card-draw}<br>Ignore all {faction:fremen} -requirements.",
-      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:card-draw}<br>Ignoriere alle {faction:fremen} -Bedingungen.',
+      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:water}<br>Ignore all {faction:fremen} -requirements.",
+      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Bedingungen.',
     },
     signetName: {
       en: 'Planting the paradise',
@@ -664,7 +664,7 @@ export const leaders: Leader[] = [
       },
       {
         type: 'troop',
-        amount: 2,
+        amount: 3,
       },
     ],
     passiveEffects: [],
@@ -693,7 +693,7 @@ export const leaders: Leader[] = [
     },
     signetDescription: {
       en: 'You may trash {resource:signet-token} when you receive {resource:solari}, {resource:spice}, {resource:water} to get <b>1</b> more of it.',
-      de: 'Du kannst {resource:signet-token} entsorgen, wenn du {resource:solari}, {resource:spice} oder {resource:water} erhältst, um davon <b>1</b> mehr zu erhalten.',
+      de: 'Du kannst {resource:signet-token} an deinem Aufdeckzug entsorgen, um {resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     type: 'new',
@@ -707,7 +707,7 @@ export const leaders: Leader[] = [
       },
       {
         type: 'troop',
-        amount: 2,
+        amount: 3,
       },
     ],
     passiveEffects: [],
@@ -1002,28 +1002,30 @@ export const leaders: Leader[] = [
       de: 'Unkontrollierte Agression',
     },
     passiveDescription: {
-      en: '<b>Round start</b>: Trash one of your handcards.',
-      de: '<b>Rundenbeginn</b>: Entsorge eine der Karten auf deiner Hand.',
+      en: '<b>Game start</b>: {resource:location-control} (only Carthag, Arrakeen or imperial basin)<br><b>Round start</b>: Trash one of your handcards.',
+      de: '<b>Spielbeginn</b>: {resource:location-control} (nur Carthag, Arrakeen oder Imperiales Becken)<br><b>Rundenbeginn</b>: Entsorge eine der Karten auf deiner Hand.',
     },
     signetName: {
       en: 'Oppression',
       de: 'Unterdrückung',
     },
     signetDescription: {
-      en: '{resource:spice}{resource:helper-or}Receive the bonus of up to <b>2</b> locations under your control.',
-      de: '{resource:spice}{resource:helper-or}Erhalte den Bonus von bis zu <b>2</b> Orten unter deiner Kontrolle.',
+      en: 'Receive the bonus of up to <b>2</b> locations under your control.',
+      de: 'Erhalte den Bonus von bis zu <b>2</b> Orten unter deiner Kontrolle.',
     },
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'medium',
+    passiveDescriptionSize: 'small',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'spice',
+        type: 'solari',
       },
       {
         type: 'troop',
-        amount: 4,
+        amount: 3,
       },
     ],
     passiveEffects: [],
@@ -1136,8 +1138,8 @@ export const leaders: Leader[] = [
       de: 'In den Schatten',
     },
     passiveDescription: {
-      en: "Enemy agents don't block board spaces for you.<br><br>All {faction:landsraad} board spaces cost you {resource:solari} more.",
-      de: 'Gegnerische Agenten blockieren Felder für dich nicht.<br><br>{faction:landsraad}-Felder kosten dich zusätzlich {resource:solari}.',
+      en: "Enemy agents don't block board spaces for you.<br><br>All {faction:landsraad} board spaces cost you {resource:solari;amount:2} more.",
+      de: 'Gegnerische Agenten blockieren Felder für dich nicht.<br><br>{faction:landsraad}-Felder kosten dich zusätzlich {resource:solari;amount:2}.',
     },
     signetName: {
       en: 'Extortion',
