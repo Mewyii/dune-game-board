@@ -472,6 +472,8 @@ export class AIEffectEvaluationService {
         return 2.75;
       case 'card-return-to-hand':
         return 2 + 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
+      case 'tech-tile-trash':
+        return -5;
       default:
         return 0;
     }
@@ -657,7 +659,6 @@ export class AIEffectEvaluationService {
           ? this.getStructuredEffectsEvaluationForTurnState(gameState.playerLeaderSignetRingEffects, player, gameState)
           : value;
       case 'location-control':
-        const noAgentsPlacedYet = gameState.playerAgentsOnFields.length < 1;
         const controllableFreeLocations = gameState.playerAgentsOnFields.some((x) =>
           gameState.freeLocations.some((y) => x.fieldId === y)
         );
@@ -665,7 +666,7 @@ export class AIEffectEvaluationService {
           gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
-        return controllableFreeLocations ? value : controllableEnemyLocations || noAgentsPlacedYet ? value * 0.8 : -3;
+        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -3;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':
@@ -696,6 +697,14 @@ export class AIEffectEvaluationService {
       case 'card-return-to-hand':
         const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
         return playerDiscardPileCount > 0 ? value : 0;
+      case 'tech-tile-trash':
+        if (gameState.playerTechTiles.length > 0) {
+          const techValue = this.getRewardEffectEvaluation('tech', player, gameState);
+          const sortedTechTiles = gameState.playerTechTiles.sort((a, b) => a.costs - b.costs);
+          return -(sortedTechTiles[0].costs * techValue * (1.25 - 0.075 * gameState.currentRound));
+        } else {
+          return 0;
+        }
       default:
         return value;
     }

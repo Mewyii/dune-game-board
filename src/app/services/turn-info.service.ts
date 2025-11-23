@@ -132,6 +132,7 @@ export class TurnInfoService {
       cardReturnToHandAmount: 0,
       needsToPassTurn: false,
       canRetreatUnits: false,
+      techTileTrashAmount: 0,
     };
   }
 }

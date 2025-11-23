@@ -511,6 +511,7 @@ export function playerCanPayCosts(
     | 'playerIntrigueCount'
     | 'playerCardsFactionsInPlay'
     | 'gameSettings'
+    | 'playerTechTiles'
   >
 ) {
   let canPayCosts = true;
@@ -536,6 +537,10 @@ export function playerCanPayCosts(
         canPayCosts = false;
       }
     } else if (costType === 'tech') {
+      if (gameState.playerTechTiles.length < costAmount) {
+        canPayCosts = false;
+      }
+    } else if (costType === 'tech-tile-trash') {
       if (player.tech < costAmount) {
         canPayCosts = false;
       }

@@ -141,7 +141,7 @@ export class TechTilesService {
     this.playerTechTilesSubject.next(this.playerTechTiles.map((x) => ({ ...x, isFlipped: false })));
   }
 
-  trashTechTile(techTileId: string) {
+  trashPlayerTechTile(techTileId: string) {
     this.playerTechTilesSubject.next(this.playerTechTiles.filter((x) => x.techTile.id !== techTileId));
   }
 

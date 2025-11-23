@@ -145,7 +145,7 @@ export const leaders: Leader[] = [
     },
     signetDescription: {
       en: 'You may trash {resource:signet-token} on your reveal turn to reduce the costs of a fremen card by <b>1</b>.',
-      de: 'Du kannst {resource:signet-token} an deinem Aufdeckzug entsorgen, um die Kosten für eine Fremen-Karte um <b>1</b> zu reduzieren.',
+      de: 'Du kannst {resource:signet-token} als {resource:persuasion} verwenden, um Fremen-Karten zu erwerben.',
     },
     imageUrl: '/assets/images/leaders/chani.png',
     type: 'new',
@@ -250,8 +250,8 @@ export const leaders: Leader[] = [
       de: 'Blind und doch Sehend',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: {resource:agent} on {faction:town} board spaces: {resource:persuasion;amount:1}<br>{resource:agent} on {faction:fremen} board spaces: {resource:troop}',
-      de: '<b>Aufdeckzug</b>: {resource:agent} auf {faction:town}-Feldern: {resource:persuasion;amount:1}<br>{resource:agent} auf {faction:fremen}-Feldern: {resource:troop}',
+      en: '<b>Reveal turn</b>: For each of your {resource:agent} on {faction:town} board spaces: {resource:persuasion;amount:1}{resource:helper-or}{resource:focus}',
+      de: '<b>Aufdeckzug</b>: Für jeden deiner {resource:agent} auf <br>{faction:town} -Feldern: {resource:persuasion;amount:1}{resource:helper-or}{resource:focus}',
     },
     signetName: {
       en: 'Accusing prophet',
@@ -317,7 +317,6 @@ export const leaders: Leader[] = [
       },
       {
         type: 'troop',
-        amount: 2,
       },
     ],
     passiveEffects: [],

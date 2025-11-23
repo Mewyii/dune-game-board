@@ -55,4 +55,5 @@ export interface TurnInfo {
   effectConversions: StructuredConversionEffectWithGameElement[];
   enemiesEffects: EffectReward[];
   needsToPassTurn: boolean;
+  techTileTrashAmount: number;
 }

@@ -70,22 +70,15 @@ export class AIFieldEvaluationService {
       imperiumRowEvaluation
     );
 
-    const adjustedFieldEvaluations = fieldEvaluations.map((x) => ({
-      ...x,
-      value: gameState.playerGameModifiers?.fieldMarkers?.some((y) => x.fieldId.includes(y.fieldId) && y.amount > 0)
-        ? x.value + 0.1
-        : x.value,
-    }));
-
-    const accessibleFields = this.getAccessibleFields(boardFields, adjustedFieldEvaluations, gameState, aiPlayer, player);
+    const accessibleFields = this.getAccessibleFields(boardFields, fieldEvaluations, gameState, aiPlayer, player);
 
     const randomFactor = gameState.isOpeningTurn
       ? 0.5
       : aiDifficulty === 'hard'
-      ? 0.05
-      : aiDifficulty === 'medium'
-      ? 0.15
-      : 0.3;
+        ? 0.05
+        : aiDifficulty === 'medium'
+          ? 0.15
+          : 0.3;
     const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
 
     return { preferredFields: slightlyRandomizedFields };
@@ -321,6 +314,15 @@ export class AIFieldEvaluationService {
     return fields.map((field) => {
       // Game Modifier Reward Adjustments
       const fieldRewards = getModifiedRewardsForField(field, gameState.playerGameModifiers?.fieldReward);
+
+      // Field Marker Adjustments
+      if (
+        gameState.playerGameModifiers?.fieldMarkers?.some(
+          (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0
+        )
+      ) {
+        fieldRewards.push({ type: 'signet-token' });
+      }
 
       // Faction Reward Adjustments
       if (isFactionScoreType(field.actionType)) {

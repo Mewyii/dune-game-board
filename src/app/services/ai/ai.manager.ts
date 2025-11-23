@@ -40,7 +40,7 @@ import { PlayerCombatUnits } from '../combat-manager.service';
 import { ImperiumRowModifier } from '../game-modifier.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { SettingsService } from '../settings.service';
-import { TechTileDeckCard } from '../tech-tiles.service';
+import { PlayerTechTile, TechTileDeckCard } from '../tech-tiles.service';
 import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 import { AIFieldEvaluationService, ViableField } from './ai.field-evaluation.service';
 
@@ -558,6 +558,18 @@ export class AIManager {
     return undefined;
   }
 
+  getTechTileToTrash(playerTechTiles: PlayerTechTile[], player: Player, gameState: GameState) {
+    if (playerTechTiles.length > 0) {
+      const cardEvaluations = playerTechTiles.map((playerTechTile) => {
+        const evaluation = this.getTechTileTrashEvaluation(playerTechTile.techTile, player, gameState);
+        return { evaluation, card: playerTechTile };
+      });
+      cardEvaluations.sort((a, b) => b.evaluation - a.evaluation);
+      return cardEvaluations[0].card;
+    }
+    return undefined;
+  }
+
   private getRandomAIName() {
     const randomIndex = Math.floor(Math.random() * Object.keys(aiPersonalities).length);
     return Object.keys(aiPersonalities)[randomIndex];
@@ -975,6 +987,28 @@ export class AIManager {
     return evaluationValue;
   }
 
+  public getTechTileTrashEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
+    let evaluationValue = 0;
+
+    if (techTile.structuredEffects) {
+      const value = this.effectEvaluationService.getStructuredEffectsEvaluation(
+        techTile.structuredEffects,
+        player,
+        gameState
+      );
+      evaluationValue -= value;
+    }
+    if (techTile.customEffect?.en) {
+      if (techTile.aiEvaluation) {
+        evaluationValue -= techTile.aiEvaluation(player, gameState);
+      } else {
+        evaluationValue -= 0.25 * techTile.costs;
+      }
+    }
+
+    return evaluationValue;
+  }
+
   public getIntriguePlayEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {
     const intrigueEffects =
       gameState.currentRoundPhase === 'agent-placement' ? intrigue.structuredPlotEffects : intrigue.structuredCombatEffects;
@@ -1074,5 +1108,27 @@ export class AIManager {
       costs: getFlattenedEffectRewardArray(costs),
       rewards: getFlattenedEffectRewardArray(rewards),
     };
+  }
+
+  public getPreferredRewardEffects(player: Player, rewards: EffectReward[], gameState: GameState, maxEffects = 1) {
+    if (rewards.length < 1) {
+      return [];
+    }
+
+    const evaluatedEffects: { reward: EffectReward; evaluation: number }[] = [];
+
+    for (const reward of rewards) {
+      const evaluation = this.effectEvaluationService.getRewardEffectEvaluationForTurnState(
+        reward.type,
+        reward.amount ?? 1,
+        player,
+        gameState
+      );
+      evaluatedEffects.push({ reward, evaluation });
+    }
+
+    evaluatedEffects.sort((a, b) => b.evaluation - a.evaluation);
+
+    return evaluatedEffects.slice(0, maxEffects).map((x) => x.reward);
   }
 }

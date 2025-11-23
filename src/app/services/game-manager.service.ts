@@ -52,7 +52,13 @@ import { Player } from '../models/player';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from '../models/turn-info';
 import { AIManager } from './ai/ai.manager';
 
-import { GameState, PlayerGameElementFactions, PlayerGameElementFieldAccess, PlayerGameElementRewards } from '../models/ai';
+import {
+  GameServices,
+  GameState,
+  PlayerGameElementFactions,
+  PlayerGameElementFieldAccess,
+  PlayerGameElementRewards,
+} from '../models/ai';
 import { AudioManager } from './audio-manager.service';
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
 import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from './combat-manager.service';
@@ -648,6 +654,15 @@ export class GameManager {
         this.resolveStructuredEffects(playerLeader.customEffects, updatedPlayer, gameState);
       }
     }
+    if (playerLeader?.customTimedFunction) {
+      if (playerLeader.customTimedFunction.timing == 'timing-reveal-turn') {
+        const gameState = this.getGameState(player);
+        const updatedPlayer = this.playerManager.getPlayer(playerId);
+        if (updatedPlayer) {
+          playerLeader.customTimedFunction.function(updatedPlayer, gameState, this.getGameServices());
+        }
+      }
+    }
 
     this.resolveTechTileEffects(player);
 
@@ -794,6 +809,18 @@ export class GameManager {
     }
 
     this.addPlayedCardRewards(playedCard, activePlayer, activePlayer.isAI);
+
+    const playerLeader = this.leadersService.getLeader(activePlayer.id);
+
+    if (playerLeader?.customTimedFunction) {
+      if (playerLeader.customTimedFunction.timing == 'timing-agent-placement') {
+        const gameState = this.getGameState(activePlayer);
+        const updatedPlayer = this.playerManager.getPlayer(activePlayer.id);
+        if (updatedPlayer) {
+          playerLeader.customTimedFunction.function(updatedPlayer, gameState, this.getGameServices());
+        }
+      }
+    }
 
     if (!activePlayer.isAI) {
       if (hasRewardOptions && rewardOptionLeft && rewardOptionRight) {
@@ -1636,6 +1663,24 @@ export class GameManager {
     }
   }
 
+  public aiTrashTechTile(playerId: number) {
+    const playerTechTiles = this.techTilesService.getPlayerTechTiles(playerId);
+    if (playerTechTiles && playerTechTiles.length > 0) {
+      const player = this.playerManager.getPlayer(playerId);
+      if (!player) {
+        return;
+      }
+
+      const gameState = this.getGameState(player);
+
+      const techTileToTrash = this.aIManager.getTechTileToTrash(playerTechTiles, player, gameState);
+      if (techTileToTrash) {
+        this.techTilesService.trashPlayerTechTile(techTileToTrash.techTile.id);
+        this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(techTileToTrash.techTile.name));
+      }
+    }
+  }
+
   private aiConvertRewardIfUsefulAndPossible(
     player: Player,
     effect: StructuredConversionEffectWithGameElement,
@@ -1808,7 +1853,7 @@ export class GameManager {
     }
   }
 
-  private resolveRewardChoices(player: Player) {
+  public resolveRewardChoices(player: Player) {
     if (!player.isAI) {
       this.resolvePlayerRewardChoices(player);
     } else {
@@ -1899,6 +1944,8 @@ export class GameManager {
             this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player, gameState);
           } else if (playerLeader.customSignetEffects) {
             this.resolveStructuredEffects(playerLeader.customSignetEffects, player, gameState);
+          } else if (playerLeader.customSignetFunction) {
+            playerLeader.customSignetFunction(player, gameState, this.getGameServices());
           } else if (playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
@@ -1919,6 +1966,13 @@ export class GameManager {
       });
 
       this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
+    }
+    if (turnInfo.techTileTrashAmount > 0) {
+      this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+        type: 'tech-tile-trash',
+      });
+
+      this.turnInfoService.setPlayerTurnInfo(player.id, { techTileTrashAmount: 0 });
     }
     if (turnInfo.canLiftAgent) {
       this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
@@ -2005,6 +2059,10 @@ export class GameManager {
     if (turnInfo.intrigueTrashAmount > 0) {
       this.aiTrashIntrigue(player.id);
       this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
+    }
+    if (turnInfo.techTileTrashAmount > 0) {
+      this.aiTrashTechTile(player.id);
+      this.turnInfoService.setPlayerTurnInfo(player.id, { techTileTrashAmount: 0 });
     }
     if (turnInfo.effectChoices.length > 0) {
       for (const effectOption of turnInfo.effectChoices) {
@@ -2137,6 +2195,10 @@ export class GameManager {
             this.resolveStructuredEffects(playerLeader.structuredSignetEffects, player, gameState);
           } else if (playerLeader.customSignetEffects) {
             this.resolveStructuredEffects(playerLeader.customSignetEffects, player, gameState);
+          } else if (playerLeader.customSignetFunction) {
+            playerLeader.customSignetFunction(player, gameState, this.getGameServices());
+          } else if (playerLeader.customSignetAIFunction) {
+            playerLeader.customSignetAIFunction(player, gameState, this.getGameServices());
           } else if (playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
@@ -2813,6 +2875,7 @@ export class GameManager {
       playerHandCardsConnectionRevealEffects,
       playerCardsFactionsInPlay,
       playerGameModifiers,
+      playerTechTiles,
       playerTechTilesFactions,
       playerTechTilesRewards,
       playerTechTilesConversionCosts,
@@ -2824,7 +2887,21 @@ export class GameManager {
         factionInfluenceMaxScore: this.settingsService.getFactionInfluenceMaxScore(),
         factionInfluenceAllianceTreshold: this.settingsService.getFactionInfluenceAllianceTreshold(),
       },
+      boardSpaces: this.settingsService.boardFields,
     } as GameState;
+  }
+
+  private getGameServices(): GameServices {
+    return {
+      locationManager: this.locationManager,
+      audioManager: this.audioManager,
+      gameModifierService: this.gameModifiersService,
+      loggingService: this.loggingService,
+      turnInfoService: this.turnInfoService,
+      playersService: this.playerManager,
+      aiManager: this.aIManager,
+      gameManager: this,
+    };
   }
 
   private fieldHasAccumulatedSpice(fieldId: string) {
@@ -3148,7 +3225,7 @@ export class GameManager {
         this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(gameElement.object.name));
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsTrashedThisTurn: [gameElement.object] });
       } else if (gameElement && gameElement.type === 'tech-tile') {
-        this.techTilesService.trashTechTile(gameElement.object.id);
+        this.techTilesService.trashPlayerTechTile(gameElement.object.id);
         this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(gameElement.object.name));
       }
     } else if (rewardType === 'tech-tile-flip') {
@@ -3232,6 +3309,8 @@ export class GameManager {
         costAmount,
         this.currentRound
       );
+    } else if (costType === 'tech-tile-trash') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { techTileTrashAmount: costAmount });
     } else if (costType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: costAmount });
     } else if (costType === 'intrigue') {
@@ -3262,7 +3341,7 @@ export class GameManager {
         this.loggingService.logPlayerTrashedCard(playerId, this.t.translateLS(element.object.name));
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsTrashedThisTurn: [element.object] });
       } else if (element.type === 'tech-tile') {
-        this.techTilesService.trashTechTile(element.object.id);
+        this.techTilesService.trashPlayerTechTile(element.object.id);
         this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(element.object.name));
       }
     } else if (costType === 'tech-tile-flip' && element) {
@@ -3297,6 +3376,12 @@ export class GameManager {
     if (leader.structuredPassiveEffects) {
       const gameState = this.getGameState(player);
       this.resolveStructuredEffects(leader.structuredPassiveEffects, player, gameState);
+    }
+    if (leader.customTimedAIFunction) {
+      if (leader.customTimedAIFunction.timing === 'timing-game-start') {
+        const gameState = this.getGameState(player);
+        leader.customTimedAIFunction.function(player, gameState, this.getGameServices());
+      }
     }
 
     this.resolveRewardChoices(player);

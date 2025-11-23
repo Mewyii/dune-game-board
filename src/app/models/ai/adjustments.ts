@@ -1,6 +1,7 @@
 import { ActionField, Resource } from 'src/app/models';
 import { Player } from 'src/app/models/player';
-import { AIGoals, GameState } from './goals';
+import { GameState } from './game-state';
+import { AIGoals } from './goals';
 
 export interface GoalModifier {
   type: AIGoals;

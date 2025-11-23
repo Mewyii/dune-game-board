@@ -318,7 +318,7 @@ export class LeadersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
       if (result) {
-        this.techTilesService.trashTechTile(techTileId);
+        this.techTilesService.trashPlayerTechTile(techTileId);
       }
     });
   }
