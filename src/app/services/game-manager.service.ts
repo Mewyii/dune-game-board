@@ -663,6 +663,15 @@ export class GameManager {
         }
       }
     }
+    if (playerLeader?.customTimedAIFunction) {
+      if (playerLeader.customTimedAIFunction.timing == 'timing-reveal-turn') {
+        const gameState = this.getGameState(player);
+        const updatedPlayer = this.playerManager.getPlayer(playerId);
+        if (updatedPlayer) {
+          playerLeader.customTimedAIFunction.function(updatedPlayer, gameState, this.getGameServices());
+        }
+      }
+    }
 
     this.resolveTechTileEffects(player);
 
@@ -2302,29 +2311,13 @@ export class GameManager {
     }
 
     const gameState = this.getGameState(player);
-
-    const imperiumRow = this.cardsService.imperiumRow.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[];
     const imperiumRowModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'imperiumRow');
 
-    const alwaysBuyableCards = [
-      ...this.cardsService.limitedCustomCards,
-      ...this.cardsService.unlimitedCustomCards.map((x) => this.cardsService.instantiateImperiumCard(x)),
-    ];
-
-    let recruitableCards: ImperiumDeckCard[] = [];
-    const factionRecruitment = this.turnInfoService.getPlayerTurnInfo(playerId, 'factionRecruitment');
-    if (factionRecruitment && factionRecruitment.length > 0) {
-      const recruitmentCardAmount = this.settingsService.getRecruitmentCardAmount();
-      recruitableCards = this.cardsService
-        .getTopDeckCards(recruitmentCardAmount)
-        .filter((x) => factionRecruitment.some((y) => y === x.faction) && x.type === 'imperium-card') as ImperiumDeckCard[];
-    }
-
-    const availableCards = [...imperiumRow, ...recruitableCards, ...shuffle(alwaysBuyableCards)];
+    const { allCards, imperiumRowCards, recruitableCards } = this.getAllBuyableCards(playerId);
 
     const cardToBuy = this.aIManager.getImperiumCardToBuy(
       availablePersuasion,
-      availableCards,
+      allCards,
       player,
       gameState,
       imperiumRowModifiers
@@ -2348,7 +2341,7 @@ export class GameManager {
       } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, cardToBuy);
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
-      } else if (imperiumRow.some((x) => x.id === cardToBuy.id)) {
+      } else if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
         this.cardsService.aquirePlayerCardFromImperiumRow(playerId, cardToBuy);
         this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsBoughtThisTurn: [cardToBuy] });
       } else {
@@ -2423,6 +2416,31 @@ export class GameManager {
       return true;
     }
     return false;
+  }
+
+  public getAllBuyableCards(playerId: number) {
+    const imperiumRowCards = this.cardsService.imperiumRow.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[];
+
+    const alwaysBuyableCards = [
+      ...this.cardsService.limitedCustomCards,
+      ...this.cardsService.unlimitedCustomCards.map((x) => this.cardsService.instantiateImperiumCard(x)),
+    ];
+
+    let recruitableCards: ImperiumDeckCard[] = [];
+    const factionRecruitment = this.turnInfoService.getPlayerTurnInfo(playerId, 'factionRecruitment');
+    if (factionRecruitment && factionRecruitment.length > 0) {
+      const recruitmentCardAmount = this.settingsService.getRecruitmentCardAmount();
+      recruitableCards = this.cardsService
+        .getTopDeckCards(recruitmentCardAmount)
+        .filter((x) => factionRecruitment.some((y) => y === x.faction) && x.type === 'imperium-card') as ImperiumDeckCard[];
+    }
+
+    return {
+      imperiumRowCards,
+      recruitableCards,
+      alwaysBuyableCards,
+      allCards: [...imperiumRowCards, ...recruitableCards, ...shuffle(alwaysBuyableCards)],
+    };
   }
 
   acquireImperiumRowCard(playerId: number, card: ImperiumRowCard | ImperiumRowPlot) {

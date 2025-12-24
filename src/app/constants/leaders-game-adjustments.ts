@@ -79,16 +79,46 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Chani Kynes',
     gameModifiers: {
-      imperiumRow: [
-        {
-          id: 'chani',
-          factionType: 'fremen',
-          persuasionAmount: -1,
-          minCosts: 1,
-        },
-      ],
       fieldCost: [{ id: 'chani-spice-field-costs', actionType: 'spice', costType: 'water', amount: -1 }],
       fieldReward: [{ id: 'chani-spice-field-rewards', actionType: 'spice', rewardType: 'spice', amount: -1 }],
+    },
+    customTimedAIFunction: {
+      timing: 'timing-reveal-turn',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
+        const availableSignetTokens = player.signetTokenCount;
+        const { allCards } = services.gameManager.getAllBuyableCards(player.id);
+
+        const reducedFremenCards = allCards.map((x) => {
+          if (x.faction !== 'fremen') {
+            return x;
+          } else {
+            return {
+              ...x,
+              persuasionCosts: x.persuasionCosts ? x.persuasionCosts - availableSignetTokens : undefined,
+            };
+          }
+        });
+
+        const cardToBuy = services.aiManager.getImperiumCardToBuy(
+          availablePersuasion,
+          reducedFremenCards,
+          player,
+          gameState,
+          []
+        );
+        if (cardToBuy?.faction === 'fremen') {
+          const realPersuasionCosts = cardToBuy.persuasionCosts ?? 0;
+          const usedSignetTokens = realPersuasionCosts > availableSignetTokens ? realPersuasionCosts : availableSignetTokens;
+
+          services.gameModifierService.addPlayerImperiumRowModifier(player.id, {
+            cardId: cardToBuy.id,
+            persuasionAmount: -usedSignetTokens,
+            currentRoundOnly: true,
+          });
+          services.playersService.removeSignetTokensFromPlayer(player.id, usedSignetTokens);
+        }
+      },
     },
     signetTokenValue: 1.75,
   },
