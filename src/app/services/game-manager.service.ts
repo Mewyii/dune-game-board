@@ -773,7 +773,7 @@ export class GameManager {
       rewards = fieldRewards as EffectReward[];
     }
 
-    for (const reward of rewards) {
+    for (const reward of getFlattenedEffectRewardArray(rewards)) {
       this.addRewardToPlayer(activePlayer.id, reward);
 
       if (reward.type === 'spice-accumulation' && this.fieldHasAccumulatedSpice(field.title.en)) {
@@ -1515,12 +1515,12 @@ export class GameManager {
     this.loggingService.logPlayerPlayedIntrigue(player.id, this.t.translateLS(intrigue.name));
     this.turnInfoService.updatePlayerTurnInfo(player.id, { intriguesPlayedThisTurn: [intrigue] });
 
+    this.intriguesService.trashPlayerIntrigue(player.id, intrigue.id);
+
     if (intrigueEffects) {
       this.resolveStructuredEffects(intrigueEffects, player, gameState, { type: 'intrigue', object: intrigue });
       this.aiResolveRewardChoices(player);
     }
-
-    this.intriguesService.trashPlayerIntrigue(player.id, intrigue.id);
   }
 
   aiGetPlayableAndUsefulIntrigues(player: Player, intrigues: IntrigueDeckCard[] | undefined, gameState: GameState) {
@@ -1542,6 +1542,10 @@ export class GameManager {
   aiIsPlayableAndUsefulIntrigue(player: Player, intrigue: IntrigueDeckCard, gameState: GameState) {
     let { isUseful, costs } = this.aIManager.getIntriguePlayEvaluation(intrigue, player, gameState);
 
+    // Fix so the AI recognizes it can't trash the intrigue it's about to play
+    if (costs.some((x) => x.type === 'intrigue-trash')) {
+      costs.push({ type: 'intrigue-trash' });
+    }
     if (isUseful && playerCanPayCosts(costs, player, gameState)) {
       return true;
     }
@@ -1791,7 +1795,7 @@ export class GameManager {
     this.aiResolveRewardChoices(player);
   }
 
-  private resolveStructuredEffects(
+  public resolveStructuredEffects(
     structuredEffects: StructuredEffect[],
     player: Player,
     gameState: GameState,
@@ -1961,9 +1965,11 @@ export class GameManager {
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
     if (turnInfo.intrigueTrashAmount > 0) {
-      this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-        type: 'intrigue-trash',
-      });
+      for (let i = 0; i < turnInfo.intrigueTrashAmount; i++) {
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'intrigue-trash',
+        });
+      }
 
       this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
     }
@@ -1999,7 +2005,7 @@ export class GameManager {
     }
   }
 
-  private aiResolveRewardChoices(player: Player, depth = 0) {
+  public aiResolveRewardChoices(player: Player, depth = 0) {
     const turnInfo = this.turnInfoService.getPlayerTurnInfos(player.id);
     if (!turnInfo || depth > 2) {
       return;
@@ -2057,7 +2063,10 @@ export class GameManager {
       this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 0 });
     }
     if (turnInfo.intrigueTrashAmount > 0) {
-      this.aiTrashIntrigue(player.id);
+      for (let i = 0; i < turnInfo.intrigueTrashAmount; i++) {
+        this.aiTrashIntrigue(player.id);
+      }
+
       this.turnInfoService.setPlayerTurnInfo(player.id, { intrigueTrashAmount: 0 });
     }
     if (turnInfo.techTileTrashAmount > 0) {
@@ -3149,7 +3158,7 @@ export class GameManager {
       this.intriguesService.drawPlayerIntriguesFromDeck(playerId, rewardAmount);
 
       const maxPlayerIntrigueCount = this.settingsService.getMaxPlayerIntrigueCount();
-      const newPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId) + rewardAmount;
+      const newPlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(playerId);
       if (maxPlayerIntrigueCount && newPlayerIntrigueCount > maxPlayerIntrigueCount) {
         this.turnInfoService.updatePlayerTurnInfo(playerId, {
           intrigueTrashAmount: newPlayerIntrigueCount - maxPlayerIntrigueCount,

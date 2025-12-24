@@ -394,8 +394,9 @@ export function isConditionFullfilled(
       }
     } else {
       if (
-        gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0 ||
-        gameState.playerHandCardsFactions[conditionEffect.faction] > 0
+        gameState.playerCardsFactionsInPlay[conditionEffect.faction] +
+          gameState.playerHandCardsFactions[conditionEffect.faction] >
+        1
       ) {
         conditionFullfilled = true;
       }

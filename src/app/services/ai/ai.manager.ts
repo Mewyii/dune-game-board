@@ -1009,36 +1009,43 @@ export class AIManager {
     return evaluationValue;
   }
 
-  public getIntriguePlayEvaluation(intrigue: IntrigueDeckCard, player: Player, gameState: GameState) {
+  public getIntriguePlayEvaluation(
+    intrigue: IntrigueDeckCard,
+    player: Player,
+    gameState: GameState
+  ): { isUseful: boolean; costs: EffectReward[] } {
     const intrigueEffects =
       gameState.currentRoundPhase === 'agent-placement' ? intrigue.structuredPlotEffects : intrigue.structuredCombatEffects;
 
     if (intrigueEffects) {
-      let isUseful =
-        this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
-          intrigueEffects,
-          player,
-          gameState,
-          undefined,
-          true
-        ) > 0;
-      let intrigueCosts: EffectReward[] = [];
-
-      const result = this.getAllStructuredEffectsRewardsAndCosts(intrigueEffects, player, gameState);
-      intrigueCosts = result.costs;
-      if (intrigueCosts.some((x) => x.type === 'location-control')) {
-        if (
-          !gameState.playerAgentsOnFields.some((agent) =>
-            gameState.freeLocations.some((locationId) => locationId === agent.fieldId)
-          )
-        ) {
-          intrigueCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
-        }
-      }
-
-      return { isUseful, costs: intrigueCosts };
+      return this.getStructuredEffectUsefulnesAndCosts(intrigueEffects, player, gameState);
     }
     return { isUseful: false, costs: [] };
+  }
+
+  public getStructuredEffectUsefulnesAndCosts(structuredEffects: StructuredEffect[], player: Player, gameState: GameState) {
+    let usefullness = this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
+      structuredEffects,
+      player,
+      gameState,
+      undefined,
+      true
+    );
+    let effectsCosts: EffectReward[] = [];
+
+    const result = this.getAllStructuredEffectsRewardsAndCosts(structuredEffects, player, gameState);
+    effectsCosts = result.costs;
+    if (effectsCosts.some((x) => x.type === 'location-control')) {
+      if (
+        !gameState.playerAgentsOnFields.some((agent) =>
+          gameState.freeLocations.some((locationId) => locationId === agent.fieldId)
+        )
+      ) {
+        effectsCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+      }
+    }
+
+    return { isUseful: usefullness > 0, usefullness, costs: effectsCosts };
   }
 
   public getStructuredEffectRewardsAndCosts(

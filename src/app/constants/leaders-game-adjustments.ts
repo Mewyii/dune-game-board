@@ -1,3 +1,4 @@
+import { playerCanPayCosts } from '../helpers/rewards';
 import { EffectTimingType, StructuredChoiceEffect, StructuredEffect } from '../models';
 import { AIAdjustments, GameServices, GameState } from '../models/ai';
 import { Player } from '../models/player';
@@ -275,6 +276,56 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
+    customTimedFunction: {
+      timing: 'timing-reveal-turn',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        const playerVictoryPoints = gameState.playerScore.victoryPoints;
+        const playerPersuasion =
+          player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound;
+
+        services.playersService.addSignetTokensToPlayer(player.id, playerVictoryPoints + playerPersuasion);
+        services.playersService.removePersuasionGainedFromPlayer(
+          player.id,
+          player.permanentPersuasion + player.persuasionGainedThisRound
+        );
+      },
+    },
+    customSignetAIFunction: (player, gameState, services) => {
+      const playerSignetTokens = player.signetTokenCount;
+      const imperiumRowCards = gameState.imperiumRowCards.filter(
+        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= playerSignetTokens
+      ) as ImperiumRowCard[];
+      if (imperiumRowCards.length < 1) {
+        return;
+      }
+
+      let chosenImperiumRowCard: ImperiumRowCard | undefined;
+      let bestEffectValue = 0;
+      for (const card of imperiumRowCards) {
+        if (card.structuredAgentEffects) {
+          const effectEvaluation = services.aiManager.getStructuredEffectUsefulnesAndCosts(
+            card.structuredAgentEffects,
+            player,
+            gameState
+          );
+          if (
+            effectEvaluation.usefullness > bestEffectValue &&
+            playerCanPayCosts(effectEvaluation.costs, player, gameState)
+          ) {
+            chosenImperiumRowCard = card;
+            bestEffectValue = effectEvaluation.usefullness;
+          }
+        }
+      }
+
+      if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
+        if (chosenImperiumRowCard.persuasionCosts) {
+          services.playersService.removeSignetTokensFromPlayer(player.id, chosenImperiumRowCard.persuasionCosts);
+        }
+        services.gameManager.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+      }
+    },
+    signetTokenValue: 0.25,
   },
   {
     id: 'Lunara Metulli',

@@ -8,7 +8,10 @@ import { PlayersService } from 'src/app/services/players.service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 export interface GameServices {
-  gameManager: Pick<GameManager, 'addRewardToPlayer' | 'payCostForPlayer' | 'resolveRewardChoices'>;
+  gameManager: Pick<
+    GameManager,
+    'addRewardToPlayer' | 'payCostForPlayer' | 'resolveRewardChoices' | 'resolveStructuredEffects'
+  >;
   playersService: PlayersService;
   gameModifierService: GameModifiersService;
   locationManager: LocationManager;
