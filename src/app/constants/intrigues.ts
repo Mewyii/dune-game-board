@@ -1015,10 +1015,10 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'shipping',
+        type: 'water',
       },
       {
-        type: 'shipping',
+        type: 'water',
       },
     ],
     combatEffects: [
@@ -1029,7 +1029,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'shipping',
+        type: 'water',
       },
     ],
   },
@@ -1084,7 +1084,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'shipping',
+        type: 'tech',
       },
     ],
     combatEffects: [
@@ -1095,10 +1095,10 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'shipping',
+        type: 'tech',
       },
       {
-        type: 'shipping',
+        type: 'water',
       },
     ],
   },

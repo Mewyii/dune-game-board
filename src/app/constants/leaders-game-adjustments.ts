@@ -68,6 +68,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       const playerWater = player.resources.find((x) => x.type === 'water');
       if (player.signetTokenCount > 2) {
         services.gameManager.addRewardToPlayer(player.id, { type: 'victory-point' });
+        services.playersService.removeSignetTokensFromPlayer(player.id, 3);
       } else if (playerWater && playerWater.amount && playerWater.amount > 1) {
         services.gameManager.payCostForPlayer(player.id, { type: 'water', amount: 2 });
         services.gameManager.addRewardToPlayer(player.id, { type: 'signet-token', amount: 3 });
@@ -85,8 +86,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunction: {
       timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
         const availableSignetTokens = player.signetTokenCount;
+        if (availableSignetTokens < 1) {
+          return;
+        }
+
+        const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
         const { allCards } = services.gameManager.getAllBuyableCards(player.id);
 
         const reducedFremenCards = allCards.map((x) => {
@@ -109,7 +114,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         );
         if (cardToBuy?.faction === 'fremen') {
           const realPersuasionCosts = cardToBuy.persuasionCosts ?? 0;
-          const usedSignetTokens = realPersuasionCosts > availableSignetTokens ? realPersuasionCosts : availableSignetTokens;
+          const usedSignetTokens = realPersuasionCosts < availableSignetTokens ? realPersuasionCosts : availableSignetTokens;
 
           services.gameModifierService.addPlayerImperiumRowModifier(player.id, {
             cardId: cardToBuy.id,
@@ -395,7 +400,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       ],
     },
     customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const possibleNewMarkerLocations = gameState.playerAgentsOnFields.map((x) => x.fieldId);
+      const possibleNewMarkerLocations = gameState.boardSpaces.filter(
+        (x) => x.ownerReward && gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.title.en)
+      );
       const playerOwnedLocations = services.locationManager.getPlayerLocations(player.id);
       const fieldMarkers = services.gameModifierService.getPlayerGameModifier(player.id, 'fieldMarkers');
 
@@ -408,13 +415,13 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             services.locationManager.setLocationOwner(fieldMarker.fieldId, player.id);
             services.loggingService.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
           } else {
-            if (possibleNewMarkerLocations.includes(fieldMarker.fieldId)) {
+            if (possibleNewMarkerLocations.some((x) => x.title.en === fieldMarker.fieldId)) {
               services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, 1);
             }
           }
         }
       } else if (possibleNewMarkerLocations.length > 0) {
-        services.gameModifierService.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0], 1);
+        services.gameModifierService.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0].title.en, 1);
       }
     },
     signetTokenValue: 2,

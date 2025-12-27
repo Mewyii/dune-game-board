@@ -552,7 +552,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'multiplier-dreadnought-in-garrison-amount',
       },
       {
-        type: 'shipping',
+        type: 'water',
       },
     ],
   },
@@ -2001,55 +2001,12 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Transport Agreement',
-      de: 'Transportabkommen',
-    },
-    faction: 'guild',
-    persuasionCosts: 3,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
-    cardAmount: 2,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [
-      {
-        type: 'shipping',
-      },
-    ],
-    agentEffects: [
-      {
-        type: 'tech',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'shipping',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Staban Tuek, Smuggler',
       de: 'Staban Tuek, Schmuggler',
     },
     faction: 'guild',
     persuasionCosts: 3,
-    fieldAccess: ['guild', 'landsraad', 'spice', 'town'],
+    fieldAccess: ['guild', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/staban.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -2065,7 +2022,11 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
     agentEffects: [
       {
         type: 'spice',
@@ -2084,10 +2045,10 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'sword',
+        type: 'spice',
       },
       {
-        type: 'spice',
+        type: 'sword',
       },
     ],
   },
@@ -2104,8 +2065,8 @@ export const imperiumCards: ImperiumCard[] = [
     canInfiltrate: false,
     agentEffectSize: 'large',
     customAgentEffect: {
-      en: '{faction:guild} Influence <br>0 {resource:foldspace} {resource:helper-or} 2 {resource:shipping} {resource:helper-or} 4 {resource:foldspace} {resource:shipping}',
-      de: '{faction:guild} Einfluss <br>0 {resource:foldspace} {resource:helper-or} 2 {resource:shipping} {resource:helper-or} 4 {resource:foldspace} {resource:shipping}',
+      en: '{faction:guild} Influence <br>0 {resource:foldspace} {resource:helper-or} 2 {resource:water} {resource:helper-or} 4 {resource:foldspace} {resource:water}',
+      de: '{faction:guild} Einfluss <br>0 {resource:foldspace} {resource:helper-or} 2 {resource:water} {resource:helper-or} 4 {resource:foldspace} {resource:water}',
       fontSize: 'medium',
     },
     revealEffectSize: 'large',
@@ -2208,63 +2169,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
     ],
     revealEffects: [],
-  },
-  {
-    name: {
-      en: 'Gurney Halleck, Smuggler',
-      de: 'Gurney Halleck, Schmuggler',
-    },
-    persuasionCosts: 4,
-    fieldAccess: ['guild', 'spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/gurney.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [
-      {
-        type: 'spice',
-      },
-    ],
-    agentEffects: [
-      {
-        type: 'spice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'shipping',
-      },
-      {
-        type: 'solari',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'spice',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
   },
   {
     name: {
@@ -2846,6 +2750,56 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Transport Agreement',
+      de: 'Transportabkommen',
+    },
+    faction: 'guild',
+    persuasionCosts: 4,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [
+      {
+        type: 'tech',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'solari',
+        amount: 4,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'water',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'tech',
+        amount: 2,
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Privilege',
       de: 'Bevorzugung',
     },
@@ -2926,6 +2880,63 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'faction-influence-up-guild',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Gurney Halleck, Smuggler',
+      de: 'Gurney Halleck, Schmuggler',
+    },
+    persuasionCosts: 5,
+    fieldAccess: ['guild', 'spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/gurney.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [
+      {
+        type: 'spice',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -3606,7 +3617,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'guild',
     persuasionCosts: 5,
-    fieldAccess: ['guild', 'spice'],
+    fieldAccess: ['guild', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/esmar.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -4862,8 +4873,8 @@ export const imperiumCards: ImperiumCard[] = [
     canInfiltrate: false,
     agentEffectSize: 'large',
     customAgentEffect: {
-      en: '{faction:bene} or {faction:fremen} Alliance: {resource:victory-point} {resource:trash-self}',
-      de: '{faction:bene} oder {faction:fremen} Allianz: {resource:victory-point} {resource:trash-self}',
+      en: '{faction:bene} or {faction:fremen} Alliance: {resource:trash-self} {resource:victory-point}',
+      de: '{faction:bene} oder {faction:fremen} Allianz: {resource:trash-self} {resource:victory-point}',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -4993,10 +5004,11 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     revealEffects: [
       {
-        type: 'shipping',
+        type: 'water',
       },
       {
         type: 'tech',
+        amount: 2,
       },
     ],
   },

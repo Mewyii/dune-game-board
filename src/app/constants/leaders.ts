@@ -641,7 +641,7 @@ export const leaders: Leader[] = [
     },
     passiveDescription: {
       en: 'You cannot acquire cards.<br><br><b>Reveal turn</b>: Receive a {resource:signet-token} for each {resource:persuasion}.',
-      de: 'Du kannst keine Karten erwerben. <br><br><b>Aufdeckzug</b>: Erhalte für jede {resource:persuasion} ein {resource:signet-token}.',
+      de: '<b>Aufdeckzug</b>: Du kannst keine Karten erwerben. Erhalte für jeden deiner {resource:victory-point} und für jeden deiner {resource:persuasion} ein {resource:signet-token}.',
     },
     signetName: {
       en: 'Manipulator',
@@ -660,7 +660,7 @@ export const leaders: Leader[] = [
     startingResources: [
       {
         type: 'signet-token',
-        amount: 3,
+        amount: 5,
       },
       {
         type: 'troop',
@@ -685,7 +685,7 @@ export const leaders: Leader[] = [
     },
     passiveDescription: {
       en: 'Remove the <b>Persuasion</b> card from your deck before the game begins.',
-      de: 'Entferne die Karte <b>Überzeugung</b> vor Beginn des Spiels aus deinem Deck.',
+      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf dieses Feld. Sobald du {resource:solari;amount:2} besitzt, entferne sie und den Marker.',
     },
     signetName: {
       en: 'Thorough approach',
@@ -693,7 +693,7 @@ export const leaders: Leader[] = [
     },
     signetDescription: {
       en: 'You may trash {resource:signet-token} when you receive {resource:solari}, {resource:spice}, {resource:water} to get <b>1</b> more of it.',
-      de: 'Du kannst {resource:signet-token} an deinem Aufdeckzug entsorgen, um {resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} zu erhalten.',
+      de: 'Du kannst {resource:signet-token} entsorgen, wenn du <br>{resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} erhältst, um 1 mehr zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     type: 'new',

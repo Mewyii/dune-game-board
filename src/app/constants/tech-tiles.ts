@@ -497,8 +497,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:shipping}{resource:helper-or} 3+ {resource:shipping}{resource:shipping}',
+      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 1 {resource:solari}{resource:helper-or}2 {resource:tech}{resource:helper-or} 3+ {resource:solari;amount:2} {resource:tech;amount:2}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:tech}{resource:helper-or} 3+ {resource:solari;amount:2} {resource:tech;amount:2}',
       fontSize: 'small',
     },
   },
@@ -636,8 +636,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:tech}{resource:helper-or}2 {resource:focus}{resource:tech}{resource:helper-or} 3+ {resource:water}{resource:tech}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:tech}{resource:helper-or}2 {resource:focus}{resource:tech}{resource:helper-or} 3+ {resource:water}{resource:tech}',
+      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:focus}{resource:helper-or}2 {resource:water}{resource:helper-or} 3+ {resource:water}{resource:focus}{resource:sword}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:focus}{resource:helper-or}2 {resource:water}{resource:helper-or} 3+ {resource:water}{resource:focus}{resource:sword}',
       fontSize: 'small',
     },
   },

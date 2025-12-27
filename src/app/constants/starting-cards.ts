@@ -267,7 +267,8 @@ export const startingCards: ImperiumCard[] = [
         faction: 'fremen',
       },
       {
-        type: 'sword',
+        type: 'persuasion',
+        amount: 1,
       },
     ],
   },

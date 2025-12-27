@@ -538,11 +538,11 @@ export function playerCanPayCosts(
         canPayCosts = false;
       }
     } else if (costType === 'tech') {
-      if (gameState.playerTechTiles.length < costAmount) {
+      if (player.tech < costAmount) {
         canPayCosts = false;
       }
     } else if (costType === 'tech-tile-trash') {
-      if (player.tech < costAmount) {
+      if (gameState.playerTechTiles.length < costAmount) {
         canPayCosts = false;
       }
     } else if (costType === 'card-discard') {

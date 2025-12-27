@@ -6,9 +6,9 @@ export const conflicts: Conflict[] = [
     name: { de: 'Schlacht von Arrakeen', en: 'Battle of Arrakeen' },
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech' }],
-      [{ type: 'water' }, { type: 'tech', amount: 2 }],
-      [{ type: 'water' }],
+      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
+      [{ type: 'tech' }, { type: 'solari', amount: 3 }],
+      [{ type: 'solari', amount: 2 }],
     ],
   },
   {
@@ -29,8 +29,8 @@ export const conflicts: Conflict[] = [
     name: { de: 'Schlacht an den Raumhäfen', en: 'Battle at the space ports' },
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'shipping' }],
-      [{ type: 'shipping' }, { type: 'shipping' }],
+      [{ type: 'location-control' }, { type: 'tech' }],
+      [{ type: 'water' }, { type: 'tech', amount: 2 }],
       [{ type: 'water' }],
     ],
   },

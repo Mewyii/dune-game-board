@@ -7,58 +7,51 @@
         <div
           [innerHTML]="
             '{resource:tech}: Get one technology. Whenever you gain technology, you can buy any amount of tech tiles this turn.'
-              | duneSymbols : '24px'
+              | duneSymbols: '24px'
           "
         ></div>
         <br />
         <div
           [innerHTML]="
-            '{resource:signet-token}: You get one signet. You can use it indiviually for each leader.' | duneSymbols : '24px'
+            '{resource:signet-token}: You get one signet. You can use it indiviually for each leader.' | duneSymbols: '24px'
           "
         ></div>
         <br />
         <div
           [innerHTML]="
             '{resource:focus}: You get one focus. At your reveal turn, you can use it to trash a card. You still get the cards reveal effect.'
-              | duneSymbols : '24px'
+              | duneSymbols: '24px'
           "
         ></div>
         <br />
         <div
           [innerHTML]="
-            '{resource:shipping}: You get a resource ({resource:solari}/{resource:spice}/{resource:water}/{resource:tech}) of your choice. It basically represents a supply shipment now.'
-              | duneSymbols : '24px'
-          "
-        ></div>
-        <br />
-        <div
-          [innerHTML]="
-            '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get one focus.' | duneSymbols : '24px'
+            '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get one focus.' | duneSymbols: '24px'
           "
         ></div>
         <br />
         <div
           [innerHTML]="
             '{resource:location-control}: You gain control of a location that has one of your agents on it.'
-              | duneSymbols : '24px'
+              | duneSymbols: '24px'
           "
         ></div>
         <br />
-        <div [innerHTML]="'{resource:trash-self}: Immediately trash this card.' | duneSymbols : '24px'"></div>
+        <div [innerHTML]="'{resource:trash-self}: Immediately trash this card.' | duneSymbols: '24px'"></div>
         <br />
-        <div [innerHTML]="'{resource:dreadnought-retreat}: Retreat one of your dreadnoughts.' | duneSymbols : '24px'"></div>
+        <div [innerHTML]="'{resource:dreadnought-retreat}: Retreat one of your dreadnoughts.' | duneSymbols: '24px'"></div>
         <br />
         <div
           [innerHTML]="
             '{resource:foldspace}: Foldspaces are added to your hand when you get them. They don\'t draw cards anymore.'
-              | duneSymbols : '24px'
+              | duneSymbols: '24px'
           "
         ></div>
         <br />
         <div
           [innerHTML]="
             '{faction:fremen}-Connection: Just a shorthand for: if you have another fremen card in play.'
-              | duneSymbols : '24px'
+              | duneSymbols: '24px'
           "
         ></div>
       </div>
@@ -75,7 +68,7 @@
           <b>Locations</b> now have give the controlling player resources (shown on the left side beside the flag) at their
           reveal turn. They also give the controlling player a victory point as long as they control the location (similar to
           the alliance tokens). <br />A Location can get taken with the
-          <span [innerHTML]="'{resource:location-control}' | duneSymbols : '24px'"></span>-symbol. You can only gain control
+          <span [innerHTML]="'{resource:location-control}' | duneSymbols: '24px'"></span>-symbol. You can only gain control
           of locations that have at least one of your agents on them. <br />Already occupied locations can get conquered by
           other players, but in order to do so, they need to pay 1 additional troop from their garrison.
         </div>
@@ -83,7 +76,7 @@
         <div>
           <b>Dreadnoughts</b> now have 4 combat strength. <br />They always need to rest one round after they were put into a
           conflict. <br />When a conflict is won, for each involved dreadnought the player receives
-          <span [innerHTML]="'{resource:location-control}' | duneSymbols : '24px'"></span>.
+          <span [innerHTML]="'{resource:location-control}' | duneSymbols: '24px'"></span>.
         </div>
         <br />
         <div>

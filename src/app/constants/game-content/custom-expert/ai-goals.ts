@@ -30,7 +30,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.7,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') -
-      0.015 * (gameState.currentRound - 1) +
+      0.0175 * (gameState.currentRound - 1) +
       (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
@@ -44,7 +44,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') -
-      0.02 * (gameState.currentRound - 1) +
+      0.025 * (gameState.currentRound - 1) +
       (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
@@ -59,8 +59,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'spice') +
       0.025 * player.tech -
-      0.01 * (gameState.currentRound - 1) +
-      0.05 * gameState.playerIntriguesConversionCosts.tech +
+      0.0125 * (gameState.currentRound - 1) +
+      0.04 * gameState.playerIntriguesConversionCosts.tech +
       0.025 * gameState.playerTechTilesConversionCosts.tech,
     goalIsReachable: (player) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
@@ -244,12 +244,12 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   troops: {
-    baseDesire: 0.1,
+    baseDesire: 0.15,
     desireModifier: (player, gameState, goals) =>
-      0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
+      0.125 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
       (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0) +
-      0.2 * gameState.playerIntriguesConversionCosts['loose-troop'] +
-      0.1 * gameState.playerTechTilesConversionCosts['loose-troop'],
+      0.04 * gameState.playerIntriguesConversionCosts['loose-troop'] +
+      0.025 * gameState.playerTechTilesConversionCosts['loose-troop'],
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({
@@ -305,7 +305,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) => {
       const deckBuildingDesire = !gameState.isFinale
         ? clamp(
-            0.4 +
+            0.35 +
               (player.hasCouncilSeat ? 0.1 : 0) -
               0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
               0.033 * gameState.playerCardsBought +
@@ -375,13 +375,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       const waterDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
         { type: 'collect-spice', modifier: 0.9 },
-        { type: 'enter-combat', modifier: 0.8 },
-        { type: 'troops', modifier: 0.7 },
+        { type: 'enter-combat', modifier: 0.75 },
+        { type: 'troops', modifier: 0.45 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire) +
-        0.05 * gameState.playerIntriguesConversionCosts.water +
+        0.04 * gameState.playerIntriguesConversionCosts.water +
         0.025 * gameState.playerTechTilesConversionCosts.water
       );
     },
@@ -398,15 +398,15 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
 
       const spiceDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
         { type: 'collect-solari', modifier: 0.9 },
-        { type: 'draw-cards', modifier: 0.8 },
-        { type: 'troops', modifier: 0.7 },
-        { type: 'intrigues', modifier: 0.6 },
-        { type: 'tech', modifier: 0.5 },
+        { type: 'draw-cards', modifier: 0.75 },
+        { type: 'mentat', modifier: 0.75 },
+        { type: 'troops', modifier: 0.45 },
+        { type: 'intrigues', modifier: 0.3 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire) +
-        0.05 * gameState.playerIntriguesConversionCosts.spice +
+        0.04 * gameState.playerIntriguesConversionCosts.spice +
         0.025 * gameState.playerTechTilesConversionCosts.spice
       );
     },
@@ -425,18 +425,18 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         { type: 'swordmaster', modifier: 1.0 },
         { type: 'high-council', modifier: 1.0 },
         { type: 'dreadnought', modifier: 1.0 },
-        { type: 'tech', modifier: 0.8 },
+        { type: 'tech', modifier: 0.75 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire) +
-        0.05 * gameState.playerIntriguesConversionCosts.solari +
+        0.04 * gameState.playerIntriguesConversionCosts.solari +
         0.025 * gameState.playerTechTilesConversionCosts.solari
       );
     },
     goalIsReachable: (player) => getResourceAmount(player, 'spice') > 2,
     reachedGoal: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
+      getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 9 : 4),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari'),
     }),
