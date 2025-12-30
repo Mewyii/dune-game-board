@@ -663,7 +663,7 @@ export class GameManager {
         }
       }
     }
-    if (playerLeader?.customTimedAIFunction) {
+    if (player.isAI && playerLeader?.customTimedAIFunction) {
       if (playerLeader.customTimedAIFunction.timing == 'timing-reveal-turn') {
         const gameState = this.getGameState(player);
         const updatedPlayer = this.playerManager.getPlayer(playerId);
@@ -1819,7 +1819,7 @@ export class GameManager {
         timingFullfilled = isTimingFullfilled(effect.timing, player, gameState);
       }
       if (effect.condition) {
-        conditionFullfilled = isConditionFullfilled(effect.condition, player, gameState, timing);
+        conditionFullfilled = isConditionFullfilled(effect.condition, player, gameState, timing, gameElement);
       }
 
       if (timingFullfilled && conditionFullfilled) {
@@ -3404,7 +3404,7 @@ export class GameManager {
       const gameState = this.getGameState(player);
       this.resolveStructuredEffects(leader.structuredPassiveEffects, player, gameState);
     }
-    if (leader.customTimedAIFunction) {
+    if (player.isAI && leader.customTimedAIFunction) {
       if (leader.customTimedAIFunction.timing === 'timing-game-start') {
         const gameState = this.getGameState(player);
         leader.customTimedAIFunction.function(player, gameState, this.getGameServices());

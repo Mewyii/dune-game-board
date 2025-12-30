@@ -36,6 +36,7 @@ import {
 } from '../models';
 import { GameState } from '../models/ai';
 import { Player } from '../models/player';
+import { GameElement } from '../services/game-manager.service';
 import { getPlayerCombatStrength } from './ai';
 import { getPlayerdreadnoughtCount } from './combat-units';
 import { getFactionScoreTypeFromCost } from './faction-score';
@@ -384,19 +385,26 @@ export function isConditionFullfilled(
   conditionEffect: StructuredEffectCondition,
   player: Player,
   gameState: Pick<GameState, 'playerCardsFactionsInPlay' | 'playerHandCardsFactions' | 'playerScore'>,
-  timing: EffectPlayerTurnTiming = 'agent-placement'
+  timing: EffectPlayerTurnTiming = 'agent-placement',
+  gameElement?: GameElement
 ) {
   let conditionFullfilled = false;
   if (conditionEffect.type === 'condition-connection') {
+    const isImperiumCardFromFaction =
+      gameElement?.type === 'imperium-card' && gameElement.object.faction === conditionEffect.faction;
+
     if (timing === 'agent-placement') {
       if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
         conditionFullfilled = true;
       }
     } else {
+      // Card itself will be in hand or in play, this will handle it
+      const playerFactionCardsRequired = isImperiumCardFromFaction ? 1 : 0;
+
       if (
         gameState.playerCardsFactionsInPlay[conditionEffect.faction] +
           gameState.playerHandCardsFactions[conditionEffect.faction] >
-        1
+        playerFactionCardsRequired
       ) {
         conditionFullfilled = true;
       }
@@ -428,7 +436,8 @@ export function getMultipliedRewardEffects(
     | 'playerHandCardsFactions'
     | 'playerCardsFactionsInPlay'
   >,
-  timing: EffectPlayerTurnTiming = 'agent-placement'
+  timing: EffectPlayerTurnTiming = 'agent-placement',
+  gameElement?: GameElement
 ): EffectReward[] {
   if (!multiplierEffectOrRewardArray.multiplier) {
     return multiplierEffectOrRewardArray.effectRewards;
@@ -468,16 +477,23 @@ export function getMultipliedRewardEffects(
       }
     } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-connections') {
       const faction = multiplierEffectOrRewardArray.multiplier.faction;
+      const isImperiumCardFromFaction = gameElement?.type === 'imperium-card' && gameElement.object.faction === faction;
+
       if (faction) {
         if (timing === 'agent-placement') {
-          const handCardAmount = gameState.playerHandCardsFactions[faction];
-          if (handCardAmount > 0) {
-            effectMultiplierAmount = handCardAmount;
+          const cardsInPlayAmount = gameState.playerCardsFactionsInPlay[faction];
+
+          if (cardsInPlayAmount > 0) {
+            effectMultiplierAmount = cardsInPlayAmount;
           }
         } else {
           const handCardAmount = gameState.playerHandCardsFactions[faction];
           const cardsInPlayAmount = gameState.playerCardsFactionsInPlay[faction];
           effectMultiplierAmount = handCardAmount + cardsInPlayAmount;
+
+          if (isImperiumCardFromFaction) {
+            effectMultiplierAmount -= 1;
+          }
         }
       }
     }

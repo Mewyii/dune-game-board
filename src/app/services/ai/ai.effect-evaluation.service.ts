@@ -56,8 +56,7 @@ export class AIEffectEvaluationService {
 
         for (const reward of rewards) {
           evaluationValue +=
-            this.getRewardEffectEvaluation(reward.type, player, gameState) *
-            (reward.amount ?? 1) *
+            this.getAmountAdjustedRewardEffectEvaluation(reward.type, reward.amount ?? 1, player, gameState) *
             conditionEstimationMultiplier;
         }
       } else if (isStructuredChoiceEffect(effect)) {
@@ -93,7 +92,12 @@ export class AIEffectEvaluationService {
           const rewards = getMultipliedRewardEffects(effect, gameState, timing);
 
           for (const reward of rewards) {
-            evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+            evaluationValue += this.getAmountAdjustedRewardEffectEvaluation(
+              reward.type,
+              reward.amount ?? 1,
+              player,
+              gameState
+            );
           }
         } else if (isStructuredChoiceEffect(effect)) {
           evaluationValue += this.getChoiceEffectEvaluationForTurnState(effect, player, gameState, timing);
@@ -277,7 +281,7 @@ export class AIEffectEvaluationService {
   public getRewardArrayEvaluation(rewards: EffectReward[], player: Player, gameState: GameState) {
     let evaluationValue = 0;
     for (const reward of rewards) {
-      evaluationValue += this.getRewardEffectEvaluation(reward.type, player, gameState) * (reward.amount ?? 1);
+      evaluationValue += this.getAmountAdjustedRewardEffectEvaluation(reward.type, reward.amount ?? 1, player, gameState);
     }
     return evaluationValue;
   }
@@ -294,8 +298,12 @@ export class AIEffectEvaluationService {
     let evaluationValue = 0;
     for (const reward of rewards) {
       const rewardAmount = reward.amount ?? 1;
-      evaluationValue +=
-        this.getRewardEffectEvaluationForTurnState(reward.type, rewardAmount, player, gameState) * rewardAmount;
+      evaluationValue += this.getAmountAdjustedRewardEffectEvaluationForTurnState(
+        reward.type,
+        rewardAmount,
+        player,
+        gameState
+      );
     }
     return evaluationValue;
   }
@@ -306,10 +314,34 @@ export class AIEffectEvaluationService {
       const rewardAmount = reward.amount ?? 1;
 
       evaluationValue += Math.abs(
-        this.getRewardEffectEvaluationForTurnState(reward.type, rewardAmount, player, gameState) * rewardAmount
+        this.getAmountAdjustedRewardEffectEvaluationForTurnState(reward.type, rewardAmount, player, gameState)
       );
     }
     return evaluationValue;
+  }
+
+  public getAmountAdjustedRewardEffectEvaluation(
+    rewardType: EffectRewardType,
+    rewardAmount: number,
+    player: Player,
+    gameState: GameState
+  ) {
+    const amountValueAdjustion = 1 + rewardAmount / 25;
+    return this.getRewardEffectEvaluation(rewardType, player, gameState) * rewardAmount * amountValueAdjustion;
+  }
+
+  public getAmountAdjustedRewardEffectEvaluationForTurnState(
+    rewardType: EffectRewardType,
+    rewardAmount: number,
+    player: Player,
+    gameState: GameState
+  ) {
+    const amountValueAdjustion = 1 + rewardAmount / 25;
+    return (
+      this.getRewardEffectEvaluationForTurnState(rewardType, rewardAmount, player, gameState) *
+      rewardAmount *
+      amountValueAdjustion
+    );
   }
 
   public getRewardEffectEvaluation(rewardType: EffectRewardType, player: Player, gameState: GameState) {
@@ -329,9 +361,9 @@ export class AIEffectEvaluationService {
         return (
           2.4 +
           0.015 * gameState.playerTechTilesConversionCosts.spice -
-          (player.hasSwordmaster ? 0.225 : 0) -
-          (player.hasCouncilSeat ? 0.225 : 0) -
-          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
+          (player.hasSwordmaster ? 0.2 : 0) -
+          (player.hasCouncilSeat ? 0.2 : 0) -
+          0.075 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
           0.025 * (gameState.currentRound - 1) -
           0.015 * gameState.playerCardsRewards.spice -
           0.015 * gameState.playerTechTilesRewards.spice
@@ -340,9 +372,9 @@ export class AIEffectEvaluationService {
         return (
           1.4 +
           0.01 * gameState.playerTechTilesConversionCosts.solari -
-          (player.hasSwordmaster ? 0.3 : 0) -
-          (player.hasCouncilSeat ? 0.3 : 0) -
-          0.15 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
+          (player.hasSwordmaster ? 0.25 : 0) -
+          (player.hasCouncilSeat ? 0.25 : 0) -
+          0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
           0.05 * (gameState.currentRound - 1) -
           0.01 * gameState.playerCardsRewards.solari -
           0.01 * gameState.playerTechTilesRewards.solari
@@ -479,7 +511,7 @@ export class AIEffectEvaluationService {
     }
   }
 
-  public getRewardEffectEvaluationForTurnState(
+  private getRewardEffectEvaluationForTurnState(
     rewardType: EffectRewardType,
     rewardAmount: number,
     player: Player,
@@ -641,7 +673,7 @@ export class AIEffectEvaluationService {
       case 'faction-influence-down-fremen':
         return value;
       case 'agent-lift':
-        if (player.turnState === 'reveal') {
+        if (player.turnState !== 'agent-placement') {
           return -3;
         } else {
           const liftingAgentWouldRemoveLocationControlPosibility =
@@ -650,7 +682,7 @@ export class AIEffectEvaluationService {
               (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId)
             );
 
-          return hasPlacedAgents && hasAgentsLeftToPlace && !liftingAgentWouldRemoveLocationControlPosibility ? value : 0;
+          return hasPlacedAgents && !liftingAgentWouldRemoveLocationControlPosibility ? value : -3;
         }
       case 'signet-token':
         return value;

@@ -246,7 +246,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   troops: {
     baseDesire: 0.15,
     desireModifier: (player, gameState, goals) =>
-      0.125 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
+      0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
       (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0) +
       0.04 * gameState.playerIntriguesConversionCosts['loose-troop'] +
       0.025 * gameState.playerTechTilesConversionCosts['loose-troop'],
@@ -278,10 +278,12 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'fold-space': {
     baseDesire: 0.1,
     desireModifier: (player, gameState, goals) =>
-      (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
-      0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + player.focusTokens) +
-      0.033 * (7 - gameState.playerHandCardsFieldAccess.length),
+      gameState.playerAgentsAvailable > 1
+        ? 0.075 * (7 - gameState.playerHandCardsFieldAccess.length) +
+          0.025 * (5 - gameState.playerHandCards.length) -
+          0.01 * gameState.playerCardsBought -
+          0.01 * (gameState.playerCardsTrashed + player.focusTokens)
+        : 0,
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -305,25 +307,28 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) => {
       const deckBuildingDesire = !gameState.isFinale
         ? clamp(
-            0.35 +
-              (player.hasCouncilSeat ? 0.1 : 0) -
-              0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
-              0.033 * gameState.playerCardsBought +
+            0.25 +
+              (player.hasCouncilSeat ? 0.05 : 0) -
+              0.005 * (gameState.currentRound - 1) * gameState.currentRound +
+              0.02 * gameState.playerCardsBought +
               0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
-              0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
+              (gameState.playerAgentsAvailable > 1 ? 0.025 * (7 - gameState.playerHandCardsFieldAccess.length) : 0),
             0,
             0.6
           )
         : 0;
 
       const getSpiceMustFlowsDesire =
-        gameState.playerDeckSizeTotal > 7
+        gameState.playerDeckSizeTotal > 7 &&
+        gameState.currentRound - 1 > 4 &&
+        gameState.playerHandCardsRewards['persuasion'] > 2
           ? clamp(
-              0.1 +
+              0.0 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
-                0.05 * gameState.playerCardsBought +
-                0.05 * (gameState.playerCardsTrashed + player.focusTokens) +
-                0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
+                0.01 * gameState.playerCardsBought +
+                0.0075 * (gameState.playerCardsTrashed + player.focusTokens) +
+                0.02 * gameState.playerHandCardsRewards['persuasion'] +
+                0.01 * gameState.playerCardsRewards['persuasion'],
               0,
               0.6
             )

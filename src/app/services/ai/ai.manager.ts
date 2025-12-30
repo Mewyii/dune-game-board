@@ -418,9 +418,12 @@ export class AIManager {
 
     for (const location of controllableLocations) {
       if (location.actionField.ownerReward) {
-        const locationValue =
-          (location.actionField.ownerReward.amount ?? 1) *
-          this.effectEvaluationService.getRewardEffectEvaluation(location.actionField.ownerReward.type, player, gameState);
+        const locationValue = this.effectEvaluationService.getAmountAdjustedRewardEffectEvaluation(
+          location.actionField.ownerReward.type,
+          location.actionField.ownerReward.amount ?? 1,
+          player,
+          gameState
+        );
         if (locationValue > preferredLocationValue) {
           preferredLocation = location;
           preferredLocationValue = locationValue;
@@ -722,7 +725,12 @@ export class AIManager {
     let decision: EffectRewardType | undefined = undefined;
     let evaluationValue = 0;
     for (const rewardType of rewardTypes) {
-      const value = this.effectEvaluationService.getRewardEffectEvaluationForTurnState(rewardType, 1, player, gameState);
+      const value = this.effectEvaluationService.getAmountAdjustedRewardEffectEvaluationForTurnState(
+        rewardType,
+        1,
+        player,
+        gameState
+      );
       if (value > evaluationValue) {
         evaluationValue = value;
         decision = rewardType;
@@ -1125,7 +1133,7 @@ export class AIManager {
     const evaluatedEffects: { reward: EffectReward; evaluation: number }[] = [];
 
     for (const reward of rewards) {
-      const evaluation = this.effectEvaluationService.getRewardEffectEvaluationForTurnState(
+      const evaluation = this.effectEvaluationService.getAmountAdjustedRewardEffectEvaluationForTurnState(
         reward.type,
         reward.amount ?? 1,
         player,
