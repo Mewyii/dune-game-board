@@ -47,11 +47,11 @@ export class AIFieldEvaluationService {
     conflictEvaluation: number,
     techEvaluation: number,
     imperiumRowEvaluation: number,
-    aiDifficulty: 'easy' | 'medium' | 'hard'
+    aiDifficulty: 'easy' | 'medium' | 'hard',
   ) {
     const boardFields = this.getFieldsWithAdjustedRewardsAndCosts(
       gameState,
-      this.getFieldsSplitByRewardChoices(this.settingsService.boardFields)
+      this.getFieldsSplitByRewardChoices(this.settingsService.boardFields),
     );
 
     let leaderGoalModifiers: GoalModifier[] = [];
@@ -67,18 +67,18 @@ export class AIFieldEvaluationService {
       boardFields,
       conflictEvaluation,
       techEvaluation,
-      imperiumRowEvaluation
+      imperiumRowEvaluation,
     );
 
     const accessibleFields = this.getAccessibleFields(boardFields, fieldEvaluations, gameState, aiPlayer, player);
 
     const randomFactor = gameState.isOpeningTurn
-      ? 0.5
+      ? 0.3
       : aiDifficulty === 'hard'
-        ? 0.05
+        ? 0.025
         : aiDifficulty === 'medium'
-          ? 0.15
-          : 0.3;
+          ? 0.075
+          : 0.15;
     const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
 
     return { preferredFields: slightlyRandomizedFields };
@@ -92,7 +92,7 @@ export class AIFieldEvaluationService {
     boardFields: ActionField[],
     conflictEvaluation: number,
     techEvaluation: number,
-    imperiumRowEvaluation: number
+    imperiumRowEvaluation: number,
   ) {
     const fieldEvaluations: FieldEvaluation[] = [];
 
@@ -149,7 +149,7 @@ export class AIFieldEvaluationService {
     fieldEvaluations: FieldEvaluation[],
     gameState: GameState,
     aiPlayer: AIPlayer,
-    player: Player
+    player: Player,
   ) {
     const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
 
@@ -179,17 +179,17 @@ export class AIFieldEvaluationService {
         }
 
         const hasOwnAgentOnField = gameState.agentsOnFields.some(
-          (y) => x.title.en.includes(y.fieldId) && y.playerId === aiPlayer.playerId
+          (y) => x.title.en.includes(y.fieldId) && y.playerId === aiPlayer.playerId,
         );
         const hasEnemyAgentOnField = gameState.agentsOnFields.some(
-          (y) => x.title.en.includes(y.fieldId) && y.playerId !== aiPlayer.playerId
+          (y) => x.title.en.includes(y.fieldId) && y.playerId !== aiPlayer.playerId,
         );
 
         const hasEnemyAcessTroughGameModidifers = gameState.playerEnemyFieldTypeAcessTroughGameModifiers.some(
-          (y) => y === x.actionType
+          (y) => y === x.actionType,
         );
         const hasEnemyAcessTroughInfiltration = gameState.playerEnemyFieldTypeAcessTroughCards.some(
-          (y) => y === x.actionType
+          (y) => y === x.actionType,
         );
 
         if (
@@ -208,7 +208,7 @@ export class AIFieldEvaluationService {
 
           if (x.requiresInfluence) {
             const hasEnoughFactionInfluence = gameState.playerFactionFriendships.some(
-              (y) => y === x.requiresInfluence!.type
+              (y) => y === x.requiresInfluence!.type,
             );
 
             if (hasEnoughFactionInfluence) {
@@ -318,7 +318,7 @@ export class AIFieldEvaluationService {
       // Field Marker Adjustments
       if (
         gameState.playerGameModifiers?.fieldMarkers?.some(
-          (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0
+          (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0,
         )
       ) {
         fieldRewards.push({ type: 'signet-token' });
@@ -327,7 +327,7 @@ export class AIFieldEvaluationService {
       // Faction Reward Adjustments
       if (isFactionScoreType(field.actionType)) {
         const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
-          (x) => x.factionId === field.actionType
+          (x) => x.factionId === field.actionType,
         )?.rewards;
         if (factionInfluenceRewards) {
           const nextFactionScore = gameState.playerScore[field.actionType] + 1;
@@ -396,7 +396,7 @@ export class AIFieldEvaluationService {
     goal: AIGoals,
     conflictEvaluation: number,
     techEvaluation: number,
-    imperiumRowEvaluation: number
+    imperiumRowEvaluation: number,
   ) {
     let modifier = 1.0;
 

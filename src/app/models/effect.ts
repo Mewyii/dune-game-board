@@ -81,6 +81,7 @@ export const effectConditions = [
   'condition-high-council-seat',
   'condition-no-high-council-seat',
   'condition-influence',
+  'condition-enemies-on-this-field',
 ] as const;
 
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
@@ -95,6 +96,7 @@ export const effectMultipliers = [
   'multiplier-dreadnought-in-conflict-amount',
   'multiplier-dreadnought-in-garrison-amount',
   'multiplier-troops-in-conflict',
+  'multiplier-enemies-on-this-field',
 ] as const;
 
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
@@ -211,23 +213,33 @@ export type StructuredEffectCondition =
   | EffectConditionConnection
   | EffectConditionInfluence
   | EffectConditionHighCouncilSeat
-  | EffectConditionNoHighCouncilSeat;
+  | EffectConditionNoHighCouncilSeat
+  | EffectConditionEnemiesOnThisField;
 
 export interface EffectConditionConnection {
   type: 'condition-connection';
   faction: ActiveFactionType;
+  affects: 'player';
 }
 
 export interface EffectConditionInfluence {
   type: 'condition-influence';
   amount: number;
   faction: ActiveFactionType;
+  affects: 'player';
 }
 
 export interface EffectConditionHighCouncilSeat {
   type: 'condition-high-council-seat';
+  affects: 'player';
 }
 
 export interface EffectConditionNoHighCouncilSeat {
   type: 'condition-no-high-council-seat';
+  affects: 'player';
+}
+
+export interface EffectConditionEnemiesOnThisField {
+  type: 'condition-enemies-on-this-field';
+  affects: 'enemies';
 }

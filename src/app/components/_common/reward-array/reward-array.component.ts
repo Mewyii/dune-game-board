@@ -14,7 +14,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 export class RewardArrayComponent implements OnInit, OnChanges {
   public effectArrays: EffectTimingConditionChoiceConversionMultiplierOrReward[][] = [];
   @Input() rewards: Effect[] = [];
-  @Input() size: string = '32px';
+  @Input() size: string = '30px';
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
   @Input() arraySeparationGap = '4px';
   @Input() wrap = true;
@@ -31,7 +31,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.effectArrays = getSeparatedEffectArrays(this.rewards);
     const sizeNumber = parseInt(this.size);
-    this.fontSize = Math.round(sizeNumber - sizeNumber / 3.75) + 'px';
+    this.fontSize = Math.round(sizeNumber - sizeNumber / 3.5) + 'px';
     this.iconMinWidth = Math.round(sizeNumber / 1.33) + 'px';
     this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
     this.effectGap = Math.round(sizeNumber / 13) + 'px';
@@ -41,7 +41,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.effectArrays = getSeparatedEffectArrays(this.rewards);
     const sizeNumber = parseInt(this.size);
-    this.fontSize = Math.round(sizeNumber - sizeNumber / 3.75) + 'px';
+    this.fontSize = Math.round(sizeNumber - sizeNumber / 3.5) + 'px';
     this.iconMinWidth = Math.round(sizeNumber / 1.33) + 'px';
     this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
     this.effectGap = Math.round(sizeNumber / 13) + 'px';
@@ -80,6 +80,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return type === 'condition-influence';
   }
 
+  public isEnemiesOnThisFieldType(type: EffectType) {
+    return type === 'condition-enemies-on-this-field';
+  }
+
   public isConnectionType(type: EffectType) {
     return type === 'condition-connection';
   }
@@ -98,6 +102,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
 
   public isDreadnoughtAmountMultiplierType(type: EffectType) {
     return type === 'multiplier-dreadnought-amount';
+  }
+
+  public isEnemiesOnThisFieldMultiplierType(type: EffectType) {
+    return type === 'multiplier-enemies-on-this-field';
   }
 
   public isTroopsInConflictMultiplierType(type: EffectType) {

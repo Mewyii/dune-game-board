@@ -41,7 +41,7 @@
   font-size: small;
   color: #e1e1e1;
   white-space: pre-wrap;
-  min-height: 36px;
+  min-height: 34px;
   padding: 10px 8px;
   background-image: url(/assets/images/card-backgrounds/reveal-effect.png);
   background-size: cover;
@@ -57,12 +57,13 @@
   font-size: small;
   color: #e1e1e1;
   white-space: pre-wrap;
-  min-height: 36px;
-  padding: 8px 6px;
+  min-height: 32px;
+  padding: 6px 6px;
   background-image: url(/assets/images/card-backgrounds/agent-effect.png);
   background-size: cover;
   flex-wrap: wrap;
   gap: 2px;
+  border: 1px solid #eedac0;
 }
 
 .card-agent-effect-separator {

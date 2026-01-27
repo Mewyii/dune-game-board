@@ -64,7 +64,7 @@ export class LeaderEditorComponent implements OnChanges {
             this.fb.group({
               type: field.type,
               amount: field.amount,
-            })
+            }),
           );
         });
       }
@@ -80,7 +80,7 @@ export class LeaderEditorComponent implements OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: field.faction,
-              })
+              }),
             );
           } else {
             passiveEffectsArray.push(
@@ -88,7 +88,7 @@ export class LeaderEditorComponent implements OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: undefined,
-              })
+              }),
             );
           }
         });
@@ -105,7 +105,7 @@ export class LeaderEditorComponent implements OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: field.faction,
-              })
+              }),
             );
           } else {
             signetEffectsArray.push(
@@ -113,7 +113,7 @@ export class LeaderEditorComponent implements OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: undefined,
-              })
+              }),
             );
           }
         });
@@ -190,7 +190,7 @@ export class LeaderEditorComponent implements OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
-      })
+      }),
     );
   }
 
@@ -224,7 +224,7 @@ export class LeaderEditorComponent implements OnChanges {
           amount: undefined,
           faction: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -234,7 +234,7 @@ export class LeaderEditorComponent implements OnChanges {
         type: '',
         amount: undefined,
         faction: undefined,
-      })
+      }),
     );
   }
 
@@ -268,7 +268,7 @@ export class LeaderEditorComponent implements OnChanges {
           amount: undefined,
           faction: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -278,7 +278,7 @@ export class LeaderEditorComponent implements OnChanges {
         type: '',
         amount: undefined,
         faction: undefined,
-      })
+      }),
     );
   }
 

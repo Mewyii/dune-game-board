@@ -47,7 +47,10 @@ export class CardEditorComponent implements OnInit, OnChanges {
   ];
   fontSizes = ['large', 'medium', 'small'];
 
-  constructor(private fb: FormBuilder, public t: TranslateService) {
+  constructor(
+    private fb: FormBuilder,
+    public t: TranslateService,
+  ) {
     this.initForm();
   }
 
@@ -68,7 +71,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
             this.fb.group({
               type: field.type,
               amount: field.amount,
-            })
+            }),
           );
         });
       }
@@ -84,7 +87,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: field.faction,
-              })
+              }),
             );
           } else {
             agentEffectsArray.push(
@@ -92,7 +95,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: undefined,
-              })
+              }),
             );
           }
         });
@@ -109,7 +112,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: field.faction,
-              })
+              }),
             );
           } else {
             revealEffectsArray.push(
@@ -117,7 +120,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
                 type: field.type,
                 amount: field.amount,
                 faction: undefined,
-              })
+              }),
             );
           }
         });
@@ -198,7 +201,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
-      })
+      }),
     );
   }
 
@@ -232,7 +235,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
           amount: undefined,
           faction: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -242,7 +245,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
         type: '',
         amount: undefined,
         faction: undefined,
-      })
+      }),
     );
   }
 
@@ -276,7 +279,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
           amount: undefined,
           faction: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -286,7 +289,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
         type: '',
         amount: undefined,
         faction: undefined,
-      })
+      }),
     );
   }
 

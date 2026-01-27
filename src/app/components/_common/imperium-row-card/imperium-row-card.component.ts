@@ -1,16 +1,15 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { getActionTypePath } from 'src/app/helpers/action-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActionType, FactionType, EffectRewardType } from 'src/app/models';
+import { ActionType, FactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-imperium-row-card',
-    templateUrl: './imperium-row-card.component.html',
-    styleUrls: ['./imperium-row-card.component.scss'],
-    standalone: false
+  selector: 'dune-imperium-row-card',
+  templateUrl: './imperium-row-card.component.html',
+  styleUrls: ['./imperium-row-card.component.scss'],
+  standalone: false,
 })
 export class ImperiumRowCardComponent implements OnInit, OnChanges {
   @Input() card!: ImperiumCard;
@@ -18,10 +17,13 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
 
   public factionName = '';
   public factionColor = '';
-  public agentEffectSize = '32px';
-  public revealEffectSize = '32px';
+  public agentEffectSize = '30px';
+  public revealEffectSize = '30px';
 
-  constructor(public t: TranslateService, public settingsService: SettingsService) {}
+  constructor(
+    public t: TranslateService,
+    public settingsService: SettingsService,
+  ) {}
 
   ngOnInit(): void {
     if (this.card.faction) {
@@ -30,11 +32,11 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     }
     if (this.card.agentEffectSize) {
       this.agentEffectSize =
-        this.card.agentEffectSize === 'large' ? '32px' : this.card.agentEffectSize === 'medium' ? '22px' : '18px';
+        this.card.agentEffectSize === 'large' ? '30px' : this.card.agentEffectSize === 'medium' ? '21px' : '18px';
     }
     if (this.card.revealEffectSize) {
       this.revealEffectSize =
-        this.card.revealEffectSize === 'large' ? '32px' : this.card.revealEffectSize === 'medium' ? '22px' : '18px';
+        this.card.revealEffectSize === 'large' ? '30px' : this.card.revealEffectSize === 'medium' ? '21px' : '18px';
     }
   }
 
@@ -45,11 +47,11 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     }
     if (this.card.agentEffectSize) {
       this.agentEffectSize =
-        this.card.agentEffectSize === 'large' ? '32px' : this.card.agentEffectSize === 'medium' ? '22px' : '18px';
+        this.card.agentEffectSize === 'large' ? '30px' : this.card.agentEffectSize === 'medium' ? '21px' : '18px';
     }
     if (this.card.revealEffectSize) {
       this.revealEffectSize =
-        this.card.revealEffectSize === 'large' ? '32px' : this.card.revealEffectSize === 'medium' ? '22px' : '18px';
+        this.card.revealEffectSize === 'large' ? '30px' : this.card.revealEffectSize === 'medium' ? '21px' : '18px';
     }
   }
 

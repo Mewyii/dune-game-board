@@ -55,7 +55,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.4,
+    baseDesire: 0.3,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'spice') +
       0.025 * player.tech -
@@ -112,7 +112,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       const agentsOnLocations = gameState.playerAgentsOnFields.filter(
         (x) =>
           gameState.freeLocations.some((freeLocation) => freeLocation === x.fieldId) ||
-          gameState.enemyLocations.some((enemyLocation) => enemyLocation === x.fieldId)
+          gameState.enemyLocations.some((enemyLocation) => enemyLocation === x.fieldId),
       ).length;
       if (agentsOnLocations >= possibleLocationControls) {
         return 0;
@@ -142,7 +142,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
       (gameState.conflict.rewards[0].some((x) => x.type === 'location-control') &&
       gameState.playerAgentsOnFields.every(
-        (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId)
+        (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId),
       )
         ? 0
         : 1.0) *
@@ -244,7 +244,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   troops: {
-    baseDesire: 0.15,
+    baseDesire: 0.1,
     desireModifier: (player, gameState, goals) =>
       0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
       (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0) +
@@ -314,7 +314,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
               0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
               (gameState.playerAgentsAvailable > 1 ? 0.025 * (7 - gameState.playerHandCardsFieldAccess.length) : 0),
             0,
-            0.6
+            0.6,
           )
         : 0;
 
@@ -330,7 +330,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
                 0.02 * gameState.playerHandCardsRewards['persuasion'] +
                 0.01 * gameState.playerCardsRewards['persuasion'],
               0,
-              0.6
+              0.6,
             )
           : 0;
 
@@ -364,7 +364,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
           0.125 * gameState.playerCardsBought -
           0.15 * (gameState.playerCardsTrashed + player.focusTokens),
         -0.2,
-        0.4
+        0.4,
       ),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 9 || gameState.isFinale,

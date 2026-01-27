@@ -176,10 +176,11 @@ export class PlayersService {
     const player = players.find((x) => x.id === id);
     if (player) {
       const resourceIndex = player.resources.findIndex((x) => x.type === type);
-      const currentResourceAmount = player.resources[resourceIndex].amount;
+      const currentResourceAmount = player.resources[resourceIndex].amount ?? 0;
+
       player.resources[resourceIndex] = {
         ...player.resources[resourceIndex],
-        amount: currentResourceAmount ? currentResourceAmount + amount : amount,
+        amount: currentResourceAmount + amount > 0 ? currentResourceAmount + amount : 0,
       };
     }
 
@@ -229,7 +230,7 @@ export class PlayersService {
 
     const player = players.find((x) => x.id === id);
     if (player) {
-      player.tech = player.tech + amount;
+      player.tech = player.tech + amount > 0 ? player.tech + amount : 0;
     }
 
     this.playersSubject.next(players);
@@ -240,7 +241,7 @@ export class PlayersService {
 
     const player = players.find((x) => x.id === id);
     if (player) {
-      player.tech = player.tech - amount;
+      player.tech = player.tech - amount > 0 ? player.tech - amount : 0;
     }
 
     this.playersSubject.next(players);
@@ -251,7 +252,7 @@ export class PlayersService {
 
     const player = players.find((x) => x.id === id);
     if (player) {
-      player.focusTokens = player.focusTokens + amount;
+      player.focusTokens = player.focusTokens + amount > 0 ? player.focusTokens + amount : 0;
     }
 
     this.playersSubject.next(players);
@@ -262,7 +263,7 @@ export class PlayersService {
 
     const player = players.find((x) => x.id === id);
     if (player && player.focusTokens >= amount) {
-      player.focusTokens = player.focusTokens - amount;
+      player.focusTokens = player.focusTokens - amount > 0 ? player.focusTokens - amount : 0;
     }
 
     this.playersSubject.next(players);
@@ -324,7 +325,7 @@ export class PlayersService {
 
   public resetPersuasionForPlayers() {
     this.playersSubject.next(
-      this.getPlayers().map((x) => ({ ...x, persuasionGainedThisRound: 0, persuasionSpentThisRound: 0 }))
+      this.getPlayers().map((x) => ({ ...x, persuasionGainedThisRound: 0, persuasionSpentThisRound: 0 })),
     );
   }
 

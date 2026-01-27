@@ -24,6 +24,7 @@ import {
   isChoiceEffectType,
   isConditionFullfilled,
   isConversionEffectType,
+  isEnemyConditionFullfilled,
   isFactionScoreCostType,
   isFactionScoreRewardType,
   isNegativeEffect,
@@ -129,7 +130,7 @@ export class GameManager {
   private activePlayerIdSubject = new BehaviorSubject<number>(0);
   public activePlayerId$ = this.activePlayerIdSubject.asObservable();
   public activePlayer$ = combineLatest([this.activePlayerIdSubject.asObservable(), this.playerManager.players$]).pipe(
-    map(([activePlayerId, players]) => players.find((player) => player.id === activePlayerId))
+    map(([activePlayerId, players]) => players.find((player) => player.id === activePlayerId)),
   );
 
   private availablePlayerAgentsSubject = new BehaviorSubject<PlayerAgents[]>([]);
@@ -164,7 +165,7 @@ export class GameManager {
     private t: TranslateService,
     private intriguesService: IntriguesService,
     private turnInfoService: TurnInfoService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
     const currentRoundString = localStorage.getItem('currentRound');
     if (currentRoundString) {
@@ -240,20 +241,6 @@ export class GameManager {
 
     this.activePlayerId$.subscribe((activePlayerId) => {
       localStorage.setItem('activePlayerId', JSON.stringify(activePlayerId));
-
-      // if (this.autoPlayAI) {
-      //   const activePlayerAgentCount = this.getAvailableAgentCountForPlayer(activePlayerId);
-
-      //   if (activePlayerAgentCount > 0) {
-      //     setTimeout(() => {
-      //       const preferredField = this.aIManager.getPreferredFieldForPlayer(activePlayerId);
-      //       if (preferredField) {
-      //         this.addAgentToField(preferredField);
-      //         this.setNextPlayerActive('agent-placement');
-      //       }
-      //     }, 1000);
-      //   }
-      // }
     });
 
     this.isFinale$.subscribe((isFinale) => {
@@ -334,7 +321,7 @@ export class GameManager {
           !card.buyEffects?.some((x) => x.type === 'dreadnought') &&
           !card.effects?.some((x) => x.type === 'dreadnought-retreat') &&
           !card.effects?.some((x) => x.type === 'dreadnought-insert-or-retreat') &&
-          !card.effects?.some((x) => x.type === 'dreadnought-insert')
+          !card.effects?.some((x) => x.type === 'dreadnought-insert'),
       );
 
       this.cardsService.createImperiumDeck(
@@ -342,14 +329,14 @@ export class GameManager {
           !card.buyEffects?.some((x) => x.type === 'dreadnought') &&
           !card.agentEffects?.some((x) => x.type === 'dreadnought-retreat') &&
           !card.revealEffects?.some((x) => x.type === 'dreadnought-insert-or-retreat') &&
-          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert')
+          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert'),
       );
     } else if (this.settingsService.getUseDreadnoughts()) {
       this.cardsService.createImperiumDeck(
         (card) =>
           !card.buyEffects?.some((x) => x.type === 'tech') &&
           !card.agentEffects?.some((x) => x.type === 'tech') &&
-          !card.revealEffects?.some((x) => x.type === 'tech')
+          !card.revealEffects?.some((x) => x.type === 'tech'),
       );
     } else {
       this.cardsService.createImperiumDeck(
@@ -360,7 +347,7 @@ export class GameManager {
           !card.buyEffects?.some((x) => x.type === 'dreadnought') &&
           !card.agentEffects?.some((x) => x.type === 'dreadnought-retreat') &&
           !card.revealEffects?.some((x) => x.type === 'dreadnought-insert-or-retreat') &&
-          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert')
+          !card.revealEffects?.some((x) => x.type === 'dreadnought-insert'),
       );
     }
 
@@ -523,7 +510,7 @@ export class GameManager {
     this.currentRoundPhaseSubject.next('agent-placement');
 
     this.startingPlayerIdSubject.next(
-      this.playerManager.getPlayerCount() > this.startingPlayerId ? this.startingPlayerId + 1 : 1
+      this.playerManager.getPlayerCount() > this.startingPlayerId ? this.startingPlayerId + 1 : 1,
     );
 
     this.activePlayerIdSubject.next(this.startingPlayerId);
@@ -629,7 +616,7 @@ export class GameManager {
             player,
             gameState,
             { type: 'imperium-card', object: card },
-            'reveal'
+            'reveal',
           );
         }
         if (hasCustomRevealEffect(card)) {
@@ -757,7 +744,7 @@ export class GameManager {
 
     this.audioManager.playSound('click');
 
-    this.setPlayerOnField(activePlayer.id, field);
+    this.setPlayerAgentOnField(activePlayer.id, field);
 
     const fieldRewards = getModifiedRewardsForField(field, gameModifiers?.fieldReward);
 
@@ -808,7 +795,7 @@ export class GameManager {
           activePlayer.id,
           field.actionType,
           1,
-          this.currentRound
+          this.currentRound,
         );
 
         for (const reward of factionRewards) {
@@ -889,7 +876,7 @@ export class GameManager {
                   activePlayer,
                   gameState,
                   costEffects,
-                  rewards
+                  rewards,
                 );
 
                 if (conversionValue > favoredConversionValue) {
@@ -942,7 +929,7 @@ export class GameManager {
     this.addAgentToPlayer(playerId);
   }
 
-  private setPlayerOnField(playerId: number, field: ActionField) {
+  private setPlayerAgentOnField(playerId: number, field: ActionField) {
     this.agentsOnFieldsSubject.next([...this.agentsOnFieldsSubject.value, { playerId, fieldId: field.title.en }]);
 
     this.turnInfoService.updatePlayerTurnInfo(playerId, { agentPlacedOnFieldId: field.title.en });
@@ -1153,7 +1140,7 @@ export class GameManager {
   increasePlayerFactionScore(playerId: number, factionType: FactionType) {
     const influenceUpChoiceTodo = this.playerRewardChoicesService.getPlayerRewardChoice(
       playerId,
-      'faction-influence-up-choice'
+      'faction-influence-up-choice',
     );
     if (influenceUpChoiceTodo) {
       this.playerRewardChoicesService.removePlayerRewardChoice(playerId, influenceUpChoiceTodo.id);
@@ -1169,7 +1156,7 @@ export class GameManager {
   decreasePlayerFactionScore(playerId: number, factionType: FactionType) {
     const influenceDownChoiceTodo = this.playerRewardChoicesService.getPlayerRewardChoice(
       playerId,
-      'faction-influence-down-choice'
+      'faction-influence-down-choice',
     );
     if (influenceDownChoiceTodo) {
       this.playerRewardChoicesService.removePlayerRewardChoice(playerId, influenceDownChoiceTodo.id);
@@ -1186,7 +1173,7 @@ export class GameManager {
     playerId: number,
     effect: StructuredChoiceEffectWithGameElement,
     choice: 'left' | 'right',
-    gameState?: GameState
+    gameState?: GameState,
   ) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
@@ -1213,7 +1200,7 @@ export class GameManager {
   public resolveEffectConversionIfPossible(
     playerId: number,
     effect: StructuredConversionEffectWithGameElement,
-    gameState?: GameState
+    gameState?: GameState,
   ) {
     const player = this.playerManager.getPlayer(playerId);
     if (!player) {
@@ -1286,7 +1273,7 @@ export class GameManager {
             const techTilePlayEvaluation = this.aIManager.getTechTilePlayEvaluation(
               playerTechTile.techTile,
               player,
-              gameState
+              gameState,
             );
             if (techTilePlayEvaluation > 0) {
               this.resolveStructuredEffects(effects, player, gameState, {
@@ -1347,7 +1334,7 @@ export class GameManager {
           const cardAndField = this.aIManager.getCardAndFieldToPlay(playerHandCards, player, gameState);
 
           const boardField = this.settingsService.boardFields.find((x) =>
-            cardAndField?.preferredField.fieldId.includes(x.title.en)
+            cardAndField?.preferredField.fieldId.includes(x.title.en),
           );
           if (boardField && cardAndField) {
             this.cardsService.setPlayedPlayerCard(playerId, cardAndField.cardToPlay.id);
@@ -1436,7 +1423,7 @@ export class GameManager {
               let result = this.aIManager.getAllStructuredEffectsRewardsAndCosts(
                 intrigue.structuredCombatEffects,
                 player,
-                gameState
+                gameState,
               );
 
               const combinedCosts = getFlattenedEffectRewardArray([...trackedCosts, ...result.costs]);
@@ -1492,7 +1479,7 @@ export class GameManager {
               Math.random() < 0.15 * intriguesWithCombatScores.length)
           ) {
             const beatableCombatScore = enemyCombatScores.find(
-              (x) => x >= playerCombatScore && x < playerCombatScore + maxAdditionalCombatScore
+              (x) => x >= playerCombatScore && x < playerCombatScore + maxAdditionalCombatScore,
             );
             if (beatableCombatScore) {
               let playerCurrentCombatScore = playerCombatScore;
@@ -1698,7 +1685,7 @@ export class GameManager {
     player: Player,
     effect: StructuredConversionEffectWithGameElement,
     gameState: GameState,
-    overrideConversionIsUseful?: boolean
+    overrideConversionIsUseful?: boolean,
   ) {
     const effectCosts = getMultipliedRewardEffects(effect.effectCosts, gameState);
     const effectRewards = getMultipliedRewardEffects(effect.effectConversions, gameState);
@@ -1721,7 +1708,7 @@ export class GameManager {
     leftSideEffect: StructuredConversionOrRewardEffect,
     rightSideEffect: StructuredConversionOrRewardEffect,
     gameState: GameState,
-    gameElement?: GameElement
+    gameElement?: GameElement,
   ) {
     let chosenEffect: StructuredConversionOrRewardEffect | undefined;
 
@@ -1809,30 +1796,61 @@ export class GameManager {
     player: Player,
     gameState: GameState,
     gameElement?: GameElement,
-    timing?: EffectPlayerTurnTiming
+    timing?: EffectPlayerTurnTiming,
   ) {
     const effects = structuredEffects;
     for (const effect of effects) {
       let timingFullfilled = true;
       let conditionFullfilled = true;
+      let affects = 'player';
       if (effect.timing) {
         timingFullfilled = isTimingFullfilled(effect.timing, player, gameState);
       }
       if (effect.condition) {
         conditionFullfilled = isConditionFullfilled(effect.condition, player, gameState, timing, gameElement);
+        affects = effect.condition.affects;
       }
 
       if (timingFullfilled && conditionFullfilled) {
-        if (isStructuredRewardEffect(effect)) {
-          const rewards = getMultipliedRewardEffects(effect, gameState, timing);
+        if (affects === 'player') {
+          if (isStructuredRewardEffect(effect)) {
+            const rewards = getMultipliedRewardEffects(effect, gameState, timing);
 
-          for (const reward of rewards) {
-            this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
+            for (const reward of rewards) {
+              this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
+            }
+          } else if (isStructuredChoiceEffect(effect)) {
+            this.resolveStructuredChoiceEffect(effect, player.id, gameElement);
+          } else if (isStructuredConversionEffect(effect)) {
+            this.resolveStructuredConversionEffect(effect, player.id, gameElement);
           }
-        } else if (isStructuredChoiceEffect(effect)) {
-          this.resolveStructuredChoiceEffect(effect, player.id, gameElement);
-        } else if (isStructuredConversionEffect(effect)) {
-          this.resolveStructuredConversionEffect(effect, player.id, gameElement);
+        } else if (affects === 'enemies') {
+          const enemies = this.playerManager.getEnemyPlayers(player.id);
+          for (const enemy of enemies) {
+            let enemyConditionFullfilled = true;
+            if (effect.condition) {
+              const enemyAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === enemy.id);
+              enemyConditionFullfilled = isEnemyConditionFullfilled(
+                effect.condition,
+                enemy,
+                enemyAgentsOnFields,
+                gameState.playerAgentPlacedOnFieldThisTurn,
+              );
+            }
+            if (enemyConditionFullfilled) {
+              if (isStructuredRewardEffect(effect)) {
+                const rewards = getMultipliedRewardEffects(effect, gameState, timing);
+
+                for (const reward of rewards) {
+                  this.addRewardToPlayer(enemy.id, reward, { gameElement, source: gameElement?.type });
+                }
+              } else if (isStructuredChoiceEffect(effect)) {
+                this.resolveStructuredChoiceEffect(effect, enemy.id, gameElement);
+              } else if (isStructuredConversionEffect(effect)) {
+                this.resolveStructuredConversionEffect(effect, enemy.id, gameElement);
+              }
+            }
+          }
         }
       }
     }
@@ -1841,7 +1859,7 @@ export class GameManager {
   private resolveStructuredChoiceEffect(
     structuredChoiceEffect: StructuredChoiceEffect,
     playerId: number,
-    element?: GameElement
+    element?: GameElement,
   ) {
     if (isChoiceEffectType(structuredChoiceEffect.type)) {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { effectChoices: [{ ...structuredChoiceEffect, element }] });
@@ -1851,7 +1869,7 @@ export class GameManager {
   private resolveStructuredConversionEffect(
     structuredChoiceEffect: StructuredConversionEffect,
     playerId: number,
-    element?: GameElement
+    element?: GameElement,
   ) {
     if (isConversionEffectType(structuredChoiceEffect.type)) {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { effectConversions: [{ ...structuredChoiceEffect, element }] });
@@ -1962,7 +1980,7 @@ export class GameManager {
           } else if (playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
-              this.t.translateLS(playerLeader.signetDescription)
+              this.t.translateLS(playerLeader.signetDescription),
             );
           }
         } else {
@@ -2093,7 +2111,7 @@ export class GameManager {
             effectOption.effectLeft,
             effectOption.effectRight,
             updatedGameState,
-            effectOption.element
+            effectOption.element,
           );
         }
       }
@@ -2113,14 +2131,14 @@ export class GameManager {
 
     if (turnInfo.canLiftAgent) {
       const playerAgentsOnOtherFields = this.agentsOnFields.filter(
-        (x) => x.playerId === player.id && x.fieldId !== turnInfo.agentPlacedOnFieldId
+        (x) => x.playerId === player.id && x.fieldId !== turnInfo.agentPlacedOnFieldId,
       );
       if (playerAgentsOnOtherFields.length > 0) {
         const locations = playerAgentsOnOtherFields.filter(
-          (x) => this.settingsService.getBoardField(x.fieldId)?.ownerReward
+          (x) => this.settingsService.getBoardField(x.fieldId)?.ownerReward,
         );
         const nonLocations = playerAgentsOnOtherFields.filter(
-          (x) => !this.settingsService.getBoardField(x.fieldId)?.ownerReward
+          (x) => !this.settingsService.getBoardField(x.fieldId)?.ownerReward,
         );
 
         if (locations.length > 0) {
@@ -2220,7 +2238,7 @@ export class GameManager {
           } else if (playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
-              this.t.translateLS(playerLeader.signetDescription)
+              this.t.translateLS(playerLeader.signetDescription),
             );
           }
         } else {
@@ -2265,11 +2283,11 @@ export class GameManager {
     const freeControllableLocations = locationsWithPlayerAgents.filter(
       (x) =>
         !playerLocations.some((y) => x.actionField.title.en === y.locationId) &&
-        !enemyLocations.some((y) => x.actionField.title.en === y.locationId)
+        !enemyLocations.some((y) => x.actionField.title.en === y.locationId),
     );
 
     const enemyControllableLocations = locationsWithPlayerAgents.filter((x) =>
-      enemyLocations.some((y) => x.actionField.title.en === y.locationId)
+      enemyLocations.some((y) => x.actionField.title.en === y.locationId),
     );
 
     const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts() ?? 0;
@@ -2284,7 +2302,7 @@ export class GameManager {
         if (gameState.rival) {
           const rivalLocations = this.locationManager.getPlayerLocations(gameState.rival.id);
           const controllableRivalLocations = locationsWithPlayerAgents.filter((x) =>
-            rivalLocations.some((y) => x.actionField.title.en === y.locationId)
+            rivalLocations.some((y) => x.actionField.title.en === y.locationId),
           );
 
           if (controllableRivalLocations.length > 0) {
@@ -2320,7 +2338,7 @@ export class GameManager {
       allCards,
       player,
       gameState,
-      imperiumRowModifiers
+      imperiumRowModifiers,
     );
     if (cardToBuy) {
       const costModifier = getCardCostModifier(cardToBuy, imperiumRowModifiers);
@@ -2603,6 +2621,7 @@ export class GameManager {
   private getGameState(player: Player): GameState {
     const playerAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === player.id);
     const enemyAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId !== player.id);
+    const playerAgentPlacedOnFieldThisTurn = this.turnInfoService.getPlayerTurnInfo(player.id, 'agentPlacedOnFieldId');
 
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
     const playerDreadnoughtCount = getPlayerdreadnoughtCount(playerCombatUnits);
@@ -2732,6 +2751,8 @@ export class GameManager {
       playerHandCardsRewards,
       playerHandCardsFactions,
       playerCardsFactionsInPlay,
+      enemyAgentsOnFields,
+      playerAgentPlacedOnFieldThisTurn,
     };
 
     for (const techTile of playerTechTiles) {
@@ -2799,7 +2820,7 @@ export class GameManager {
     const playerFieldUnlocksForFactions = this.gameModifiersService.getPlayerFieldUnlocksForFactions(player.id) ?? [];
     const playerFieldUnlocksForIds = this.gameModifiersService.getPlayerFieldUnlocksForIds(player.id) ?? [];
     const playerEnemyFieldTypeAcessTroughCards = flatten(
-      playerHandCards.filter((x) => x.fieldAccess && x.canInfiltrate).map((x) => x.fieldAccess)
+      playerHandCards.filter((x) => x.fieldAccess && x.canInfiltrate).map((x) => x.fieldAccess),
     ) as ActionType[];
     const playerEnemyFieldTypeAcessTroughGameModifiers =
       this.gameModifiersService.getPlayerFieldEnemyAcessForActionTypes(player.id) ?? [];
@@ -2826,7 +2847,7 @@ export class GameManager {
       .filter((x) => x.playerId !== player.id)
       .map((x) => x.locationId);
     const freeLocations = this.settingsService.controllableLocations.filter(
-      (x) => !playerLocations.includes(x) && !enemyLocations.includes(x)
+      (x) => !playerLocations.includes(x) && !enemyLocations.includes(x),
     );
 
     const enemyScore = this.playerScoreManager.getEnemyScore(player.id)!;
@@ -2915,6 +2936,7 @@ export class GameManager {
         factionInfluenceAllianceTreshold: this.settingsService.getFactionInfluenceAllianceTreshold(),
       },
       boardSpaces: this.settingsService.boardFields,
+      playerAgentPlacedOnFieldThisTurn,
     } as GameState;
   }
 
@@ -3031,7 +3053,7 @@ export class GameManager {
     const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTech = player.tech;
     const affordableTechTiles = buyableTechTiles.filter(
-      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech + availablePlayerSpice
+      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech + availablePlayerSpice,
     );
 
     if (affordableTechTiles.length > 0) {
@@ -3039,7 +3061,7 @@ export class GameManager {
       const mostDesiredTechTile = buyableTechTiles.sort(
         (a, b) =>
           this.aIManager.getTechTileBuyEvaluation(b, player, gameState) -
-          this.aIManager.getTechTileBuyEvaluation(a, player, gameState)
+          this.aIManager.getTechTileBuyEvaluation(a, player, gameState),
       )[0];
 
       const desire = this.aIManager.getTechTileBuyEvaluation(mostDesiredTechTile, player, gameState);
@@ -3113,7 +3135,7 @@ export class GameManager {
   public addRewardToPlayer(
     playerId: number,
     reward: EffectReward,
-    additionalInfos?: { gameElement?: GameElement; source?: string }
+    additionalInfos?: { gameElement?: GameElement; source?: string },
   ) {
     const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(playerId);
 
@@ -3148,7 +3170,7 @@ export class GameManager {
           playerId,
           scoreType as PlayerFactionScoreType,
           1,
-          this.currentRound
+          this.currentRound,
         );
 
         for (const reward of factionRewards) {
@@ -3334,7 +3356,7 @@ export class GameManager {
         playerId,
         scoreType as PlayerFactionScoreType,
         costAmount,
-        this.currentRound
+        this.currentRound,
       );
     } else if (costType === 'tech-tile-trash') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { techTileTrashAmount: costAmount });
@@ -3528,7 +3550,7 @@ export class GameManager {
     playerId: number,
     playerCombatUnits: PlayerCombatUnits,
     enemyCombatScores: PlayerCombatScore[],
-    playerHasAgentsLeft: boolean
+    playerHasAgentsLeft: boolean,
   ) {
     if (playerHasAgentsLeft) {
       let troopsAdded = 0;
@@ -3573,7 +3595,7 @@ export class GameManager {
           player.id,
           playerScores,
           1,
-          increasedFactionScoreTypes
+          increasedFactionScoreTypes,
         );
 
         if (desiredScoreType) {
@@ -3598,7 +3620,7 @@ export class GameManager {
           player.id,
           playerScores,
           1,
-          increasedFactionScoreTypes
+          increasedFactionScoreTypes,
         );
 
         if (desiredScoreType) {

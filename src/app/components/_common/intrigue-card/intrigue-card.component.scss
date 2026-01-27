@@ -47,23 +47,26 @@
 }
 
 .card-content.complot {
-  border-top: 2px solid #fabc57;
-  background-image: linear-gradient(#fabc57 -4%, #bf7d13, 10%, #856435, 70%, #40331f);
+  border-top: 1px solid #fabc57;
+  background-image: url(/assets/images/intrigues/complot_background.png);
 }
 
 .card-content.combat {
-  border-top: 2px solid #ff5959;
-  background-image: linear-gradient(#ff5959 -4%, #bf1313, 10%, #852e2e, 70%, #401d1d);
+  border-top: 1px solid #ff5959;
+  background-image: url(/assets/images/intrigues/combat_background.png);
 }
 
 .card-content.complot.combined {
   border-radius: 0;
-  background-image: linear-gradient(#fabc57 -4%, #bf7d13, 20%, #856435, 80%, #664c29);
+  background-image: url(/assets/images/intrigues/complot_background.png);
+  background-size: 125%;
 }
 
 .card-content.combat.combined {
-  border-top: 2px solid #353535;
-  background-image: linear-gradient(#bf1313 -25%, #852e2e, 70%, #401d1d);
+  border-top: 1px solid #101010;
+  background-image: url(/assets/images/intrigues/combat_background.png);
+  background-position: top;
+  background-size: 125%;
 }
 
 .card-title {

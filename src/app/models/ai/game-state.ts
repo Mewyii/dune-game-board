@@ -95,4 +95,5 @@ export type GameState = Readonly<{
     | 'factionInfluenceAllianceTreshold'
   >;
   boardSpaces: ActionField[];
+  playerAgentPlacedOnFieldThisTurn?: string;
 }>;

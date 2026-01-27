@@ -36,7 +36,7 @@ import {
 } from '../models';
 import { GameState } from '../models/ai';
 import { Player } from '../models/player';
-import { GameElement } from '../services/game-manager.service';
+import { AgentOnField, GameElement } from '../services/game-manager.service';
 import { getPlayerCombatStrength } from './ai';
 import { getPlayerdreadnoughtCount } from './combat-units';
 import { getFactionScoreTypeFromCost } from './faction-score';
@@ -55,7 +55,7 @@ export function isFactionScoreReward(reward: Effect) {
 }
 
 export function isFactionScoreRewardType(
-  rewardType: EffectRewardType
+  rewardType: EffectRewardType,
 ): rewardType is
   | 'faction-influence-up-bene'
   | 'faction-influence-up-fremen'
@@ -85,7 +85,7 @@ export function isFactionScoreCost(reward: Effect) {
 }
 
 export function isFactionScoreCostType(
-  rewardType: EffectRewardType
+  rewardType: EffectRewardType,
 ): rewardType is
   | 'faction-influence-down-bene'
   | 'faction-influence-down-fremen'
@@ -236,7 +236,7 @@ export function getSeparatedEffectArrays(effects: Effect[]) {
 }
 
 export function getStructuredEffectTimingIfPossible(
-  effects: EffectTimingConditionChoiceConversionMultiplierOrReward[]
+  effects: EffectTimingConditionChoiceConversionMultiplierOrReward[],
 ): [EffectConditionChoiceConversionMultiplierOrReward[], StructuredEffectTiming | undefined] {
   for (const [index, effect] of effects.entries()) {
     if (isTimingEffect(effect)) {
@@ -249,7 +249,7 @@ export function getStructuredEffectTimingIfPossible(
 }
 
 export function getStructuredEffectConditionIfPossible(
-  effects: EffectConditionChoiceConversionMultiplierOrReward[]
+  effects: EffectConditionChoiceConversionMultiplierOrReward[],
 ): [EffectChoiceConversionMultiplierOrReward[], StructuredEffectCondition | undefined] {
   for (const [index, effect] of effects.entries()) {
     if (isConditionalEffect(effect)) {
@@ -259,24 +259,34 @@ export function getStructuredEffectConditionIfPossible(
         const conditionalEffect = {
           type: effect.type,
           faction: effect.faction ?? 'emperor',
-        };
+          affects: 'player',
+        } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-influence') {
         const conditionalEffect = {
           type: effect.type,
           faction: effect.faction ?? 'emperor',
           amount: effect.amount ?? 0,
-        };
+          affects: 'player',
+        } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-high-council-seat') {
         const conditionalEffect = {
           type: effect.type,
-        };
+          affects: 'player',
+        } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-no-high-council-seat') {
         const conditionalEffect = {
           type: effect.type,
-        };
+          affects: 'player',
+        } as StructuredEffectCondition;
+        return [effectsWithoutCondition, conditionalEffect];
+      } else if (effect.type === 'condition-enemies-on-this-field') {
+        const conditionalEffect = {
+          type: effect.type,
+          affects: 'enemies',
+        } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
       }
     }
@@ -285,7 +295,7 @@ export function getStructuredEffectConditionIfPossible(
 }
 
 export function getStructuredChoiceEffectIfPossible(
-  effects: EffectChoiceConversionMultiplierOrReward[]
+  effects: EffectChoiceConversionMultiplierOrReward[],
 ): [EffectConversionMultiplierOrReward[], undefined] | [undefined, StructuredChoiceEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isChoiceEffect(effect)) {
@@ -320,7 +330,7 @@ export function getStructuredChoiceEffectIfPossible(
 }
 
 export function getStructuredConversionEffectIfPossible(
-  effects: EffectConversionMultiplierOrReward[]
+  effects: EffectConversionMultiplierOrReward[],
 ): [EffectMultiplierOrReward[], undefined] | [undefined, StructuredConversionEffect] {
   for (const [index, effect] of effects.entries()) {
     if (isConversionEffect(effect)) {
@@ -357,7 +367,7 @@ export function getStructuredEffectReward(effects: EffectMultiplierOrReward[]): 
 export function isTimingFullfilled(
   timingEffect: StructuredEffectTiming,
   player: Player,
-  gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos' | 'currentRoundPhase'>
+  gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos' | 'currentRoundPhase'>,
 ) {
   let timingFullfilled = false;
   if (timingEffect.type === 'timing-game-start') {
@@ -384,9 +394,16 @@ export function isTimingFullfilled(
 export function isConditionFullfilled(
   conditionEffect: StructuredEffectCondition,
   player: Player,
-  gameState: Pick<GameState, 'playerCardsFactionsInPlay' | 'playerHandCardsFactions' | 'playerScore'>,
+  gameState: Pick<
+    GameState,
+    | 'playerCardsFactionsInPlay'
+    | 'playerHandCardsFactions'
+    | 'playerScore'
+    | 'enemyAgentsOnFields'
+    | 'playerAgentPlacedOnFieldThisTurn'
+  >,
   timing: EffectPlayerTurnTiming = 'agent-placement',
-  gameElement?: GameElement
+  gameElement?: GameElement,
 ) {
   let conditionFullfilled = false;
   if (conditionEffect.type === 'condition-connection') {
@@ -422,6 +439,31 @@ export function isConditionFullfilled(
     if (!player.hasCouncilSeat) {
       conditionFullfilled = true;
     }
+  } else if (conditionEffect.type === 'condition-enemies-on-this-field') {
+    const enemyAgentsOnCurrentFieldCount = gameState.enemyAgentsOnFields.filter(
+      (x) => x.fieldId === gameState.playerAgentPlacedOnFieldThisTurn,
+    ).length;
+    if (enemyAgentsOnCurrentFieldCount > 0) {
+      conditionFullfilled = true;
+    }
+  }
+  return conditionFullfilled;
+}
+
+export function isEnemyConditionFullfilled(
+  conditionEffect: StructuredEffectCondition,
+  enemy: Player,
+  enemyAgentsOnFields: AgentOnField[],
+  playerAgentPlacedOnFieldThisTurn?: string,
+) {
+  let conditionFullfilled = false;
+  if (conditionEffect.type === 'condition-enemies-on-this-field') {
+    const enemyAgentsOnCurrentFieldCount = enemyAgentsOnFields.filter(
+      (x) => x.fieldId === playerAgentPlacedOnFieldThisTurn,
+    ).length;
+    if (enemyAgentsOnCurrentFieldCount > 0) {
+      conditionFullfilled = true;
+    }
   }
   return conditionFullfilled;
 }
@@ -431,13 +473,15 @@ export function getMultipliedRewardEffects(
   gameState: Pick<
     GameState,
     | 'playerAgentsOnFields'
+    | 'playerAgentPlacedOnFieldThisTurn'
     | 'playerCombatUnits'
     | 'playerHandCardsRewards'
     | 'playerHandCardsFactions'
     | 'playerCardsFactionsInPlay'
+    | 'enemyAgentsOnFields'
   >,
   timing: EffectPlayerTurnTiming = 'agent-placement',
-  gameElement?: GameElement
+  gameElement?: GameElement,
 ): EffectReward[] {
   if (!multiplierEffectOrRewardArray.multiplier) {
     return multiplierEffectOrRewardArray.effectRewards;
@@ -473,7 +517,14 @@ export function getMultipliedRewardEffects(
     } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-cards-with-sword') {
       const swordAmount = gameState.playerHandCardsRewards.sword;
       if (swordAmount > 0) {
-        effectMultiplierAmount = 0.75 * swordAmount;
+        effectMultiplierAmount = 1 * swordAmount;
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-enemies-on-this-field') {
+      const enemyAgentsOnCurrentFieldCount = gameState.enemyAgentsOnFields.filter(
+        (x) => x.fieldId === gameState.playerAgentPlacedOnFieldThisTurn,
+      ).length;
+      if (enemyAgentsOnCurrentFieldCount > 0) {
+        effectMultiplierAmount = 1 * enemyAgentsOnCurrentFieldCount;
       }
     } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-connections') {
       const faction = multiplierEffectOrRewardArray.multiplier.faction;
@@ -529,7 +580,7 @@ export function playerCanPayCosts(
     | 'playerCardsFactionsInPlay'
     | 'gameSettings'
     | 'playerTechTiles'
-  >
+  >,
 ) {
   let canPayCosts = true;
   const playerScore = gameState.playerScore;

@@ -94,7 +94,7 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'spice', amount: 4 }],
         rewards: [
           { type: 'tech', amount: 2 },
-          { type: 'troop', amount: 5 },
+          { type: 'troop', amount: 6 },
         ],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
       },
@@ -174,7 +174,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
+        costs: [{ type: 'solari', amount: 2 }],
         rewards: [
           { type: 'card-draw', amount: 2 },
           { type: 'troop', amount: 2 },
@@ -194,14 +194,10 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
         rewards: [
-          { type: 'persuasion', amount: 2 },
-          { type: 'helper-or' },
+          { type: 'solari', amount: 2 },
           { type: 'troop', amount: 2 },
-          { type: 'solari' },
         ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
-        customWidth: '130px',
-        noColumnGap: true,
       },
       {
         title: { de: 'Mentat', en: 'Mentat' },
@@ -209,7 +205,7 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
-        customWidth: '135px',
+        customWidth: '175px',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
@@ -253,8 +249,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
-        rewards: [{ type: 'water' }, { type: 'water' }, { type: 'tech' }],
+        costs: [{ type: 'solari' }],
+        rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'tech' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         requiresInfluence: { type: 'emperor' },
       },

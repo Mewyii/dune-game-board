@@ -70,7 +70,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
             this.fb.group({
               type: field.type,
               amount: field.amount,
-            })
+            }),
           );
         });
       }
@@ -84,7 +84,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
             this.fb.group({
               type: field.type,
               amount: field.amount,
-            })
+            }),
           );
         });
       }
@@ -146,7 +146,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
-      })
+      }),
     );
   }
 
@@ -179,7 +179,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
           type: '',
           amount: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -190,7 +190,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
         en: '',
         de: '',
         fontSize: 'small',
-      })
+      }),
     );
   }
 
@@ -199,7 +199,7 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
-      })
+      }),
     );
   }
 
