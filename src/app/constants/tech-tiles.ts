@@ -477,7 +477,11 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/port.png',
     effectSize: 'small',
     imagePosition: 'bottom',
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'solari',
+      },
+    ],
     effects: [
       {
         type: 'timing-round-start',
@@ -486,19 +490,19 @@ export const techTiles: TechTileCard[] = [
         type: 'tech-tile-flip',
       },
       {
-        type: 'tech',
+        type: 'spice',
       },
       {
         type: 'helper-trade',
       },
       {
         type: 'solari',
-        amount: 4,
+        amount: 3,
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 1 {resource:solari}{resource:helper-or}2 {resource:tech}{resource:helper-or} 3+ {resource:solari;amount:2} {resource:tech;amount:2}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:tech}{resource:helper-or} 3+ {resource:solari;amount:2} {resource:tech;amount:2}',
+      en: '<b>Reveal turn:</b> <br>{faction:guild} -Connections<br> 1 {resource:solari}{resource:helper-or}2 {resource:tech}{resource:helper-or} 3+ {resource:solari} {resource:tech;amount:2}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:guild} -Verbindungen<br> 1 {resource:solari}{resource:helper-or}2 {resource:tech}{resource:helper-or} 3+ {resource:solari} {resource:tech;amount:2}',
       fontSize: 'small',
     },
   },
@@ -614,7 +618,11 @@ export const techTiles: TechTileCard[] = [
     imageUrl: '/assets/images/action-backgrounds/research_station.png',
     effectSize: 'small',
     imagePosition: 'center',
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'focus',
+      },
+    ],
     effects: [
       {
         type: 'timing-round-start',
@@ -629,15 +637,12 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'card-draw',
-      },
-      {
-        type: 'focus',
+        type: 'water',
       },
     ],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:focus}{resource:helper-or}2 {resource:water}{resource:helper-or} 3+ {resource:water}{resource:focus}{resource:sword}',
-      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:focus}{resource:helper-or}2 {resource:water}{resource:helper-or} 3+ {resource:water}{resource:focus}{resource:sword}',
+      en: '<b>Reveal turn:</b> <br>{faction:fremen} -Connections<br> 1 {resource:persuasion;amount:1}{resource:helper-or}2 {resource:focus}{resource:helper-or} 3+ {resource:persuasion;amount:1} {resource:focus}',
+      de: '<b>Aufdeckzug:</b> <br>{faction:fremen} -Verbindungen<br> 1 {resource:persuasion;amount:1}{resource:helper-or}2 {resource:focus}{resource:helper-or} 3+ {resource:persuasion;amount:1} {resource:focus}',
       fontSize: 'small',
     },
   },

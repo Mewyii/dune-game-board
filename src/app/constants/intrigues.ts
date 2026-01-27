@@ -324,7 +324,8 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'faction-influence-down-choice',
+        type: 'spice',
+        amount: 2,
       },
       {
         type: 'helper-trade',
@@ -366,7 +367,8 @@ export const intrigues: IntrigueCard[] = [
         type: 'water',
       },
       {
-        type: 'focus',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'helper-trade',
@@ -581,7 +583,7 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'focus',
+        type: 'spice',
       },
       {
         type: 'helper-trade',
@@ -853,7 +855,7 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'solari',
-        amount: 3,
+        amount: 4,
       },
     ],
     combatEffects: [
