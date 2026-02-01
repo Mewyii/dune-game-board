@@ -7,9 +7,9 @@ export const techTiles: TechTileCard[] = [
       de: 'Spice-Transportmodule',
     },
     costs: 1,
-    imageUrl: '/assets/images/action-backgrounds/industry.png',
+    imageUrl: '/assets/images/action-backgrounds/leighter_spice_module.png',
     effectSize: 'medium',
-    imagePosition: 'top',
+    imagePosition: 'center',
     buyEffects: [],
     effects: [
       {
@@ -40,9 +40,9 @@ export const techTiles: TechTileCard[] = [
       de: 'Spionagemodule',
     },
     costs: 1,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_7.png',
+    imageUrl: '/assets/images/action-backgrounds/leighter_spy_module.png',
     effectSize: 'medium',
-    imagePosition: 'bottom',
+    imagePosition: 'top',
     buyEffects: [],
     effects: [
       {
@@ -96,13 +96,30 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Controlled Spice Explosions',
+      de: 'Gesteuerte Spice-Explosionen',
+    },
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/spice_explosion.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Place {resource:spice} on a {faction:spice} board space of your choice.',
+      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Lege {resource:spice} auf ein {faction:spice}-Feld deiner Wahl.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Landing Ships',
       de: 'Landungsschiffe',
     },
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
     effectSize: 'medium',
-    imagePosition: 'bottom',
+    imagePosition: 'center',
     buyEffects: [
       {
         type: 'troop',
@@ -141,7 +158,7 @@ export const techTiles: TechTileCard[] = [
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/windtraps.png',
     effectSize: 'medium',
-    imagePosition: 'center',
+    imagePosition: 'top',
     buyEffects: [],
     effects: [
       {
@@ -238,7 +255,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Schwere Lasguns',
     },
     costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/lasgun.png',
+    imageUrl: '/assets/images/action-backgrounds/leigther_heavy_lasguns.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
@@ -334,9 +351,9 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'emperor',
     costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/military_camp.png',
+    imageUrl: '/assets/images/action-backgrounds/troops_3.png',
     effectSize: 'medium',
-    imagePosition: 'center',
+    imagePosition: 'bottom',
     buyEffects: [],
     effects: [
       {
@@ -372,8 +389,10 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/carryall.png',
-    imagePosition: 'center',
+    effectSize: 'medium',
+    imagePosition: 'top',
     buyEffects: [],
+    effects: [],
     customEffect: {
       en: 'Access to {faction:spice} board spaces costs {resource:water} less.',
       de: 'Der Zugang zu {faction:spice}-Feldern kostet {resource:water} weniger.',
@@ -389,7 +408,7 @@ export const techTiles: TechTileCard[] = [
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
     effectSize: 'medium',
-    imagePosition: 'center',
+    imagePosition: 'top',
     buyEffects: [],
     effects: [
       {
@@ -442,7 +461,7 @@ export const techTiles: TechTileCard[] = [
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/assault.png',
     effectSize: 'small',
-    imagePosition: 'center',
+    imagePosition: 'top',
     buyEffects: [],
     effects: [
       {
@@ -464,6 +483,23 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
       de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Recruitment Hub',
+      de: 'Anwerbungszentrum',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:solari} {resource:helper-trade}Acquire a card for {resource:persuasion;amount:-2} and place it on top of your deck.',
+      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:solari} {resource:helper-trade}Erwirb eine Karte für {resource:persuasion;amount:-2} und lege sie oben auf dein Deck.',
       fontSize: 'small',
     },
   },
@@ -514,7 +550,7 @@ export const techTiles: TechTileCard[] = [
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/ornithopter.png',
     effectSize: 'small',
-    imagePosition: 'center',
+    imagePosition: 'top',
     buyEffects: [],
     effects: [
       {
@@ -582,7 +618,7 @@ export const techTiles: TechTileCard[] = [
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/port_2.png',
     effectSize: 'large',
-    imagePosition: 'center',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'troop',
@@ -615,7 +651,7 @@ export const techTiles: TechTileCard[] = [
     },
     faction: 'fremen',
     costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/research_station.png',
+    imageUrl: '/assets/images/action-backgrounds/ecological_testing_station.png',
     effectSize: 'small',
     imagePosition: 'center',
     buyEffects: [
@@ -693,7 +729,7 @@ export const techTiles: TechTileCard[] = [
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_3.png',
     effectSize: 'small',
-    imagePosition: 'bottom',
+    imagePosition: 'center',
     buyEffects: [],
     effects: [
       {
@@ -743,7 +779,7 @@ export const techTiles: TechTileCard[] = [
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/ornithopters.png',
     effectSize: 'small',
-    imagePosition: 'center',
+    imagePosition: 'top',
     buyEffects: [
       {
         type: 'troop',
@@ -775,7 +811,7 @@ export const techTiles: TechTileCard[] = [
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/shields.png',
     effectSize: 'small',
-    imagePosition: 'center',
+    imagePosition: 'bottom',
     buyEffects: [],
     effects: [
       {
@@ -992,6 +1028,23 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Deployment Ship',
+      de: 'Einsatzsschiff',
+    },
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/landing_ship_2.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Acquire a card for {resource:persuasion;amount:-1}. Immediately execute its reveal effect.',
+      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Erwirb eine Karte für {resource:persuasion;amount:-1}. Führe ihren Aufdeck-Effekt sofort aus.',
+      fontSize: 'small',
     },
   },
   {
@@ -1214,6 +1267,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 9,
     imageUrl: '/assets/images/action-backgrounds/lighter.png',
+    effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [
       {
@@ -1223,12 +1277,6 @@ export const techTiles: TechTileCard[] = [
         type: 'troop',
       },
     ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    effectSize: 'medium',
     effects: [
       {
         type: 'timing-reveal-turn',
@@ -1246,5 +1294,10 @@ export const techTiles: TechTileCard[] = [
         type: 'victory-point',
       },
     ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
   },
 ];

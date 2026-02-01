@@ -10,7 +10,7 @@ export const ixCustomExpert: ActionField = {
       { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
       { type: 'tech', amount: 3 },
     ],
-    [{ type: 'solari', amount: 5 }, { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 }, { type: 'dreadnought' }],
+    [{ type: 'solari', amount: 6 }, { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 }, { type: 'dreadnought' }],
   ],
   pathToImage: 'assets/images/action-backgrounds/industry_2.png',
   customWidth: '120px',

@@ -12,6 +12,11 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 32px;
+  pointer-events: none;
+}
+
+.turn-infos-container > * {
+  pointer-events: auto;
 }
 
 .turn-info-container {
@@ -85,5 +90,7 @@ dune-intrigue-card {
 
 .spacer:hover {
   transform: scale(1.75);
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
 }

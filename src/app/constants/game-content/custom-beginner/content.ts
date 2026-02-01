@@ -33,9 +33,9 @@ export const gameContentCustomBeginner: GameContent = {
   aiName: 'custom-beginner',
   maxPlayers: 4,
   cardAcquiringRules: {
-    imperiumRow: 'under-deck',
-    limited: 'under-deck',
-    unlimited: 'under-deck',
+    imperiumRow: 'below-deck',
+    limited: 'below-deck',
+    unlimited: 'below-deck',
     foldspace: 'hand',
   },
   churnRowCards: true,

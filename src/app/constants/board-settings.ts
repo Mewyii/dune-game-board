@@ -13,7 +13,7 @@ export interface AI {
   aiGoals: FieldsForGoals;
 }
 
-export type CardAcquiringPlacementType = 'hand' | 'under-deck' | 'discard-pile';
+export type CardAcquiringPlacementType = 'hand' | 'below-deck' | 'above-deck' | 'discard-pile';
 
 export interface CardAcquiringRules {
   imperiumRow: CardAcquiringPlacementType;

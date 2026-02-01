@@ -10,63 +10,65 @@
     </div>
     <ng-container *ngIf="settingsService.mode === 'game'">
       @for (combatUnits of playerCombatUnits; track trackCombatUnits(combatUnits); let i = $index) {
-      <div
-        class="units-in-timeout-container"
-        [style.top]="190 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
-        [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
-      >
-        @for (ship of combatUnits.shipsInTimeout | numberToArray; track $index; let is = $index) {
-        <div class="ship-marker timeout"></div>
-        }
-      </div>
-      <div
-        [class]="'units-in-garrison-container'"
-        [style.top]="210 - (i > 0 && i < 3 ? 200 : 0) + 'px'"
-        [style.left]="35 + (i > 0 ? 260 : 0) + (i > 1 ? 430 : 0) + (i > 2 ? 250 : 0) + 'px'"
-      >
-        @for (ship of combatUnits.shipsInGarrison | numberToArray; track $index; let is = $index) {
-        <div class="ship-marker-container">
-          <div
-            class="ship-marker"
-            [style.background-color]="getPlayerColor(combatUnits.playerId)"
-            (click)="onAddShipToCombatClicked(combatUnits.playerId)"
-          ></div>
+        <div
+          class="units-in-timeout-container"
+          [style.top]="190 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
+          [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
+        >
+          @for (ship of combatUnits.shipsInTimeout | numberToArray; track $index; let is = $index) {
+            <div class="ship-marker timeout"></div>
+          }
         </div>
-        } @for (troop of combatUnits.troopsInGarrison | numberToArray; track $index; let it = $index) {
-        <div class="troop-marker-container">
-          <div
-            class="troop-marker"
-            [style.background-color]="getPlayerColor(combatUnits.playerId)"
-            (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
-          ></div>
+        <div
+          [class]="'units-in-garrison-container'"
+          [style.top]="210 - (i > 0 && i < 3 ? 200 : 0) + 'px'"
+          [style.left]="35 + (i > 0 ? 260 : 0) + (i > 1 ? 430 : 0) + (i > 2 ? 250 : 0) + 'px'"
+        >
+          @for (ship of combatUnits.shipsInGarrison | numberToArray; track $index; let is = $index) {
+            <div class="ship-marker-container">
+              <div
+                class="ship-marker"
+                [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                (click)="onAddShipToCombatClicked(combatUnits.playerId)"
+              ></div>
+            </div>
+          }
+          @for (troop of combatUnits.troopsInGarrison | numberToArray; track $index; let it = $index) {
+            <div class="troop-marker-container">
+              <div
+                class="troop-marker"
+                [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
+              ></div>
+            </div>
+          }
         </div>
-        }
-      </div>
-      <div
-        [class]="'units-in-combat-container ' + (i > 0 && i < 3 ? 'top ' : '') + (i > 1 ? 'right' : '')"
-        [style.top]="270 - (i > 0 && i < 3 ? 110 : 0) + 'px'"
-        [style.left]="330 - (i > 0 && i < 3 ? 30 : 0) + (i > 1 ? 340 : 0) + 'px'"
-      >
-        @for (ship of combatUnits.shipsInCombat | numberToArray; track $index; let is = $index) {
-        <div class="ship-marker-container">
-          <div
-            class="ship-marker combat"
-            [style.background-color]="getPlayerColor(combatUnits.playerId)"
-            (click)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
-            (contextmenu)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
-          ></div>
+        <div
+          [class]="'units-in-combat-container ' + (i > 0 && i < 3 ? 'top ' : '') + (i > 1 ? 'right' : '')"
+          [style.top]="270 - (i > 0 && i < 3 ? 110 : 0) + 'px'"
+          [style.left]="330 - (i > 0 && i < 3 ? 30 : 0) + (i > 1 ? 340 : 0) + 'px'"
+        >
+          @for (ship of combatUnits.shipsInCombat | numberToArray; track $index; let is = $index) {
+            <div class="ship-marker-container">
+              <div
+                class="ship-marker combat"
+                [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                (click)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
+                (contextmenu)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
+              ></div>
+            </div>
+          }
+          @for (troop of combatUnits.troopsInCombat | numberToArray; track $index; let it = $index) {
+            <div class="troop-marker-container">
+              <div
+                class="troop-marker combat"
+                [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                (click)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
+                (contextmenu)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
+              ></div>
+            </div>
+          }
         </div>
-        } @for (troop of combatUnits.troopsInCombat | numberToArray; track $index; let it = $index) {
-        <div class="troop-marker-container">
-          <div
-            class="troop-marker combat"
-            [style.background-color]="getPlayerColor(combatUnits.playerId)"
-            (click)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
-            (contextmenu)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
-          ></div>
-        </div>
-        }
-      </div>
       }
     </ng-container>
     <img class="battlefield-background" [src]="'assets/images/battefield_background.png'" />
@@ -79,32 +81,32 @@
       <ng-container *ngIf="settingsService.mode === 'game'">
         <div class="score-container large">
           @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
-          <div
-            *ngIf="playerScore.score === 0"
-            class="score-marker"
-            [style.background-color]="getPlayerColor(playerScore.playerId)"
-            [style.top]="25 + i * 25 + 'px'"
-          ></div>
+            <div
+              *ngIf="playerScore.score === 0"
+              class="score-marker"
+              [style.background-color]="getPlayerColor(playerScore.playerId)"
+              [style.top]="25 + i * 25 + 'px'"
+            ></div>
           }
         </div>
       </ng-container>
     </div>
     <div class="combat-score-board">
       @for (score of combatScoreArray; track $index; let scoreIndex = $index; let last = $last) {
-      <div class="score-element">
-        <div class="score">{{ scoreIndex + 1 }}</div>
-        <ng-container *ngIf="settingsService.mode === 'game'">
-          <div class="score-container">
-            @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
-            <div
-              *ngIf="playerScore.score === scoreIndex + 1"
-              class="score-marker"
-              [style.background-color]="getPlayerColor(playerScore.playerId)"
-            ></div>
-            }
-          </div>
-        </ng-container>
-      </div>
+        <div class="score-element">
+          <div class="score">{{ scoreIndex + 1 }}</div>
+          <ng-container *ngIf="settingsService.mode === 'game'">
+            <div class="score-container">
+              @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
+                <div
+                  *ngIf="playerScore.score === scoreIndex + 1"
+                  class="score-marker"
+                  [style.background-color]="getPlayerColor(playerScore.playerId)"
+                ></div>
+              }
+            </div>
+          </ng-container>
+        </div>
       }
     </div>
   </div>
@@ -122,14 +124,18 @@
     <div class="legend-container" *ngIf="useDreadnoughts">
       <img class="legend-icon" [src]="getEffectTypePath('dreadnought')" />
       <span>=</span>
-      <div class="legend-description">4</div>
+      <div class="legend-description">{{ dreadnoughtCombatStrength }}</div>
     </div>
   </div>
   <div class="absolute-scores">
     @for (combatScore of combatScores; track $index) {
-    <div *ngIf="combatScore.score > 22" [style.color]="getPlayerColor(combatScore.playerId)" [style.padding]="'6px'">
-      {{ combatScore.score }}
-    </div>
+      <div
+        *ngIf="combatScore.score > maxCombatScore"
+        [style.color]="getPlayerColor(combatScore.playerId)"
+        [style.padding]="'6px'"
+      >
+        {{ combatScore.score }}
+      </div>
     }
   </div>
 </div>

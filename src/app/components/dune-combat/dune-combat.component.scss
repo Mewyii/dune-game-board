@@ -193,7 +193,9 @@
 }
 
 .units-in-garrison-container:hover {
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer !important;
 }
 
 .units-in-combat-container {
@@ -237,7 +239,9 @@
 .ship-marker:hover {
   transform: scale(1.3);
   filter: brightness(1.4);
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer !important;
 }
 
 .troop-marker.combat {
@@ -275,7 +279,7 @@
 .absolute-scores {
   position: absolute;
   bottom: 0;
-  right: -16px;
+  right: -26px;
   display: flex;
   flex-direction: column;
   gap: 6px;

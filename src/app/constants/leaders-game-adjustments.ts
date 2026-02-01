@@ -1,14 +1,9 @@
 import { playerCanPayCosts } from '../helpers/rewards';
-import { EffectTimingType, StructuredChoiceEffect, StructuredEffect } from '../models';
-import { AIAdjustments, GameServices, GameState } from '../models/ai';
+import { StructuredChoiceEffect, StructuredEffect } from '../models';
+import { AIAdjustments, GameServices, GameState, TimedFunction } from '../models/ai';
 import { Player } from '../models/player';
-import { ImperiumRowCard } from '../services/cards.service';
+import { ImperiumDeckCard, ImperiumRowCard } from '../services/cards.service';
 import { GameModifiers } from '../services/game-modifier.service';
-
-interface TimedFunction {
-  timing: EffectTimingType;
-  function: (player: Player, gameState: GameState, services: GameServices) => void;
-}
 
 export interface LeaderGameAdjustments {
   id: string;
@@ -92,15 +87,20 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
 
         const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
-        const { allCards } = services.gameManager.getAllBuyableCards(player.id);
+        const { allCards, imperiumRowCards, recruitableCards } = services.gameManager.getAllBuyableCards(player.id);
 
-        const reducedFremenCards = allCards.map((x) => {
+        const reducedFremenCards: (ImperiumDeckCard & { originalPersuasionCosts?: number })[] = allCards.map((x) => {
           if (x.faction !== 'fremen') {
             return x;
           } else {
             return {
               ...x,
-              persuasionCosts: x.persuasionCosts ? x.persuasionCosts - availableSignetTokens : undefined,
+              persuasionCosts: x.persuasionCosts
+                ? x.persuasionCosts >= availableSignetTokens
+                  ? x.persuasionCosts - availableSignetTokens
+                  : 0
+                : 0,
+              originalPersuasionCosts: x.persuasionCosts ?? 0,
             };
           }
         });
@@ -110,17 +110,22 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           reducedFremenCards,
           player,
           gameState,
-          []
+          [],
         );
-        if (cardToBuy?.faction === 'fremen') {
-          const realPersuasionCosts = cardToBuy.persuasionCosts ?? 0;
-          const usedSignetTokens = realPersuasionCosts < availableSignetTokens ? realPersuasionCosts : availableSignetTokens;
+        if (cardToBuy?.faction === 'fremen' && cardToBuy.originalPersuasionCosts) {
+          let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
+          if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
+            source = 'row';
+          } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
+            source = 'deck';
+          }
 
-          services.gameModifierService.addPlayerImperiumRowModifier(player.id, {
-            cardId: cardToBuy.id,
-            persuasionAmount: -usedSignetTokens,
-            currentRoundOnly: true,
-          });
+          const usedSignetTokens =
+            cardToBuy.originalPersuasionCosts < availableSignetTokens
+              ? cardToBuy.originalPersuasionCosts
+              : availableSignetTokens;
+
+          services.gameManager.acquireImperiumCard(player.id, cardToBuy, source);
           services.playersService.removeSignetTokensFromPlayer(player.id, usedSignetTokens);
         }
       },
@@ -134,7 +139,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       function: (player: Player, gameState: GameState, services: GameServices) => {
         const townBoardSpaces = gameState.boardSpaces.filter((x) => x.actionType === 'town');
         const agentsOnTownFields = gameState.playerAgentsOnFields.filter((x) =>
-          townBoardSpaces.some((bs) => bs.title.en === x.fieldId)
+          townBoardSpaces.some((bs) => bs.title.en === x.fieldId),
         );
         if (agentsOnTownFields.length > 0) {
           for (const item of agentsOnTownFields) {
@@ -198,7 +203,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           return;
         } else {
           const fieldWithMarker = gameState.playerAgentsOnFields.find((x) =>
-            playerFieldMarkers.some((marker) => marker.fieldId === x.fieldId && marker.amount > 0)
+            playerFieldMarkers.some((marker) => marker.fieldId === x.fieldId && marker.amount > 0),
           );
           if (fieldWithMarker) {
             services.gameModifierService.changeFieldMarkerModifier(player.id, fieldWithMarker.fieldId, -1);
@@ -264,14 +269,14 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       let targetCard: ImperiumRowCard | undefined;
       const handCardAmount = gameState.playerHandCards.length;
       const buyableCards = gameState.imperiumRowCards.filter(
-        (x) => x.type === 'imperium-card' && x.persuasionCosts && x.persuasionCosts <= handCardAmount
+        (x) => x.type === 'imperium-card' && x.persuasionCosts && x.persuasionCosts <= handCardAmount,
       );
       if (buyableCards.length > 0) {
         buyableCards.sort((a, b) => (b.persuasionCosts ?? 0) - (a.persuasionCosts ?? 0));
         targetCard = buyableCards[0] as ImperiumRowCard;
       } else {
         const nonBuyableCards = gameState.imperiumRowCards.filter(
-          (x) => x.persuasionCosts && x.persuasionCosts > handCardAmount
+          (x) => x.persuasionCosts && x.persuasionCosts > handCardAmount,
         );
         if (nonBuyableCards.length > 0) {
           nonBuyableCards.sort((a, b) => (b.persuasionCosts ?? 0) - (a.persuasionCosts ?? 0));
@@ -321,14 +326,14 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         services.playersService.addSignetTokensToPlayer(player.id, playerVictoryPoints + playerPersuasion);
         services.playersService.removePersuasionGainedFromPlayer(
           player.id,
-          player.permanentPersuasion + player.persuasionGainedThisRound
+          player.permanentPersuasion + player.persuasionGainedThisRound,
         );
       },
     },
     customSignetAIFunction: (player, gameState, services) => {
       const playerSignetTokens = player.signetTokenCount;
       const imperiumRowCards = gameState.imperiumRowCards.filter(
-        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= playerSignetTokens
+        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= playerSignetTokens,
       ) as ImperiumRowCard[];
       if (imperiumRowCards.length < 1) {
         return;
@@ -341,7 +346,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           const effectEvaluation = services.aiManager.getStructuredEffectUsefulnesAndCosts(
             card.structuredAgentEffects,
             player,
-            gameState
+            gameState,
           );
           if (
             effectEvaluation.usefullness > bestEffectValue &&
@@ -401,7 +406,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
     customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const possibleNewMarkerLocations = gameState.boardSpaces.filter(
-        (x) => x.ownerReward && gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.title.en)
+        (x) => x.ownerReward && gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.title.en),
       );
       const playerOwnedLocations = services.locationManager.getPlayerLocations(player.id);
       const fieldMarkers = services.gameModifierService.getPlayerGameModifier(player.id, 'fieldMarkers');
@@ -476,7 +481,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
     customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const rewardAmount = gameState.playerAgentsOnFields.filter((pa) =>
-        gameState.enemyAgentsOnFields.some((ea) => ea.fieldId === pa.fieldId)
+        gameState.enemyAgentsOnFields.some((ea) => ea.fieldId === pa.fieldId),
       ).length;
 
       services.gameManager.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });

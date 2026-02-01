@@ -88,7 +88,9 @@
   box-sizing: border-box;
   margin-top: 16px;
   transition: 0.7s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer !important;
 }
 
 .agent-area.active {

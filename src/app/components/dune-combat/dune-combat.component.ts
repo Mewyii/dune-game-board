@@ -39,13 +39,15 @@ export class DuneCombatComponent implements OnInit {
 
   public activeGarrisonPlayerId = 0;
 
+  public dreadnoughtCombatStrength = 4;
+
   constructor(
     public gameManager: GameManager,
     public combatManager: CombatManager,
     public playerManager: PlayersService,
     public settingsService: SettingsService,
     private audioManager: AudioManager,
-    private turnInfoService: TurnInfoService
+    private turnInfoService: TurnInfoService,
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +64,10 @@ export class DuneCombatComponent implements OnInit {
 
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       this.activeGarrisonPlayerId = turnInfos.find((x) => playerCanEnterCombat(x))?.playerId ?? 0;
+    });
+
+    this.settingsService.gameContent$.subscribe((x) => {
+      this.dreadnoughtCombatStrength = x.dreadnoughtCombatStrength;
     });
   }
 

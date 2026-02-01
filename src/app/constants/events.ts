@@ -50,27 +50,6 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'Grandmother Storm',
-      de: 'Urgroßmuttersturm',
-    },
-    description: {
-      en: '{faction:spice} board spaces are blocked.',
-      de: '{faction:spice}-Felder sind blockiert.',
-    },
-    imagePath: 'assets/images/action-backgrounds/sandstorm.png',
-    cardAmount: 1,
-    gameModifiers: {
-      fieldBlock: [
-        {
-          id: 'sandstorms-field-block',
-          actionType: 'spice',
-          currentRoundOnly: true,
-        },
-      ],
-    },
-  },
-  {
-    title: {
       en: 'Spice gusts',
       de: 'Spice-Winde',
     },
@@ -103,7 +82,17 @@ export const duneEvents: DuneEvent[] = [
     },
     imagePath: '/assets/images/action-backgrounds/sun.png',
     cardAmount: 1,
-    immediatePlayerEffects: [{ type: 'reward', effectRewards: [{ type: 'troop-insert', amount: 2 }] }],
+    immediatePlayerEffects: [
+      {
+        type: 'reward',
+        effectRewards: [
+          {
+            type: 'troop-insert',
+            amount: 2,
+          },
+        ],
+      },
+    ],
   },
   {
     title: {
@@ -164,16 +153,33 @@ export const duneEvents: DuneEvent[] = [
       de: 'Ixianische Händler',
     },
     description: {
-      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}',
-      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}',
+      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}{resource:solari}',
+      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}{resource:solari}',
     },
     imagePath: 'assets/images/action-backgrounds/port_4.png',
     cardAmount: 1,
     immediatePlayerEffects: [
       {
         type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'tech' }] },
+        effectCosts: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'card-discard',
+            },
+          ],
+        },
+        effectConversions: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'tech',
+            },
+            {
+              type: 'solari',
+            },
+          ],
+        },
       },
     ],
   },
@@ -183,8 +189,8 @@ export const duneEvents: DuneEvent[] = [
       de: 'Orbitaler Heighliner',
     },
     description: {
-      en: 'Draw an additional <b>3</b> cards to the imperium row this round.',
-      de: 'Ziehe <b>3</b> zusätzliche Karten für die Imperium-Reihe in dieser Runde.',
+      en: 'Draw an additional <b>2</b> cards to the imperium row this round.',
+      de: 'Ziehe <b>2</b> zusätzliche Karten für die Imperium-Reihe in dieser Runde.',
     },
     imagePath: '/assets/images/action-backgrounds/highliner_2.png',
     cardAmount: 2,
@@ -224,16 +230,34 @@ export const duneEvents: DuneEvent[] = [
       de: 'Delegationen der großen Häuser',
     },
     description: {
-      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari}',
-      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari}',
+      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari;amount:2}',
+      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari;amount:2}',
     },
     imagePath: '/assets/images/action-backgrounds/emperor_camp.png',
     cardAmount: 1,
     immediatePlayerEffects: [
       {
         type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'troop' }, { type: 'solari' }] },
+        effectCosts: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'card-discard',
+            },
+          ],
+        },
+        effectConversions: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'troop',
+            },
+            {
+              type: 'solari',
+              amount: 2,
+            },
+          ],
+        },
       },
     ],
   },
@@ -251,8 +275,23 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: [
       {
         type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'solari', amount: 2 }] },
+        effectCosts: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'card-discard',
+            },
+          ],
+        },
+        effectConversions: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'solari',
+              amount: 2,
+            },
+          ],
+        },
       },
     ],
   },
@@ -270,8 +309,22 @@ export const duneEvents: DuneEvent[] = [
     immediatePlayerEffects: [
       {
         type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'water' }] },
+        effectCosts: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'card-discard',
+            },
+          ],
+        },
+        effectConversions: {
+          type: 'reward',
+          effectRewards: [
+            {
+              type: 'water',
+            },
+          ],
+        },
       },
     ],
   },

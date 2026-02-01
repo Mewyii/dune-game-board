@@ -35,7 +35,6 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
     desiredFields: (fields) => ({
-      // Three because "amount" is used for the persuasion indicator
       ...getViableBoardFields(fields, 'council-seat-small', false),
     }),
     viableFields: () => ({}),
@@ -45,8 +44,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'solari') -
       0.025 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
+      (getResourceAmount(player, 'solari') > 7 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 7,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', false),
@@ -75,7 +74,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       0.01 * gameState.playerCombatUnits.troopsInGarrison +
       0.0075 * (gameState.currentRound - 1) -
       0.05 * gameState.playerDreadnoughtCount,
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 4,
+    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 5,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1 || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', false),

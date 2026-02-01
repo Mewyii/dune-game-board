@@ -38,7 +38,7 @@ export class AlwaysBuyableCardsComponent {
     private gameManager: GameManager,
     public cardsService: CardsService,
     private gameModifierService: GameModifiersService,
-    public t: TranslateService
+    public t: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +83,11 @@ export class AlwaysBuyableCardsComponent {
   }
 
   onBuyAlwaysAvailableCardClicked(card: ImperiumCard) {
-    this.gameManager.acquireCustomImperiumCard(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
+    this.gameManager.acquireImperiumCard(
+      this.activePlayerId,
+      this.cardsService.instantiateImperiumCard(card),
+      'always-buyable',
+    );
   }
 
   onShowNextLimitedCustomCardClicked() {
@@ -115,7 +119,7 @@ export class AlwaysBuyableCardsComponent {
   }
 
   onBuyLimitedCustomCardClicked(card: ImperiumDeckCard) {
-    this.gameManager.acquireCustomImperiumCard(this.activePlayerId, card);
+    this.gameManager.acquireImperiumCard(this.activePlayerId, card, 'always-buyable');
   }
 
   setCardActive(cardId: string) {

@@ -10,7 +10,13 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
 export interface GameServices {
   gameManager: Pick<
     GameManager,
-    'addRewardToPlayer' | 'payCostForPlayer' | 'resolveRewardChoices' | 'resolveStructuredEffects' | 'getAllBuyableCards'
+    | 'addRewardToPlayer'
+    | 'payCostForPlayer'
+    | 'resolveRewardChoices'
+    | 'resolveStructuredEffects'
+    | 'getAllBuyableCards'
+    | 'acquireImperiumCard'
+    | 'addAccumulatedSpiceToField'
   >;
   playersService: PlayersService;
   gameModifierService: GameModifiersService;

@@ -5,10 +5,10 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-imperium-cards-preview-dialog',
-    templateUrl: './imperium-cards-preview-dialog.component.html',
-    styleUrl: './imperium-cards-preview-dialog.component.scss',
-    standalone: false
+  selector: 'dune-imperium-cards-preview-dialog',
+  templateUrl: './imperium-cards-preview-dialog.component.html',
+  styleUrl: './imperium-cards-preview-dialog.component.scss',
+  standalone: false,
 })
 export class ImperiumCardsPreviewDialogComponent implements OnInit {
   public searchString = '';
@@ -26,7 +26,7 @@ export class ImperiumCardsPreviewDialogComponent implements OnInit {
       canAquireCards: boolean;
       aquirableFactionTypes?: string[];
       search?: boolean;
-    }
+    },
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +42,7 @@ export class ImperiumCardsPreviewDialogComponent implements OnInit {
   }
 
   onBuyCardClicked(card: ImperiumDeckCard) {
-    const couldBuyCard = this.gameManager.acquireImperiumDeckCard(this.data.playerId, card);
+    const couldBuyCard = this.gameManager.acquireImperiumCard(this.data.playerId, card, 'deck');
     if (couldBuyCard) {
       this.data.imperiumCards = this.data.imperiumCards.filter((x) => x.id !== card.id);
       this.filterCards();
@@ -56,7 +56,7 @@ export class ImperiumCardsPreviewDialogComponent implements OnInit {
         (x) =>
           x.name.en.toLocaleLowerCase().includes(searchInput) ||
           x.name.de.toLocaleLowerCase().includes(searchInput) ||
-          x.faction?.toLocaleLowerCase().includes(searchInput)
+          x.faction?.toLocaleLowerCase().includes(searchInput),
       );
     } else {
       this.imperiumCards = [];

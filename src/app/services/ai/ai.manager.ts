@@ -73,7 +73,7 @@ export class AIManager {
   constructor(
     private settingsService: SettingsService,
     private effectEvaluationService: AIEffectEvaluationService,
-    private fieldEvaluationService: AIFieldEvaluationService
+    private fieldEvaluationService: AIFieldEvaluationService,
   ) {
     const aiPlayersString = localStorage.getItem('aiPlayers');
     if (aiPlayersString) {
@@ -236,16 +236,16 @@ export class AIManager {
       (normalizeNumber(
         this.effectEvaluationService.getRewardArrayEvaluation(gameState.conflict.rewards[0], player, gameState),
         30,
-        0
+        0,
       ) +
         normalizeNumber(
           this.effectEvaluationService.getRewardArrayEvaluationForTurnState(
             gameState.conflict.rewards[0],
             player,
-            gameState
+            gameState,
           ),
           30,
-          0
+          0,
         ) +
         (gameState.playerCombatUnits.shipsInCombat *
           this.effectEvaluationService.getRewardEffectEvaluation('location-control', player, gameState)) /
@@ -256,10 +256,10 @@ export class AIManager {
       normalizeNumber(
         Math.max(...gameState.availableTechTiles.map((x) => this.getTechTileBuyEvaluation(x, player, gameState))),
         15,
-        0
+        0,
       ),
       0,
-      1
+      1,
     );
 
     const evaluatedImperiumRowCards = (
@@ -277,7 +277,7 @@ export class AIManager {
       conflictEvaluation,
       techEvaluation,
       imperiumRowEvaluation,
-      this.aiDifficulty
+      this.aiDifficulty,
     );
 
     aiPlayer.preferredFields = preferredFields;
@@ -339,7 +339,7 @@ export class AIManager {
 
   public getAddAdditionalUnitsToCombatDecision(
     playerCombatUnits: PlayerCombatUnits,
-    gameState: GameState
+    gameState: GameState,
   ): 'none' | 'minimum' | 'all' | number {
     if (!playerCombatUnits || !gameState.enemyCombatUnits) {
       return 'none';
@@ -368,7 +368,7 @@ export class AIManager {
         highestEnemyCombatScore,
         enemyAgentsAvailable,
         enemyIntrigueCount,
-        gameState
+        gameState,
       );
 
       if (enemyCombatStrengthPotentialAgainstPlayer < 1) {
@@ -387,7 +387,7 @@ export class AIManager {
         gameState.playerAgentsAvailable + 1,
         gameState.playerIntrigueCount,
         highestEnemyCombatScore,
-        gameState
+        gameState,
       );
 
       const enemyGarrisonStrength = getPlayerGarrisonStrength(highestEnemyCombatScore, gameState);
@@ -422,7 +422,7 @@ export class AIManager {
           location.actionField.ownerReward.type,
           location.actionField.ownerReward.amount ?? 1,
           player,
-          gameState
+          gameState,
         );
         if (locationValue > preferredLocationValue) {
           preferredLocation = location;
@@ -468,7 +468,7 @@ export class AIManager {
       const usableCards = cardEvaluations.filter(
         (cardEvaluation) =>
           (preferredField.requiresInfiltration ? cardEvaluation.card.canInfiltrate : true) &&
-          cardEvaluation.card.fieldAccess?.some((x) => x === preferredField.actionType)
+          cardEvaluation.card.fieldAccess?.some((x) => x === preferredField.actionType),
       );
 
       if (usableCards.length > 0) {
@@ -489,15 +489,15 @@ export class AIManager {
     return undefined;
   }
 
-  getImperiumCardToBuy(
+  getImperiumCardToBuy<T extends ImperiumDeckCard>(
     availablePersuasion: number,
-    cards: ImperiumDeckCard[],
+    cards: T[],
     player: Player,
     gameState: GameState,
-    imperiumRowModifiers?: ImperiumRowModifier[]
-  ) {
+    imperiumRowModifiers?: ImperiumRowModifier[],
+  ): T | undefined {
     const buyableCards = cards.filter(
-      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion
+      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion,
     );
     if (buyableCards.length > 0) {
       const cardEvaluations = buyableCards.map((card) => {
@@ -514,10 +514,10 @@ export class AIManager {
     availablePersuasion: number,
     cards: ImperiumRowPlot[],
     player: Player,
-    imperiumRowModifiers?: ImperiumRowModifier[]
+    imperiumRowModifiers?: ImperiumRowModifier[],
   ) {
     const buyableCards = cards.filter(
-      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion
+      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion,
     );
     if (buyableCards.length > 0) {
       return shuffle(buyableCards)[0];
@@ -582,7 +582,7 @@ export class AIManager {
     playerId: number,
     playerScores: PlayerScore[],
     influenceGainAmount: number,
-    exclusions?: PlayerFactionScoreType[]
+    exclusions?: PlayerFactionScoreType[],
   ): PlayerFactionScoreType | undefined {
     const playerScore = playerScores.find((x) => x.playerId === playerId);
     if (!playerScore) {
@@ -612,7 +612,7 @@ export class AIManager {
                 (x) =>
                   x[factionType] > playerFactionScore &&
                   x[factionType] < maxFactionInfluence &&
-                  playerFactionScore + influenceGainAmount === x[factionType]
+                  playerFactionScore + influenceGainAmount === x[factionType],
               )
             ) {
               factionDesires[factionType] += 5;
@@ -622,7 +622,7 @@ export class AIManager {
                 (x) =>
                   x[factionType] >= playerFactionScore &&
                   x[factionType] < maxFactionInfluence &&
-                  playerFactionScore + influenceGainAmount > x[factionType]
+                  playerFactionScore + influenceGainAmount > x[factionType],
               )
             ) {
               factionDesires[factionType] += 10;
@@ -655,7 +655,7 @@ export class AIManager {
 
   getLeastDesiredFactionScoreType(
     playerScores: PlayerScore,
-    exclusions?: PlayerFactionScoreType[]
+    exclusions?: PlayerFactionScoreType[],
   ): PlayerFactionScoreType | undefined {
     let desiredFactionScoreType: PlayerFactionScoreType | undefined;
     let desiredFactionScoreAmount = 100;
@@ -676,7 +676,7 @@ export class AIManager {
     player: Player,
     gameState: GameState,
     leftSideEffect: StructuredConversionOrRewardEffect,
-    rightSideEffect: StructuredConversionOrRewardEffect
+    rightSideEffect: StructuredConversionOrRewardEffect,
   ) {
     let leftSideEvaluation = 0;
     let rightSideEvaluation = 0;
@@ -729,7 +729,7 @@ export class AIManager {
         rewardType,
         1,
         player,
-        gameState
+        gameState,
       );
       if (value > evaluationValue) {
         evaluationValue = value;
@@ -761,7 +761,7 @@ export class AIManager {
       evaluationValue += this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
         card.structuredAgentEffects,
         player,
-        gameState
+        gameState,
       );
     }
     if (hasCustomAgentEffect(card)) {
@@ -793,7 +793,7 @@ export class AIManager {
               revealEffect,
               player,
               gameState,
-              'reveal'
+              'reveal',
             ) *
             0.7 *
             conditionMultiplier;
@@ -843,7 +843,7 @@ export class AIManager {
       evaluationValue += this.effectEvaluationService.getStructuredEffectsEvaluation(
         card.structuredAgentEffects,
         player,
-        gameState
+        gameState,
       );
     }
     if (hasCustomAgentEffect(card)) {
@@ -859,7 +859,7 @@ export class AIManager {
         card.structuredRevealEffects,
         player,
         gameState,
-        'reveal'
+        'reveal',
       );
     }
     if (hasCustomRevealEffect(card)) {
@@ -897,7 +897,7 @@ export class AIManager {
       evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
         card.structuredAgentEffects,
         player,
-        gameState
+        gameState,
       );
     }
     if (hasCustomAgentEffect(card)) {
@@ -913,7 +913,7 @@ export class AIManager {
         card.structuredRevealEffects,
         player,
         gameState,
-        'reveal'
+        'reveal',
       );
     }
     if (hasCustomRevealEffect(card)) {
@@ -933,13 +933,13 @@ export class AIManager {
     evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
       card.structuredPlotEffects,
       player,
-      gameState
+      gameState,
     );
 
     evaluationValue -= this.effectEvaluationService.getStructuredEffectsEvaluation(
       card.structuredCombatEffects,
       player,
-      gameState
+      gameState,
     );
 
     return evaluationValue;
@@ -963,7 +963,7 @@ export class AIManager {
       const value = this.effectEvaluationService.getStructuredEffectsEvaluation(
         techTile.structuredEffects,
         player,
-        gameState
+        gameState,
       );
       evaluationValue +=
         (value / (differentTechTileActivations > 0 ? differentTechTileActivations : 1)) *
@@ -987,7 +987,7 @@ export class AIManager {
       const value = this.effectEvaluationService.getStructuredEffectsEvaluationForTurnState(
         techTile.structuredEffects,
         player,
-        gameState
+        gameState,
       );
       evaluationValue += value;
     }
@@ -1002,7 +1002,7 @@ export class AIManager {
       const value = this.effectEvaluationService.getStructuredEffectsEvaluation(
         techTile.structuredEffects,
         player,
-        gameState
+        gameState,
       );
       evaluationValue -= value;
     }
@@ -1020,7 +1020,7 @@ export class AIManager {
   public getIntriguePlayEvaluation(
     intrigue: IntrigueDeckCard,
     player: Player,
-    gameState: GameState
+    gameState: GameState,
   ): { isUseful: boolean; costs: EffectReward[] } {
     const intrigueEffects =
       gameState.currentRoundPhase === 'agent-placement' ? intrigue.structuredPlotEffects : intrigue.structuredCombatEffects;
@@ -1037,7 +1037,7 @@ export class AIManager {
       player,
       gameState,
       undefined,
-      true
+      true,
     );
     let effectsCosts: EffectReward[] = [];
 
@@ -1046,7 +1046,7 @@ export class AIManager {
     if (effectsCosts.some((x) => x.type === 'location-control')) {
       if (
         !gameState.playerAgentsOnFields.some((agent) =>
-          gameState.freeLocations.some((locationId) => locationId === agent.fieldId)
+          gameState.freeLocations.some((locationId) => locationId === agent.fieldId),
         )
       ) {
         effectsCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
@@ -1059,7 +1059,7 @@ export class AIManager {
   public getStructuredEffectRewardsAndCosts(
     structuredEffect: StructuredEffect,
     player: Player,
-    gameState: GameState
+    gameState: GameState,
   ): { costs: EffectReward[]; rewards: EffectReward[] } {
     let costs: EffectReward[] = [];
     let rewards: EffectReward[] = [];
@@ -1082,7 +1082,7 @@ export class AIManager {
           player,
           gameState,
           structuredEffect.effectLeft,
-          structuredEffect.effectRight
+          structuredEffect.effectRight,
         );
 
         if (chosenEffect) {
@@ -1108,7 +1108,7 @@ export class AIManager {
   public getAllStructuredEffectsRewardsAndCosts(
     structuredEffects: StructuredEffect[],
     player: Player,
-    gameState: GameState
+    gameState: GameState,
   ): { costs: EffectReward[]; rewards: EffectReward[] } {
     const rewards: EffectReward[] = [];
     const costs: EffectReward[] = [];
@@ -1137,7 +1137,7 @@ export class AIManager {
         reward.type,
         reward.amount ?? 1,
         player,
-        gameState
+        gameState,
       );
       evaluatedEffects.push({ reward, evaluation });
     }

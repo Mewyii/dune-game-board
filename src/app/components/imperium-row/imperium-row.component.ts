@@ -44,7 +44,7 @@ export class ImperiumRowComponent implements OnInit {
     private dialog: MatDialog,
     private turnInfoService: TurnInfoService,
     private settingsService: SettingsService,
-    public t: TranslateService
+    public t: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -92,15 +92,19 @@ export class ImperiumRowComponent implements OnInit {
   }
 
   onBuyCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
-    this.gameManager.acquireImperiumRowCard(this.activePlayerId, card);
+    this.gameManager.acquireImperiumCard(this.activePlayerId, card, 'row');
   }
 
   onBuyAlwaysAvailableCardClicked(card: ImperiumCard) {
-    this.gameManager.acquireCustomImperiumCard(this.activePlayerId, this.cardsService.instantiateImperiumCard(card));
+    this.gameManager.acquireImperiumCard(
+      this.activePlayerId,
+      this.cardsService.instantiateImperiumCard(card),
+      'always-buyable',
+    );
   }
 
   onBuyLimitedCustomCardClicked(card: ImperiumDeckCard) {
-    this.gameManager.acquireCustomImperiumCard(this.activePlayerId, card);
+    this.gameManager.acquireImperiumCard(this.activePlayerId, card, 'always-buyable');
   }
 
   onRemoveCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {

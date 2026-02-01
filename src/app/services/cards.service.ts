@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { CardAcquiringPlacementType } from '../constants/board-settings';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { ActionType, FactionType, StructuredEffect } from '../models';
@@ -89,7 +90,7 @@ export class CardsService {
     private playerManager: PlayersService,
     private cardConfiguratorService: CardConfiguratorService,
     private plotConfiguratorService: PlotConfiguratorService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
   ) {
     const imperiumDeckString = localStorage.getItem('imperiumDeck');
     if (imperiumDeckString) {
@@ -465,7 +466,7 @@ export class CardsService {
       const cardIndex = playerDiscardPiles[playerDiscardPileIndex].cards.findIndex((x) => x.id === card.id);
       if (cardIndex > -1) {
         playerDiscardPiles[playerDiscardPileIndex].cards = playerDiscardPiles[playerDiscardPileIndex].cards.filter(
-          (x) => x.id !== card.id
+          (x) => x.id !== card.id,
         );
         this.playerDiscardPilesSubject.next(playerDiscardPiles);
       }
@@ -479,7 +480,7 @@ export class CardsService {
       const cardIndex = playerDiscardPiles[playerDiscardPileIndex].cards.findIndex((x) => x.id === card.id);
       if (cardIndex > -1) {
         playerDiscardPiles[playerDiscardPileIndex].cards = playerDiscardPiles[playerDiscardPileIndex].cards.filter(
-          (x) => x.id !== card.id
+          (x) => x.id !== card.id,
         );
         this.playerDiscardPilesSubject.next(playerDiscardPiles);
         this.addCardToPlayerTrashPile(playerId, card);
@@ -536,6 +537,16 @@ export class CardsService {
     }
   }
 
+  shuffleCardsOnTopOfPlayerDeck(playerId: number, cards: ImperiumDeckCard[]) {
+    const playerDecks = this.playerDecks;
+    const playerDeckIndex = playerDecks.findIndex((x) => x.playerId === playerId);
+    if (playerDeckIndex > -1) {
+      const playerDeckCards = playerDecks[playerDeckIndex].cards;
+      playerDecks[playerDeckIndex].cards = [...shuffle(cards), ...playerDeckCards];
+      this.playerDecksSubject.next(playerDecks);
+    }
+  }
+
   shufflePlayerDeck(playerId: number) {
     const playerDecks = this.playerDecks;
     const playerDeckIndex = playerDecks.findIndex((x) => x.playerId === playerId);
@@ -574,7 +585,11 @@ export class CardsService {
     this.imperiumDeckSubject.next(imperiumDeck);
   }
 
-  aquirePlayerCardFromImperiumRow(playerId: number, card: ImperiumDeckCard) {
+  aquirePlayerCardFromImperiumRow(
+    playerId: number,
+    card: ImperiumDeckCard,
+    acquireLocation: CardAcquiringPlacementType = this.settingsService.getCardAcquiringRuleImperiumRow(),
+  ) {
     const imperiumDeck = this.imperiumDeck;
     const nextCard = imperiumDeck.shift();
     if (nextCard) {
@@ -584,11 +599,12 @@ export class CardsService {
       this.imperiumDeckSubject.next(imperiumDeck);
     }
 
-    const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
-    if (rule === 'discard-pile') {
+    if (acquireLocation === 'discard-pile') {
       this.addCardToPlayerDiscardPile(playerId, card);
-    } else if (rule === 'under-deck') {
+    } else if (acquireLocation === 'below-deck') {
       this.addCardUnderPlayerDeck(playerId, card);
+    } else if (acquireLocation === 'above-deck') {
+      this.addCardOnTopOfPlayerDeck(playerId, card);
     } else {
       this.addCardToPlayerHand(playerId, card);
     }
@@ -599,7 +615,7 @@ export class CardsService {
     const addedCards = imperiumDeck.splice(0, amount);
     if (addedCards.length > 0) {
       const imperiumRow = this.imperiumRow;
-      imperiumRow.push(...addedCards.map((x) => ({ ...x, status: 'just-arrived' } as ImperiumRowPlot)));
+      imperiumRow.push(...addedCards.map((x) => ({ ...x, status: 'just-arrived' }) as ImperiumRowPlot));
       this.imperiumRowSubject.next(imperiumRow);
       this.imperiumDeckSubject.next(imperiumDeck);
     }
@@ -617,27 +633,37 @@ export class CardsService {
     this.addCardsToPlayerPlots(playerId, [card]);
   }
 
-  aquirePlayerCardFromImperiumDeck(playerId: number, card: ImperiumDeckCard) {
+  aquirePlayerCardFromImperiumDeck(
+    playerId: number,
+    card: ImperiumDeckCard,
+    acquireLocation: CardAcquiringPlacementType = this.settingsService.getCardAcquiringRuleImperiumRow(),
+  ) {
     this.imperiumDeckSubject.next([...this.imperiumDeck.filter((x) => x.id !== card.id)]);
 
-    const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
-    if (rule === 'discard-pile') {
+    if (acquireLocation === 'discard-pile') {
       this.addCardToPlayerDiscardPile(playerId, card);
-    } else if (rule === 'under-deck') {
+    } else if (acquireLocation === 'below-deck') {
       this.addCardUnderPlayerDeck(playerId, card);
+    } else if (acquireLocation === 'above-deck') {
+      this.addCardOnTopOfPlayerDeck(playerId, card);
     } else {
       this.addCardToPlayerHand(playerId, card);
     }
   }
 
-  aquirePlayerCardFromLimitedCustomCards(playerId: number, card: ImperiumDeckCard) {
+  aquirePlayerCardFromLimitedCustomCards(
+    playerId: number,
+    card: ImperiumDeckCard,
+    acquireLocation: CardAcquiringPlacementType = this.settingsService.getCardAcquiringRuleImperiumRow(),
+  ) {
     this.limitedCustomCardsSubject.next([...this.limitedCustomCards.filter((x) => x.id !== card.id)]);
 
-    const rule = this.settingsService.getCardAcquiringRuleImperiumRow();
-    if (rule === 'discard-pile') {
+    if (acquireLocation === 'discard-pile') {
       this.addCardToPlayerDiscardPile(playerId, card);
-    } else if (rule === 'under-deck') {
+    } else if (acquireLocation === 'below-deck') {
       this.addCardUnderPlayerDeck(playerId, card);
+    } else if (acquireLocation === 'above-deck') {
+      this.addCardOnTopOfPlayerDeck(playerId, card);
     } else {
       this.addCardToPlayerHand(playerId, card);
     }
@@ -682,6 +708,10 @@ export class CardsService {
 
   addCardUnderPlayerDeck(playerId: number, card: ImperiumDeckCard) {
     this.shuffleCardsUnderPlayerDeck(playerId, [card]);
+  }
+
+  addCardOnTopOfPlayerDeck(playerId: number, card: ImperiumDeckCard) {
+    this.shuffleCardsOnTopOfPlayerDeck(playerId, [card]);
   }
 
   addCardsToPlayerDiscardPile(playerId: number, cards: ImperiumDeckCard[]) {

@@ -52,8 +52,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Hellsicht', en: 'Truthsay' },
         actionType: 'bene',
-        costs: [{ type: 'spice' }],
-        rewards: [{ type: 'card-draw' }, { type: 'card-discard' }, { type: 'agent-lift' }],
+        costs: [{ type: 'spice', amount: 2 }],
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-discard' }, { type: 'agent-lift' }],
         pathToImage: 'assets/images/action-backgrounds/bene_gesserit_4.png',
       },
       {
@@ -92,10 +92,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Heighliner', en: 'Heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [
-          { type: 'tech', amount: 2 },
-          { type: 'troop', amount: 6 },
-        ],
+        rewards: [{ type: 'tech' }, { type: 'troop', amount: 6 }],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
       },
       {
@@ -186,7 +183,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
         costs: [{ type: 'solari', amount: 10 }],
-        rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
+        rewards: [{ type: 'council-seat-small', amount: 4, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
       },
@@ -202,7 +199,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Mentat', en: 'Mentat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 10 }],
+        costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
         customWidth: '175px',
