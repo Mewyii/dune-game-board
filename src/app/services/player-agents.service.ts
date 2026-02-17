@@ -101,6 +101,10 @@ export class PlayerAgentsService {
     this.playerAgentsSubject.next(playersAgents.map((x) => ({ ...x, state: 'available', fieldId: undefined })));
   }
 
+  public deleteAllPlayerAgents() {
+    this.playerAgentsSubject.next([]);
+  }
+
   public addPlayerAgent(playerId: number) {
     const playersAgents = this.getPlayersAgents();
     const newPlayerAgent = { playerId, state: 'available', fieldId: undefined } as PlayerAgent;

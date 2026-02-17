@@ -363,8 +363,16 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     customTimedAIFunction: {
       timing: 'timing-turn-start',
       function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
-        gameState.playerAgentsOnFields.length < 1;
-        return;
+        if (gameState.enemyAgentsOnFields.length < 1 || gameState.playerAgentsOnFields.length < 1) {
+          return;
+        }
+        const locationThreat = gameState.enemyAgentsOnFields.find((x) =>
+          gameState.playerLocations.some((fieldId) => fieldId === x.fieldId),
+        );
+        if (locationThreat && Math.random() > 0.33) {
+          services.playerAgentsService.setPlayerAgentInTimeout(locationThreat.playerId, locationThreat.fieldId);
+          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+        }
       },
     },
   },

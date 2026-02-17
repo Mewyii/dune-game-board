@@ -255,6 +255,7 @@ export class GameManager {
     this.combatManager.setInitialPlayerCombatUnits(newPlayers);
     this.locationManager.resetLocationOwners();
     this.playerRewardChoicesService.resetPlayerRewardChoices();
+    this.playerAgentsService.deleteAllPlayerAgents();
 
     this.playerScoreManager.resetPlayersScores(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
@@ -2841,6 +2842,7 @@ export class GameManager {
       aiManager: this.aIManager,
       gameManager: this,
       combatManager: this.combatManager,
+      playerAgentsService: this.playerAgentsService,
     };
   }
 

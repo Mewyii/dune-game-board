@@ -5,6 +5,7 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { LoggingService } from 'src/app/services/log.service';
+import { PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
@@ -27,4 +28,5 @@ export interface GameServices {
   turnInfoService: TurnInfoService;
   aiManager: AIManager;
   combatManager: CombatManager;
+  playerAgentsService: PlayerAgentsService;
 }
