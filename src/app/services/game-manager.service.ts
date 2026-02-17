@@ -2734,11 +2734,9 @@ export class GameManager {
     const playerLocations = this.locationManager.ownedLocations
       .filter((x) => x.playerId === player.id)
       .map((x) => x.locationId);
-    const enemyLocations = this.locationManager.ownedLocations
-      .filter((x) => x.playerId !== player.id)
-      .map((x) => x.locationId);
+    const enemyLocations = this.locationManager.ownedLocations.filter((x) => x.playerId !== player.id);
     const freeLocations = this.settingsService.controllableLocations.filter(
-      (x) => !playerLocations.includes(x) && !enemyLocations.includes(x),
+      (x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x),
     );
 
     const enemyScore = this.playerScoreManager.getEnemyScore(player.id)!;
@@ -2782,6 +2780,7 @@ export class GameManager {
       playerCardsTrashed,
       playerDreadnoughtCount,
       imperiumRowCards: this.cardsService.imperiumRow,
+      imperiumDeckCards: this.cardsService.imperiumDeck,
       playerFactionFriendships,
       playerFieldUnlocksForFactions,
       playerFieldUnlocksForIds,

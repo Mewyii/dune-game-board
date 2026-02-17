@@ -16,12 +16,20 @@ export interface AIAdjustments {
   goalEvaluationModifier?: (player: Player, gameState: GameState) => GoalModifier[];
 }
 
+export type CustomEffectFunction = (player: Player, gameState: GameState, services: GameServices) => void;
+export type CustomEffectFunctionWithGameElement = (
+  player: Player,
+  gameState: GameState,
+  services: GameServices,
+  gameElement: GameElement,
+) => void;
+
 export interface TimedFunction {
   timing: EffectTimingType;
-  function: (player: Player, gameState: GameState, services: GameServices) => void;
+  function: CustomEffectFunction;
 }
 
 export interface TimedFunctionWithGameElement {
   timing: EffectTimingType;
-  function: (player: Player, gameState: GameState, services: GameServices, gameElement: GameElement) => void;
+  function: CustomEffectFunctionWithGameElement;
 }

@@ -98,7 +98,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       const agentsOnLocations = gameState.playerAgentsOnFields.filter(
         (x) =>
           gameState.freeLocations.some((freeLocation) => freeLocation === x.fieldId) ||
-          gameState.enemyLocations.some((enemyLocation) => enemyLocation === x.fieldId)
+          gameState.enemyLocations.some((enemyLocation) => enemyLocation.locationId === x.fieldId),
       ).length;
       if (agentsOnLocations >= possibleLocationControls) {
         return 0;
@@ -280,7 +280,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
               0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
               0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
             0,
-            0.6
+            0.6,
           )
         : 0;
 
@@ -293,7 +293,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
                 0.05 * (gameState.playerCardsTrashed + player.focusTokens) +
                 0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
               0,
-              0.6
+              0.6,
             )
           : 0;
 
@@ -327,7 +327,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
           0.125 * gameState.playerCardsBought -
           0.15 * (gameState.playerCardsTrashed + player.focusTokens),
         -0.4,
-        0.4
+        0.4,
       ),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 9 || gameState.isFinale,

@@ -691,7 +691,9 @@ export class AIEffectEvaluationService {
           const liftingAgentWouldRemoveLocationControlPosibility =
             gameState.conflict.rewards[0].some((x) => x.type === 'location-control') &&
             gameState.playerAgentsOnFields.every(
-              (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId),
+              (x) =>
+                gameState.freeLocations.includes(x.fieldId) ||
+                gameState.enemyLocations.some((y) => x.fieldId === y.locationId),
             );
 
           return hasPlacedAgents && !liftingAgentWouldRemoveLocationControlPosibility ? value : -3;
@@ -707,7 +709,7 @@ export class AIEffectEvaluationService {
           gameState.freeLocations.some((y) => x.fieldId === y),
         );
         const controllableEnemyLocations =
-          gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y)) &&
+          gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y.locationId)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
         return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -3;

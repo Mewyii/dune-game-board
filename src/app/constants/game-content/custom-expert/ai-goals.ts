@@ -112,7 +112,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       const agentsOnLocations = gameState.playerAgentsOnFields.filter(
         (x) =>
           gameState.freeLocations.some((freeLocation) => freeLocation === x.fieldId) ||
-          gameState.enemyLocations.some((enemyLocation) => enemyLocation === x.fieldId),
+          gameState.enemyLocations.some((enemyLocation) => enemyLocation.locationId === x.fieldId),
       ).length;
       if (agentsOnLocations >= possibleLocationControls) {
         return 0;
@@ -142,7 +142,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
       (gameState.conflict.rewards[0].some((x) => x.type === 'location-control') &&
       gameState.playerAgentsOnFields.every(
-        (x) => gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.includes(x.fieldId),
+        (x) =>
+          gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.some((y) => x.fieldId === y.locationId),
       )
         ? 0
         : 1.0) *
