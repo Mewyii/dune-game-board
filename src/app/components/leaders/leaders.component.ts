@@ -10,10 +10,11 @@ import { TurnInfo } from 'src/app/models/turn-info';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { GameManager, PlayerAgents, RoundPhaseType } from 'src/app/services/game-manager.service';
+import { GameManager, RoundPhaseType } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
+import { PlayerAgent, PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -45,7 +46,7 @@ export class LeadersComponent implements OnInit {
 
   public activePlayerCombatUnits: PlayerCombatUnits | undefined;
 
-  public activePlayerAvailableAgents: PlayerAgents | undefined;
+  public activePlayerAvailableAgents: PlayerAgent[] | undefined;
 
   public activePlayerIntrigueCount: number | undefined;
 
@@ -76,7 +77,8 @@ export class LeadersComponent implements OnInit {
     private audioManager: AudioManager,
     private dialog: MatDialog,
     private turnInfoService: TurnInfoService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private playerAgentsService: PlayerAgentsService,
   ) {}
 
   ngOnInit(): void {
@@ -107,9 +109,7 @@ export class LeadersComponent implements OnInit {
 
       this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId).map((x) => x.techTile);
 
-      this.activePlayerAvailableAgents = this.gameManager.availablePlayerAgents.find(
-        (x) => x.playerId === this.activePlayerId
-      );
+      this.activePlayerAvailableAgents = this.playerAgentsService.getAvailablePlayerAgents(this.activePlayerId);
 
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
@@ -118,8 +118,8 @@ export class LeadersComponent implements OnInit {
       this.activePlayerCombatUnits = playerCombatUnits.find((x) => x.playerId === this.activePlayerId);
     });
 
-    this.gameManager.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
-      this.activePlayerAvailableAgents = availablePlayerAgents.find((x) => x.playerId === this.activePlayerId);
+    this.playerAgentsService.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
+      this.activePlayerAvailableAgents = availablePlayerAgents.filter((x) => x.playerId === this.activePlayerId);
     });
 
     this.minorHouseService.playerHouses$.subscribe((playerHouses) => {
@@ -281,14 +281,14 @@ export class LeadersComponent implements OnInit {
     return false;
   }
 
-  onAddPlayerAgentClicked(id: number) {
+  onAddPlayerAgentClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
-    this.gameManager.addAgentToPlayer(id);
+    this.playerAgentsService.addPlayerAgent(playerId);
   }
 
-  onRemovePlayerAgentClicked(id: number) {
+  onRemovePlayerAgentClicked(playerId: number) {
     this.audioManager.playSound('click-reverse');
-    this.gameManager.removeAgentFromPlayer(id);
+    this.playerAgentsService.removePlayerAgent(playerId);
     return false;
   }
 

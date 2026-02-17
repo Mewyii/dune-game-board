@@ -358,10 +358,12 @@ export class AIManager {
     const combatPowerDifference = playerCombatStrength - highestEnemyCombatScore.combatStrength;
 
     if (combatPowerDifference > 0) {
-      const enemyAgentsAvailable =
-        gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;
-      const enemyIntrigueCount =
-        gameState.enemyIntrigueCounts.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.intrigueCount ?? 0;
+      const enemyAgentsAvailable = gameState.enemyAgentsAvailable.filter(
+        (x) => x.playerId === highestEnemyCombatScore.playerId,
+      ).length;
+      const enemyIntrigueCount = gameState.enemyIntrigueCounts.filter(
+        (x) => x.playerId === highestEnemyCombatScore.playerId,
+      ).length;
 
       const enemyCombatStrengthPotentialAgainstPlayer = getEnemyCombatStrengthPotentialAgainstPlayer(
         playerCombatUnits,
@@ -886,7 +888,7 @@ export class AIManager {
     }
     if (card.fieldAccess) {
       for (const access of card.fieldAccess) {
-        evaluationValue -= gameState.playerCardsFieldAccessCounts[access] < 2 ? 3.0 : 0.75;
+        evaluationValue -= gameState.playerCardsFieldAccessCounts[access] < 3 ? 3.0 : 0.75;
       }
     }
     if (card.canInfiltrate) {

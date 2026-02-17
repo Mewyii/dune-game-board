@@ -56,7 +56,9 @@ dune-imperium-row-card,
 dune-plot-card {
   position: relative;
   transition: 0.7s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   display: block;
   user-select: none;
   animation-name: card-anim;
@@ -68,7 +70,7 @@ dune-imperium-row-card:hover,
 dune-imperium-row-card.active,
 dune-plot-card:hover,
 dune-plot-card.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.3) translate(0rem, -40px);
   z-index: 3;
 }
@@ -90,7 +92,9 @@ dune-imperium-row-card.not-played {
 .draw-card-button {
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
   transition: 0.5s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
 }
 
 .draw-card-button:hover {
@@ -155,7 +159,9 @@ dune-intrigue-card,
 .intrigue-card {
   position: relative;
   transition: 0.7s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   display: block;
   user-select: none;
   animation-name: card-anim;
@@ -167,7 +173,7 @@ dune-intrigue-card:hover,
 dune-intrigue-card.active,
 .intrigue-card:hover,
 .intrigue-card.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.3) translate(0rem, -30px);
   z-index: 3;
   position: relative;

@@ -113,6 +113,32 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Personal Suspensors',
+      de: 'Persönliche Suspensoren',
+    },
+    faction: 'emperor',
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/jet_packs.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-round-start',
+      },
+      {
+        type: 'troop-insert',
+        amount: 1,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Landing Ships',
       de: 'Landungsschiffe',
     },
@@ -127,7 +153,7 @@ export const techTiles: TechTileCard[] = [
     ],
     effects: [
       {
-        type: 'timing-round-start',
+        type: 'timing-turn-start',
       },
       {
         type: 'tech-tile-flip',
@@ -181,32 +207,6 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'medium',
-    },
-  },
-  {
-    name: {
-      en: 'Personal Suspensors',
-      de: 'Persönliche Suspensoren',
-    },
-    faction: 'emperor',
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/jet_packs.png',
-    effectSize: 'medium',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'timing-round-start',
-      },
-      {
-        type: 'troop-insert',
-        amount: 1,
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
     },
   },
   {

@@ -42,7 +42,9 @@ dune-plot-card,
   transition: 0.9s;
   transform: scale(0.75) translateY(-150px);
   max-height: 200px;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   display: block;
   user-select: none;
   animation-name: card-row-anim;
@@ -69,7 +71,7 @@ dune-imperium-row-card:hover,
 dune-imperium-row-card.active,
 dune-plot-card:hover,
 dune-plot-card.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.3) translateY(-150px);
   z-index: 3;
 }
@@ -154,12 +156,14 @@ dune-plot-card.active {
   background-position: center;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66));
   transition: 0.7s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer !important;
 }
 
 .imperium-deck:hover,
 .imperium-deck.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.2);
   z-index: 3;
 }

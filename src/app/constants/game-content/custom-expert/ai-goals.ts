@@ -54,13 +54,14 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     viableFields: () => ({}),
   },
   tech: {
-    baseDesire: 0.3,
+    baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
       0.01 * getResourceAmount(player, 'spice') +
-      0.025 * player.tech -
+      0.02 * player.tech -
       0.0125 * (gameState.currentRound - 1) +
       0.04 * gameState.playerIntriguesConversionCosts.tech +
-      0.025 * gameState.playerTechTilesConversionCosts.tech,
+      0.025 * gameState.playerTechTilesConversionCosts.tech -
+      0.05 * gameState.playerTechTiles.length,
     goalIsReachable: (player) => getResourceAmount(player, 'solari') > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -243,10 +244,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   troops: {
-    baseDesire: 0.1,
+    baseDesire: 0.05,
     desireModifier: (player, gameState, goals) =>
       0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
-      (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0) +
+      (gameState.playerTurnInfos?.canEnterCombat ? 0.2 : 0) +
       0.04 * gameState.playerIntriguesConversionCosts['loose-troop'] +
       0.025 * gameState.playerTechTilesConversionCosts['loose-troop'],
     goalIsReachable: () => false,
@@ -378,8 +379,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       let maxDesire = 0.0;
 
       const waterDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
-        { type: 'collect-spice', modifier: 0.9 },
-        { type: 'enter-combat', modifier: 0.75 },
+        { type: 'collect-spice', modifier: 0.85 },
+        { type: 'enter-combat', modifier: 0.7 },
         { type: 'troops', modifier: 0.45 },
       ];
 
@@ -401,7 +402,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       let maxDesire = 0.0;
 
       const spiceDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
-        { type: 'collect-solari', modifier: 0.9 },
+        { type: 'collect-solari', modifier: 0.85 },
         { type: 'draw-cards', modifier: 0.75 },
         { type: 'mentat', modifier: 0.75 },
         { type: 'troops', modifier: 0.45 },
@@ -442,7 +443,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState, goals) =>
       getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 9 : 4),
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'solari'),
+      ...getViableBoardFields(fields, 'solari', true, 6),
     }),
   },
   'swordmaster-helper': {

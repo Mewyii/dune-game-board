@@ -41,7 +41,7 @@
               <div class="agents-icon" [style.background-color]="activePlayer.color"></div>
             </div>
             <div class="resource-amount on-background">
-              <span>{{ activePlayerAvailableAgents?.agentAmount }}</span>
+              <span>{{ activePlayerAvailableAgents?.length }}</span>
             </div>
           </div>
         </div>
@@ -128,18 +128,18 @@
         </div>
         <div class="info-container">
           @for (resource of activePlayer.resources; track $index) {
-          <div [class]="'resource-container'">
-            <div
-              class="resource-display"
-              (click)="onAddRewardClicked(activePlayer, resource.type)"
-              (contextmenu)="onRemoveResourceClicked(activePlayer, resource.type)"
-            >
-              <img [class]="'resource ' + resource.type" [src]="getEffectTypePath(resource.type)" />
-              <div class="resource-amount on-background">
-                <span>{{ resource.amount }}</span>
+            <div [class]="'resource-container'">
+              <div
+                class="resource-display"
+                (click)="onAddRewardClicked(activePlayer, resource.type)"
+                (contextmenu)="onRemoveResourceClicked(activePlayer, resource.type)"
+              >
+                <img [class]="'resource ' + resource.type" [src]="getEffectTypePath(resource.type)" />
+                <div class="resource-amount on-background">
+                  <span>{{ resource.amount }}</span>
+                </div>
               </div>
             </div>
-          </div>
           }
           <div [class]="'resource-container'">
             <div class="resource-display" (click)="onAddTechClicked(activePlayer)" (contextmenu)="onRemoveTechClicked()">
@@ -304,47 +304,47 @@
     <dune-player-reward-choices></dune-player-reward-choices>
     <div class="control-bar center" *ngIf="techTiles.length > 0">
       @for (techTile of techTiles; track techTile.name.en) {
-      <div
-        class="tech-tile-container"
-        (click)="setTechTileActive(techTile.id)"
-        (mouseenter)="setCardHover(techTile.id)"
-        (mouseleave)="hoveredTechTileId = ''"
-      >
-        <dune-highlighting
-          *ngIf="techTile.id === activeTechTileId || techTile.id === hoveredTechTileId"
-          [id]="techTile.id"
-          [width]="480"
-          [height]="340"
-          [bottom]="-85"
-          [left]="-115"
-        ></dune-highlighting>
         <div
-          *ngIf="getIsTechTileFlipped(techTile.id)"
-          [class]="'tech-tile' + (techTile.id === activeTechTileId ? ' active' : '')"
-        ></div>
-        <dune-tech-tile
-          *ngIf="!getIsTechTileFlipped(techTile.id)"
-          [class]="techTile.id === activeTechTileId ? ' active' : ''"
-          [card]="techTile"
-        ></dune-tech-tile>
-        <div class="tech-tile-action-container" *ngIf="techTile.id === activeTechTileId">
-          <button
-            *ngIf="techTile.structuredEffects && !getIsTechTileFlipped(techTile.id)"
-            class="tech-flip-button"
-            mat-fab
-            [color]="'accent'"
-            (click)="onActivateTechClicked(techTile)"
-          >
-            <mat-icon>flash_on</mat-icon>
-          </button>
-          <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.id)">
-            <mat-icon>refresh</mat-icon>
-          </button>
-          <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
+          class="tech-tile-container"
+          (click)="setTechTileActive(techTile.id)"
+          (mouseenter)="setCardHover(techTile.id)"
+          (mouseleave)="hoveredTechTileId = ''"
+        >
+          <dune-highlighting
+            *ngIf="techTile.id === activeTechTileId || techTile.id === hoveredTechTileId"
+            [id]="techTile.id"
+            [width]="480"
+            [height]="340"
+            [bottom]="-85"
+            [left]="-115"
+          ></dune-highlighting>
+          <div
+            *ngIf="getIsTechTileFlipped(techTile.id)"
+            [class]="'tech-tile' + (techTile.id === activeTechTileId ? ' active' : '')"
+          ></div>
+          <dune-tech-tile
+            *ngIf="!getIsTechTileFlipped(techTile.id)"
+            [class]="techTile.id === activeTechTileId ? ' active' : ''"
+            [card]="techTile"
+          ></dune-tech-tile>
+          <div class="tech-tile-action-container" *ngIf="techTile.id === activeTechTileId">
+            <button
+              *ngIf="techTile.structuredEffects && !getIsTechTileFlipped(techTile.id)"
+              class="tech-flip-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onActivateTechClicked(techTile)"
+            >
+              <mat-icon>flash_on</mat-icon>
+            </button>
+            <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.id)">
+              <mat-icon>refresh</mat-icon>
+            </button>
+            <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </div>
-      </div>
       }
     </div>
     <dune-ai-tile [showDetails]="showAIDetails"></dune-ai-tile>

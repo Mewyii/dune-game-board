@@ -17,7 +17,7 @@ dune-conflict-card {
 
 dune-conflict-card:hover,
 dune-conflict-card.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.5);
   z-index: 3;
 }
@@ -41,12 +41,14 @@ dune-conflict-card.active {
 
 .conflict-card.backside.clickable {
   transition: 0.7s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer !important;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer !important;
 }
 
 .conflict-card.backside.clickable:hover,
 .conflict-card.backside.clickable.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.2);
   z-index: 3;
 }

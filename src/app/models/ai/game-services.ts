@@ -1,5 +1,6 @@
 import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { CombatManager } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
@@ -25,4 +26,5 @@ export interface GameServices {
   audioManager: AudioManager;
   turnInfoService: TurnInfoService;
   aiManager: AIManager;
+  combatManager: CombatManager;
 }

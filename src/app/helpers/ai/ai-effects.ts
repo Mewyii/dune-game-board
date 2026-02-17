@@ -24,7 +24,7 @@ export function getParticipateInCombatDesire(gameState: GameState) {
       if (enemyCombatStrength > 0) {
         desire -= 0.15 + 0.01 * getPlayerCombatStrength(enemy, gameState);
       } else {
-        const enemyAgentCount = gameState.enemyAgentsAvailable.find((x) => x.playerId === enemy.playerId)?.agentAmount ?? 0;
+        const enemyAgentCount = gameState.enemyAgentsAvailable.filter((x) => x.playerId === enemy.playerId).length;
         desire += 0.15 * (2 - enemyAgentCount);
       }
     }
@@ -52,8 +52,9 @@ export function getWinCombatDesire(gameState: GameState) {
   const highestEnemyCombatScore = enemyCombatScores[0];
 
   if (playerCombatScore > highestEnemyCombatScore.combatStrength) {
-    const enemyAgentsAvailable =
-      gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;
+    const enemyAgentsAvailable = gameState.enemyAgentsAvailable.filter(
+      (x) => x.playerId === highestEnemyCombatScore.playerId,
+    ).length;
     const enemyIntrigueCount =
       gameState.enemyIntrigueCounts.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.intrigueCount ?? 0;
 
@@ -63,7 +64,7 @@ export function getWinCombatDesire(gameState: GameState) {
         highestEnemyCombatScore,
         enemyAgentsAvailable,
         enemyIntrigueCount,
-        gameState
+        gameState,
       ) > 1
     ) {
       desire += 0.3;
@@ -74,8 +75,9 @@ export function getWinCombatDesire(gameState: GameState) {
     for (const enemyCombatScore of enemyCombatScores) {
       desire += 0.02 * enemyCombatScore.combatStrength;
 
-      const enemyAgentsAvailable =
-        gameState.enemyAgentsAvailable.find((x) => x.playerId === highestEnemyCombatScore.playerId)?.agentAmount ?? 0;
+      const enemyAgentsAvailable = gameState.enemyAgentsAvailable.filter(
+        (x) => x.playerId === highestEnemyCombatScore.playerId,
+      ).length;
 
       if (
         getPlayerCombatStrengthPotentialAgainstEnemy(
@@ -83,7 +85,7 @@ export function getWinCombatDesire(gameState: GameState) {
           gameState.playerAgentsAvailable,
           gameState.playerIntrigueCount,
           enemyCombatScore,
-          gameState
+          gameState,
         ) < 1
       ) {
         desire = desire - 0.5;
@@ -102,7 +104,7 @@ export function getEnemyCombatStrengthPotentialAgainstPlayer(
   enemyCombatUnits: PlayerCombatUnits,
   enemyAgentsAvailable: number,
   enemyIntrigueCount: number,
-  gameState: GameState
+  gameState: GameState,
 ) {
   const playerCombatPower = getPlayerCombatStrength(playerCombatUnits, gameState);
   const enemyCombatPower = getPlayerCombatStrength(enemyCombatUnits, gameState);
@@ -111,7 +113,7 @@ export function getEnemyCombatStrengthPotentialAgainstPlayer(
     enemyCombatUnits,
     enemyAgentsAvailable,
     enemyIntrigueCount,
-    gameState
+    gameState,
   );
 
   return enemyCombatPower + enemyCombatStrengthPotential - playerCombatPower;
@@ -122,7 +124,7 @@ export function getPlayerCombatStrengthPotentialAgainstEnemy(
   playerAgentsAvailable: number,
   playerIntrigueCount: number,
   enemy: PlayerCombatUnits,
-  gameState: GameState
+  gameState: GameState,
 ) {
   return getEnemyCombatStrengthPotentialAgainstPlayer(enemy, player, playerAgentsAvailable, playerIntrigueCount, gameState);
 }
@@ -131,7 +133,7 @@ export function getPlayerCombatStrengthPotential(
   playerCombatUnits: PlayerCombatUnits,
   playerAgentsAvailable: number,
   playerIntrigueCount: number,
-  gameState: GameState
+  gameState: GameState,
 ) {
   const playerGarrisonStrength = getPlayerGarrisonStrength(playerCombatUnits, gameState);
   const maxAddableTroopCombatStrengthPerTurn =
@@ -160,7 +162,7 @@ export function getAvoidCombatTiesModifier(gameState: GameState) {
   }
 
   const playerIsTiedToEnemy = gameState.enemyCombatUnits.some(
-    (x) => getPlayerCombatStrength(x, gameState) === playerCombatStrength
+    (x) => getPlayerCombatStrength(x, gameState) === playerCombatStrength,
   );
   if (playerIsTiedToEnemy) {
     return 0.5 - 0.2 * gameState.playerAgentsAvailable;

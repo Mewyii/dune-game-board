@@ -22,7 +22,7 @@ export const gameContentCustomExpert: GameContent = {
   dreadnoughtCombatStrength: 5,
   maxPlayerDreadnoughtCount: 2,
   maxPlayerIntrigueCount: 3,
-  highCouncilPersuasion: 3,
+  highCouncilPersuasion: 4,
   startingResources: [],
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 6,

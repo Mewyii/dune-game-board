@@ -726,9 +726,7 @@ export class AIEffectEvaluationService {
         const unitsInCombat = gameState.playerCombatUnits.shipsInCombat + gameState.playerCombatUnits.troopsInCombat;
         return value * (4 - gameState.playerAgentsAvailable / 2) - (unitsInCombat < 2 ? 2 : 0);
       case 'enemies-card-discard':
-        return (
-          (value * gameState.enemyAgentsAvailable.filter((x) => x.agentAmount > 0).length) / (gameState.playersCount - 1)
-        );
+        return (value * 0.5 * gameState.enemyAgentsAvailable.length) / (gameState.playersCount - 1);
       case 'enemies-troop-destroy':
         return (
           (value * gameState.enemyCombatUnits.filter((x) => x.troopsInCombat > 0 || x.troopsInGarrison > 0).length) /
@@ -740,7 +738,7 @@ export class AIEffectEvaluationService {
         );
       case 'card-return-to-hand':
         const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
-        return playerDiscardPileCount > 0 ? value : 0;
+        return playerDiscardPileCount > 0 ? value : -3;
       case 'tech-tile-trash':
         if (gameState.playerTechTiles.length > 0) {
           const techValue = this.getRewardEffectEvaluation('tech', player, gameState);

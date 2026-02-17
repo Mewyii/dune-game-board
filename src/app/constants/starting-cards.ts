@@ -28,16 +28,6 @@ export const startingCards: ImperiumCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-connection',
-        faction: 'emperor',
-      },
-      {
-        type: 'troop',
-      },
     ],
   },
   {
@@ -84,16 +74,6 @@ export const startingCards: ImperiumCard[] = [
       {
         type: 'tech',
       },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-connection',
-        faction: 'guild',
-      },
-      {
-        type: 'solari',
-      },
     ],
   },
   {
@@ -139,17 +119,6 @@ export const startingCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'focus',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-connection',
-        faction: 'bene',
-      },
-      {
-        type: 'persuasion',
-        amount: 1,
       },
     ],
   },
@@ -258,17 +227,6 @@ export const startingCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'sword',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-connection',
-        faction: 'fremen',
-      },
-      {
-        type: 'persuasion',
-        amount: 1,
       },
     ],
   },

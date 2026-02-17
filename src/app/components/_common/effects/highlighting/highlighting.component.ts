@@ -32,7 +32,7 @@ export class HighlightingComponent implements OnInit {
     const area = this.width * this.height;
     const densityFactor = Math.sqrt(refArea / area);
 
-    const baseDelayMin = 0.1;
+    const baseDelayMin = 0.05;
     const baseDelayMax = 0.4;
 
     const adjustedDelayMin = baseDelayMin * densityFactor;

@@ -35,15 +35,6 @@ export const conflicts: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Vorherrschaft über die Vorstädte', en: 'Supremacy over the Suburbs' },
-    lvl: 1,
-    rewards: [
-      [{ type: 'victory-point' }, { type: 'intrigue' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'intrigue' }],
-      [{ type: 'intrigue' }],
-    ],
-  },
-  {
     name: { de: 'Vorherrschaft über die Spice-Raffinerien', en: 'Supremacy over the spice-refineries' },
     lvl: 1,
     rewards: [
@@ -68,7 +59,7 @@ export const conflicts: Conflict[] = [
     name: { de: 'Vorherrschaft über den Wasserhandel', en: 'Supremacy over the Water Trade' },
     lvl: 1,
     rewards: [
-      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'water' }],
+      [{ type: 'victory-point' }, { type: 'water' }],
       [{ type: 'water' }, { type: 'solari', amount: 3 }],
       [{ type: 'water' }],
     ],
@@ -77,7 +68,7 @@ export const conflicts: Conflict[] = [
     name: { de: 'Eroberung der imperialen Forschungs-Stationen', en: 'Conquest of the Imperial Research Stations' },
     lvl: 1,
     rewards: [
-      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'focus' }],
+      [{ type: 'victory-point' }, { type: 'focus' }],
       [{ type: 'water' }, { type: 'spice' }, { type: 'focus' }],
       [{ type: 'spice' }],
     ],
@@ -126,6 +117,15 @@ export const conflicts: Conflict[] = [
       [{ type: 'faction-influence-up-twice-choice' }, { type: 'tech', amount: 2 }],
       [{ type: 'location-control' }],
       [{ type: 'tech', amount: 2 }],
+    ],
+  },
+  {
+    name: { de: 'Schlacht von Tueks Sietch', en: 'Battle of Tueks Sietch' },
+    lvl: 2,
+    rewards: [
+      [{ type: 'victory-point' }, { type: 'faction-influence-up-choice' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 3 }],
+      [{ type: 'solari', amount: 5 }],
     ],
   },
 ];

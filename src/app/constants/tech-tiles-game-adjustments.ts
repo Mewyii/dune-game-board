@@ -1,4 +1,5 @@
 import { getResourceAmount } from '../helpers/ai';
+import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { getFlattenedEffectRewardArray } from '../helpers/rewards';
 import { GameServices, GameState, TimedFunctionWithGameElement } from '../models/ai';
 import { Player } from '../models/player';
@@ -158,10 +159,6 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     aiEvaluation: (player, gameState) => 11 + 0.75 * gameState.playerCardsBought + 0.25 * gameState.playerCardsTrashed,
   },
   {
-    id: 'Barrage Rockets',
-    aiEvaluation: (player, gameState) => 9 + 0.25 * (gameState.currentRound - 1) + 4 * gameState.playerDreadnoughtCount,
-  },
-  {
     id: 'Spice Refineries',
     aiEvaluation: (player, gameState) => 15 - 0.33 * (gameState.currentRound - 1),
     gameModifiers: {
@@ -174,11 +171,6 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         },
       ],
     },
-  },
-  { id: 'Shieldbreakers', aiEvaluation: (player, gameState) => 0.0 + 9 * gameState.playerDreadnoughtCount },
-  {
-    id: 'Gunship',
-    aiEvaluation: (player, gameState) => 1 + 0.25 * (gameState.currentRound - 1),
   },
   { id: 'Planetary Surveillance', aiEvaluation: (player, gameState) => 0 + 0.5 * (gameState.currentRound - 1) },
   { id: 'Improved Projectile Rifles', aiEvaluation: (player, gameState) => 0 + 0.5 * gameState.playerCardsRewards.sword },
@@ -289,6 +281,90 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           services.gameManager.addAccumulatedSpiceToField(targetSpace.title.en, 1);
           services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
         }
+      },
+    },
+  },
+  {
+    id: 'Barrage Rockets',
+    aiEvaluation: (player, gameState) =>
+      6 + 0.25 * (gameState.currentRound - 1) + 3 * gameState.playerDreadnoughtCount + 2 * gameState.playerLocations.length,
+    customTimedAIFunction: {
+      timing: 'timing-turn-start',
+      function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
+        const playerLocations = gameState.playerLocations;
+
+        if (playerLocations.length < 1) {
+          return;
+        }
+
+        let activatedEffect = false;
+        for (const location of playerLocations) {
+          if (activatedEffect) {
+            break;
+          }
+
+          const locationHasAgentOnIt = gameState.agentsOnFields.some((x) => x.fieldId === location);
+          if (!locationHasAgentOnIt) {
+            const playerHasAvailableShips =
+              gameState.playerCombatUnits.shipsInCombat > 0 || gameState.playerCombatUnits.shipsInGarrison > 0;
+            if (!playerHasAvailableShips || Math.random() > 0.5) {
+              services.gameModifierService.addPlayerGameModifiers(player.id, {
+                fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location, currentRoundOnly: true }],
+              });
+              for (const enemyPlayer of gameState.enemyPlayers) {
+                services.gameModifierService.addPlayerGameModifiers(enemyPlayer.id, {
+                  fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location, currentRoundOnly: true }],
+                });
+              }
+              services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+              activatedEffect = true;
+            }
+          }
+        }
+      },
+    },
+  },
+  {
+    id: 'Shieldbreakers',
+    aiEvaluation: (player, gameState) =>
+      2 +
+      0.25 * (gameState.currentRound - 1) +
+      4 * gameState.playerDreadnoughtCount +
+      2 * gameState.enemyCombatUnits.filter((x) => getPlayerdreadnoughtCount(x) > 0).length,
+    customTimedAIFunction: {
+      timing: 'timing-turn-start',
+      function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
+        const enemiesWithDreadnoughtsInCombat = gameState.enemyCombatUnits.filter((x) => x.shipsInCombat > 0).length;
+        if (
+          enemiesWithDreadnoughtsInCombat < 1 ||
+          getResourceAmount(player, 'tech') < 1 ||
+          gameState.playerAgentsAvailable > 0
+        ) {
+          return;
+        }
+
+        if (Math.random() + 0.075 * (gameState.currentRound - 1) > 0.5) {
+          for (const enemy of gameState.enemyPlayers) {
+            services.combatManager.removePlayerShipsFromCombat(enemy.id, 1);
+          }
+          services.gameManager.payCostForPlayer(player.id, { type: 'tech' });
+          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+        }
+      },
+    },
+  },
+  {
+    id: 'Gunship',
+    aiEvaluation: (player, gameState) =>
+      2 +
+      0.25 * (gameState.currentRound - 1) +
+      4 * gameState.playerDreadnoughtCount +
+      2 * gameState.enemyCombatUnits.filter((x) => getPlayerdreadnoughtCount(x) > 0).length,
+    customTimedAIFunction: {
+      timing: 'timing-turn-start',
+      function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
+        gameState.playerAgentsOnFields.length < 1;
+        return;
       },
     },
   },

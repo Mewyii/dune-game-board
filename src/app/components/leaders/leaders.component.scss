@@ -46,7 +46,7 @@ dune-leader-card {
 }
 
 dune-leader-card:hover {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.05);
 }
 
@@ -68,7 +68,9 @@ dune-leader-card:hover {
 .control-button {
   height: 160px;
   width: 40px;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -233,7 +235,9 @@ dune-leader-card:hover {
 .resource-display:hover {
   filter: brightness(1.2) saturate(1.2);
   transform: scale(1.1);
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
 }
 
 .resource {
@@ -332,7 +336,7 @@ dune-tech-tile:hover,
 dune-tech-tile.active,
 .tech-tile:hover,
 .tech-tile.active {
-  filter: drop-shadow(0px 0px 15px rgb(255, 170, 73)) brightness(1.1);
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   transform: scale(1.5);
   z-index: 3;
   position: relative;

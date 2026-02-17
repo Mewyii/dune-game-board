@@ -12,6 +12,7 @@ import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { EffectWithModifier, GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
+import { PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -70,7 +71,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
     private audioManager: AudioManager,
     private cardsService: CardsService,
     private playerScoreManager: PlayerScoreManager,
-    private gameModifierService: GameModifiersService
+    private gameModifierService: GameModifiersService,
+    private playerAgentsService: PlayerAgentsService,
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +86,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     this.backgroundGradient =
       'linear-gradient(' + gradientColor1 + ', 5%, ' + gradientColor2 + ', 70%, ' + gradientColor3 + ')';
 
-    this.gameManager.agentsOnFields$.subscribe((agentsOnFields) => {
+    this.playerAgentsService.playerAgentsOnFields$.subscribe((agentsOnFields) => {
       const playerIds = agentsOnFields.filter((x) => x.fieldId === this.actionField.title.en).map((x) => x.playerId);
       if (playerIds.length > 0) {
         const firstPlayerId = playerIds.shift()!;
@@ -129,7 +131,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
       this.canPlaceFieldMarkers = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'field-marker'
+        'field-marker',
       );
       this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
@@ -169,13 +171,13 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
       this.canPlaceFieldMarkers = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'field-marker'
+        'field-marker',
       );
       this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
 
     this.isHighCouncilField = this.actionField.rewards.some(
-      (x) => x.type === 'council-seat-small' || x.type === 'council-seat-large'
+      (x) => x.type === 'council-seat-small' || x.type === 'council-seat-large',
     );
     if (this.isHighCouncilField) {
       this.playerManager.players$.subscribe((players) => {
@@ -200,7 +202,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   onPlayerMarkerRightClicked(playerId: number, fieldId: string) {
-    this.gameManager.removePlayerAgentFromField(playerId, fieldId);
+    this.playerAgentsService.removePlayerAgentFromField(playerId, fieldId);
     this.audioManager.playSound('click');
     return false;
   }

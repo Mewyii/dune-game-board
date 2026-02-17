@@ -36,7 +36,8 @@ import {
 } from '../models';
 import { GameState } from '../models/ai';
 import { Player } from '../models/player';
-import { AgentOnField, GameElement } from '../services/game-manager.service';
+import { GameElement } from '../services/game-manager.service';
+import { PlayerAgentOnField } from '../services/player-agents.service';
 import { getPlayerCombatStrength } from './ai';
 import { getPlayerdreadnoughtCount } from './combat-units';
 import { getFactionScoreTypeFromCost } from './faction-score';
@@ -453,7 +454,7 @@ export function isConditionFullfilled(
 export function isEnemyConditionFullfilled(
   conditionEffect: StructuredEffectCondition,
   enemy: Player,
-  enemyAgentsOnFields: AgentOnField[],
+  enemyAgentsOnFields: PlayerAgentOnField[],
   playerAgentPlacedOnFieldThisTurn?: string,
 ) {
   let conditionFullfilled = false;

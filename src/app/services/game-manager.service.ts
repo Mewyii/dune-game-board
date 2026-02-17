@@ -74,6 +74,7 @@ import { LocationManager } from './location-manager.service';
 import { LoggingService } from './log.service';
 import { MinorHousesService } from './minor-houses.service';
 import { NotificationService } from './notification.service';
+import { PlayerAgentsService } from './player-agents.service';
 import { PlayerRewardChoicesService } from './player-reward-choices.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { PlayersService } from './players.service';
@@ -81,16 +82,6 @@ import { SettingsService } from './settings.service';
 import { TechTileDeckCard, TechTilesService } from './tech-tiles.service';
 import { TranslateService } from './translate-service';
 import { TurnInfoService } from './turn-info.service';
-
-export interface AgentOnField {
-  fieldId: string;
-  playerId: number;
-}
-
-export interface PlayerAgents {
-  playerId: number;
-  agentAmount: number;
-}
 
 export interface SpiceAccumulation {
   fieldId: string;
@@ -135,12 +126,6 @@ export class GameManager {
     map(([activePlayerId, players]) => players.find((player) => player.id === activePlayerId)),
   );
 
-  private availablePlayerAgentsSubject = new BehaviorSubject<PlayerAgents[]>([]);
-  public availablePlayerAgents$ = this.availablePlayerAgentsSubject.asObservable();
-
-  private agentsOnFieldsSubject = new BehaviorSubject<AgentOnField[]>([]);
-  public agentsOnFields$ = this.agentsOnFieldsSubject.asObservable();
-
   private accumulatedSpiceOnFieldsSubject = new BehaviorSubject<SpiceAccumulation[]>([]);
   public accumulatedSpiceOnFields$ = this.accumulatedSpiceOnFieldsSubject.asObservable();
 
@@ -168,6 +153,7 @@ export class GameManager {
     private intriguesService: IntriguesService,
     private turnInfoService: TurnInfoService,
     private notificationService: NotificationService,
+    private playerAgentsService: PlayerAgentsService,
   ) {
     const currentRoundString = localStorage.getItem('currentRound');
     if (currentRoundString) {
@@ -191,18 +177,6 @@ export class GameManager {
     if (currentRoundPhaseString) {
       const currentRoundPhase = JSON.parse(currentRoundPhaseString) as RoundPhaseType;
       this.currentRoundPhaseSubject.next(currentRoundPhase);
-    }
-
-    const availablePlayerAgentsString = localStorage.getItem('availablePlayerAgents');
-    if (availablePlayerAgentsString) {
-      const availablePlayerAgents = JSON.parse(availablePlayerAgentsString) as PlayerAgents[];
-      this.availablePlayerAgentsSubject.next(availablePlayerAgents);
-    }
-
-    const agentsOnFieldsString = localStorage.getItem('agentsOnFields');
-    if (agentsOnFieldsString) {
-      const agentsOnFields = JSON.parse(agentsOnFieldsString) as AgentOnField[];
-      this.agentsOnFieldsSubject.next(agentsOnFields);
     }
 
     const activePlayerIdString = localStorage.getItem('activePlayerId');
@@ -233,14 +207,6 @@ export class GameManager {
       localStorage.setItem('currentRoundPhase', JSON.stringify(currentRoundPhase));
     });
 
-    this.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
-      localStorage.setItem('availablePlayerAgents', JSON.stringify(availablePlayerAgents));
-    });
-
-    this.agentsOnFields$.subscribe((agentsOnFields) => {
-      localStorage.setItem('agentsOnFields', JSON.stringify(agentsOnFields));
-    });
-
     this.activePlayerId$.subscribe((activePlayerId) => {
       localStorage.setItem('activePlayerId', JSON.stringify(activePlayerId));
     });
@@ -262,14 +228,6 @@ export class GameManager {
     return cloneDeep(this.activePlayerIdSubject.value);
   }
 
-  public get availablePlayerAgents() {
-    return cloneDeep(this.availablePlayerAgentsSubject.value);
-  }
-
-  public get agentsOnFields() {
-    return cloneDeep(this.agentsOnFieldsSubject.value);
-  }
-
   public get accumulatedSpiceOnFields() {
     return cloneDeep(this.accumulatedSpiceOnFieldsSubject.value);
   }
@@ -280,14 +238,6 @@ export class GameManager {
 
   public getActivePlayer() {
     return this.playerManager.getPlayer(this.activePlayerId);
-  }
-
-  public getPlayerAgentsOnFields(playerId: number) {
-    return cloneDeep(this.agentsOnFieldsSubject.value.filter((x) => x.playerId === playerId));
-  }
-
-  public getAvailableAgentCountForPlayer(playerId: number) {
-    return this.availablePlayerAgents.find((x) => x.playerId === playerId)?.agentAmount ?? 0;
   }
 
   public get isFinale() {
@@ -308,7 +258,6 @@ export class GameManager {
 
     this.playerScoreManager.resetPlayersScores(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
-    this.removePlayerAgentsFromBoard();
     this.resetAccumulatedSpiceOnFields();
 
     this.cardsService.setLimitedCustomCards();
@@ -367,6 +316,7 @@ export class GameManager {
     this.activePlayerIdSubject.next(1);
 
     for (const player of newPlayers) {
+      this.playerAgentsService.addPlayerAgents(player.id, player.agents);
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
       if (player.isAI) {
@@ -493,7 +443,7 @@ export class GameManager {
     this.gameModifiersService.removeTemporaryGameModifiers();
 
     this.accumulateSpiceOnFields();
-    this.removePlayerAgentsFromBoard();
+    this.playerAgentsService.resetPlayerAgents();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
     this.combatManager.setAllPlayerShipsFromCombatToTimeout();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
@@ -570,7 +520,7 @@ export class GameManager {
 
   public finishGame() {
     this.audioManager.playSound('atmospheric');
-    this.removePlayerAgentsFromBoard();
+    this.playerAgentsService.resetPlayerAgents();
     this.combatManager.resetAdditionalCombatPower();
     this.loggingService.printLogs();
     this.currentRoundSubject.next(0);
@@ -639,17 +589,6 @@ export class GameManager {
     this.playerManager.setTurnStateForPlayer(playerId, 'done');
   }
 
-  private removePlayerAgentsFromBoard() {
-    this.agentsOnFieldsSubject.next([]);
-
-    const playerAgents: PlayerAgents[] = [];
-    for (let player of this.playerManager.getPlayers()) {
-      playerAgents.push({ playerId: player.id, agentAmount: player.agents });
-    }
-
-    this.availablePlayerAgentsSubject.next(playerAgents);
-  }
-
   public addAgentToField(field: ActionField) {
     const activePlayer = this.getActivePlayer();
 
@@ -671,7 +610,7 @@ export class GameManager {
       return;
     }
 
-    const activePlayerAgentCount = this.getAvailableAgentCountForPlayer(activePlayer.id);
+    const activePlayerAgentCount = this.playerAgentsService.getAvailablePlayerAgentCount(activePlayer.id);
     if (activePlayerAgentCount < 1) {
       this.notificationService.showWarning(this.t.translate('playerboardWarningNoAgentsLeft'));
       return;
@@ -860,8 +799,6 @@ export class GameManager {
       }
     }
 
-    this.removeAgentFromPlayer(activePlayer.id);
-
     this.resolveRewardChoices(activePlayer);
 
     this.turnInfoService.updatePlayerTurnInfo(activePlayer.id, { fieldsVisitedThisTurn: [field] });
@@ -880,46 +817,12 @@ export class GameManager {
     }
   }
 
-  public getAgentOnField(fieldId: string) {
-    return this.agentsOnFieldsSubject.value.find((x) => x.fieldId === fieldId);
-  }
-
-  public removePlayerAgentFromField(playerId: number, fieldId: string) {
-    this.agentsOnFieldsSubject.next(this.agentsOnFields.filter((x) => !(x.fieldId === fieldId && x.playerId === playerId)));
-
-    this.addAgentToPlayer(playerId);
-  }
-
   private setPlayerAgentOnField(playerId: number, field: ActionField) {
-    this.agentsOnFieldsSubject.next([...this.agentsOnFieldsSubject.value, { playerId, fieldId: field.title.en }]);
+    this.playerAgentsService.setPlayerAgentOnField(playerId, field.title.en);
 
     this.turnInfoService.updatePlayerTurnInfo(playerId, { agentPlacedOnFieldId: field.title.en });
 
     this.loggingService.logPlayerSentAgentToField(playerId, this.t.translateLS(field.title));
-  }
-
-  public addAgentToPlayer(playerId: number) {
-    const availablePlayerAgents = this.availablePlayerAgents;
-    const playerAgentsIndex = availablePlayerAgents.findIndex((x) => x.playerId === playerId);
-    const playerAgents = availablePlayerAgents[playerAgentsIndex];
-    availablePlayerAgents[playerAgentsIndex] = {
-      ...playerAgents,
-      agentAmount: playerAgents.agentAmount + 1,
-    };
-
-    this.availablePlayerAgentsSubject.next(availablePlayerAgents);
-  }
-
-  public removeAgentFromPlayer(playerId: number) {
-    const availablePlayerAgents = this.availablePlayerAgents;
-    const playerAgentsIndex = availablePlayerAgents.findIndex((x) => x.playerId === playerId);
-    const playerAgents = availablePlayerAgents[playerAgentsIndex];
-    availablePlayerAgents[playerAgentsIndex] = {
-      ...playerAgents,
-      agentAmount: playerAgents.agentAmount > 0 ? playerAgents.agentAmount - 1 : 0,
-    };
-
-    this.availablePlayerAgentsSubject.next(availablePlayerAgents);
   }
 
   public addTroopsToPlayer(playerId: number, amount: number) {
@@ -970,6 +873,8 @@ export class GameManager {
       this.setActiveAIPlayer(nextPlayer.id);
       if (nextPlayer.isAI) {
         this.setPreferredFieldsForAIPlayer(nextPlayer.id);
+        this.resolveLeaderEffects(nextPlayer, 'timing-turn-start');
+        this.resolveTechTileEffects(nextPlayer, 'timing-turn-start');
       }
     }
   }
@@ -1020,7 +925,7 @@ export class GameManager {
       return;
     }
 
-    const playerAgentsOnFields = this.getPlayerAgentsOnFields(playerId).map((x) => x.fieldId);
+    const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(playerId).map((x) => x.fieldId);
     if (playerAgentsOnFields.some((x) => x === locationId)) {
       const playerLocation = this.locationManager.getPlayerLocation(locationId);
       if (playerLocation) {
@@ -1284,7 +1189,7 @@ export class GameManager {
         return;
       }
 
-      const playerAgentCount = this.getAvailableAgentCountForPlayer(playerId);
+      const playerAgentCount = this.playerAgentsService.getAvailablePlayerAgentCount(playerId);
 
       let couldPlaceAgent = false;
       if (player.turnState === 'agent-placement' && playerAgentCount > 0) {
@@ -1850,7 +1755,7 @@ export class GameManager {
           for (const enemy of enemies) {
             let enemyConditionFullfilled = true;
             if (effect.condition) {
-              const enemyAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === enemy.id);
+              const enemyAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(enemy.id);
               enemyConditionFullfilled = isEnemyConditionFullfilled(
                 effect.condition,
                 enemy,
@@ -1923,9 +1828,18 @@ export class GameManager {
 
     if (turnInfo.cardDrawOrDestroyAmount > 0) {
       for (let i = 0; i < turnInfo.cardDrawOrDestroyAmount; i++) {
-        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-          type: 'card-draw-or-destroy',
-        });
+        const choiceEffect: StructuredChoiceEffect = {
+          type: 'helper-or',
+          effectLeft: {
+            type: 'reward',
+            effectRewards: [{ type: 'card-draw' }],
+          },
+          effectRight: {
+            type: 'reward',
+            effectRewards: [{ type: 'focus' }],
+          },
+        };
+        this.turnInfoService.updatePlayerTurnInfo(player.id, { effectChoices: [choiceEffect] });
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDrawOrDestroyAmount: 0 });
     }
@@ -2151,9 +2065,9 @@ export class GameManager {
     }
 
     if (turnInfo.canLiftAgent) {
-      const playerAgentsOnOtherFields = this.agentsOnFields.filter(
-        (x) => x.playerId === player.id && x.fieldId !== turnInfo.agentPlacedOnFieldId,
-      );
+      const playerAgentsOnOtherFields = this.playerAgentsService
+        .getPlayerAgentsOnFields(player.id)
+        .filter((x) => x.fieldId !== turnInfo.agentPlacedOnFieldId);
       if (playerAgentsOnOtherFields.length > 0) {
         const locations = playerAgentsOnOtherFields.filter(
           (x) => this.settingsService.getBoardField(x.fieldId)?.ownerReward,
@@ -2164,10 +2078,10 @@ export class GameManager {
 
         if (locations.length > 0) {
           shuffle(locations);
-          this.removePlayerAgentFromField(player.id, locations[0].fieldId);
+          this.playerAgentsService.removePlayerAgentFromField(player.id, locations[0].fieldId);
         } else if (nonLocations.length > 0) {
           shuffle(nonLocations);
-          this.removePlayerAgentFromField(player.id, nonLocations[0].fieldId);
+          this.playerAgentsService.removePlayerAgentFromField(player.id, nonLocations[0].fieldId);
         }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { canLiftAgent: false });
@@ -2191,7 +2105,7 @@ export class GameManager {
 
       const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id);
       const enemyCombatScores = this.combatManager.getEnemyCombatScores(player.id);
-      const playerHasAgentsLeft = (this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0) > 1;
+      const playerHasAgentsLeft = this.playerAgentsService.getAvailablePlayerAgentCount(player.id) > 1;
 
       if (playerCombatUnits) {
         const deployableTroops = turnInfo.deployableTroops - turnInfo.deployedTroops;
@@ -2292,7 +2206,7 @@ export class GameManager {
   }
 
   private aiControlLocation(player: Player, gameState: GameState) {
-    const playerAgentsOnFields = this.getPlayerAgentsOnFields(player.id).map((x) => x.fieldId);
+    const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(player.id).map((x) => x.fieldId);
 
     const locationsWithPlayerAgents = this.settingsService
       .getBoardLocations()
@@ -2595,8 +2509,8 @@ export class GameManager {
   }
 
   private getGameState(player: Player): GameState {
-    const playerAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId === player.id);
-    const enemyAgentsOnFields = this.agentsOnFields.filter((x) => x.playerId !== player.id);
+    const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(player.id);
+    const enemyAgentsOnFields = this.playerAgentsService.getEnemyAgentsOnFields(player.id);
     const playerAgentPlacedOnFieldThisTurn = this.turnInfoService.getPlayerTurnInfo(player.id, 'agentPlacedOnFieldId');
 
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
@@ -2839,13 +2753,13 @@ export class GameManager {
       currentRound: this.currentRound,
       currentRoundPhase: this.currentRoundPhase,
       accumulatedSpiceOnFields: this.accumulatedSpiceOnFields,
-      playerAgentsAvailable: this.availablePlayerAgents.find((x) => x.playerId === player.id)?.agentAmount ?? 0,
-      enemyAgentsAvailable: this.availablePlayerAgents.filter((x) => x.playerId !== player.id),
+      playerAgentsAvailable: this.playerAgentsService.getAvailablePlayerAgentCount(player.id),
+      enemyAgentsAvailable: this.playerAgentsService.getAvailableEnemyPlayerAgents(player.id),
       playerScore: playerScore,
       enemyScore,
       playerCombatUnits,
       enemyCombatUnits: this.combatManager.getEnemyCombatUnits(player.id),
-      agentsOnFields: this.agentsOnFields,
+      agentsOnFields: this.playerAgentsService.getPlayersAgentsOnFields(),
       playerAgentsOnFields,
       enemyAgentsOnFields,
       isOpeningTurn: this.isOpeningTurn(player.id),
@@ -2926,6 +2840,7 @@ export class GameManager {
       playersService: this.playerManager,
       aiManager: this.aIManager,
       gameManager: this,
+      combatManager: this.combatManager,
     };
   }
 
@@ -2990,7 +2905,7 @@ export class GameManager {
     const accumulatedSpiceOnFields = this.accumulatedSpiceOnFields;
 
     for (let fieldName of spiceFieldNames) {
-      if (!this.agentsOnFields.some((x) => x.fieldId === fieldName)) {
+      if (this.playerAgentsService.getPlayerAgentsOnFieldCount(fieldName) < 1) {
         const index = accumulatedSpiceOnFields.findIndex((x) => x.fieldId === fieldName);
         if (index > -1) {
           const element = accumulatedSpiceOnFields[index];
@@ -3042,10 +2957,9 @@ export class GameManager {
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
 
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
-    const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
     const availablePlayerTech = player.tech;
     const affordableTechTiles = buyableTechTiles.filter(
-      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech + availablePlayerSpice,
+      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech,
     );
 
     if (affordableTechTiles.length > 0) {
@@ -3075,17 +2989,14 @@ export class GameManager {
   private buyTechTileForPlayer(player: Player, techTile: TechTileDeckCard, techAmount: number, discount: number) {
     const effectiveCosts = techTile.costs - discount;
 
-    if (effectiveCosts > 0) {
-      if (techAmount) {
-        const techCosts = effectiveCosts > techAmount ? techAmount : effectiveCosts;
-        this.playerManager.removeTechFromPlayer(player.id, techCosts);
-        this.loggingService.logPlayerResourcePaid(player.id, 'tech', techCosts);
-      }
+    if (effectiveCosts > techAmount) {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningNotEnoughResources'));
+    }
 
-      if (effectiveCosts > techAmount) {
-        this.playerManager.removeResourceFromPlayer(player.id, 'spice', effectiveCosts - techAmount);
-        this.loggingService.logPlayerResourcePaid(player.id, 'spice', effectiveCosts - techAmount);
-      }
+    if (effectiveCosts > 0) {
+      const techCosts = effectiveCosts > techAmount ? techAmount : effectiveCosts;
+      this.playerManager.removeTechFromPlayer(player.id, techCosts);
+      this.loggingService.logPlayerResourcePaid(player.id, 'tech', techCosts);
     }
 
     this.techTilesService.setPlayerTechTile(player.id, techTile.name.en);
@@ -3109,7 +3020,7 @@ export class GameManager {
 
   private isOpeningTurn(playerId: number) {
     if (this.currentRound === 1) {
-      return this.availablePlayerAgents.find((x) => x.playerId == playerId)?.agentAmount === 2;
+      return this.playerAgentsService.getAvailablePlayerAgentCount(playerId) === 2;
     }
     return false;
   }
@@ -3228,9 +3139,9 @@ export class GameManager {
       this.addHighCouncilSeatIfPossible(playerId);
     } else if (rewardType === 'sword-master' || rewardType === 'agent') {
       this.addSwordmasterIfPossible(playerId);
-      this.addAgentToPlayer(playerId);
+      this.playerAgentsService.addPlayerAgent(playerId);
     } else if (rewardType === 'mentat') {
-      this.addAgentToPlayer(playerId);
+      this.playerAgentsService.addPlayerAgent(playerId);
     } else if (rewardType === 'agent-lift') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { canLiftAgent: true });
     } else if (rewardType === 'victory-point') {

@@ -21,7 +21,7 @@ export function getResourceDesire(
     amount: number;
     maxAmount?: number;
     negative?: boolean;
-  }[]
+  }[],
 ) {
   let desire = baseDesire;
   for (const influence of influences) {
@@ -67,7 +67,7 @@ export function getMaxDesireOfUnreachedOrUnreachableGoal(
   player: Player,
   gameState: GameState,
   goals: FieldsForGoals,
-  goalType: { type: AIGoals; modifier: number }
+  goalType: { type: AIGoals; modifier: number },
 ) {
   const goal = goals[goalType.type];
   if (!goal) {
@@ -87,7 +87,7 @@ export function getMaxDesireOfUnreachedOrUnreachableGoals(
   gameState: GameState,
   goals: FieldsForGoals,
   goalTypes: { type: AIGoals; modifier: number }[],
-  currentDesire: number
+  currentDesire: number,
 ) {
   for (const goalType of goalTypes) {
     const goalDesire = getMaxDesireOfUnreachedOrUnreachableGoal(player, gameState, goals, goalType);
@@ -96,10 +96,6 @@ export function getMaxDesireOfUnreachedOrUnreachableGoals(
     }
   }
   return currentDesire;
-}
-
-export function getInactiveEnemyCount(gamestate: GameState) {
-  return gamestate.enemyAgentsAvailable.filter((x) => x.agentAmount < 1).length;
 }
 
 export function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: keyof PlayerScore) {
@@ -166,11 +162,11 @@ export function getCostAdjustedDesire(player: Player, resources: Resource[], des
     const costs = resource.amount ?? 1;
     const playerResourceAmount = getResourceAmount(player, resource.type);
 
-    let resourceTypeModifier = 0.015 / desire;
+    let resourceTypeModifier = 0.0175 / desire;
     if (resource.type === 'spice') {
       resourceTypeModifier = 0.0225 / desire;
     } else if (resource.type === 'water') {
-      resourceTypeModifier = 0.03 / desire;
+      resourceTypeModifier = 0.0275 / desire;
     }
 
     desireAdjustment -= resourceTypeModifier * costs - (resourceTypeModifier / 2) * (playerResourceAmount - costs);

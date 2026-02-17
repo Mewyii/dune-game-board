@@ -8,9 +8,10 @@ import { PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, PlayerCardStack } from 'src/app/services/cards.service';
-import { GameManager, PlayerAgents } from 'src/app/services/game-manager.service';
+import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeadersService } from 'src/app/services/leaders.service';
+import { PlayerAgent, PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -30,7 +31,7 @@ export class PlayerboardComponent implements OnInit {
   public currentRound = 0;
   public currentRoundPhase = '';
   public canSwitchToCombatPhase = false;
-  public availablePlayerAgents: PlayerAgents[] = [];
+  public availablePlayerAgents: PlayerAgent[] = [];
   public subTitle = '';
 
   public playerScores: PlayerScore[] = [];
@@ -56,7 +57,8 @@ export class PlayerboardComponent implements OnInit {
     public t: TranslateService,
     private audioManager: AudioManager,
     private settingsService: SettingsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private playerAgentsService: PlayerAgentsService,
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +75,7 @@ export class PlayerboardComponent implements OnInit {
       this.currentRoundPhase = currentRoundPhase;
     });
 
-    this.gameManager.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
+    this.playerAgentsService.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
       this.availablePlayerAgents = availablePlayerAgents;
     });
 
@@ -194,8 +196,8 @@ export class PlayerboardComponent implements OnInit {
   }
 
   public getAvailablePlayerAgents(playerId: number) {
-    const playerAgents = this.availablePlayerAgents.find((x) => x.playerId === playerId);
-    return playerAgents ? playerAgents.agentAmount : 0;
+    const playerAgents = this.availablePlayerAgents.filter((x) => x.playerId === playerId);
+    return playerAgents.length;
   }
 
   public getPlayerScore(playerId: number, scoreType: PlayerScoreType) {
