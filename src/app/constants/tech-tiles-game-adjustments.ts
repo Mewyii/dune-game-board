@@ -7,25 +7,13 @@ import { GameModifiers } from '../services/game-modifier.service';
 
 export interface TechTileGameAdjustments {
   id: string;
-  aiEvaluation?: (player: Player, gameState: GameState) => number; //Keep costs in mind, Max value should be 20, min 0
+  aiEvaluation?: (player: Player, gameState: GameState) => number; //Only for custom effect texts. Keep costs in mind, Max value should be 20, min 0
   gameModifiers?: GameModifiers;
   customTimedFunction?: TimedFunctionWithGameElement;
   customTimedAIFunction?: TimedFunctionWithGameElement;
 }
 
 export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
-  {
-    id: 'Spice transport modules',
-    aiEvaluation: (player, gameState) => 0.0 + 5 * gameState.playerDreadnoughtCount + (player.hasSwordmaster ? 3 : 0),
-  },
-  {
-    id: 'Spy modules',
-    aiEvaluation: (player, gameState) => 0.0 + 5 * gameState.playerDreadnoughtCount + (player.hasSwordmaster ? 3 : 0),
-  },
-  {
-    id: 'Maula Pistol Works',
-    aiEvaluation: (player, gameState) => 6 + 1.25 * (gameState.currentRound - 1) + 0.5 * gameState.playerCardsRewards.solari,
-  },
   {
     id: 'Upgraded Carryall Suspensors',
     aiEvaluation: (player, gameState) => 16 - 1.25 * (gameState.currentRound - 1),
@@ -39,18 +27,6 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         },
       ],
     },
-  },
-  {
-    id: 'Spy Network',
-    aiEvaluation: (player, gameState) =>
-      10 +
-      0.5 * gameState.playerCardsRewards['card-draw'] -
-      0.1 * (gameState.currentRound - 1) -
-      (player.hasSwordmaster ? 0 : 1),
-  },
-  {
-    id: 'Heavy Lasguns',
-    aiEvaluation: (player, gameState) => 0.0 + 8 * gameState.playerDreadnoughtCount + (player.hasSwordmaster ? 2 : 0),
   },
   {
     id: 'Enhanced Sandcrawler Engines',
@@ -155,10 +131,6 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     },
   },
   {
-    id: 'Upgraded Ornithoper Engines',
-    aiEvaluation: (player, gameState) => 11 + 0.75 * gameState.playerCardsBought + 0.25 * gameState.playerCardsTrashed,
-  },
-  {
     id: 'Spice Refineries',
     aiEvaluation: (player, gameState) => 15 - 0.33 * (gameState.currentRound - 1),
     gameModifiers: {
@@ -172,8 +144,8 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       ],
     },
   },
-  { id: 'Planetary Surveillance', aiEvaluation: (player, gameState) => 0 + 0.5 * (gameState.currentRound - 1) },
-  { id: 'Improved Projectile Rifles', aiEvaluation: (player, gameState) => 0 + 0.5 * gameState.playerCardsRewards.sword },
+  { id: 'Planetary Surveillance', aiEvaluation: (player, gameState) => 2 + 0.5 * (gameState.currentRound - 1) },
+  { id: 'Improved Projectile Rifles', aiEvaluation: (player, gameState) => 0 },
   {
     id: 'Deployment Ship',
     aiEvaluation: (player, gameState) => 5 + 1.5 * (gameState.currentRound - 1),
@@ -286,8 +258,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Barrage Rockets',
-    aiEvaluation: (player, gameState) =>
-      6 + 0.25 * (gameState.currentRound - 1) + 3 * gameState.playerDreadnoughtCount + 2 * gameState.playerLocations.length,
+    aiEvaluation: (player, gameState) => 2 + 0.25 * (gameState.currentRound - 1) + 1 * gameState.playerLocations.length,
     customTimedAIFunction: {
       timing: 'timing-turn-start',
       function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
@@ -327,9 +298,8 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Shieldbreakers',
     aiEvaluation: (player, gameState) =>
-      2 +
+      0 +
       0.25 * (gameState.currentRound - 1) +
-      4 * gameState.playerDreadnoughtCount +
       2 * gameState.enemyCombatUnits.filter((x) => getPlayerdreadnoughtCount(x) > 0).length,
     customTimedAIFunction: {
       timing: 'timing-turn-start',
@@ -355,11 +325,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Gunship',
-    aiEvaluation: (player, gameState) =>
-      2 +
-      0.25 * (gameState.currentRound - 1) +
-      4 * gameState.playerDreadnoughtCount +
-      2 * gameState.enemyCombatUnits.filter((x) => getPlayerdreadnoughtCount(x) > 0).length,
+    aiEvaluation: (player, gameState) => 1 + 0.25 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 2 : 0),
     customTimedAIFunction: {
       timing: 'timing-turn-start',
       function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {

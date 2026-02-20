@@ -561,21 +561,7 @@ export class GameManager {
     const playerHand = this.cardsService.getPlayerHand(playerId);
     if (playerHand) {
       for (const card of playerHand.cards) {
-        if (card.structuredRevealEffects) {
-          const gameState = this.getGameState(player);
-
-          this.resolveStructuredEffects(
-            card.structuredRevealEffects,
-            player,
-            gameState,
-            { type: 'imperium-card', object: card },
-            'reveal',
-          );
-        }
-        if (hasCustomRevealEffect(card)) {
-          const localizedString = this.t.translateLS(card.customRevealEffect);
-          this.playerRewardChoicesService.addPlayerCustomChoice(playerId, localizedString);
-        }
+        this.resolveImperiumCardEffects(card, player, 'timing-reveal-turn');
       }
     }
 
@@ -714,7 +700,7 @@ export class GameManager {
       }
     }
 
-    this.addPlayedCardRewards(playedCard, activePlayer, activePlayer.isAI);
+    this.resolveImperiumCardEffects(playedCard, activePlayer, 'timing-agent-placement');
 
     this.resolveLeaderEffects(activePlayer, 'timing-agent-placement');
     this.resolveTechTileEffects(activePlayer, 'timing-agent-placement');
@@ -804,18 +790,6 @@ export class GameManager {
 
     this.turnInfoService.updatePlayerTurnInfo(activePlayer.id, { fieldsVisitedThisTurn: [field] });
     this.loggingService.logAgentAction(field);
-  }
-
-  addPlayedCardRewards(card: ImperiumDeckCard, player: Player, isAI?: boolean) {
-    if (card.structuredAgentEffects) {
-      const gameState = this.getGameState(player);
-
-      this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, { type: 'imperium-card', object: card });
-    }
-    if (hasCustomAgentEffect(card)) {
-      const localizedString = this.t.translateLS(card.customAgentEffect);
-      this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
-    }
   }
 
   private setPlayerAgentOnField(playerId: number, field: ActionField) {
@@ -1416,6 +1390,76 @@ export class GameManager {
     return false;
   }
 
+  private resolveImperiumCardEffects(card: ImperiumDeckCard, player: Player, timing: EffectTimingType) {
+    if (timing === 'timing-agent-placement') {
+      if (card.structuredAgentEffects) {
+        const gameState = this.getGameState(player);
+
+        this.resolveStructuredEffects(card.structuredAgentEffects, player, gameState, {
+          type: 'imperium-card',
+          object: card,
+        });
+      }
+
+      if (card.customAgentFunction) {
+        const gameState = this.getGameState(player);
+        const updatedPlayer = this.playerManager.getPlayer(player.id);
+        if (updatedPlayer) {
+          card.customAgentFunction(updatedPlayer, gameState, this.getGameServices(), {
+            type: 'imperium-card',
+            object: card,
+          });
+        }
+      } else if (player.isAI && card.customAgentAIFunction) {
+        const gameState = this.getGameState(player);
+        const updatedPlayer = this.playerManager.getPlayer(player.id);
+        if (updatedPlayer) {
+          card.customAgentAIFunction(updatedPlayer, gameState, this.getGameServices(), {
+            type: 'imperium-card',
+            object: card,
+          });
+        }
+      } else if (hasCustomAgentEffect(card)) {
+        const localizedString = this.t.translateLS(card.customAgentEffect);
+        this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
+      }
+    } else if (timing === 'timing-reveal-turn') {
+      if (card.structuredRevealEffects) {
+        const gameState = this.getGameState(player);
+
+        this.resolveStructuredEffects(card.structuredRevealEffects, player, gameState, {
+          type: 'imperium-card',
+          object: card,
+        });
+      }
+
+      if (card.customRevealFunction) {
+        const gameState = this.getGameState(player);
+        const updatedPlayer = this.playerManager.getPlayer(player.id);
+        if (updatedPlayer) {
+          card.customRevealFunction(updatedPlayer, gameState, this.getGameServices(), {
+            type: 'imperium-card',
+            object: card,
+          });
+        }
+      } else if (player.isAI && card.customRevealAIFunction) {
+        const gameState = this.getGameState(player);
+        const updatedPlayer = this.playerManager.getPlayer(player.id);
+        if (updatedPlayer) {
+          card.customRevealAIFunction(updatedPlayer, gameState, this.getGameServices(), {
+            type: 'imperium-card',
+            object: card,
+          });
+        }
+      } else if (hasCustomRevealEffect(card)) {
+        const localizedString = this.t.translateLS(card.customRevealEffect);
+        this.playerRewardChoicesService.addPlayerCustomChoice(player.id, localizedString);
+      }
+    }
+
+    this.resolveRewardChoices(player);
+  }
+
   private resolveLeaderEffects(player: Player, timing: EffectTimingType) {
     const playerLeader = this.leadersService.getLeader(player.id);
     if (playerLeader?.structuredPassiveEffects) {
@@ -1450,6 +1494,8 @@ export class GameManager {
         }
       }
     }
+
+    this.resolveRewardChoices(player);
   }
 
   private resolveTechTileEffects(player: Player, timing: EffectTimingType) {
@@ -2727,9 +2773,8 @@ export class GameManager {
       .getEnemyIntrigues(player.id)
       .filter((x) => x.intrigues.length > 3).length;
 
-    const enemyIntrigueCounts = this.intriguesService
-      .getEnemyIntrigues(player.id)
-      .map((x) => ({ playerId: x.playerId, intrigueCount: x.intrigues.length }));
+    const enemyIntrigues = this.intriguesService.getEnemyIntrigues(player.id);
+    const enemyIntrigueCounts = enemyIntrigues.map((x) => ({ playerId: x.playerId, intrigueCount: x.intrigues.length }));
 
     const playerLocations = this.locationManager.ownedLocations
       .filter((x) => x.playerId === player.id)
@@ -2817,6 +2862,7 @@ export class GameManager {
       playerTechTilesFactions,
       playerTechTilesRewards,
       playerTechTilesConversionCosts,
+      enemyIntrigues,
       enemyIntrigueCounts,
       gameSettings: {
         combatMaxDeployableUnits: this.settingsService.getCombatMaxDeployableUnits(),
@@ -2842,6 +2888,7 @@ export class GameManager {
       gameManager: this,
       combatManager: this.combatManager,
       playerAgentsService: this.playerAgentsService,
+      intriguesService: this.intriguesService,
     };
   }
 

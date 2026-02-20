@@ -24,6 +24,7 @@ export interface ImperiumCard {
   canInfiltrate?: boolean;
   imageUrl?: string;
   cardAmount?: number;
+  rarity?: 'normal' | 'rare';
 }
 
 export type CustomCardType = 'foldspace' | 'unlimited' | 'limited';

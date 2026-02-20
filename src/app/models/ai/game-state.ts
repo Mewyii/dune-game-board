@@ -2,7 +2,7 @@ import { GameContent } from 'src/app/constants/board-settings';
 import { DuneEvent } from 'src/app/constants/events';
 import { ActionField, ActionType, ActiveFactionType, EffectRewardType, StructuredEffect } from 'src/app/models';
 import { Conflict } from 'src/app/models/conflict';
-import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { IntrigueDeckCard, PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
@@ -66,6 +66,7 @@ export type GameState = Readonly<{
   playerIntrigueCount: number;
   playerCombatIntrigueCount: number;
   playerIntrigueStealAmount: number;
+  enemyIntrigues: PlayerIntrigueStack[];
   enemyIntrigueCounts: { playerId: number; intrigueCount: number }[];
   freeLocations: string[];
   playerLocations: string[];

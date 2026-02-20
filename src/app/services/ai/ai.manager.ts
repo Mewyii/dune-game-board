@@ -767,11 +767,15 @@ export class AIManager {
       );
     }
     if (hasCustomAgentEffect(card)) {
-      let evaluationEstimation = 0.5;
-      if (card.structuredAgentEffects) {
-        evaluationEstimation = 0.33;
+      if (card.aiAgentEvaluation) {
+        evaluationValue += card.aiAgentEvaluation(player, gameState);
+      } else {
+        let evaluationEstimation = 0.5;
+        if (card.structuredAgentEffects) {
+          evaluationEstimation = 0.33;
+        }
+        evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
       }
-      evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     if (card.structuredRevealEffects) {
@@ -803,11 +807,15 @@ export class AIManager {
       }
     }
     if (hasCustomRevealEffect(card)) {
-      let evaluationEstimation = 0.5;
-      if (card.structuredRevealEffects) {
-        evaluationEstimation = 0.33;
+      if (card.aiRevealEvaluation) {
+        evaluationValue += card.aiRevealEvaluation(player, gameState);
+      } else {
+        let evaluationEstimation = 0.5;
+        if (card.structuredRevealEffects) {
+          evaluationEstimation = 0.33;
+        }
+        evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
       }
-      evaluationValue += 2 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     return evaluationValue;
@@ -849,11 +857,15 @@ export class AIManager {
       );
     }
     if (hasCustomAgentEffect(card)) {
-      let evaluationEstimation = 0.5;
-      if (card.structuredAgentEffects) {
-        evaluationEstimation = 0.33;
+      if (card.aiAgentEvaluation) {
+        evaluationValue += card.aiAgentEvaluation(player, gameState);
+      } else {
+        let evaluationEstimation = 0.5;
+        if (card.structuredAgentEffects) {
+          evaluationEstimation = 0.33;
+        }
+        evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
       }
-      evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     if (card.structuredRevealEffects) {
@@ -865,11 +877,15 @@ export class AIManager {
       );
     }
     if (hasCustomRevealEffect(card)) {
-      let evaluationEstimation = 0.5;
-      if (card.structuredRevealEffects) {
-        evaluationEstimation = 0.33;
+      if (card.aiRevealEvaluation) {
+        evaluationValue += card.aiRevealEvaluation(player, gameState);
+      } else {
+        let evaluationEstimation = 0.5;
+        if (card.structuredRevealEffects) {
+          evaluationEstimation = 0.33;
+        }
+        evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
       }
-      evaluationValue += 2 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     return evaluationValue;
@@ -903,11 +919,15 @@ export class AIManager {
       );
     }
     if (hasCustomAgentEffect(card)) {
-      let evaluationEstimation = 0.5;
-      if (card.structuredAgentEffects) {
-        evaluationEstimation = 0.33;
+      if (card.aiAgentEvaluation) {
+        evaluationValue += card.aiAgentEvaluation(player, gameState);
+      } else {
+        let evaluationEstimation = 0.5;
+        if (card.structuredAgentEffects) {
+          evaluationEstimation = 0.33;
+        }
+        evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
       }
-      evaluationValue -= 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     if (card.structuredRevealEffects) {
@@ -919,11 +939,15 @@ export class AIManager {
       );
     }
     if (hasCustomRevealEffect(card)) {
-      let evaluationEstimation = 0.5;
-      if (card.structuredRevealEffects) {
-        evaluationEstimation = 0.33;
+      if (card.aiRevealEvaluation) {
+        evaluationValue += card.aiRevealEvaluation(player, gameState);
+      } else {
+        let evaluationEstimation = 0.5;
+        if (card.structuredRevealEffects) {
+          evaluationEstimation = 0.33;
+        }
+        evaluationValue += 1 + evaluationEstimation * (card.persuasionCosts ?? 0);
       }
-      evaluationValue -= 2 + evaluationEstimation * (card.persuasionCosts ?? 0);
     }
 
     return evaluationValue;

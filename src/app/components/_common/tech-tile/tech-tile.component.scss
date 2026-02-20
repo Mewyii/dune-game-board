@@ -35,6 +35,7 @@
   position: relative;
   background-position: top;
   border-radius: 0px 0px 8px 8px;
+  box-shadow: inset 0px 3px 7px rgb(191 215 255 / 66%);
 }
 
 .card-title {
@@ -60,7 +61,7 @@
     rgb(191, 215, 255) -4%,
     rgba(133, 159, 204, 0.9),
     5%,
-    rgba(27, 31, 38, 0.45),
+    rgba(27, 31, 38, 0.66),
     95%,
     rgba(26, 34, 51, 0.9)
   );

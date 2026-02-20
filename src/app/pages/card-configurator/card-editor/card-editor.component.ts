@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { getFactionTypePath } from 'src/app/helpers/faction-types';
 import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { isConditionalEffect } from 'src/app/helpers/rewards';
+import { isConditionalEffect, isMultiplierEffect } from 'src/app/helpers/rewards';
 import {
   activeFactionTypes,
   combatUnitTypes,
@@ -81,7 +81,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
         agentEffectsArray.clear();
         newImperiumCard.agentEffects.forEach((field) => {
-          if (isConditionalEffect(field)) {
+          if (isConditionalEffect(field) || isMultiplierEffect(field)) {
             agentEffectsArray.push(
               this.fb.group({
                 type: field.type,
@@ -106,7 +106,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
         revealEffectsArray.clear();
         newImperiumCard.revealEffects.forEach((field) => {
-          if (isConditionalEffect(field)) {
+          if (isConditionalEffect(field) || isMultiplierEffect(field)) {
             revealEffectsArray.push(
               this.fb.group({
                 type: field.type,
@@ -145,6 +145,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       cardAmount: 1,
       canInfiltrate: false,
       agentEffectSize: 'large',
+      rarity: '',
       customAgentEffect: this.fb.group({
         en: '',
         de: '',

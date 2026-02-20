@@ -602,7 +602,18 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    rarity: 'rare',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [],
     revealEffects: [
@@ -1124,6 +1135,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'small',
+    rarity: 'rare',
     customAgentEffect: {
       en: 'Each opponent reveals one of his intrigues.',
       de: 'Jeder Gegner deckt eine seiner Intrigen auf.',
@@ -1754,6 +1766,50 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Turncoats',
+      de: 'Überläufer',
+    },
+    faction: 'emperor',
+    persuasionCosts: 3,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/soldiers.png',
+    cardAmount: 1,
+    canInfiltrate: true,
+    agentEffectSize: 'medium',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: 'Receive a random {resource:intrigue} from each opponent on {faction:town} fields.',
+      de: 'Erhalte eine zufällige {resource:intrigue} von jedem Gegner auf {faction:town}-Feldern.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [
+      {
+        type: 'solari',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'trash-self',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'recruitment-emperor',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Desert Ambush',
       de: 'Wüsten-Hinterhalt',
     },
@@ -1820,19 +1876,21 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['fremen', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/jamis.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    rarity: 'rare',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'recruitment-fremen',
-      },
-      {
-        type: 'sword',
-      },
-    ],
     agentEffects: [
       {
         type: 'card-draw',
@@ -1848,6 +1906,18 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'trash-self',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'recruitment-fremen',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -1902,15 +1972,16 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'large',
+    revealEffectSize: 'medium',
     customRevealEffect: {
-      en: '{faction:fremen} Influence<br>0 {resource:persuasion;amount:1}{resource:helper-or}2 {resource:persuasion;amount:1} {resource:spice}{resource:helper-or}4 {resource:persuasion;amount:2} {resource:spice}',
-      de: '{faction:fremen} Einfluss <br>0 {resource:persuasion;amount:1}{resource:helper-or}2 {resource:persuasion;amount:1} {resource:spice}{resource:helper-or}4 {resource:persuasion;amount:2} {resource:spice}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
     buyEffects: [],
@@ -1923,7 +1994,23 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-fremen',
       },
     ],
-    revealEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-connections',
+        faction: 'fremen',
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
   },
   {
     name: {
@@ -1937,12 +2024,13 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -2089,6 +2177,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -2228,6 +2317,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'small',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -2349,8 +2439,9 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: true,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent on {faction:landsraad} board spaces of this type trashes one of his cards in his hand.',
+      en: 'Each opponent on {faction:landsraad} board spaces trashes one of his cards in his hand.',
       de: 'Jeder Gegner auf {faction:landsraad}-Feldern entsorgt eine Karte aus seiner Hand.',
       fontSize: 'small',
     },
@@ -2396,6 +2487,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -2972,6 +3064,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3219,6 +3312,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3364,10 +3458,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/battle_2.png',
     cardAmount: 1,
     canInfiltrate: true,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
+    rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent on {faction:town} board spaces: {resource:loose-troop}<br>{faction:emperor} -Connection: {resource:troop}',
-      de: 'Jeder Gegner auf {faction:town}-Feldern: {resource:loose-troop}<br>{faction:emperor} -Verbindung: {resource:troop}',
+      en: 'Each opponent on {faction:town} board spaces: {resource:loose-troop}',
+      de: 'Jeder Gegner auf {faction:town}-Feldern: {resource:loose-troop}',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -3377,7 +3472,15 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-connection',
+        faction: 'emperor',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -3505,6 +3608,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3565,6 +3669,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3669,6 +3774,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3803,6 +3909,66 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 2,
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Duncan, Swordmaster',
+      de: 'Duncan Idaho, Schwertmeister',
+    },
+    persuasionCosts: 6,
+    fieldAccess: ['fremen', 'spice', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/duncan.png',
+    cardAmount: 1,
+    canInfiltrate: true,
+    agentEffectSize: 'small',
+    rarity: 'rare',
+    customAgentEffect: {
+      en: 'Remove enemy agents from this board space. They are no longer available for this round.',
+      de: 'Entferne gegnerische {resource:agent} von diesem Feld. Sie sind für diese Runde nicht mehr verfügbar.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [
+      {
+        type: 'focus',
+      },
+    ],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -4055,6 +4221,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4340,64 +4507,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Duncan, Swordmaster',
-      de: 'Duncan Idaho, Schwertmeister',
-    },
-    persuasionCosts: 7,
-    fieldAccess: ['fremen', 'spice', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/duncan.png',
-    cardAmount: 1,
-    canInfiltrate: true,
-    agentEffectSize: 'medium',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'small',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'troop',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-influence',
-        amount: 2,
-        faction: 'fremen',
-      },
-      {
-        type: 'troop',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'multiplier-troops-in-conflict',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Gurney Halleck, Warmaster',
       de: 'Gurney Halleck, Kriegsmeister',
     },
@@ -4407,6 +4516,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'small',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4462,6 +4572,20 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/jessica_5.png',
     cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    rarity: 'rare',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [
       {
         type: 'faction-influence-up-choice',
@@ -4493,24 +4617,38 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/battle_3.png',
     cardAmount: 1,
     canInfiltrate: true,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
+    rarity: 'normal',
     customAgentEffect: {
-      en: '{resource:solari;amount:2} {resource:helper-trade} Get {resource:intrigue} from each opponent on {faction:town} board spaces .',
-      de: '{resource:solari;amount:2} {resource:helper-trade} Erhalte von jedem Gegner auf {faction:town}-Feldern {resource:intrigue}.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
     customRevealEffect: {
-      en: 'Each opponent loses <b>4</b> troops in the conflict.',
-      de: 'Jeder Gegner verliert <b>4</b> Truppen im Konflikt.',
+      en: 'Each opponent loses <b>3</b> troops in the conflict.',
+      de: 'Jeder Gegner verliert <b>3</b> Truppen im Konflikt.',
       fontSize: 'small',
     },
     buyEffects: [
       {
-        type: 'intrigue',
+        type: 'troop',
+      },
+      {
+        type: 'troop',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-enemies-on-this-field',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'loose-troop',
+      },
+    ],
     revealEffects: [
       {
         type: 'trash-self',
@@ -4581,6 +4719,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4629,10 +4768,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/lasguns.png',
     cardAmount: 1,
     canInfiltrate: true,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
+    rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent on {faction:spice} fields loses {resource:spice;amount:2} and you gain {resource:spice;amount:2}.',
-      de: 'Jeder Gegner auf {faction:spice}-Feldern verliert {resource:spice;amount:2} und du erhältst {resource:spice;amount:2}.',
+      en: 'Each opponent on {faction:spice} board spaces: {resource:spice;amount:-2}',
+      de: 'Jeder Gegner auf {faction:spice}-Feldern: {resource:spice;amount:-2}',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -4642,7 +4782,12 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'spice',
+        amount: 2,
+      },
+    ],
     revealEffects: [
       {
         type: 'spice',
@@ -4668,6 +4813,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4684,7 +4830,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-guild',
       },
       {
-        type: 'spice',
+        type: 'tech',
       },
     ],
     agentEffects: [
@@ -4780,6 +4926,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4833,6 +4980,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4879,8 +5027,9 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/leaders/mohiam.png',
     cardAmount: 1,
-    canInfiltrate: false,
+    canInfiltrate: true,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: 'You may look at the top card of the intrigue deck as well as the conflict deck.',
       de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
@@ -4897,7 +5046,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-bene',
       },
       {
-        type: 'faction-influence-up-bene',
+        type: 'spice',
       },
     ],
     agentEffects: [],
@@ -5168,6 +5317,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -5209,6 +5359,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'rare',
     customAgentEffect: {
       en: '',
       de: '',
@@ -5251,6 +5402,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',

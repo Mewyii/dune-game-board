@@ -481,8 +481,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
       fontSize: 'small',
     },
   },
@@ -837,8 +837,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Put a {resource:dreadnought} in a garrison of your choice into a timeout until the next round.',
-      de: '{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Ein {resource:dreadnought} in einer Garnison deiner Wahl setzt bis zum Ende der Runde aus.',
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Each opponent retreats one of his {resource:dreadnought}.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Jeder Gegner zieht eines seiner {resource:dreadnought} zurück.',
       fontSize: 'small',
     },
   },
@@ -911,8 +911,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>agent from a board space. It is no longer available for this round.',
-      de: '{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen Agenten von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>{resource:agent} from a board space. It is no longer available for this round.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen {resource:agent} von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
       fontSize: 'small',
     },
   },

@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { CardAcquiringPlacementType } from '../constants/board-settings';
+import { imperiumCardsGameAdjustments } from '../constants/imperium-cards-game-adjustments';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { ActionType, FactionType, StructuredEffect } from '../models';
+import { CustomEffectFunctionWithGameElement, GameState } from '../models/ai';
 import { ImperiumCard } from '../models/imperium-card';
 import { ImperiumPlot } from '../models/imperium-plot';
+import { Player } from '../models/player';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { PlotConfiguratorService } from './configurators/plot-configurator.service';
 import { PlayersService } from './players.service';
@@ -17,6 +20,12 @@ export interface ImperiumDeckCard extends ImperiumCard {
   type: 'imperium-card';
   structuredAgentEffects?: StructuredEffect[];
   structuredRevealEffects?: StructuredEffect[];
+  aiAgentEvaluation?: (player: Player, gameState: GameState) => number; //Keep costs in mind, Max value should be 20, min 0
+  aiRevealEvaluation?: (player: Player, gameState: GameState) => number; //Keep costs in mind, Max value should be 20, min 0
+  customAgentFunction?: CustomEffectFunctionWithGameElement;
+  customAgentAIFunction?: CustomEffectFunctionWithGameElement;
+  customRevealFunction?: CustomEffectFunctionWithGameElement;
+  customRevealAIFunction?: CustomEffectFunctionWithGameElement;
 }
 
 export interface ImperiumRowCard extends ImperiumDeckCard {
@@ -96,7 +105,16 @@ export class CardsService {
     if (imperiumDeckString) {
       const imperiumDeck = JSON.parse(imperiumDeckString) as ImperiumDeckCard[];
 
-      this.imperiumDeckSubject.next(imperiumDeck);
+      // Workaround for local storage not being able to store functions
+      const realImperiumDeck = imperiumDeck.map((x) => {
+        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
+        return {
+          ...imperiumCardGameAdjustments,
+          ...x,
+        };
+      });
+
+      this.imperiumDeckSubject.next(realImperiumDeck);
     }
 
     this.imperiumDeck$.subscribe((imperiumDeck) => {
@@ -107,7 +125,15 @@ export class CardsService {
     if (imperiumRowString) {
       const imperiumRow = JSON.parse(imperiumRowString) as ImperiumRowCard[];
 
-      this.imperiumRowSubject.next(imperiumRow);
+      const realImperiumRow = imperiumRow.map((x) => {
+        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
+        return {
+          ...imperiumCardGameAdjustments,
+          ...x,
+        };
+      });
+
+      this.imperiumRowSubject.next(realImperiumRow);
     }
 
     this.imperiumRow$.subscribe((imperiumRow) => {
@@ -117,7 +143,17 @@ export class CardsService {
     const playerDecksString = localStorage.getItem('playerDecks');
     if (playerDecksString) {
       const playerDecks = JSON.parse(playerDecksString) as PlayerCardStack[];
-      this.playerDecksSubject.next(playerDecks);
+      const realPlayerDecks = playerDecks.map((playerDeck) => ({
+        ...playerDeck,
+        cards: playerDeck.cards.map((card) => {
+          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
+          return {
+            ...imperiumCardGameAdjustments,
+            ...card,
+          };
+        }),
+      }));
+      this.playerDecksSubject.next(realPlayerDecks);
     }
 
     this.playerDecks$.subscribe((playerDecks) => {
@@ -127,7 +163,17 @@ export class CardsService {
     const playerHandCardsString = localStorage.getItem('playerHandCards');
     if (playerHandCardsString) {
       const playerHandCards = JSON.parse(playerHandCardsString) as PlayerCardStack[];
-      this.playerHandsSubject.next(playerHandCards);
+      const realPlayerHandCards = playerHandCards.map((playerHand) => ({
+        ...playerHand,
+        cards: playerHand.cards.map((card) => {
+          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
+          return {
+            ...imperiumCardGameAdjustments,
+            ...card,
+          };
+        }),
+      }));
+      this.playerHandsSubject.next(realPlayerHandCards);
     }
 
     this.playerHands$.subscribe((playerHandCards) => {
@@ -137,7 +183,17 @@ export class CardsService {
     const playerDiscardPilesString = localStorage.getItem('playerDiscardPiles');
     if (playerDiscardPilesString) {
       const playerDiscardPiles = JSON.parse(playerDiscardPilesString) as PlayerCardStack[];
-      this.playerDiscardPilesSubject.next(playerDiscardPiles);
+      const realPlayerDiscardPiles = playerDiscardPiles.map((playerDiscardPile) => ({
+        ...playerDiscardPile,
+        cards: playerDiscardPile.cards.map((card) => {
+          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
+          return {
+            ...imperiumCardGameAdjustments,
+            ...card,
+          };
+        }),
+      }));
+      this.playerDiscardPilesSubject.next(realPlayerDiscardPiles);
     }
 
     this.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
@@ -147,7 +203,17 @@ export class CardsService {
     const playerTrashPilesString = localStorage.getItem('playerTrashPiles');
     if (playerTrashPilesString) {
       const playerTrashPiles = JSON.parse(playerTrashPilesString) as PlayerCardStack[];
-      this.playerTrashPilesSubject.next(playerTrashPiles);
+      const realPlayerTrashPiles = playerTrashPiles.map((playerTrashPile) => ({
+        ...playerTrashPile,
+        cards: playerTrashPile.cards.map((card) => {
+          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
+          return {
+            ...imperiumCardGameAdjustments,
+            ...card,
+          };
+        }),
+      }));
+      this.playerTrashPilesSubject.next(realPlayerTrashPiles);
     }
 
     this.playerTrashPiles$.subscribe((playerTrashPiles) => {
@@ -177,7 +243,14 @@ export class CardsService {
     const limitedCustomCardsString = localStorage.getItem('limitedCustomCards');
     if (limitedCustomCardsString) {
       const limitedCustomCards = JSON.parse(limitedCustomCardsString) as ImperiumDeckCard[];
-      this.limitedCustomCardsSubject.next(limitedCustomCards);
+      const realLimitedCustomCards = limitedCustomCards.map((x) => {
+        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
+        return {
+          ...imperiumCardGameAdjustments,
+          ...x,
+        };
+      });
+      this.limitedCustomCardsSubject.next(realLimitedCustomCards);
     }
 
     this.limitedCustomCards$.subscribe((limitedCustomCards) => {
@@ -187,7 +260,14 @@ export class CardsService {
     const unlimitedCustomCardsString = localStorage.getItem('unlimitedCustomCards');
     if (unlimitedCustomCardsString) {
       const unlimitedCustomCards = JSON.parse(unlimitedCustomCardsString) as ImperiumDeckCard[];
-      this.unlimitedCustomCardsSubject.next(unlimitedCustomCards);
+      const realUnlimitedCustomCards = unlimitedCustomCards.map((x) => {
+        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
+        return {
+          ...imperiumCardGameAdjustments,
+          ...x,
+        };
+      });
+      this.unlimitedCustomCardsSubject.next(realUnlimitedCustomCards);
     }
 
     this.unlimitedCustomCards$.subscribe((unlimitedCustomCards) => {

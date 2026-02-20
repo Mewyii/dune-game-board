@@ -3,6 +3,7 @@ import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CombatManager } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { LoggingService } from 'src/app/services/log.service';
 import { PlayerAgentsService } from 'src/app/services/player-agents.service';
@@ -29,4 +30,5 @@ export interface GameServices {
   aiManager: AIManager;
   combatManager: CombatManager;
   playerAgentsService: PlayerAgentsService;
+  intriguesService: IntriguesService;
 }

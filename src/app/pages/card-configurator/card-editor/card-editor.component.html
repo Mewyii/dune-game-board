@@ -54,6 +54,15 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Rarity -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Rarity</mat-label>
+    <mat-select formControlName="rarity">
+      <mat-option [value]="'normal'"> Normal </mat-option>
+      <mat-option [value]="'rare'"> Rare </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <!-- Image -->
   <mat-form-field class="larger-text-field flex">
     <mat-label>Image URL</mat-label>

@@ -27,12 +27,22 @@
   align-items: center;
 }
 
+.rare .card-header {
+  color: rgb(255 199 142);
+}
+
 .card-img {
   flex: 1 1;
   background-size: cover;
   border-top: 2px solid rgba(192, 192, 192, 0.243);
   position: relative;
   background-position: center;
+  box-shadow: inset 0px 0px 10px rgb(91 78 65 / 40%);
+}
+
+.rare .card-img {
+  border-top: 2px solid rgb(255 145 30);
+  box-shadow: inset 0px 3px 11px 0px rgb(255 131 0 / 66%);
 }
 
 .card-reveal-effect-container {
