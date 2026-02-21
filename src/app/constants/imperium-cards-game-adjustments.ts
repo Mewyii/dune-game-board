@@ -198,7 +198,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       for (const enemyIntrigues of gameState.enemyIntrigues) {
         if (enemyIntrigues.intrigues.length > 0) {
           const randomIntrigue = shuffle(enemyIntrigues.intrigues)[0];
-          services.intriguesService.trashPlayerIntrigue(enemyIntrigues.playerId, randomIntrigue.id);
+          services.intriguesService.trashPlayerIntrigue(enemyIntrigues.playerId, randomIntrigue.id, false);
           services.intriguesService.addPlayerIntrigue(player.id, randomIntrigue);
         }
       }

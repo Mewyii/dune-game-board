@@ -45,3 +45,25 @@
   gap: 16px;
   z-index: 3;
 }
+
+.intrigue-discard-pile {
+  position: absolute;
+  bottom: 645px;
+  right: 215px;
+  border-radius: 10px;
+  background-size: 1000px;
+  height: 255px;
+  width: 170px;
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.66)) saturate(0.6);
+  border: 0px solid #2d0505;
+  border-right: 2px solid #2d0505;
+  border-top: 2px solid #2d0505;
+  transition: 0.7s;
+}
+
+.intrigue-discard-pile:hover,
+.intrigue-discard-pile.active {
+  filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15) saturate(0.8);
+  transform: scale(1.2);
+  z-index: 3;
+}

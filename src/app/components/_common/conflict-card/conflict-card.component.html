@@ -6,10 +6,10 @@
   </div>
   <div [class]="'card-content'">
     @for (rewards of conflict.rewards; track $index; let i = $index) {
-    <div class="conflict-reward-container">
-      <div [class]="'conflict-rank ' + (i === 0 ? 'first' : '')">{{ i + 1 }}.</div>
-      <dune-reward-array [rewards]="rewards" [size]="'36px'"></dune-reward-array>
-    </div>
+      <div class="conflict-reward-container">
+        <div [class]="'conflict-rank ' + (i === 0 ? 'first' : '')">{{ i + 1 }}.</div>
+        <dune-reward-array [rewards]="rewards" [size]="'34px'"></dune-reward-array>
+      </div>
     }
   </div>
 </div>

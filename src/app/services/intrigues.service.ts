@@ -13,6 +13,9 @@ export class IntriguesService {
   private intrigueDeckSubject = new BehaviorSubject<IntrigueDeckCard[]>([]);
   public intrigueDeck$ = this.intrigueDeckSubject.asObservable();
 
+  private intrigueDiscardPileSubject = new BehaviorSubject<IntrigueDeckCard[]>([]);
+  public intrigueDiscardPile$ = this.intrigueDiscardPileSubject.asObservable();
+
   private playerIntriguesSubject = new BehaviorSubject<PlayerIntrigueStack[]>([]);
   public playerIntrigues$ = this.playerIntriguesSubject.asObservable();
 
@@ -28,6 +31,17 @@ export class IntriguesService {
       localStorage.setItem('intrigueDeck', JSON.stringify(intrigueDeck));
     });
 
+    const intrigueDiscardPileString = localStorage.getItem('intrigueDiscardPile');
+    if (intrigueDiscardPileString) {
+      const intrigueDiscardPile = JSON.parse(intrigueDiscardPileString) as IntrigueDeckCard[];
+
+      this.intrigueDiscardPileSubject.next(intrigueDiscardPile);
+    }
+
+    this.intrigueDiscardPile$.subscribe((intrigueDiscardPile) => {
+      localStorage.setItem('intrigueDiscardPile', JSON.stringify(intrigueDiscardPile));
+    });
+
     const playerIntriguesString = localStorage.getItem('playerIntrigues');
     if (playerIntriguesString) {
       const playerIntrigues = JSON.parse(playerIntriguesString) as PlayerIntrigueStack[];
@@ -41,6 +55,10 @@ export class IntriguesService {
 
   public get intrigueDeck() {
     return cloneDeep(this.intrigueDeckSubject.value);
+  }
+
+  public get intrigueDiscardPile() {
+    return cloneDeep(this.intrigueDiscardPileSubject.value);
   }
 
   public get playerIntrigues() {
@@ -85,6 +103,7 @@ export class IntriguesService {
       }
     }
     this.intrigueDeckSubject.next(shuffleMultipleTimes(intrigueDeck));
+    this.intrigueDiscardPileSubject.next([]);
   }
 
   public shuffleIntrigueDeck() {
@@ -131,10 +150,14 @@ export class IntriguesService {
     this.playerIntriguesSubject.next(playerIntrigues);
   }
 
-  trashPlayerIntrigue(playerId: number, intrigueId: string) {
+  trashPlayerIntrigue(playerId: number, intrigueId: string, addToDiscardPile = true) {
     const playerIntrigues = this.playerIntrigues;
     const playerIndex = playerIntrigues.findIndex((x) => x.playerId === playerId);
     if (playerIndex > -1) {
+      const intrigue = playerIntrigues[playerIndex].intrigues.find((x) => x.id === intrigueId);
+      if (intrigue) {
+        this.intrigueDiscardPileSubject.next([...this.intrigueDiscardPile, intrigue]);
+      }
       playerIntrigues[playerIndex].intrigues = playerIntrigues[playerIndex].intrigues.filter((x) => x.id !== intrigueId);
       this.playerIntriguesSubject.next(playerIntrigues);
     }

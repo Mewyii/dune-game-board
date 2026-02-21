@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
@@ -7,10 +8,10 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
 
 @Component({
-    selector: 'dune-intrigues',
-    templateUrl: './intrigues.component.html',
-    styleUrl: './intrigues.component.scss',
-    standalone: false
+  selector: 'dune-intrigues',
+  templateUrl: './intrigues.component.html',
+  styleUrl: './intrigues.component.scss',
+  standalone: false,
 })
 export class IntriguesComponent {
   constructor(
@@ -18,12 +19,13 @@ export class IntriguesComponent {
     private gameManager: GameManager,
     private gameModifierService: GameModifiersService,
     private audioManager: AudioManager,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   public activePlayerId = 0;
   public hasIntrigueVision = false;
   public intrigueStackIsActive = false;
+  public intrigueDiscardPileTopCard: IntrigueDeckCard | undefined;
 
   ngOnInit(): void {
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
@@ -31,7 +33,7 @@ export class IntriguesComponent {
 
       this.hasIntrigueVision = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'vision-intrigues'
+        'vision-intrigues',
       );
 
       this.intrigueStackIsActive = false;
@@ -40,8 +42,12 @@ export class IntriguesComponent {
     this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.hasIntrigueVision = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'vision-intrigues'
+        'vision-intrigues',
       );
+    });
+
+    this.intriguesService.intrigueDiscardPile$.subscribe((discardPile) => {
+      this.intrigueDiscardPileTopCard = discardPile[discardPile.length - 1];
     });
   }
 
