@@ -49,7 +49,7 @@ export class PlayerHandComponent implements OnInit {
     private settingsService: SettingsService,
     private dialog: MatDialog,
     private logService: LoggingService,
-    public t: TranslateService
+    public t: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -141,6 +141,11 @@ export class PlayerHandComponent implements OnInit {
     this.activeCardId = '';
   }
 
+  onTrashHandCardClicked(card: ImperiumDeckCard) {
+    this.gameManager.trashImperiumCardFromHand(this.activePlayerId, card);
+    this.activeCardId = '';
+  }
+
   onAIDiscardCardClicked() {
     this.audioManager.playSound('card-discard');
     this.gameManager.aiDiscardHandCard(this.activePlayerId);
@@ -179,23 +184,6 @@ export class PlayerHandComponent implements OnInit {
     if (this.activePlayer) {
       this.cardsService.returnDiscardedPlayerCardToHand(this.activePlayerId, card);
       this.activeCardId = '';
-    }
-  }
-
-  onTrashHandCardClicked(card: ImperiumDeckCard) {
-    if (this.activePlayer) {
-      if (this.activePlayer.turnState === 'agent-placement') {
-        this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
-        this.activeCardId = '';
-
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      } else if (this.activePlayer.focusTokens > 0) {
-        this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
-        this.playerManager.removeFocusTokens(this.activePlayerId, 1);
-        this.activeCardId = '';
-
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      }
     }
   }
 

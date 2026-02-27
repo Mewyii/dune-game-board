@@ -170,7 +170,7 @@ export class PlayersService {
     this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, turnNumber: 0 })));
   }
 
-  public addResourceToPlayer(id: number, type: ResourceType, amount: number) {
+  public addResourceToPlayer(id: number, type: ResourceType, amount: number, valuesCanBeNegative?: boolean) {
     const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
@@ -180,7 +180,7 @@ export class PlayersService {
 
       player.resources[resourceIndex] = {
         ...player.resources[resourceIndex],
-        amount: currentResourceAmount + amount > 0 ? currentResourceAmount + amount : 0,
+        amount: currentResourceAmount + amount > 0 || valuesCanBeNegative ? currentResourceAmount + amount : 0,
       };
     }
 

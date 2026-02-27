@@ -64,7 +64,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       const playerWater = player.resources.find((x) => x.type === 'water');
       if (player.signetTokenCount > 2) {
         services.gameManager.addRewardToPlayer(player.id, { type: 'victory-point' });
-        services.playersService.removeSignetTokensFromPlayer(player.id, 3);
+        services.gameManager.payCostForPlayer(player.id, { type: 'signet-token', amount: 3 });
       } else if (playerWater && playerWater.amount && playerWater.amount > 1) {
         services.gameManager.payCostForPlayer(player.id, { type: 'water', amount: 2 });
         services.gameManager.addRewardToPlayer(player.id, { type: 'signet-token', amount: 3 });
@@ -127,7 +127,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
               : availableSignetTokens;
 
           services.gameManager.acquireImperiumCard(player.id, cardToBuy, source);
-          services.playersService.removeSignetTokensFromPlayer(player.id, usedSignetTokens);
+          services.gameManager.payCostForPlayer(player.id, { type: 'signet-token', amount: usedSignetTokens });
         }
       },
     },
@@ -364,7 +364,10 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
         if (chosenImperiumRowCard.persuasionCosts) {
-          services.playersService.removeSignetTokensFromPlayer(player.id, chosenImperiumRowCard.persuasionCosts);
+          services.gameManager.payCostForPlayer(player.id, {
+            type: 'signet-token',
+            amount: chosenImperiumRowCard.persuasionCosts,
+          });
         }
         services.gameManager.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
       }
@@ -376,7 +379,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunction: {
       timing: 'timing-game-start',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: -2 });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
       },
     },
     customTimedAIFunction: {
@@ -391,12 +394,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           for (const reward of boardSpace.rewards) {
             if (reward.type === 'water' || reward.type === 'spice') {
               services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
-              services.playersService.removeSignetTokensFromPlayer(player.id, 1);
+              services.gameManager.payCostForPlayer(player.id, { type: 'signet-token' });
               break;
             }
             if (reward.type === 'solari' && player.signetTokenCount > 1) {
               services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
-              services.playersService.removeSignetTokensFromPlayer(player.id, 1);
+              services.gameManager.payCostForPlayer(player.id, { type: 'signet-token' });
               break;
             }
           }

@@ -794,7 +794,7 @@ export class GameManager {
   private setPlayerAgentOnField(playerId: number, field: ActionField) {
     this.playerAgentsService.setPlayerAgentOnField(playerId, field.title.en);
 
-    this.turnInfoService.updatePlayerTurnInfo(playerId, { agentPlacedOnFieldId: field.title.en });
+    this.turnInfoService.setPlayerTurnInfo(playerId, { agentPlacedOnFieldId: field.title.en });
 
     this.loggingService.logPlayerSentAgentToField(playerId, this.t.translateLS(field.title));
   }
@@ -902,27 +902,38 @@ export class GameManager {
     const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(playerId).map((x) => x.fieldId);
     if (playerAgentsOnFields.some((x) => x === locationId)) {
       const playerLocation = this.locationManager.getPlayerLocation(locationId);
-      if (playerLocation) {
-        if (playerLocation.playerId !== playerId) {
-          const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
-          const troopsInGarrison = this.combatManager.getPlayerTroopsInGarrison(playerId);
-          if (!locationTakeoverTroopCosts || troopsInGarrison >= locationTakeoverTroopCosts) {
-            this.audioManager.playSound('location-control');
-            this.locationManager.setLocationOwner(locationId, playerId);
-            this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, { source: 'Location' });
-            this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
-            this.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
-
-            this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound, locationId);
-            this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound, locationId);
-          }
-        }
-      } else {
-        this.audioManager.playSound('location-control');
-        this.locationManager.setLocationOwner(locationId, playerId);
-        this.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
-        this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound, locationId);
+      if (playerLocation?.playerId === playerId) {
+        return;
       }
+
+      let takeOverFromEnemy = false;
+
+      if (playerLocation && playerLocation.playerId !== playerId) {
+        takeOverFromEnemy = true;
+      }
+
+      if (playerLocation && takeOverFromEnemy) {
+        const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
+        const troopsInGarrison = this.combatManager.getPlayerTroopsInGarrison(playerId);
+
+        if (locationTakeoverTroopCosts && troopsInGarrison < locationTakeoverTroopCosts) {
+          return;
+        }
+
+        this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
+        this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, { source: 'Location' });
+        this.loggingService.logPlayerLostLocationControl(playerLocation.playerId, this.currentRound, locationId);
+      }
+      const locationControlChoice = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'location-control');
+      if (locationControlChoice) {
+        this.playerRewardChoicesService.removePlayerRewardChoice(playerId, locationControlChoice.id);
+      }
+
+      this.audioManager.playSound('location-control');
+
+      this.locationManager.setLocationOwner(locationId, playerId);
+      this.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
+      this.loggingService.logPlayerGainedLocationControl(playerId, this.currentRound, locationId);
     }
   }
 
@@ -2475,14 +2486,14 @@ export class GameManager {
           }
 
           this.resolveRewardChoices(player);
+        }
 
-          if (source === 'deck') {
-            this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, card, options?.acquireLocation);
-          } else if (source === 'row') {
-            this.cardsService.aquirePlayerCardFromImperiumRow(playerId, card, options?.acquireLocation);
-          } else {
-            this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, card, options?.acquireLocation);
-          }
+        if (source === 'deck') {
+          this.cardsService.aquirePlayerCardFromImperiumDeck(playerId, card, options?.acquireLocation);
+        } else if (source === 'row') {
+          this.cardsService.aquirePlayerCardFromImperiumRow(playerId, card, options?.acquireLocation);
+        } else {
+          this.cardsService.aquirePlayerCardFromLimitedCustomCards(playerId, card, options?.acquireLocation);
         }
       } else {
         this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, card);
@@ -2510,6 +2521,18 @@ export class GameManager {
     this.cardsService.discardPlayerHandCard(this.activePlayerId, card);
 
     this.loggingService.logPlayerDiscardedCard(this.activePlayerId, this.t.translateLS(card.name));
+  }
+
+  trashImperiumCardFromHand(playerId: number, card: ImperiumDeckCard) {
+    const cardTrashTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'card-destroy');
+    if (cardTrashTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, cardTrashTodo.id);
+    }
+
+    this.audioManager.playSound('card-discard');
+    this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
+
+    this.loggingService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
   }
 
   acquirePlayerTechTile(playerId: number, techTile: TechTileDeckCard) {
@@ -3085,7 +3108,7 @@ export class GameManager {
   public addRewardToPlayer(
     playerId: number,
     reward: EffectReward,
-    additionalInfos?: { gameElement?: GameElement; source?: string },
+    additionalInfos?: { gameElement?: GameElement; source?: string; valuesCanBeNegative?: boolean },
   ) {
     const playerGameModifier = this.gameModifiersService.getPlayerGameModifiers(playerId);
 
@@ -3101,7 +3124,7 @@ export class GameManager {
         this.audioManager.playSound('spice', rewardAmount);
       }
 
-      this.playerManager.addResourceToPlayer(playerId, rewardType, rewardAmount);
+      this.playerManager.addResourceToPlayer(playerId, rewardType, rewardAmount, additionalInfos?.valuesCanBeNegative);
     } else if (rewardType === 'shipping') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { shippingAmount: 1 });
     } else if (isFactionScoreRewardType(rewardType)) {
