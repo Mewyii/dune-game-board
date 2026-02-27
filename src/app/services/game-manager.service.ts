@@ -566,7 +566,6 @@ export class GameManager {
     }
 
     this.resolveLeaderEffects(player, 'timing-reveal-turn');
-
     this.resolveTechTileEffects(player, 'timing-reveal-turn');
 
     this.resolveRewardChoices(player);

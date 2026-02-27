@@ -1234,7 +1234,7 @@ export const leaders: Leader[] = [
       en: '',
       de: '',
     },
-    imageUrl: '/assets/images/leaders/ariana_4.png',
+    imageUrl: '/assets/images/leaders/ariana.png',
     type: 'new',
     startingResources: [
       {

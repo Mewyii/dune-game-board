@@ -1,5 +1,6 @@
+import { getResourceAmount } from '../helpers/ai';
 import { playerCanPayCosts } from '../helpers/rewards';
-import { StructuredChoiceEffect, StructuredEffect } from '../models';
+import { StructuredEffect } from '../models';
 import { AIAdjustments, GameServices, GameState, TimedFunction } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard, ImperiumRowCard } from '../services/cards.service';
@@ -134,29 +135,32 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'The Preacher',
+    gameModifiers: {
+      fieldEnemyAgentAccess: [
+        {
+          id: 'preacher-enemy-access',
+          actionTypes: ['town'],
+        },
+      ],
+    },
+    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const enemyLocation = gameState.enemyLocations.find(
+        (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
+      );
+      if (enemyLocation) {
+        services.gameManager.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
+      } else {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'focus' });
+      }
+    },
     customTimedFunction: {
       timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        const townBoardSpaces = gameState.boardSpaces.filter((x) => x.actionType === 'town');
-        const agentsOnTownFields = gameState.playerAgentsOnFields.filter((x) =>
-          townBoardSpaces.some((bs) => bs.title.en === x.fieldId),
-        );
-        if (agentsOnTownFields.length > 0) {
-          for (const item of agentsOnTownFields) {
-            const choiceEffect: StructuredChoiceEffect = {
-              type: 'helper-or',
-              effectLeft: {
-                type: 'reward',
-                effectRewards: [{ type: 'persuasion' }],
-              },
-              effectRight: {
-                type: 'reward',
-                effectRewards: [{ type: 'focus' }],
-              },
-            };
-            services.turnInfoService.updatePlayerTurnInfo(player.id, { effectChoices: [choiceEffect] });
+        for (const agentOnField of gameState.playerAgentsOnFields) {
+          const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
+          if (isEnemyLocation) {
+            services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion' });
           }
-          services.gameManager.resolveRewardChoices(player);
         }
       },
     },
@@ -369,10 +373,35 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Lunara Metulli',
-    aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'high-council', modifier: -0.2 }],
-      fieldEvaluationModifier: (player, gameState, field) =>
-        field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
+    customTimedFunction: {
+      timing: 'timing-game-start',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: -2 });
+      },
+    },
+    customTimedAIFunction: {
+      timing: 'timing-agent-placement',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        if (player.signetTokenCount < 1) {
+          return;
+        }
+
+        const boardSpace = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
+        if (boardSpace) {
+          for (const reward of boardSpace.rewards) {
+            if (reward.type === 'water' || reward.type === 'spice') {
+              services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
+              services.playersService.removeSignetTokensFromPlayer(player.id, 1);
+              break;
+            }
+            if (reward.type === 'solari' && player.signetTokenCount > 1) {
+              services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
+              services.playersService.removeSignetTokensFromPlayer(player.id, 1);
+              break;
+            }
+          }
+        }
+      },
     },
   },
   {
@@ -485,6 +514,47 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       ).length;
 
       services.gameManager.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });
+    },
+  },
+  {
+    id: 'Earl Memnon Thorvald',
+    customTimedAIFunction: {
+      timing: 'timing-agent-placement',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        if (!player.hasSwordmaster && gameState.currentRound < 4) {
+          return;
+        }
+
+        const field = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
+        if (!field || field.actionType !== 'landsraad') {
+          return;
+        }
+
+        if (gameState.playerCombatUnits.troopsInGarrison < 6) {
+          if (getResourceAmount(player, 'solari') > 0) {
+            services.gameManager.payCostForPlayer(player.id, { type: 'solari' });
+            services.gameManager.addRewardToPlayer(player.id, { type: 'troop' });
+          }
+        }
+      },
+    },
+  },
+  {
+    id: 'Feyd-Rautha Harkonnen',
+    customTimedAIFunction: {
+      timing: 'timing-round-start',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        if (
+          gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
+          gameState.playerIntrigueCount < 2 &&
+          Math.random() > 0.33
+        ) {
+          services.gameManager.addRewardToPlayer(player.id, { type: 'card-destroy' });
+          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.gameManager.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+        }
+      },
     },
   },
 ];
