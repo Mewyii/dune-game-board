@@ -14,7 +14,7 @@ export const factionsCustomExpert: Faction[] = [
         actionType: 'fremen',
         costs: [{ type: 'spice', amount: 2 }],
         rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
-        pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
+        pathToImage: 'assets/images/action-backgrounds/spice_2.png',
       },
       {
         title: { de: 'Wüstenausrüstung', en: 'Desert Equipment' },
