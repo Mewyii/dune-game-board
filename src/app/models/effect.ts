@@ -82,6 +82,7 @@ export const effectConditions = [
   'condition-no-high-council-seat',
   'condition-influence',
   'condition-enemies-on-this-field',
+  'condition-enemy-controlling-this-field',
 ] as const;
 
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
@@ -214,7 +215,8 @@ export type StructuredEffectCondition =
   | EffectConditionInfluence
   | EffectConditionHighCouncilSeat
   | EffectConditionNoHighCouncilSeat
-  | EffectConditionEnemiesOnThisField;
+  | EffectConditionEnemiesOnThisField
+  | EffectConditionEnemyCntrollingThisField;
 
 export interface EffectConditionConnection {
   type: 'condition-connection';
@@ -241,5 +243,10 @@ export interface EffectConditionNoHighCouncilSeat {
 
 export interface EffectConditionEnemiesOnThisField {
   type: 'condition-enemies-on-this-field';
+  affects: 'enemies';
+}
+
+export interface EffectConditionEnemyCntrollingThisField {
+  type: 'condition-enemy-controlling-this-field';
   affects: 'enemies';
 }

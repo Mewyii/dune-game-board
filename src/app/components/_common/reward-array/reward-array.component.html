@@ -69,6 +69,12 @@
                 {{ t.translate('commonEffectConditionEnemiesOnThisField') }}:
               </div>
             </div>
+          } @else if (isEnemyControllingThisFieldType(reward.type)) {
+            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
+                {{ t.translate('commonEffectConditionEnemiesControllingThisField') }}:
+              </div>
+            </div>
           }
         } @else if (isAgentsOnBoardSpacesMultiplierType(reward.type)) {
           <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">

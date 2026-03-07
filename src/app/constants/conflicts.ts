@@ -7,7 +7,7 @@ export const conflicts: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
-      [{ type: 'tech' }, { type: 'solari', amount: 3 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }],
       [{ type: 'solari', amount: 2 }],
     ],
   },
@@ -16,14 +16,14 @@ export const conflicts: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'intrigue' }],
-      [{ type: 'intrigue' }, { type: 'solari', amount: 3 }],
-      [{ type: 'solari', amount: 2 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 2 }],
+      [{ type: 'intrigue' }],
     ],
   },
   {
     name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle in the Spice Fields' },
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 3 }], [{ type: 'spice' }]],
+    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
   },
   {
     name: { de: 'Schlacht an den Raumhäfen', en: 'Battle at the space ports' },

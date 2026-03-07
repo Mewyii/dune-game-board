@@ -48,11 +48,11 @@
 .card-reveal-effect-container {
   display: flex;
   font-weight: initial;
-  font-size: small;
+  font-size: 13px;
   color: #e1e1e1;
   white-space: pre-wrap;
   min-height: 34px;
-  padding: 10px 8px;
+  padding: 10px 4px;
   background-image: url(/assets/images/card-backgrounds/reveal-effect.png);
   background-size: cover;
   border-radius: 0px 0px 4px 4px;
@@ -64,11 +64,11 @@
 .card-agent-effect-container {
   display: flex;
   font-weight: initial;
-  font-size: small;
+  font-size: 13px;
   color: #e1e1e1;
   white-space: pre-wrap;
   min-height: 32px;
-  padding: 6px 6px;
+  padding: 6px 4px;
   background-image: url(/assets/images/card-backgrounds/agent-effect.png);
   background-size: cover;
   flex-wrap: wrap;

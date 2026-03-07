@@ -84,6 +84,10 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     return type === 'condition-enemies-on-this-field';
   }
 
+  public isEnemyControllingThisFieldType(type: EffectType) {
+    return type === 'condition-enemy-controlling-this-field';
+  }
+
   public isConnectionType(type: EffectType) {
     return type === 'condition-connection';
   }

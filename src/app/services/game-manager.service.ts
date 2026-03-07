@@ -1818,6 +1818,7 @@ export class GameManager {
                 enemy,
                 enemyAgentsOnFields,
                 gameState.playerAgentPlacedOnFieldThisTurn,
+                gameState.enemyLocations,
               );
             }
             if (enemyConditionFullfilled) {

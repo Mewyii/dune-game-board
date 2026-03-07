@@ -63,7 +63,9 @@
 }
 
 .sortable-category {
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   color: orange;
   font-weight: bold;
 }
@@ -78,4 +80,8 @@
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.icon-and-string-container.inactive {
+  filter: brightness(0.66);
 }

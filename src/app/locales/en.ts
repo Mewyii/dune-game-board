@@ -22,6 +22,7 @@ export const enLocale = {
   commonEffectConditionHighCouncilSeat: 'When you have a high council seat',
   commonEffectConditionNoHighCouncilSeat: 'When you have no high council seat',
   commonEffectConditionEnemiesOnThisField: 'Opponents on this board space',
+  commonEffectConditionEnemiesControllingThisField: 'The opponent controlling this board space',
   commonEffectMultiplierAgentsOnBoardSpaces: 'For each of your {resource:agent} on board spaces',
   commonEffectMultiplierDreadnoughtAmount: 'For each of your {resource:dreadnought}',
   commonEffectMultiplierEnemiesOnThisField: 'For each opponent on this board space',

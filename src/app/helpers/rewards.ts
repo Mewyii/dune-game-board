@@ -37,6 +37,7 @@ import {
 import { GameState } from '../models/ai';
 import { Player } from '../models/player';
 import { GameElement } from '../services/game-manager.service';
+import { OwnedLocation } from '../services/location-manager.service';
 import { PlayerAgentOnField } from '../services/player-agents.service';
 import { getPlayerCombatStrength } from './ai';
 import { getPlayerdreadnoughtCount } from './combat-units';
@@ -289,6 +290,12 @@ export function getStructuredEffectConditionIfPossible(
           affects: 'enemies',
         } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
+      } else if (effect.type === 'condition-enemy-controlling-this-field') {
+        const conditionalEffect = {
+          type: effect.type,
+          affects: 'enemies',
+        } as StructuredEffectCondition;
+        return [effectsWithoutCondition, conditionalEffect];
       }
     }
   }
@@ -402,6 +409,7 @@ export function isConditionFullfilled(
     | 'playerScore'
     | 'enemyAgentsOnFields'
     | 'playerAgentPlacedOnFieldThisTurn'
+    | 'enemyLocations'
   >,
   timing: EffectPlayerTurnTiming = 'agent-placement',
   gameElement?: GameElement,
@@ -447,6 +455,11 @@ export function isConditionFullfilled(
     if (enemyAgentsOnCurrentFieldCount > 0) {
       conditionFullfilled = true;
     }
+  } else if (conditionEffect.type === 'condition-enemy-controlling-this-field') {
+    const enemyLocation = gameState.enemyLocations.find((x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn);
+    if (enemyLocation) {
+      conditionFullfilled = true;
+    }
   }
   return conditionFullfilled;
 }
@@ -456,13 +469,21 @@ export function isEnemyConditionFullfilled(
   enemy: Player,
   enemyAgentsOnFields: PlayerAgentOnField[],
   playerAgentPlacedOnFieldThisTurn?: string,
+  enemyLocations?: OwnedLocation[],
 ) {
   let conditionFullfilled = false;
   if (conditionEffect.type === 'condition-enemies-on-this-field') {
     const enemyAgentsOnCurrentFieldCount = enemyAgentsOnFields.filter(
-      (x) => x.fieldId === playerAgentPlacedOnFieldThisTurn,
+      (x) => enemy.id === x.playerId && x.fieldId === playerAgentPlacedOnFieldThisTurn,
     ).length;
     if (enemyAgentsOnCurrentFieldCount > 0) {
+      conditionFullfilled = true;
+    }
+  } else if (conditionEffect.type === 'condition-enemy-controlling-this-field') {
+    const enemyLocation = enemyLocations?.find(
+      (x) => enemy.id === x.playerId && x.locationId === playerAgentPlacedOnFieldThisTurn,
+    );
+    if (enemyLocation) {
       conditionFullfilled = true;
     }
   }

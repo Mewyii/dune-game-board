@@ -32,53 +32,70 @@
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
       <div *ngFor="let item of costs | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.1-1' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number: '1.1-1' }}%)
       </div>
     </div>
     <div class="action-bar" [style.gap]="'32px'">
       <div class="sortable-category" (click)="onSortByFactionsClicked()">card-factions:</div>
-      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalCardAmount | number : '1.1-1' }}%)</div>
+      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalCardAmount | number: '1.1-1' }}%)</div>
       <div *ngFor="let item of factions | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number : '1.1-1' }}%)
+        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number: '1.1-1' }}%)
       </div>
     </div>
     <div class="action-bar center" [style.gap]="'32px'">
       <div>card-access:</div>
       <div class="icon-and-string-container" *ngFor="let item of fieldAccessess | keyvalue">
         <img class="field-access-image" [src]="getActionTypePath(item.key)" /> {{ item.value }} ({{
-          (item.value * 100) / totalCardAmount | number : '1.1-1'
+          (item.value * 100) / totalCardAmount | number: '1.1-1'
         }}%)
+      </div>
+      <div class="icon-and-string-container">
+        <img class="field-access-image" [src]="'assets/images/action-types/action_type_infiltration.png'" />
+        {{ infiltrationAmount }} ({{ (infiltrationAmount * 100) / totalCardAmount | number: '1.1-1' }}%)
       </div>
     </div>
     <div class="action-bar center" [style.gap]="'32px'">
-      <div>reveal-resources:</div>
-      <div class="icon-and-string-container" *ngFor="let item of revealResources">
+      <div>
+        card resource reward filters
+        @if (activeFilters.length > 0) {
+          <span> ({{ shownCardAmount }} cards ({{ (shownCardAmount * 100) / totalCardAmount | number: '1.1-1' }}%))</span>
+        } @else {
+          <span> ({{ totalCardAmount }} cards (100%))</span>
+        }
+        :
+      </div>
+      <div
+        class="icon-and-string-container"
+        [class.inactive]="!isFilterActive(item.id)"
+        *ngFor="let item of resources"
+        (click)="toggleActiveFilter(item)"
+      >
         <dune-reward-array
           [rewards]="[{ type: item.resourceType, amount: item.amount }]"
           [size]="'16px'"
           [textColor]="'white'"
         ></dune-reward-array>
-        {{ item.count }} ({{ (item.count * 100) / totalCardAmount | number : '1.1-1' }}%)
+        {{ item.count }} ({{ (item.count * 100) / totalCardAmount | number: '1.1-1' }}%)
       </div>
     </div>
     <div class="cards-preview-container">
-      @for (card of imperiumCards; track $index) {
-      <div class="card-container">
-        <div #cardimg [style]="'padding:' + imagePadding + 'px'">
-          <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+      @for (card of shownCards; track $index) {
+        <div class="card-container">
+          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
+            <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+          </div>
+          <div class="card-action-bar" *ngIf="showControls">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)" matTooltip="Edit">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)" matTooltip="Save">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="card-action-bar" *ngIf="showControls">
-          <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)" matTooltip="Edit">
-            <mat-icon>settings</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)" matTooltip="Delete">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)" matTooltip="Save">
-            <mat-icon>download</mat-icon>
-          </button>
-        </div>
-      </div>
       }
     </div>
   </div>

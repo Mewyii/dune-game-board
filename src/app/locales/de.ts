@@ -20,6 +20,7 @@ export const deLocale: Locale = {
   commonEffectConditionHighCouncilSeat: 'Wenn du einen Sitz im hohen Rat hast',
   commonEffectConditionNoHighCouncilSeat: 'Wenn du keinen Sitz im hohen Rat hast',
   commonEffectConditionEnemiesOnThisField: 'Gegner auf diesem Feld',
+  commonEffectConditionEnemiesControllingThisField: 'Der Gegner, der dieses Feld kontrolliert',
   commonEffectMultiplierAgentsOnBoardSpaces: 'Für jeden deiner {resource:agent} auf Feldern',
   commonEffectMultiplierDreadnoughtAmount: 'Für jedes deiner {resource:dreadnought}',
   commonEffectMultiplierEnemiesOnThisField: 'Für jeden Gegner auf diesem Feld',

@@ -4,17 +4,17 @@ import * as htmlToImage from 'html-to-image';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { getActionTypePath } from 'src/app/helpers/action-types';
 import { getFlattenedEffectRewardArray, isRewardEffect } from 'src/app/helpers/rewards';
-import { ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
+import { ActionType, ActiveFactionType, Effect, EffectReward, EffectRewardType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-editor.component';
 
 @Component({
-    selector: 'dune-card-configurator',
-    templateUrl: './imperium-card-configurator.component.html',
-    styleUrls: ['./imperium-card-configurator.component.scss'],
-    standalone: false
+  selector: 'dune-card-configurator',
+  templateUrl: './imperium-card-configurator.component.html',
+  styleUrls: ['./imperium-card-configurator.component.scss'],
+  standalone: false,
 })
 export class ImperiumCardConfiguratorComponent implements OnInit {
   public imperiumCards: ImperiumCard[] = [];
@@ -39,6 +39,8 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
     spice: 0,
   };
 
+  public infiltrationAmount = 0;
+
   public costs: { [type in number]: number } = {
     1: 0,
     2: 0,
@@ -54,12 +56,16 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   public totalCardAmount = 0;
   public uniqueCardAmount = 0;
 
-  public revealResources: { resourceType: EffectRewardType; amount: number; count: number }[] = [];
+  public resources: { id: string; resourceType: EffectRewardType; amount: number; count: number }[] = [];
+  public activeFilters: { id: string; resourceType: EffectRewardType; amount: number; count: number }[] = [];
+
+  public shownCardAmount = 0;
+  public shownCards: ImperiumCard[] = [];
 
   constructor(
     public t: TranslateService,
     public cardConfiguratorService: CardConfiguratorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +93,8 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
         spice: 0,
       };
 
+      this.infiltrationAmount = 0;
+
       this.costs = {
         1: 0,
         2: 0,
@@ -99,7 +107,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
         9: 0,
       };
 
-      this.revealResources = [];
+      this.resources = this.resources.map((x) => ({ ...x, count: 0 }));
 
       for (const card of imperiumCards) {
         const cardAmount = card.cardAmount ?? 1;
@@ -116,6 +124,9 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
           for (const access of card.fieldAccess) {
             this.fieldAccessess[access] += cardAmount;
           }
+          if (card.canInfiltrate) {
+            this.infiltrationAmount += cardAmount;
+          }
         }
 
         if (card.persuasionCosts) {
@@ -123,38 +134,129 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
         }
 
         let cardHasPersuasion = false;
-        if (card.revealEffects) {
-          for (const effect of getFlattenedEffectRewardArray(card.revealEffects.filter((x) => isRewardEffect(x)) as any[])) {
+        if (card.buyEffects) {
+          for (const effect of getFlattenedEffectRewardArray(card.buyEffects.filter((x) => isRewardEffect(x)) as any[])) {
             const amount = effect.amount ?? 1;
 
-            const index = this.revealResources.findIndex((x) => x.resourceType === effect.type && x.amount === amount);
+            const index = this.resources.findIndex((x) => x.resourceType === effect.type && x.amount === amount);
             if (index > -1) {
-              this.revealResources[index].count += cardAmount;
+              this.resources[index].count += cardAmount;
             } else {
-              this.revealResources.push({ resourceType: effect.type, amount, count: cardAmount });
+              this.resources.push({ id: crypto.randomUUID(), resourceType: effect.type, amount, count: cardAmount });
+            }
+          }
+        }
+        if (card.agentEffects) {
+          let rewards = this.getEffectRewardsOnly(card.agentEffects);
+
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+
+            const index = this.resources.findIndex((x) => x.resourceType === reward.type && x.amount === amount);
+            if (index > -1) {
+              this.resources[index].count += cardAmount;
+            } else {
+              this.resources.push({ id: crypto.randomUUID(), resourceType: reward.type, amount, count: cardAmount });
+            }
+          }
+        }
+        if (card.revealEffects) {
+          let rewards = this.getEffectRewardsOnly(card.revealEffects);
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+
+            const index = this.resources.findIndex((x) => x.resourceType === reward.type && x.amount === amount);
+            if (index > -1) {
+              this.resources[index].count += cardAmount;
+            } else {
+              this.resources.push({ id: crypto.randomUUID(), resourceType: reward.type, amount, count: cardAmount });
             }
 
-            if (effect.type === 'persuasion') {
+            if (reward.type === 'persuasion') {
               cardHasPersuasion = true;
             }
           }
         }
         if (cardHasPersuasion === false) {
-          const index = this.revealResources.findIndex((x) => x.resourceType === 'persuasion' && x.amount === 0);
+          const index = this.resources.findIndex((x) => x.resourceType === 'persuasion' && x.amount === 0);
           if (index > -1) {
-            this.revealResources[index].count += cardAmount;
+            this.resources[index].count += cardAmount;
           } else {
-            this.revealResources.push({ resourceType: 'persuasion', amount: 0, count: cardAmount });
+            this.resources.push({ id: crypto.randomUUID(), resourceType: 'persuasion', amount: 0, count: cardAmount });
           }
         }
       }
 
-      this.revealResources = this.revealResources.filter(
-        (x) => x.resourceType === 'persuasion' || x.resourceType === 'sword' || x.resourceType.includes('recruitment')
-      );
-      this.revealResources.sort((a, b) => a.amount - b.amount);
-      this.revealResources.sort((a, b) => a.resourceType.localeCompare(b.resourceType));
+      this.resources = this.resources.filter((x) => x.count > 0);
+      this.resources.sort((a, b) => a.amount - b.amount);
+      this.resources.sort((a, b) => a.resourceType.localeCompare(b.resourceType));
+      this.filterImperiumCards();
     });
+  }
+
+  filterImperiumCards() {
+    if (this.activeFilters.length < 1) {
+      this.shownCards = this.imperiumCards;
+      return;
+    } else {
+      let shownCardAmount = 0;
+
+      this.shownCards = this.imperiumCards.filter((card) => {
+        let showCard = false;
+
+        if (card.buyEffects) {
+          const rewards = getFlattenedEffectRewardArray(card.buyEffects.filter((x) => isRewardEffect(x)));
+
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+            if (this.activeFilters.some((x) => x.resourceType === reward.type && x.amount === amount)) {
+              showCard = true;
+            }
+          }
+        }
+        if (card.agentEffects) {
+          let rewards = this.getEffectRewardsOnly(card.agentEffects);
+
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+            if (this.activeFilters.some((x) => x.resourceType === reward.type && x.amount === amount)) {
+              showCard = true;
+            }
+          }
+        }
+        if (card.revealEffects) {
+          let rewards = this.getEffectRewardsOnly(card.revealEffects);
+
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+            if (this.activeFilters.some((x) => x.resourceType === reward.type && x.amount === amount)) {
+              showCard = true;
+            }
+          }
+        }
+        if (showCard) {
+          shownCardAmount += card.cardAmount ?? 1;
+        }
+
+        return showCard;
+      });
+
+      this.shownCardAmount = shownCardAmount;
+    }
+  }
+
+  toggleActiveFilter(resource: { id: string; resourceType: EffectRewardType; amount: number; count: number }) {
+    if (this.activeFilters.some((x) => x.id === resource.id)) {
+      this.activeFilters = this.activeFilters.filter((x) => !(x.id === resource.id));
+    } else {
+      this.activeFilters.push(resource);
+    }
+
+    this.filterImperiumCards();
+  }
+
+  isFilterActive(itemId: string): boolean {
+    return this.activeFilters.length < 1 || this.activeFilters.some((x) => x.id === itemId);
   }
 
   onExportCardsClicked() {
@@ -285,5 +387,18 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
     return {
       name: { en: '', de: '' },
     };
+  }
+
+  private getEffectRewardsOnly(cardEffects: Effect[]): EffectReward[] {
+    let rewards: EffectReward[] = [];
+
+    const tradeIndex = cardEffects.findIndex((x) => x.type === 'helper-trade');
+    if (tradeIndex > -1) {
+      rewards = getFlattenedEffectRewardArray(cardEffects.slice(tradeIndex + 1).filter((x) => isRewardEffect(x)));
+    } else {
+      rewards = getFlattenedEffectRewardArray(cardEffects.filter((x) => isRewardEffect(x)));
+    }
+
+    return rewards;
   }
 }
