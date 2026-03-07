@@ -3491,7 +3491,7 @@ export class GameManager {
           : playerTurnInfos.deployedTroops;
 
       if (canRetreatTroops || troopsToRetreat > 0) {
-        this.combatManager.removePlayerTroopsFromCombat(playerId, troopsToRetreat);
+        this.combatManager.retreatPlayerTroopsFromCombat(playerId, troopsToRetreat);
         this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedTroops: -troopsToRetreat });
         retreatedAmount += troopsToRetreat;
       }
@@ -3515,7 +3515,7 @@ export class GameManager {
 
       if (unitsToDeploy > 0) {
         if (unitType === 'troop') {
-          this.combatManager.removePlayerTroopsFromCombat(playerId, unitsToDeploy);
+          this.combatManager.retreatPlayerTroopsFromCombat(playerId, unitsToDeploy);
         } else {
           this.combatManager.removePlayerShipsFromCombat(playerId, unitsToDeploy);
         }

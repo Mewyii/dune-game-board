@@ -205,7 +205,7 @@ export class CombatManager {
     }
   }
 
-  public removePlayerTroopsFromCombat(playerId: number, troops: number) {
+  public retreatPlayerTroopsFromCombat(playerId: number, troops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInCombat - troops >= 0) {

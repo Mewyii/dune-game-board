@@ -113,7 +113,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customRevealFunction: (player: Player, gameState: GameState, services: GameServices) => {
       for (const enemy of gameState.enemyCombatUnits) {
         if (enemy.troopsInCombat > 0) {
-          services.combatManager.removePlayerTroopsFromCombat(enemy.playerId, 1);
+          services.combatManager.retreatPlayerTroopsFromCombat(enemy.playerId, 1);
         }
       }
     },
@@ -147,7 +147,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customRevealFunction: (player: Player, gameState: GameState, services: GameServices) => {
       for (const enemy of gameState.enemyCombatUnits) {
         if (enemy.troopsInCombat > 0) {
-          services.combatManager.removePlayerTroopsFromCombat(enemy.playerId, 3);
+          services.combatManager.retreatPlayerTroopsFromCombat(enemy.playerId, 3);
         }
       }
     },
@@ -249,6 +249,55 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
         services.gameManager.addRewardToPlayer(player.id, { type: 'foldspace' });
         services.gameManager.addRewardToPlayer(player.id, { type: 'water' });
       }
+    },
+  },
+  {
+    id: 'Guild Administrator',
+    aiAgentEvaluation: (player: Player, gameState: GameState) =>
+      0 + 1 * (gameState.playerScore.guild < 4 ? gameState.playerScore.guild : 4),
+    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const guildInfluence = gameState.playerScore.guild;
+      1;
+      if (guildInfluence < 2) {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'solari' });
+      } else if (guildInfluence < 4) {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
+      } else {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 3 });
+      }
+    },
+  },
+  {
+    id: 'Dr. Yueh, Suk Doctor',
+    aiRevealEvaluation: (player: Player, gameState: GameState) => 2.5 + 0.1 * gameState.currentRound - 1,
+    customRevealAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const troopsInCombat = gameState.playerCombatUnits.troopsInCombat;
+      if (troopsInCombat > 1) {
+        services.combatManager.retreatPlayerTroopsFromCombat(player.id, 1);
+        services.combatManager.addAdditionalCombatPowerToPlayer(player.id, 2);
+      }
+    },
+  },
+  {
+    id: 'Arrival of the Emperor',
+    aiAgentEvaluation: (player: Player, gameState: GameState) => 5 + 0.1 * gameState.currentRound - 1,
+    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const enemyLocation = gameState.enemyLocations.find(
+        (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
+      );
+      if (enemyLocation) {
+        services.locationManager.setLocationOwner(enemyLocation.locationId, player.id);
+      }
+    },
+  },
+  {
+    id: 'Drawing the Knifes',
+    aiAgentEvaluation: (player: Player, gameState: GameState) => 0.25 + 0.1 * gameState.playerHandCards.length,
+    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      for (const enemy of gameState.enemyPlayers) {
+        services.gameManager.payCostForPlayer(enemy.id, { type: 'card-destroy' });
+      }
+      services.gameManager.payCostForPlayer(player.id, { type: 'card-destroy' });
     },
   },
 ];

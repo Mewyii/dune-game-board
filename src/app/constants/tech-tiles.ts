@@ -284,6 +284,79 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Stilltents',
+      de: 'Destillzelte',
+    },
+    faction: 'fremen',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/stilltent.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Armored Spice Harvesters',
+      de: 'Gepanzerte Sandcrawler',
+    },
+    faction: 'guild',
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/spice_harvester_2.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Maula Pistol Works',
+      de: 'Maula-Pistolen Werk',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
+    effectSize: 'medium',
+    imagePosition: 'top',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+        amount: 3,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Satellite Control',
       de: 'Satellitenkontrolle',
     },
@@ -305,43 +378,6 @@ export const techTiles: TechTileCard[] = [
       en: '<b>Round start:</b> <br>{resource:tech-tile-flip} {resource:spice}{resource:helper-trade}Remove all units from <br>your garrison for this round. You <br>can use them as if they were in it.',
       de: '<b>Rundenbeginn:</b> <br>{resource:tech-tile-flip} {resource:spice}{resource:helper-trade}Entferne alle Einheiten<br> für diese Runde aus deiner <br>Garnison. Du kannst sie einsetzen als wären sie darin.',
       fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Maula Pistol Works',
-      de: 'Maula-Pistolen Werk',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
-    effectSize: 'medium',
-    imagePosition: 'top',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'solari',
-        amount: 2,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'multiplier-troops-in-conflict',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
     },
   },
   {
@@ -1257,6 +1293,24 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '<br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
       de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Imperial Palace',
+      de: 'Imperiale Residenz',
+    },
+    faction: 'emperor',
+    costs: 8,
+    imageUrl: '/assets/images/action-backgrounds/imperial_camp_2.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },

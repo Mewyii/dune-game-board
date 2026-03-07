@@ -250,22 +250,22 @@ export const leaders: Leader[] = [
       de: 'Blind und doch Sehend',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: For each of your {resource:agent} on {faction:town} board spaces: {resource:persuasion;amount:1}{resource:helper-or}{resource:focus}',
-      de: '<b>Aufdeckzug</b>: Für jeden deiner {resource:agent} auf <br>{faction:town} -Feldern: {resource:persuasion;amount:1}{resource:helper-or}{resource:focus}',
+      en: 'Enemy agents on {faction:town} board spaces do not block your agents.<br><b>Reveal turn</b>: For each of your {resource:agent} on {faction:town} board spaces: {resource:persuasion;amount:1}{resource:helper-or}{resource:focus}',
+      de: 'Gegnerische Agenten blockieren {faction:town}-Felder für dich nicht.<br><b>Aufdeckzug</b>: Für jeden deiner Agenten auf Feldern, die ein Gegner kontrolliert: {resource:persuasion;amount:1}',
     },
     signetName: {
       en: 'Accusing prophet',
       de: 'Anklagender Prophet',
     },
     signetDescription: {
-      en: '',
-      de: '',
+      en: 'If an opponent controls this board space, they must {resource:card-discard}. Otherwise, gain {resource:focus}.',
+      de: 'Wenn ein Gegner dieses Feld kontrolliert, muss er {resource:card-discard}. Erhalte ansonsten {resource:focus}.',
     },
     imageUrl: '/assets/images/leaders/preacher.png',
     type: 'new',
     passiveEffectSize: 'small',
-    signetEffectSize: 'medium',
-    passiveDescriptionSize: 'medium',
+    signetEffectSize: 'small',
+    passiveDescriptionSize: 'small',
     signetDescriptionSize: 'medium',
     startingResources: [
       {
@@ -273,11 +273,7 @@ export const leaders: Leader[] = [
       },
     ],
     passiveEffects: [],
-    signetEffects: [
-      {
-        type: 'enemies-card-discard',
-      },
-    ],
+    signetEffects: [],
   },
   {
     name: {
@@ -336,8 +332,8 @@ export const leaders: Leader[] = [
       de: 'Rücksichtsloser Ehrgeiz',
     },
     passiveDescription: {
-      en: 'Reveal all intrigues received this way.',
-      de: 'Decke alle so erhaltenen Intrigen auf.',
+      en: '<b>Round start</b>: You may trash one of the cards in your hand to get {resource:intrigue}{resource:intrigue}. Keep one of them, discard the other.',
+      de: '<b>Rundenbeginn</b>: Du kannst eine der Karten auf deiner Hand entsorgen, um {resource:intrigue}{resource:intrigue} zu erhalten. Behalte eine davon, entsorge die andere.',
     },
     signetName: {
       en: 'Hidden poison',
@@ -362,21 +358,7 @@ export const leaders: Leader[] = [
         amount: 3,
       },
     ],
-    passiveEffects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'intrigue',
-      },
-    ],
+    passiveEffects: [],
     signetEffects: [
       {
         type: 'signet-token',
@@ -684,8 +666,8 @@ export const leaders: Leader[] = [
       de: 'Bedrängtes Haus',
     },
     passiveDescription: {
-      en: 'Remove the <b>Persuasion</b> card from your deck before the game begins.',
-      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf dieses Feld. Sobald du {resource:solari;amount:2} besitzt, entferne sie und den Marker.',
+      en: '<b>Game start</b>: Place a debt marker ({resource:troop}) on this space. Whenever you have {resource:solari;amount:2}, remove it and the marker.',
+      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf dieses Feld. Sobald du {resource:solari;amount:2} hast, entferne sie und den Marker.',
     },
     signetName: {
       en: 'Thorough approach',
@@ -1236,6 +1218,10 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/ariana.png',
     type: 'new',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'large',
+    passiveDescriptionSize: 'medium',
+    signetDescriptionSize: 'medium',
     startingResources: [
       {
         type: 'solari',
@@ -1245,8 +1231,6 @@ export const leaders: Leader[] = [
         amount: 3,
       },
     ],
-    passiveEffectSize: 'medium',
-    signetEffectSize: 'large',
     passiveEffects: [
       {
         type: 'timing-round-start',
