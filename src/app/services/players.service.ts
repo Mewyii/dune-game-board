@@ -379,13 +379,13 @@ export class PlayersService {
 
   private createPlayerColor(id: number) {
     if (id === 1) {
-      return 'rgb(255 202 75)';
+      return 'rgb(255, 206, 92)';
     } else if (id === 2) {
-      return 'rgb(65 79 98)';
+      return 'rgb(107, 128, 139)';
     } else if (id === 3) {
-      return 'rgb(36 203 71)';
+      return 'rgb(59, 215, 93)';
     } else if (id === 4) {
-      return 'rgb(103 0 0)';
+      return 'rgb(120, 0, 0)';
     } else if (id === 5) {
       return 'rgb(68, 43, 255)';
     } else {

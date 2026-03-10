@@ -187,7 +187,9 @@
             >
               <img class="resource" [src]="getEffectTypePath('dreadnought')" />
               <div class="resource-amount on-background">
-                <span>{{ activePlayerCombatUnits?.shipsInGarrison }}</span>
+                <span>{{
+                  (activePlayerCombatUnits?.shipsInGarrison ?? 0) + (activePlayerCombatUnits?.shipsInTimeout ?? 0)
+                }}</span>
               </div>
             </div>
           </div>

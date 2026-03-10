@@ -1,47 +1,38 @@
 <div class="combat-tile">
   <div class="units-area">
-    <div class="upper-row">
-      <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === 2 ? ' active' : '')"></div>
-      <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === 3 ? ' active' : '')"></div>
-    </div>
-    <div class="mid-row">
-      <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === 1 ? ' active' : '')"></div>
-      <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === 4 ? ' active' : '')"></div>
-    </div>
     <ng-container *ngIf="settingsService.mode === 'game'">
       @for (combatUnits of playerCombatUnits; track trackCombatUnits(combatUnits); let i = $index) {
         <div
-          class="units-in-timeout-container"
-          [style.top]="190 - (i > 0 && i < 3 ? 190 : 0) + 'px'"
-          [style.left]="25 + (i > 0 ? 250 : 0) + (i > 1 ? 350 : 0) + (i > 2 ? 250 : 0) + 'px'"
+          class="garrison-container"
+          [style.left]="playerGarrisonLocations[i].x"
+          [style.bottom]="playerGarrisonLocations[i].y"
         >
-          @for (ship of combatUnits.shipsInTimeout | numberToArray; track $index; let is = $index) {
-            <div class="ship-marker timeout"></div>
-          }
-        </div>
-        <div
-          [class]="'units-in-garrison-container'"
-          [style.top]="210 - (i > 0 && i < 3 ? 200 : 0) + 'px'"
-          [style.left]="35 + (i > 0 ? 260 : 0) + (i > 1 ? 430 : 0) + (i > 2 ? 250 : 0) + 'px'"
-        >
-          @for (ship of combatUnits.shipsInGarrison | numberToArray; track $index; let is = $index) {
-            <div class="ship-marker-container">
-              <div
-                class="ship-marker"
-                [style.background-color]="getPlayerColor(combatUnits.playerId)"
-                (click)="onAddShipToCombatClicked(combatUnits.playerId)"
-              ></div>
-            </div>
-          }
-          @for (troop of combatUnits.troopsInGarrison | numberToArray; track $index; let it = $index) {
-            <div class="troop-marker-container">
-              <div
-                class="troop-marker"
-                [style.background-color]="getPlayerColor(combatUnits.playerId)"
-                (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
-              ></div>
-            </div>
-          }
+          <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === 2 ? ' active' : '')"></div>
+          <div class="units-in-timeout-container">
+            @for (ship of combatUnits.shipsInTimeout | numberToArray; track $index; let is = $index) {
+              <div class="ship-marker timeout"></div>
+            }
+          </div>
+          <div [class]="'units-in-garrison-container'">
+            @for (ship of combatUnits.shipsInGarrison | numberToArray; track $index; let is = $index) {
+              <div class="ship-marker-container">
+                <div
+                  class="ship-marker"
+                  [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                  (click)="onAddShipToCombatClicked(combatUnits.playerId)"
+                ></div>
+              </div>
+            }
+            @for (troop of combatUnits.troopsInGarrison | numberToArray; track $index; let it = $index) {
+              <div class="troop-marker-container">
+                <div
+                  class="troop-marker"
+                  [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                  (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
+                ></div>
+              </div>
+            }
+          </div>
         </div>
         <div
           [class]="'units-in-combat-container ' + (i > 0 && i < 3 ? 'top ' : '') + (i > 1 ? 'right' : '')"

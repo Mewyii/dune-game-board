@@ -226,11 +226,11 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const beneInfluence = gameState.playerScore.bene;
       if (beneInfluence < 2) {
+        services.gameManager.payCostForPlayer(player.id, { type: 'card-discard' });
         services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else if (beneInfluence < 4) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'agent-lift' });
-      } else {
         services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
+      } else {
         services.gameManager.addRewardToPlayer(player.id, { type: 'agent-lift' });
       }
     },
@@ -248,22 +248,6 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       } else {
         services.gameManager.addRewardToPlayer(player.id, { type: 'foldspace' });
         services.gameManager.addRewardToPlayer(player.id, { type: 'water' });
-      }
-    },
-  },
-  {
-    id: 'Guild Administrator',
-    aiAgentEvaluation: (player: Player, gameState: GameState) =>
-      0 + 1 * (gameState.playerScore.guild < 4 ? gameState.playerScore.guild : 4),
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const guildInfluence = gameState.playerScore.guild;
-      1;
-      if (guildInfluence < 2) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari' });
-      } else if (guildInfluence < 4) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
-      } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 3 });
       }
     },
   },

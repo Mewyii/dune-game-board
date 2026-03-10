@@ -425,6 +425,13 @@ export class GameManager {
               }
             }
 
+            const otherPlayersScoresCombined = playerCombatScores.slice(1).reduce((sum, x) => sum + x.score, 0);
+
+            if (firstPlayer.score > otherPlayersScoresCombined) {
+              const returnedTroops = Math.floor((firstPlayer.score - otherPlayersScoresCombined) / 2);
+              this.combatManager.addPlayerTroopsToGarrison(player.id, returnedTroops);
+            }
+
             this.loggingService.logPlayerWonCombat(player.id, this.currentRound);
           }
         }
@@ -845,7 +852,7 @@ export class GameManager {
         this.playerManager.increaseTurnNumberForPlayer(nextPlayer.id);
       }
       this.setActiveAIPlayer(nextPlayer.id);
-      if (nextPlayer.isAI) {
+      if (nextPlayer.isAI && this.currentRoundPhase === 'agent-placement') {
         this.setPreferredFieldsForAIPlayer(nextPlayer.id);
         this.resolveLeaderEffects(nextPlayer, 'timing-turn-start');
         this.resolveTechTileEffects(nextPlayer, 'timing-turn-start');
@@ -3403,10 +3410,6 @@ export class GameManager {
     }
     if (leader.gameModifiers) {
       this.gameModifiersService.addPlayerGameModifiers(playerId, leader.gameModifiers);
-    }
-    if (leader.structuredPassiveEffects) {
-      const gameState = this.getGameState(player);
-      this.resolveStructuredEffects(leader.structuredPassiveEffects, player, gameState);
     }
 
     this.resolveLeaderEffects(player, 'timing-game-start');

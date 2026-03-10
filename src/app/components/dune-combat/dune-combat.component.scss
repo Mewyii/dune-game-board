@@ -5,6 +5,7 @@
   width: 1260px;
   display: flex;
   border-radius: 50%;
+  height: 350px;
 }
 
 .units-area {
@@ -35,10 +36,14 @@
   background: #c19e7d30;
   border-radius: 48%;
   box-sizing: border-box;
-  box-shadow: inset 0px 0px 20px 2px #e7dbbb;
+  box-shadow: inset 0px 0px 20px 2px rgba(231, 219, 187, 0.8);
   backdrop-filter: blur(5px);
   filter: blur(4px);
   transition: 0.7s;
+}
+
+.garrison-container {
+  position: absolute;
 }
 
 .units-gathering-area.active {
@@ -97,9 +102,9 @@
 
 .score-tile {
   position: absolute;
-  right: 255px;
+  right: 235px;
   bottom: 16px;
-  width: 1250px;
+  width: 1320px;
   display: flex;
   border-radius: 50%;
 }
@@ -190,6 +195,16 @@
   gap: 2px;
   transition: 0.7s;
   z-index: 1;
+}
+
+.units-in-garrison-container {
+  top: 10px;
+  left: 40px;
+}
+
+.units-in-timeout-container {
+  top: -20px;
+  left: 40px;
 }
 
 .units-in-garrison-container:hover {

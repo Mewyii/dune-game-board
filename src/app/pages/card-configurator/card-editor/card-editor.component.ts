@@ -145,7 +145,7 @@ export class CardEditorComponent implements OnInit, OnChanges {
       cardAmount: 1,
       canInfiltrate: false,
       agentEffectSize: 'large',
-      rarity: '',
+      rarity: 'normal',
       customAgentEffect: this.fb.group({
         en: '',
         de: '',

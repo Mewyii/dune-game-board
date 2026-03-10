@@ -1030,7 +1030,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'bene',
     persuasionCosts: 4,
-    fieldAccess: ['bene', 'town'],
+    fieldAccess: ['bene', 'emperor'],
     imageUrl: '/assets/images/action-backgrounds/ship_fleet.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -1553,6 +1553,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
@@ -1572,6 +1573,10 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     agentEffects: [],
     revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
       {
         type: 'faction-influence-up-choice',
       },
@@ -2115,6 +2120,49 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Imperial Diplomat',
+      de: 'Imperialer Diplomat',
+    },
+    faction: 'emperor',
+    persuasionCosts: 3,
+    fieldAccess: ['bene', 'guild', 'landsraad'],
+    imageUrl: '',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'small',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'solari',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Imperial Spies',
       de: 'Imperiale Spione',
     },
@@ -2218,10 +2266,21 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 3,
     fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/harkonnen_ceremony.png',
-    cardAmount: 2,
+    cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'medium',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
     buyEffects: [],
     agentEffects: [
       {
@@ -2439,7 +2498,7 @@ export const imperiumCards: ImperiumCard[] = [
     persuasionCosts: 3,
     fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/landing_ship.png',
-    cardAmount: 2,
+    cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
     rarity: 'normal',
@@ -2653,6 +2712,51 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Imperial Assassin',
+      de: 'Imperialer Assassine',
+    },
+    faction: 'emperor',
+    persuasionCosts: 4,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '/assets/images/action-backgrounds/assassin.png',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: 'Each opponent trashes one of his cards in play.',
+      de: 'Jeder Gegner entsorgt eine seiner Karten im Spiel.',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Iakin Nefud, Corporal',
       de: 'Iakin Nefud, Korporal',
     },
@@ -2697,50 +2801,6 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'recruitment-emperor',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Imperial Assassin',
-      de: 'Imperialer Assassine',
-    },
-    faction: 'emperor',
-    persuasionCosts: 5,
-    fieldAccess: ['guild', 'landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/assassin.png',
-    cardAmount: 2,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    customAgentEffect: {
-      en: 'Each opponent trashes one of his cards in play.',
-      de: 'Jeder Gegner entsorgt eine seiner Karten im Spiel.',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 2,
-      },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'trash-self',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
       },
     ],
   },
@@ -3683,7 +3743,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'fremen',
     persuasionCosts: 2,
-    fieldAccess: ['spice'],
+    fieldAccess: ['fremen', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/sandwalking.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -4444,6 +4504,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
@@ -4473,10 +4534,14 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     revealEffects: [
       {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
         type: 'water',
       },
       {
-        type: 'troop',
+        type: 'helper-or',
       },
       {
         type: 'sword',
@@ -5105,10 +5170,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/guild_banker_8.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
+    rarity: 'normal',
     customAgentEffect: {
-      en: '{faction:guild} Influence <br>0 {resource:solari} {resource:helper-or} 2 {resource:solari;amount:2} {resource:helper-or} 4 {resource:solari;amount:3}',
-      de: '{faction:guild} Einfluss <br>0 {resource:solari} {resource:helper-or} 2 {resource:solari;amount:2} {resource:helper-or} 4 {resource:solari;amount:3}',
+      en: '',
+      de: '',
       fontSize: 'medium',
     },
     revealEffectSize: 'large',
@@ -5118,7 +5184,21 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -5313,7 +5393,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     faction: 'guild',
     persuasionCosts: 2,
-    fieldAccess: ['landsraad', 'spice'],
+    fieldAccess: ['guild', 'landsraad', 'spice'],
     imageUrl: '/assets/images/action-backgrounds/gurney_4.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -5358,6 +5438,59 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Ixian Smuggler',
+      de: 'Ixianischer Schmuggler',
+    },
+    faction: 'guild',
+    persuasionCosts: 2,
+    fieldAccess: ['landsraad', 'town'],
+    imageUrl: '',
+    cardAmount: 2,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'tech',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'tech',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'dreadnought',
       },
     ],
   },
@@ -5515,6 +5648,7 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
@@ -5533,15 +5667,6 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     agentEffects: [
       {
-        type: 'trash-self',
-      },
-      {
-        type: 'solari',
-        amount: 4,
-      },
-    ],
-    revealEffects: [
-      {
         type: 'water',
       },
       {
@@ -5549,7 +5674,25 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'tech',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
         amount: 2,
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'solari',
+        amount: 4,
       },
     ],
   },
@@ -5635,6 +5778,53 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'faction-influence-up-guild',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Guild Ship Engineer',
+      de: 'Gilden Schiffsingenieur',
+    },
+    faction: 'guild',
+    persuasionCosts: 4,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/guild_engineer.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'large',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'tech',
+        amount: 2,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'multiplier-dreadnought-amount',
+      },
+      {
+        type: 'sword',
       },
     ],
   },

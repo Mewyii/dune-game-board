@@ -2,18 +2,19 @@
   position: absolute;
   display: flex;
   flex-wrap: wrap;
-  gap: 32px;
 }
 
 .cards-area.one {
   right: 15px;
   bottom: 15px;
   flex-direction: column;
+  gap: 56px;
 }
 
 .cards-area.two {
   right: 15px;
-  bottom: 650px;
+  bottom: 725px;
+  gap: 15px;
 }
 
 .card-area {

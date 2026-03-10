@@ -25,7 +25,7 @@ export interface CombatScore {
 export class DuneCombatComponent implements OnInit {
   @Input() useDreadnoughts = false;
 
-  public maxCombatScore = 26;
+  public maxCombatScore = 28;
 
   public players: Player[] = [];
 
@@ -40,6 +40,13 @@ export class DuneCombatComponent implements OnInit {
   public activeGarrisonPlayerId = 0;
 
   public dreadnoughtCombatStrength = 4;
+
+  public playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
+    0: { x: '-20px', y: '-30px' },
+    1: { x: '-30px', y: '170px' },
+    2: { x: '920px', y: '205px' },
+    3: { x: '950px', y: '-25px' },
+  };
 
   constructor(
     public gameManager: GameManager,
