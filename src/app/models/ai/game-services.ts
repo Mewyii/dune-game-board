@@ -7,6 +7,7 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { LoggingService } from 'src/app/services/log.service';
 import { PlayerAgentsService } from 'src/app/services/player-agents.service';
+import { PlayerResourcesService } from 'src/app/services/player-resources.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
 
@@ -22,6 +23,7 @@ export interface GameServices {
     | 'addAccumulatedSpiceToField'
   >;
   playersService: PlayersService;
+  playerResourcesService: PlayerResourcesService;
   gameModifierService: GameModifiersService;
   locationManager: LocationManager;
   loggingService: LoggingService;

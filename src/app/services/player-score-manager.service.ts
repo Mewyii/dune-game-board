@@ -5,6 +5,7 @@ import { ActionType, EffectReward, FactionType } from '../models';
 import { Player } from '../models/player';
 import { CombatManager } from './combat-manager.service';
 import { LoggingService } from './log.service';
+import { PlayerResourcesService } from './player-resources.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
 
@@ -40,7 +41,8 @@ export class PlayerScoreManager {
     private playerManager: PlayersService,
     private combatManager: CombatManager,
     private settingsService: SettingsService,
-    private loggingService: LoggingService
+    private loggingService: LoggingService,
+    private playersResourcesService: PlayerResourcesService,
   ) {
     const playersScoresString = localStorage.getItem('playersScores');
     if (playersScoresString) {
@@ -122,7 +124,7 @@ export class PlayerScoreManager {
         this.playerScoresSubject.next(playerScores);
 
         const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
-          (x) => x.factionId === actionType
+          (x) => x.factionId === actionType,
         )?.rewards;
         if (factionInfluenceRewards) {
           const factionScoreRewards = factionInfluenceRewards[newScore];
@@ -156,7 +158,7 @@ export class PlayerScoreManager {
 
         if (vpReward) {
           if (vpReward.type === 'solari' || vpReward.type === 'spice' || vpReward.type === 'water') {
-            this.playerManager.addResourceToPlayer(playerId, vpReward.type, vpReward.amount ?? 1);
+            this.playersResourcesService.addResourceToPlayer(playerId, vpReward.type, vpReward.amount ?? 1);
           }
           if (vpReward.type === 'troop') {
             this.combatManager.addPlayerTroopsToGarrison(playerId, vpReward.amount ?? 1);
@@ -249,10 +251,10 @@ export class PlayerScoreManager {
     playerId: number,
     factionType: PlayerFactionScoreType,
     score: number,
-    roundNumber: number
+    roundNumber: number,
   ) {
     const playerWithAlliance = this.playerAlliances.find((x) =>
-      x.alliances.some((allianceType) => allianceType === factionType)
+      x.alliances.some((allianceType) => allianceType === factionType),
     );
     if (playerWithAlliance) {
       if (playerWithAlliance.playerId !== playerId) {

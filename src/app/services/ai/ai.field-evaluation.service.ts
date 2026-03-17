@@ -5,11 +5,13 @@ import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { randomizeArray } from 'src/app/helpers/common';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
+import { isResourceType } from 'src/app/helpers/resources';
 import { getFlattenedEffectRewardArray, getRewardArrayAIInfos } from 'src/app/helpers/rewards';
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
 import { AIGoals, FieldsForGoals, GameState, GoalModifier } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { LeaderDeckCard } from '../leaders.service';
+import { Resources } from '../player-resources.service';
 import { SettingsService } from '../settings.service';
 import { AIPlayer } from './ai.manager';
 
@@ -70,7 +72,13 @@ export class AIFieldEvaluationService {
       imperiumRowEvaluation,
     );
 
-    const accessibleFields = this.getAccessibleFields(boardFields, fieldEvaluations, gameState, aiPlayer, player);
+    const accessibleFields = this.getAccessibleFields(
+      boardFields,
+      fieldEvaluations,
+      gameState,
+      aiPlayer,
+      gameState.playerResources,
+    );
 
     const randomFactor = gameState.isOpeningTurn
       ? 0.3
@@ -149,7 +157,7 @@ export class AIFieldEvaluationService {
     fieldEvaluations: FieldEvaluation[],
     gameState: GameState,
     aiPlayer: AIPlayer,
-    player: Player,
+    playerResources: Resources,
   ) {
     const fieldAccessFromCards = getCardsFieldAccess(gameState.playerHandCards);
 
@@ -166,11 +174,13 @@ export class AIFieldEvaluationService {
         if (x.costs) {
           let canPayCosts = true;
           for (const cost of getFlattenedEffectRewardArray(x.costs)) {
-            const costAmount = cost.amount ?? 1;
-            const playerResourceAmount = player.resources.find((x) => x.type === cost.type)?.amount ?? 0;
-            if (playerResourceAmount < costAmount) {
-              canPayCosts = false;
-              break;
+            if (isResourceType(cost.type)) {
+              const costAmount = cost.amount ?? 1;
+              const playerResourceAmount = playerResources[cost.type] ?? 0;
+              if (playerResourceAmount < costAmount) {
+                canPayCosts = false;
+                break;
+              }
             }
           }
           if (!canPayCosts) {
@@ -321,7 +331,7 @@ export class AIFieldEvaluationService {
           (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0,
         )
       ) {
-        fieldRewards.push({ type: 'signet-token' });
+        fieldRewards.push({ type: 'signet' });
       }
 
       // Faction Reward Adjustments

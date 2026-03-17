@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType } from 'src/app/models';
+
 import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
 
 @Component({
-    selector: 'dune-game-log',
-    templateUrl: './game-log.component.html',
-    styleUrl: './game-log.component.scss',
-    standalone: false
+  selector: 'dune-game-log',
+  templateUrl: './game-log.component.html',
+  styleUrl: './game-log.component.scss',
+  standalone: false,
 })
 export class GameLogComponent implements OnInit, AfterViewInit {
   @ViewChildren('rewardLogs') rewardLogElements!: QueryList<ElementRef>;
@@ -44,9 +43,5 @@ export class GameLogComponent implements OnInit, AfterViewInit {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

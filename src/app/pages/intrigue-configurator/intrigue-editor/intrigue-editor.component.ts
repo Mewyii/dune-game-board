@@ -1,14 +1,13 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import {
   combatUnitTypes,
   effectChoices,
   effectConversions,
   effectMultipliers,
   effectRewards,
-  EffectType,
   resourceTypes,
 } from 'src/app/models';
 import { IntrigueCard, intriguesTypes, IntrigueType } from 'src/app/models/intrigue';
@@ -50,7 +49,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
             this.fb.group({
               type: field.type,
               amount: field.amount,
-            })
+            }),
           );
         });
       }
@@ -64,7 +63,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
             this.fb.group({
               type: field.type,
               amount: field.amount,
-            })
+            }),
           );
         });
       }
@@ -131,7 +130,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
           type: '',
           amount: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -140,7 +139,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
-      })
+      }),
     );
   }
 
@@ -169,7 +168,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
           type: '',
           amount: undefined,
         }),
-      ])
+      ]),
     );
   }
 
@@ -178,15 +177,11 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
       this.fb.group({
         type: '',
         amount: undefined,
-      })
+      }),
     );
   }
 
   onRemoveCombatEffectClicked(index: number) {
     this.combatEffects.removeAt(index);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

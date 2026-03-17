@@ -25,7 +25,6 @@ import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import {
   getPlayerCombatStrength,
-  getResourceAmount,
   noOneHasMoreInfluence,
   playerAllianceIsContested,
   playerCanGetAllianceThisTurn,
@@ -454,7 +453,7 @@ export class AIEffectEvaluationService {
       case 'intrigue-draw':
         return 0.25;
       case 'shipping':
-        return 2.5 - 0.1 * getResourceAmount(player, 'water') - 0.1 * getResourceAmount(player, 'spice');
+        return 2.5 - 0.1 * gameState.playerResources.water - 0.1 * gameState.playerResources.spice;
       case 'faction-influence-up-choice':
         return 4;
       case 'faction-influence-up-emperor':
@@ -484,7 +483,7 @@ export class AIEffectEvaluationService {
         return -3;
       case 'agent-lift':
         return 3 + 0.25 * (gameState.currentRound - 1);
-      case 'signet-token':
+      case 'signet':
         return gameState.playerLeaderSignetTokenValue ?? 0.75;
       case 'signet-ring':
         return gameState.playerLeaderSignetRingEffects
@@ -535,28 +534,28 @@ export class AIEffectEvaluationService {
       case 'water':
         return (
           value -
-          0.4 * getResourceAmount(player, 'water') +
+          0.4 * gameState.playerResources.water +
           0.3 * gameState.playerIntriguesConversionCosts.water +
           0.3 * gameState.playerTechTilesConversionCosts.water
         );
       case 'spice':
         return (
           value -
-          0.2 * getResourceAmount(player, 'spice') +
+          0.2 * gameState.playerResources.spice +
           0.2 * gameState.playerIntriguesConversionCosts.spice +
           0.2 * gameState.playerTechTilesConversionCosts.spice
         );
       case 'solari':
         return (
           value -
-          0.1 * getResourceAmount(player, 'solari') +
+          0.1 * gameState.playerResources.solari +
           0.1 * gameState.playerIntriguesConversionCosts.solari +
           0.1 * gameState.playerTechTilesConversionCosts.solari
         );
       case 'tech':
         return (
           value +
-          0.2 * player.tech +
+          0.2 * gameState.playerResources.tech +
           0.2 * gameState.playerIntriguesConversionCosts.tech +
           0.2 * gameState.playerTechTilesConversionCosts.tech
         );
@@ -698,7 +697,7 @@ export class AIEffectEvaluationService {
 
           return hasPlacedAgents && !liftingAgentWouldRemoveLocationControlPosibility ? value : -3;
         }
-      case 'signet-token':
+      case 'signet':
         return value;
       case 'signet-ring':
         return gameState.playerLeaderSignetRingEffects

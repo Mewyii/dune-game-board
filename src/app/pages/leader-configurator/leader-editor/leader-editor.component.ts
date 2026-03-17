@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Leader } from 'src/app/constants/leaders';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import { isConditionalEffect } from 'src/app/helpers/rewards';
 import {
   activeFactionTypes,
@@ -14,7 +13,6 @@ import {
   effectRewards,
   effectSeparators,
   effectTimings,
-  EffectType,
   FactionType,
   resourceTypes,
 } from 'src/app/models';
@@ -157,6 +155,7 @@ export class LeaderEditorComponent implements OnChanges {
       signetEffectSize: 'medium',
       passiveDescriptionSize: 'medium',
       signetDescriptionSize: 'medium',
+      hasHitPoints: false,
     });
 
     this.addStartingResourcesControl();
@@ -288,13 +287,5 @@ export class LeaderEditorComponent implements OnChanges {
 
   getFormData(): FormGroup {
     return this.leaderForm;
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
-
-  public getFactionTypePath(factionType: FactionType) {
-    return getFactionTypePath(factionType);
   }
 }

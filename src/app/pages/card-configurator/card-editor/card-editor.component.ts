@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import { isConditionalEffect, isMultiplierEffect } from 'src/app/helpers/rewards';
 import {
   activeFactionTypes,
@@ -12,7 +11,6 @@ import {
   effectMultipliers,
   effectRewards,
   effectSeparators,
-  EffectType,
   FactionType,
   nonFactionActionTypes,
   passiveFactionTypes,
@@ -296,13 +294,5 @@ export class CardEditorComponent implements OnInit, OnChanges {
 
   onRemoveRevealEffectClicked(index: number) {
     this.revealEffects.removeAt(index);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
-
-  public getFactionTypePath(factionType: FactionType) {
-    return getFactionTypePath(factionType);
   }
 }

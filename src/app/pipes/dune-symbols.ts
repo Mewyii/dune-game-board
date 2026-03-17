@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { getActionTypePath } from '../helpers/action-types';
-import { getEffectTypePath } from '../helpers/reward-types';
+import { ACTION_TYPE_PATHS } from '../helpers/action-types';
+import { EFFECT_TYPE_PATHS } from '../helpers/reward-types';
 import { ActionType, EffectRewardType } from '../models';
 
 @Pipe({
@@ -22,13 +22,13 @@ export class DuneSymbolsPipe implements PipeTransform {
 
         if (!amountMatch) {
           const resource = part.substring(10, part.length - 1) as EffectRewardType;
-          const resourceImgPath = getEffectTypePath(resource);
+          const resourceImgPath = EFFECT_TYPE_PATHS[resource] ?? '';
           return `<img style="min-width: ${iconSize};height: ${iconSize};object-fit:scale-down; vertical-align: middle;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="${resourceImgPath}"/>`;
         } else {
           const amount = amountMatch[0].substring(8, amountMatch[0].length - 1);
           const amountNumber = parseInt(amount);
           const resource = part.substring(10, part.length - amount.length - 9) as EffectRewardType;
-          const resourceImgPath = getEffectTypePath(resource);
+          const resourceImgPath = EFFECT_TYPE_PATHS[resource] ?? '';
           const ratioFix = Math.ceil(iconSizeNumber / 3);
 
           return `<div style="position:relative;display:inline-flex;color:white;width:min-content;vertical-align:middle;height: ${iconSize}">
@@ -44,11 +44,11 @@ export class DuneSymbolsPipe implements PipeTransform {
 
       if (part.startsWith('{faction:')) {
         const faction = part.substring(9, part.length - 1) as ActionType;
-        const factionImgPath = getActionTypePath(faction);
+        const factionImgPath = ACTION_TYPE_PATHS[faction] ?? '';
         const ratioFix = Math.ceil(iconSizeNumber / 3);
 
         return `<img style="min-width:${Math.ceil(iconSizeNumber - ratioFix / 3)}px;height:${Math.ceil(
-          iconSizeNumber - ratioFix / 2
+          iconSizeNumber - ratioFix / 2,
         )}px;object-fit:scale-down; vertical-align: middle;filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));" src="${factionImgPath}"/>`;
       }
 

@@ -103,17 +103,17 @@
   </div>
   <div class="score-legend">
     <div class="legend-container">
-      <img class="legend-icon" [src]="getEffectTypePath('sword')" />
+      <img class="legend-icon" [src]="'sword' | effectTypePath" />
       <span>=</span>
       <div class="legend-description">1</div>
     </div>
     <div class="legend-container">
-      <img class="legend-icon" [src]="getEffectTypePath('troop')" />
+      <img class="legend-icon" [src]="'troop' | effectTypePath" />
       <span>=</span>
-      <div class="legend-description">2</div>
+      <div class="legend-description">{{ troopCombatStrength }}</div>
     </div>
     <div class="legend-container" *ngIf="useDreadnoughts">
-      <img class="legend-icon" [src]="getEffectTypePath('dreadnought')" />
+      <img class="legend-icon" [src]="'dreadnought' | effectTypePath" />
       <span>=</span>
       <div class="legend-description">{{ dreadnoughtCombatStrength }}</div>
     </div>

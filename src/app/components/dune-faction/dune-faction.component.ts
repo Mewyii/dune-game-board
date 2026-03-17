@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppMode } from 'src/app/constants/board-settings';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, Faction } from 'src/app/models';
+
+import { Faction } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
@@ -63,7 +63,7 @@ export class DuneFactionComponent implements OnInit {
     public t: TranslateService,
     public gameModifiersService: GameModifiersService,
     private settingsService: SettingsService,
-    private gameManager: GameManager
+    private gameManager: GameManager,
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +80,7 @@ export class DuneFactionComponent implements OnInit {
 
         this.allianceTakenByPlayerId =
           this.playerScoreManager.playerAlliances.find((x) =>
-            x.alliances.some((allianceType) => allianceType === factionType)
+            x.alliances.some((allianceType) => allianceType === factionType),
           )?.playerId ?? 0;
       }
     });
@@ -98,7 +98,7 @@ export class DuneFactionComponent implements OnInit {
         .filter(
           (x) =>
             x.factionInfluence &&
-            x.factionInfluence.some((x) => x.factionType === this.faction.type && x.noInfluence === true)
+            x.factionInfluence.some((x) => x.factionType === this.faction.type && x.noInfluence === true),
         )
         .map((x) => x.playerId);
     });
@@ -116,10 +116,6 @@ export class DuneFactionComponent implements OnInit {
 
   public getPlayerColor(playerId: number) {
     return this.playerManager.getPlayerColor(playerId);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 
   public getTitleColor(rgbColor: string) {

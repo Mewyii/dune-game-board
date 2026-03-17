@@ -1,4 +1,4 @@
-import { ActionField, DuneLocation, Effect, Faction, LanguageType } from '../models';
+import { ActionField, DuneLocation, Effect, EffectReward, Faction, LanguageType } from '../models';
 import { FieldsForGoals } from '../models/ai';
 import { CustomCard } from '../models/imperium-card';
 import { gameContentCustomExpert } from './game-content';
@@ -37,7 +37,7 @@ export interface GameContent {
   maxPlayerDreadnoughtCount: number;
   maxPlayerIntrigueCount?: number;
   highCouncilPersuasion: number;
-  startingResources: Effect[];
+  startingResources: EffectReward[];
   customCards?: CustomCard[];
   recruitmentCardAmount: number;
   locationTakeoverTroopCosts?: number;
@@ -49,6 +49,7 @@ export interface GameContent {
   maxPlayers: number;
   cardAcquiringRules: CardAcquiringRules;
   churnRowCards: boolean;
+  leaderCombatStrength?: number;
 }
 
 export type AppMode = 'board' | 'game';

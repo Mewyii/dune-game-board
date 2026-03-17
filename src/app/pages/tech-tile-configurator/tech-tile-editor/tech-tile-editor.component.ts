@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import {
   activeFactionTypes,
   combatUnitTypes,
@@ -11,7 +11,6 @@ import {
   effectRewards,
   effectSeparators,
   effectTimings,
-  EffectType,
   nonFactionActionTypes,
   passiveFactionTypes,
   resourceTypes,
@@ -205,9 +204,5 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
 
   onRemoveAgentEffectClicked(index: number) {
     this.effects.removeAt(index);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

@@ -53,7 +53,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Hellsicht', en: 'Truthsay' },
         actionType: 'bene',
         costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-discard' }, { type: 'agent-lift' }],
+        rewards: [{ type: 'card-draw' }, { type: 'agent-lift' }],
         pathToImage: 'assets/images/action-backgrounds/bene_gesserit_4.png',
       },
       {
@@ -199,7 +199,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Mentat', en: 'Mentat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 9 }],
+        costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
         customWidth: '175px',
@@ -231,12 +231,12 @@ export const factionsCustomExpert: Faction[] = [
           [
             { type: 'spice', amount: 2, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 7, width: 45 },
+            { type: 'solari', amount: 8, width: 45 },
           ],
           [
             { type: 'spice', amount: 3, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 9, width: 45 },
+            { type: 'solari', amount: 10, width: 45 },
           ],
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
@@ -246,8 +246,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari' }],
-        rewards: [{ type: 'water' }, { type: 'troop' }, { type: 'tech' }],
+        costs: [{ type: 'solari', amount: 4 }],
+        rewards: [{ type: 'leader-heal' }, { type: 'water' }, { type: 'tech', amount: 2 }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         requiresInfluence: { type: 'emperor' },
       },

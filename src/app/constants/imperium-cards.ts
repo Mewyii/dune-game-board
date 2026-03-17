@@ -12,15 +12,16 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
-      en: 'You may retreat <b>1</b> inserted troops after the combat phase.',
-      de: 'Du kannst nach der Kampf-Phase <b>1</b> eingesetzten Trupp zurückziehen.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -33,6 +34,9 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'leader-heal',
       },
     ],
   },

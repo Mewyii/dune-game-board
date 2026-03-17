@@ -11,7 +11,7 @@ import { getCostAdjustedDesire, getRewardAmountFromArray } from './ai-goals';
 
 export function getViableBoardFieldsForFaction(
   fields: ActionField[],
-  factionType: FactionType
+  factionType: FactionType,
 ): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number } {
   const factionFields = fields.filter((x) => x.actionType === factionType);
   const viableFields: {
@@ -23,7 +23,7 @@ export function getViableBoardFieldsForFaction(
 
     if (field.costs && isResourceArray(field.costs)) {
       viableFields[field.title.en] = (player, gameState, goals) =>
-        getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire);
+        getCostAdjustedDesire(gameState.playerResources, field.costs as Resource[], baseFieldDesire);
     } else {
       viableFields[field.title.en] = () => baseFieldDesire;
     }
@@ -36,7 +36,7 @@ export function getViableBoardFields(
   fields: ActionField[],
   rewardType: EffectRewardType,
   adjustForCosts = true,
-  maxRewardAmountOverride?: number
+  maxRewardAmountOverride?: number,
 ): { [key: string]: (player: Player, gameState: GameState, goals: FieldsForGoals) => number } {
   const fieldsWithReward = fields.filter((x) => x.rewards.some((y) => y.type === rewardType));
   const viableFields: {
@@ -71,7 +71,7 @@ export function getViableBoardFields(
 
     if (adjustForCosts && field.costs && isResourceArray(field.costs)) {
       viableFields[field.title.en] = (player, gameState, goals) =>
-        getCostAdjustedDesire(player, field.costs as Resource[], baseFieldDesire);
+        getCostAdjustedDesire(gameState.playerResources, field.costs as Resource[], baseFieldDesire);
     } else {
       viableFields[field.title.en] = () => baseFieldDesire;
     }

@@ -15,7 +15,7 @@ import {
   getTechTileCostModifier,
   hasFactionInfluenceModifier,
 } from '../helpers/game-modifiers';
-import { isResource, isResourceType } from '../helpers/resources';
+import { isResourceType } from '../helpers/resources';
 import {
   getFlattenedEffectRewardArray,
   getMultipliedRewardEffects,
@@ -75,6 +75,7 @@ import { LoggingService } from './log.service';
 import { MinorHousesService } from './minor-houses.service';
 import { NotificationService } from './notification.service';
 import { PlayerAgentsService } from './player-agents.service';
+import { PlayerResourcesService } from './player-resources.service';
 import { PlayerRewardChoicesService } from './player-reward-choices.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
 import { PlayersService } from './players.service';
@@ -154,6 +155,7 @@ export class GameManager {
     private turnInfoService: TurnInfoService,
     private notificationService: NotificationService,
     private playerAgentsService: PlayerAgentsService,
+    private playersResourcesService: PlayerResourcesService,
   ) {
     const currentRoundString = localStorage.getItem('currentRound');
     if (currentRoundString) {
@@ -258,6 +260,7 @@ export class GameManager {
     this.playerAgentsService.deleteAllPlayerAgents();
 
     this.playerScoreManager.resetPlayersScores(newPlayers);
+    this.playersResourcesService.resetPlayerResources(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
     this.resetAccumulatedSpiceOnFields();
 
@@ -638,8 +641,8 @@ export class GameManager {
       }
 
       for (let cost of fieldCosts) {
-        if (isResource(cost)) {
-          this.playerManager.removeResourceFromPlayer(activePlayer.id, cost.type, cost.amount ?? 1);
+        if (isResourceType(cost.type)) {
+          this.playersResourcesService.removeResourceFromPlayer(activePlayer.id, cost.type, cost.amount ?? 1);
         }
       }
     }
@@ -880,17 +883,22 @@ export class GameManager {
   }
 
   public setAIActiveForPlayer(playerId: number, active: boolean) {
+    this.audioManager.playSound('tech-tile');
+
     this.playerManager.setAIActiveForPlayer(playerId, active);
     if (active) {
       this.aIManager.addAIPlayer(playerId);
+      if (this.currentRound > 0) {
+        this.setPreferredFieldsForAIPlayer(playerId);
+      }
     } else {
       this.aIManager.removeAIPlayer(playerId);
     }
-    this.aIManager.setactiveAIPlayerId(playerId);
+    this.aIManager.setActiveAIPlayerId(playerId);
   }
 
   public setActiveAIPlayer(playerId: number) {
-    this.aIManager.setactiveAIPlayerId(playerId);
+    this.aIManager.setActiveAIPlayerId(playerId);
   }
 
   public setPreferredFieldsForAIPlayer(playerId: number) {
@@ -1219,11 +1227,11 @@ export class GameManager {
           this.aiBuyPlotCards(playerId, playerPersuasionLeft);
         }
 
-        const playerFocusTokens = this.playerManager.getPlayerFocusTokens(playerId);
+        const playerFocusTokens = this.playersResourcesService.getPlayerResourceAmount(playerId, 'focus');
         for (let i = 0; i < playerFocusTokens; i++) {
           const success = this.aiTrashCardInPlay(playerId);
           if (success) {
-            this.playerManager.removeFocusTokens(playerId, 1);
+            this.playersResourcesService.removeResourceFromPlayer(playerId, 'focus', 1);
           } else {
             break;
           }
@@ -1478,36 +1486,41 @@ export class GameManager {
   }
 
   private resolveLeaderEffects(player: Player, timing: EffectTimingType) {
-    const playerLeader = this.leadersService.getLeader(player.id);
-    if (playerLeader?.structuredPassiveEffects) {
+    const playerLeader = this.leadersService.getPlayerLeader(player.id);
+    const leader = playerLeader?.leader;
+    if (!leader || playerLeader?.isFlipped) {
+      return;
+    }
+
+    if (leader.structuredPassiveEffects) {
       const gameState = this.getGameState(player);
       const updatedPlayer = this.playerManager.getPlayer(player.id);
       if (updatedPlayer) {
-        this.resolveStructuredEffects(playerLeader.structuredPassiveEffects, updatedPlayer, gameState);
+        this.resolveStructuredEffects(leader.structuredPassiveEffects, updatedPlayer, gameState);
       }
     }
-    if (playerLeader?.customEffects) {
+    if (leader.customEffects) {
       const gameState = this.getGameState(player);
       const updatedPlayer = this.playerManager.getPlayer(player.id);
       if (updatedPlayer) {
-        this.resolveStructuredEffects(playerLeader.customEffects, updatedPlayer, gameState);
+        this.resolveStructuredEffects(leader.customEffects, updatedPlayer, gameState);
       }
     }
-    if (playerLeader?.customTimedFunction) {
-      if (playerLeader.customTimedFunction.timing == timing) {
+    if (leader.customTimedFunction) {
+      if (leader.customTimedFunction.timing == timing) {
         const gameState = this.getGameState(player);
         const updatedPlayer = this.playerManager.getPlayer(player.id);
         if (updatedPlayer) {
-          playerLeader.customTimedFunction.function(updatedPlayer, gameState, this.getGameServices());
+          leader.customTimedFunction.function(updatedPlayer, gameState, this.getGameServices());
         }
       }
     }
-    if (player.isAI && playerLeader?.customTimedAIFunction) {
-      if (playerLeader.customTimedAIFunction.timing == timing) {
+    if (player.isAI && leader.customTimedAIFunction) {
+      if (leader.customTimedAIFunction.timing == timing) {
         const gameState = this.getGameState(player);
         const updatedPlayer = this.playerManager.getPlayer(player.id);
         if (updatedPlayer) {
-          playerLeader.customTimedAIFunction.function(updatedPlayer, gameState, this.getGameServices());
+          leader.customTimedAIFunction.function(updatedPlayer, gameState, this.getGameServices());
         }
       }
     }
@@ -2558,8 +2571,8 @@ export class GameManager {
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
     const costModifier = getTechTileCostModifier(techTile, costModifiers);
 
-    const availablePlayerSpice = player.resources.find((x) => x.type === 'spice')?.amount ?? 0;
-    const availablePlayerTech = player.tech;
+    const availablePlayerSpice = this.playersResourcesService.getPlayerResourceAmount(playerId, 'spice');
+    const availablePlayerTech = this.playersResourcesService.getPlayerResourceAmount(playerId, 'tech');
     const playerCanAffordTechTile = techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTech;
 
     if (playerCanAffordTechTile) {
@@ -2903,6 +2916,7 @@ export class GameManager {
       },
       boardSpaces: this.settingsService.boardFields,
       playerAgentPlacedOnFieldThisTurn,
+      playerResources: this.playersResourcesService.getPlayerResources(player.id),
     } as GameState;
   }
 
@@ -2919,6 +2933,7 @@ export class GameManager {
       combatManager: this.combatManager,
       playerAgentsService: this.playerAgentsService,
       intriguesService: this.intriguesService,
+      playerResourcesService: this.playersResourcesService,
     };
   }
 
@@ -3035,7 +3050,7 @@ export class GameManager {
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
 
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
-    const availablePlayerTech = player.tech;
+    const availablePlayerTech = this.playersResourcesService.getPlayerResourceAmount(playerId, 'tech');
     const affordableTechTiles = buyableTechTiles.filter(
       (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech,
     );
@@ -3073,7 +3088,7 @@ export class GameManager {
 
     if (effectiveCosts > 0) {
       const techCosts = effectiveCosts > techAmount ? techAmount : effectiveCosts;
-      this.playerManager.removeTechFromPlayer(player.id, techCosts);
+      this.playersResourcesService.removeResourceFromPlayer(player.id, 'tech', techCosts);
       this.loggingService.logPlayerResourcePaid(player.id, 'tech', techCosts);
     }
 
@@ -3130,9 +3145,22 @@ export class GameManager {
         this.audioManager.playSound('water', rewardAmount);
       } else if (rewardType === 'spice') {
         this.audioManager.playSound('spice', rewardAmount);
+      } else if (rewardType === 'focus') {
+        this.audioManager.playSound('focus');
+      } else if (rewardType === 'tech') {
+        this.audioManager.playSound('tech-agent', rewardAmount);
+        this.turnInfoService.updatePlayerTurnInfo(playerId, { canBuyTech: true });
+      } else if (rewardType === 'leader-heal') {
+      } else if (rewardType === 'signet') {
+        this.audioManager.playSound('signet');
       }
 
-      this.playerManager.addResourceToPlayer(playerId, rewardType, rewardAmount, additionalInfos?.valuesCanBeNegative);
+      this.playersResourcesService.addResourceToPlayer(
+        playerId,
+        rewardType,
+        rewardAmount,
+        additionalInfos?.valuesCanBeNegative,
+      );
     } else if (rewardType === 'shipping') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { shippingAmount: 1 });
     } else if (isFactionScoreRewardType(rewardType)) {
@@ -3170,10 +3198,6 @@ export class GameManager {
       this.playerScoreManager.removePlayerScore(playerId, scoreType as PlayerFactionScoreType, 1, this.currentRound);
     } else if (rewardType === 'faction-influence-down-choice') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { factionInfluenceDownChoiceAmount: 1 });
-    } else if (rewardType === 'tech') {
-      this.audioManager.playSound('tech-agent', rewardAmount);
-      this.playerManager.addTechToPlayer(playerId, rewardAmount);
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { canBuyTech: true });
     } else if (rewardType === 'intrigue') {
       this.audioManager.playSound('intrigue', rewardAmount);
       this.intriguesService.drawPlayerIntriguesFromDeck(playerId, rewardAmount);
@@ -3205,9 +3229,6 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDrawOrDestroyAmount: 1 });
     } else if (rewardType === 'card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: 1 });
-    } else if (rewardType === 'focus') {
-      this.audioManager.playSound('focus');
-      this.playerManager.addFocusTokens(playerId, rewardAmount);
     } else if (rewardType == 'persuasion') {
       this.playerManager.addPersuasionGainedToPlayer(playerId, rewardAmount);
     } else if (rewardType == 'sword') {
@@ -3248,9 +3269,6 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { locationControlAmount: 1 });
     } else if (rewardType === 'signet-ring') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { signetRingAmount: 1 });
-    } else if (rewardType === 'signet-token') {
-      this.audioManager.playSound('signet');
-      this.playerManager.addSignetTokensToPlayer(playerId, rewardAmount);
     } else if (rewardType === 'trash-self') {
       if (gameElement && gameElement.type === 'imperium-card') {
         this.cardsService.trashPlayerHandCard(playerId, gameElement.object);
@@ -3311,8 +3329,12 @@ export class GameManager {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'card-discard' }] });
     } else if (rewardType === 'enemies-intrigue-trash') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'intrigue-trash' }] });
+    } else if (rewardType === 'enemies-leader-assassinate') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { enemiesEffects: [{ type: 'leader-wound' }] });
     } else if (rewardType === 'card-return-to-hand') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardReturnToHandAmount: rewardAmount });
+    } else if (rewardType === 'leader-wound') {
+      this.leadersService.flipLeader(playerId);
     } else if (rewardType === 'turn-pass') {
       this.turnInfoService.setPlayerTurnInfo(playerId, { needsToPassTurn: true });
     }
@@ -3329,15 +3351,9 @@ export class GameManager {
     const gameElement = additionalInfos?.gameElement;
     const source = additionalInfos?.source;
     if (isResourceType(costType)) {
-      this.playerManager.removeResourceFromPlayer(playerId, costType, costAmount);
-    } else if (costType === 'signet-token') {
-      this.playerManager.removeSignetTokensFromPlayer(playerId, costAmount);
-    } else if (costType === 'focus') {
-      this.playerManager.removeFocusTokens(playerId, costAmount);
+      this.playersResourcesService.removeResourceFromPlayer(playerId, costType, costAmount);
     } else if (costType === 'shipping') {
-      this.playerManager.removeResourceFromPlayer(playerId, 'water', costAmount);
-    } else if (costType === 'tech') {
-      this.playerManager.removeTechFromPlayer(playerId, costAmount);
+      // this.playerManager.removeResourceFromPlayer(playerId, 'water', costAmount);
     } else if (isFactionScoreRewardType(costType)) {
       const scoreType = getFactionScoreTypeFromReward(cost);
 
@@ -3403,11 +3419,13 @@ export class GameManager {
     }
     this.leadersService.lockInLeader(playerId);
 
-    if (leader.startingResources) {
-      for (const startingResource of leader.startingResources) {
-        this.addRewardToPlayer(player.id, startingResource);
-      }
+    for (const startingResource of this.settingsService.getStartingResources()) {
+      this.addRewardToPlayer(player.id, startingResource);
     }
+    for (const startingResource of leader.startingResources) {
+      this.addRewardToPlayer(player.id, startingResource);
+    }
+
     if (leader.gameModifiers) {
       this.gameModifiersService.addPlayerGameModifiers(playerId, leader.gameModifiers);
     }
@@ -3415,6 +3433,15 @@ export class GameManager {
     this.resolveLeaderEffects(player, 'timing-game-start');
 
     this.resolveRewardChoices(player);
+  }
+
+  public healLeader(playerId: number) {
+    const leaderHealAmount = this.playersResourcesService.getPlayerResourceAmount(playerId, 'leader-heal');
+    const healCosts = this.currentRoundPhase === 'combat-resolvement' ? 1 : 2;
+    if (leaderHealAmount >= healCosts) {
+      this.payCostForPlayer(playerId, { type: 'leader-heal', amount: healCosts });
+      this.leadersService.unflipLeader(playerId);
+    }
   }
 
   private addSwordmasterIfPossible(playerId: number) {
@@ -3700,7 +3727,7 @@ export class GameManager {
       placeholder: 0,
       shipping: 0,
       'signet-ring': 0,
-      'signet-token': 0,
+      signet: 0,
       'spice-accumulation': 0,
       sword: 0,
       'sword-master': 0,
@@ -3726,8 +3753,11 @@ export class GameManager {
       'enemies-card-discard': 0,
       'enemies-troop-destroy': 0,
       'enemies-intrigue-trash': 0,
+      'enemies-leader-assassinate': 0,
       'card-return-to-hand': 0,
       'turn-pass': 0,
+      'leader-heal': 0,
+      'leader-wound': 0,
     };
   }
 }

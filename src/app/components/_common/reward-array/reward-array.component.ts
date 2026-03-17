@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import { getSeparatedEffectArrays, isConditionalEffect, isTimingEffect } from 'src/app/helpers/rewards';
 import { Effect, EffectTimingConditionChoiceConversionMultiplierOrReward, EffectType } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -46,10 +45,6 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     this.rewardAmountFontSize = Math.round(sizeNumber - sizeNumber / 2.25) + 'px';
     this.effectGap = Math.round(sizeNumber / 13) + 'px';
     this.marginBottom = Math.round(sizeNumber / 6) + 'px';
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 
   public isTimingEffect(effect: EffectTimingConditionChoiceConversionMultiplierOrReward) {
@@ -114,9 +109,5 @@ export class RewardArrayComponent implements OnInit, OnChanges {
 
   public isTroopsInConflictMultiplierType(type: EffectType) {
     return type === 'multiplier-troops-in-conflict';
-  }
-
-  public getFactionTypePath(effect: any) {
-    return getFactionTypePath(effect.faction);
   }
 }

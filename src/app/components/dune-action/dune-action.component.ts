@@ -1,18 +1,21 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { getActionTypePath } from 'src/app/helpers/action-types';
+import { ACTION_TYPE_PATHS } from 'src/app/helpers/action-types';
+
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
+
 import { getFieldIsBlocked, getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { isResourceType } from 'src/app/helpers/resources';
+
 import { getFlattenedEffectRewardArray } from 'src/app/helpers/rewards';
-import { ActionField, EffectType, FactionType, Resource } from 'src/app/models';
+import { ActionField, EffectType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { EffectWithModifier, GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
 import { PlayerAgentsService } from 'src/app/services/player-agents.service';
+import { PlayerResourcesService, Resources } from 'src/app/services/player-resources.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -50,7 +53,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
   public activePlayerId: number = 0;
   public activePlayerTurnState: PlayerTurnState | undefined;
-  public activePlayerResources: Resource[] = [];
+  public activePlayerResources: Resources = this.playerResourcesService.getInitialPlayerResources();
   public activePlayerIsAI = false;
 
   public isAccessibleByPlayer = false;
@@ -73,12 +76,13 @@ export class DuneActionComponent implements OnInit, OnChanges {
     private playerScoreManager: PlayerScoreManager,
     private gameModifierService: GameModifiersService,
     private playerAgentsService: PlayerAgentsService,
+    private playerResourcesService: PlayerResourcesService,
   ) {}
 
   ngOnInit(): void {
     this.actionCosts = this.actionField.costs ?? [];
     this.actionRewards = this.actionField.rewards ?? [];
-    this.pathToActionType = getActionTypePath(this.actionField.actionType);
+    this.pathToActionType = ACTION_TYPE_PATHS[this.actionField.actionType] ?? '';
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
     const gradientColor1 = this.adjustRGBColor(this.backgroundColor, -16);
     const gradientColor2 = this.adjustRGBColor(this.backgroundColor, -24);
@@ -86,7 +90,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     this.backgroundGradient =
       'linear-gradient(' + gradientColor1 + ', 5%, ' + gradientColor2 + ', 70%, ' + gradientColor3 + ')';
 
-    this.playerAgentsService.playerAgentsOnFields$.subscribe((agentsOnFields) => {
+    this.playerAgentsService.playersAgentsOnFields$.subscribe((agentsOnFields) => {
       const playerIds = agentsOnFields.filter((x) => x.fieldId === this.actionField.title.en).map((x) => x.playerId);
       if (playerIds.length > 0) {
         const firstPlayerId = playerIds.shift()!;
@@ -111,7 +115,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const player = this.playerManager.getPlayer(this.activePlayerId);
 
       this.activePlayerTurnState = player?.turnState;
-      this.activePlayerResources = player?.resources ?? [];
+      this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
       this.activePlayerIsAI = player?.isAI ?? false;
 
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
@@ -145,7 +149,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.activePlayerIsAI = player?.isAI ?? false;
 
       this.activePlayerTurnState = player?.turnState;
-      this.activePlayerResources = player?.resources ?? [];
+      this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
 
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
@@ -230,14 +234,6 @@ export class DuneActionComponent implements OnInit, OnChanges {
     return false;
   }
 
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
-
-  public getFactionTypePath(rewardType: FactionType) {
-    return getFactionTypePath(rewardType);
-  }
-
   public getPlayerColor(playerId: number) {
     return this.playerManager.getPlayerColor(playerId);
   }
@@ -269,10 +265,12 @@ export class DuneActionComponent implements OnInit, OnChanges {
     }
 
     for (const cost of getFlattenedEffectRewardArray(costs)) {
-      const costAmount = cost.amount ?? 1;
-      const playerResourceAmount = this.activePlayerResources.find((x) => x.type === cost.type)?.amount ?? 0;
-      if (playerResourceAmount < costAmount) {
-        return false;
+      if (isResourceType(cost.type)) {
+        const costAmount = cost.amount ?? 1;
+        const playerResourceAmount = this.activePlayerResources[cost.type];
+        if (playerResourceAmount < costAmount) {
+          return false;
+        }
       }
     }
 

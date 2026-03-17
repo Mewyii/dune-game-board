@@ -69,33 +69,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Improved projectile rifles',
-      de: 'Verbesserte Projektilwaffen',
-    },
-    costs: 1,
-    imageUrl: '/assets/images/action-backgrounds/assault_trooper.png',
-    effectSize: 'small',
-    imagePosition: 'center',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'multiplier-cards-with-sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
       en: 'Controlled Spice Explosions',
       de: 'Gesteuerte Spice-Explosionen',
     },
@@ -129,6 +102,137 @@ export const techTiles: TechTileCard[] = [
       {
         type: 'troop-insert',
         amount: 1,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Smuggler outposts',
+      de: 'Schmuggler-Aussenposten',
+    },
+    faction: 'guild',
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [
+      {
+        type: 'foldspace',
+      },
+    ],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'tech',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Personal Shield',
+      de: 'Persönlicher Schild',
+    },
+    costs: 1,
+    imageUrl: '/assets/images/action-backgrounds/personal_shield.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'leader-heal',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Hunter Seekers',
+      de: 'Jäger-Sucher',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/hunter_seeker.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-leader-assassinate',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Improved projectile rifles',
+      de: 'Verbesserte Projektilwaffen',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/assault_trooper.png',
+    effectSize: 'small',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'multiplier-cards-with-sword',
+      },
+      {
+        type: 'sword',
       },
     ],
     customEffect: {
@@ -184,7 +288,7 @@ export const techTiles: TechTileCard[] = [
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/windtraps.png',
     effectSize: 'medium',
-    imagePosition: 'top',
+    imagePosition: 'center',
     buyEffects: [],
     effects: [
       {
@@ -201,46 +305,6 @@ export const techTiles: TechTileCard[] = [
       },
       {
         type: 'water',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-  },
-  {
-    name: {
-      en: 'Smuggler outposts',
-      de: 'Schmuggler-Aussenposten',
-    },
-    faction: 'guild',
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/desert_4.png',
-    effectSize: 'medium',
-    imagePosition: 'center',
-    buyEffects: [
-      {
-        type: 'foldspace',
-      },
-    ],
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'solari',
-        amount: 2,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'tech',
-        amount: 2,
       },
     ],
     customEffect: {
@@ -291,12 +355,12 @@ export const techTiles: TechTileCard[] = [
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/stilltent.png',
     effectSize: 'medium',
-    imagePosition: 'bottom',
+    imagePosition: 'center',
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '',
-      de: '',
+      en: '<b>Aufdeckzug:</b> <br>Wenn du einen Agenten auf einem <br>{faction:spice}-Feld hast: {resource:persuasion;amount:1} {resource:focus}',
+      de: '<b>Aufdeckzug:</b> <br>Wenn du einen Agenten auf einem <br>{faction:spice}-Feld hast: {resource:persuasion;amount:1} {resource:focus}',
       fontSize: 'small',
     },
   },
@@ -313,8 +377,8 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '',
-      de: '',
+      en: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf {faction:spice}-Feldern: {resource:sword}',
+      de: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf <br>{faction:spice}-Feldern: {resource:sword}{resource:sword}',
       fontSize: 'small',
     },
   },
@@ -353,6 +417,40 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Axolotl-Tanks',
+      de: 'Axolotl-Tanks',
+    },
+    costs: 2,
+    imageUrl: '',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'leader-heal',
+        amount: 2,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
     },
   },
   {
@@ -541,6 +639,49 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Artillery Arsenal',
+      de: 'Artillerie-Arsenal',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/infrastructure.png',
+    effectSize: 'medium',
+    imagePosition: 'top',
+    buyEffects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+    ],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
       en: 'Trade Port',
       de: 'Handelshafen',
     },
@@ -604,46 +745,6 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Artillery Arsenal',
-      de: 'Artillerie-Arsenal',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/infrastructure.png',
-    effectSize: 'medium',
-    imagePosition: 'top',
-    buyEffects: [
-      {
-        type: 'faction-influence-down-choice',
-      },
-    ],
-    effects: [
-      {
-        type: 'timing-reveal-turn',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
     },
   },
   {
@@ -1202,7 +1303,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Leichter',
     },
     costs: 6,
-    imageUrl: '/assets/images/action-backgrounds/arrakeen_3.png',
+    imageUrl: '/assets/images/action-backgrounds/spaceship.png',
     effectSize: 'medium',
     imagePosition: 'top',
     buyEffects: [
@@ -1307,7 +1408,27 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'bottom',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'recruitment-emperor',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
     customEffect: {
       en: '',
       de: '',

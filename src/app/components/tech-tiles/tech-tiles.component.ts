@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
+
 import { getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, FactionType, LanguageString } from 'src/app/models';
+
+import { LanguageString } from 'src/app/models';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, TechTileModifier } from 'src/app/services/game-modifier.service';
@@ -27,7 +27,7 @@ export class TechTilesComponent {
     public gameManager: GameManager,
     public techTilesService: TechTilesService,
     public t: TranslateService,
-    private gameModifierService: GameModifiersService
+    private gameModifierService: GameModifiersService,
   ) {}
 
   ngOnInit(): void {
@@ -67,14 +67,6 @@ export class TechTilesComponent {
     } else {
       this.hoveredTechTileId = '';
     }
-  }
-
-  getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
-
-  getFactionTypePath(rewardType: FactionType) {
-    return getFactionTypePath(rewardType);
   }
 
   getTechTileCostModifier(card: TechTileCard) {

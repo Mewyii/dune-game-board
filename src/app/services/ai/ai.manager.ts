@@ -6,7 +6,6 @@ import {
   getPlayerCombatStrength,
   getPlayerCombatStrengthPotentialAgainstEnemy,
   getPlayerGarrisonStrength,
-  getResourceAmount,
 } from 'src/app/helpers/ai';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
@@ -38,6 +37,7 @@ import { getNumberAverage, normalizeNumber } from '../../helpers/common';
 import { ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../cards.service';
 import { PlayerCombatUnits } from '../combat-manager.service';
 import { ImperiumRowModifier } from '../game-modifier.service';
+import { PlayerResourcesService } from '../player-resources.service';
 import { PlayerFactionScoreType, PlayerScore } from '../player-score-manager.service';
 import { SettingsService } from '../settings.service';
 import { PlayerTechTile, TechTileDeckCard } from '../tech-tiles.service';
@@ -74,6 +74,7 @@ export class AIManager {
     private settingsService: SettingsService,
     private effectEvaluationService: AIEffectEvaluationService,
     private fieldEvaluationService: AIFieldEvaluationService,
+    private playerResourcesService: PlayerResourcesService,
   ) {
     const aiPlayersString = localStorage.getItem('aiPlayers');
     if (aiPlayersString) {
@@ -184,7 +185,7 @@ export class AIManager {
     this.aiPlayersSubject.next(aiPlayers);
   }
 
-  public setactiveAIPlayerId(id: number) {
+  public setActiveAIPlayerId(id: number) {
     this.activeAIPlayerIdSubject.next(id);
   }
 
@@ -320,13 +321,13 @@ export class AIManager {
       return 0;
     }
 
-    const playerSpiceAmount = player.resources.find((x) => x.type === 'spice')?.amount;
+    const playerSpiceAmount = this.playerResourcesService.getPlayerResourceAmount(player.id, 'spice');
     if (!playerSpiceAmount) {
       return 0;
     }
 
     const desiredSolariAmount = player.hasSwordmaster ? 9 : 10;
-    const playerSolariAmount = player.resources.find((x) => x.type === 'solari')?.amount ?? 0;
+    const playerSolariAmount = this.playerResourcesService.getPlayerResourceAmount(player.id, 'solari');
 
     for (let spiceCount = 1; spiceCount <= playerSpiceAmount; spiceCount++) {
       if (playerSolariAmount + spiceToSolariFunction(spiceCount) > desiredSolariAmount || spiceCount >= maxAmount) {
@@ -974,7 +975,7 @@ export class AIManager {
   public getTechTileBuyEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
     const techCostEvaluation =
       this.effectEvaluationService.getRewardEffectEvaluation('tech', player, gameState) * techTile.costs;
-    const playerTechAmount = getResourceAmount(player, 'tech');
+    const playerTechAmount = gameState.playerResources.tech;
 
     let evaluationValue = -techCostEvaluation + playerTechAmount * 0.75;
 

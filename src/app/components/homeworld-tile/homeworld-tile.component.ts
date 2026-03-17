@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, EffectRewardType } from 'src/app/models';
+
+import { EffectRewardType } from 'src/app/models';
 
 interface HomeworldUpgrade {
   rewardType: EffectRewardType;
@@ -9,10 +9,10 @@ interface HomeworldUpgrade {
 }
 
 @Component({
-    selector: 'dune-homeworld-tile',
-    templateUrl: './homeworld-tile.component.html',
-    styleUrls: ['./homeworld-tile.component.scss'],
-    standalone: false
+  selector: 'dune-homeworld-tile',
+  templateUrl: './homeworld-tile.component.html',
+  styleUrls: ['./homeworld-tile.component.scss'],
+  standalone: false,
 })
 export class HomeworldTileComponent implements OnInit {
   public upgrades: HomeworldUpgrade[] = [
@@ -29,10 +29,6 @@ export class HomeworldTileComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
 
   public getRandomDegree() {
     return Math.floor(Math.random() * 360) + 1;

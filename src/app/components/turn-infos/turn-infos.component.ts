@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isFactionType } from 'src/app/helpers/faction-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActionField, EffectType } from 'src/app/models';
+
+import { ActionField } from 'src/app/models';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -28,7 +28,7 @@ export class TurnInfosComponent implements OnInit {
     private gameManager: GameManager,
     private turnInfoService: TurnInfoService,
     public t: TranslateService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
   ) {}
 
   ngOnInit(): void {
@@ -65,9 +65,5 @@ export class TurnInfosComponent implements OnInit {
     this.showTechTilesFlippedThisTurn = true;
     this.showTechTilesBoughtThisTurn = true;
     this.showIntriguesPlayedThisTurn = true;
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

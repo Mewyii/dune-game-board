@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { AppMode } from 'src/app/constants/board-settings';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType } from 'src/app/models';
+
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
@@ -128,10 +127,6 @@ export class AlwaysBuyableCardsComponent {
     } else {
       this.activeCardId = '';
     }
-  }
-
-  getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 
   getCardCostModifier(card: ImperiumCard) {

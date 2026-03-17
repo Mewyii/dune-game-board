@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
-import { EffectType, StructuredConversionEffect, StructuredRewardEffect } from 'src/app/models';
+import { StructuredConversionEffect, StructuredRewardEffect } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -33,7 +33,7 @@ export class PlayerRewardChoicesComponent implements OnInit {
     private gameManager: GameManager,
     private playerRewardChoicesService: PlayerRewardChoicesService,
     private turnInfoService: TurnInfoService,
-    public t: TranslateService
+    public t: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +43,7 @@ export class PlayerRewardChoicesComponent implements OnInit {
       this.activePlayerId = activePlayer?.id ?? 0;
       this.activePlayer = activePlayer;
       this.playerRewardChoices = this.playerRewardChoicesService.playerRewardChoices.find(
-        (x) => x.playerId === this.activePlayerId
+        (x) => x.playerId === this.activePlayerId,
       );
     });
 
@@ -132,9 +132,5 @@ export class PlayerRewardChoicesComponent implements OnInit {
 
   public isStructuredConversionEffect(effect: StructuredConversionEffect | StructuredRewardEffect) {
     return isStructuredConversionEffect(effect);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

@@ -34,23 +34,23 @@ export class SettingsService {
   private settings$ = this.settingsSubject.asObservable();
   public gameContent$ = this.settings$.pipe(
     map((x) => x.gameContent),
-    distinctUntilChanged((prev, next) => prev.name === next.name)
+    distinctUntilChanged((prev, next) => prev.name === next.name),
   );
   public mode$ = this.settings$.pipe(
     map((x) => x.mode),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
   public language$ = this.settings$.pipe(
     map((x) => x.language),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
   public eventsEnabled$ = this.settings$.pipe(
     map((x) => x.eventsEnabled),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
   public autoplayMusic$ = this.settings$.pipe(
     map((x) => x.autoplayMusic),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 
   constructor() {

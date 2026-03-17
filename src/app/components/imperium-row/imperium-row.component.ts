@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActiveFactionType, EffectType } from 'src/app/models';
+
+import { ActiveFactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
@@ -197,10 +197,6 @@ export class ImperiumRowComponent implements OnInit {
     } else {
       this.hoveredCardId = '';
     }
-  }
-
-  getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 
   getCardCostModifier(card: ImperiumRowCard | ImperiumRowPlot) {

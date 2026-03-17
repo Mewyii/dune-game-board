@@ -1,23 +1,14 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import {
-  activeFactionTypes,
-  combatUnitTypes,
-  EffectType,
-  nonFactionActionTypes,
-  passiveFactionTypes,
-  resourceTypes,
-  EffectRewardType,
-  effectRewards,
-} from 'src/app/models';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { activeFactionTypes } from 'src/app/models';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 
 @Component({
-    selector: 'dune-plot-editor',
-    templateUrl: './plot-editor.component.html',
-    styleUrls: ['./plot-editor.component.scss'],
-    standalone: false
+  selector: 'dune-plot-editor',
+  templateUrl: './plot-editor.component.html',
+  styleUrls: ['./plot-editor.component.scss'],
+  standalone: false,
 })
 export class PlotEditorComponent implements OnInit, OnChanges {
   @Input() imperiumPlot: ImperiumPlot | null = null;
@@ -82,11 +73,7 @@ export class PlotEditorComponent implements OnInit, OnChanges {
         en: '',
         de: '',
         fontSize: 'small',
-      })
+      }),
     );
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

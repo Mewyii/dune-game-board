@@ -71,6 +71,7 @@ import { PlayerHandComponent } from './components/player-hand/player-hand.compon
 import { PlayerEffectChoiceComponent } from './components/player-reward-choices/player-effect-choice/player-effect-choice.component';
 import { PlayerEffectConversionComponent } from './components/player-reward-choices/player-effect-conversion/player-effect-conversion.component';
 import { PlayerRewardChoicesComponent } from './components/player-reward-choices/player-reward-choices.component';
+import { PlayerOverviewComponent } from './components/playerboard/player-overview/player-overview.component';
 import { TechTilesComponent } from './components/tech-tiles/tech-tiles.component';
 import { TranslationComponent } from './components/translation/translation.component';
 import { TurnInfosComponent } from './components/turn-infos/turn-infos.component';
@@ -97,7 +98,10 @@ import { StartingCardConfiguratorComponent } from './pages/starting-card-configu
 import { DialogTechTileEditorComponent } from './pages/tech-tile-configurator/dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 import { TechTileConfiguratorComponent } from './pages/tech-tile-configurator/tech-tile-configurator.component';
 import { TechTileEditorComponent } from './pages/tech-tile-configurator/tech-tile-editor/tech-tile-editor.component';
+import { ActionTypePathPipe } from './pipes/action-type-path';
 import { DuneSymbolsPipe } from './pipes/dune-symbols';
+import { EffectTypePathPipe } from './pipes/effect-type-path';
+import { FactionTypePathPipe } from './pipes/faction-type-path';
 import { NumberToArrayPipe } from './pipes/number-to-array';
 import { SafeUrlPipe } from './pipes/safe-url';
 
@@ -111,6 +115,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     DuneLocationComponent,
     CardAreasComponent,
     PlayerboardComponent,
+    PlayerOverviewComponent,
     TechboardComponent,
     EventsComponent,
     HomeworldTileComponent,
@@ -120,6 +125,9 @@ import { SafeUrlPipe } from './pipes/safe-url';
     ConflictsComponent,
     AllianceTokenComponent,
     DuneSymbolsPipe,
+    EffectTypePathPipe,
+    FactionTypePathPipe,
+    ActionTypePathPipe,
     NumberToArrayPipe,
     SafeUrlPipe,
     MinorHousesComponent,

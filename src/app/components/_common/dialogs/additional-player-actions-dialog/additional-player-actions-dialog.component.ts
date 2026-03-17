@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { compact } from 'lodash';
-import { getFactionTypePath, isFactionType } from 'src/app/helpers/faction-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { ActionField, EffectRewardType, EffectType, FactionType } from 'src/app/models';
+import { isFactionType } from 'src/app/helpers/faction-types';
+
+import { ActionField, EffectRewardType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -39,7 +39,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     private settingsService: SettingsService,
     private gameModifiersService: GameModifiersService,
     private playerScoreManager: PlayerScoreManager,
-    private turnInfoService: TurnInfoService
+    private turnInfoService: TurnInfoService,
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +100,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       const players = this.playersService.getPlayers();
       for (const player of players) {
         const modifierId = this.blockedFieldIds.find(
-          (x) => x.fieldId === actionField.title.en || x.actionType === actionField.actionType
+          (x) => x.fieldId === actionField.title.en || x.actionType === actionField.actionType,
         )?.id;
         if (modifierId) {
           this.gameModifiersService.removePlayerGameModifier(player.id, 'fieldBlock', modifierId);
@@ -141,10 +141,6 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     return this.blockedFieldIds.some((x) => x.fieldId === actionField.title.en || x.actionType === actionField.actionType);
   }
 
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
-
   public getColor(actionField: ActionField) {
     const location = this.settingsService.getBoardLocation(actionField.title.en);
     if (location) {
@@ -161,9 +157,5 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
   public getPlayerScore(scoreType: PlayerScoreType) {
     return this.activePlayerScore ? this.activePlayerScore[scoreType] : 0;
-  }
-
-  public getFactionTypePath(rewardType: FactionType) {
-    return getFactionTypePath(rewardType);
   }
 }

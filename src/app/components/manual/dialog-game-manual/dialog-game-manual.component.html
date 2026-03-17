@@ -13,7 +13,7 @@
         <br />
         <div
           [innerHTML]="
-            '{resource:signet-token}: You get one signet. You can use it indiviually for each leader.' | duneSymbols: '24px'
+            '{resource:signet}: You get one signet. You can use it indiviually for each leader.' | duneSymbols: '24px'
           "
         ></div>
         <br />
@@ -27,6 +27,19 @@
         <div
           [innerHTML]="
             '{resource:card-draw-or-destroy}: You can decide wether to draw a card or get one focus.' | duneSymbols: '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:leader-heal}: Can be used to heal your leader at the very end of a round.' | duneSymbols: '24px'
+          "
+        ></div>
+        <br />
+        <div
+          [innerHTML]="
+            '{resource:leader-wound}: Flip your leader. His abilites can not be used until he is healed.'
+              | duneSymbols: '24px'
           "
         ></div>
         <br />
@@ -60,8 +73,14 @@
       <div class="content-container">
         <br />
         <div>
-          <b>Endgame</b> is now triggered when a player has 8 (or 9 in a 3-player-game) victory points at the end of a round.
-          Then, one final round is played, after which the game ends and endgame effects on cards are triggered.
+          <b>Dreadnoughts</b> now have 5 combat strength. <br />They always need to rest one round after they were put into a
+          conflict. <br />When a conflict is won, for each involved dreadnought the player receives
+          <span [innerHTML]="'{resource:location-control}' | duneSymbols: '24px'"></span>.
+        </div>
+        <br />
+        <div>
+          <b>Tech</b> is mostly the same, but tech negotiators are removed and tech is an additional resource now. <br />It
+          can not be substituted by spice anymore.
         </div>
         <br />
         <div>
@@ -74,14 +93,15 @@
         </div>
         <br />
         <div>
-          <b>Dreadnoughts</b> now have 4 combat strength. <br />They always need to rest one round after they were put into a
-          conflict. <br />When a conflict is won, for each involved dreadnought the player receives
-          <span [innerHTML]="'{resource:location-control}' | duneSymbols: '24px'"></span>.
+          <b>Endgame</b> is now triggered when a player has 8 (or 9 in a 3-player-game) victory points at the end of a round.
+          Then, one final round is played, after which the game ends and endgame effects on cards are triggered.
         </div>
         <br />
         <div>
-          <b>Tech</b> is mostly the same, but tech negotiators are removed and tech is an additional resource now. <br />It
-          can not be substituted by spice anymore.
+          <b>Leaders</b> can now be assassinated (<span [innerHTML]="'{resource:leader-wound}' | duneSymbols: '24px'"></span
+          >). When this happens, flip the targeted leader tile. Flipped leaders can not use their abilities or their signet
+          rings anymore. Every player can heal their leader (flip him around again) at the end of a round after combat by
+          using <span [innerHTML]="'{resource:leader-heal}' | duneSymbols: '24px'"></span>.
         </div>
         <br />
         <div>

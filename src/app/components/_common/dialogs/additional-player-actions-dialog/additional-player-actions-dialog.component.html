@@ -14,7 +14,7 @@
             (click)="onAddPermanentPersuasionClicked(activePlayer.id)"
             (contextmenu)="onRemovePermanentPersuasionClicked(activePlayer.id)"
           >
-            <img class="resource" [src]="getEffectTypePath('persuasion')" />
+            <img class="resource" [src]="'persuasion' | effectTypePath" />
             <div class="resource-amount on-background">
               <span>{{ activePlayer.permanentPersuasion }}</span>
             </div>
@@ -34,7 +34,7 @@
             (click)="onAddRewardClicked(activePlayer, 'victory-point')"
             (contextmenu)="onRemovePlayerScoreClicked(activePlayer.id, 'victoryPoints')"
           >
-            <img class="resource dark" [src]="getEffectTypePath('victory-point')" />
+            <img class="resource dark" [src]="'victory-point' | effectTypePath" />
             <div class="resource-amount on-background">
               <span>{{ getPlayerScore('victoryPoints') }}</span>
             </div>
@@ -54,7 +54,7 @@
             (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-fremen')"
             (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-fremen')"
           >
-            <img class="resource dark" [src]="getFactionTypePath('fremen')" />
+            <img class="resource dark" [src]="'fremen' | factionTypePath" />
             <div class="resource-amount on-background">
               <span>{{ getPlayerScore('fremen') }}</span>
             </div>
@@ -66,7 +66,7 @@
             (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-bene')"
             (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-bene')"
           >
-            <img class="resource dark" [src]="getFactionTypePath('bene')" />
+            <img class="resource dark" [src]="'bene' | factionTypePath" />
             <div class="resource-amount on-background">
               <span>{{ getPlayerScore('bene') }}</span>
             </div>
@@ -78,7 +78,7 @@
             (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-guild')"
             (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-guild')"
           >
-            <img class="resource dark" [src]="getFactionTypePath('guild')" />
+            <img class="resource dark" [src]="'guild' | factionTypePath" />
             <div class="resource-amount on-background">
               <span>{{ getPlayerScore('guild') }}</span>
             </div>
@@ -90,7 +90,7 @@
             (click)="onAddRewardClicked(activePlayer, 'faction-influence-up-emperor')"
             (contextmenu)="onAddRewardClicked(activePlayer, 'faction-influence-down-emperor')"
           >
-            <img class="resource dark" [src]="getFactionTypePath('emperor')" />
+            <img class="resource dark" [src]="'emperor' | factionTypePath" />
             <div class="resource-amount on-background">
               <span>{{ getPlayerScore('emperor') }}</span>
             </div>

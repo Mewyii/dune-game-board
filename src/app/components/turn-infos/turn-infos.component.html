@@ -1,98 +1,112 @@
 @if (playerTurnInfo) {
-<div class="turn-infos-container font-scifi">
-  @if (showCardsPlayedThisTurn && playerTurnInfo.cardsPlayedThisTurn.length > 0 &&
-  playerTurnInfo.fieldsVisitedThisTurn.length > 0) {
-  <div class="turn-info-container">
-    <div class="turn-info-title">
-      <div class="spacer"></div>
-      {{ t.translate('turninfosFieldsVisited') }}
-      <div class="spacer" (click)="showCardsPlayedThisTurn = false"><mat-icon>close</mat-icon></div>
-    </div>
-    <div class="cards-container">
-      @for (field of playerTurnInfo.fieldsVisitedThisTurn; track $index;let i = $index) {
-      <div class="agent-placement-container">
-        @if (playerTurnInfo.cardsPlayedThisTurn[i]) {
-        <div class="card-container">
-          <dune-imperium-row-card class="small" [card]="playerTurnInfo.cardsPlayedThisTurn[i]"></dune-imperium-row-card>
+  <div class="turn-infos-container font-scifi">
+    @if (
+      showCardsPlayedThisTurn &&
+      playerTurnInfo.cardsPlayedThisTurn.length > 0 &&
+      playerTurnInfo.fieldsVisitedThisTurn.length > 0
+    ) {
+      <div class="turn-info-container">
+        <div class="turn-info-title">
+          <div class="spacer"></div>
+          {{ t.translate('turninfosFieldsVisited') }}
+          <div class="spacer" (click)="showCardsPlayedThisTurn = false"><mat-icon>close</mat-icon></div>
         </div>
-        <img class="reward" [src]="getEffectTypePath('helper-trade')" />
-        }
-        <app-dune-action [actionField]="field" [disabled]="true" [backgroundColor]="getColor(field)"></app-dune-action>
+        <div class="cards-container">
+          @for (field of playerTurnInfo.fieldsVisitedThisTurn; track $index; let i = $index) {
+            <div class="agent-placement-container">
+              @if (playerTurnInfo.cardsPlayedThisTurn[i]) {
+                <div class="card-container">
+                  <dune-imperium-row-card
+                    class="small"
+                    [card]="playerTurnInfo.cardsPlayedThisTurn[i]"
+                  ></dune-imperium-row-card>
+                </div>
+                <img class="reward" [src]="'helper-trade' | effectTypePath" />
+              }
+              <app-dune-action [actionField]="field" [disabled]="true" [backgroundColor]="getColor(field)"></app-dune-action>
+            </div>
+          }
+        </div>
       </div>
-      }
-    </div>
-  </div>
-  } @if (showCardsBoughtThisTurn && playerTurnInfo.cardsBoughtThisTurn.length > 0) {
-  <div class="turn-info-container">
-    <div class="turn-info-title">
-      <div class="spacer"></div>
-      {{ t.translate('turninfosCardsBought') }}
-      <div class="spacer" (click)="showCardsBoughtThisTurn = false"><mat-icon>close</mat-icon></div>
-    </div>
-    <div class="cards-container">
-      @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) { @if (card.type === 'imperium-card') {
-      <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
-      } @if (card.type === 'plot') {
-      <dune-plot-card [plot]="card"></dune-plot-card>
-      } }
-    </div>
-  </div>
-  } @if (showCardsTrashedThisTurn && playerTurnInfo.cardsTrashedThisTurn.length > 0) {
-  <div class="turn-info-container">
-    <div class="turn-info-title">
-      <div class="spacer"></div>
-      {{ t.translate('turninfosCardsTrashed') }}
-      <div class="spacer" (click)="showCardsTrashedThisTurn = false"><mat-icon>close</mat-icon></div>
-    </div>
-    <div class="cards-container">
-      @for (card of playerTurnInfo.cardsTrashedThisTurn; track $index) {
-      <div class="card-container">
-        <dune-imperium-row-card class="small" [card]="card"></dune-imperium-row-card>
+    }
+    @if (showCardsBoughtThisTurn && playerTurnInfo.cardsBoughtThisTurn.length > 0) {
+      <div class="turn-info-container">
+        <div class="turn-info-title">
+          <div class="spacer"></div>
+          {{ t.translate('turninfosCardsBought') }}
+          <div class="spacer" (click)="showCardsBoughtThisTurn = false"><mat-icon>close</mat-icon></div>
+        </div>
+        <div class="cards-container">
+          @for (card of playerTurnInfo.cardsBoughtThisTurn; track $index) {
+            @if (card.type === 'imperium-card') {
+              <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
+            }
+            @if (card.type === 'plot') {
+              <dune-plot-card [plot]="card"></dune-plot-card>
+            }
+          }
+        </div>
       </div>
-      }
-    </div>
-  </div>
-  } @if (showIntriguesPlayedThisTurn && playerTurnInfo.intriguesPlayedThisTurn.length > 0) {
-  <div class="turn-info-container">
-    <div class="turn-info-title">
-      <div class="spacer"></div>
-      {{ t.translate('turninfosIntriguesPlayed') }}
-      <div class="spacer" (click)="showIntriguesPlayedThisTurn = false"><mat-icon>close</mat-icon></div>
-    </div>
-    <div class="cards-container">
-      @for (card of playerTurnInfo.intriguesPlayedThisTurn; track $index) {
-      <div class="intrigue-card-container">
-        <dune-intrigue-card [card]="card"></dune-intrigue-card>
+    }
+    @if (showCardsTrashedThisTurn && playerTurnInfo.cardsTrashedThisTurn.length > 0) {
+      <div class="turn-info-container">
+        <div class="turn-info-title">
+          <div class="spacer"></div>
+          {{ t.translate('turninfosCardsTrashed') }}
+          <div class="spacer" (click)="showCardsTrashedThisTurn = false"><mat-icon>close</mat-icon></div>
+        </div>
+        <div class="cards-container">
+          @for (card of playerTurnInfo.cardsTrashedThisTurn; track $index) {
+            <div class="card-container">
+              <dune-imperium-row-card class="small" [card]="card"></dune-imperium-row-card>
+            </div>
+          }
+        </div>
       </div>
-      }
-    </div>
+    }
+    @if (showIntriguesPlayedThisTurn && playerTurnInfo.intriguesPlayedThisTurn.length > 0) {
+      <div class="turn-info-container">
+        <div class="turn-info-title">
+          <div class="spacer"></div>
+          {{ t.translate('turninfosIntriguesPlayed') }}
+          <div class="spacer" (click)="showIntriguesPlayedThisTurn = false"><mat-icon>close</mat-icon></div>
+        </div>
+        <div class="cards-container">
+          @for (card of playerTurnInfo.intriguesPlayedThisTurn; track $index) {
+            <div class="intrigue-card-container">
+              <dune-intrigue-card [card]="card"></dune-intrigue-card>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (showTechTilesFlippedThisTurn && playerTurnInfo.techTilesFlippedThisTurn.length > 0) {
+      <div class="turn-info-container">
+        <div class="turn-info-title">
+          <div class="spacer"></div>
+          {{ t.translate('turninfosTechTilesFlipped') }}
+          <div class="spacer" (click)="showTechTilesFlippedThisTurn = false"><mat-icon>close</mat-icon></div>
+        </div>
+        <div class="cards-container">
+          @for (card of playerTurnInfo.techTilesFlippedThisTurn; track $index) {
+            <dune-tech-tile [card]="card"></dune-tech-tile>
+          }
+        </div>
+      </div>
+    }
+    @if (showTechTilesBoughtThisTurn && playerTurnInfo.techTilesBoughtThisTurn.length > 0) {
+      <div class="turn-info-container">
+        <div class="turn-info-title">
+          <div class="spacer"></div>
+          {{ t.translate('turninfosTechTilesBought') }}
+          <div class="spacer" (click)="showTechTilesBoughtThisTurn = false"><mat-icon>close</mat-icon></div>
+        </div>
+        <div class="cards-container">
+          @for (card of playerTurnInfo.techTilesBoughtThisTurn; track $index) {
+            <dune-tech-tile [card]="card"></dune-tech-tile>
+          }
+        </div>
+      </div>
+    }
   </div>
-  } @if (showTechTilesFlippedThisTurn && playerTurnInfo.techTilesFlippedThisTurn.length > 0) {
-  <div class="turn-info-container">
-    <div class="turn-info-title">
-      <div class="spacer"></div>
-      {{ t.translate('turninfosTechTilesFlipped') }}
-      <div class="spacer" (click)="showTechTilesFlippedThisTurn = false"><mat-icon>close</mat-icon></div>
-    </div>
-    <div class="cards-container">
-      @for (card of playerTurnInfo.techTilesFlippedThisTurn; track $index) {
-      <dune-tech-tile [card]="card"></dune-tech-tile>
-      }
-    </div>
-  </div>
-  } @if (showTechTilesBoughtThisTurn && playerTurnInfo.techTilesBoughtThisTurn.length > 0) {
-  <div class="turn-info-container">
-    <div class="turn-info-title">
-      <div class="spacer"></div>
-      {{ t.translate('turninfosTechTilesBought') }}
-      <div class="spacer" (click)="showTechTilesBoughtThisTurn = false"><mat-icon>close</mat-icon></div>
-    </div>
-    <div class="cards-container">
-      @for (card of playerTurnInfo.techTilesBoughtThisTurn; track $index) {
-      <dune-tech-tile [card]="card"></dune-tech-tile>
-      }
-    </div>
-  </div>
-  }
-</div>
 }

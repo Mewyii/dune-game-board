@@ -1,15 +1,15 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { getActionTypePath } from 'src/app/helpers/action-types';
-import { ActionType, FactionType, EffectRewardType } from 'src/app/models';
+import { Component, Input, SimpleChanges } from '@angular/core';
+
+import { FactionType } from 'src/app/models';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
-    selector: 'dune-plot-card',
-    templateUrl: './plot-card.component.html',
-    styleUrl: './plot-card.component.scss',
-    standalone: false
+  selector: 'dune-plot-card',
+  templateUrl: './plot-card.component.html',
+  styleUrl: './plot-card.component.scss',
+  standalone: false,
 })
 export class PlotCardComponent {
   @Input() plot!: ImperiumPlot;
@@ -18,7 +18,10 @@ export class PlotCardComponent {
   public factionName = '';
   public factionColor = '';
 
-  constructor(public t: TranslateService, public settingsService: SettingsService) {}
+  constructor(
+    public t: TranslateService,
+    public settingsService: SettingsService,
+  ) {}
 
   ngOnInit(): void {
     if (this.plot.faction) {
@@ -32,10 +35,6 @@ export class PlotCardComponent {
       this.factionName = this.getFactionName(this.plot.faction);
       this.factionColor = this.getFactionColor(this.plot.faction);
     }
-  }
-
-  public getActionTypePath(rewardType: ActionType) {
-    return getActionTypePath(rewardType);
   }
 
   private getFactionColor(factionType: FactionType) {

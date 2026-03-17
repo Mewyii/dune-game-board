@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { CardAcquiringPlacementType } from '../constants/board-settings';
 import { imperiumCardsGameAdjustments } from '../constants/imperium-cards-game-adjustments';
 import { shuffleMultipleTimes } from '../helpers/common';
@@ -73,12 +73,27 @@ export class CardsService {
 
   private playerDecksSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerDecks$ = this.playerDecksSubject.asObservable();
+  public playerDeck$ = (playerId: number) =>
+    this.playerDecks$.pipe(
+      map((decks) => decks.find((deck) => deck.playerId === playerId)?.cards),
+      distinctUntilChanged(),
+    );
 
   private playerHandsSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerHands$ = this.playerHandsSubject.asObservable();
+  public playerHand$ = (playerId: number) =>
+    this.playerHands$.pipe(
+      map((hands) => hands.find((hand) => hand.playerId === playerId)?.cards),
+      distinctUntilChanged(),
+    );
 
   private playerDiscardPilesSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerDiscardPiles$ = this.playerDiscardPilesSubject.asObservable();
+  public playerDiscardPile$ = (playerId: number) =>
+    this.playerDiscardPiles$.pipe(
+      map((dps) => dps.find((dp) => dp.playerId === playerId)?.cards),
+      distinctUntilChanged(),
+    );
 
   private playerTrashPilesSubject = new BehaviorSubject<PlayerCardStack[]>([]);
   public playerTrashPiles$ = this.playerTrashPilesSubject.asObservable();

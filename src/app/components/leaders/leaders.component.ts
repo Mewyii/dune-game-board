@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { shuffle } from 'lodash';
 import { House } from 'src/app/constants/minor-houses';
-import { getFactionTypePath } from 'src/app/helpers/faction-types';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectRewardType, EffectType, FactionType, LanguageString, ResourceType } from 'src/app/models';
+
+import { EffectRewardType, LanguageString, ResourceType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -15,6 +14,7 @@ import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { PlayerAgent, PlayerAgentsService } from 'src/app/services/player-agents.service';
+import { PlayerResourcesService, Resources } from 'src/app/services/player-resources.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -41,8 +41,10 @@ export class LeadersComponent implements OnInit {
   public activePlayerId: number = 0;
 
   public activeLeader: LeaderDeckCard | undefined;
+  public isLeaderActive = false;
 
   public activePlayer: Player | undefined;
+  public activePlayerResources: Resources = this.playerResourcesService.getInitialPlayerResources();
 
   public activePlayerCombatUnits: PlayerCombatUnits | undefined;
 
@@ -55,7 +57,6 @@ export class LeadersComponent implements OnInit {
   public houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
   public playerTechTiles: PlayerTechTile[] = [];
-  public techTiles: TechTileDeckCard[] = [];
   public activeTechTileId = '';
   public hoveredTechTileId = '';
 
@@ -79,6 +80,7 @@ export class LeadersComponent implements OnInit {
     private turnInfoService: TurnInfoService,
     private settingsService: SettingsService,
     private playerAgentsService: PlayerAgentsService,
+    private playerResourcesService: PlayerResourcesService,
   ) {}
 
   ngOnInit(): void {
@@ -107,18 +109,20 @@ export class LeadersComponent implements OnInit {
 
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
 
-      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId).map((x) => x.techTile);
+      this.playerTechTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
 
       this.activePlayerAvailableAgents = this.playerAgentsService.getAvailablePlayerAgents(this.activePlayerId);
 
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
+
+      this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
     });
 
     this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
       this.activePlayerCombatUnits = playerCombatUnits.find((x) => x.playerId === this.activePlayerId);
     });
 
-    this.playerAgentsService.availablePlayerAgents$.subscribe((availablePlayerAgents) => {
+    this.playerAgentsService.availablePlayersAgents$.subscribe((availablePlayerAgents) => {
       this.activePlayerAvailableAgents = availablePlayerAgents.filter((x) => x.playerId === this.activePlayerId);
     });
 
@@ -128,20 +132,23 @@ export class LeadersComponent implements OnInit {
     });
 
     this.techTilesService.playerTechTiles$.subscribe((playerTechTiles) => {
-      this.playerTechTiles = playerTechTiles;
-      this.techTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId).map((x) => x.techTile);
+      this.playerTechTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
     });
 
     this.gameManager.currentRound$.subscribe((currentTurn) => {
       this.currentRound = currentTurn;
     });
 
-    this.intriguesService.playerIntrigues$.subscribe(() => {
+    this.intriguesService.playersIntrigues$.subscribe(() => {
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
 
     this.turnInfoService.turnInfos$.subscribe(() => {
       this.turnInfos = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
+    });
+
+    this.playerResourcesService.playersResources$.subscribe(() => {
+      this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
     });
   }
 
@@ -190,19 +197,19 @@ export class LeadersComponent implements OnInit {
     }
   }
 
-  onAddFocusTokenClicked(id: number) {
-    this.audioManager.playSound('focus');
-    this.playerManager.addFocusTokens(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
+  onFlipLeaderClicked() {
+    if (this.activeLeader && this.activePlayer) {
+      this.audioManager.playSound('tech-tile');
+      this.leadersService.flipLeader(this.activePlayer.id);
+      this.isLeaderActive = false;
+    }
   }
 
-  onRemoveFocusTokenClicked(id: number) {
-    this.audioManager.playSound('click-reverse');
-    this.playerManager.removeFocusTokens(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-    return false;
+  onHealLeaderClicked() {
+    if (this.activeLeader && this.activePlayer) {
+      this.gameManager.healLeader(this.activePlayer.id);
+      this.isLeaderActive = false;
+    }
   }
 
   public onAddTroopToGarrisonClicked(playerId: number) {
@@ -230,54 +237,17 @@ export class LeadersComponent implements OnInit {
   }
 
   onAddRewardClicked(player: Player, type: EffectRewardType) {
-    if (type === 'solari') {
-      this.audioManager.playSound('solari');
-    } else if (type === 'water') {
-      this.audioManager.playSound('water');
-    } else if (type === 'spice') {
-      this.audioManager.playSound('spice');
-    }
-
     this.gameManager.addRewardToPlayer(player.id, { type });
 
     this.gameManager.setPreferredFieldsForAIPlayer(player.id);
-
     return false;
   }
 
   onRemoveResourceClicked(player: Player, type: ResourceType) {
     this.audioManager.playSound('click-reverse');
-    this.playerManager.removeResourceFromPlayer(player.id, type, 1);
+    this.playerResourcesService.removeResourceFromPlayer(player.id, type, 1);
 
     this.gameManager.setPreferredFieldsForAIPlayer(player.id);
-    return false;
-  }
-
-  onAddSignetTokenClicked(player: Player) {
-    this.gameManager.addRewardToPlayer(player.id, { type: 'signet-token' });
-
-    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
-  }
-
-  onRemoveSignetTokenClicked(id: number) {
-    this.audioManager.playSound('click-reverse');
-    this.playerManager.removeSignetTokensFromPlayer(id, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
-    return false;
-  }
-
-  onAddTechClicked(player: Player) {
-    this.gameManager.addRewardToPlayer(player.id, { type: 'tech' });
-
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
-  }
-
-  onRemoveTechClicked() {
-    this.audioManager.playSound('click-reverse');
-    this.playerManager.removeTechFromPlayer(this.activePlayerId, 1);
-
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
     return false;
   }
 
@@ -388,6 +358,7 @@ export class LeadersComponent implements OnInit {
 
   public onEndTurnClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
+    this.isLeaderActive = false;
     this.gameManager.endPlayerTurn(playerId);
   }
 
@@ -421,22 +392,6 @@ export class LeadersComponent implements OnInit {
     } else {
       this.hoveredTechTileId = '';
     }
-  }
-
-  public getIsTechTileFlipped(techTileId: string) {
-    return this.playerTechTiles.find((x) => x.techTile.id === techTileId)?.isFlipped;
-  }
-
-  public getPlayerHouseLevel(houseId: string) {
-    return this.playerHouses.find((x) => x.houseId === houseId)?.level ?? 0;
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
-  }
-
-  public getFactionTypePath(rewardType: FactionType) {
-    return getFactionTypePath(rewardType);
   }
 
   getTransparentColor(color: string, opacity: number) {

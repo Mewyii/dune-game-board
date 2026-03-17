@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType, EffectRewardType } from 'src/app/models';
+
 import { Player } from 'src/app/models/player';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { LoggingService } from 'src/app/services/log.service';
@@ -28,10 +27,10 @@ interface PlayerSummary {
 }
 
 @Component({
-    selector: 'dune-game-summary-dialog',
-    templateUrl: './game-summary-dialog.component.html',
-    styleUrl: './game-summary-dialog.component.scss',
-    standalone: false
+  selector: 'dune-game-summary-dialog',
+  templateUrl: './game-summary-dialog.component.html',
+  styleUrl: './game-summary-dialog.component.scss',
+  standalone: false,
 })
 export class GameSummaryDialogComponent implements OnInit {
   public players: Player[] = [];
@@ -44,7 +43,7 @@ export class GameSummaryDialogComponent implements OnInit {
     private playersService: PlayersService,
     private leadersService: LeadersService,
     private loggingService: LoggingService,
-    private playerScoreManager: PlayerScoreManager
+    private playerScoreManager: PlayerScoreManager,
   ) {}
 
   ngOnInit(): void {
@@ -98,9 +97,5 @@ export class GameSummaryDialogComponent implements OnInit {
 
   onClose() {
     this.dialogRef.close();
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

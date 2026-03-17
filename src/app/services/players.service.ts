@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Resource, ResourceType } from '../models';
 import { Player, PlayerTurnState } from '../models/player';
 import { SettingsService } from './settings.service';
 
@@ -54,11 +53,6 @@ export class PlayersService {
     return player ? player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound : 0;
   }
 
-  public getPlayerFocusTokens(playerId: number) {
-    const player = this.playersSubject.value.find((x) => x.id === playerId);
-    return player ? cloneDeep(player.focusTokens) : 0;
-  }
-
   public addPlayer() {
     const players = this.getPlayers();
 
@@ -67,18 +61,10 @@ export class PlayersService {
         id: players.length + 1,
         agents: 2,
         turnState: 'agent-placement',
-        resources: [
-          { type: 'solari', amount: 0 },
-          { type: 'spice', amount: 0 },
-          { type: 'water', amount: 0 },
-        ],
         color: this.createPlayerColor(players.length + 1),
-        focusTokens: 0,
-        signetTokenCount: 0,
         cardsDrawnAtRoundStart: 5,
         persuasionGainedThisRound: 0,
         persuasionSpentThisRound: 0,
-        tech: 0,
         permanentPersuasion: 0,
         isAI: true,
         turnNumber: 0,
@@ -97,26 +83,12 @@ export class PlayersService {
   }
 
   public resetPlayers() {
-    const playerStartingResources = this.settingsService.getStartingResources();
-    const playerStartingSolari = playerStartingResources.find((x) => x.type === 'solari')?.amount ?? 0;
-    const playerStartingSpice = playerStartingResources.find((x) => x.type === 'spice')?.amount ?? 0;
-    const playerStartingWater = playerStartingResources.find((x) => x.type === 'water')?.amount ?? 0;
-
     const players: Player[] = this.getPlayers().map((player) => ({
       ...player,
       agents: 2,
       turnState: 'agent-placement',
-      resources: [
-        { type: 'solari', amount: playerStartingSolari },
-        { type: 'spice', amount: playerStartingSpice },
-        { type: 'water', amount: playerStartingWater },
-      ] as Resource[],
       cardsBought: 0,
-      focusTokens: 0,
-      intrigueCount: 0,
-      signetTokenCount: 0,
       cardsDrawnAtRoundStart: 5,
-      tech: 0,
       persuasionGainedThisRound: 0,
       persuasionSpentThisRound: 0,
       permanentPersuasion: 0,
@@ -168,105 +140,6 @@ export class PlayersService {
 
   public resetTurnNumberForPlayers() {
     this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, turnNumber: 0 })));
-  }
-
-  public addResourceToPlayer(id: number, type: ResourceType, amount: number, valuesCanBeNegative?: boolean) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      const resourceIndex = player.resources.findIndex((x) => x.type === type);
-      const currentResourceAmount = player.resources[resourceIndex].amount ?? 0;
-
-      player.resources[resourceIndex] = {
-        ...player.resources[resourceIndex],
-        amount: currentResourceAmount + amount > 0 || valuesCanBeNegative ? currentResourceAmount + amount : 0,
-      };
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public removeResourceFromPlayer(id: number, type: ResourceType, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      const resourceIndex = player.resources.findIndex((x) => x.type === type);
-      const currentResourceAmount = player.resources[resourceIndex].amount;
-      player.resources[resourceIndex] = {
-        ...player.resources[resourceIndex],
-        amount: currentResourceAmount ? currentResourceAmount - amount : 0,
-      };
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public addSignetTokensToPlayer(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.signetTokenCount = player.signetTokenCount + amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public removeSignetTokensFromPlayer(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.signetTokenCount = player.signetTokenCount - amount;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public addTechToPlayer(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.tech = player.tech + amount > 0 ? player.tech + amount : 0;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public removeTechFromPlayer(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.tech = player.tech - amount > 0 ? player.tech - amount : 0;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public addFocusTokens(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player) {
-      player.focusTokens = player.focusTokens + amount > 0 ? player.focusTokens + amount : 0;
-    }
-
-    this.playersSubject.next(players);
-  }
-
-  public removeFocusTokens(id: number, amount: number) {
-    const players = this.getPlayers();
-
-    const player = players.find((x) => x.id === id);
-    if (player && player.focusTokens >= amount) {
-      player.focusTokens = player.focusTokens - amount > 0 ? player.focusTokens - amount : 0;
-    }
-
-    this.playersSubject.next(players);
   }
 
   public addPermanentAgentToPlayer(playerId: number) {

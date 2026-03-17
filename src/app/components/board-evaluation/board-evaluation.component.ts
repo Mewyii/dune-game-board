@@ -35,7 +35,7 @@ export class BoardEvaluationComponent implements OnInit {
         const fieldCosts = actionField.costs ? this.getRewardValue(actionField.costs) : 0;
 
         const rewardOptionIndex = actionField.rewards.findIndex(
-          (x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal'
+          (x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal',
         );
         const fieldHasRewardOptions = rewardOptionIndex > -1;
 
@@ -50,11 +50,11 @@ export class BoardEvaluationComponent implements OnInit {
           this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
         } else if (fieldHasRewardOptions) {
           const optionalRewards = actionField.rewards.filter(
-            (item, index) => index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1
+            (item, index) => index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1,
           );
 
           const nonOptionalRewards = this.getRewardValue(
-            actionField.rewards.filter((x) => !optionalRewards.some((y) => y.type === x.type))
+            actionField.rewards.filter((x) => !optionalRewards.some((y) => y.type === x.type)),
           );
 
           let highestOptionalRewardValue = 0;
@@ -195,7 +195,7 @@ export class BoardEvaluationComponent implements OnInit {
         case 'placeholder':
         case 'helper-or':
         case 'helper-or-horizontal':
-        case 'signet-token':
+        case 'signet':
         default:
           break;
       }

@@ -12,20 +12,21 @@
         {{ t.translateLS(leader.passiveName) }}
       </div>
       <div class="leader-signet-description-container font-text">
-        @if(leader.passiveEffects && leader.passiveEffects.length > 0) {
-        <dune-reward-array
-          [rewards]="leader.passiveEffects"
-          [size]="passiveEffectSize"
-          [textColor]="'white'"
-          [wrap]="false"
-          [alignItems]="'start'"
-        ></dune-reward-array>
-        } @if(leader.passiveDescription && leader.passiveDescription.en) {
-        <div
-          class="leader-passive-description"
-          [style.fontSize]="passiveDescriptionSize"
-          [innerHTML]="t.translateLS(leader.passiveDescription) | duneSymbols : passiveDescriptionSymbolSize"
-        ></div>
+        @if (leader.passiveEffects && leader.passiveEffects.length > 0) {
+          <dune-reward-array
+            [rewards]="leader.passiveEffects"
+            [size]="passiveEffectSize"
+            [textColor]="'white'"
+            [wrap]="false"
+            [alignItems]="'start'"
+          ></dune-reward-array>
+        }
+        @if (leader.passiveDescription && leader.passiveDescription.en) {
+          <div
+            class="leader-passive-description"
+            [style.fontSize]="passiveDescriptionSize"
+            [innerHTML]="t.translateLS(leader.passiveDescription) | duneSymbols: passiveDescriptionSymbolSize"
+          ></div>
         }
       </div>
     </div>
@@ -34,20 +35,21 @@
         {{ t.translateLS(leader.signetName) }}
       </div>
       <div class="leader-signet-description-container font-text">
-        @if(leader.signetEffects && leader.signetEffects.length > 0) {
-        <dune-reward-array
-          [rewards]="leader.signetEffects"
-          [size]="signetEffectSize"
-          [textColor]="'white'"
-          [wrap]="false"
-          [alignItems]="'start'"
-        ></dune-reward-array>
-        } @if(leader.signetDescription && leader.signetDescription.en) {
-        <div
-          class="leader-signet-description"
-          [style.fontSize]="signetDescriptionSize"
-          [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols : signetDescriptionSymbolSize"
-        ></div>
+        @if (leader.signetEffects && leader.signetEffects.length > 0) {
+          <dune-reward-array
+            [rewards]="leader.signetEffects"
+            [size]="signetEffectSize"
+            [textColor]="'white'"
+            [wrap]="false"
+            [alignItems]="'start'"
+          ></dune-reward-array>
+        }
+        @if (leader.signetDescription && leader.signetDescription.en) {
+          <div
+            class="leader-signet-description"
+            [style.fontSize]="signetDescriptionSize"
+            [innerHTML]="t.translateLS(leader.signetDescription) | duneSymbols: signetDescriptionSymbolSize"
+          ></div>
         }
       </div>
     </div>

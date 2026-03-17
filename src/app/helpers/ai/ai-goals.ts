@@ -3,6 +3,7 @@ import { Effect, EffectRewardType, Resource, ResourceType } from 'src/app/models
 import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
+import { Resources } from 'src/app/services/player-resources.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
 
 export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
@@ -11,39 +12,6 @@ export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
     return spice.amount;
   }
   return 0;
-}
-
-export function getResourceDesire(
-  player: Player,
-  baseDesire: number,
-  influences: {
-    resource: ResourceType | 'tech';
-    amount: number;
-    maxAmount?: number;
-    negative?: boolean;
-  }[],
-) {
-  let desire = baseDesire;
-  for (const influence of influences) {
-    const resourceAmount = getResourceAmount(player, influence.resource);
-    if (!influence.negative) {
-      desire = desire + clamp(resourceAmount * influence.amount, 0, influence.maxAmount ?? 1);
-    } else {
-      desire = desire - clamp(resourceAmount * influence.amount, 0, influence.maxAmount ?? 1);
-    }
-  }
-  return clamp(desire, 0, 1);
-}
-
-export function getResourceAmount(player: Player, resourceType: ResourceType | 'tech') {
-  switch (resourceType) {
-    case 'tech':
-      return player.tech;
-    default:
-      const resource = player.resources.find((x) => x.type === resourceType);
-
-      return resource?.amount ?? 0;
-  }
 }
 
 export function getPlayerCombatStrength(player: PlayerCombatUnits, gamestate: Pick<GameState, 'gameSettings'>) {
@@ -156,11 +124,11 @@ export function noOneHasMoreInfluence(player: Player, gameState: GameState, fact
   return !gameState.enemyScore.some((x) => x[faction] > playerScore);
 }
 
-export function getCostAdjustedDesire(player: Player, resources: Resource[], desire: number) {
+export function getCostAdjustedDesire(playerResources: Resources, resources: Resource[], desire: number) {
   let desireAdjustment = 1.0;
   for (const resource of resources) {
     const costs = resource.amount ?? 1;
-    const playerResourceAmount = getResourceAmount(player, resource.type);
+    const playerResourceAmount = playerResources[resource.type];
 
     let resourceTypeModifier = 0.0175 / desire;
     if (resource.type === 'spice') {

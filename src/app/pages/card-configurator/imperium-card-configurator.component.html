@@ -45,7 +45,7 @@
     <div class="action-bar center" [style.gap]="'32px'">
       <div>card-access:</div>
       <div class="icon-and-string-container" *ngFor="let item of fieldAccessess | keyvalue">
-        <img class="field-access-image" [src]="getActionTypePath(item.key)" /> {{ item.value }} ({{
+        <img class="field-access-image" [src]="asActionType(item.key) | actionTypePath" /> {{ item.value }} ({{
           (item.value * 100) / totalCardAmount | number: '1.1-1'
         }}%)
       </div>

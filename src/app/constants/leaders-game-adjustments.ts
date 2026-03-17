@@ -1,4 +1,3 @@
-import { getResourceAmount } from '../helpers/ai';
 import { playerCanPayCosts } from '../helpers/rewards';
 import { StructuredEffect } from '../models';
 import { AIAdjustments, GameServices, GameState, TimedFunction } from '../models/ai';
@@ -26,7 +25,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: { type: 'timing-combat' },
         type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
         effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 3 }] },
       },
     ],
@@ -61,15 +60,14 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       ],
     },
     customSignetAIFunction(player, gameState, services) {
-      const playerWater = player.resources.find((x) => x.type === 'water');
-      if (player.signetTokenCount > 2) {
+      if (gameState.playerResources.signet > 2) {
         services.gameManager.addRewardToPlayer(player.id, { type: 'victory-point' });
-        services.gameManager.payCostForPlayer(player.id, { type: 'signet-token', amount: 3 });
-      } else if (playerWater && playerWater.amount && playerWater.amount > 1) {
+        services.gameManager.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
+      } else if (gameState.playerResources.water > 1) {
         services.gameManager.payCostForPlayer(player.id, { type: 'water', amount: 2 });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'signet-token', amount: 3 });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'signet-token' });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'signet' });
       }
     },
   },
@@ -82,7 +80,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunction: {
       timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        const availableSignetTokens = player.signetTokenCount;
+        const availableSignetTokens = gameState.playerResources.signet;
         if (availableSignetTokens < 1) {
           return;
         }
@@ -127,7 +125,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
               : availableSignetTokens;
 
           services.gameManager.acquireImperiumCard(player.id, cardToBuy, source);
-          services.gameManager.payCostForPlayer(player.id, { type: 'signet-token', amount: usedSignetTokens });
+          services.gameManager.payCostForPlayer(player.id, { type: 'signet', amount: usedSignetTokens });
         }
       },
     },
@@ -220,12 +218,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Feyd-Rautha Harkonnen',
-    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet-token' }] }],
+    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet' }] }],
     customEffects: [
       {
         type: 'helper-trade',
         timing: { type: 'timing-combat' },
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
         effectConversions: { type: 'reward', effectRewards: [{ type: 'sword' }] },
       },
     ],
@@ -239,12 +237,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         timing: { type: 'timing-reveal-turn' },
         effectLeft: {
           type: 'helper-trade',
-          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
           effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
         },
         effectRight: {
           type: 'helper-trade',
-          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet-token' }] },
+          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
           effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
         },
       },
@@ -327,7 +325,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         const playerPersuasion =
           player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound;
 
-        services.playersService.addSignetTokensToPlayer(player.id, playerVictoryPoints + playerPersuasion);
+        services.playerResourcesService.addResourceToPlayer(player.id, 'signet', playerVictoryPoints + playerPersuasion);
         services.playersService.removePersuasionGainedFromPlayer(
           player.id,
           player.permanentPersuasion + player.persuasionGainedThisRound,
@@ -335,7 +333,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       },
     },
     customSignetAIFunction: (player, gameState, services) => {
-      const playerSignetTokens = player.signetTokenCount;
+      const playerSignetTokens = gameState.playerResources.signet;
       const imperiumRowCards = gameState.imperiumRowCards.filter(
         (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= playerSignetTokens,
       ) as ImperiumRowCard[];
@@ -365,7 +363,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
         if (chosenImperiumRowCard.persuasionCosts) {
           services.gameManager.payCostForPlayer(player.id, {
-            type: 'signet-token',
+            type: 'signet',
             amount: chosenImperiumRowCard.persuasionCosts,
           });
         }
@@ -385,7 +383,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunction: {
       timing: 'timing-agent-placement',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        if (player.signetTokenCount < 1) {
+        if (gameState.playerResources.signet < 1) {
           return;
         }
 
@@ -394,12 +392,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           for (const reward of boardSpace.rewards) {
             if (reward.type === 'water' || reward.type === 'spice') {
               services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
-              services.gameManager.payCostForPlayer(player.id, { type: 'signet-token' });
+              services.gameManager.payCostForPlayer(player.id, { type: 'signet' });
               break;
             }
-            if (reward.type === 'solari' && player.signetTokenCount > 1) {
+            if (reward.type === 'solari' && gameState.playerResources.signet > 1) {
               services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
-              services.gameManager.payCostForPlayer(player.id, { type: 'signet-token' });
+              services.gameManager.payCostForPlayer(player.id, { type: 'signet' });
               break;
             }
           }
@@ -534,7 +532,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
 
         if (gameState.playerCombatUnits.troopsInGarrison < 6) {
-          if (getResourceAmount(player, 'solari') > 0) {
+          if (gameState.playerResources.solari > 0) {
             services.gameManager.payCostForPlayer(player.id, { type: 'solari' });
             services.gameManager.addRewardToPlayer(player.id, { type: 'troop' });
           }

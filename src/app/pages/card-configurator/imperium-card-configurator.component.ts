@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
-import { getActionTypePath } from 'src/app/helpers/action-types';
+
 import { getFlattenedEffectRewardArray, isRewardEffect } from 'src/app/helpers/rewards';
 import { ActionType, ActiveFactionType, Effect, EffectReward, EffectRewardType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
@@ -28,7 +28,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   };
   public noFactions = 0;
 
-  public fieldAccessess: { [type in ActionType]: number } = {
+  public fieldAccessess: Record<ActionType, number> = {
     landsraad: 0,
     choam: 0,
     emperor: 0,
@@ -387,10 +387,6 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
     this.cardConfiguratorService.sortImperiumCards('faction', 'asc');
   }
 
-  public getActionTypePath(actionType: string) {
-    return getActionTypePath(actionType as any);
-  }
-
   private createEmptyImperiumCard(): ImperiumCard {
     return {
       name: { en: '', de: '' },
@@ -452,5 +448,9 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
     }
 
     return rewards;
+  }
+
+  asActionType(key: string) {
+    return key as ActionType;
   }
 }

@@ -68,6 +68,8 @@ export const enLocale = {
   imperiumRowTooltipShowPreviousCard: 'Previous Card',
   leadersTooltipLockIn: 'Lock In',
   leadersTooltipRandomize: 'Randomize',
+  leadersTooltipFlip: 'Flip',
+  leadersTooltipHeal: 'Heal',
   leadersTooltipAgent: 'Available Agents',
   leadersTooltipEndTurn: 'End Turn',
   leadersTooltipAIAction: 'AI Action',

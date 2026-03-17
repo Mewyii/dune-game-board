@@ -1,0 +1,83 @@
+<div class="player-container">
+  <div class="player-heading font-medieval">
+    <div
+      class="player-name {{ player.id === gameManager.activePlayerId ? 'highlighted' : '' }}"
+      [style.color]="player.color"
+    >
+      <span [style.color]="'white'"> {{ gameManager.startingPlayerId === player.id ? '- ' : '' }}</span>
+      {{ playerLeaderName }}
+    </div>
+  </div>
+  <div class="ai-area font-medieval">
+    <mat-slide-toggle
+      [color]="'accent'"
+      [checked]="player.isAI"
+      (change)="onSetAIActiveClicked(player.id, $event)"
+      [matTooltip]="t.translate('playerboardButtonToggleAI')"
+      >AI</mat-slide-toggle
+    >
+  </div>
+  <div class="agent-area">
+    @for (object of player.agents | numberToArray; track $index; let i = $index) {
+      <div class="agents-icon-container">
+        <div
+          class="agents-icon"
+          [class.greyed-out]="availablePlayerAgents < i + 1"
+          [style.background-color]="player.color"
+        ></div>
+      </div>
+    }
+  </div>
+  <div class="cards-area">
+    <div class="resource-display">
+      <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
+      <div class="resource-amount">
+        <span>{{ playerHandCards }}</span>
+      </div>
+    </div>
+    <div class="resource-display">
+      <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
+      <div class="resource-amount">
+        <span>{{ playerDiscardPileCards }}</span>
+      </div>
+    </div>
+    <div class="resource-display">
+      <img class="resource" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
+      <div class="resource-amount">
+        <span>{{ playerDeckCards }}</span>
+      </div>
+    </div>
+    <div class="resource-display">
+      <img class="resource dark" [src]="'intrigue' | effectTypePath" />
+      <div class="resource-amount">
+        <span>{{ playerIntrigues }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="resource-area">
+    <div class="resource-display">
+      <img class="resource" [src]="'solari' | effectTypePath" />
+      <div class="resource-amount">
+        <span>{{ playerResources?.solari }}</span>
+      </div>
+    </div>
+    <div class="resource-display">
+      <img class="resource" [src]="'spice' | effectTypePath" />
+      <div class="resource-amount">
+        <span>{{ playerResources?.spice }}</span>
+      </div>
+    </div>
+    <div class="resource-display">
+      <img class="resource" [src]="'water' | effectTypePath" />
+      <div class="resource-amount">
+        <span>{{ playerResources?.water }}</span>
+      </div>
+    </div>
+    <div class="resource-display">
+      <img class="resource" [src]="'tech' | effectTypePath" />
+      <div class="resource-amount">
+        <span>{{ playerResources?.tech }}</span>
+      </div>
+    </div>
+  </div>
+</div>

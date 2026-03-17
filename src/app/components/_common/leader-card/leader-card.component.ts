@@ -44,28 +44,28 @@ export class LeaderCardComponent implements OnInit, OnChanges {
         this.leader.passiveDescriptionSize === 'large'
           ? '14px'
           : this.leader.passiveDescriptionSize === 'medium'
-          ? '13px'
-          : '12px';
+            ? '13px'
+            : '12px';
       this.passiveDescriptionSymbolSize =
         this.leader.passiveDescriptionSize === 'large'
           ? '19px'
           : this.leader.passiveDescriptionSize === 'medium'
-          ? '17px'
-          : '15px';
+            ? '17px'
+            : '15px';
     }
     if (this.leader.signetDescriptionSize) {
       this.signetDescriptionSize =
         this.leader.signetDescriptionSize === 'large'
           ? '14px'
           : this.leader.signetDescriptionSize === 'medium'
-          ? '13px'
-          : '12px';
+            ? '13px'
+            : '12px';
       this.signetDescriptionSymbolSize =
         this.leader.signetDescriptionSize === 'large'
           ? '19px'
           : this.leader.signetDescriptionSize === 'medium'
-          ? '17px'
-          : '15px';
+            ? '17px'
+            : '15px';
     }
   }
 }

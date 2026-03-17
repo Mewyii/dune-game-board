@@ -12,6 +12,7 @@ import { PlayerGameModifiers } from 'src/app/services/game-modifier.service';
 import { LeaderDeckCard } from 'src/app/services/leaders.service';
 import { OwnedLocation } from 'src/app/services/location-manager.service';
 import { PlayerAgent, PlayerAgentOnField } from 'src/app/services/player-agents.service';
+import { Resources } from 'src/app/services/player-resources.service';
 import { PlayerFactionScoreType, PlayerScore } from 'src/app/services/player-score-manager.service';
 import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
 
@@ -100,4 +101,5 @@ export type GameState = Readonly<{
   >;
   boardSpaces: ActionField[];
   playerAgentPlacedOnFieldThisTurn?: string;
+  playerResources: Resources;
 }>;

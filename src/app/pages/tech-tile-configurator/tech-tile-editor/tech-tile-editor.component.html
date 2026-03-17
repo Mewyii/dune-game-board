@@ -48,13 +48,13 @@
           <mat-select [formControl]="getBuyEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(getBuyEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getBuyEffectTypeControl(i).value | effectTypePath" />
                 <span class="reward-label">{{ getBuyEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(rewardType)" />
+                <img class="reward" [src]="rewardType | effectTypePath" />
                 <span class="reward-label">{{ rewardType }}</span>
               </div>
             </mat-option>
@@ -86,13 +86,13 @@
           <mat-select [formControl]="getAgentEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(getAgentEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getAgentEffectTypeControl(i).value | effectTypePath" />
                 <span class="reward-label">{{ getAgentEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let rewardType of effectTypes" [value]="rewardType">
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(rewardType)" />
+                <img class="reward" [src]="rewardType | effectTypePath" />
                 <span class="reward-label">{{ rewardType }}</span>
               </div>
             </mat-option>

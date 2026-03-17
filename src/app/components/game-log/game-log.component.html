@@ -8,10 +8,10 @@
           Player {{ logEntry.playerId }} sent an agent to field {{ logEntry.fieldName }}.
         } @else if (logEntry.type === 'reward-gain') {
           Player {{ logEntry.playerId }} got: {{ logEntry.amount }}
-          <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
+          <img class="reward-small" [src]="logEntry.rewardType | effectTypePath" />
         } @else if (logEntry.type === 'reward-pay') {
           Player {{ logEntry.playerId }} paid: {{ logEntry.amount }}
-          <img class="reward-small" [src]="getEffectTypePath(logEntry.rewardType)" />
+          <img class="reward-small" [src]="logEntry.rewardType | effectTypePath" />
         } @else if (logEntry.type === 'card-buy') {
           Player {{ logEntry.playerId }} acquired card {{ logEntry.cardName }}.
         } @else if (logEntry.type === 'card-play') {
@@ -27,7 +27,7 @@
         } @else if (logEntry.type === 'intrigue-steal') {
           Player {{ logEntry.playerId }} stole an intrigue from player {{ logEntry.enemyPlayerId }}.
         } @else if (logEntry.type === 'victory-point-gain') {
-          Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="getEffectTypePath('victory-point')" />
+          Player {{ logEntry.playerId }} received: <img class="reward-small" [src]="'victory-point' | effectTypePath" />
         } @else if (logEntry.type === 'tech-tile-buy') {
           Player {{ logEntry.playerId }} acquired tech tile {{ logEntry.techTileName }}.
         } @else if (logEntry.type === 'tech-tile-play') {

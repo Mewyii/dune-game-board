@@ -13,7 +13,7 @@
     <div class="field-access-container">
       @for (access of card.fieldAccess; track $index) {
         <div [class]="'field-access ' + (card.canInfiltrate ? 'infiltration' : '')">
-          <img class="field-access-image" [src]="getActionTypePath(access)" />
+          <img class="field-access-image" [src]="access | actionTypePath" />
           @if (card.canInfiltrate) {
             <img class="field-access-image" [src]="'assets/images/action-types/action_type_infiltration.png'" />
           }

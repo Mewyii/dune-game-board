@@ -1,16 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { EFFECT_TYPE_PATHS } from 'src/app/helpers/reward-types';
+
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
-    selector: 'app-scoreboard',
-    templateUrl: './scoreboard.component.html',
-    styleUrls: ['./scoreboard.component.scss'],
-    standalone: false
+  selector: 'app-scoreboard',
+  templateUrl: './scoreboard.component.html',
+  styleUrls: ['./scoreboard.component.scss'],
+  standalone: false,
 })
 export class ScoreboardComponent implements OnInit {
   @Input() mode: AppMode = 'board';
@@ -26,7 +27,7 @@ export class ScoreboardComponent implements OnInit {
     private playerManager: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     private settingsService: SettingsService,
-    private gameManager: GameManager
+    private gameManager: GameManager,
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +77,7 @@ export class ScoreboardComponent implements OnInit {
 
   public getEffectTypePath(score: number) {
     const reward = this.victoryPointBoni?.find((x) => x.score === score);
-    return reward ? getEffectTypePath(reward.reward.type) : '';
+    return reward ? EFFECT_TYPE_PATHS[reward.reward.type] : '';
   }
 
   public trackPlayerScore(playerScore: { playerId: number; amount: number }) {

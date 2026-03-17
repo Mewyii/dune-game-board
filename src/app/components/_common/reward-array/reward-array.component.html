@@ -39,14 +39,18 @@
         } @else if (isConditionalEffect(reward)) {
           @if (isInfluenceType(reward.type)) {
             <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
-              <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
+              @if (reward.faction) {
+                <img [style.maxWidth]="size" class="faction" [src]="reward.faction | factionTypePath" />
+              }
               <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
                 {{ reward.amount }} {{ t.translate('commonEffectConditionInfluence') }}:
               </div>
             </div>
           } @else if (isConnectionType(reward.type)) {
             <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
-              <img [style.maxWidth]="size" class="faction" [src]="getFactionTypePath(reward)" />
+              @if (reward.faction) {
+                <img [style.maxWidth]="size" class="faction" [src]="reward.faction | factionTypePath" />
+              }
               <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
                 -{{ t.translate('commonEffectConditionConnection') }}:
               </div>
@@ -209,7 +213,7 @@
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
                 class="reward"
-                [src]="getEffectTypePath('card-discard')"
+                [src]="'card-discard' | effectTypePath"
                 [style.height]="size"
                 [style.minWidth]="iconMinWidth"
               />
@@ -232,7 +236,7 @@
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
                 class="reward"
-                [src]="getEffectTypePath('loose-troop')"
+                [src]="'loose-troop' | effectTypePath"
                 [style.height]="size"
                 [style.minWidth]="iconMinWidth"
               />
@@ -255,7 +259,30 @@
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
                 class="reward"
-                [src]="getEffectTypePath('intrigue-trash')"
+                [src]="'intrigue-trash' | effectTypePath"
+                [style.height]="size"
+                [style.minWidth]="iconMinWidth"
+              />
+              <div class="reward-amount" *ngIf="reward.amount">
+                <div [style.fontSize]="rewardAmountFontSize">
+                  {{ reward.amount }}
+                </div>
+              </div>
+            </div>
+          </div>
+        } @else if (reward.type === 'enemies-leader-assassinate') {
+          <div
+            [class]="'text custom-with-reward ' + textColor"
+            [style.fontSize]="fontSize"
+            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
+          >
+            <div [class]="'text inline ' + textColor">
+              {{ t.translate('commonEffectEachOpponent', true, reward.amount) }}
+            </div>
+            <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
+              <img
+                class="reward"
+                [src]="'leader-wound' | effectTypePath"
                 [style.height]="size"
                 [style.minWidth]="iconMinWidth"
               />
@@ -280,12 +307,7 @@
             [style.height]="size"
             [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
           >
-            <img
-              class="reward"
-              [src]="getEffectTypePath(reward.type)"
-              [style.height]="size"
-              [style.minWidth]="iconMinWidth"
-            />
+            <img class="reward" [src]="reward.type | effectTypePath" [style.height]="size" [style.minWidth]="iconMinWidth" />
             <div class="reward-amount" *ngIf="reward.amount">
               <div [style.fontSize]="rewardAmountFontSize">
                 {{ reward.amount }}

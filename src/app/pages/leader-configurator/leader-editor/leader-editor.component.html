@@ -21,11 +21,17 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field class="large-text-field flex">
+  <mat-form-field class="big-text-field flex">
     <mat-label>Image URL</mat-label>
     <input matInput formControlName="imageUrl" />
   </mat-form-field>
-
+  <mat-form-field>
+    <mat-label>Has Hit Points</mat-label>
+    <mat-select formControlName="hasHitPoints">
+      <mat-option [value]="true">Yes</mat-option>
+      <mat-option [value]="false">No</mat-option>
+    </mat-select>
+  </mat-form-field>
   <!-- Custom Starting Resources -->
   <div class="card-effect-container">
     <div class="title-container">
@@ -38,13 +44,13 @@
           <mat-select [formControl]="getStartingResourcesTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(getStartingResourcesTypeControl(i).value)" />
+                <img class="reward" [src]="getStartingResourcesTypeControl(i).value | effectTypePath" />
                 <span class="reward-label">{{ getStartingResourcesTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(rewardType)" />
+                <img class="reward" [src]="rewardType | effectTypePath" />
                 <span class="reward-label">{{ rewardType }}</span>
               </div>
             </mat-option>
@@ -91,13 +97,13 @@
           <mat-select [formControl]="getPassiveEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(getPassiveEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getPassiveEffectTypeControl(i).value | effectTypePath" />
                 <span class="reward-label">{{ getPassiveEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
               ><div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(effectType)" />
+                <img class="reward" [src]="effectType | effectTypePath" />
                 <span class="reward-label">{{ effectType }}</span>
               </div></mat-option
             >
@@ -112,13 +118,13 @@
           <mat-select [formControl]="getPassiveEffectFactionControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getFactionTypePath(getPassiveEffectFactionControl(i).value)" />
+                <img class="reward" [src]="getPassiveEffectFactionControl(i).value | factionTypePath" />
                 <span class="reward-label">{{ getPassiveEffectFactionControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let faction of factions" [value]="faction"
               ><div class="reward-container">
-                <img class="reward" [src]="getFactionTypePath(faction)" />
+                <img class="reward" [src]="faction | factionTypePath" />
                 <span class="reward-label">{{ faction }}</span>
               </div></mat-option
             >
@@ -190,13 +196,13 @@
           <mat-select [formControl]="getSignetEffectTypeControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(getSignetEffectTypeControl(i).value)" />
+                <img class="reward" [src]="getSignetEffectTypeControl(i).value | effectTypePath" />
                 <span class="reward-label">{{ getSignetEffectTypeControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
               ><div class="reward-container">
-                <img class="reward" [src]="getEffectTypePath(effectType)" />
+                <img class="reward" [src]="effectType | effectTypePath" />
                 <span class="reward-label">{{ effectType }}</span>
               </div></mat-option
             >
@@ -211,13 +217,13 @@
           <mat-select [formControl]="getSignetEffectFactionControl(i)">
             <mat-select-trigger>
               <div class="reward-container">
-                <img class="reward" [src]="getFactionTypePath(getSignetEffectFactionControl(i).value)" />
+                <img class="reward" [src]="getSignetEffectFactionControl(i).value | factionTypePath" />
                 <span class="reward-label">{{ getSignetEffectFactionControl(i).value }}</span>
               </div>
             </mat-select-trigger>
             <mat-option *ngFor="let faction of factions" [value]="faction"
               ><div class="reward-container">
-                <img class="reward" [src]="getFactionTypePath(faction)" />
+                <img class="reward" [src]="faction | factionTypePath" />
                 <span class="reward-label">{{ faction }}</span>
               </div></mat-option
             >

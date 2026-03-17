@@ -4,27 +4,59 @@
       <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setPreviousLeader()">
         <mat-icon>navigate_before</mat-icon>
       </div>
-      <dune-leader-card *ngIf="activeLeader.type === 'new'" [leader]="activeLeader"></dune-leader-card>
-      <div class="leader-action-container" *ngIf="!playerLeader?.isLockedIn">
-        <button
-          class="buy-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onLockInLeaderClicked()"
-          [matTooltip]="t.translate('leadersTooltipLockIn')"
-        >
-          <mat-icon>check</mat-icon>
-        </button>
-        <button
-          class="buy-button"
-          mat-fab
-          [color]="'accent'"
-          (click)="onSelectRandomLeaderClicked()"
-          [matTooltip]="t.translate('leadersTooltipRandomize')"
-        >
-          <mat-icon>shuffle</mat-icon>
-        </button>
-      </div>
+      <dune-leader-card
+        [class.active]="isLeaderActive"
+        [class.flipped]="playerLeader?.isFlipped"
+        *ngIf="activeLeader.type === 'new'"
+        [leader]="activeLeader"
+        (click)="isLeaderActive = !isLeaderActive"
+      ></dune-leader-card>
+      @if (!playerLeader?.isLockedIn || isLeaderActive) {
+        <div class="leader-action-container">
+          @if (!playerLeader?.isLockedIn) {
+            <button
+              class="buy-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onLockInLeaderClicked()"
+              [matTooltip]="t.translate('leadersTooltipLockIn')"
+            >
+              <mat-icon>check</mat-icon>
+            </button>
+            <button
+              class="buy-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onSelectRandomLeaderClicked()"
+              [matTooltip]="t.translate('leadersTooltipRandomize')"
+            >
+              <mat-icon>shuffle</mat-icon>
+            </button>
+          } @else {
+            @if (playerLeader?.isFlipped) {
+              <button
+                class="buy-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onHealLeaderClicked()"
+                [matTooltip]="t.translate('leadersTooltipHeal')"
+              >
+                <mat-icon>favorite_border</mat-icon>
+              </button>
+            }
+            <button
+              class="buy-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onFlipLeaderClicked()"
+              [matTooltip]="t.translate('leadersTooltipFlip')"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          }
+        </div>
+      }
+
       <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setNextLeader()">
         <mat-icon>navigate_next</mat-icon>
       </div>
@@ -116,36 +148,62 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddSignetTokenClicked(activePlayer)"
-              (contextmenu)="onRemoveSignetTokenClicked(activePlayer.id)"
+              (click)="onAddRewardClicked(activePlayer, 'signet')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'signet')"
             >
-              <img class="resource intrigue" [src]="getEffectTypePath('signet-token')" />
+              <img class="resource intrigue" [src]="'signet' | effectTypePath" />
               <div class="resource-amount on-background">
-                <span>{{ activePlayer.signetTokenCount }}</span>
+                <span>{{ activePlayerResources.signet }}</span>
               </div>
             </div>
           </div>
         </div>
         <div class="info-container">
-          @for (resource of activePlayer.resources; track $index) {
-            <div [class]="'resource-container'">
-              <div
-                class="resource-display"
-                (click)="onAddRewardClicked(activePlayer, resource.type)"
-                (contextmenu)="onRemoveResourceClicked(activePlayer, resource.type)"
-              >
-                <img [class]="'resource ' + resource.type" [src]="getEffectTypePath(resource.type)" />
-                <div class="resource-amount on-background">
-                  <span>{{ resource.amount }}</span>
-                </div>
+          <div [class]="'resource-container'">
+            <div
+              class="resource-display"
+              (click)="onAddRewardClicked(activePlayer, 'solari')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'solari')"
+            >
+              <img [class]="'resource solari'" [src]="'solari' | effectTypePath" />
+              <div class="resource-amount on-background">
+                <span>{{ activePlayerResources.solari }}</span>
               </div>
             </div>
-          }
+          </div>
           <div [class]="'resource-container'">
-            <div class="resource-display" (click)="onAddTechClicked(activePlayer)" (contextmenu)="onRemoveTechClicked()">
-              <img [class]="'resource tech'" [src]="getEffectTypePath('tech')" />
+            <div
+              class="resource-display"
+              (click)="onAddRewardClicked(activePlayer, 'spice')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'spice')"
+            >
+              <img [class]="'resource spice'" [src]="'spice' | effectTypePath" />
               <div class="resource-amount on-background">
-                <span>{{ activePlayer.tech }}</span>
+                <span>{{ activePlayerResources.spice }}</span>
+              </div>
+            </div>
+          </div>
+          <div [class]="'resource-container'">
+            <div
+              class="resource-display"
+              (click)="onAddRewardClicked(activePlayer, 'water')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'water')"
+            >
+              <img [class]="'resource water'" [src]="'water' | effectTypePath" />
+              <div class="resource-amount on-background">
+                <span>{{ activePlayerResources.water }}</span>
+              </div>
+            </div>
+          </div>
+          <div [class]="'resource-container'">
+            <div
+              class="resource-display"
+              (click)="onAddRewardClicked(activePlayer, 'tech')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'tech')"
+            >
+              <img [class]="'resource tech'" [src]="'tech' | effectTypePath" />
+              <div class="resource-amount on-background">
+                <span>{{ activePlayerResources.tech }}</span>
               </div>
             </div>
           </div>
@@ -154,12 +212,24 @@
           <div class="resource-container">
             <div
               class="resource-display"
-              (click)="onAddFocusTokenClicked(activePlayer.id)"
-              (contextmenu)="onRemoveFocusTokenClicked(activePlayer.id)"
+              (click)="onAddRewardClicked(activePlayer, 'focus')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'focus')"
             >
-              <img class="resource focus dark" [src]="getEffectTypePath('focus')" />
+              <img class="resource focus dark" [src]="'focus' | effectTypePath" />
               <div class="resource-amount on-background">
-                <span>{{ activePlayer.focusTokens }}</span>
+                <span>{{ activePlayerResources.focus }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="resource-container">
+            <div
+              class="resource-display"
+              (click)="onAddRewardClicked(activePlayer, 'leader-heal')"
+              (contextmenu)="onRemoveResourceClicked(activePlayer, 'leader-heal')"
+            >
+              <img class="resource heal dark" [src]="'leader-heal' | effectTypePath" />
+              <div class="resource-amount on-background">
+                <span>{{ activePlayerResources['leader-heal'] }}</span>
               </div>
             </div>
           </div>
@@ -173,7 +243,7 @@
               (click)="onAddTroopToGarrisonClicked(activePlayer.id)"
               (contextmenu)="onRemoveTroopFromGarrisonClicked(activePlayer.id)"
             >
-              <img class="resource" [src]="getEffectTypePath('troop')" />
+              <img class="resource" [src]="'troop' | effectTypePath" />
               <div class="resource-amount on-background">
                 <span>{{ activePlayerCombatUnits?.troopsInGarrison }}</span>
               </div>
@@ -185,7 +255,7 @@
               (click)="onAddShipToGarrisonClicked(activePlayer.id)"
               (contextmenu)="onRemoveShipFromGarrisonClicked(activePlayer.id)"
             >
-              <img class="resource" [src]="getEffectTypePath('dreadnought')" />
+              <img class="resource" [src]="'dreadnought' | effectTypePath" />
               <div class="resource-amount on-background">
                 <span>{{
                   (activePlayerCombatUnits?.shipsInGarrison ?? 0) + (activePlayerCombatUnits?.shipsInTimeout ?? 0)
@@ -199,7 +269,7 @@
             <div class="resource-display" (click)="onPlayerCanEnterCombatClicked(activePlayer.id)">
               <img
                 [class]="'resource ' + (turnInfos?.canEnterCombat ? 'enabled' : 'disabled')"
-                [src]="getEffectTypePath('combat')"
+                [src]="'combat' | effectTypePath"
               />
             </div>
           </div>
@@ -207,7 +277,7 @@
             <div class="resource-display" (click)="onPlayerCanBuyTechClicked(activePlayer.id)">
               <img
                 [class]="'resource ' + (turnInfos?.canBuyTech ? 'enabled' : 'disabled')"
-                [src]="getEffectTypePath('tech-tile')"
+                [src]="'tech-tile' | effectTypePath"
               />
             </div>
           </div>
@@ -219,7 +289,7 @@
               (click)="onAddPersuasionGainedThisRoundClicked(activePlayer.id)"
               (contextmenu)="onRemovePersuasionGainedThisRoundClicked(activePlayer.id)"
             >
-              <img class="resource" [src]="getEffectTypePath('persuasion')" />
+              <img class="resource" [src]="'persuasion' | effectTypePath" />
               <div class="resource-amount on-background">
                 <span>{{ activePlayer.persuasionGainedThisRound }}</span>
               </div>
@@ -245,12 +315,12 @@
         <div class="info-container">
           <div class="resource-container">
             <div class="resource-display" (click)="onAIIncreaseInfluenceChoiceClicked(activePlayer.id)">
-              <img class="resource" [src]="getEffectTypePath('faction-influence-up-choice')" />
+              <img class="resource" [src]="'faction-influence-up-choice' | effectTypePath" />
             </div>
           </div>
           <div class="resource-container">
             <div class="resource-display" (click)="onAIDecreaseInfluenceChoiceClicked(activePlayer.id)">
-              <img class="resource" [src]="getEffectTypePath('faction-influence-down-choice')" />
+              <img class="resource" [src]="'faction-influence-down-choice' | effectTypePath" />
             </div>
           </div>
         </div>
@@ -288,61 +358,59 @@
           >
             <mat-icon>expand_more</mat-icon>
           </button>
-          <div
-            class="house-marker"
-            *ngIf="getPlayerHouseLevel(house.name.en) === 2"
-            [style.background-color]="activePlayer?.color"
-            [style.bottom]="'174px'"
-          ></div>
-          <div
-            class="house-marker"
-            *ngIf="getPlayerHouseLevel(house.name.en) === 1"
-            [style.background-color]="activePlayer?.color"
-            [style.bottom]="'56px'"
-          ></div>
         </div>
       </ng-container>
     </div>
     <dune-player-reward-choices></dune-player-reward-choices>
-    <div class="control-bar center" *ngIf="techTiles.length > 0">
-      @for (techTile of techTiles; track techTile.name.en) {
+    <div class="control-bar center" *ngIf="playerTechTiles.length > 0">
+      @for (playerTechTile of playerTechTiles; track playerTechTile.techTile.name.en) {
         <div
           class="tech-tile-container"
-          (click)="setTechTileActive(techTile.id)"
-          (mouseenter)="setCardHover(techTile.id)"
+          (click)="setTechTileActive(playerTechTile.techTile.id)"
+          (mouseenter)="setCardHover(playerTechTile.techTile.id)"
           (mouseleave)="hoveredTechTileId = ''"
         >
           <dune-highlighting
-            *ngIf="techTile.id === activeTechTileId || techTile.id === hoveredTechTileId"
-            [id]="techTile.id"
+            *ngIf="playerTechTile.techTile.id === activeTechTileId || playerTechTile.techTile.id === hoveredTechTileId"
+            [id]="playerTechTile.techTile.id"
             [width]="480"
             [height]="340"
             [bottom]="-85"
             [left]="-115"
           ></dune-highlighting>
           <div
-            *ngIf="getIsTechTileFlipped(techTile.id)"
-            [class]="'tech-tile' + (techTile.id === activeTechTileId ? ' active' : '')"
+            *ngIf="playerTechTile.isFlipped"
+            [class]="'tech-tile' + (playerTechTile.techTile.id === activeTechTileId ? ' active' : '')"
           ></div>
           <dune-tech-tile
-            *ngIf="!getIsTechTileFlipped(techTile.id)"
-            [class]="techTile.id === activeTechTileId ? ' active' : ''"
-            [card]="techTile"
+            *ngIf="!playerTechTile.isFlipped"
+            [class]="playerTechTile.techTile.id === activeTechTileId ? ' active' : ''"
+            [card]="playerTechTile.techTile"
           ></dune-tech-tile>
-          <div class="tech-tile-action-container" *ngIf="techTile.id === activeTechTileId">
+          <div class="tech-tile-action-container" *ngIf="playerTechTile.techTile.id === activeTechTileId">
             <button
-              *ngIf="techTile.structuredEffects && !getIsTechTileFlipped(techTile.id)"
+              *ngIf="playerTechTile.techTile.structuredEffects && !playerTechTile.isFlipped"
               class="tech-flip-button"
               mat-fab
               [color]="'accent'"
-              (click)="onActivateTechClicked(techTile)"
+              (click)="onActivateTechClicked(playerTechTile.techTile)"
             >
               <mat-icon>flash_on</mat-icon>
             </button>
-            <button class="tech-flip-button" mat-fab [color]="'accent'" (click)="onFlipTechClicked(techTile.id)">
+            <button
+              class="tech-flip-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onFlipTechClicked(playerTechTile.techTile.id)"
+            >
               <mat-icon>refresh</mat-icon>
             </button>
-            <button class="tech-trash-button" mat-fab [color]="'accent'" (click)="onTrashTechClicked(techTile.id)">
+            <button
+              class="tech-trash-button"
+              mat-fab
+              [color]="'accent'"
+              (click)="onTrashTechClicked(playerTechTile.techTile.id)"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>

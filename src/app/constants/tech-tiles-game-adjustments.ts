@@ -1,4 +1,3 @@
-import { getResourceAmount } from '../helpers/ai';
 import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
 import { getFlattenedEffectRewardArray } from '../helpers/rewards';
 import { GameServices, GameState, TimedFunctionWithGameElement } from '../models/ai';
@@ -190,7 +189,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     customTimedAIFunction: {
       timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
-        const playerSolariAmount = getResourceAmount(player, 'solari');
+        const playerSolariAmount = gameState.playerResources.solari;
         if (playerSolariAmount < 1) {
           return;
         }
@@ -228,7 +227,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
         const spiceSpaces = gameState.boardSpaces.filter((x) => x.actionType === 'spice');
-        const waterAmount = getResourceAmount(player, 'water');
+        const waterAmount = gameState.playerResources.water;
 
         let targetSpace = undefined;
         let targetSpaceWaterCosts = 0;
@@ -307,7 +306,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         const enemiesWithDreadnoughtsInCombat = gameState.enemyCombatUnits.filter((x) => x.shipsInCombat > 0).length;
         if (
           enemiesWithDreadnoughtsInCombat < 1 ||
-          getResourceAmount(player, 'tech') < 1 ||
+          gameState.playerResources.tech < 1 ||
           gameState.playerAgentsAvailable > 0
         ) {
           return;
@@ -324,7 +323,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     },
   },
   {
-    id: 'Gunship',
+    id: 'Heavy Lasguns',
     aiEvaluation: (player, gameState) => 1 + 0.25 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 2 : 0),
     customTimedAIFunction: {
       timing: 'timing-turn-start',

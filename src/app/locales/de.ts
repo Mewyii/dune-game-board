@@ -70,6 +70,8 @@ export const deLocale: Locale = {
   imperiumRowTooltipShowPreviousCard: 'Vorherige Karte',
   leadersTooltipLockIn: 'Auswählen',
   leadersTooltipRandomize: 'Zufällig',
+  leadersTooltipFlip: 'Umdrehen',
+  leadersTooltipHeal: 'Heilen',
   leadersTooltipAgent: 'Verfügbare Agenten',
   leadersTooltipEndTurn: 'Zug beenden',
   leadersTooltipAIAction: 'KI ausführen',

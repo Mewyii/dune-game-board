@@ -1,19 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DuneLocation, EffectType, EffectRewardType } from 'src/app/models';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+import { DuneLocation } from 'src/app/models';
+
+import { Player } from 'src/app/models/player';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { GameModifiersService } from 'src/app/services/game-modifier.service';
+import { LeadersService } from 'src/app/services/leaders.service';
 import { LocationManager } from 'src/app/services/location-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
-import { LeadersService } from 'src/app/services/leaders.service';
-import { AudioManager } from 'src/app/services/audio-manager.service';
-import { GameModifiersService } from 'src/app/services/game-modifier.service';
-import { Player } from 'src/app/models/player';
 
 @Component({
-    selector: 'app-dune-location',
-    templateUrl: './dune-location.component.html',
-    styleUrls: ['./dune-location.component.scss'],
-    standalone: false
+  selector: 'app-dune-location',
+  templateUrl: './dune-location.component.html',
+  styleUrls: ['./dune-location.component.scss'],
+  standalone: false,
 })
 export class DuneLocationComponent implements OnInit {
   @Input() location: DuneLocation = {
@@ -44,7 +44,7 @@ export class DuneLocationComponent implements OnInit {
     private leaderService: LeadersService,
     private audioManager: AudioManager,
     private gameManager: GameManager,
-    private gameModifierService: GameModifiersService
+    private gameModifierService: GameModifiersService,
   ) {}
 
   ngOnInit(): void {
@@ -67,9 +67,5 @@ export class DuneLocationComponent implements OnInit {
 
   onOwnerIndicatorClicked() {
     this.gameManager.changeLocationOwner(this.location.actionField.title.en, this.gameManager.activePlayerId);
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 }

@@ -17,7 +17,8 @@ export interface LeaderDeckCard extends Leader, LeaderGameAdjustments {
 export interface PlayerLeader {
   playerId: number;
   leader: LeaderDeckCard;
-  isLockedIn?: boolean;
+  isLockedIn: boolean;
+  isFlipped: boolean;
 }
 
 @Injectable({
@@ -84,6 +85,10 @@ export class LeadersService {
     return cloneDeep(this.playerLeaders.find((x) => x.playerId === playerId)?.leader);
   }
 
+  getPlayerLeader(playerId: number) {
+    return cloneDeep(this.playerLeaders.find((x) => x.playerId === playerId));
+  }
+
   createLeaderDeck() {
     const leaders = this.leaderConfiguratorService.leaders;
     this.playerLeadersSubject.next([]);
@@ -99,7 +104,7 @@ export class LeadersService {
     for (const player of players) {
       const leader = shuffledLeaders.pop();
       if (leader) {
-        playerLeaders.push({ playerId: player.id, leader: leader });
+        playerLeaders.push({ playerId: player.id, leader: leader, isLockedIn: false, isFlipped: false });
       }
     }
 
@@ -126,6 +131,32 @@ export class LeadersService {
     if (playerLeaderIndex > -1) {
       const playerLeader = playerLeaders[playerLeaderIndex];
       playerLeaders[playerLeaderIndex] = { ...playerLeader, isLockedIn: true };
+
+      this.playerLeadersSubject.next(playerLeaders);
+      this.leaderDeckSubject.next(this.leaderDeck.filter((x) => x.id !== playerLeader.leader.id));
+    }
+  }
+
+  flipLeader(playerId: number) {
+    const playerLeaders = this.playerLeaders;
+    const playerLeaderIndex = playerLeaders.findIndex((x) => x.playerId === playerId);
+
+    if (playerLeaderIndex > -1) {
+      const playerLeader = playerLeaders[playerLeaderIndex];
+      playerLeaders[playerLeaderIndex] = { ...playerLeader, isFlipped: true };
+
+      this.playerLeadersSubject.next(playerLeaders);
+      this.leaderDeckSubject.next(this.leaderDeck.filter((x) => x.id !== playerLeader.leader.id));
+    }
+  }
+
+  unflipLeader(playerId: number) {
+    const playerLeaders = this.playerLeaders;
+    const playerLeaderIndex = playerLeaders.findIndex((x) => x.playerId === playerId);
+
+    if (playerLeaderIndex > -1) {
+      const playerLeader = playerLeaders[playerLeaderIndex];
+      playerLeaders[playerLeaderIndex] = { ...playerLeader, isFlipped: false };
 
       this.playerLeadersSubject.next(playerLeaders);
       this.leaderDeckSubject.next(this.leaderDeck.filter((x) => x.id !== playerLeader.leader.id));

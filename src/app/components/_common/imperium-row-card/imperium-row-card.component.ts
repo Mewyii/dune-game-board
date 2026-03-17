@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { getActionTypePath } from 'src/app/helpers/action-types';
-import { ActionType, FactionType } from 'src/app/models';
+
+import { FactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -53,10 +53,6 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
       this.revealEffectSize =
         this.card.revealEffectSize === 'large' ? '30px' : this.card.revealEffectSize === 'medium' ? '21px' : '18px';
     }
-  }
-
-  public getActionTypePath(rewardType: ActionType) {
-    return getActionTypePath(rewardType);
   }
 
   private getFactionColor(factionType: FactionType) {

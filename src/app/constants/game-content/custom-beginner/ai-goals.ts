@@ -5,7 +5,6 @@ import {
   getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
   getPlayerCombatStrength,
-  getResourceAmount,
   getViableBoardFields,
   getViableBoardFieldsForFaction,
   getWinCombatDesire,
@@ -29,10 +28,10 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.7,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') -
+      0.01 * gameState.playerResources.solari -
       0.0175 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
+      (gameState.playerResources.solari > 9 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
     desiredFields: (fields) => ({
       // Three because "amount" is used for the persuasion indicator
@@ -43,10 +42,10 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') -
+      0.01 * gameState.playerResources.solari -
       0.025 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 9 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
+      (gameState.playerResources.solari > 9 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', false),
@@ -57,11 +56,11 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   dreadnought: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') +
+      0.01 * gameState.playerResources.solari +
       0.01 * gameState.playerCombatUnits.troopsInGarrison +
       0.0075 * (gameState.currentRound - 1) -
       0.05 * gameState.playerDreadnoughtCount,
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 4,
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 4,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1 || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', false),
@@ -127,10 +126,10 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
       (0.15 +
-        0.01 * getResourceAmount(player, 'spice') +
+        0.01 * gameState.playerResources.spice +
         0.025 * (gameState.currentRound - 1) +
         0.02 * gameState.playerCardsBought),
-    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 0,
+    goalIsReachable: (player, gameState) => gameState.playerResources.spice > 0,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'agent-lift'),
@@ -248,7 +247,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
       0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + player.focusTokens) +
+      0.01 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
       0.033 * (7 - gameState.playerHandCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: () => false,
@@ -260,7 +259,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
       -0.0125 * gameState.playerCardsBought -
-      0.0125 * (gameState.playerCardsTrashed + player.focusTokens) -
+      0.0125 * (gameState.playerCardsTrashed + gameState.playerResources.focus) -
       (player.hasCouncilSeat ? 0.05 : 0.0),
     goalIsReachable: () => false,
     reachedGoal: () => false,
@@ -277,7 +276,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
               (player.hasCouncilSeat ? 0.1 : 0) -
               0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
               0.033 * gameState.playerCardsBought +
-              0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
+              0.025 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
               0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
             0,
             0.6,
@@ -290,7 +289,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
               0.1 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
                 0.05 * gameState.playerCardsBought +
-                0.05 * (gameState.playerCardsTrashed + player.focusTokens) +
+                0.05 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
                 0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
               0,
               0.6,
@@ -311,7 +310,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     baseDesire: -0.1,
     desireModifier: (player, gameState, goals) =>
       0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
+      0.01 * (gameState.playerCardsTrashed + gameState.playerResources.focus) -
       0.01 * (7 - gameState.playerHandCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => gameState.playerHandCards.length < 1,
@@ -325,7 +324,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
           0.125 * gameState.playerCardsBought -
-          0.15 * (gameState.playerCardsTrashed + player.focusTokens),
+          0.15 * (gameState.playerCardsTrashed + gameState.playerResources.focus),
         -0.4,
         0.4,
       ),
@@ -354,7 +353,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       );
     },
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'water') > 1,
+    reachedGoal: (player, gameState, goals) => gameState.playerResources.water > 1,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'water'),
     }),
@@ -377,8 +376,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         0.025 * gameState.playerTechTilesConversionCosts.spice
       );
     },
-    goalIsReachable: (player) => getResourceAmount(player, 'water') > 1,
-    reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'spice') > 3,
+    goalIsReachable: (player, gameState) => gameState.playerResources.water > 1,
+    reachedGoal: (player, gameState, goals) => gameState.playerResources.spice > 3,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'spice'),
     }),
@@ -400,9 +399,9 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         0.025 * gameState.playerTechTilesConversionCosts.solari
       );
     },
-    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 2,
+    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 2,
     reachedGoal: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
+      gameState.playerResources.solari > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari'),
     }),
@@ -410,8 +409,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > 6 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
-    goalIsReachable: (player) => getResourceAmount(player, 'solari') > 9,
+      gameState.playerResources.solari > 6 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
+    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari'),

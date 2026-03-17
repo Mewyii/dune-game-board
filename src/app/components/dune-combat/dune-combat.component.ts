@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { boardSettings } from 'src/app/constants/board-settings';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
+
 import { playerCanEnterCombat } from 'src/app/helpers/turn-infos';
-import { EffectType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
@@ -41,6 +40,10 @@ export class DuneCombatComponent implements OnInit {
 
   public dreadnoughtCombatStrength = 4;
 
+  public troopCombatStrength = 2;
+
+  public leaderHitPointCombatStrength: number | undefined;
+
   public playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
     0: { x: '-20px', y: '-30px' },
     1: { x: '-30px', y: '170px' },
@@ -75,6 +78,8 @@ export class DuneCombatComponent implements OnInit {
 
     this.settingsService.gameContent$.subscribe((x) => {
       this.dreadnoughtCombatStrength = x.dreadnoughtCombatStrength;
+      this.troopCombatStrength = x.troopCombatStrength;
+      this.leaderHitPointCombatStrength = x.leaderCombatStrength;
     });
   }
 
@@ -98,10 +103,6 @@ export class DuneCombatComponent implements OnInit {
     this.audioManager.playSound('click');
     this.gameManager.retreatUnitsIfPossible(playerId, 'dreadnought', 1);
     return false;
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 
   public getPlayersOnScore(score: number) {

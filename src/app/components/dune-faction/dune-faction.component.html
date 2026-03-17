@@ -21,7 +21,7 @@
             <div class="reward-area">
               <ng-container *ngFor="let reward of faction.influenceRewards[i]">
                 <div class="reward-container">
-                  <img class="reward" [src]="getEffectTypePath(reward.type)" />
+                  <img class="reward" [src]="reward.type | effectTypePath" />
                   <ng-container *ngIf="reward.amount">
                     <div class="reward-amount">
                       {{ reward.amount }}
@@ -43,15 +43,15 @@
           ></dune-alliance-token>
         </div>
         @for (playerScore of playerScores; track trackPlayerScore(playerScore); let i = $index) {
-        <div
-          class="score-marker"
-          [class.hidden]="isExcluded(playerScore.playerId)"
-          [style.bottom]="15 + playerScore.score * 48 + 'px'"
-          [style.left]="15 + i * 35 + 'px'"
-          [style.background-color]="getPlayerColor(playerScore.playerId)"
-          (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
-          (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"
-        ></div>
+          <div
+            class="score-marker"
+            [class.hidden]="isExcluded(playerScore.playerId)"
+            [style.bottom]="15 + playerScore.score * 48 + 'px'"
+            [style.left]="15 + i * 35 + 'px'"
+            [style.background-color]="getPlayerColor(playerScore.playerId)"
+            (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
+            (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"
+          ></div>
         }
       </ng-container>
     </div>

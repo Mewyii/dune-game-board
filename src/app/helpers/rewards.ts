@@ -602,6 +602,7 @@ export function playerCanPayCosts(
     | 'playerCardsFactionsInPlay'
     | 'gameSettings'
     | 'playerTechTiles'
+    | 'playerResources'
   >,
 ) {
   let canPayCosts = true;
@@ -612,22 +613,9 @@ export function playerCanPayCosts(
     const costAmount = Math.abs(cost.amount ?? 1);
 
     if (isResourceType(costType)) {
-      const resourceIndex = player.resources.findIndex((x) => x.type === cost.type);
-      const currentResourceAmount = player.resources[resourceIndex].amount ?? 0;
+      const currentResourceAmount = gameState.playerResources[costType];
 
       if (currentResourceAmount < costAmount) {
-        canPayCosts = false;
-      }
-    } else if (costType === 'signet-token') {
-      if (player.signetTokenCount < costAmount) {
-        canPayCosts = false;
-      }
-    } else if (costType === 'focus') {
-      if (player.focusTokens < costAmount) {
-        canPayCosts = false;
-      }
-    } else if (costType === 'tech') {
-      if (player.tech < costAmount) {
         canPayCosts = false;
       }
     } else if (costType === 'tech-tile-trash') {

@@ -4,7 +4,6 @@ import {
   getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
   getPlayerCombatStrength,
-  getResourceAmount,
   getWinCombatDesire,
   noOneHasMoreInfluence,
   playerAllianceIsContested,
@@ -29,10 +28,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'high-council': {
     baseDesire: 0.7,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') -
+      0.01 * gameState.playerResources.solari -
       0.0175 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 11 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 9,
+      (gameState.playerResources.solari > 11 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'council-seat-small', false),
@@ -42,10 +41,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   swordmaster: {
     baseDesire: 0.8,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') -
+      0.01 * gameState.playerResources.solari -
       0.025 * (gameState.currentRound - 1) +
-      (getResourceAmount(player, 'solari') > 8 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 7,
+      (gameState.playerResources.solari > 8 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 7,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', false),
@@ -56,13 +55,13 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   tech: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'spice') +
-      0.02 * player.tech -
+      0.01 * gameState.playerResources.spice +
+      0.02 * gameState.playerResources.tech -
       0.0125 * (gameState.currentRound - 1) +
       0.04 * gameState.playerIntriguesConversionCosts.tech +
       0.025 * gameState.playerTechTilesConversionCosts.tech -
       0.05 * gameState.playerTechTiles.length,
-    goalIsReachable: (player) => getResourceAmount(player, 'solari') > 2,
+    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 2,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'tech'),
@@ -71,11 +70,11 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   dreadnought: {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
-      0.01 * getResourceAmount(player, 'solari') +
+      0.01 * gameState.playerResources.solari +
       0.01 * gameState.playerCombatUnits.troopsInGarrison +
       0.0075 * (gameState.currentRound - 1) -
       0.05 * gameState.playerDreadnoughtCount,
-    goalIsReachable: (player, gameState, goals) => getResourceAmount(player, 'solari') > 5,
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 5,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1 || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', false),
@@ -148,10 +147,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         ? 0
         : 1.0) *
       (0.15 +
-        0.01 * getResourceAmount(player, 'spice') +
+        0.01 * gameState.playerResources.spice +
         0.025 * (gameState.currentRound - 1) +
         0.02 * gameState.playerCardsBought),
-    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 0,
+    goalIsReachable: (player, gameState) => gameState.playerResources.spice > 0,
     reachedGoal: () => false,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'agent-lift'),
@@ -283,7 +282,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         ? 0.075 * (7 - gameState.playerHandCardsFieldAccess.length) +
           0.025 * (5 - gameState.playerHandCards.length) -
           0.01 * gameState.playerCardsBought -
-          0.01 * (gameState.playerCardsTrashed + player.focusTokens)
+          0.01 * (gameState.playerCardsTrashed + gameState.playerResources.focus)
         : 0,
     goalIsReachable: () => false,
     reachedGoal: () => false,
@@ -295,7 +294,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.4,
     desireModifier: (player, gameState, goals) =>
       -0.0125 * gameState.playerCardsBought -
-      0.0125 * (gameState.playerCardsTrashed + player.focusTokens) -
+      0.0125 * (gameState.playerCardsTrashed + gameState.playerResources.focus) -
       (player.hasCouncilSeat ? 0.05 : 0.0),
     goalIsReachable: () => false,
     reachedGoal: () => false,
@@ -312,7 +311,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
               (player.hasCouncilSeat ? 0.05 : 0) -
               0.005 * (gameState.currentRound - 1) * gameState.currentRound +
               0.02 * gameState.playerCardsBought +
-              0.025 * (gameState.playerCardsTrashed + player.focusTokens) +
+              0.025 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
               (gameState.playerAgentsAvailable > 1 ? 0.025 * (7 - gameState.playerHandCardsFieldAccess.length) : 0),
             0,
             0.6,
@@ -327,7 +326,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
               0.0 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
                 0.01 * gameState.playerCardsBought +
-                0.0075 * (gameState.playerCardsTrashed + player.focusTokens) +
+                0.0075 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
                 0.02 * gameState.playerHandCardsRewards['persuasion'] +
                 0.01 * gameState.playerCardsRewards['persuasion'],
               0,
@@ -349,7 +348,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: -0.1,
     desireModifier: (player, gameState, goals) =>
       0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + player.focusTokens) -
+      0.01 * (gameState.playerCardsTrashed + gameState.playerResources.focus) -
       0.01 * (7 - gameState.playerHandCardsFieldAccess.length),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState, goals) => gameState.playerHandCards.length < 1,
@@ -363,7 +362,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       clamp(
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
           0.125 * gameState.playerCardsBought -
-          0.15 * (gameState.playerCardsTrashed + player.focusTokens),
+          0.15 * (gameState.playerCardsTrashed + gameState.playerResources.focus),
         -0.2,
         0.4,
       ),
@@ -392,7 +391,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       );
     },
     goalIsReachable: () => false,
-    reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'water') > 1,
+    reachedGoal: (player, gameState, goals) => gameState.playerResources.water > 1,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'water'),
     }),
@@ -416,8 +415,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         0.025 * gameState.playerTechTilesConversionCosts.spice
       );
     },
-    goalIsReachable: (player) => getResourceAmount(player, 'water') > 1,
-    reachedGoal: (player, gameState, goals) => getResourceAmount(player, 'spice') > 3,
+    goalIsReachable: (player, gameState) => gameState.playerResources.water > 1,
+    reachedGoal: (player, gameState, goals) => gameState.playerResources.spice > 3,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'spice'),
     }),
@@ -440,9 +439,9 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         0.025 * gameState.playerTechTilesConversionCosts.solari
       );
     },
-    goalIsReachable: (player) => getResourceAmount(player, 'spice') > 2,
+    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 2,
     reachedGoal: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > (!player.hasSwordmaster || !player.hasCouncilSeat ? 9 : 4),
+      gameState.playerResources.solari > (!player.hasSwordmaster || !player.hasCouncilSeat ? 9 : 4),
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari', true, 6),
     }),
@@ -450,8 +449,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
-      getResourceAmount(player, 'solari') > 5 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
-    goalIsReachable: (player) => getResourceAmount(player, 'solari') > 8,
+      gameState.playerResources.solari > 5 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
+    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 8,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari'),

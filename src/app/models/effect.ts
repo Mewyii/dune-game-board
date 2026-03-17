@@ -20,6 +20,7 @@ export const effectRewards = [
   'enemies-card-discard',
   'enemies-intrigue-trash',
   'enemies-troop-destroy',
+  'enemies-leader-assassinate',
   'faction-influence-down-bene',
   'faction-influence-down-choice',
   'faction-influence-down-emperor',
@@ -31,7 +32,6 @@ export const effectRewards = [
   'faction-influence-up-fremen',
   'faction-influence-up-guild',
   'faction-influence-up-twice-choice',
-  'focus',
   'foldspace',
   'intrigue',
   'intrigue-draw',
@@ -48,12 +48,10 @@ export const effectRewards = [
   'research',
   'shipping',
   'signet-ring',
-  'signet-token',
   'specimen',
   'spice-accumulation',
   'sword',
   'sword-master',
-  'tech',
   'tech-tile',
   'tech-tile-flip',
   'tech-tile-trash',
@@ -63,6 +61,7 @@ export const effectRewards = [
   'troop-retreat',
   'turn-pass',
   'victory-point',
+  'leader-wound',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;

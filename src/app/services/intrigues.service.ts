@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
@@ -17,7 +17,12 @@ export class IntriguesService {
   public intrigueDiscardPile$ = this.intrigueDiscardPileSubject.asObservable();
 
   private playerIntriguesSubject = new BehaviorSubject<PlayerIntrigueStack[]>([]);
-  public playerIntrigues$ = this.playerIntriguesSubject.asObservable();
+  public playersIntrigues$ = this.playerIntriguesSubject.asObservable();
+  public playerIntrigues$ = (playerId: number) =>
+    this.playersIntrigues$.pipe(
+      map((x) => x.find((intrigues) => intrigues.playerId === playerId)?.intrigues),
+      distinctUntilChanged(),
+    );
 
   constructor(private intrigueConfigService: IntrigueConfiguratorService) {
     const intrigueDeckString = localStorage.getItem('intrigueDeck');
@@ -48,7 +53,7 @@ export class IntriguesService {
       this.playerIntriguesSubject.next(playerIntrigues);
     }
 
-    this.playerIntrigues$.subscribe((playerIntrigues) => {
+    this.playersIntrigues$.subscribe((playerIntrigues) => {
       localStorage.setItem('playerIntrigues', JSON.stringify(playerIntrigues));
     });
   }

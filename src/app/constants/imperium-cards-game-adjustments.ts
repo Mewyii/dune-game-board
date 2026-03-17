@@ -26,20 +26,6 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
   },
   {
-    id: 'Insurgents',
-    aiAgentEvaluation: (player: Player, gameState: GameState) =>
-      0 + 1 * gameState.enemyLocations.length - 0.25 * gameState.playerLocations.length,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const enemyLocation = gameState.enemyLocations.find(
-        (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
-      );
-      if (enemyLocation) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
-        services.gameManager.payCostForPlayer(player.id, { type: 'solari', amount: -2 });
-      }
-    },
-  },
-  {
     id: 'Seduction',
     aiAgentEvaluation: (player: Player, gameState: GameState) => {
       const result = 0;
@@ -79,34 +65,10 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
   },
   {
-    id: 'Imperial Assassin',
+    id: 'Provoked Hostilities',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 3,
     customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
       return;
-    },
-  },
-  {
-    id: 'Provoked Hostilities',
-    aiAgentEvaluation: (player: Player, gameState: GameState) => {
-      const result = 0;
-      const boardSpaces = gameState.boardSpaces.filter((field) => field.actionType === 'town');
-      const affectedPlayerIds: number[] = [];
-      let playerCount = 0;
-      for (const boardSpace of boardSpaces) {
-        const enemyAgent = gameState.enemyAgentsOnFields.find((agent) => agent.fieldId === boardSpace.title.en);
-        if (enemyAgent && !affectedPlayerIds.some((playerId) => playerId === enemyAgent.playerId)) {
-          affectedPlayerIds.push(enemyAgent.playerId);
-          playerCount++;
-        }
-      }
-      return result + playerCount * 1.25;
-    },
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const townFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'town').map((x) => x.title.en);
-      const enemiesOnTownFields = gameState.enemyAgentsOnFields.filter((x) => townFieldIds.includes(x.fieldId));
-      for (const enemyOnTownField of enemiesOnTownFields) {
-        services.gameManager.payCostForPlayer(enemyOnTownField.playerId, { type: 'loose-troop' });
-      }
     },
     aiRevealEvaluation: (player: Player, gameState: GameState) =>
       0 + 1.5 * gameState.enemyCombatUnits.filter((x) => getPlayerCombatStrength(x, gameState)).length,
@@ -119,10 +81,32 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
   },
   {
+    id: 'Insurgents',
+    aiAgentEvaluation: (player: Player, gameState: GameState) =>
+      0.75 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
+    customAgentAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const blockableBoardSpaces = gameState.boardSpaces.filter(
+        (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
+      );
+
+      const randomizedBoardSpaces = shuffle(blockableBoardSpaces).slice(0, 1);
+      for (const boardSpace of randomizedBoardSpaces) {
+        services.gameModifierService.addPlayerGameModifiers(player.id, {
+          fieldBlock: [{ id: 'embargo-field-block', fieldId: boardSpace.title.en, currentRoundOnly: true }],
+        });
+        for (const enemyPlayer of gameState.enemyPlayers) {
+          services.gameModifierService.addPlayerGameModifiers(enemyPlayer.id, {
+            fieldBlock: [{ id: 'embargo-field-block', fieldId: boardSpace.title.en, currentRoundOnly: true }],
+          });
+        }
+      }
+    },
+  },
+  {
     id: 'Embargo',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       2 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
       );
@@ -272,16 +256,6 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       if (enemyLocation) {
         services.locationManager.setLocationOwner(enemyLocation.locationId, player.id);
       }
-    },
-  },
-  {
-    id: 'Drawing the Knifes',
-    aiAgentEvaluation: (player: Player, gameState: GameState) => 0.25 + 0.1 * gameState.playerHandCards.length,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      for (const enemy of gameState.enemyPlayers) {
-        services.gameManager.payCostForPlayer(enemy.id, { type: 'card-destroy' });
-      }
-      services.gameManager.payCostForPlayer(player.id, { type: 'card-destroy' });
     },
   },
 ];

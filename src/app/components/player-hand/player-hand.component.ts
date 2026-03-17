@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { getEffectTypePath } from 'src/app/helpers/reward-types';
-import { EffectType } from 'src/app/models';
+
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -9,6 +8,7 @@ import { CardsService, ImperiumDeckCard, PlayerCardStack, PlayerPlotStack } from
 import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LoggingService } from 'src/app/services/log.service';
+import { PlayerResourcesService } from 'src/app/services/player-resources.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -50,6 +50,7 @@ export class PlayerHandComponent implements OnInit {
     private dialog: MatDialog,
     private logService: LoggingService,
     public t: TranslateService,
+    private playerresourcesService: PlayerResourcesService,
   ) {}
 
   ngOnInit(): void {
@@ -89,7 +90,7 @@ export class PlayerHandComponent implements OnInit {
       this.playedPlayerCardId = playedPlayerCards.find((x) => x.playerId === this.activePlayerId)?.cardId;
     });
 
-    this.intriguesService.playerIntrigues$.subscribe((playerIntrigues) => {
+    this.intriguesService.playersIntrigues$.subscribe((playerIntrigues) => {
       this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
     });
   }
@@ -194,9 +195,9 @@ export class PlayerHandComponent implements OnInit {
         this.activeCardId = '';
 
         this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      } else if (this.activePlayer.focusTokens > 0) {
+      } else if (this.playerresourcesService.getPlayerResourceAmount(this.activePlayerId, 'focus') > 0) {
         this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
-        this.playerManager.removeFocusTokens(this.activePlayerId, 1);
+        this.playerresourcesService.removeResourceFromPlayer(this.activePlayerId, 'focus', 1);
         this.activeCardId = '';
 
         this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
@@ -262,10 +263,6 @@ export class PlayerHandComponent implements OnInit {
     } else {
       this.activeIntrigueId = '';
     }
-  }
-
-  public getEffectTypePath(effectType: EffectType) {
-    return getEffectTypePath(effectType);
   }
 
   public trackCount(index: number, card: any) {
