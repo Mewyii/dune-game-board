@@ -353,18 +353,18 @@ export class AIEffectEvaluationService {
     switch (rewardType) {
       case 'water':
         return (
-          2.9 +
+          2.7 +
           0.02 * gameState.playerTechTilesConversionCosts.water -
           (player.hasSwordmaster ? 0.15 : 0) -
           (player.hasCouncilSeat ? 0.15 : 0) -
           0.05 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-          0.01 * (gameState.currentRound - 1) -
+          0.0125 * (gameState.currentRound - 1) -
           0.02 * gameState.playerCardsRewards.water -
           0.02 * gameState.playerTechTilesRewards.water
         );
       case 'spice':
         return (
-          2.4 +
+          2.3 +
           0.015 * gameState.playerTechTilesConversionCosts.spice -
           (player.hasSwordmaster ? 0.2 : 0) -
           (player.hasCouncilSeat ? 0.2 : 0) -
@@ -375,7 +375,7 @@ export class AIEffectEvaluationService {
         );
       case 'solari':
         return (
-          1.4 +
+          1.3 +
           0.01 * gameState.playerTechTilesConversionCosts.solari -
           (player.hasSwordmaster ? 0.25 : 0) -
           (player.hasCouncilSeat ? 0.25 : 0) -
@@ -510,10 +510,16 @@ export class AIEffectEvaluationService {
         return 2.5 - 0.1 * (gameState.currentRound - 1);
       case 'enemies-intrigue-trash':
         return 2.75;
+      case 'enemies-leader-assassinate':
+        return 3.5;
       case 'card-return-to-hand':
         return 2 + 0.1 * gameState.playerCardsBought - 0.1 * gameState.playerCardsTrashed;
       case 'tech-tile-trash':
         return -5;
+      case 'leader-heal':
+        return 2 - 0.1 * (gameState.currentRound - 1);
+      case 'leader-wound':
+        return -2 - 0.1 * (gameState.currentRound - 1);
       default:
         return 0;
     }
@@ -737,6 +743,8 @@ export class AIEffectEvaluationService {
         return (
           (value * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length) / (gameState.playersCount - 1)
         );
+      case 'enemies-leader-assassinate':
+        return value - 0.1 * gameState.enemyAgentsOnFields.length;
       case 'card-return-to-hand':
         const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
         return playerDiscardPileCount > 0 ? value : -3;
@@ -748,6 +756,10 @@ export class AIEffectEvaluationService {
         } else {
           return 0;
         }
+      case 'leader-heal':
+        return value * 0.35 * (4 - gameState.playerResources['leader-heal']);
+      case 'leader-wound':
+        return value;
       default:
         return value;
     }

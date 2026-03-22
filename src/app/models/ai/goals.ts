@@ -29,7 +29,8 @@ export type AIGoals =
   | 'harvest-accumulated-spice-flat'
   | 'swordmaster-helper'
   | 'get-board-persuasion'
-  | 'get-victory-points';
+  | 'get-victory-points'
+  | 'regain-health';
 
 export interface AIGoal {
   baseDesire: number;

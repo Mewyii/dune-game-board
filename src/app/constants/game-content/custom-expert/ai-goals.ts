@@ -446,6 +446,16 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
       ...getViableBoardFields(fields, 'solari', true, 6),
     }),
   },
+  'regain-health': {
+    baseDesire: 0.025,
+    desireModifier: (player, gameState, goals) =>
+      0.075 * (4 - gameState.playerResources['leader-heal']) - 0.02 * (gameState.currentRound - 1),
+    goalIsReachable: () => false,
+    reachedGoal: (player, gameState) => gameState.playerResources['leader-heal'] > 3,
+    viableFields: (fields) => ({
+      ...getViableBoardFields(fields, 'leader-heal'),
+    }),
+  },
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
