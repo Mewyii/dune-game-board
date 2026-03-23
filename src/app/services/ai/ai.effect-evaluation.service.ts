@@ -12,6 +12,7 @@ import {
   playerCanPayCosts,
 } from 'src/app/helpers/rewards';
 import {
+  ActionField,
   EffectPlayerTurnTiming,
   EffectReward,
   EffectRewardType,
@@ -75,6 +76,7 @@ export class AIEffectEvaluationService {
     gameState: GameState,
     timing: EffectPlayerTurnTiming = 'agent-placement',
     ignoreConversionCosts = false,
+    targetBoardSpace?: ActionField,
   ) {
     let evaluationValue = 0;
     for (const effect of effects) {
@@ -91,18 +93,25 @@ export class AIEffectEvaluationService {
           const rewards = getMultipliedRewardEffects(effect, gameState, timing);
 
           for (const reward of rewards) {
-            evaluationValue += this.getAmountAdjustedRewardEffectEvaluation(
+            evaluationValue += this.getAmountAdjustedRewardEffectEvaluationForTurnState(
               reward.type,
               reward.amount ?? 1,
               player,
               gameState,
+              targetBoardSpace,
             );
           }
         } else if (isStructuredChoiceEffect(effect)) {
-          evaluationValue += this.getChoiceEffectEvaluationForTurnState(effect, player, gameState, timing);
+          evaluationValue += this.getChoiceEffectEvaluationForTurnState(effect, player, gameState, timing, targetBoardSpace);
         } else if (isStructuredConversionEffect(effect)) {
           if (ignoreConversionCosts || playerCanPayCosts(effect.effectCosts.effectRewards, player, gameState)) {
-            evaluationValue += this.getConversionEffectEvaluationForTurnState(effect, player, gameState, timing);
+            evaluationValue += this.getConversionEffectEvaluationForTurnState(
+              effect,
+              player,
+              gameState,
+              timing,
+              targetBoardSpace,
+            );
           }
         }
       }
@@ -143,6 +152,7 @@ export class AIEffectEvaluationService {
     player: Player,
     gameState: GameState,
     timing: EffectPlayerTurnTiming = 'agent-placement',
+    targetBoardSpace?: ActionField,
   ) {
     let evaluationValue = 0;
     const leftSideEvaluation = isStructuredConversionEffect(choiceEffect.effectLeft)
@@ -151,6 +161,7 @@ export class AIEffectEvaluationService {
           getMultipliedRewardEffects(choiceEffect.effectLeft, gameState, timing),
           player,
           gameState,
+          targetBoardSpace,
         );
     const rightSideEvaluation = isStructuredConversionEffect(choiceEffect.effectRight)
       ? this.getConversionEffectEvaluationForTurnState(choiceEffect.effectRight, player, gameState, timing)
@@ -158,6 +169,7 @@ export class AIEffectEvaluationService {
           getMultipliedRewardEffects(choiceEffect.effectRight, gameState, timing),
           player,
           gameState,
+          targetBoardSpace,
         );
 
     evaluationValue += leftSideEvaluation > rightSideEvaluation ? leftSideEvaluation : rightSideEvaluation;
@@ -191,6 +203,7 @@ export class AIEffectEvaluationService {
     player: Player,
     gameState: GameState,
     timing: EffectPlayerTurnTiming = 'agent-placement',
+    targetBoardSpace?: ActionField,
   ) {
     let evaluationValue = 0;
     if (isConversionEffectType(conversionEffect.type)) {
@@ -198,7 +211,7 @@ export class AIEffectEvaluationService {
       const rewards = getMultipliedRewardEffects(conversionEffect.effectConversions, gameState, timing);
 
       const costsEvaluation = this.getCostsArrayEvaluationForTurnState(costs, player, gameState);
-      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState);
+      const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState, targetBoardSpace);
 
       evaluationValue += -costsEvaluation + rewardsEvaluation;
     }
@@ -299,7 +312,12 @@ export class AIEffectEvaluationService {
     return evaluationValue;
   }
 
-  public getRewardArrayEvaluationForTurnState(rewards: EffectReward[], player: Player, gameState: GameState) {
+  public getRewardArrayEvaluationForTurnState(
+    rewards: EffectReward[],
+    player: Player,
+    gameState: GameState,
+    targetBoardSpace?: ActionField,
+  ) {
     let evaluationValue = 0;
     for (const reward of rewards) {
       const rewardAmount = reward.amount ?? 1;
@@ -308,6 +326,7 @@ export class AIEffectEvaluationService {
         rewardAmount,
         player,
         gameState,
+        targetBoardSpace,
       );
     }
     return evaluationValue;
@@ -340,10 +359,11 @@ export class AIEffectEvaluationService {
     rewardAmount: number,
     player: Player,
     gameState: GameState,
+    targetBoardSpace?: ActionField,
   ) {
     const amountValueAdjustion = 1 + rewardAmount / 25;
     return (
-      this.getRewardEffectEvaluationForTurnState(rewardType, rewardAmount, player, gameState) *
+      this.getRewardEffectEvaluationForTurnState(rewardType, rewardAmount, player, gameState, targetBoardSpace) *
       rewardAmount *
       amountValueAdjustion
     );
@@ -484,11 +504,15 @@ export class AIEffectEvaluationService {
       case 'agent-lift':
         return 3 + 0.25 * (gameState.currentRound - 1);
       case 'signet':
-        return gameState.playerLeaderSignetTokenValue ?? 0.75;
+        return gameState.playerLeader.signetTokenOrFieldMarkerValue
+          ? gameState.playerLeader.signetTokenOrFieldMarkerValue(player, gameState)
+          : 0.75;
       case 'signet-ring':
-        return gameState.playerLeaderSignetRingEffects
-          ? this.getStructuredEffectsEvaluation(gameState.playerLeaderSignetRingEffects, player, gameState)
-          : 3;
+        return gameState.playerLeader.signetRingValue
+          ? gameState.playerLeader.signetRingValue(player, gameState)
+          : gameState.playerLeader.structuredSignetEffects
+            ? this.getStructuredEffectsEvaluation(gameState.playerLeader.structuredSignetEffects, player, gameState)
+            : 3;
       case 'location-control':
         return 7 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
@@ -530,6 +554,7 @@ export class AIEffectEvaluationService {
     rewardAmount: number,
     player: Player,
     gameState: GameState,
+    targetBoardSpace?: ActionField,
   ) {
     const hasPlacedAgents = gameState.playerAgentsOnFields.length > 0;
     const hasAgentsLeftToPlace = gameState.playerAgentsAvailable > 0;
@@ -566,16 +591,19 @@ export class AIEffectEvaluationService {
           0.2 * gameState.playerTechTilesConversionCosts.tech
         );
       case 'troop':
+        const combatBoardSpace = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
         return (
-          value +
+          (combatBoardSpace ? 1.125 : 1.0) * value +
           0.2 * (3 - gameState.playerCombatUnits.troopsInGarrison) +
           0.2 * gameState.playerIntriguesConversionCosts['loose-troop'] +
           0.2 * gameState.playerTechTilesConversionCosts['loose-troop']
         );
       case 'dreadnought':
+        const combatField = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
         const maxDreadnoughts = this.settingsService.getMaxPlayerDreadnoughtCount();
+
         return getPlayerdreadnoughtCount(gameState.playerCombatUnits) < maxDreadnoughts
-          ? value + 0.1 * gameState.playerCombatUnits.troopsInGarrison
+          ? (combatField ? 1.25 : 1.0) * value + 0.1 * gameState.playerCombatUnits.troopsInGarrison
           : 0;
       case 'card-draw':
         if (player.turnState === 'reveal') {
@@ -599,7 +627,7 @@ export class AIEffectEvaluationService {
       case 'persuasion':
         return value;
       case 'foldspace':
-        return (hasAgentsLeftToPlace ? value : 0.33 * value) + 0.1 * (7 - gameState.playerCardsFieldAccess.length);
+        return (hasAgentsLeftToPlace ? value : 0.25 * value) + 0.1 * (7 - gameState.playerCardsFieldAccess.length);
       case 'council-seat-small':
       case 'council-seat-large':
         return value;
@@ -704,17 +732,33 @@ export class AIEffectEvaluationService {
           return hasPlacedAgents && !liftingAgentWouldRemoveLocationControlPosibility ? value : -3;
         }
       case 'signet':
-        return value;
+        return gameState.playerLeader.signetTokenOrFieldMarkerValue
+          ? gameState.playerLeader.signetTokenOrFieldMarkerValue(player, gameState, targetBoardSpace)
+          : 0.75;
       case 'signet-ring':
-        return gameState.playerLeaderSignetRingEffects
-          ? this.getStructuredEffectsEvaluationForTurnState(gameState.playerLeaderSignetRingEffects, player, gameState)
-          : value;
+        return gameState.playerLeader.signetRingValue
+          ? gameState.playerLeader.signetRingValue(player, gameState, targetBoardSpace)
+          : gameState.playerLeader.structuredSignetEffects
+            ? this.getStructuredEffectsEvaluationForTurnState(
+                gameState.playerLeader.structuredSignetEffects,
+                player,
+                gameState,
+                'agent-placement',
+                false,
+                targetBoardSpace,
+              )
+            : value;
       case 'location-control':
-        const controllableFreeLocations = gameState.playerAgentsOnFields.some((x) =>
+        const playerAgentsOnFields = gameState.playerAgentsOnFields;
+        if (targetBoardSpace?.ownerReward) {
+          playerAgentsOnFields.push({ playerId: player.id, fieldId: targetBoardSpace.title.en, state: 'placed' });
+        }
+
+        const controllableFreeLocations = playerAgentsOnFields.some((x) =>
           gameState.freeLocations.some((y) => x.fieldId === y),
         );
         const controllableEnemyLocations =
-          gameState.playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y.locationId)) &&
+          playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y.locationId)) &&
           gameState.playerCombatUnits.troopsInGarrison >= (this.settingsService.getLocationTakeoverTroopCosts() ?? 0);
 
         return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -3;

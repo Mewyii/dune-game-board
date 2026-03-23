@@ -7,10 +7,11 @@ export const startingCards: ImperiumCard[] = [
       de: 'Kriegsmeister',
     },
     fieldAccess: ['emperor', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/gurney_3.png',
+    imageUrl: '/assets/images/action-backgrounds/warmaster.png',
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',

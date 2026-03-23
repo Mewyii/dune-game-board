@@ -462,12 +462,15 @@ export class AIManager {
 
     const preferredFields = aiPlayer.preferredFields;
 
-    const cardEvaluations = playerHandCards.map((card) => ({
-      card,
-      evaluationValue: this.getImperiumCardPlayEvaluation(card, player, gameState),
-    }));
     const cardAndFieldEvaluations: { field: ViableField; evaluation: number; card: ImperiumDeckCard }[] = [];
     for (const [fieldIndex, preferredField] of preferredFields.entries()) {
+      const boardField = gameState.boardSpaces.find((x) => x.title.en === preferredField.fieldId);
+
+      const cardEvaluations = playerHandCards.map((card) => ({
+        card,
+        evaluationValue: this.getImperiumCardPlayEvaluation(card, player, gameState, boardField),
+      }));
+
       const usableCards = cardEvaluations.filter(
         (cardEvaluation) =>
           (preferredField.requiresInfiltration ? cardEvaluation.card.canInfiltrate : true) &&
@@ -743,7 +746,12 @@ export class AIManager {
     return decision;
   }
 
-  private getImperiumCardPlayEvaluation(card: ImperiumDeckCard, player: Player, gameState: GameState) {
+  private getImperiumCardPlayEvaluation(
+    card: ImperiumDeckCard,
+    player: Player,
+    gameState: GameState,
+    targetBoardSpace?: ActionField,
+  ) {
     let evaluationValue = 0;
     if (card.faction) {
       evaluationValue +=
@@ -765,6 +773,9 @@ export class AIManager {
         card.structuredAgentEffects,
         player,
         gameState,
+        'agent-placement',
+        false,
+        targetBoardSpace,
       );
     }
     if (hasCustomAgentEffect(card)) {

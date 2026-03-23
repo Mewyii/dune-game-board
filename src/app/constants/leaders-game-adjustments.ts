@@ -1,5 +1,5 @@
 import { playerCanPayCosts } from '../helpers/rewards';
-import { StructuredEffect } from '../models';
+import { ActionField, StructuredEffect } from '../models';
 import { AIAdjustments, GameServices, GameState, TimedFunction } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard, ImperiumRowCard } from '../services/cards.service';
@@ -15,60 +15,170 @@ export interface LeaderGameAdjustments {
   customTimedFunction?: TimedFunction;
   customTimedAIFunction?: TimedFunction;
   customEffects?: StructuredEffect[];
-  signetTokenValue?: number;
+  signetRingValue?: (player: Player, gameState: GameState, targetBoardSpace?: ActionField) => number;
+  signetTokenOrFieldMarkerValue?: (player: Player, gameState: GameState, targetBoardSpace?: ActionField) => number;
 }
 
 export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
-    id: 'Stilgar',
-    customEffects: [
-      {
-        timing: { type: 'timing-combat' },
-        type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 3 }] },
-      },
-    ],
+    id: 'Paul Atreides',
     gameModifiers: {
-      fieldFactionAccess: [
-        {
-          id: 'liet-fremen',
-          fieldId: 'Sietch Tabr',
-        },
-      ],
+      fieldBlock: [{ id: 'paul-fremen-access', actionType: 'fremen' }],
     },
-    signetTokenValue: 2.5,
+    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const fremenInfluence = gameState.playerScore['fremen'];
+      if (fremenInfluence > 3) {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'troop' });
+      } else if (fremenInfluence > 1) {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'agent-lift' });
+      }
+      services.gameModifierService.addPlayerGameModifiers(player.id, {
+        customActions: [
+          {
+            id: 'paul-vision-intrigues',
+            action: 'vision-intrigues',
+            currentRoundOnly: true,
+          },
+          {
+            id: 'paul-vision-conflict',
+            action: 'vision-conflict',
+            currentRoundOnly: true,
+          },
+        ],
+      });
+    },
+    signetRingValue: (player, gameState) => {
+      let value = 1;
+      const fremenInfluence = gameState.playerScore['fremen'];
+      if (fremenInfluence > 3) {
+        if (gameState.playerAgentsOnFields.length > 0) {
+          value += 5.0;
+        }
+      } else if (fremenInfluence > 1) {
+        value += 3.5;
+      }
+      return value;
+    },
   },
   {
-    id: 'Liet Kynes',
+    id: 'Alia Atreides',
+    customTimedFunction: {
+      timing: 'timing-reveal-turn',
+      function: (player, gameState, services) => {
+        if (gameState.playerHandCards.some((card) => card.agentEffects?.some((x) => x.type === 'signet-ring'))) {
+          services.gameManager.addRewardToPlayer(player.id, { type: 'faction-influence-down-choice' });
+        }
+      },
+    },
+    signetRingValue: (player, gameState) => 5,
+  },
+  {
+    id: 'Duke Leto Atreides',
     gameModifiers: {
-      factionInfluence: [
+      customActions: [
         {
-          id: 'liet',
-          factionType: 'fremen',
-          noInfluence: true,
-          alternateReward: {
-            type: 'water',
-          },
-        },
-      ],
-      fieldFactionAccess: [
-        {
-          id: 'liet-fremen',
-          factionType: 'fremen',
+          id: 'leto-inspiring-loyalty',
+          action: 'field-marker',
         },
       ],
     },
-    customSignetAIFunction(player, gameState, services) {
-      if (gameState.playerResources.signet > 2) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'victory-point' });
-        services.gameManager.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
-      } else if (gameState.playerResources.water > 1) {
-        services.gameManager.payCostForPlayer(player.id, { type: 'water', amount: 2 });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
-      } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'signet' });
+    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const possibleNewMarkerLocations = gameState.boardSpaces.filter(
+        (x) => x.ownerReward && gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.title.en),
+      );
+      const playerOwnedLocations = services.locationManager.getPlayerLocations(player.id);
+      const fieldMarkers = services.gameModifierService.getPlayerGameModifier(player.id, 'fieldMarkers');
+
+      if (fieldMarkers) {
+        fieldMarkers.sort((a, b) => a.amount - b.amount);
+        for (const fieldMarker of fieldMarkers) {
+          if (fieldMarker.amount > 1 && !playerOwnedLocations.some((x) => x.locationId === fieldMarker.fieldId)) {
+            services.audioManager.playSound('location-control');
+            services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
+            services.locationManager.setLocationOwner(fieldMarker.fieldId, player.id);
+            services.loggingService.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
+          } else {
+            if (possibleNewMarkerLocations.some((x) => x.title.en === fieldMarker.fieldId)) {
+              services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, 1);
+            }
+          }
+        }
+      } else if (possibleNewMarkerLocations.length > 0) {
+        services.gameModifierService.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0].title.en, 1);
       }
+    },
+    signetRingValue: (player, gameState, targetBoardSpace) => {
+      const playerAgentsOnFields = gameState.playerAgentsOnFields;
+      if (targetBoardSpace) {
+        playerAgentsOnFields.push({ playerId: player.id, fieldId: targetBoardSpace.title.en, state: 'placed' });
+      }
+      let value = 0;
+      if (gameState.playerGameModifiers?.fieldMarkers?.some((x) => x.amount > 1)) {
+        value += 6;
+      } else if (playerAgentsOnFields.length > 0) {
+        value += 3;
+      }
+      return value;
+    },
+    signetTokenOrFieldMarkerValue: (player, gameState) => 3,
+  },
+  {
+    id: 'Feyd-Rautha Harkonnen',
+    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet' }] }],
+    customTimedAIFunction: {
+      timing: 'timing-round-start',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        if (
+          gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
+          gameState.playerIntrigueCount < 2 &&
+          Math.random() > 0.33
+        ) {
+          services.gameManager.addRewardToPlayer(player.id, { type: 'card-destroy' });
+          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.gameManager.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+        }
+      },
+    },
+    customEffects: [
+      {
+        type: 'helper-trade',
+        timing: { type: 'timing-combat' },
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword' }] },
+      },
+    ],
+    signetTokenOrFieldMarkerValue: (player, gameState) => 0.75,
+  },
+  {
+    id: 'Count Glossu Rabban',
+    customEffects: [{ type: 'reward', timing: { type: 'timing-round-start' }, effectRewards: [{ type: 'card-destroy' }] }],
+    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const resourceOptions = gameState.boardSpaces
+        .filter((bs) => gameState.playerLocations.includes(bs.title.en))
+        .map((x) => x.ownerReward)
+        .filter((x) => x !== undefined);
+
+      const resourceChoices = services.aiManager.getPreferredRewardEffects(player, resourceOptions, gameState);
+      for (const choice of resourceChoices) {
+        services.gameManager.addRewardToPlayer(player.id, choice);
+      }
+    },
+    customTimedAIFunction: {
+      timing: 'timing-game-start',
+      function: (player: Player, gameState: GameState, services: GameServices) => {
+        const possibleLocations = ['Arrakeen', 'Carthag', 'Imperial Basin'];
+        const randomIndex = Math.floor(Math.random() * possibleLocations.length);
+        const chosenLocation = possibleLocations[randomIndex];
+
+        services.loggingService.logPlayerGainedLocationControl(player.id, 1, chosenLocation);
+        services.locationManager.setLocationOwner(chosenLocation, player.id);
+      },
+    },
+    signetRingValue: (player, gameState) => {
+      return gameState.playerLocations.length * 2;
     },
   },
   {
@@ -129,38 +239,76 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    signetTokenValue: 1.75,
+    signetTokenOrFieldMarkerValue: (player, gameState) => 1.75,
   },
   {
-    id: 'The Preacher',
+    id: 'Stilgar',
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => {
+        if (gameState.playerResources.signet < 1 || gameState.playerCombatUnits.troopsInGarrison < 1) {
+          return 0;
+        } else {
+          return field.rewards.some((x) => x.type === 'combat') ? 0.05 : 0;
+        }
+      },
+    },
+    customEffects: [
+      {
+        timing: { type: 'timing-combat' },
+        type: 'helper-trade',
+        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 3 }] },
+      },
+    ],
     gameModifiers: {
-      fieldEnemyAgentAccess: [
+      fieldFactionAccess: [
         {
-          id: 'preacher-enemy-access',
-          actionTypes: ['town'],
+          id: 'liet-fremen',
+          fieldId: 'Sietch Tabr',
         },
       ],
     },
-    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const enemyLocation = gameState.enemyLocations.find(
-        (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
-      );
-      if (enemyLocation) {
-        services.gameManager.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
+    signetTokenOrFieldMarkerValue: (player, gameState) => 3,
+  },
+  {
+    id: 'Liet Kynes',
+    gameModifiers: {
+      factionInfluence: [
+        {
+          id: 'liet',
+          factionType: 'fremen',
+          noInfluence: true,
+          alternateReward: {
+            type: 'water',
+          },
+        },
+      ],
+      fieldFactionAccess: [
+        {
+          id: 'liet-fremen',
+          factionType: 'fremen',
+        },
+      ],
+    },
+    customSignetAIFunction(player, gameState, services) {
+      if (gameState.playerResources.signet > 2) {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'victory-point' });
+        services.gameManager.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
+      } else if (gameState.playerResources.water > 1) {
+        services.gameManager.payCostForPlayer(player.id, { type: 'water', amount: 2 });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'focus' });
+        services.gameManager.addRewardToPlayer(player.id, { type: 'signet' });
       }
     },
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        for (const agentOnField of gameState.playerAgentsOnFields) {
-          const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
-          if (isEnemyLocation) {
-            services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion' });
-          }
-        }
-      },
+    signetRingValue: (player, gameState) => {
+      let value = 2.5;
+      if (gameState.playerResources.signet > 2) {
+        value += 10;
+      } else {
+        value += 1 * gameState.playerResources.signet;
+      }
+      return value;
     },
   },
   {
@@ -214,51 +362,17 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    signetTokenValue: 2.5,
-  },
-  {
-    id: 'Feyd-Rautha Harkonnen',
-    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet' }] }],
-    customEffects: [
-      {
-        type: 'helper-trade',
-        timing: { type: 'timing-combat' },
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword' }] },
-      },
-    ],
-    signetTokenValue: 0.5,
-  },
-  {
-    id: 'Count Hasimir Fenring',
-    customEffects: [
-      {
-        type: 'helper-or',
-        timing: { type: 'timing-reveal-turn' },
-        effectLeft: {
-          type: 'helper-trade',
-          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-          effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
-        },
-        effectRight: {
-          type: 'helper-trade',
-          effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-          effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
-        },
-      },
-    ],
-    signetTokenValue: 2.0,
+    signetRingValue: (player, gameState, targetBoardSpace) => {
+      const playerAgentsOnFields = gameState.playerAgentsOnFields;
+      if (targetBoardSpace) {
+        playerAgentsOnFields.push({ playerId: player.id, fieldId: targetBoardSpace.title.en, state: 'placed' });
+      }
+      return playerAgentsOnFields.length > 0 ? 2.75 : 0;
+    },
+    signetTokenOrFieldMarkerValue: (player, gameState) => 4.5,
   },
   {
     id: 'Lady Margot Fenring',
-    gameModifiers: {
-      customActions: [
-        {
-          id: 'margot-charm',
-          action: 'charm',
-        },
-      ],
-    },
     customEffects: [
       {
         type: 'helper-trade',
@@ -267,6 +381,17 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         effectConversions: { type: 'reward', effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }] },
       },
     ],
+    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      services.gameModifierService.addPlayerGameModifiers(player.id, {
+        customActions: [
+          {
+            id: 'margot-charm',
+            action: 'charm',
+            currentRoundOnly: true,
+          },
+        ],
+      });
+    },
     customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
       let targetCard: ImperiumRowCard | undefined;
       const handCardAmount = gameState.playerHandCards.length;
@@ -299,17 +424,69 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       }
     },
+    signetRingValue: (player, gameState) => 2.5,
+  },
+  {
+    id: 'Count Hasimir Fenring',
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => {
+        if (gameState.playerResources.signet < 1 || gameState.playerCombatUnits.troopsInGarrison < 1) {
+          return 0;
+        } else {
+          return field.rewards.some((x) => x.type === 'combat') ? 0.05 : 0;
+        }
+      },
+    },
+    customTimedFunction: {
+      timing: 'timing-reveal-turn',
+      function: (player, gameState, services) => {
+        if (gameState.playerResources.signet > 0) {
+          services.gameManager.resolveStructuredEffects(
+            [
+              {
+                type: 'helper-or',
+                timing: { type: 'timing-reveal-turn' },
+                effectLeft: {
+                  type: 'helper-trade',
+                  effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                  effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
+                },
+                effectRight: {
+                  type: 'helper-trade',
+                  effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                  effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
+                },
+              },
+            ],
+            player,
+            gameState,
+          );
+        }
+      },
+    },
+    signetTokenOrFieldMarkerValue: (player, gameState) => 2.5 - 1.0 * gameState.playerResources.signet,
   },
   {
     id: 'Tessia Vernius',
-    customEffects: [
-      {
-        type: 'helper-trade',
-        timing: { type: 'timing-reveal-turn' },
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'tech-tile-trash' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'faction-influence-up-choice' }] },
+    customTimedFunction: {
+      timing: 'timing-reveal-turn',
+      function: (player, gameState, services) => {
+        if (gameState.playerTechTiles.length > 0) {
+          services.gameManager.resolveStructuredEffects(
+            [
+              {
+                type: 'helper-trade',
+                timing: { type: 'timing-reveal-turn' },
+                effectCosts: { type: 'reward', effectRewards: [{ type: 'tech-tile-trash' }] },
+                effectConversions: { type: 'reward', effectRewards: [{ type: 'faction-influence-up-choice' }] },
+              },
+            ],
+            player,
+            gameState,
+          );
+        }
       },
-    ],
+    },
   },
   {
     id: 'Count August Metulli',
@@ -370,10 +547,27 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         services.gameManager.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
       }
     },
-    signetTokenValue: 0.25,
+    signetRingValue: (player, gameState) => {
+      const potentialImperiumRowCards = gameState.imperiumRowCards.filter(
+        (x) =>
+          x.type === 'imperium-card' &&
+          x.structuredAgentEffects &&
+          gameState.playerResources.signet >= (x.persuasionCosts ?? 0),
+      );
+      return potentialImperiumRowCards.length > 0 ? 2.5 + 1.0 * potentialImperiumRowCards.length : 0;
+    },
   },
   {
     id: 'Lunara Metulli',
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => {
+        if (gameState.playerResources.signet < 1) {
+          return 0;
+        } else {
+          return field.rewards.some((x) => x.type === 'water' || x.type === 'spice') ? 0.05 : 0;
+        }
+      },
+    },
     customTimedFunction: {
       timing: 'timing-game-start',
       function: (player: Player, gameState: GameState, services: GameServices) => {
@@ -404,88 +598,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-  },
-  {
-    id: 'Emperor Paul Atreides',
-    gameModifiers: {
-      customActions: [
-        {
-          id: 'emperor-paul-vision-deck',
-          action: 'vision-deck',
-        },
-        {
-          id: 'emperor-paul-vision-intrigues',
-          action: 'vision-intrigues',
-        },
-        {
-          id: 'emperor-paul-vision-conflict',
-          action: 'vision-conflict',
-        },
-      ],
-    },
-  },
-  {
-    id: 'Duke Leto Atreides',
-    gameModifiers: {
-      customActions: [
-        {
-          id: 'leto-inspiring-loyalty',
-          action: 'field-marker',
-        },
-      ],
-    },
-    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const possibleNewMarkerLocations = gameState.boardSpaces.filter(
-        (x) => x.ownerReward && gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.title.en),
-      );
-      const playerOwnedLocations = services.locationManager.getPlayerLocations(player.id);
-      const fieldMarkers = services.gameModifierService.getPlayerGameModifier(player.id, 'fieldMarkers');
-
-      if (fieldMarkers) {
-        fieldMarkers.sort((a, b) => a.amount - b.amount);
-        for (const fieldMarker of fieldMarkers) {
-          if (fieldMarker.amount > 1 && !playerOwnedLocations.some((x) => x.locationId === fieldMarker.fieldId)) {
-            services.audioManager.playSound('location-control');
-            services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
-            services.locationManager.setLocationOwner(fieldMarker.fieldId, player.id);
-            services.loggingService.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
-          } else {
-            if (possibleNewMarkerLocations.some((x) => x.title.en === fieldMarker.fieldId)) {
-              services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, 1);
-            }
-          }
-        }
-      } else if (possibleNewMarkerLocations.length > 0) {
-        services.gameModifierService.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0].title.en, 1);
-      }
-    },
-    signetTokenValue: 2,
-  },
-  {
-    id: 'Count Glossu Rabban',
-    customEffects: [{ type: 'reward', timing: { type: 'timing-round-start' }, effectRewards: [{ type: 'card-destroy' }] }],
-    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const resourceOptions = gameState.boardSpaces
-        .filter((bs) => gameState.playerLocations.includes(bs.title.en))
-        .map((x) => x.ownerReward)
-        .filter((x) => x !== undefined);
-
-      const resourceChoices = services.aiManager.getPreferredRewardEffects(player, resourceOptions, gameState);
-      for (const choice of resourceChoices) {
-        services.gameManager.addRewardToPlayer(player.id, choice);
-      }
-    },
-    customTimedAIFunction: {
-      timing: 'timing-game-start',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        const possibleLocations = ['Arrakeen', 'Carthag', 'Imperial Basin'];
-        const randomIndex = Math.floor(Math.random() * possibleLocations.length);
-        const chosenLocation = possibleLocations[randomIndex];
-
-        services.loggingService.logPlayerGainedLocationControl(player.id, 1, chosenLocation);
-        services.locationManager.setLocationOwner(chosenLocation, player.id);
-      },
-    },
+    signetTokenOrFieldMarkerValue: (player, gameState) => 2.75,
   },
   {
     id: 'Eva Moritani',
@@ -500,6 +613,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Dara Moritani',
+    aiAdjustments: {
+      goalEvaluationModifier: () => [{ type: 'swordmaster', modifier: 0.2 }],
+    },
     gameModifiers: {
       fieldEnemyAgentAccess: [
         {
@@ -516,9 +632,31 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       services.gameManager.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });
     },
+    signetRingValue: (player, gameState, targetBoardSpace) => {
+      const playerAgentsOnFields = gameState.playerAgentsOnFields;
+      if (targetBoardSpace) {
+        playerAgentsOnFields.push({ playerId: player.id, fieldId: targetBoardSpace.title.en, state: 'placed' });
+      }
+      return (
+        1 +
+        2.0 *
+          gameState.enemyAgentsOnFields.filter((enemy) =>
+            playerAgentsOnFields.some((player) => player.fieldId === enemy.fieldId),
+          ).length
+      );
+    },
   },
   {
     id: 'Earl Memnon Thorvald',
+    aiAdjustments: {
+      fieldEvaluationModifier: (player, gameState, field) => {
+        if (gameState.playerResources.solari < 1) {
+          return 0;
+        } else {
+          return field.actionType === 'landsraad' ? 0.05 : 0;
+        }
+      },
+    },
     customTimedAIFunction: {
       timing: 'timing-agent-placement',
       function: (player: Player, gameState: GameState, services: GameServices) => {
@@ -541,21 +679,36 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
   },
   {
-    id: 'Feyd-Rautha Harkonnen',
-    customTimedAIFunction: {
-      timing: 'timing-round-start',
+    id: 'The Preacher',
+    gameModifiers: {
+      fieldEnemyAgentAccess: [
+        {
+          id: 'preacher-enemy-access',
+          actionTypes: ['town'],
+        },
+      ],
+    },
+    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+      const enemyLocation = gameState.enemyLocations.find(
+        (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
+      );
+      if (enemyLocation) {
+        services.gameManager.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
+      } else {
+        services.gameManager.addRewardToPlayer(player.id, { type: 'focus' });
+      }
+    },
+    customTimedFunction: {
+      timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        if (
-          gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
-          gameState.playerIntrigueCount < 2 &&
-          Math.random() > 0.33
-        ) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'card-destroy' });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
-          services.gameManager.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+        for (const agentOnField of gameState.playerAgentsOnFields) {
+          const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
+          if (isEnemyLocation) {
+            services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion' });
+          }
         }
       },
     },
+    signetRingValue: (player, gameState) => 2,
   },
 ];

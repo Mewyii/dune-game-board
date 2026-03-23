@@ -318,32 +318,16 @@ export const techTiles: TechTileCard[] = [
       en: 'Heavy Lasguns',
       de: 'Schwere Lasguns',
     },
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/leigther_heavy_lasguns.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
-    effects: [
-      {
-        type: 'timing-turn-start',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'dreadnought-retreat',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'enemies-card-discard',
-      },
-    ],
+    effects: [],
     customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>{resource:agent} from a board space. It is no longer available for this round.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen {resource:agent} von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
+      fontSize: 'small',
     },
   },
   {
@@ -1026,11 +1010,27 @@ export const techTiles: TechTileCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'troop',
-      },
     ],
     effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'solari',
+        amount: 3,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-leader-assassinate',
+      },
+      {
+        type: 'helper-separator',
+      },
       {
         type: 'timing-reveal-turn',
       },
@@ -1048,8 +1048,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>{resource:agent} from a board space. It is no longer available for this round.',
-      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen {resource:agent} von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },

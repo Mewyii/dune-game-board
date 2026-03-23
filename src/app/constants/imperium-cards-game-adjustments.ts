@@ -236,17 +236,6 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
   },
   {
-    id: 'Dr. Yueh, Suk Doctor',
-    aiRevealEvaluation: (player: Player, gameState: GameState) => 2.5 + 0.1 * gameState.currentRound - 1,
-    customRevealAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const troopsInCombat = gameState.playerCombatUnits.troopsInCombat;
-      if (troopsInCombat > 1) {
-        services.combatManager.retreatPlayerTroopsFromCombat(player.id, 1);
-        services.combatManager.addAdditionalCombatPowerToPlayer(player.id, 2);
-      }
-    },
-  },
-  {
     id: 'Arrival of the Emperor',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 5 + 0.1 * gameState.currentRound - 1,
     customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {

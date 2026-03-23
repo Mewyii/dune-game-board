@@ -473,8 +473,8 @@ export const leaders: Leader[] = [
       de: 'Anführer der Fremen',
     },
     passiveDescription: {
-      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:water}<br>Ignore all {faction:fremen} -requirements.",
-      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Ignoriere alle {faction:fremen} -Bedingungen.',
+      en: "Don't put a marker on the {faction:fremen}-influence-track. Every time you would gain influence there: {resource:water}<br>You meet all {faction:fremen} influence requirements.",
+      de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Du erfüllst alle {faction:fremen} Einfluss-Bedingungen.',
     },
     signetName: {
       en: 'Planting the paradise',
@@ -515,8 +515,8 @@ export const leaders: Leader[] = [
       de: 'Tochter des Imperators',
     },
     passiveDescription: {
-      en: "Don't put a marker on the {faction:emperor}-influence-track. Every time you would gain influence there: {resource:solari}<br>Ignore all {faction:emperor} -requirements.",
-      de: 'Lege keinen Marker auf die {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Ignoriere alle {faction:emperor} -Bedingungen.',
+      en: "Don't put a marker on the {faction:emperor}-influence-track. Every time you would gain influence there: {resource:solari}<br>You meet all {faction:emperor} influence requirements.",
+      de: 'Lege keinen Marker auf die {faction:emperor}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:solari}<br>Du erfüllst alle {faction:emperor} Einfluss-Bedingungen.',
     },
     signetName: {
       en: 'Chronicler',

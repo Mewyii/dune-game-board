@@ -2246,13 +2246,14 @@ export class GameManager {
             this.resolveStructuredEffects(playerLeader.customSignetEffects, player, gameState);
           } else if (playerLeader.customSignetFunction) {
             playerLeader.customSignetFunction(player, gameState, this.getGameServices());
-          } else if (playerLeader.customSignetAIFunction) {
-            playerLeader.customSignetAIFunction(player, gameState, this.getGameServices());
-          } else if (playerLeader.signetDescription.en) {
+          } else if (!playerLeader.customSignetAIFunction && playerLeader.signetDescription.en) {
             this.playerRewardChoicesService.addPlayerCustomChoice(
               player.id,
               this.t.translateLS(playerLeader.signetDescription),
             );
+          }
+          if (playerLeader.customSignetAIFunction) {
+            playerLeader.customSignetAIFunction(player, gameState, this.getGameServices());
           }
         } else {
           this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
@@ -2853,8 +2854,6 @@ export class GameManager {
       isFinale: this.isFinale,
       enemyPlayers: this.playerManager.getEnemyPlayers(player.id),
       playerLeader: playerLeader!,
-      playerLeaderSignetRingEffects: playerLeader?.structuredSignetEffects,
-      playerLeaderSignetTokenValue: playerLeader?.signetTokenValue,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.buyableTechTiles,
       currentEvent: this.duneEventsManager.eventDeck[this.currentRound - 1],

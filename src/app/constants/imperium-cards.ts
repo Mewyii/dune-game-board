@@ -36,6 +36,12 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
+        type: 'helper-or',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
         type: 'leader-heal',
       },
     ],
@@ -103,10 +109,10 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
-      en: 'You may retreat up to <b>1</b> inserted troop to gain {resource:sword}{resource:sword}.',
-      de: 'Du kannst <b>1</b> eingesetzte Truppe zurückziehen, um {resource:sword}{resource:sword} zu erhalten.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     buyEffects: [],
@@ -120,6 +126,9 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
+      },
+      {
+        type: 'leader-heal',
       },
     ],
   },
@@ -1020,6 +1029,46 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'solari',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [],
+  },
+  {
+    name: {
+      en: 'Bene Gesserit Missionary',
+      de: 'Bene Gesserit Missionarin',
+    },
+    faction: 'bene',
+    persuasionCosts: 4,
+    fieldAccess: ['fremen', 'spice'],
+    imageUrl: '/assets/images/action-backgrounds/bene_gesserit_missionary.png',
+    cardAmount: 2,
+    canInfiltrate: true,
+    agentEffectSize: 'medium',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: 'Fremen-Karten kosten für dich in dieser Runde {resource:persuasion;amount:-1}',
+      de: 'Fremen-Karten kosten für dich in dieser Runde {resource:persuasion;amount:-1}',
+      fontSize: 'small',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-influence',
+        amount: 2,
+        faction: 'fremen',
+      },
+      {
+        type: 'troop',
       },
       {
         type: 'troop',
@@ -2130,7 +2179,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'emperor',
     persuasionCosts: 3,
     fieldAccess: ['bene', 'guild', 'landsraad'],
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/imperial_diplomat.png',
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'small',
@@ -2460,9 +2509,10 @@ export const imperiumCards: ImperiumCard[] = [
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'large',
+    rarity: 'normal',
     customAgentEffect: {
-      en: 'If this location is controlled by an opponent, they lose {resource:solari;amount:2} and you gain {resource:solari;amount:2}.',
-      de: 'Wenn ein Gegner diesen Ort kontrolliert, verliert er {resource:solari;amount:2} und du erhältst {resource:solari;amount:2}.',
+      en: 'Put {resource:troop} on up to <b>1</b> board space of your choice. It is blocked for this round.',
+      de: 'Lege {resource:troop} auf bis zu <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -2725,11 +2775,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/assassin.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent trashes one of his cards in play.',
-      de: 'Jeder Gegner entsorgt eine seiner Karten im Spiel.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -2739,7 +2789,17 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-leader-assassinate',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -2767,11 +2827,11 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'emperor',
     persuasionCosts: 5,
     fieldAccess: ['emperor', 'guild', 'landsraad', 'town'],
-    imageUrl: '/assets/images/action-backgrounds/twisted_mentat_2.png',
+    imageUrl: '/assets/images/action-backgrounds/iakin_nefud.png',
     cardAmount: 1,
     canInfiltrate: false,
     agentEffectSize: 'large',
-    rarity: 'rare',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
@@ -2876,8 +2936,8 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffectSize: 'small',
     rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent on {faction:town} board spaces: {resource:loose-troop}',
-      de: 'Jeder Gegner auf {faction:town}-Feldern: {resource:loose-troop}',
+      en: 'Each opponent trashes one of his cards in play.',
+      de: 'Jeder Gegner entsorgt eine seiner Karten im Spiel.',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -2887,15 +2947,7 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'small',
     },
     buyEffects: [],
-    agentEffects: [
-      {
-        type: 'condition-connection',
-        faction: 'emperor',
-      },
-      {
-        type: 'troop',
-      },
-    ],
+    agentEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
@@ -3547,8 +3599,8 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffectSize: 'medium',
     rarity: 'normal',
     customAgentEffect: {
-      en: 'Each player trashes one of his cards in his hand.',
-      de: 'Jeder Spieler entsorgt eine Karte aus seiner Hand.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -3560,10 +3612,16 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
+        type: 'faction-influence-down-choice',
+      },
+      {
         type: 'trash-self',
       },
       {
-        type: 'faction-influence-up-fremen',
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-leader-assassinate',
       },
     ],
     revealEffects: [
@@ -5453,7 +5511,7 @@ export const imperiumCards: ImperiumCard[] = [
     faction: 'guild',
     persuasionCosts: 2,
     fieldAccess: ['landsraad', 'town'],
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/ixian_smuggler.png',
     cardAmount: 2,
     canInfiltrate: false,
     agentEffectSize: 'large',

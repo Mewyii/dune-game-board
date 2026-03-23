@@ -91,9 +91,19 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         modifier += 0.2 * gameState.playerCombatUnits.shipsInCombat;
       }
       if (gameState.conflict.rewards[0].some((x) => x.type === 'location-control')) {
-        const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
         possibleLocationControls += 1;
-        modifier += 0.033 * playerCombatStrength;
+
+        const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+        if (playerCombatStrength > 0) {
+          let playerIsWinningCombat = true;
+          for (const enemy of gameState.enemyCombatUnits) {
+            if (playerCombatStrength < getPlayerCombatStrength(enemy, gameState)) {
+              playerIsWinningCombat = false;
+            }
+          }
+
+          modifier += (playerIsWinningCombat ? 0.0375 : 0.225) * playerCombatStrength;
+        }
       }
       if (gameState.playerHandCardsRewards['location-control'] > 0) {
         possibleLocationControls += gameState.playerHandCardsRewards['location-control'];
@@ -459,8 +469,8 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   'swordmaster-helper': {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
-      gameState.playerResources.solari > 5 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
-    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 8,
+      gameState.playerResources.solari > 6 && !player.hasSwordmaster ? 0.5 - 0.025 * (gameState.currentRound - 1) : 0,
+    goalIsReachable: (player, gameState) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState, goals) => player.hasSwordmaster || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'solari'),

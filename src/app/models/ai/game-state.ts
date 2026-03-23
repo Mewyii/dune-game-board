@@ -1,6 +1,6 @@
 import { GameContent } from 'src/app/constants/board-settings';
 import { DuneEvent } from 'src/app/constants/events';
-import { ActionField, ActionType, ActiveFactionType, EffectRewardType, StructuredEffect } from 'src/app/models';
+import { ActionField, ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
 import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard, PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
@@ -38,8 +38,6 @@ export type GameState = Readonly<{
   isFinale: boolean;
   enemyPlayers: Player[];
   playerLeader: LeaderDeckCard;
-  playerLeaderSignetRingEffects: StructuredEffect[] | undefined;
-  playerLeaderSignetTokenValue?: number;
   conflict: Conflict;
   availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;

@@ -326,12 +326,11 @@ export class AIFieldEvaluationService {
       const fieldRewards = getModifiedRewardsForField(field, gameState.playerGameModifiers?.fieldReward);
 
       // Field Marker Adjustments
-      if (
-        gameState.playerGameModifiers?.fieldMarkers?.some(
-          (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0,
-        )
-      ) {
-        fieldRewards.push({ type: 'signet' });
+      const playerFieldMarker = gameState.playerGameModifiers?.fieldMarkers?.find(
+        (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0,
+      );
+      if (playerFieldMarker) {
+        fieldRewards.push({ type: 'signet', amount: playerFieldMarker.amount });
       }
 
       // Faction Reward Adjustments
