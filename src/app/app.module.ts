@@ -77,8 +77,8 @@ import { TranslationComponent } from './components/translation/translation.compo
 import { TurnInfosComponent } from './components/turn-infos/turn-infos.component';
 import { StopPropagationClickDirective } from './directives/stop-propagation-click';
 import { AboutComponent } from './pages/about/about.component';
-import { CardEditorComponent } from './pages/card-configurator/card-editor/card-editor.component';
 import { DialogCardEditorComponent } from './pages/card-configurator/dialog-card-editor/dialog-card-editor.component';
+import { EffectSelectorComponent } from './pages/card-configurator/effect-selector/effect-selector.component';
 import { ImperiumCardConfiguratorComponent } from './pages/card-configurator/imperium-card-configurator.component';
 import { DialogEventEditorComponent } from './pages/event-configurator/dialog-event-editor/dialog-event-editor.component';
 import { EventConfiguratorComponent } from './pages/event-configurator/event-configurator.component';
@@ -137,8 +137,8 @@ import { SafeUrlPipe } from './pipes/safe-url';
     GameBoardComponent,
     LeaderConfiguratorComponent,
     ImperiumCardConfiguratorComponent,
-    CardEditorComponent,
     DialogCardEditorComponent,
+    EffectSelectorComponent,
     NotificationComponent,
     LeaderCardComponent,
     DialogLeaderEditorComponent,

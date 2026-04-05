@@ -1,0 +1,100 @@
+div[mat-dialog-content] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card-header-row,
+.card-text-row {
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+  flex: 1 1;
+}
+
+.card-header-row--padded {
+  padding-top: 8px;
+}
+
+.card-text-row--wrap {
+  flex-wrap: wrap;
+}
+
+.small-text-field {
+  width: 150px;
+  min-width: 150px;
+}
+
+.medium-text-field {
+  width: 250px;
+  min-width: 250px;
+}
+
+.big-text-field {
+  width: 400px;
+  min-width: 400px;
+}
+
+.larger-text-field {
+  width: 600px;
+  min-width: 600px;
+}
+
+.large-text-field {
+  width: 800px;
+  min-width: 800px;
+}
+
+.flex {
+  flex: 1 1;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.margin-top {
+  margin-top: 32px;
+}
+
+.card-effect-container {
+  width: 100%;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  font-size: x-large;
+  margin-bottom: 8px;
+}
+
+.card-effect-title {
+  margin-right: 16px;
+}
+
+.reward-container {
+  display: flex;
+  align-items: center;
+}
+
+.reward {
+  position: absolute;
+  height: 26px;
+  max-width: 38px;
+}
+
+.reward-label {
+  margin-left: 44px;
+}
+
+.text-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+dune-effect-selector {
+  width: 100%;
+  margin-bottom: 16px;
+}

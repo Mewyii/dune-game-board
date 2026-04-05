@@ -1,162 +1,173 @@
 <div class="effect-arrays-container" [style.gap]="arraySeparationGap" [style.alignItems]="alignItems">
-  @for (effects of effectArrays; track $index) {
+  @for (effects of effectArrays; track trackArray($index, effects)) {
     <div [class]="'effects-container ' + (wrap ? ' wrap ' : ' nowrap ')" [style.textAlign]="alignItems">
-      @for (reward of effects; track $index) {
+      @for (reward of effects; track trackReward($index, reward)) {
         @if (isTimingEffect(reward)) {
-          @if (isGameStartTiming(reward.type)) {
+          @if (reward.type === 'timing-game-start') {
             <div
               [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
               [style.fontSize]="fontSize"
               [style.marginBottom]="wrap ? marginBottom : ''"
             >
-              {{ t.translate('commonEffectTimingGameStart') }}:
+              <span>{{ t.translate('commonEffectTimingGameStart') }}:</span>
             </div>
-          } @else if (isRoundStartTiming(reward.type)) {
+          } @else if (reward.type === 'timing-round-start') {
             <div
               [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
               [style.fontSize]="fontSize"
               [style.marginBottom]="wrap ? marginBottom : ''"
             >
-              {{ t.translate('commonEffectTimingRoundStart') }}:
+              <span>{{ t.translate('commonEffectTimingRoundStart') }}:</span>
             </div>
-          } @else if (isTurnStartTiming(reward.type)) {
+          } @else if (reward.type === 'timing-turn-start') {
             <div
               [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
               [style.fontSize]="fontSize"
               [style.marginBottom]="wrap ? marginBottom : ''"
             >
-              {{ t.translate('commonEffectTimingTurnStart') }}:
+              <span>{{ t.translate('commonEffectTimingTurnStart') }}:</span>
             </div>
-          } @else if (isRevealTurnTiming(reward.type)) {
+          } @else if (reward.type === 'timing-reveal-turn') {
             <div
               [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
               [style.fontSize]="fontSize"
               [style.marginBottom]="wrap ? marginBottom : ''"
             >
-              {{ t.translate('commonEffectTimingRevealTurn') }}:
+              <span>{{ t.translate('commonEffectTimingRevealTurn') }}:</span>
             </div>
           }
         } @else if (isConditionalEffect(reward)) {
-          @if (isInfluenceType(reward.type)) {
-            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+          @if (reward.type === 'condition-influence') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
               @if (reward.faction) {
                 <img [style.maxWidth]="size" class="faction" [src]="reward.faction | factionTypePath" />
               }
-              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
-                {{ reward.amount }} {{ t.translate('commonEffectConditionInfluence') }}:
+              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+                <span> {{ reward.amount }} {{ t.translate('commonEffectConditionInfluence') }}:</span>
               </div>
             </div>
-          } @else if (isConnectionType(reward.type)) {
-            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+          } @else if (reward.type === 'condition-connection') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
               @if (reward.faction) {
                 <img [style.maxWidth]="size" class="faction" [src]="reward.faction | factionTypePath" />
               }
-              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
-                -{{ t.translate('commonEffectConditionConnection') }}:
+              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize" [style.marginLeft]="effectGap">
+                <span>-{{ t.translate('commonEffectConditionConnection') }}:</span>
               </div>
             </div>
-          } @else if (isHighCouncilConditionType(reward.type)) {
-            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
-              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
-                {{ t.translate('commonEffectConditionHighCouncilSeat') }}:
+          } @else if (reward.type === 'condition-high-council-seat') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
+              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+                <span>{{ t.translate('commonEffectConditionHighCouncilSeat') }}:</span>
               </div>
             </div>
-          } @else if (isNoHighCouncilConditionType(reward.type)) {
-            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
-              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
-                {{ t.translate('commonEffectConditionNoHighCouncilSeat') }}:
+          } @else if (reward.type === 'condition-no-high-council-seat') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
+              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+                <span>{{ t.translate('commonEffectConditionNoHighCouncilSeat') }}:</span>
               </div>
             </div>
-          } @else if (isEnemiesOnThisFieldType(reward.type)) {
-            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
-              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
-                {{ t.translate('commonEffectConditionEnemiesOnThisField') }}:
+          } @else if (reward.type === 'condition-enemies-on-this-field') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
+              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+                <span>{{ t.translate('commonEffectConditionEnemiesOnThisField') }}:</span>
               </div>
             </div>
-          } @else if (isEnemyControllingThisFieldType(reward.type)) {
-            <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
-              <div [class]="'text inline ' + textColor" [style.fontSize]="fontSize">
-                {{ t.translate('commonEffectConditionEnemiesControllingThisField') }}:
+          } @else if (reward.type === 'condition-enemy-controlling-this-field') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
+              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+                <span>{{ t.translate('commonEffectConditionEnemiesControllingThisField') }}:</span>
               </div>
+            </div>
+          } @else if (reward.type === 'condition-enemies-on-field-type') {
+            <div class="condition-container" [style.marginRight]="effectGapLarge">
+              <div
+                [class]="rewardTextClass('text inline')"
+                [style.fontSize]="fontSize"
+                [innerHTML]="
+                  t.translate('commonEffectConditionEnemiesFieldType', false, '{faction:' + reward?.action + '}') + ':'
+                    | duneSymbols: size
+                "
+              ></div>
             </div>
           }
-        } @else if (isAgentsOnBoardSpacesMultiplierType(reward.type)) {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+        } @else if (reward.type === 'multiplier-agents-on-board-spaces') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
                 t.translate('commonEffectMultiplierAgentsOnBoardSpaces', true, reward.amount) + ':' | duneSymbols: size
               "
             ></div>
           </div>
-        } @else if (isDreadnoughtAmountMultiplierType(reward.type)) {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+        } @else if (reward.type === 'multiplier-dreadnought-amount') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
-                t.translate('commonEffectMultiplierDreadnoughtAmount', true, reward.amount) + ' :' | duneSymbols: size
+                t.translate('commonEffectMultiplierDreadnoughtAmount', true, reward.amount) + ':' | duneSymbols: size
               "
             ></div>
           </div>
-        } @else if (isEnemiesOnThisFieldMultiplierType(reward.type)) {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+        } @else if (reward.type === 'multiplier-enemies-on-this-field') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
-                t.translate('commonEffectMultiplierEnemiesOnThisField', true, reward.amount) + ' :' | duneSymbols: size
+                t.translate('commonEffectMultiplierEnemiesOnThisField', true, reward.amount) + ':' | duneSymbols: size
               "
             ></div>
           </div>
         } @else if (reward.type === 'multiplier-dreadnought-in-conflict-amount') {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
-                t.translate('commonEffectMultiplierDreadnoughtInConflictAmount', true, reward.amount) + ' :'
+                t.translate('commonEffectMultiplierDreadnoughtInConflictAmount', true, reward.amount) + ':'
                   | duneSymbols: size
               "
             ></div>
           </div>
         } @else if (reward.type === 'multiplier-dreadnought-in-garrison-amount') {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
-                t.translate('commonEffectMultiplierDreadnoughtInGarrisonAmount', true, reward.amount) + ' :'
+                t.translate('commonEffectMultiplierDreadnoughtInGarrisonAmount', true, reward.amount) + ':'
                   | duneSymbols: size
               "
             ></div>
           </div>
         } @else if (reward.type === 'multiplier-cards-with-sword') {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
-                t.translate('commonEffectMultiplierCardsWithSwordAmount', true, reward.amount) + ' :' | duneSymbols: size
+                t.translate('commonEffectMultiplierCardsWithSwordAmount', true, reward.amount) + ':' | duneSymbols: size
               "
             ></div>
           </div>
         } @else if (reward.type === 'multiplier-connections') {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
-                t.translate('commonEffectMultiplierConnections', false, '{faction:' + reward.faction + '}') + ':'
+                t.translate('commonEffectMultiplierConnections', false, '{faction:' + reward?.faction + '}') + ':'
                   | duneSymbols: size
               "
             ></div>
           </div>
-        } @else if (isTroopsInConflictMultiplierType(reward.type)) {
-          <div class="condition-container" [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap">
+        } @else if (reward.type === 'multiplier-troops-in-conflict') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
-              [class]="'text inline ' + textColor"
+              [class]="rewardTextClass('text inline')"
               [style.fontSize]="fontSize"
               [innerHTML]="
                 t.translate('commonEffectMultiplierTroopsInConflictAmount', true, reward.amount) + ':' | duneSymbols: size
@@ -165,31 +176,31 @@
           </div>
         } @else if (reward.type === 'troop-insert') {
           <div
-            [class]="'text inline ' + textColor"
+            [class]="rewardTextClass('text inline')"
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, reward.amount)"
           ></div>
         } @else if (reward.type === 'troop-insert-or-retreat') {
           <div
-            [class]="'text inline ' + textColor"
+            [class]="rewardTextClass('text inline')"
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardTroopInsertOrRetreat', true, reward.amount)"
           ></div>
         } @else if (reward.type === 'troop-retreat') {
           <div
-            [class]="'text inline ' + textColor"
+            [class]="rewardTextClass('text inline')"
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardTroopRetreat', true, reward.amount)"
           ></div>
         } @else if (reward.type === 'dreadnought-insert') {
           <div
-            [class]="'text inline ' + textColor"
+            [class]="rewardTextClass('text inline')"
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, reward.amount) | duneSymbols: size"
           ></div>
         } @else if (reward.type === 'dreadnought-insert-or-retreat') {
           <div
-            [class]="'text inline ' + textColor"
+            [class]="rewardTextClass('text inline')"
             [style.fontSize]="fontSize"
             [innerHTML]="
               t.translate('commonEffectRewardDreadnoughtInsertOrRetreat', true, reward.amount) | duneSymbols: size
@@ -197,18 +208,18 @@
           ></div>
         } @else if (reward.type === 'card-return-to-hand') {
           <div
-            [class]="'text inline ' + textColor"
+            [class]="rewardTextClass('text inline')"
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardCardReturnToHand', true, reward.amount)"
           ></div>
         } @else if (reward.type === 'enemies-card-discard') {
           <div
-            [class]="'text custom-with-reward ' + textColor"
+            [class]="rewardTextClass('text custom-with-reward')"
             [style.fontSize]="fontSize"
-            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
+            [style.marginRight]="effectGapLarge"
           >
-            <div [class]="'text inline ' + textColor">
-              {{ t.translate('commonEffectEachOpponent', true, reward.amount) }}
+            <div [class]="rewardTextClass('text inline')">
+              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
             </div>
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
@@ -226,12 +237,12 @@
           </div>
         } @else if (reward.type === 'enemies-troop-destroy') {
           <div
-            [class]="'text custom-with-reward ' + textColor"
+            [class]="rewardTextClass('text custom-with-reward')"
             [style.fontSize]="fontSize"
-            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
+            [style.marginRight]="effectGapLarge"
           >
-            <div [class]="'text inline ' + textColor">
-              {{ t.translate('commonEffectEachOpponent', true, reward.amount) }}
+            <div [class]="rewardTextClass('text inline')">
+              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
             </div>
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
@@ -249,12 +260,12 @@
           </div>
         } @else if (reward.type === 'enemies-intrigue-trash') {
           <div
-            [class]="'text custom-with-reward ' + textColor"
+            [class]="rewardTextClass('text custom-with-reward')"
             [style.fontSize]="fontSize"
-            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
+            [style.marginRight]="effectGapLarge"
           >
-            <div [class]="'text inline ' + textColor">
-              {{ t.translate('commonEffectEachOpponent', true, reward.amount) }}
+            <div [class]="rewardTextClass('text inline')">
+              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
             </div>
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
@@ -272,12 +283,12 @@
           </div>
         } @else if (reward.type === 'enemies-leader-assassinate') {
           <div
-            [class]="'text custom-with-reward ' + textColor"
+            [class]="rewardTextClass('text custom-with-reward')"
             [style.fontSize]="fontSize"
-            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
+            [style.marginRight]="effectGapLarge"
           >
-            <div [class]="'text inline ' + textColor">
-              {{ t.translate('commonEffectEachOpponent', true, reward.amount) }}
+            <div [class]="rewardTextClass('text inline')">
+              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
             </div>
             <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
               <img
@@ -295,18 +306,14 @@
           </div>
         } @else if (reward.type === 'turn-pass') {
           <div
-            [class]="'text inline custom-with-reward ' + textColor"
+            [class]="rewardTextClass('text inline custom-with-reward')"
             [style.fontSize]="fontSize"
-            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
+            [style.marginRight]="effectGapLarge"
           >
             {{ t.translate('commonEffectTurnPass', true, reward.amount) }}
           </div>
         } @else {
-          <div
-            class="reward-container"
-            [style.height]="size"
-            [style.margin]="vertical ? effectGap + ' 0px' : '0px ' + effectGap"
-          >
+          <div class="reward-container" [style.height]="size" [style.margin]="rewardEffectMargin">
             <img class="reward" [src]="reward.type | effectTypePath" [style.height]="size" [style.minWidth]="iconMinWidth" />
             <div class="reward-amount" *ngIf="reward.amount">
               <div [style.fontSize]="rewardAmountFontSize">

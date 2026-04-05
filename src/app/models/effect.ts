@@ -1,5 +1,6 @@
 import { CombatUnitType } from './combat-unit';
 import { ActiveFactionType } from './faction';
+import { ActionType } from './location';
 import { ResourceType } from './resource';
 
 export const effectRewards = [
@@ -76,13 +77,15 @@ export const effectTimings = [
 ] as const;
 
 export const effectConditions = [
-  'condition-connection',
   'condition-high-council-seat',
   'condition-no-high-council-seat',
-  'condition-influence',
   'condition-enemies-on-this-field',
   'condition-enemy-controlling-this-field',
 ] as const;
+
+export const effectFactionConditions = ['condition-connection', 'condition-influence'] as const;
+
+export const effectActionConditions = ['condition-enemies-on-field-type'] as const;
 
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
 
@@ -91,7 +94,6 @@ export const effectConversions = ['helper-trade', 'helper-trade-horizontal'] as 
 export const effectMultipliers = [
   'multiplier-agents-on-board-spaces',
   'multiplier-cards-with-sword',
-  'multiplier-connections',
   'multiplier-dreadnought-amount',
   'multiplier-dreadnought-in-conflict-amount',
   'multiplier-dreadnought-in-garrison-amount',
@@ -99,22 +101,30 @@ export const effectMultipliers = [
   'multiplier-enemies-on-this-field',
 ] as const;
 
+export const effectFactionMultipliers = ['multiplier-connections'] as const;
+
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
 
 export type EffectSeparatorType = (typeof effectSeparators)[number];
 export type EffectTimingType = (typeof effectTimings)[number];
 export type EffectChoiceType = (typeof effectChoices)[number];
 export type EffectConditionType = (typeof effectConditions)[number];
+export type EffectFactionConditionType = (typeof effectFactionConditions)[number];
+export type EffectActionConditionType = (typeof effectActionConditions)[number];
 export type EffectConversionType = (typeof effectConversions)[number];
 export type EffectMultiplierType = (typeof effectMultipliers)[number];
+export type EffectFactionMultiplierType = (typeof effectFactionMultipliers)[number];
 
 export type EffectType =
   | EffectSeparatorType
   | EffectTimingType
   | EffectConditionType
+  | EffectFactionConditionType
+  | EffectActionConditionType
   | EffectChoiceType
   | EffectConversionType
   | EffectMultiplierType
+  | EffectFactionMultiplierType
   | EffectRewardType;
 
 interface EffectBase {
@@ -133,8 +143,9 @@ export interface EffectTiming extends EffectBase {
 }
 
 export interface EffectCondition extends EffectBase {
-  type: EffectConditionType;
+  type: EffectConditionType | EffectFactionConditionType | EffectActionConditionType;
   faction?: ActiveFactionType;
+  action?: ActionType;
 }
 
 export interface EffectChoice extends EffectBase {
@@ -146,7 +157,7 @@ export interface EffectConversion extends EffectBase {
 }
 
 export interface EffectMultiplier extends EffectBase {
-  type: EffectMultiplierType;
+  type: EffectMultiplierType | EffectFactionMultiplierType;
   faction?: ActiveFactionType;
 }
 
@@ -215,7 +226,8 @@ export type StructuredEffectCondition =
   | EffectConditionHighCouncilSeat
   | EffectConditionNoHighCouncilSeat
   | EffectConditionEnemiesOnThisField
-  | EffectConditionEnemyCntrollingThisField;
+  | EffectConditionEnemyControllingThisField
+  | EffectConditionEnemiesOnFieldType;
 
 export interface EffectConditionConnection {
   type: 'condition-connection';
@@ -228,6 +240,12 @@ export interface EffectConditionInfluence {
   amount: number;
   faction: ActiveFactionType;
   affects: 'player';
+}
+
+export interface EffectConditionEnemiesOnFieldType {
+  type: 'condition-enemies-on-field-type';
+  action: ActionType;
+  affects: 'enemies';
 }
 
 export interface EffectConditionHighCouncilSeat {
@@ -245,7 +263,7 @@ export interface EffectConditionEnemiesOnThisField {
   affects: 'enemies';
 }
 
-export interface EffectConditionEnemyCntrollingThisField {
+export interface EffectConditionEnemyControllingThisField {
   type: 'condition-enemy-controlling-this-field';
   affects: 'enemies';
 }

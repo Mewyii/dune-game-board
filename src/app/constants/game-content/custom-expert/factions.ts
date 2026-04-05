@@ -13,7 +13,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Die Wüste Verstehen', en: 'Desert Knowledge' },
         actionType: 'fremen',
         costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }],
         pathToImage: 'assets/images/action-backgrounds/spice_2.png',
       },
       {
@@ -246,10 +246,12 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 4 }],
-        rewards: [{ type: 'leader-heal' }, { type: 'water' }, { type: 'tech', amount: 2 }],
+        costs: [{ type: 'solari', amount: 2 }],
+        rewards: [{ type: 'water' }, { type: 'helper-or' }, { type: 'leader-heal' }, { type: 'water' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         requiresInfluence: { type: 'emperor' },
+        customWidth: '115px',
+        noColumnGap: true,
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

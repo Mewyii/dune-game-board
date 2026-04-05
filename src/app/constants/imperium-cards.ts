@@ -501,7 +501,11 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'enemies-intrigue-trash',
+        type: 'condition-enemies-on-field-type',
+        action: 'town',
+      },
+      {
+        type: 'intrigue-trash',
       },
     ],
     revealEffects: [
@@ -1137,7 +1141,8 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_20.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
+    rarity: 'normal',
     customAgentEffect: {
       en: '',
       de: '',
@@ -1151,6 +1156,11 @@ export const imperiumCards: ImperiumCard[] = [
     },
     buyEffects: [],
     agentEffects: [
+      {
+        type: 'condition-influence',
+        amount: 2,
+        faction: 'bene',
+      },
       {
         type: 'signet-ring',
       },
@@ -1179,7 +1189,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit_9.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -1194,13 +1204,18 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'enemies-card-discard',
+        type: 'condition-enemies-on-field-type',
+        action: 'landsraad',
+      },
+      {
+        type: 'card-discard',
       },
       {
         type: 'helper-separator',
       },
       {
         type: 'condition-connection',
+        amount: 2,
         faction: 'bene',
       },
       {
@@ -1214,6 +1229,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -2356,100 +2372,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Sardaukar Infiltrators',
-      de: 'Sardaukar Infiltratoren',
-    },
-    faction: 'emperor',
-    persuasionCosts: 3,
-    fieldAccess: ['spice'],
-    imageUrl: '/assets/images/action-backgrounds/sardaukar_4.png',
-    cardAmount: 2,
-    canInfiltrate: true,
-    agentEffectSize: 'medium',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'condition-enemies-on-this-field',
-      },
-      {
-        type: 'loose-troop',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'sword',
-      },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'trash-self',
-      },
-      {
-        type: 'loose-troop',
-      },
-      {
-        type: 'location-control',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Sardaukar Lasgun Team',
-      de: 'Sardaukar Lasgun-Team',
-    },
-    faction: 'emperor',
-    persuasionCosts: 3,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/sardaukar_6.png',
-    cardAmount: 2,
-    canInfiltrate: true,
-    agentEffectSize: 'medium',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'condition-enemies-on-this-field',
-      },
-      {
-        type: 'loose-troop',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Imperial Caid',
       de: 'Imperialer Caid',
     },
@@ -2650,6 +2572,174 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Sardaukar Battle Rites',
+      de: 'Sardaukar Kampfriten',
+    },
+    faction: 'emperor',
+    persuasionCosts: 3,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/sardaukar_battle_rites.png',
+    cardAmount: 1,
+    canInfiltrate: false,
+    agentEffectSize: 'medium',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'focus',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-connection',
+        faction: 'emperor',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Sardaukar Infiltrators',
+      de: 'Sardaukar Infiltratoren',
+    },
+    faction: 'emperor',
+    persuasionCosts: 4,
+    fieldAccess: ['spice'],
+    imageUrl: '/assets/images/action-backgrounds/sardaukar_4.png',
+    cardAmount: 2,
+    canInfiltrate: true,
+    agentEffectSize: 'small',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'medium',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-enemies-on-field-type',
+        action: 'choam',
+      },
+      {
+        type: 'loose-troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-influence',
+        amount: 2,
+        faction: 'emperor',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Sardaukar Lasgun Team',
+      de: 'Sardaukar Lasgun-Team',
+    },
+    faction: 'emperor',
+    persuasionCosts: 4,
+    fieldAccess: ['town'],
+    imageUrl: '/assets/images/action-backgrounds/sardaukar_6.png',
+    cardAmount: 2,
+    canInfiltrate: true,
+    agentEffectSize: 'small',
+    rarity: 'normal',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+    revealEffectSize: 'large',
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    buyEffects: [],
+    agentEffects: [
+      {
+        type: 'condition-enemies-on-field-type',
+        amount: 2,
+        action: 'town',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'loose-troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
       en: 'Imperial Camp',
       de: 'Imperiales Lager',
     },
@@ -2700,64 +2790,6 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'multiplier-connections',
         faction: 'emperor',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Sardaukar Battle Rites',
-      de: 'Sardaukar Kampfriten',
-    },
-    faction: 'emperor',
-    persuasionCosts: 4,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/sardaukar_battle_rites.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'medium',
-    rarity: 'normal',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'medium',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'focus',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'condition-connection',
-        faction: 'emperor',
-      },
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'card-draw',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'faction-influence-down-choice',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'multiplier-troops-in-conflict',
       },
       {
         type: 'sword',
@@ -2936,8 +2968,8 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffectSize: 'small',
     rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent trashes one of his cards in play.',
-      de: 'Jeder Gegner entsorgt eine seiner Karten im Spiel.',
+      en: 'Each opponent on {faction:town} board spaces trashes one of his cards in play.',
+      de: 'Jeder Gegner auf {faction:town}-Feldern entsorgt eine seiner Karten im Spiel.',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -3197,7 +3229,7 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/battle_3.png',
     cardAmount: 1,
-    canInfiltrate: true,
+    canInfiltrate: false,
     agentEffectSize: 'small',
     rarity: 'normal',
     customAgentEffect: {
@@ -3215,19 +3247,17 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'troop',
-      },
     ],
     agentEffects: [
       {
-        type: 'condition-enemies-on-this-field',
+        type: 'condition-enemies-on-field-type',
+        action: 'town',
       },
       {
         type: 'card-discard',
       },
       {
-        type: 'loose-troop',
+        type: 'card-discard',
       },
     ],
     revealEffects: [
@@ -3752,7 +3782,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/shadout.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'small',
+    agentEffectSize: 'medium',
     rarity: 'rare',
     customAgentEffect: {
       en: '',
@@ -3854,7 +3884,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/ambush.png',
     cardAmount: 1,
     canInfiltrate: true,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -3869,7 +3899,8 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-this-field',
+        type: 'condition-enemies-on-field-type',
+        action: 'choam',
       },
       {
         type: 'loose-troop',
@@ -3897,9 +3928,10 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'troop-insert',
-        amount: 2,
+        amount: 1,
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -4196,7 +4228,12 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'troop-insert',
+        type: 'condition-influence',
+        amount: 2,
+        faction: 'fremen',
+      },
+      {
+        type: 'troop-insert-or-retreat',
         amount: 1,
       },
     ],
@@ -4378,7 +4415,11 @@ export const imperiumCards: ImperiumCard[] = [
         faction: 'fremen',
       },
       {
-        type: 'enemies-troop-destroy',
+        type: 'condition-enemies-on-field-type',
+        action: 'spice',
+      },
+      {
+        type: 'loose-troop',
       },
     ],
     revealEffects: [
@@ -4986,11 +5027,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/lasguns.png',
     cardAmount: 1,
     canInfiltrate: true,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     rarity: 'normal',
     customAgentEffect: {
-      en: 'Each opponent on {faction:spice} board spaces: {resource:spice;amount:-2}',
-      de: 'Jeder Gegner auf {faction:spice}-Feldern: {resource:spice;amount:-2}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -5004,6 +5045,17 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'spice',
         amount: 2,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-enemies-on-field-type',
+        action: 'spice',
+      },
+      {
+        type: 'spice',
+        amount: -2,
       },
     ],
     revealEffects: [

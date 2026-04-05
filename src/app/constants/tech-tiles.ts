@@ -97,7 +97,7 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [
       {
-        type: 'timing-round-start',
+        type: 'timing-turn-start',
       },
       {
         type: 'troop-insert',
@@ -160,11 +160,32 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [
       {
-        type: 'timing-turn-start',
+        type: 'trash-self',
       },
       {
-        type: 'tech-tile-flip',
+        type: 'helper-trade',
       },
+      {
+        type: 'leader-heal',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Poison Snoopers',
+      de: 'Giftschnüffler',
+    },
+    costs: 1,
+    imageUrl: '',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
       {
         type: 'trash-self',
       },
@@ -173,6 +194,36 @@ export const techTiles: TechTileCard[] = [
       },
       {
         type: 'leader-heal',
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Chaumurky',
+      de: 'Chaumurky',
+    },
+    costs: 2,
+    imageUrl: '',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'enemies-leader-assassinate',
       },
     ],
     customEffect: {
@@ -194,9 +245,6 @@ export const techTiles: TechTileCard[] = [
     effects: [
       {
         type: 'timing-turn-start',
-      },
-      {
-        type: 'tech-tile-flip',
       },
       {
         type: 'trash-self',
@@ -315,23 +363,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Heavy Lasguns',
-      de: 'Schwere Lasguns',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/leigther_heavy_lasguns.png',
-    effectSize: 'medium',
-    imagePosition: 'center',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>{resource:agent} from a board space. It is no longer available for this round.',
-      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen {resource:agent} von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
       en: 'Stilltents',
       de: 'Destillzelte',
     },
@@ -415,12 +446,6 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [
       {
-        type: 'timing-turn-start',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
         type: 'trash-self',
       },
       {
@@ -434,6 +459,23 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Heavy Lasguns',
+      de: 'Schwere Lasguns',
+    },
+    costs: 3,
+    imageUrl: '/assets/images/action-backgrounds/leigther_heavy_lasguns.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>{resource:agent} from a board space. It is no longer available for this round.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen {resource:agent} von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
       fontSize: 'small',
     },
   },

@@ -1,7 +1,9 @@
 import { cloneDeep } from 'lodash';
 import {
+  ActionField,
   combatUnitTypes,
   Effect,
+  effectActionConditions,
   EffectChoice,
   EffectChoiceConversionMultiplierOrReward,
   effectChoices,
@@ -13,6 +15,8 @@ import {
   EffectConversionMultiplierOrReward,
   effectConversions,
   EffectConversionType,
+  effectFactionConditions,
+  effectFactionMultipliers,
   EffectMultiplier,
   EffectMultiplierOrReward,
   effectMultipliers,
@@ -109,7 +113,11 @@ export function isTimingEffect(reward: Effect): reward is EffectTiming {
 }
 
 export function isConditionalEffect(reward: Effect): reward is EffectCondition {
-  return effectConditions.some((x) => x === reward.type);
+  return (
+    effectConditions.some((x) => x === reward.type) ||
+    effectFactionConditions.some((x) => x === reward.type) ||
+    effectActionConditions.some((x) => x === reward.type)
+  );
 }
 
 export function isChoiceEffect(reward: Effect): reward is EffectChoice {
@@ -121,7 +129,7 @@ export function isConversionEffect(reward: Effect): reward is EffectConversion {
 }
 
 export function isMultiplierEffect(reward: Effect): reward is EffectMultiplier {
-  return effectMultipliers.some((x) => x === reward.type);
+  return effectMultipliers.some((x) => x === reward.type) || effectFactionMultipliers.some((x) => x === reward.type);
 }
 
 export function isConversionEffectType(input: string): input is EffectConversionType {
@@ -290,6 +298,12 @@ export function getStructuredEffectConditionIfPossible(
           affects: 'enemies',
         } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
+      } else if (effect.type === 'condition-enemies-on-field-type') {
+        const conditionalEffect = {
+          type: effect.type,
+          affects: 'enemies',
+        } as StructuredEffectCondition;
+        return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-enemy-controlling-this-field') {
         const conditionalEffect = {
           type: effect.type,
@@ -410,6 +424,7 @@ export function isConditionFullfilled(
     | 'enemyAgentsOnFields'
     | 'playerAgentPlacedOnFieldThisTurn'
     | 'enemyLocations'
+    | 'boardSpaces'
   >,
   timing: EffectPlayerTurnTiming = 'agent-placement',
   gameElement?: GameElement,
@@ -455,6 +470,15 @@ export function isConditionFullfilled(
     if (enemyAgentsOnCurrentFieldCount > 0) {
       conditionFullfilled = true;
     }
+  } else if (conditionEffect.type === 'condition-enemies-on-field-type') {
+    const actionTypeFieldIds = gameState.boardSpaces
+      .filter((x) => x.actionType === conditionEffect.action)
+      .map((x) => x.title.en);
+    const enemiesOnFieldType = gameState.enemyAgentsOnFields.filter((x) => actionTypeFieldIds.includes(x.fieldId));
+
+    if (enemiesOnFieldType.length >= 0) {
+      conditionFullfilled = true;
+    }
   } else if (conditionEffect.type === 'condition-enemy-controlling-this-field') {
     const enemyLocation = gameState.enemyLocations.find((x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn);
     if (enemyLocation) {
@@ -468,6 +492,7 @@ export function isEnemyConditionFullfilled(
   conditionEffect: StructuredEffectCondition,
   enemy: Player,
   enemyAgentsOnFields: PlayerAgentOnField[],
+  boardSpaces: ActionField[],
   playerAgentPlacedOnFieldThisTurn?: string,
   enemyLocations?: OwnedLocation[],
 ) {
@@ -477,6 +502,13 @@ export function isEnemyConditionFullfilled(
       (x) => enemy.id === x.playerId && x.fieldId === playerAgentPlacedOnFieldThisTurn,
     ).length;
     if (enemyAgentsOnCurrentFieldCount > 0) {
+      conditionFullfilled = true;
+    }
+  } else if (conditionEffect.type === 'condition-enemies-on-field-type') {
+    const actionTypeFieldIds = boardSpaces.filter((x) => x.actionType === conditionEffect.action).map((x) => x.title.en);
+
+    const enemiesOnFieldType = enemyAgentsOnFields.filter((x) => actionTypeFieldIds.includes(x.fieldId));
+    if (enemiesOnFieldType.length > 0) {
       conditionFullfilled = true;
     }
   } else if (conditionEffect.type === 'condition-enemy-controlling-this-field') {

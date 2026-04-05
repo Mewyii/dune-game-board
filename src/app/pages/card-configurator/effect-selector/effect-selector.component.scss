@@ -1,10 +1,4 @@
-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.form-group {
+.effect-row {
   display: flex;
   gap: 20px;
   align-items: baseline;
@@ -44,12 +38,12 @@ form {
   flex-wrap: wrap;
 }
 
-.padding-top {
-  padding-top: 8px;
-}
-
 .margin-top {
   margin-top: 32px;
+}
+
+.effects-container {
+  margin-top: 16px;
 }
 
 .card-effect-container {
@@ -60,7 +54,8 @@ form {
   display: flex;
   align-items: center;
   font-size: x-large;
-  margin-bottom: 8px;
+  width: 100%;
+  margin-bottom: 6px;
 }
 
 .card-effect-title {

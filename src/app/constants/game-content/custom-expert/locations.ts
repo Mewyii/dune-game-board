@@ -25,7 +25,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'spice', amount: 2 }, { type: 'troop' }, { type: 'tech' }],
+      rewards: [{ type: 'spice' }, { type: 'tech' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
       ownerReward: { type: 'tech' },
@@ -42,7 +42,7 @@ export const locationsCustomExpert: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
-      ownerReward: { type: 'solari', amount: 2 },
+      ownerReward: { type: 'persuasion', amount: 1 },
     },
   },
   {

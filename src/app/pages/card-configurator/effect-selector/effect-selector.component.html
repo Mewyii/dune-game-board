@@ -1,0 +1,77 @@
+<div class="card-effect-container">
+  <div class="title-container">
+    <span class="card-effect-title">{{ title }}</span>
+  </div>
+
+  @for (effect of effects; track $index; let index = $index) {
+    <div class="effect-row">
+      <mat-form-field class="big-text-field flex">
+        <mat-label>Effect Type</mat-label>
+        <mat-select [(ngModel)]="effect.type" (selectionChange)="onTypeChanged(effect)">
+          <mat-select-trigger>
+            <div class="reward-container">
+              <img class="reward" [src]="effect.type | effectTypePath" />
+              <span class="reward-label">{{ effect.type }}</span>
+            </div>
+          </mat-select-trigger>
+          <mat-option *ngFor="let type of effectTypes" [value]="type">
+            <div class="reward-container">
+              <img class="reward" [src]="type | effectTypePath" />
+              <span class="reward-label">{{ type }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="small-text-field">
+        <mat-label>Amount</mat-label>
+        <input matInput [(ngModel)]="effect.amount" type="number" />
+      </mat-form-field>
+      <mat-form-field class="small-text-field" *ngIf="effectRequiresFaction(effect.type)">
+        <mat-label>Faction</mat-label>
+        <mat-select [(ngModel)]="effect.faction">
+          <mat-select-trigger>
+            <div class="reward-container">
+              @if (effect.faction) {
+                <img class="reward" [src]="effect.faction | factionTypePath" />
+              }
+              <span class="reward-label">{{ effect.faction }}</span>
+            </div>
+          </mat-select-trigger>
+          <mat-option *ngFor="let faction of factions" [value]="faction">
+            <div class="reward-container">
+              <img class="reward" [src]="faction | factionTypePath" />
+              <span class="reward-label">{{ faction }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="small-text-field" *ngIf="effectRequiresAction(effect.type)">
+        <mat-label>Action</mat-label>
+        <mat-select [(ngModel)]="effect.action">
+          <mat-select-trigger>
+            <div class="reward-container">
+              @if (effect.action) {
+                <img class="reward" [src]="effect.action | actionTypePath" />
+              }
+              <span class="reward-label">{{ effect.action }}</span>
+            </div>
+          </mat-select-trigger>
+          <mat-option *ngFor="let action of actions" [value]="action">
+            <div class="reward-container">
+              <img class="reward" [src]="action | actionTypePath" />
+              <span class="reward-label">{{ action }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-mini-fab color="accent" (click)="onRemoveEffectClicked(index)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  }
+  <div class="control-bar">
+    <button mat-mini-fab color="accent" (click)="onAddEffectClicked()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>

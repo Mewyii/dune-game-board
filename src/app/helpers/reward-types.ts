@@ -75,6 +75,7 @@ export const EFFECT_TYPE_PATHS: Record<EffectType, string> = {
   'condition-no-high-council-seat': '',
   'condition-influence': '',
   'condition-enemies-on-this-field': '',
+  'condition-enemies-on-field-type': '',
   'condition-enemy-controlling-this-field': '',
   'multiplier-agents-on-board-spaces': '',
   'multiplier-cards-with-sword': '',

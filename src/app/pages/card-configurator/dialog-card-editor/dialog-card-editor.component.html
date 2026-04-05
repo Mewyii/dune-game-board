@@ -1,6 +1,172 @@
-<h1 mat-dialog-title>{{ dialogTitle }}</h1>
+<h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  <dune-card-editor [imperiumCard]="imperiumCard"></dune-card-editor>
+  <div [class]="'card-header-row' + (editMode ? ' card-header-row--padded' : '')">
+    <mat-form-field class="medium-text-field flex">
+      <mat-label>Name (English)</mat-label>
+      <input matInput [(ngModel)]="card.name.en" />
+    </mat-form-field>
+    <mat-form-field class="medium-text-field flex">
+      <mat-label>Name (German)</mat-label>
+      <input matInput [(ngModel)]="card.name.de" />
+    </mat-form-field>
+  </div>
+
+  <!-- Faction -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Faction</mat-label>
+    <mat-select [(ngModel)]="card.faction">
+      <mat-select-trigger>
+        <div class="reward-container">
+          <img class="reward" [src]="card.faction || ''" />
+          <span class="reward-label">{{ card.faction }}</span>
+        </div>
+      </mat-select-trigger>
+      <mat-option *ngFor="let faction of factions" [value]="faction"
+        ><div class="reward-container">
+          <img class="reward" [src]="faction" />
+          <span class="reward-label">{{ faction }}</span>
+        </div></mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Persuasion Costs -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Persuasion Costs</mat-label>
+    <input matInput [(ngModel)]="card.persuasionCosts" type="number" />
+  </mat-form-field>
+
+  <!-- Field Access -->
+  <mat-form-field class="medium-text-field flex">
+    <mat-label>Board Space Access</mat-label>
+    <mat-select [(ngModel)]="card.fieldAccess" multiple>
+      <mat-option *ngFor="let actionType of actionTypes; let i = index" [value]="actionType">
+        {{ actionType }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Infiltration -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Can Infiltrate</mat-label>
+    <mat-select [(ngModel)]="card.canInfiltrate">
+      <mat-option [value]="false"> {{ t.translate('commonNo') }} </mat-option>
+      <mat-option [value]="true"> {{ t.translate('commonYes') }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Rarity -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Rarity</mat-label>
+    <mat-select [(ngModel)]="card.rarity">
+      <mat-option value="normal"> Normal </mat-option>
+      <mat-option value="rare"> Rare </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Image -->
+  <mat-form-field class="larger-text-field flex">
+    <mat-label>Image URL</mat-label>
+    <input matInput [(ngModel)]="card.imageUrl" />
+  </mat-form-field>
+
+  <!-- Card Amount -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Amount</mat-label>
+    <input matInput type="number" [(ngModel)]="card.cardAmount" />
+  </mat-form-field>
+
+  <!-- Buy Effects -->
+  <dune-effect-selector
+    [effects]="card.buyEffects!"
+    [effectTypes]="rewardTypes"
+    [factions]="factions"
+    [actions]="actionTypes"
+    title="Buy Effects"
+  >
+  </dune-effect-selector>
+
+  <!-- Agent Effects -->
+  <dune-effect-selector
+    [effects]="card.agentEffects!"
+    [effectTypes]="effectTypes"
+    [factions]="factions"
+    [actions]="actionTypes"
+    title="Agent Effects"
+  >
+  </dune-effect-selector>
+
+  <mat-form-field class="margin-top">
+    <mat-label>Agent Effect Size</mat-label>
+    <mat-select [(ngModel)]="card.agentEffectSize">
+      <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="text-container">
+    Custom Agent Effect Text
+    <mat-icon
+      [style]="'margin-left: 4px'"
+      matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+      >info</mat-icon
+    >
+  </div>
+  <div class="card-text-row card-text-row--wrap">
+    <mat-form-field class="large-text-field flex">
+      <mat-label>English</mat-label>
+      <input matInput [(ngModel)]="card.customAgentEffect!.en" />
+    </mat-form-field>
+    <mat-form-field class="large-text-field flex">
+      <mat-label>German</mat-label>
+      <input matInput [(ngModel)]="card.customAgentEffect!.de" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Font Size</mat-label>
+      <mat-select [(ngModel)]="card.customAgentEffect!.fontSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Reveal Effects -->
+  <dune-effect-selector
+    [effects]="card.revealEffects!"
+    [effectTypes]="effectTypes"
+    [factions]="factions"
+    [actions]="actionTypes"
+    title="Reveal Effects"
+  >
+  </dune-effect-selector>
+
+  <mat-form-field class="margin-top">
+    <mat-label>Reveal Effect Size</mat-label>
+    <mat-select [(ngModel)]="card.revealEffectSize">
+      <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="text-container">
+    Custom Reveal Effect Text
+    <mat-icon
+      [style]="'margin-left: 4px'"
+      matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+      >info</mat-icon
+    >
+  </div>
+  <div class="card-text-row card-text-row--wrap">
+    <mat-form-field class="large-text-field flex">
+      <mat-label>English</mat-label>
+      <input matInput [(ngModel)]="card.customRevealEffect!.en" />
+    </mat-form-field>
+    <mat-form-field class="large-text-field flex">
+      <mat-label>German</mat-label>
+      <input matInput [(ngModel)]="card.customRevealEffect!.de" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Font Size</mat-label>
+      <mat-select [(ngModel)]="card.customRevealEffect!.fontSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">{{ t.translate('commonCancel') }}</button>

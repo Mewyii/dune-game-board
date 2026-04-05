@@ -1837,6 +1837,7 @@ export class GameManager {
                 effect.condition,
                 enemy,
                 enemyAgentsOnFields,
+                gameState.boardSpaces,
                 gameState.playerAgentPlacedOnFieldThisTurn,
                 gameState.enemyLocations,
               );
