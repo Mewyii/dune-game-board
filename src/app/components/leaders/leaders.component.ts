@@ -6,10 +6,12 @@ import { House } from 'src/app/constants/minor-houses';
 import { EffectRewardType, LanguageString, ResourceType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
+import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { GameManager, RoundPhaseType } from 'src/app/services/game-manager.service';
+import { EffectsService } from 'src/app/services/game-effects.service';
+import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/leaders.service';
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
@@ -17,6 +19,7 @@ import { PlayerAgent, PlayerAgentsService } from 'src/app/services/player-agents
 import { PlayerResourcesService, Resources } from 'src/app/services/player-resources.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { RoundPhaseType, RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -31,49 +34,49 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   standalone: false,
 })
 export class LeadersComponent implements OnInit {
-  public leaders: LeaderDeckCard[] = [];
+  leaders: LeaderDeckCard[] = [];
 
-  public currentRound = 0;
+  currentRound = 0;
 
-  public currentRoundPhase: RoundPhaseType | undefined;
+  currentRoundPhase: RoundPhaseType | undefined;
 
-  public playerLeader: PlayerLeader | undefined;
-  public activePlayerId: number = 0;
+  playerLeader: PlayerLeader | undefined;
+  activePlayerId: number = 0;
 
-  public activeLeader: LeaderDeckCard | undefined;
-  public isLeaderActive = false;
+  activeLeader: LeaderDeckCard | undefined;
+  isLeaderActive = false;
 
-  public activePlayer: Player | undefined;
-  public activePlayerResources: Resources = this.playerResourcesService.getInitialPlayerResources();
+  activePlayer: Player | undefined;
+  activePlayerResources: Resources = this.playerResourcesService.getInitialPlayerResources();
 
-  public activePlayerCombatUnits: PlayerCombatUnits | undefined;
+  activePlayerCombatUnits: PlayerCombatUnits | undefined;
 
-  public activePlayerAvailableAgents: PlayerAgent[] | undefined;
+  activePlayerAvailableAgents: PlayerAgent[] | undefined;
 
-  public activePlayerIntrigueCount: number | undefined;
+  activePlayerIntrigueCount: number | undefined;
 
-  public houses: House[] = [];
-  public playerHouses: PlayerHouse[] = [];
-  public houseTitle: LanguageString = { de: 'haus', en: 'house' };
+  houses: House[] = [];
+  playerHouses: PlayerHouse[] = [];
+  houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
-  public playerTechTiles: PlayerTechTile[] = [];
-  public activeTechTileId = '';
-  public hoveredTechTileId = '';
+  playerTechTiles: PlayerTechTile[] = [];
+  activeTechTileId = '';
+  hoveredTechTileId = '';
 
-  public turnInfos: TurnInfo | undefined;
+  turnInfos: TurnInfo | undefined;
 
-  public showAIDetails = false;
+  showAIDetails = false;
 
   constructor(
-    public leadersService: LeadersService,
     public t: TranslateService,
-    public gameManager: GameManager,
-    public playerManager: PlayersService,
-    public combatManager: CombatManager,
-    public playerScoreManager: PlayerScoreManager,
-    public minorHouseService: MinorHousesService,
-    public techTilesService: TechTilesService,
-    public cardsService: CardsService,
+    private leadersService: LeadersService,
+    private gameManager: GameManager,
+    private playersService: PlayersService,
+    private combatManager: CombatManager,
+    private playerScoreManager: PlayerScoreManager,
+    private minorHouseService: MinorHousesService,
+    private techTilesService: TechTilesService,
+    private cardsService: CardsService,
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     private dialog: MatDialog,
@@ -81,6 +84,9 @@ export class LeadersComponent implements OnInit {
     private settingsService: SettingsService,
     private playerAgentsService: PlayerAgentsService,
     private playerResourcesService: PlayerResourcesService,
+    private effectsService: EffectsService,
+    private roundService: RoundService,
+    private aiManager: AIManager,
   ) {}
 
   ngOnInit(): void {
@@ -93,7 +99,7 @@ export class LeadersComponent implements OnInit {
       this.activeLeader = this.playerLeader?.leader;
     });
 
-    this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
+    this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
       this.currentRoundPhase = roundPhase;
     });
 
@@ -135,7 +141,7 @@ export class LeadersComponent implements OnInit {
       this.playerTechTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
     });
 
-    this.gameManager.currentRound$.subscribe((currentTurn) => {
+    this.roundService.currentRound$.subscribe((currentTurn) => {
       this.currentRound = currentTurn;
     });
 
@@ -212,34 +218,36 @@ export class LeadersComponent implements OnInit {
     }
   }
 
-  public onAddTroopToGarrisonClicked(playerId: number) {
-    this.gameManager.addTroopsToPlayer(playerId, 1);
+  onAddTroopToGarrisonClicked(player: Player) {
+    this.effectsService.addTroopsToPlayer(player.id, 1);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
-  public onRemoveTroopFromGarrisonClicked(playerId: number) {
+  onRemoveTroopFromGarrisonClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
-    this.combatManager.removePlayerTroopsFromGarrison(playerId, 1);
+    this.combatManager.removePlayerTroopsFromGarrison(player.id, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
     return false;
   }
 
-  public onAddShipToGarrisonClicked(playerId: number) {
-    this.gameManager.addDreadnoughtToPlayer(playerId);
+  onAddShipToGarrisonClicked(player: Player) {
+    this.effectsService.addDreadnoughtToPlayer(player.id);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
-  public onRemoveShipFromGarrisonClicked(playerId: number) {
+  onRemoveShipFromGarrisonClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
-    this.combatManager.removePlayerShipsFromGarrison(playerId, 1);
+    this.combatManager.removePlayerShipsFromGarrison(player.id, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
     return false;
   }
 
   onAddRewardClicked(player: Player, type: EffectRewardType) {
-    this.gameManager.addRewardToPlayer(player.id, { type });
+    this.effectsService.addRewardToPlayer(player.id, { type });
 
-    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
     return false;
   }
 
@@ -247,7 +255,7 @@ export class LeadersComponent implements OnInit {
     this.audioManager.playSound('click-reverse');
     this.playerResourcesService.removeResourceFromPlayer(player.id, type, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
     return false;
   }
 
@@ -293,33 +301,33 @@ export class LeadersComponent implements OnInit {
     });
   }
 
-  public onAddPersuasionGainedThisRoundClicked(playerId: number) {
+  onAddPersuasionGainedThisRoundClicked(player: Player) {
     this.audioManager.playSound('click-soft');
-    this.playerManager.addPersuasionGainedToPlayer(playerId, 1);
+    this.playersService.addPersuasionGainedToPlayer(player.id, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
-  public onRemovePersuasionGainedThisRoundClicked(playerId: number) {
+  onRemovePersuasionGainedThisRoundClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
-    this.playerManager.removePersuasionGainedFromPlayer(playerId, 1);
+    this.playersService.removePersuasionGainedFromPlayer(player.id, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
     return false;
   }
 
-  public onAddAdditionalCombatPowerToPlayer(playerId: number) {
+  onAddAdditionalCombatPowerToPlayer(playerId: number) {
     this.audioManager.playSound('sword');
     this.combatManager.addAdditionalCombatPowerToPlayer(playerId, 1);
   }
 
-  public onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
+  onRemoveAdditionalCombatPowerFromPlayer(playerId: number) {
     this.audioManager.playSound('sword');
     this.combatManager.removeAdditionalCombatPowerFromPlayer(playerId, 1);
     return false;
   }
 
-  public onPlayerCanEnterCombatClicked(playerId: number) {
+  onPlayerCanEnterCombatClicked(playerId: number) {
     if (!this.turnInfos?.canEnterCombat) {
       let deployableUnits = this.settingsService.getCombatMaxDeployableUnits();
       this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: true, deployableUnits });
@@ -328,19 +336,25 @@ export class LeadersComponent implements OnInit {
     }
   }
 
-  public onPlayerCanBuyTechClicked(playerId: number) {
+  onPlayerCanBuyTechClicked(playerId: number) {
     this.turnInfoService.setPlayerTurnInfo(playerId, { canBuyTech: !this.turnInfos?.canBuyTech });
   }
 
-  public onAIIncreaseInfluenceChoiceClicked(playerId: number) {
-    this.gameManager.aiIncreaseInfluenceChoice(playerId);
+  onAIIncreaseInfluenceChoiceClicked(playerId: number) {
+    if (this.activePlayer) {
+      this.effectsService.payCostForPlayer(playerId, { type: 'faction-influence-up-choice' });
+      this.gameManager.aiResolveRewardChoices(this.activePlayer);
+    }
   }
 
-  public onAIDecreaseInfluenceChoiceClicked(playerId: number) {
-    this.gameManager.aiDecreaseInfluenceChoice(playerId);
+  onAIDecreaseInfluenceChoiceClicked(playerId: number) {
+    if (this.activePlayer) {
+      this.effectsService.payCostForPlayer(playerId, { type: 'faction-influence-down-choice' });
+      this.gameManager.aiResolveRewardChoices(this.activePlayer);
+    }
   }
 
-  public onRevealCardsClicked(playerId: number) {
+  onRevealCardsClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -356,23 +370,23 @@ export class LeadersComponent implements OnInit {
     });
   }
 
-  public onEndTurnClicked(playerId: number) {
+  onEndTurnClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.isLeaderActive = false;
     this.gameManager.endPlayerTurn(playerId);
   }
 
-  public onAiActionClicked(playerId: number) {
+  onAiActionClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
-    this.gameManager.doAIAction(playerId);
+    this.gameManager.executeAITurn(playerId);
   }
 
-  public onPassConflictClicked(playerId: number) {
+  onPassConflictClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.gameManager.playerPassedConflict(playerId);
   }
 
-  public onShowAdditionalPlayerActionsClicked() {
+  onShowAdditionalPlayerActionsClicked() {
     const dialogRef = this.dialog.open(AdditionalPlayerActionsDialogComponent);
 
     dialogRef.afterClosed().subscribe(() => {});

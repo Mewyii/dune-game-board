@@ -1,4 +1,5 @@
 import { GameContent } from '../../board-settings';
+import { conflictsCustomBeginner } from './conflicts';
 import { customCardsCustomBeginner } from './custom-cards';
 import { factionsCustomBeginner } from './factions';
 import { ixCustomBeginner } from './ix';
@@ -8,6 +9,7 @@ export const gameContentCustomBeginner: GameContent = {
   name: 'New Beginnings',
   factions: factionsCustomBeginner,
   locations: locationsCustomBeginner,
+  conflicts: conflictsCustomBeginner,
   ix: ixCustomBeginner,
   useTechTiles: false,
   useDreadnoughts: true,
@@ -39,4 +41,6 @@ export const gameContentCustomBeginner: GameContent = {
     foldspace: 'hand',
   },
   churnRowCards: true,
+  conflictsMode: 'pick',
+  conflictCardsPerLevel: [20],
 };

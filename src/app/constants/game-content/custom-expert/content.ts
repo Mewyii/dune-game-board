@@ -1,4 +1,5 @@
 import { GameContent } from '../../board-settings';
+import { conflictsCustomExpert } from './conflicts';
 import { customCardsCustomExpert } from './custom-cards';
 import { factionsCustomExpert } from './factions';
 import { ixCustomExpert } from './ix';
@@ -8,6 +9,7 @@ export const gameContentCustomExpert: GameContent = {
   name: 'Sands of Arrakis',
   factions: factionsCustomExpert,
   locations: locationsCustomExpert,
+  conflicts: conflictsCustomExpert,
   ix: ixCustomExpert,
   useTechTiles: true,
   useDreadnoughts: true,
@@ -41,4 +43,6 @@ export const gameContentCustomExpert: GameContent = {
   },
   churnRowCards: true,
   leaderCombatStrength: 3,
+  conflictsMode: 'pick',
+  conflictCardsPerLevel: [20],
 };

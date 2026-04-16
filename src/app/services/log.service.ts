@@ -129,10 +129,10 @@ export type PlayerActionLog =
 })
 export class LoggingService {
   private logSubject = new BehaviorSubject<FieldLog[]>([]);
-  public log$ = this.logSubject.asObservable();
+  log$ = this.logSubject.asObservable();
 
   private playerActionLogSubject = new BehaviorSubject<PlayerActionLog[]>([]);
-  public playerActionLog$ = this.playerActionLogSubject.asObservable();
+  playerActionLog$ = this.playerActionLogSubject.asObservable();
 
   constructor() {
     const logString = localStorage.getItem('log');
@@ -156,19 +156,19 @@ export class LoggingService {
     });
   }
 
-  public get log() {
+  get log() {
     return cloneDeep(this.logSubject.value);
   }
 
-  public get playerActionLogs() {
+  get playerActionLogs() {
     return cloneDeep(this.playerActionLogSubject.value);
   }
 
-  public getPlayerActionLog(playerId: number) {
+  getPlayerActionLog(playerId: number) {
     return cloneDeep(this.playerActionLogSubject.value.filter((x) => x.playerId === playerId));
   }
 
-  public clearLogs() {
+  clearLogs() {
     this.logSubject.next([]);
     this.playerActionLogSubject.next([]);
   }
@@ -280,7 +280,7 @@ export class LoggingService {
     ]);
   }
 
-  public printLogs() {
+  printLogs() {
     console.log(this.log);
     console.log(this.playerActionLogs);
   }

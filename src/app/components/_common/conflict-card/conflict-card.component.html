@@ -1,8 +1,13 @@
 <div class="conflict-card">
   <div class="card-header font-medieval">
-    <span>
+    @if (conflict.boardSpaceId) {
+      <div class="card-title">
+        {{ boardSpaceName.toUpperCase() }}
+      </div>
+    }
+    <div [style.fontSize]="'xx-small'">
       {{ t.translateLS(conflict.name).toUpperCase() }}
-    </span>
+    </div>
   </div>
   <div [class]="'card-content'">
     @for (rewards of conflict.rewards; track $index; let i = $index) {

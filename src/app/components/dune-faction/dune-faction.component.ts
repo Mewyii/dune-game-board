@@ -58,7 +58,7 @@ export class DuneFactionComponent implements OnInit {
   public excludedPlayers: number[] = [];
 
   constructor(
-    public playerManager: PlayersService,
+    public playersService: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     public t: TranslateService,
     public gameModifiersService: GameModifiersService,
@@ -105,17 +105,23 @@ export class DuneFactionComponent implements OnInit {
   }
 
   onIncreaseFactionScoreClicked(playerId: number) {
-    this.gameManager.increasePlayerFactionScore(playerId, this.faction.type);
+    const player = this.playersService.getPlayer(playerId);
+    if (player) {
+      this.gameManager.increasePlayerFactionScore(player, this.faction.type);
+    }
   }
 
   onDecreaseFactionScoreClicked(playerId: number) {
-    this.gameManager.decreasePlayerFactionScore(playerId, this.faction.type);
+    const player = this.playersService.getPlayer(playerId);
+    if (player) {
+      this.gameManager.decreasePlayerFactionScore(player, this.faction.type);
+    }
 
     return false;
   }
 
   public getPlayerColor(playerId: number) {
-    return this.playerManager.getPlayerColor(playerId);
+    return this.playersService.getPlayerColor(playerId);
   }
 
   public getTitleColor(rgbColor: string) {

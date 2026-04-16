@@ -3,13 +3,15 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
+import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService, ImperiumDeckCard, PlayerCardStack, PlayerPlotStack } from 'src/app/services/cards.service';
+import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LoggingService } from 'src/app/services/log.service';
 import { PlayerResourcesService } from 'src/app/services/player-resources.service';
-import { PlayersService } from 'src/app/services/players.service';
+import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
@@ -21,36 +23,38 @@ import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium
   standalone: false,
 })
 export class PlayerHandComponent implements OnInit {
-  public activePlayer: Player | undefined;
-  public activePlayerId: number = 0;
+  activePlayer: Player | undefined;
+  activePlayerId: number = 0;
 
-  public playerHandCards: PlayerCardStack | undefined;
-  public playerDiscardPiles: PlayerCardStack | undefined;
-  public activeCardId = '';
-  public hoveredCardId = '';
-  public playedPlayerCardId: string | undefined;
+  playerHandCards: PlayerCardStack | undefined;
+  playerDiscardPiles: PlayerCardStack | undefined;
+  activeCardId = '';
+  hoveredCardId = '';
+  playedPlayerCardId: string | undefined;
 
-  public playerPlots: PlayerPlotStack | undefined;
+  playerPlots: PlayerPlotStack | undefined;
 
-  public playerIntrigues: IntrigueDeckCard[] | undefined;
-  public activeIntrigueId = '';
+  playerIntrigues: IntrigueDeckCard[] | undefined;
+  activeIntrigueId = '';
 
-  public showCards = false;
-  public cardsShown: 'hand' | 'discard' | 'deck' = 'hand';
+  showCards = false;
+  cardsShown: 'hand' | 'discard' | 'deck' = 'hand';
 
-  public revealPlots = false;
+  revealPlots = false;
 
   constructor(
-    private playerManager: PlayersService,
-    public gameManager: GameManager,
+    public t: TranslateService,
+    private gameManager: GameManager,
     private cardsService: CardsService,
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     private settingsService: SettingsService,
     private dialog: MatDialog,
     private logService: LoggingService,
-    public t: TranslateService,
     private playerresourcesService: PlayerResourcesService,
+    private roundService: RoundService,
+    private effectsService: EffectsService,
+    private aiManager: AIManager,
   ) {}
 
   ngOnInit(): void {
@@ -70,8 +74,8 @@ export class PlayerHandComponent implements OnInit {
       this.activePlayer = activePlayer;
     });
 
-    this.gameManager.currentRoundPhase$.subscribe((roundPhase) => {
-      this.revealPlots = roundPhase === 'combat-resolvement' && this.gameManager.isFinale;
+    this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
+      this.revealPlots = roundPhase === 'combat-resolvement' && this.roundService.isFinale;
     });
 
     this.cardsService.playerHands$.subscribe((playerHandCards) => {
@@ -101,19 +105,27 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onDrawCardClicked() {
+    if (!this.activePlayer) {
+      return;
+    }
+
     this.audioManager.playSound('card-draw');
     this.cardsService.drawPlayerCardsFromDeck(this.activePlayerId, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onAddFoldspaceToHandClicked() {
-    const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.type === 'foldspace');
-    if (foldspaceCard) {
-      this.gameManager.addRewardToPlayer(this.activePlayerId, { type: 'foldspace' });
+    if (!this.activePlayer) {
+      return;
     }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.type === 'foldspace');
+    if (foldspaceCard) {
+      this.effectsService.addRewardToPlayer(this.activePlayerId, { type: 'foldspace' });
+    }
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onShowHandClicked() {
@@ -148,37 +160,57 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onAIDiscardCardClicked() {
-    this.audioManager.playSound('card-discard');
-    this.gameManager.aiDiscardHandCard(this.activePlayerId);
+    if (!this.activePlayer) {
+      return;
+    }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.audioManager.playSound('card-discard');
+    this.aiManager.aiDiscardHandCard(this.activePlayerId);
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onAITrashCardFromHandClicked() {
-    this.audioManager.playSound('card-discard');
-    this.gameManager.aiTrashCardFromHand(this.activePlayerId);
+    if (!this.activePlayer) {
+      return;
+    }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.audioManager.playSound('card-discard');
+    this.aiManager.aiTrashCardFromHand(this.activePlayerId);
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onAITrashCardFromDiscardPileClicked() {
-    this.audioManager.playSound('card-discard');
-    this.gameManager.aiTrashCardFromDiscardPile(this.activePlayerId);
+    if (!this.activePlayer) {
+      return;
+    }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.audioManager.playSound('card-discard');
+    this.aiManager.aiTrashCardFromDiscardPile(this.activePlayerId);
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onAIAddCardToHandFromDiscardPileClicked() {
-    this.audioManager.playSound('card-discard');
-    this.gameManager.aiAddCardToHandFromDiscardPile(this.activePlayerId);
+    if (!this.activePlayer) {
+      return;
+    }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.audioManager.playSound('card-discard');
+    this.aiManager.aiAddCardToHandFromDiscardPile(this.activePlayerId);
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onAITrashIntrigueClicked() {
-    this.gameManager.aiTrashIntrigue(this.activePlayerId);
+    if (!this.activePlayer) {
+      return;
+    }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.aiManager.aiTrashIntrigue(this.activePlayerId);
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onReturnDiscardedCardToHandClicked(card: ImperiumDeckCard) {

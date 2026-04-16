@@ -22,7 +22,7 @@ export class TechboardComponent implements OnInit {
   public playerCanBuyTech = false;
 
   constructor(
-    public playerManager: PlayersService,
+    public playersService: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     private gameManager: GameManager,
     private audioManager: AudioManager,

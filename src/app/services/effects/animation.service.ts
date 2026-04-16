@@ -3,7 +3,7 @@ import type { ISourceOptions } from '@tsparticles/engine';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { LanguageString } from 'src/app/models';
-import { GameManager } from '../game-manager.service';
+import { RoundService } from '../round.service';
 import { fire, spice } from './constants';
 import { welcome } from './constants/welcome';
 
@@ -18,7 +18,7 @@ export interface Effect {
 @Injectable({
   providedIn: 'root',
 })
-export class EffectsService {
+export class AnimationService {
   private welcomeAnimationSubject = new BehaviorSubject<Effect>({
     id: 'welcomeEffect',
     title: { en: 'Dune: Imperium', de: 'Dune: Imperium' },
@@ -26,7 +26,7 @@ export class EffectsService {
     duration: 5,
     show: false,
   });
-  public welcomeAnimation$ = this.welcomeAnimationSubject.asObservable();
+  welcomeAnimation$ = this.welcomeAnimationSubject.asObservable();
 
   private combatAnimationSubject = new BehaviorSubject<Effect>({
     id: 'combatEffect',
@@ -35,7 +35,7 @@ export class EffectsService {
     duration: 5,
     show: false,
   });
-  public combatAnimation$ = this.combatAnimationSubject.asObservable();
+  combatAnimation$ = this.combatAnimationSubject.asObservable();
 
   private spiceAnimationSubject = new BehaviorSubject<Effect>({
     id: 'spiceEffect',
@@ -44,16 +44,16 @@ export class EffectsService {
     duration: 5,
     show: false,
   });
-  public spiceAnimation$ = this.spiceAnimationSubject.asObservable();
+  spiceAnimation$ = this.spiceAnimationSubject.asObservable();
 
-  public currentTurn = 0;
+  currentTurn = 0;
 
-  constructor(public gameManager: GameManager) {
-    this.gameManager.currentRound$.subscribe((currentTurn) => {
+  constructor(private roundService: RoundService) {
+    this.roundService.currentRound$.subscribe((currentTurn) => {
       this.currentTurn = currentTurn;
     });
 
-    this.gameManager.currentRoundPhase$.subscribe((phase) => {
+    this.roundService.currentRoundPhase$.subscribe((phase) => {
       if (phase === 'combat') {
         this.showCombatAnimation();
       }
@@ -90,26 +90,26 @@ export class EffectsService {
     });
   }
 
-  public get welcomeAnimation() {
+  get welcomeAnimation() {
     return cloneDeep(this.welcomeAnimationSubject.value);
   }
-  public get combatAnimation() {
+  get combatAnimation() {
     return cloneDeep(this.combatAnimationSubject.value);
   }
 
-  public get spiceAnimation() {
+  get spiceAnimation() {
     return cloneDeep(this.spiceAnimationSubject.value);
   }
 
-  public showWelcomeAnimation() {
+  showWelcomeAnimation() {
     this.welcomeAnimationSubject.next({ ...this.welcomeAnimation, show: true });
   }
 
-  public showCombatAnimation(title?: LanguageString) {
+  showCombatAnimation(title?: LanguageString) {
     this.combatAnimationSubject.next({ ...this.combatAnimation, title: title ?? this.combatAnimation.title, show: true });
   }
 
-  public showSpiceAnimation(title?: LanguageString) {
+  showSpiceAnimation(title?: LanguageString) {
     this.spiceAnimationSubject.next({ ...this.spiceAnimation, title: title ?? this.spiceAnimation.title, show: true });
   }
 }

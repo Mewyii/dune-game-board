@@ -32,13 +32,13 @@ export type PlayerFactionScoreType = keyof Omit<PlayerScore, 'playerId' | 'victo
 })
 export class PlayerScoreManager {
   private playerScoresSubject = new BehaviorSubject<PlayerScore[]>([]);
-  public playerScores$ = this.playerScoresSubject.asObservable();
+  playerScores$ = this.playerScoresSubject.asObservable();
 
   private playerAlliancesSubject = new BehaviorSubject<PlayerAlliances[]>([]);
-  public playerAlliances$ = this.playerAlliancesSubject.asObservable();
+  playerAlliances$ = this.playerAlliancesSubject.asObservable();
 
   constructor(
-    private playerManager: PlayersService,
+    private playersService: PlayersService,
     private combatManager: CombatManager,
     private settingsService: SettingsService,
     private loggingService: LoggingService,
@@ -65,23 +65,23 @@ export class PlayerScoreManager {
     });
   }
 
-  public get playerScores() {
+  get playerScores() {
     return cloneDeep(this.playerScoresSubject.value);
   }
 
-  public get playerAlliances() {
+  get playerAlliances() {
     return cloneDeep(this.playerAlliancesSubject.value);
   }
 
-  public getPlayerScore(playerId: number) {
+  getPlayerScore(playerId: number) {
     return this.playerScores.find((x) => x.playerId === playerId);
   }
 
-  public getEnemyScore(playerId: number) {
+  getEnemyScore(playerId: number) {
     return this.playerScores.filter((x) => x.playerId !== playerId);
   }
 
-  public resetPlayersScores(players: Player[]) {
+  resetPlayersScores(players: Player[]) {
     const playerScores: PlayerScore[] = [];
     for (let player of players) {
       playerScores.push({
@@ -97,11 +97,11 @@ export class PlayerScoreManager {
     this.playerScoresSubject.next(playerScores);
   }
 
-  public resetPlayerAlliances() {
+  resetPlayerAlliances() {
     this.playerAlliancesSubject.next([]);
   }
 
-  public addFactionScore(playerId: number, actionType: ActionType, score: number, roundNumber: number) {
+  addFactionScore(playerId: number, actionType: ActionType, score: number, roundNumber: number) {
     let factionRewards: EffectReward[] = [];
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
@@ -142,7 +142,7 @@ export class PlayerScoreManager {
     return factionRewards;
   }
 
-  public addPlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number, roundNumber: number) {
+  addPlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number, roundNumber: number) {
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
@@ -164,7 +164,7 @@ export class PlayerScoreManager {
             this.combatManager.addPlayerTroopsToGarrison(playerId, vpReward.amount ?? 1);
           }
           if (vpReward.type === 'persuasion') {
-            this.playerManager.addPermanentPersuasionToPlayer(playerId, vpReward.amount ?? 1);
+            this.playersService.addPermanentPersuasionToPlayer(playerId, vpReward.amount ?? 1);
           }
         }
       }
@@ -179,7 +179,7 @@ export class PlayerScoreManager {
     }
   }
 
-  public removePlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number, roundNumber: number) {
+  removePlayerScore(playerId: number, scoreType: PlayerScoreType, amount: number, roundNumber: number) {
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
@@ -206,14 +206,14 @@ export class PlayerScoreManager {
 
         if (vpReward) {
           if (vpReward.type === 'persuasion') {
-            this.playerManager.removePermanentPersuasionFromPlayer(playerId, vpReward.amount ?? 1);
+            this.playersService.removePermanentPersuasionFromPlayer(playerId, vpReward.amount ?? 1);
           }
         }
       }
     }
   }
 
-  public addAllianceToPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
+  addAllianceToPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
     const playerAlliances = this.playerAlliances;
     const playerIndex = this.playerAlliances.findIndex((x) => x.playerId === playerId);
     if (playerIndex > -1) {
@@ -231,7 +231,7 @@ export class PlayerScoreManager {
     this.loggingService.logPlayerGainedVictoryPoint(playerId, roundNumber, 'Alliance');
   }
 
-  public removeAllianceFromPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
+  removeAllianceFromPlayer(playerId: number, factionType: PlayerFactionScoreType, roundNumber: number) {
     const playerAlliances = this.playerAlliances;
     const playerIndex = this.playerAlliances.findIndex((x) => x.playerId === playerId);
     if (playerIndex > -1) {
@@ -247,7 +247,7 @@ export class PlayerScoreManager {
     }
   }
 
-  public adjustAlliancesBasedOnFactionScore(
+  adjustAlliancesBasedOnFactionScore(
     playerId: number,
     factionType: PlayerFactionScoreType,
     score: number,

@@ -19,8 +19,8 @@ export interface PlayerResources {
 })
 export class PlayerResourcesService {
   private playersResourcesSubject = new BehaviorSubject<PlayerResources[]>([]);
-  public playersResources$ = this.playersResourcesSubject.asObservable();
-  public playerResources$ = (playerId: number) =>
+  playersResources$ = this.playersResourcesSubject.asObservable();
+  playerResources$ = (playerId: number) =>
     this.playersResources$.pipe(
       map((x) => x.find((resources) => resources.playerId === playerId)?.resources),
       distinctUntilChanged(),
@@ -38,21 +38,21 @@ export class PlayerResourcesService {
     });
   }
 
-  public getPlayersResources() {
+  getPlayersResources() {
     return cloneDeep(this.playersResourcesSubject.value);
   }
 
-  public getPlayerResources(playerId: number) {
+  getPlayerResources(playerId: number) {
     const resources = this.playersResourcesSubject.value.find((x) => x.playerId === playerId)?.resources;
     return resources ? cloneDeep(resources) : this.getInitialPlayerResources();
   }
 
-  public getPlayerResourceAmount(playerId: number, type: ResourceType) {
+  getPlayerResourceAmount(playerId: number, type: ResourceType) {
     const playerResources = this.playersResourcesSubject.value.find((x) => x.playerId === playerId);
     return playerResources ? playerResources.resources[type] : 0;
   }
 
-  public resetPlayerResources(players: Player[]) {
+  resetPlayerResources(players: Player[]) {
     const newPlayersResources = players.map((player) => ({
       playerId: player.id,
       resources: this.getInitialPlayerResources(),
@@ -61,7 +61,7 @@ export class PlayerResourcesService {
     this.playersResourcesSubject.next(newPlayersResources);
   }
 
-  public addResourceToPlayer(id: number, type: ResourceType, amount: number, valuesCanGetNegative?: boolean) {
+  addResourceToPlayer(id: number, type: ResourceType, amount: number, valuesCanGetNegative?: boolean) {
     const playersResources = this.getPlayersResources();
 
     const playerResources = playersResources.find((x) => x.playerId === id);
@@ -75,11 +75,11 @@ export class PlayerResourcesService {
     }
   }
 
-  public removeResourceFromPlayer(id: number, type: ResourceType, amount: number, valuesCanGetNegative?: boolean) {
+  removeResourceFromPlayer(id: number, type: ResourceType, amount: number, valuesCanGetNegative?: boolean) {
     this.addResourceToPlayer(id, type, -amount, valuesCanGetNegative);
   }
 
-  public getInitialPlayerResources() {
+  getInitialPlayerResources() {
     const initialResources: Resources = {
       water: 0,
       spice: 0,

@@ -9,7 +9,7 @@ import { TurnInfo } from '../models/turn-info';
 })
 export class TurnInfoService {
   private turnInfosSubject = new BehaviorSubject<TurnInfo[]>([]);
-  public turnInfos$ = this.turnInfosSubject.asObservable();
+  turnInfos$ = this.turnInfosSubject.asObservable();
 
   constructor() {
     const turnInfosString = localStorage.getItem('turnInfos');

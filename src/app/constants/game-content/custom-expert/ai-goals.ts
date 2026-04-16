@@ -90,7 +90,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
         possibleLocationControls += gameState.playerCombatUnits.shipsInCombat;
         modifier += 0.2 * gameState.playerCombatUnits.shipsInCombat;
       }
-      if (gameState.conflict.rewards[0].some((x) => x.type === 'location-control')) {
+      if (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control')) {
         possibleLocationControls += 1;
 
         const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
@@ -105,17 +105,17 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
           modifier += (playerIsWinningCombat ? 0.0375 : 0.225) * playerCombatStrength;
         }
       }
-      if (gameState.playerHandCardsRewards['location-control'] > 0) {
-        possibleLocationControls += gameState.playerHandCardsRewards['location-control'];
-        modifier += 0.3 * gameState.playerHandCardsRewards['location-control'];
+      if (gameState.playerHandCardsRewards['location-control-choice'] > 0) {
+        possibleLocationControls += gameState.playerHandCardsRewards['location-control-choice'];
+        modifier += 0.3 * gameState.playerHandCardsRewards['location-control-choice'];
       }
-      if (gameState.playerIntriguesRewards['location-control'] > 0) {
-        possibleLocationControls += gameState.playerIntriguesRewards['location-control'];
-        modifier += 0.2 * gameState.playerIntriguesRewards['location-control'];
+      if (gameState.playerIntriguesRewards['location-control-choice'] > 0) {
+        possibleLocationControls += gameState.playerIntriguesRewards['location-control-choice'];
+        modifier += 0.2 * gameState.playerIntriguesRewards['location-control-choice'];
       }
-      if (gameState.playerTechTilesRewards['location-control'] > 0) {
-        possibleLocationControls += gameState.playerTechTilesRewards['location-control'];
-        modifier += 0.15 * gameState.playerTechTilesRewards['location-control'];
+      if (gameState.playerTechTilesRewards['location-control-choice'] > 0) {
+        possibleLocationControls += gameState.playerTechTilesRewards['location-control-choice'];
+        modifier += 0.15 * gameState.playerTechTilesRewards['location-control-choice'];
       }
 
       const agentsOnLocations = gameState.playerAgentsOnFields.filter(
@@ -149,7 +149,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
-      (gameState.conflict.rewards[0].some((x) => x.type === 'location-control') &&
+      (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control-choice') &&
       gameState.playerAgentsOnFields.every(
         (x) =>
           gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.some((y) => x.fieldId === y.locationId),

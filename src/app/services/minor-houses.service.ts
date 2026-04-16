@@ -13,15 +13,15 @@ export interface PlayerHouse {
   providedIn: 'root',
 })
 export class MinorHousesService {
-  public houses = minorHouses;
+  houses = minorHouses;
 
   private currentAvailableHousesSubject = new BehaviorSubject<House[]>([]);
-  public currentAvailableHouses$ = this.currentAvailableHousesSubject.asObservable();
+  currentAvailableHouses$ = this.currentAvailableHousesSubject.asObservable();
 
   private playerHousesSubject = new BehaviorSubject<PlayerHouse[]>([]);
-  public playerHouses$ = this.playerHousesSubject.asObservable();
+  playerHouses$ = this.playerHousesSubject.asObservable();
 
-  public maxHouseLevel = 2;
+  maxHouseLevel = 2;
 
   constructor() {
     const currentAvailableHousesString = localStorage.getItem('currentAvailableHouses');
@@ -45,11 +45,11 @@ export class MinorHousesService {
     });
   }
 
-  public get currentAvailableHouses() {
+  get currentAvailableHouses() {
     return cloneDeep(this.currentAvailableHousesSubject.value);
   }
 
-  public get playerHouses() {
+  get playerHouses() {
     return cloneDeep(this.playerHousesSubject.value);
   }
 
@@ -76,7 +76,7 @@ export class MinorHousesService {
     const newTakenHouses = [...this.playerHouses, { playerId, houseId, level: 0 }];
 
     const availableHouses = this.houses.filter(
-      (x) => !newTakenHouses.some((y) => y.houseId === x.name.en) && !filteredAvailableHouseIds.includes(x.name.en)
+      (x) => !newTakenHouses.some((y) => y.houseId === x.name.en) && !filteredAvailableHouseIds.includes(x.name.en),
     );
 
     const newAvailableHouse = shuffle(availableHouses).pop();

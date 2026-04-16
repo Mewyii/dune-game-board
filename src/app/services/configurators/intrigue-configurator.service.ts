@@ -9,7 +9,7 @@ import { IntrigueCard } from 'src/app/models/intrigue';
 })
 export class IntrigueConfiguratorService {
   private intriguesSubject = new BehaviorSubject<IntrigueCard[]>(intrigues);
-  public intrigues$ = this.intriguesSubject.asObservable();
+  intrigues$ = this.intriguesSubject.asObservable();
 
   constructor() {
     const intriguesString = localStorage.getItem('intrigues');
@@ -23,7 +23,7 @@ export class IntrigueConfiguratorService {
     });
   }
 
-  public get intrigues() {
+  get intrigues() {
     return cloneDeep(this.intriguesSubject.value);
   }
 

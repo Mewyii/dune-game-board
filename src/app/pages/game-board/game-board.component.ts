@@ -3,7 +3,7 @@ import { NgParticlesService } from '@tsparticles/angular';
 import { AppMode, GameContent } from 'src/app/constants/board-settings';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
 import { spiceGlitter } from 'src/app/services/effects/constants/spice-glitter';
-import { GameManager } from 'src/app/services/game-manager.service';
+import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { loadFull } from 'tsparticles';
 
@@ -16,24 +16,26 @@ import { loadFull } from 'tsparticles';
 export class GameBoardComponent implements OnInit, AfterViewInit {
   @ViewChild('gameBoardContainer', { static: true }) gameBoardRef!: ElementRef;
 
-  public gameContent: GameContent | undefined;
-  public mode: AppMode | undefined;
-  public eventsEnabled: boolean | undefined;
+  currentRound = 0;
 
-  public stars = stars;
-  public dust = dust;
-  public sand = sand;
-  public ships = ships;
-  public spiceGlitter = spiceGlitter;
+  gameContent: GameContent | undefined;
+  mode: AppMode | undefined;
+  eventsEnabled: boolean | undefined;
 
-  public viewInitialized = false;
+  stars = stars;
+  dust = dust;
+  sand = sand;
+  ships = ships;
+  spiceGlitter = spiceGlitter;
+
+  viewInitialized = false;
   isChrome = false;
   isFirefox = false;
 
   constructor(
-    public settingsService: SettingsService,
-    public gameManager: GameManager,
-    private readonly ngParticlesService: NgParticlesService
+    private settingsService: SettingsService,
+    private roundService: RoundService,
+    private readonly ngParticlesService: NgParticlesService,
   ) {
     this.settingsService.gameContent$.subscribe((gameContent) => {
       this.gameContent = gameContent;
@@ -45,7 +47,12 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     this.settingsService.eventsEnabled$.subscribe((eventsEnabled) => {
       this.eventsEnabled = eventsEnabled;
     });
+
+    this.roundService.currentRound$.subscribe((currentRound) => {
+      this.currentRound = currentRound;
+    });
   }
+
   ngOnInit(): void {
     this.isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     this.isFirefox = /Firefox\/\d+/.test(navigator.userAgent);
@@ -64,26 +71,6 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     window.addEventListener('resize', () => this.setZoom());
   }
 
-  // async initStars(engine: Engine) {
-  //   await loadFull(engine);
-  // }
-
-  // async initDust(engine: Engine) {
-  //   await loadFull(engine);
-  // }
-
-  // async initShips(engine: Engine) {
-  //   await loadFull(engine);
-  // }
-
-  // async initSand(engine: Engine) {
-  //   await loadFull(engine);
-  // }
-
-  // async initSpiceGlitter(engine: Engine) {
-  //   await loadFull(engine);
-  // }
-
   private setZoom(): void {
     const element = this.gameBoardRef?.nativeElement;
     if (!element) return;
@@ -96,9 +83,6 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
       element.style.zoom = zoom.toString();
     } else {
       element.style.zoom = zoom.toString();
-      // element.style.transform = `scale(${zoom})`;
-      // element.style.transformOrigin = 'top left';
-      // element.style.width = `${targetHeight}px`;
     }
   }
 }

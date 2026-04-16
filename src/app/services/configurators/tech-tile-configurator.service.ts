@@ -9,7 +9,7 @@ import { TechTileCard } from 'src/app/models/tech-tile';
 })
 export class TechTileConfiguratorService {
   private techTilesSubject = new BehaviorSubject<TechTileCard[]>(techTiles);
-  public techTiles$ = this.techTilesSubject.asObservable();
+  techTiles$ = this.techTilesSubject.asObservable();
 
   constructor() {
     const techTilesString = localStorage.getItem('techTiles');
@@ -23,7 +23,7 @@ export class TechTileConfiguratorService {
     });
   }
 
-  public get techTiles() {
+  get techTiles() {
     return cloneDeep(this.techTilesSubject.value);
   }
 

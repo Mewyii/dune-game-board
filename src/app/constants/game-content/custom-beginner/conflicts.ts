@@ -1,6 +1,6 @@
-import { Conflict } from '../models/conflict';
+import { Conflict } from '../../../models/conflict';
 
-export const conflicts: Conflict[] = [
+export const conflictsCustomBeginner: Conflict[] = [
   // LVL 1
   {
     name: { de: 'Schlacht von Arrakeen', en: 'Battle of Arrakeen' },

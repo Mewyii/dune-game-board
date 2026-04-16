@@ -7,7 +7,7 @@ import { Resources } from 'src/app/services/player-resources.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
 
 export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
-  const spice = gameState.accumulatedSpiceOnFields.find((x) => x.fieldId === fieldId);
+  const spice = gameState.accumulatedSpiceOnBoardSpaces.find((x) => x.boardSpaceId === fieldId);
   if (spice) {
     return spice.amount;
   }

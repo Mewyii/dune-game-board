@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Effect, EffectsService } from 'src/app/services/effects/effects.service';
+import { AnimationService, Effect } from 'src/app/services/effects/animation.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -9,11 +9,14 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class ParticleEffectsComponent implements OnInit {
-  public combatAnimation: Effect | undefined;
-  public spiceAnimation: Effect | undefined;
-  public welcomeAnimation: Effect | undefined;
+  combatAnimation: Effect | undefined;
+  spiceAnimation: Effect | undefined;
+  welcomeAnimation: Effect | undefined;
 
-  constructor(public effectsService: EffectsService, public t: TranslateService) {}
+  constructor(
+    public t: TranslateService,
+    private effectsService: AnimationService,
+  ) {}
 
   ngOnInit(): void {
     this.effectsService.combatAnimation$.subscribe((combatAnimation) => {

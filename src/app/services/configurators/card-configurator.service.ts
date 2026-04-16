@@ -11,12 +11,12 @@ import { TranslateService } from '../translate-service';
 })
 export class CardConfiguratorService {
   private imperiumCardsSubject = new BehaviorSubject<ImperiumCard[]>(imperiumCards);
-  public imperiumCards$ = this.imperiumCardsSubject.asObservable();
+  imperiumCards$ = this.imperiumCardsSubject.asObservable();
 
   private startingCardsSubject = new BehaviorSubject<ImperiumCard[]>(startingCards);
-  public startingCards$ = this.startingCardsSubject.asObservable();
+  startingCards$ = this.startingCardsSubject.asObservable();
 
-  constructor(public t: TranslateService) {
+  constructor(t: TranslateService) {
     const imperiumCardsString = localStorage.getItem('imperiumCards');
     if (imperiumCardsString) {
       const imperiumCards = JSON.parse(imperiumCardsString) as ImperiumCard[];
@@ -38,11 +38,11 @@ export class CardConfiguratorService {
     });
   }
 
-  public get imperiumCards() {
+  get imperiumCards() {
     return cloneDeep(this.imperiumCardsSubject.value);
   }
 
-  public get startingCards() {
+  get startingCards() {
     return cloneDeep(this.startingCardsSubject.value);
   }
 

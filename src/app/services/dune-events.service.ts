@@ -13,11 +13,11 @@ export interface DuneEventCard extends DuneEvent {
 })
 export class DuneEventsManager {
   private eventsSubject = new BehaviorSubject<DuneEvent[]>(duneEvents);
-  public events$ = this.eventsSubject.asObservable();
+  events$ = this.eventsSubject.asObservable();
 
   private eventDeckSubject = new BehaviorSubject<DuneEventCard[]>([]);
-  public eventDeck$ = this.eventDeckSubject.asObservable();
-  public currentEvent$ = this.eventDeck$.pipe(map((x) => x[0]));
+  eventDeck$ = this.eventDeckSubject.asObservable();
+  currentEvent$ = this.eventDeck$.pipe(map((x) => x[0]));
 
   constructor() {
     const eventsString = localStorage.getItem('events');
@@ -45,15 +45,15 @@ export class DuneEventsManager {
     });
   }
 
-  public get events() {
+  get events() {
     return cloneDeep(this.eventsSubject.value);
   }
 
-  public get eventDeck() {
+  get eventDeck() {
     return cloneDeep(this.eventDeckSubject.value);
   }
 
-  public getCurrentEvent() {
+  getCurrentEvent() {
     const currentEvent = this.eventDeckSubject.value[0];
     if (currentEvent) {
       return cloneDeep(this.eventDeckSubject.value[0]);
@@ -62,7 +62,7 @@ export class DuneEventsManager {
     }
   }
 
-  public setEventDeck() {
+  setEventDeck() {
     const newEvents: DuneEventCard[] = [];
     for (let event of this.events) {
       for (let i = 0; i < (event.cardAmount ?? 1); i++) {
@@ -72,26 +72,26 @@ export class DuneEventsManager {
     this.eventDeckSubject.next(shuffleMultipleTimes(newEvents));
   }
 
-  public setNextEvent() {
+  setNextEvent() {
     const eventDeck = this.eventDeck;
     eventDeck.shift();
     this.eventDeckSubject.next(eventDeck);
     return eventDeck[0];
   }
 
-  public resetEventDeck() {
+  resetEventDeck() {
     this.eventDeckSubject.next([]);
   }
 
-  public setEvents(events: DuneEvent[]) {
+  setEvents(events: DuneEvent[]) {
     this.eventsSubject.next(events);
   }
 
-  public addEvent(card: DuneEvent) {
+  addEvent(card: DuneEvent) {
     this.eventsSubject.next([...this.events, card]);
   }
 
-  public editEvent(card: DuneEvent) {
+  editEvent(card: DuneEvent) {
     const cardId = card.title.en;
 
     const events = this.events;
@@ -101,11 +101,11 @@ export class DuneEventsManager {
     this.eventsSubject.next(events);
   }
 
-  public deleteEvent(id: string) {
+  deleteEvent(id: string) {
     this.eventsSubject.next(this.events.filter((x) => x.title.en !== id));
   }
 
-  public instantiateEvent(card: DuneEvent): DuneEventCard {
+  instantiateEvent(card: DuneEvent): DuneEventCard {
     return {
       ...card,
       id: crypto.randomUUID(),
@@ -113,7 +113,7 @@ export class DuneEventsManager {
     };
   }
 
-  public getNewEvent() {
+  getNewEvent() {
     return {
       title: { en: '', de: '' },
       description: { en: '', de: '' },

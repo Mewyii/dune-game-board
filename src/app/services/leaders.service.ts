@@ -26,11 +26,11 @@ export interface PlayerLeader {
 })
 export class LeadersService {
   private leaderDeckSubject = new BehaviorSubject<LeaderDeckCard[]>([]);
-  public leaderDeck$ = this.leaderDeckSubject.asObservable();
+  leaderDeck$ = this.leaderDeckSubject.asObservable();
 
   private playerLeadersSubject = new BehaviorSubject<PlayerLeader[]>([]);
-  public playerLeaders$ = this.playerLeadersSubject.asObservable();
-  public playerLeaders: PlayerLeader[] = [];
+  playerLeaders$ = this.playerLeadersSubject.asObservable();
+  playerLeaders: PlayerLeader[] = [];
 
   constructor(private leaderConfiguratorService: LeaderConfiguratorService) {
     const leaderDeckString = localStorage.getItem('leaderDeck');

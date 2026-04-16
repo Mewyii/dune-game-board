@@ -79,7 +79,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
       {
         type: 'sword',
@@ -2461,7 +2461,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
   },
@@ -2684,7 +2684,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
   },
@@ -3113,7 +3113,7 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
       {
         type: 'trash-self',
@@ -3347,7 +3347,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'dreadnought',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     agentEffects: [
@@ -3455,6 +3455,53 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'tech',
       },
     ],
+  },
+  {
+    name: {
+      en: 'CHOAM Directorship',
+      de: 'MAFEA Vorsitz',
+    },
+    buyEffects: [
+      {
+        type: 'victory-point',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'solari',
+        amount: 3,
+      },
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+    ],
+    fieldAccess: ['bene', 'emperor', 'guild', 'landsraad'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 9,
+    faction: 'emperor',
+    imageUrl: '/assets/images/action-backgrounds/highliner_3.png',
   },
   {
     name: {
@@ -4576,7 +4623,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     revealEffects: [
@@ -4941,7 +4988,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'trash-self',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     revealEffects: [

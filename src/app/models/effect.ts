@@ -38,6 +38,7 @@ export const effectRewards = [
   'intrigue-draw',
   'intrigue-trash',
   'location-control',
+  'location-control-choice',
   'loose-troop',
   'mentat',
   'persuasion',

@@ -25,7 +25,7 @@ export interface PlayerCombatScore {
 })
 export class CombatManager {
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
-  public playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
+  playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
 
   constructor(private settingsService: SettingsService) {
     const playerCombatUnitsString = localStorage.getItem('playerCombatUnits');
@@ -43,15 +43,15 @@ export class CombatManager {
     return cloneDeep(this.playerCombatUnitsSubject.value);
   }
 
-  public getPlayerCombatUnits(playerId: number) {
+  getPlayerCombatUnits(playerId: number) {
     return cloneDeep(this.playerCombatUnitsSubject.value.find((x) => x.playerId === playerId));
   }
 
-  public getEnemyCombatUnits(playerId: number) {
+  getEnemyCombatUnits(playerId: number) {
     return cloneDeep(this.playerCombatUnitsSubject.value.filter((x) => x.playerId !== playerId));
   }
 
-  public setInitialPlayerCombatUnits(players: Player[]) {
+  setInitialPlayerCombatUnits(players: Player[]) {
     const playerCombatUnits = [];
     for (const player of players) {
       playerCombatUnits.push(this.getInitialPlayerCombatUnits(player.id));
@@ -59,7 +59,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public setPlayerTroopsInGarrison(playerId: number, troops: number) {
+  setPlayerTroopsInGarrison(playerId: number, troops: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     if (playerCombatUnitsIndex > -1) {
@@ -80,7 +80,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public addPlayerTroopsToGarrison(playerId: number, troops: number) {
+  addPlayerTroopsToGarrison(playerId: number, troops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       this.setPlayerTroopsInGarrison(playerId, combatUnits.troopsInGarrison + troops);
@@ -89,7 +89,7 @@ export class CombatManager {
     }
   }
 
-  public removePlayerTroopsFromGarrison(playerId: number, troops: number) {
+  removePlayerTroopsFromGarrison(playerId: number, troops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInGarrison - troops >= 0) {
@@ -100,7 +100,7 @@ export class CombatManager {
     }
   }
 
-  public removePlayerTroopsFromGarrisonOrCombat(playerId: number, troops: number) {
+  removePlayerTroopsFromGarrisonOrCombat(playerId: number, troops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInGarrison - troops >= 0) {
@@ -111,7 +111,7 @@ export class CombatManager {
     }
   }
 
-  public setPlayerShipsInGarrison(playerId: number, ships: number) {
+  setPlayerShipsInGarrison(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     if (playerCombatUnitsIndex > -1) {
@@ -132,7 +132,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public addPlayerShipsToGarrison(playerId: number, ships: number) {
+  addPlayerShipsToGarrison(playerId: number, ships: number) {
     const maxDreadnoughtCount = this.settingsService.getMaxPlayerDreadnoughtCount();
     const combatUnits = this.getPlayerCombatUnits(playerId);
 
@@ -150,7 +150,7 @@ export class CombatManager {
     }
   }
 
-  public removePlayerShipsFromGarrison(playerId: number, ships: number) {
+  removePlayerShipsFromGarrison(playerId: number, ships: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.shipsInGarrison - ships >= 0) {
@@ -161,7 +161,7 @@ export class CombatManager {
     }
   }
 
-  public setPlayerTroopsInCombat(playerId: number, troops: number) {
+  setPlayerTroopsInCombat(playerId: number, troops: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     if (playerCombatUnitsIndex > -1) {
@@ -196,7 +196,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public addPlayerTroopsToCombat(playerId: number, troops: number) {
+  addPlayerTroopsToCombat(playerId: number, troops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       this.setPlayerTroopsInCombat(playerId, combatUnits.troopsInCombat + troops);
@@ -205,7 +205,7 @@ export class CombatManager {
     }
   }
 
-  public retreatPlayerTroopsFromCombat(playerId: number, troops: number) {
+  retreatPlayerTroopsFromCombat(playerId: number, troops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.troopsInCombat - troops >= 0) {
@@ -216,7 +216,7 @@ export class CombatManager {
     }
   }
 
-  public addAllPossibleTroopsToCombat(playerId: number, deployableTroops: number) {
+  addAllPossibleTroopsToCombat(playerId: number, deployableTroops: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
@@ -233,7 +233,7 @@ export class CombatManager {
     }
   }
 
-  public addAllPossibleDreadnoughtsToCombat(playerId: number, deployableDreadnoughts: number) {
+  addAllPossibleDreadnoughtsToCombat(playerId: number, deployableDreadnoughts: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
@@ -249,7 +249,7 @@ export class CombatManager {
     }
   }
 
-  public addAllPossibleUnitsToCombat(playerId: number, deployableUnitAmount: number) {
+  addAllPossibleUnitsToCombat(playerId: number, deployableUnitAmount: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (!combatUnits) {
       return 0;
@@ -275,7 +275,7 @@ export class CombatManager {
     return addedUnits;
   }
 
-  public setPlayerShipsInCombat(playerId: number, ships: number) {
+  setPlayerShipsInCombat(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     if (playerCombatUnitsIndex > -1) {
@@ -310,7 +310,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public addPlayerShipsToCombat(playerId: number, ships: number) {
+  addPlayerShipsToCombat(playerId: number, ships: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       this.setPlayerShipsInCombat(playerId, combatUnits.shipsInCombat + ships);
@@ -319,7 +319,7 @@ export class CombatManager {
     }
   }
 
-  public removePlayerShipsFromCombat(playerId: number, ships: number) {
+  removePlayerShipsFromCombat(playerId: number, ships: number) {
     const combatUnits = this.getPlayerCombatUnits(playerId);
     if (combatUnits) {
       if (combatUnits.shipsInCombat - ships >= 0) {
@@ -330,7 +330,7 @@ export class CombatManager {
     }
   }
 
-  public destroyPlayerShipsInCombat(playerId: number, ships: number) {
+  destroyPlayerShipsInCombat(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     if (playerCombatUnitsIndex > -1) {
@@ -352,7 +352,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public setAllPlayerShipsFromCombatToTimeout() {
+  setAllPlayerShipsFromCombatToTimeout() {
     const playerCombatUnits = this.playerCombatUnits;
 
     for (const combatUnits of playerCombatUnits) {
@@ -365,7 +365,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public setAllPlayerShipsFromTimeoutToGarrison() {
+  setAllPlayerShipsFromTimeoutToGarrison() {
     const playerCombatUnits = this.playerCombatUnits;
 
     for (const combatUnits of playerCombatUnits) {
@@ -376,7 +376,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public deleteAllPlayerTroopsFromCombat() {
+  deleteAllPlayerTroopsFromCombat() {
     const playerCombatUnits = this.playerCombatUnits;
 
     for (const combatUnits of playerCombatUnits) {
@@ -386,7 +386,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public deleteAllPlayerShipsFromCombat() {
+  deleteAllPlayerShipsFromCombat() {
     const playerCombatUnits = this.playerCombatUnits;
 
     for (const combatUnits of playerCombatUnits) {
@@ -396,7 +396,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public resetAllPlayerShips() {
+  resetAllPlayerShips() {
     const playerCombatUnits = this.playerCombatUnits;
 
     for (const combatUnits of playerCombatUnits) {
@@ -408,7 +408,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public resetAdditionalCombatPower() {
+  resetAdditionalCombatPower() {
     const playerCombatUnits = this.playerCombatUnits;
 
     for (const combatUnits of playerCombatUnits) {
@@ -418,7 +418,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public addAdditionalCombatPowerToPlayer(playerId: number, amount: number) {
+  addAdditionalCombatPowerToPlayer(playerId: number, amount: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const combatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     const combatunits = playerCombatUnits[combatUnitsIndex];
@@ -430,7 +430,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public removeAdditionalCombatPowerFromPlayer(playerId: number, amount: number) {
+  removeAdditionalCombatPowerFromPlayer(playerId: number, amount: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const combatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
     const combatUnits = playerCombatUnits[combatUnitsIndex];
@@ -442,7 +442,7 @@ export class CombatManager {
     this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
-  public getPlayerTroopsTotal(playerId: number) {
+  getPlayerTroopsTotal(playerId: number) {
     const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
     if (playerCombatUnits) {
       return playerCombatUnits.troopsInCombat + playerCombatUnits.troopsInGarrison;
@@ -451,7 +451,7 @@ export class CombatManager {
     }
   }
 
-  public getPlayerTroopsInGarrison(playerId: number) {
+  getPlayerTroopsInGarrison(playerId: number) {
     const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
     if (playerCombatUnits) {
       return playerCombatUnits.troopsInGarrison;
@@ -460,7 +460,7 @@ export class CombatManager {
     }
   }
 
-  public getPlayerCombatScore(playerId: number) {
+  getPlayerCombatScore(playerId: number) {
     const troopCombatStrength = this.settingsService.getTroopStrength();
     const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
@@ -478,7 +478,7 @@ export class CombatManager {
     return 0;
   }
 
-  public getPlayerCombatScores() {
+  getPlayerCombatScores() {
     const troopCombatStrength = this.settingsService.getTroopStrength();
     const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
@@ -491,7 +491,7 @@ export class CombatManager {
     }));
   }
 
-  public getEnemyCombatScores(playerId: number): PlayerCombatScore[] {
+  getEnemyCombatScores(playerId: number): PlayerCombatScore[] {
     const troopCombatStrength = this.settingsService.getTroopStrength();
     const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 
@@ -506,7 +506,7 @@ export class CombatManager {
       }));
   }
 
-  public getEnemyHighestCombatScores(playerId: number) {
+  getEnemyHighestCombatScores(playerId: number) {
     const enemyCombatScores = this.getEnemyCombatScores(playerId);
     if (enemyCombatScores.length > 0) {
       enemyCombatScores.sort((a, b) => b.score - a.score);
@@ -516,7 +516,7 @@ export class CombatManager {
     }
   }
 
-  public getCombatScore(troopAmount: number, dreadnoughtAmount: number) {
+  getCombatScore(troopAmount: number, dreadnoughtAmount: number) {
     const troopCombatStrength = this.settingsService.getTroopStrength();
     const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
 

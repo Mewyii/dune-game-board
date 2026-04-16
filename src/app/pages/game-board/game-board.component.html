@@ -7,33 +7,35 @@
     <div class="board">
       <div [class]="mode === 'game' ? 'overlay' : ''">
         @if (viewInitialized && mode === 'game') {
-        <ngx-particles [id]="'stars'" [options]="stars"></ngx-particles>
-        <ngx-particles [id]="'ships'" [options]="ships"></ngx-particles>
-        <ngx-particles [id]="'dust'" [options]="dust"></ngx-particles>
-        <ngx-particles [id]="'sand'" [options]="sand"></ngx-particles>
-        <ngx-particles [id]="'spiceGlitter'" [options]="spiceGlitter"></ngx-particles>
-        } @for (faction of gameContent.factions; track $index) {
-        <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
-        } @for (location of gameContent.locations; track $index) {
-        <app-dune-location [location]="location"></app-dune-location>
+          <ngx-particles [id]="'stars'" [options]="stars"></ngx-particles>
+          <ngx-particles [id]="'ships'" [options]="ships"></ngx-particles>
+          <ngx-particles [id]="'dust'" [options]="dust"></ngx-particles>
+          <ngx-particles [id]="'sand'" [options]="sand"></ngx-particles>
+          <ngx-particles [id]="'spiceGlitter'" [options]="spiceGlitter"></ngx-particles>
+        }
+        @for (faction of gameContent.factions; track $index) {
+          <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
+        }
+        @for (location of gameContent.locations; track $index) {
+          <app-dune-location [location]="location"></app-dune-location>
         }
         <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
         <app-scoreboard [mode]="mode"></app-scoreboard>
         <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
         <app-card-areas></app-card-areas>
         <dune-conflicts *ngIf="mode === 'game'"></dune-conflicts>
-        <dune-intrigues *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-intrigues>
+        <dune-intrigues *ngIf="mode === 'game' && currentRound !== 0"></dune-intrigues>
         <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
         <dune-always-buyable-cards></dune-always-buyable-cards>
       </div>
     </div>
-    <dune-turn-infos *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-turn-infos>
+    <dune-turn-infos *ngIf="mode === 'game' && currentRound !== 0"></dune-turn-infos>
     <dune-imperium-row *ngIf="mode === 'game'"></dune-imperium-row>
     <div class="sideboard-container">
       <dune-events *ngIf="mode === 'game' && eventsEnabled"></dune-events>
-      <dune-game-manual *ngIf="mode === 'game' && gameManager.currentRound === 0"></dune-game-manual>
+      <dune-game-manual *ngIf="mode === 'game' && currentRound === 0"></dune-game-manual>
       <!-- <dune-minor-houses *ngIf="mode=== 'game'"></dune-minor-houses> -->
-      <dune-leaders *ngIf="mode === 'game' && gameManager.currentRound !== 0"></dune-leaders>
+      <dune-leaders *ngIf="mode === 'game' && currentRound !== 0"></dune-leaders>
       <dune-game-log *ngIf="mode === 'game'"></dune-game-log>
       <dune-board-evaluation *ngIf="mode === 'board'"></dune-board-evaluation>
       <!-- <dune-homeworld-tile></dune-homeworld-tile> -->

@@ -7,9 +7,9 @@ import { appVersion } from '../constants/version';
 })
 export class AppVersionService {
   private appVersionChangedSubject = new BehaviorSubject<boolean>(false);
-  public appVersionChanged$ = this.appVersionChangedSubject.asObservable();
-  public currentAppVersion = 0;
-  public newAppVersion = 0;
+  appVersionChanged$ = this.appVersionChangedSubject.asObservable();
+  currentAppVersion = 0;
+  newAppVersion = 0;
 
   constructor() {
     this.newAppVersion = appVersion;

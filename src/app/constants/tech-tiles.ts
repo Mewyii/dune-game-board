@@ -156,7 +156,7 @@ export const techTiles: TechTileCard[] = [
     costs: 1,
     imageUrl: '/assets/images/action-backgrounds/personal_shield.png',
     effectSize: 'medium',
-    imagePosition: 'center',
+    imagePosition: 'bottom',
     buyEffects: [],
     effects: [
       {
@@ -181,7 +181,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Giftschnüffler',
     },
     costs: 1,
-    imageUrl: '',
+    imageUrl: ' /assets/images/action-backgrounds/poison_snooper.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
@@ -208,7 +208,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Chaumurky',
     },
     costs: 2,
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/chaumurky.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
@@ -440,9 +440,9 @@ export const techTiles: TechTileCard[] = [
       de: 'Axolotl-Tanks',
     },
     costs: 2,
-    imageUrl: '',
+    imageUrl: '/assets/images/action-backgrounds/axolotl_tanks.png',
     effectSize: 'medium',
-    imagePosition: 'center',
+    imagePosition: 'bottom',
     buyEffects: [],
     effects: [
       {

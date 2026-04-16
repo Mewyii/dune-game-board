@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
 
 @Component({
@@ -14,18 +16,20 @@ import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-pr
   standalone: false,
 })
 export class IntriguesComponent {
+  activePlayerId = 0;
+  hasIntrigueVision = false;
+  intrigueStackIsActive = false;
+  intrigueDiscardPileTopCard: IntrigueDeckCard | undefined;
+
   constructor(
-    public intriguesService: IntriguesService,
+    private intriguesService: IntriguesService,
     private gameManager: GameManager,
     private gameModifierService: GameModifiersService,
     private audioManager: AudioManager,
     private dialog: MatDialog,
+    private aiManager: AIManager,
+    private playersService: PlayersService,
   ) {}
-
-  public activePlayerId = 0;
-  public hasIntrigueVision = false;
-  public intrigueStackIsActive = false;
-  public intrigueDiscardPileTopCard: IntrigueDeckCard | undefined;
 
   ngOnInit(): void {
     this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
@@ -52,10 +56,15 @@ export class IntriguesComponent {
   }
 
   onDrawIntrigueClicked() {
+    const player = this.playersService.getPlayer(this.activePlayerId);
+    if (!player) {
+      return;
+    }
+
     this.audioManager.playSound('intrigue');
     this.intriguesService.drawPlayerIntriguesFromDeck(this.activePlayerId, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
   onShowNextIntrigueClicked() {

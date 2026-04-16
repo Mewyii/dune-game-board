@@ -8,6 +8,7 @@ import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LeadersService } from 'src/app/services/leaders.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { GameSummaryDialogComponent } from '../_common/dialogs/game-summary-dialog/game-summary-dialog.component';
@@ -21,46 +22,47 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
   standalone: false,
 })
 export class PlayerboardComponent implements OnInit {
-  public players: Player[] = [];
-  public currentRound = 0;
-  public currentRoundPhase = '';
-  public canSwitchToCombatPhase = false;
-  public subTitle = '';
+  players: Player[] = [];
+  currentRound = 0;
+  currentRoundPhase = '';
+  canSwitchToCombatPhase = false;
+  subTitle = '';
 
-  public roundString: LanguageString = { de: 'Runde', en: 'Round' };
+  roundString: LanguageString = { de: 'Runde', en: 'Round' };
 
-  public isFinale = false;
-  public maxPlayers = 0;
+  isFinale = false;
+  maxPlayers = 0;
 
-  public allLeadersLockedIn = false;
+  allLeadersLockedIn = false;
 
   constructor(
-    public gameManager: GameManager,
-    private playerManager: PlayersService,
+    public t: TranslateService,
+    private gameManager: GameManager,
+    private playersService: PlayersService,
     private leadersService: LeadersService,
     private cardsService: CardsService,
-    public t: TranslateService,
     private audioManager: AudioManager,
     private settingsService: SettingsService,
     private dialog: MatDialog,
+    private roundService: RoundService,
   ) {}
 
   ngOnInit(): void {
-    this.playerManager.players$.subscribe((players) => {
+    this.playersService.players$.subscribe((players) => {
       this.players = players;
 
       this.canSwitchToCombatPhase = !players.some((x) => x.turnState === 'agent-placement');
     });
 
-    this.gameManager.currentRound$.subscribe((currentTurn) => {
+    this.roundService.currentRound$.subscribe((currentTurn) => {
       this.currentRound = currentTurn;
     });
 
-    this.gameManager.currentRoundPhase$.subscribe((currentRoundPhase) => {
+    this.roundService.currentRoundPhase$.subscribe((currentRoundPhase) => {
       this.currentRoundPhase = currentRoundPhase;
     });
 
-    this.gameManager.isFinale$.subscribe((isFinale) => {
+    this.roundService.isFinale$.subscribe((isFinale) => {
       this.isFinale = isFinale;
     });
 
@@ -76,12 +78,12 @@ export class PlayerboardComponent implements OnInit {
 
   onAddPlayerClicked() {
     this.audioManager.playSound('click-soft');
-    this.playerManager.addPlayer();
+    this.playersService.addPlayer();
   }
 
   onRemovePlayerClicked() {
     this.audioManager.playSound('click-soft');
-    this.playerManager.removePlayer();
+    this.playersService.removePlayer();
   }
 
   onStartGameClicked() {
@@ -108,7 +110,7 @@ export class PlayerboardComponent implements OnInit {
       const playerHand = this.cardsService.getPlayerHand(activePlayer.id);
       if (playerHand && playerHand.cards) {
         this.cardsService.discardPlayerHandCards(activePlayer.id);
-        this.playerManager.setTurnStateForPlayer(activePlayer.id, 'revealed');
+        this.playersService.setTurnStateForPlayer(activePlayer.id, 'revealed');
       }
     }
     this.gameManager.setRoundStateToCombat();

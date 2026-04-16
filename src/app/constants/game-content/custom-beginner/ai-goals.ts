@@ -76,22 +76,22 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         possibleLocationControls += gameState.playerCombatUnits.shipsInCombat;
         modifier += 0.2 * gameState.playerCombatUnits.shipsInCombat;
       }
-      if (gameState.conflict.rewards[0].some((x) => x.type === 'location-control')) {
+      if (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control')) {
         const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
         possibleLocationControls += 1;
         modifier += 0.02 * playerCombatStrength;
       }
-      if (gameState.playerHandCardsRewards['location-control'] > 0) {
-        possibleLocationControls += gameState.playerHandCardsRewards['location-control'];
-        modifier += 0.3 * gameState.playerHandCardsRewards['location-control'];
+      if (gameState.playerHandCardsRewards['location-control-choice'] > 0) {
+        possibleLocationControls += gameState.playerHandCardsRewards['location-control-choice'];
+        modifier += 0.3 * gameState.playerHandCardsRewards['location-control-choice'];
       }
-      if (gameState.playerIntriguesRewards['location-control'] > 0) {
-        possibleLocationControls += gameState.playerIntriguesRewards['location-control'];
-        modifier += 0.15 * gameState.playerIntriguesRewards['location-control'];
+      if (gameState.playerIntriguesRewards['location-control-choice'] > 0) {
+        possibleLocationControls += gameState.playerIntriguesRewards['location-control-choice'];
+        modifier += 0.15 * gameState.playerIntriguesRewards['location-control-choice'];
       }
-      if (gameState.playerTechTilesRewards['location-control'] > 0) {
-        possibleLocationControls += gameState.playerTechTilesRewards['location-control'];
-        modifier += 0.15 * gameState.playerTechTilesRewards['location-control'];
+      if (gameState.playerTechTilesRewards['location-control-choice'] > 0) {
+        possibleLocationControls += gameState.playerTechTilesRewards['location-control-choice'];
+        modifier += 0.15 * gameState.playerTechTilesRewards['location-control-choice'];
       }
 
       const agentsOnLocations = gameState.playerAgentsOnFields.filter(

@@ -11,14 +11,14 @@ import { IntrigueConfiguratorService } from './configurators/intrigue-configurat
 })
 export class IntriguesService {
   private intrigueDeckSubject = new BehaviorSubject<IntrigueDeckCard[]>([]);
-  public intrigueDeck$ = this.intrigueDeckSubject.asObservable();
+  intrigueDeck$ = this.intrigueDeckSubject.asObservable();
 
   private intrigueDiscardPileSubject = new BehaviorSubject<IntrigueDeckCard[]>([]);
-  public intrigueDiscardPile$ = this.intrigueDiscardPileSubject.asObservable();
+  intrigueDiscardPile$ = this.intrigueDiscardPileSubject.asObservable();
 
   private playerIntriguesSubject = new BehaviorSubject<PlayerIntrigueStack[]>([]);
-  public playersIntrigues$ = this.playerIntriguesSubject.asObservable();
-  public playerIntrigues$ = (playerId: number) =>
+  playersIntrigues$ = this.playerIntriguesSubject.asObservable();
+  playerIntrigues$ = (playerId: number) =>
     this.playersIntrigues$.pipe(
       map((x) => x.find((intrigues) => intrigues.playerId === playerId)?.intrigues),
       distinctUntilChanged(),
@@ -58,19 +58,19 @@ export class IntriguesService {
     });
   }
 
-  public get intrigueDeck() {
+  get intrigueDeck() {
     return cloneDeep(this.intrigueDeckSubject.value);
   }
 
-  public get intrigueDiscardPile() {
+  get intrigueDiscardPile() {
     return cloneDeep(this.intrigueDiscardPileSubject.value);
   }
 
-  public get playerIntrigues() {
+  get playerIntrigues() {
     return cloneDeep(this.playerIntriguesSubject.value);
   }
 
-  public getPlayerIntrigues(playerId: number, type?: IntrigueType) {
+  getPlayerIntrigues(playerId: number, type?: IntrigueType) {
     const playerIntrigues = this.playerIntriguesSubject.value.find((x) => x.playerId === playerId);
     if (!playerIntrigues) {
       return [];
@@ -83,22 +83,22 @@ export class IntriguesService {
     }
   }
 
-  public getEnemyIntrigues(playerId: number) {
+  getEnemyIntrigues(playerId: number) {
     return cloneDeep(this.playerIntriguesSubject.value.filter((x) => x.playerId !== playerId));
   }
 
-  public getPlayerIntrigueCount(playerId: number) {
+  getPlayerIntrigueCount(playerId: number) {
     return this.playerIntriguesSubject.value.find((x) => x.playerId === playerId)?.intrigues.length ?? 0;
   }
 
-  public getPlayerCombatIntrigueCount(playerId: number) {
+  getPlayerCombatIntrigueCount(playerId: number) {
     return (
       this.playerIntriguesSubject.value.find((x) => x.playerId === playerId)?.intrigues.filter((y) => y.type === 'combat')
         .length ?? 0
     );
   }
 
-  public createIntrigueDeck() {
+  createIntrigueDeck() {
     this.playerIntriguesSubject.next([]);
     const intrigueDeck: IntrigueDeckCard[] = [];
     const intriguesCards = this.intrigueConfigService.intrigues;
@@ -111,11 +111,11 @@ export class IntriguesService {
     this.intrigueDiscardPileSubject.next([]);
   }
 
-  public shuffleIntrigueDeck() {
+  shuffleIntrigueDeck() {
     this.intrigueDeckSubject.next(shuffle(this.intrigueDeckSubject.value));
   }
 
-  public drawPlayerIntriguesFromDeck(playerId: number, amount: number) {
+  drawPlayerIntriguesFromDeck(playerId: number, amount: number) {
     const intrigueDeck = this.intrigueDeck;
     const addedPlayerIntrigues: IntrigueDeckCard[] = [];
     for (let i = 0; i < amount; i++) {
@@ -177,7 +177,7 @@ export class IntriguesService {
     this.intrigueDeckSubject.next([]);
   }
 
-  public instantiateIntrigueCard(card: IntrigueCard): IntrigueDeckCard {
+  instantiateIntrigueCard(card: IntrigueCard): IntrigueDeckCard {
     return {
       name: card.name,
       type: card.type,

@@ -14,41 +14,41 @@ import { ActionField, FactionInfluenceReward, FactionType, LanguageType } from '
 export class SettingsService {
   private AIs = [aiOriginal, aiCustomBeginner, aiCustomExpert];
   private AISubject = new BehaviorSubject<AI>(aiOriginal);
-  public AI$ = this.AISubject.asObservable();
+  AI$ = this.AISubject.asObservable();
 
   private gameContentsSubject = new BehaviorSubject<GameContent[]>([
     gameContentOriginal,
     gameContentCustomBeginner,
     gameContentCustomExpert,
   ]);
-  public gameContents$ = this.gameContentsSubject.asObservable();
+  gameContents$ = this.gameContentsSubject.asObservable();
 
   private fields: ActionField[] = [];
-  public spiceAccumulationFields: string[] = [];
-  public controllableLocations: string[] = [];
-  public unblockableFields: ActionField[] = [];
+  spiceAccumulationFields: string[] = [];
+  controllableLocations: string[] = [];
+  unblockableFields: ActionField[] = [];
 
-  public factionInfluenceRewards: { factionId: FactionType; rewards: FactionInfluenceReward }[] = [];
+  factionInfluenceRewards: { factionId: FactionType; rewards: FactionInfluenceReward }[] = [];
 
   private settingsSubject = new BehaviorSubject<Settings>(boardSettings);
   private settings$ = this.settingsSubject.asObservable();
-  public gameContent$ = this.settings$.pipe(
+  gameContent$ = this.settings$.pipe(
     map((x) => x.gameContent),
     distinctUntilChanged((prev, next) => prev.name === next.name),
   );
-  public mode$ = this.settings$.pipe(
+  mode$ = this.settings$.pipe(
     map((x) => x.mode),
     distinctUntilChanged(),
   );
-  public language$ = this.settings$.pipe(
+  language$ = this.settings$.pipe(
     map((x) => x.language),
     distinctUntilChanged(),
   );
-  public eventsEnabled$ = this.settings$.pipe(
+  eventsEnabled$ = this.settings$.pipe(
     map((x) => x.eventsEnabled),
     distinctUntilChanged(),
   );
-  public autoplayMusic$ = this.settings$.pipe(
+  autoplayMusic$ = this.settings$.pipe(
     map((x) => x.autoplayMusic),
     distinctUntilChanged(),
   );
@@ -84,27 +84,27 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value);
   }
 
-  public get gameContent() {
+  get gameContent() {
     return cloneDeep(this.settingsSubject.value.gameContent);
   }
 
-  public get ai() {
+  get ai() {
     return cloneDeep(this.AISubject.value);
   }
 
-  public get mode() {
+  get mode() {
     return cloneDeep(this.settingsSubject.value.mode);
   }
 
-  public get language() {
+  get language() {
     return cloneDeep(this.settingsSubject.value.language);
   }
 
-  public get eventsEnabled() {
+  get eventsEnabled() {
     return cloneDeep(this.settingsSubject.value.eventsEnabled);
   }
 
-  public get boardFields() {
+  get boardFields() {
     return cloneDeep(this.fields);
   }
 
@@ -116,111 +116,123 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === factionType)?.primaryColor);
   }
 
-  public getBoardField(id: string) {
+  getBoardField(id: string) {
     return this.fields.find((x) => x.title.en === id);
   }
 
-  public getBoardLocations() {
+  getBoardLocations() {
     return cloneDeep(this.settingsSubject.value.gameContent.locations);
   }
 
-  public getBoardLocation(id: string) {
+  getBoardLocation(id: string) {
     return cloneDeep(this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.title.en === id));
   }
 
-  public getStartingResources() {
+  getConflicts() {
+    return cloneDeep(this.settingsSubject.value.gameContent.conflicts);
+  }
+
+  getConflictCardsPerLevel() {
+    return cloneDeep(this.settingsSubject.value.gameContent.conflictCardsPerLevel);
+  }
+
+  getConflictsMode() {
+    return cloneDeep(this.settingsSubject.value.gameContent.conflictsMode);
+  }
+
+  getStartingResources() {
     return cloneDeep(this.settingsSubject.value.gameContent.startingResources);
   }
 
-  public getHighCouncilPersuasionAmount() {
+  getHighCouncilPersuasionAmount() {
     return cloneDeep(this.settingsSubject.value.gameContent.highCouncilPersuasion);
   }
 
-  public getTroopStrength() {
+  getTroopStrength() {
     return cloneDeep(this.settingsSubject.value.gameContent.troopCombatStrength);
   }
 
-  public getDreadnoughtStrength() {
+  getDreadnoughtStrength() {
     return cloneDeep(this.settingsSubject.value.gameContent.dreadnoughtCombatStrength);
   }
 
-  public getMaxPlayerDreadnoughtCount() {
+  getMaxPlayerDreadnoughtCount() {
     return cloneDeep(this.settingsSubject.value.gameContent.maxPlayerDreadnoughtCount);
   }
 
-  public getMaxPlayerIntrigueCount() {
+  getMaxPlayerIntrigueCount() {
     return cloneDeep(this.settingsSubject.value.gameContent.maxPlayerIntrigueCount);
   }
 
-  public getLocationTakeoverTroopCosts() {
-    return cloneDeep(this.settingsSubject.value.gameContent.locationTakeoverTroopCosts);
+  getLocationTakeoverTroopCosts() {
+    return cloneDeep(this.settingsSubject.value.gameContent.locationTakeoverTroopCosts ?? 0);
   }
 
-  public getCombatMaxDeployableUnits() {
+  getCombatMaxDeployableUnits() {
     return cloneDeep(this.settingsSubject.value.gameContent.combatMaxDeployableUnits);
   }
 
-  public getUseTechtiles() {
+  getUseTechtiles() {
     return cloneDeep(this.settingsSubject.value.gameContent.useTechTiles);
   }
 
-  public getUseDreadnoughts() {
+  getUseDreadnoughts() {
     return cloneDeep(this.settingsSubject.value.gameContent.useDreadnoughts);
   }
 
-  public getFactions() {
+  getFactions() {
     return cloneDeep(this.settingsSubject.value.gameContent.factions);
   }
 
-  public getVictoryPointsBoni() {
+  getVictoryPointsBoni() {
     return cloneDeep(this.settingsSubject.value.gameContent.victoryPointBoni);
   }
 
-  public getFinaleTrigger() {
+  getFinaleTrigger() {
     return cloneDeep(this.settingsSubject.value.gameContent.finaleTrigger);
   }
 
-  public getRecruitmentCardAmount() {
+  getRecruitmentCardAmount() {
     return cloneDeep(this.settingsSubject.value.gameContent.recruitmentCardAmount);
   }
 
-  public getFactionInfluenceMaxScore() {
+  getFactionInfluenceMaxScore() {
     return cloneDeep(this.settingsSubject.value.gameContent.factionInfluenceMaxScore);
   }
 
-  public getFactionInfluenceAllianceTreshold() {
+  getFactionInfluenceAllianceTreshold() {
     return cloneDeep(this.settingsSubject.value.gameContent.factionInfluenceAllianceTreshold);
   }
 
-  public getImperiumRowCards() {
+  getImperiumRowCards() {
     return cloneDeep(this.settingsSubject.value.gameContent.imperiumRowCards);
   }
 
-  public getMaxPlayers() {
+  getMaxPlayers() {
     return cloneDeep(this.settingsSubject.value.gameContent.maxPlayers);
   }
 
-  public getCustomCards() {
+  getCustomCards() {
     return cloneDeep(this.settingsSubject.value.gameContent.customCards);
   }
 
-  public getCardAcquiringRuleFoldspace() {
+  getCardAcquiringRuleFoldspace() {
     return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.foldspace);
   }
-  public getCardAcquiringRuleImperiumRow() {
+  getCardAcquiringRuleImperiumRow() {
     return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.imperiumRow);
   }
-  public getCardAcquiringRuleLimited() {
+  getCardAcquiringRuleLimited() {
     return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.limited);
   }
-  public getCardAcquiringRuleUnlimited() {
+  getCardAcquiringRuleUnlimited() {
     return cloneDeep(this.settingsSubject.value.gameContent.cardAcquiringRules.unlimited);
   }
-  public getChurnRowCards() {
+  getChurnRowCards() {
     return cloneDeep(this.settingsSubject.value.gameContent.churnRowCards);
   }
 
-  public setFields() {
+  setFields() {
     const gameContent = this.gameContent;
     const result: ActionField[] = [];
     for (const faction of gameContent.factions) {

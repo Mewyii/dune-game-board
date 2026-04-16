@@ -31,11 +31,11 @@ export interface PlayerTechTile {
 })
 export class TechTilesService {
   private techTileDeckSubject = new BehaviorSubject<TechTileDeckCard[]>([]);
-  public techTileDeck$ = this.techTileDeckSubject.asObservable();
-  public availableTechTiles$ = this.techTileDeckSubject.pipe(map((x) => x.slice(0, 3)));
+  techTileDeck$ = this.techTileDeckSubject.asObservable();
+  availableTechTiles$ = this.techTileDeckSubject.pipe(map((x) => x.slice(0, 3)));
 
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
-  public playerTechTiles$ = this.playerTechTilesSubject.asObservable();
+  playerTechTiles$ = this.playerTechTilesSubject.asObservable();
 
   constructor(private techTilesConfigService: TechTileConfiguratorService) {
     const techTileDeckString = localStorage.getItem('techTileDeck');
@@ -87,15 +87,15 @@ export class TechTilesService {
     });
   }
 
-  public get techTileDeck() {
+  get techTileDeck() {
     return cloneDeep(this.techTileDeckSubject.value);
   }
 
-  public get buyableTechTiles() {
+  get buyableTechTiles() {
     return cloneDeep(this.techTileDeckSubject.value.slice(0, 3));
   }
 
-  public get playerTechTiles() {
+  get playerTechTiles() {
     return cloneDeep(this.playerTechTilesSubject.value);
   }
 

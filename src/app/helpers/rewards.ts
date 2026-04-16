@@ -386,7 +386,7 @@ export function getStructuredEffectReward(effects: EffectMultiplierOrReward[]): 
   return { type: 'reward', effectRewards: effects as EffectReward[] };
 }
 
-export function isTimingFullfilled(
+export function isEffectTimingFullfilled(
   timingEffect: StructuredEffectTiming,
   player: Player,
   gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos' | 'currentRoundPhase'>,
@@ -413,7 +413,7 @@ export function isTimingFullfilled(
   return timingFullfilled;
 }
 
-export function isConditionFullfilled(
+export function isEffectConditionFullfilled(
   conditionEffect: StructuredEffectCondition,
   player: Player,
   gameState: Pick<
@@ -488,7 +488,7 @@ export function isConditionFullfilled(
   return conditionFullfilled;
 }
 
-export function isEnemyConditionFullfilled(
+export function isEffectEnemyConditionFullfilled(
   conditionEffect: StructuredEffectCondition,
   enemy: Player,
   enemyAgentsOnFields: PlayerAgentOnField[],

@@ -89,7 +89,7 @@ export const aiGoalsOriginal: FieldsForGoals = {
         possibleLocationControls += gameState.playerCombatUnits.shipsInCombat;
         modifier += 0.2 * gameState.playerCombatUnits.shipsInCombat;
       }
-      if (gameState.conflict.rewards[0].some((x) => x.type === 'location-control')) {
+      if (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control-choice')) {
         const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
         possibleLocationControls += 1;
         modifier += 0.02 * playerCombatStrength;

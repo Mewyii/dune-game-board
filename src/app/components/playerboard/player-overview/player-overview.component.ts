@@ -91,7 +91,7 @@ export class PlayerOverviewComponent implements OnInit, OnDestroy {
     this.subscriptions = [];
   }
 
-  onSetAIActiveClicked(playerId: number, event: MatSlideToggleChange) {
-    this.gameManager.setAIActiveForPlayer(playerId, event.checked);
+  onSetAIActiveClicked(player: Player, event: MatSlideToggleChange) {
+    this.gameManager.setAIActiveForPlayer(player, event.checked);
   }
 }

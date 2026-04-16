@@ -1,4 +1,5 @@
 import { GameContent } from '../../board-settings';
+import { conflictsOriginal } from './conflicts';
 import { customCardsOriginal } from './custom-cards';
 import { factionsOriginal } from './factions';
 import { locationsOriginal } from './locations';
@@ -7,6 +8,7 @@ export const gameContentOriginal: GameContent = {
   name: 'Original',
   factions: factionsOriginal,
   locations: locationsOriginal,
+  conflicts: conflictsOriginal,
   useTechTiles: false,
   useDreadnoughts: false,
   troopCombatStrength: 2,
@@ -33,4 +35,6 @@ export const gameContentOriginal: GameContent = {
     foldspace: 'discard-pile',
   },
   churnRowCards: false,
+  conflictsMode: 'random',
+  conflictCardsPerLevel: [5, 5],
 };

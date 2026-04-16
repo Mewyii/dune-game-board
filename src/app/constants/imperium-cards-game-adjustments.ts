@@ -21,7 +21,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       getPlayerCombatStrength(gameState.playerCombatUnits, gameState) > 0 ? 0 : 5,
     customRevealFunction: (player: Player, gameState: GameState, services: GameServices) => {
       if (gameState.playerCombatUnits.troopsInCombat < 1 && gameState.playerCombatUnits.shipsInCombat < 1) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion', amount: 3 });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'persuasion', amount: 3 });
       }
     },
   },
@@ -45,7 +45,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       const greenFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'landsraad').map((x) => x.title.en);
       const enemiesOnGreenFields = gameState.enemyAgentsOnFields.filter((x) => greenFieldIds.includes(x.fieldId));
       for (const enemyOnGreenField of enemiesOnGreenFields) {
-        services.gameManager.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-destroy' });
+        services.effectsService.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-destroy' });
       }
     },
   },
@@ -156,7 +156,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       const spiceFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'spice').map((x) => x.title.en);
       const enemiesOnSpiceFields = gameState.enemyAgentsOnFields.filter((x) => spiceFieldIds.includes(x.fieldId));
       for (const enemyOnSpiceField of enemiesOnSpiceFields) {
-        services.gameManager.payCostForPlayer(enemyOnSpiceField.playerId, { type: 'spice', amount: 2 });
+        services.effectsService.payCostForPlayer(enemyOnSpiceField.playerId, { type: 'spice', amount: 2 });
       }
     },
   },
@@ -195,11 +195,11 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const guildInfluence = gameState.playerScore.guild;
       if (guildInfluence < 2) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
       } else if (guildInfluence < 4) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 3 });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: 3 });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: 4 });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: 4 });
       }
     },
   },
@@ -210,12 +210,12 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const beneInfluence = gameState.playerScore.bene;
       if (beneInfluence < 2) {
-        services.gameManager.payCostForPlayer(player.id, { type: 'card-discard' });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
+        services.effectsService.payCostForPlayer(player.id, { type: 'card-discard' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else if (beneInfluence < 4) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'agent-lift' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'agent-lift' });
       }
     },
   },
@@ -226,12 +226,12 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const guildInfluence = gameState.playerScore.guild;
       if (guildInfluence < 2) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'foldspace' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'foldspace' });
       } else if (guildInfluence < 4) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'water' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'water' });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'foldspace' });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'water' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'foldspace' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'water' });
       }
     },
   },

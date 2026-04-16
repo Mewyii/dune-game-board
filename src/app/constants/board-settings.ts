@@ -1,5 +1,6 @@
 import { ActionField, DuneLocation, Effect, EffectReward, Faction, LanguageType } from '../models';
 import { FieldsForGoals } from '../models/ai';
+import { Conflict } from '../models/conflict';
 import { CustomCard } from '../models/imperium-card';
 import { gameContentCustomExpert } from './game-content';
 
@@ -26,6 +27,8 @@ export interface GameContent {
   name: string;
   factions: Faction[];
   locations: DuneLocation[];
+  conflicts: Conflict[];
+  conflictsMode: 'random' | 'pick';
   ix?: ActionField;
   useTechTiles: boolean;
   useDreadnoughts: boolean;
@@ -50,6 +53,7 @@ export interface GameContent {
   cardAcquiringRules: CardAcquiringRules;
   churnRowCards: boolean;
   leaderCombatStrength?: number;
+  conflictCardsPerLevel: number[];
 }
 
 export type AppMode = 'board' | 'game';

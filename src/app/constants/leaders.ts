@@ -254,8 +254,8 @@ export const leaders: Leader[] = [
       de: 'Unkontrollierte Agression',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: {resource:location-control} (only Carthag, Arrakeen or imperial basin)<br><b>Round start</b>: Trash one of your handcards.',
-      de: '<b>Spielbeginn</b>: {resource:location-control} (nur Carthag, Arrakeen oder Imperiales Becken)<br><b>Rundenbeginn</b>: Entsorge eine der Karten auf deiner Hand.',
+      en: '<b>Game start</b>: {resource:location-control-choice} (only Carthag, Arrakeen or imperial basin)<br><b>Round start</b>: Trash one of your handcards.',
+      de: '<b>Spielbeginn</b>: {resource:location-control-choice} (nur Carthag, Arrakeen oder Imperiales Becken)<br><b>Rundenbeginn</b>: Entsorge eine der Karten auf deiner Hand.',
     },
     signetName: {
       en: 'Oppression',

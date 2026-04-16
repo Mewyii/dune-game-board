@@ -5,11 +5,14 @@ import { isFactionType } from 'src/app/helpers/faction-types';
 
 import { ActionField, EffectRewardType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
+import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { FieldBlockModifier, GameModifiersService } from 'src/app/services/game-modifier.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
@@ -21,14 +24,14 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
   standalone: false,
 })
 export class AdditionalPlayerActionsDialogComponent implements OnInit {
-  public activePlayer: Player | undefined;
-  public activePlayerId: number = 0;
+  activePlayer: Player | undefined;
+  activePlayerId: number = 0;
 
-  public boardFields: ActionField[] = [];
-  public blockedFieldIds: FieldBlockModifier[] = [];
+  boardFields: ActionField[] = [];
+  blockedFieldIds: FieldBlockModifier[] = [];
 
-  public activePlayerScore: PlayerScore | undefined;
-  public playerCanRetreatUnits: boolean | undefined;
+  activePlayerScore: PlayerScore | undefined;
+  playerCanRetreatUnits: boolean | undefined;
 
   constructor(
     public t: TranslateService,
@@ -40,6 +43,9 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     private gameModifiersService: GameModifiersService,
     private playerScoreManager: PlayerScoreManager,
     private turnInfoService: TurnInfoService,
+    private roundService: RoundService,
+    private effectsService: EffectsService,
+    private aiManager: AIManager,
   ) {}
 
   ngOnInit(): void {
@@ -70,22 +76,28 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public onAddPermanentPersuasionClicked(playerId: number) {
+  onAddPermanentPersuasionClicked(playerId: number) {
     this.audioManager.playSound('click-soft');
     this.playersService.addPermanentPersuasionToPlayer(playerId, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    const player = this.playersService.getPlayer(playerId);
+    if (player) {
+      this.aiManager.setPreferredFieldsForAIPlayer(player);
+    }
   }
 
-  public onRemovePermanentPersuasionClicked(playerId: number) {
+  onRemovePermanentPersuasionClicked(playerId: number) {
     this.audioManager.playSound('click-reverse');
     this.playersService.removePermanentPersuasionFromPlayer(playerId, 1);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    const player = this.playersService.getPlayer(playerId);
+    if (player) {
+      this.aiManager.setPreferredFieldsForAIPlayer(player);
+    }
     return false;
   }
 
-  public onToggleFieldBlockClicked(actionField: ActionField) {
+  onToggleFieldBlockClicked(actionField: ActionField) {
     const fieldIsBlocked = this.fieldIsBlocked(actionField);
     if (!fieldIsBlocked) {
       const players = this.playersService.getPlayers();
@@ -118,30 +130,33 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       this.audioManager.playSound('spice');
     }
 
-    this.gameManager.addRewardToPlayer(player.id, { type });
+    this.effectsService.addRewardToPlayer(player.id, { type });
 
-    this.gameManager.setPreferredFieldsForAIPlayer(player.id);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
 
     return false;
   }
 
-  public onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
+  onRemovePlayerScoreClicked(id: number, scoreType: PlayerScoreType) {
     this.audioManager.playSound('click-reverse');
-    this.playerScoreManager.removePlayerScore(id, scoreType, 1, this.gameManager.currentRound);
+    this.playerScoreManager.removePlayerScore(id, scoreType, 1, this.roundService.currentRound);
 
-    this.gameManager.setPreferredFieldsForAIPlayer(id);
+    const player = this.playersService.getPlayer(id);
+    if (player) {
+      this.aiManager.setPreferredFieldsForAIPlayer(player);
+    }
     return false;
   }
 
-  public onSetPlayerCanRetreatUnitsClicked() {
+  onSetPlayerCanRetreatUnitsClicked() {
     this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, { canRetreatUnits: !this.playerCanRetreatUnits });
   }
 
-  public fieldIsBlocked(actionField: ActionField) {
+  fieldIsBlocked(actionField: ActionField) {
     return this.blockedFieldIds.some((x) => x.fieldId === actionField.title.en || x.actionType === actionField.actionType);
   }
 
-  public getColor(actionField: ActionField) {
+  getColor(actionField: ActionField) {
     const location = this.settingsService.getBoardLocation(actionField.title.en);
     if (location) {
       return location.color;
@@ -155,7 +170,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     return '';
   }
 
-  public getPlayerScore(scoreType: PlayerScoreType) {
+  getPlayerScore(scoreType: PlayerScoreType) {
     return this.activePlayerScore ? this.activePlayerScore[scoreType] : 0;
   }
 }

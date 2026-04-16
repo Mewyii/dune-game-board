@@ -5,7 +5,7 @@ import { playerCanEnterCombat } from 'src/app/helpers/turn-infos';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { GameManager } from 'src/app/services/game-manager.service';
+import { EffectsService } from 'src/app/services/game-effects.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
@@ -24,27 +24,27 @@ export interface CombatScore {
 export class DuneCombatComponent implements OnInit {
   @Input() useDreadnoughts = false;
 
-  public maxCombatScore = 28;
+  maxCombatScore = 28;
 
-  public players: Player[] = [];
+  players: Player[] = [];
 
-  public combatScoreArray: number[] = [];
+  combatScoreArray: number[] = [];
 
-  public boardSettings = boardSettings;
+  boardSettings = boardSettings;
 
-  public combatScores: CombatScore[] = [];
+  combatScores: CombatScore[] = [];
 
-  public playerCombatUnits: PlayerCombatUnits[] = [];
+  playerCombatUnits: PlayerCombatUnits[] = [];
 
-  public activeGarrisonPlayerId = 0;
+  activeGarrisonPlayerId = 0;
 
-  public dreadnoughtCombatStrength = 4;
+  dreadnoughtCombatStrength = 4;
 
-  public troopCombatStrength = 2;
+  troopCombatStrength = 2;
 
-  public leaderHitPointCombatStrength: number | undefined;
+  leaderHitPointCombatStrength: number | undefined;
 
-  public playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
+  playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
     0: { x: '-20px', y: '-30px' },
     1: { x: '-30px', y: '170px' },
     2: { x: '920px', y: '205px' },
@@ -52,12 +52,12 @@ export class DuneCombatComponent implements OnInit {
   };
 
   constructor(
-    public gameManager: GameManager,
-    public combatManager: CombatManager,
-    public playerManager: PlayersService,
     public settingsService: SettingsService,
+    private combatManager: CombatManager,
+    private playersService: PlayersService,
     private audioManager: AudioManager,
     private turnInfoService: TurnInfoService,
+    private effectsService: EffectsService,
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class DuneCombatComponent implements OnInit {
       this.combatScores = this.combatManager.getPlayerCombatScores();
     });
 
-    this.playerManager.players$.subscribe((players) => {
+    this.playersService.players$.subscribe((players) => {
       this.players = players;
     });
 
@@ -83,41 +83,41 @@ export class DuneCombatComponent implements OnInit {
     });
   }
 
-  public onAddTroopToCombatClicked(playerId: number) {
+  onAddTroopToCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.gameManager.addUnitsToCombatIfPossible(playerId, 'troop', 1);
+    this.effectsService.addUnitsToCombatIfPossible(playerId, 'troop', 1);
   }
 
-  public onRemoveTroopFromCombatClicked(playerId: number) {
+  onRemoveTroopFromCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.gameManager.retreatUnitsIfPossible(playerId, 'troop', 1);
+    this.effectsService.retreatUnitsIfPossible(playerId, 'troop', 1);
     return false;
   }
 
-  public onAddShipToCombatClicked(playerId: number) {
+  onAddShipToCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.gameManager.addUnitsToCombatIfPossible(playerId, 'dreadnought', 1);
+    this.effectsService.addUnitsToCombatIfPossible(playerId, 'dreadnought', 1);
   }
 
-  public onRemoveShipFromCombatClicked(playerId: number) {
+  onRemoveShipFromCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.gameManager.retreatUnitsIfPossible(playerId, 'dreadnought', 1);
+    this.effectsService.retreatUnitsIfPossible(playerId, 'dreadnought', 1);
     return false;
   }
 
-  public getPlayersOnScore(score: number) {
+  getPlayersOnScore(score: number) {
     return this.combatScores.filter((x) => x.score === score);
   }
 
-  public getPlayerColor(playerId: number) {
-    return this.playerManager.getPlayerColor(playerId);
+  getPlayerColor(playerId: number) {
+    return this.playersService.getPlayerColor(playerId);
   }
 
-  public trackCombatUnits(combatUnits: PlayerCombatUnits) {
+  trackCombatUnits(combatUnits: PlayerCombatUnits) {
     return combatUnits.playerId;
   }
 
-  public trackPlayerScore(playerScore: CombatScore) {
+  trackPlayerScore(playerScore: CombatScore) {
     return playerScore.playerId * 100 + playerScore.score;
   }
 }

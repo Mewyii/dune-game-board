@@ -9,6 +9,7 @@ import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { PlayersService } from 'src/app/services/players.service';
+import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
@@ -37,14 +38,15 @@ export class ImperiumRowComponent implements OnInit {
   limitedCustomCards: ImperiumDeckCard[] = [];
 
   constructor(
-    private playerManager: PlayersService,
+    public t: TranslateService,
+    private playersService: PlayersService,
     private gameManager: GameManager,
-    public cardsService: CardsService,
+    private cardsService: CardsService,
     private gameModifierService: GameModifiersService,
     private dialog: MatDialog,
     private turnInfoService: TurnInfoService,
     private settingsService: SettingsService,
-    public t: TranslateService,
+    private roundService: RoundService,
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class ImperiumRowComponent implements OnInit {
       if (this.activePlayer) {
         this.activePlayerTurnState = this.activePlayer.turnState;
 
-        this.activePlayerPersuasion = this.playerManager.getPlayerPersuasion(this.activePlayer.id);
+        this.activePlayerPersuasion = this.playersService.getPlayerPersuasion(this.activePlayer.id);
 
         this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
         this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
@@ -86,7 +88,7 @@ export class ImperiumRowComponent implements OnInit {
       }
     });
 
-    this.gameManager.currentRound$.subscribe((round) => {
+    this.roundService.currentRound$.subscribe((round) => {
       this.setRowCards();
     });
   }
@@ -113,7 +115,7 @@ export class ImperiumRowComponent implements OnInit {
 
   onCharmCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
     this.gameModifierService.addPlayerImperiumRowModifier(this.activePlayerId, { cardId: card.id, persuasionAmount: -1 });
-    const enemyPlayers = this.playerManager.getEnemyPlayers(this.activePlayerId);
+    const enemyPlayers = this.playersService.getEnemyPlayers(this.activePlayerId);
     for (const player of enemyPlayers) {
       this.gameModifierService.addPlayerImperiumRowModifier(player.id, { cardId: card.id, persuasionAmount: 1 });
     }
@@ -172,7 +174,7 @@ export class ImperiumRowComponent implements OnInit {
 
     const cardsWithPlotCostsAdjusted = this.cardsService.imperiumRow.map((x) => {
       if (x.type === 'plot') {
-        return { ...x, persuasionCosts: this.gameManager.currentRound };
+        return { ...x, persuasionCosts: this.roundService.currentRound };
       } else {
         return x;
       }

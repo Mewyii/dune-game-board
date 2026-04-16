@@ -28,11 +28,11 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
       const fremenInfluence = gameState.playerScore['fremen'];
       if (fremenInfluence > 3) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'troop' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'troop' });
       } else if (fremenInfluence > 1) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw' });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'agent-lift' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'agent-lift' });
       }
       services.gameModifierService.addPlayerGameModifiers(player.id, {
         customActions: [
@@ -68,7 +68,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       timing: 'timing-reveal-turn',
       function: (player, gameState, services) => {
         if (gameState.playerHandCards.some((card) => card.agentEffects?.some((x) => x.type === 'signet-ring'))) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'faction-influence-down-choice' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'faction-influence-down-choice' });
         }
       },
     },
@@ -135,10 +135,10 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           gameState.playerIntrigueCount < 2 &&
           Math.random() > 0.33
         ) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'card-destroy' });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
-          services.gameManager.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'card-destroy' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.effectsService.payCostForPlayer(player.id, { type: 'intrigue-trash' });
         }
       },
     },
@@ -161,9 +161,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         .map((x) => x.ownerReward)
         .filter((x) => x !== undefined);
 
-      const resourceChoices = services.aiManager.getPreferredRewardEffects(player, resourceOptions, gameState);
+      const resourceChoices = services.aiEffectEvaluationService.getDesiredRewardEffects(player, resourceOptions, gameState);
       for (const choice of resourceChoices) {
-        services.gameManager.addRewardToPlayer(player.id, choice);
+        services.effectsService.addRewardToPlayer(player.id, choice);
       }
     },
     customTimedAIFunction: {
@@ -196,7 +196,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
 
         const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
-        const { allCards, imperiumRowCards, recruitableCards } = services.gameManager.getAllBuyableCards(player.id);
+        const { allCards, imperiumRowCards, recruitableCards } = services.cardsService.getAllBuyableCards(
+          services.turnInfoService.getPlayerTurnInfo(player.id, 'factionRecruitment'),
+        );
 
         const reducedFremenCards: (ImperiumDeckCard & { originalPersuasionCosts?: number })[] = allCards.map((x) => {
           if (x.faction !== 'fremen') {
@@ -214,7 +216,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           }
         });
 
-        const cardToBuy = services.aiManager.getImperiumCardToBuy(
+        const cardToBuy = services.aiCardsService.getImperiumCardToBuy(
           availablePersuasion,
           reducedFremenCards,
           player,
@@ -235,7 +237,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
               : availableSignetTokens;
 
           services.gameManager.acquireImperiumCard(player.id, cardToBuy, source);
-          services.gameManager.payCostForPlayer(player.id, { type: 'signet', amount: usedSignetTokens });
+          services.effectsService.payCostForPlayer(player.id, { type: 'signet', amount: usedSignetTokens });
         }
       },
     },
@@ -292,13 +294,13 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
     customSignetAIFunction(player, gameState, services) {
       if (gameState.playerResources.signet > 2) {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'victory-point' });
-        services.gameManager.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'victory-point' });
+        services.effectsService.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
       } else if (gameState.playerResources.water > 1) {
-        services.gameManager.payCostForPlayer(player.id, { type: 'water', amount: 2 });
-        services.gameManager.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
+        services.effectsService.payCostForPlayer(player.id, { type: 'water', amount: 2 });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'signet' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'signet' });
       }
     },
     signetRingValue: (player, gameState) => {
@@ -357,7 +359,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           );
           if (fieldWithMarker) {
             services.gameModifierService.changeFieldMarkerModifier(player.id, fieldWithMarker.fieldId, -1);
-            services.gameManager.addRewardToPlayer(player.id, { type: 'card-draw', amount: 2 });
+            services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw', amount: 2 });
           }
         }
       },
@@ -441,7 +443,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       timing: 'timing-reveal-turn',
       function: (player, gameState, services) => {
         if (gameState.playerResources.signet > 0) {
-          services.gameManager.resolveStructuredEffects(
+          services.effectsService.resolveStructuredEffects(
             [
               {
                 type: 'helper-or',
@@ -472,7 +474,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       timing: 'timing-reveal-turn',
       function: (player, gameState, services) => {
         if (gameState.playerTechTiles.length > 0) {
-          services.gameManager.resolveStructuredEffects(
+          services.effectsService.resolveStructuredEffects(
             [
               {
                 type: 'helper-trade',
@@ -522,7 +524,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       let bestEffectValue = 0;
       for (const card of imperiumRowCards) {
         if (card.structuredAgentEffects) {
-          const effectEvaluation = services.aiManager.getStructuredEffectUsefulnesAndCosts(
+          const effectEvaluation = services.aiEffectEvaluationService.getStructuredEffectUsefulnesAndCosts(
             card.structuredAgentEffects,
             player,
             gameState,
@@ -539,12 +541,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
         if (chosenImperiumRowCard.persuasionCosts) {
-          services.gameManager.payCostForPlayer(player.id, {
+          services.effectsService.payCostForPlayer(player.id, {
             type: 'signet',
             amount: chosenImperiumRowCard.persuasionCosts,
           });
         }
-        services.gameManager.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+        services.effectsService.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
       }
     },
     signetRingValue: (player, gameState) => {
@@ -571,7 +573,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunction: {
       timing: 'timing-game-start',
       function: (player: Player, gameState: GameState, services: GameServices) => {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
       },
     },
     customTimedAIFunction: {
@@ -585,13 +587,13 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         if (boardSpace) {
           for (const reward of boardSpace.rewards) {
             if (reward.type === 'water' || reward.type === 'spice') {
-              services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
-              services.gameManager.payCostForPlayer(player.id, { type: 'signet' });
+              services.effectsService.addRewardToPlayer(player.id, { type: reward.type });
+              services.effectsService.payCostForPlayer(player.id, { type: 'signet' });
               break;
             }
             if (reward.type === 'solari' && gameState.playerResources.signet > 1) {
-              services.gameManager.addRewardToPlayer(player.id, { type: reward.type });
-              services.gameManager.payCostForPlayer(player.id, { type: 'signet' });
+              services.effectsService.addRewardToPlayer(player.id, { type: reward.type });
+              services.effectsService.payCostForPlayer(player.id, { type: 'signet' });
               break;
             }
           }
@@ -630,7 +632,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         gameState.enemyAgentsOnFields.some((ea) => ea.fieldId === pa.fieldId),
       ).length;
 
-      services.gameManager.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });
+      services.effectsService.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });
     },
     signetRingValue: (player, gameState, targetBoardSpace) => {
       const playerAgentsOnFields = gameState.playerAgentsOnFields;
@@ -671,8 +673,8 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
         if (gameState.playerCombatUnits.troopsInGarrison < 6) {
           if (gameState.playerResources.solari > 0) {
-            services.gameManager.payCostForPlayer(player.id, { type: 'solari' });
-            services.gameManager.addRewardToPlayer(player.id, { type: 'troop' });
+            services.effectsService.payCostForPlayer(player.id, { type: 'solari' });
+            services.effectsService.addRewardToPlayer(player.id, { type: 'troop' });
           }
         }
       },
@@ -693,9 +695,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
       );
       if (enemyLocation) {
-        services.gameManager.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
+        services.effectsService.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
       } else {
-        services.gameManager.addRewardToPlayer(player.id, { type: 'focus' });
+        services.effectsService.addRewardToPlayer(player.id, { type: 'focus' });
       }
     },
     customTimedFunction: {
@@ -704,7 +706,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         for (const agentOnField of gameState.playerAgentsOnFields) {
           const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
           if (isEnemyLocation) {
-            services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion' });
+            services.effectsService.addRewardToPlayer(player.id, { type: 'persuasion' });
           }
         }
       },

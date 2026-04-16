@@ -19,7 +19,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     combatEffects: [
@@ -165,7 +165,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     combatEffects: [
@@ -213,22 +213,28 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'tech',
-        amount: 4,
+        amount: 5,
       },
     ],
     combatEffects: [
       {
-        type: 'sword',
-      },
-      {
         type: 'spice',
+        amount: 2,
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'tech',
-        amount: 3,
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -421,10 +427,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'troop',
-      },
-      {
-        type: 'troop',
+        type: 'enemies-leader-assassinate',
       },
     ],
   },
@@ -680,7 +683,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     combatEffects: [
@@ -725,7 +728,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'location-control-choice',
       },
     ],
     combatEffects: [
@@ -736,13 +739,10 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
       {
-        type: 'sword',
-      },
-      {
         type: 'helper-trade',
       },
       {
-        type: 'location-control',
+        type: 'enemies-leader-assassinate',
       },
     ],
   },
@@ -875,7 +875,7 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'focus',
+        type: 'card-discard',
       },
       {
         type: 'helper-trade',
@@ -1045,10 +1045,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'water',
-      },
-      {
-        type: 'water',
+        type: 'location-control-choice',
       },
     ],
   },

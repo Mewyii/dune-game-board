@@ -12,7 +12,7 @@ export interface OwnedLocation {
 })
 export class LocationManager {
   private ownedLocationsSubject = new BehaviorSubject<OwnedLocation[]>([]);
-  public ownedLocations$ = this.ownedLocationsSubject.asObservable();
+  ownedLocations$ = this.ownedLocationsSubject.asObservable();
 
   constructor() {
     const ownedLocationsString = localStorage.getItem('ownedLocations');
@@ -26,27 +26,27 @@ export class LocationManager {
     });
   }
 
-  public get ownedLocations() {
+  get ownedLocations() {
     return cloneDeep(this.ownedLocationsSubject.value);
   }
 
-  public getPlayerLocations(playerId: number) {
+  getPlayerLocations(playerId: number) {
     return this.ownedLocations.filter((x) => x.playerId === playerId);
   }
 
-  public getPlayerLocation(locationId: string) {
+  getPlayerLocation(locationId: string) {
     return this.ownedLocations.find((x) => x.locationId === locationId);
   }
 
-  public getEnemyLocations(playerId: number) {
+  getEnemyLocations(playerId: number) {
     return this.ownedLocations.filter((x) => x.playerId !== playerId);
   }
 
-  public locationOwnerId$(locationId: string) {
+  locationOwnerId$(locationId: string) {
     return this.ownedLocations$.pipe(map((data) => data.find((x) => x.locationId === locationId)?.playerId));
   }
 
-  public setLocationOwner(locationId: string, playerId: number) {
+  setLocationOwner(locationId: string, playerId: number) {
     const ownedLocations = this.ownedLocations;
     const ownedLocationIndex = ownedLocations.findIndex((x) => x.locationId === locationId);
     if (ownedLocationIndex > -1) {
@@ -59,7 +59,7 @@ export class LocationManager {
     this.ownedLocationsSubject.next(ownedLocations);
   }
 
-  public resetLocationOwner(locationId: string) {
+  resetLocationOwner(locationId: string) {
     const ownedLocations = this.ownedLocations;
     const ownedLocationIndex = ownedLocations.findIndex((x) => x.locationId === locationId);
     if (ownedLocationIndex > -1) {
@@ -69,7 +69,7 @@ export class LocationManager {
     this.ownedLocationsSubject.next(ownedLocations);
   }
 
-  public resetLocationOwners() {
+  resetLocationOwners() {
     this.ownedLocationsSubject.next([]);
   }
 }

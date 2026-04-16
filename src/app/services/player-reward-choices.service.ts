@@ -25,7 +25,7 @@ export type PlayerFactionScoreType = keyof Omit<PlayerRewardChoices, 'playerId' 
 })
 export class PlayerRewardChoicesService {
   private playerRewardChoicesSubject = new BehaviorSubject<PlayerRewardChoices[]>([]);
-  public playerRewardChoices$ = this.playerRewardChoicesSubject.asObservable();
+  playerRewardChoices$ = this.playerRewardChoicesSubject.asObservable();
 
   constructor() {
     const playerRewardChoicesString = localStorage.getItem('playerRewardChoices');
@@ -39,15 +39,15 @@ export class PlayerRewardChoicesService {
     });
   }
 
-  public get playerRewardChoices() {
+  get playerRewardChoices() {
     return cloneDeep(this.playerRewardChoicesSubject.value);
   }
 
-  public resetPlayerRewardChoices() {
+  resetPlayerRewardChoices() {
     this.playerRewardChoicesSubject.next([]);
   }
 
-  public addPlayerRewardChoice(playerId: number, reward: Effect) {
+  addPlayerRewardChoice(playerId: number, reward: Effect) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -64,7 +64,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public addPlayerRewardsChoice(playerId: number, rewards: Effect[]) {
+  addPlayerRewardsChoice(playerId: number, rewards: Effect[]) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -81,7 +81,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public addPlayerCustomChoice(playerId: number, customChoice: string) {
+  addPlayerCustomChoice(playerId: number, customChoice: string) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -98,7 +98,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public addPlayerConversionChoice(playerId: number, conversionChoice: StructuredChoiceEffect) {
+  addPlayerConversionChoice(playerId: number, conversionChoice: StructuredChoiceEffect) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -115,7 +115,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public removePlayerRewardChoice(playerId: number, id: string) {
+  removePlayerRewardChoice(playerId: number, id: string) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -126,7 +126,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public removePlayerRewardsChoice(playerId: number, id: string) {
+  removePlayerRewardsChoice(playerId: number, id: string) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -137,7 +137,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public removePlayerCustomChoice(playerId: number, id: string) {
+  removePlayerCustomChoice(playerId: number, id: string) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
@@ -148,14 +148,14 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public removePlayerConversionChoice(playerId: number, index: number) {
+  removePlayerConversionChoice(playerId: number, index: number) {
     const playerRewardChoices = this.playerRewardChoices;
 
     playerRewardChoices[index].effectChoices = playerRewardChoices[index].effectChoices.filter((x, idx) => idx !== index);
     this.playerRewardChoicesSubject.next(playerRewardChoices);
   }
 
-  public getPlayerRewardChoice(playerId: number, rewardType: EffectRewardType) {
+  getPlayerRewardChoice(playerId: number, rewardType: EffectRewardType) {
     const playerRewardChoices = this.playerRewardChoices;
 
     const playerRewardChoice = playerRewardChoices.find((x) => x.playerId === playerId);
@@ -167,7 +167,7 @@ export class PlayerRewardChoicesService {
     }
   }
 
-  public getInitialPlayerRewardChoices(playerId: number): PlayerRewardChoices {
+  getInitialPlayerRewardChoices(playerId: number): PlayerRewardChoices {
     return {
       playerId,
       rewardChoices: [],

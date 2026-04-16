@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppMode, GameContent } from 'src/app/constants/board-settings';
-import { AIDIfficultyTypes, AIManager } from 'src/app/services/ai/ai.manager';
+import { AIDIfficultyTypes, AIPlayersService } from 'src/app/services/ai/ai-players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
@@ -22,10 +22,10 @@ export class DialogSettingsComponent {
   constructor(
     private dialogRef: MatDialogRef<DialogSettingsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string; content: any },
-    private aiManager: AIManager,
-    private settingsService: SettingsService
+    private aIPlayersService: AIPlayersService,
+    private settingsService: SettingsService,
   ) {
-    this.aiManager.aiDifficulty$.subscribe((aiDifficulty) => {
+    this.aIPlayersService.aiDifficulty$.subscribe((aiDifficulty) => {
       this.aiDifficulty = aiDifficulty;
     });
     this.settingsService.gameContent$.subscribe((gameContent) => {
@@ -48,7 +48,7 @@ export class DialogSettingsComponent {
 
   setAIDifficulty(aiDifficulty: AIDIfficultyTypes) {
     if (aiDifficulty !== this.aiDifficulty) {
-      this.aiManager.setAIDifficulty(aiDifficulty);
+      this.aIPlayersService.setAIDifficulty(aiDifficulty);
     }
   }
 

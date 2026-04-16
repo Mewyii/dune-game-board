@@ -10,9 +10,9 @@ import { TranslateService } from '../translate-service';
 })
 export class PlotConfiguratorService {
   private imperiumPlotsSubject = new BehaviorSubject<ImperiumPlot[]>(imperiumPlots);
-  public imperiumPlots$ = this.imperiumPlotsSubject.asObservable();
+  imperiumPlots$ = this.imperiumPlotsSubject.asObservable();
 
-  constructor(public t: TranslateService) {
+  constructor(t: TranslateService) {
     const imperiumPlotsString = localStorage.getItem('imperiumPlots');
     if (imperiumPlotsString) {
       const imperiumPlots = JSON.parse(imperiumPlotsString) as ImperiumPlot[];
@@ -24,7 +24,7 @@ export class PlotConfiguratorService {
     });
   }
 
-  public get imperiumPlots() {
+  get imperiumPlots() {
     return cloneDeep(this.imperiumPlotsSubject.value);
   }
 

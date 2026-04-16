@@ -4,6 +4,7 @@ import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
 import { StructuredConversionEffect, StructuredRewardEffect } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
+import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerActionLog } from 'src/app/services/log.service';
 import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
@@ -17,22 +18,23 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
   standalone: false,
 })
 export class PlayerRewardChoicesComponent implements OnInit {
-  public activePlayerId: number = 0;
-  public activePlayer: Player | undefined;
-  public playerRewardChoices: PlayerRewardChoices | undefined;
-  public playerActionLog: PlayerActionLog[] = [];
-  public playerEffectConversions: StructuredConversionEffectWithGameElement[] = [];
-  public playerEffectOptions: StructuredChoiceEffectWithGameElement[] = [];
-  public deployableUnits = 0;
-  public deployableTroops = 0;
-  public deployableDreadnoughts = 0;
+  activePlayerId: number = 0;
+  activePlayer: Player | undefined;
+  playerRewardChoices: PlayerRewardChoices | undefined;
+  playerActionLog: PlayerActionLog[] = [];
+  playerEffectConversions: StructuredConversionEffectWithGameElement[] = [];
+  playerEffectOptions: StructuredChoiceEffectWithGameElement[] = [];
+  deployableUnits = 0;
+  deployableTroops = 0;
+  deployableDreadnoughts = 0;
 
-  public activeEffectId = '';
+  activeEffectId = '';
 
   constructor(
     private gameManager: GameManager,
     private playerRewardChoicesService: PlayerRewardChoicesService,
     private turnInfoService: TurnInfoService,
+    private effectsService: EffectsService,
     public t: TranslateService,
   ) {}
 
@@ -123,11 +125,11 @@ export class PlayerRewardChoicesComponent implements OnInit {
   }
 
   onDeployTroopsClicked(amount: number) {
-    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'troop', amount);
+    this.effectsService.addUnitsToCombatIfPossible(this.activePlayerId, 'troop', amount);
   }
 
   onDeployDreadnoughtsClicked(amount: number) {
-    this.gameManager.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', amount);
+    this.effectsService.addUnitsToCombatIfPossible(this.activePlayerId, 'dreadnought', amount);
   }
 
   public isStructuredConversionEffect(effect: StructuredConversionEffect | StructuredRewardEffect) {

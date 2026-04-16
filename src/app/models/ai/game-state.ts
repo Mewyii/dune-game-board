@@ -5,15 +5,16 @@ import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard, PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
+import { SpiceAccumulation } from 'src/app/services/board-space.service';
 import { ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
-import { RoundPhaseType, SpiceAccumulation } from 'src/app/services/game-manager.service';
 import { PlayerGameModifiers } from 'src/app/services/game-modifier.service';
 import { LeaderDeckCard } from 'src/app/services/leaders.service';
 import { OwnedLocation } from 'src/app/services/location-manager.service';
 import { PlayerAgent, PlayerAgentOnField } from 'src/app/services/player-agents.service';
 import { Resources } from 'src/app/services/player-resources.service';
 import { PlayerFactionScoreType, PlayerScore } from 'src/app/services/player-score-manager.service';
+import { RoundPhaseType } from 'src/app/services/round.service';
 import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
 
 export type PlayerGameElementRewards = { [key in EffectRewardType]: number };
@@ -27,7 +28,7 @@ export type GameState = Readonly<{
   playerCombatUnits: PlayerCombatUnits;
   currentRound: number;
   currentRoundPhase: RoundPhaseType;
-  accumulatedSpiceOnFields: SpiceAccumulation[];
+  accumulatedSpiceOnBoardSpaces: SpiceAccumulation[];
   enemyCombatUnits: PlayerCombatUnits[];
   agentsOnFields: PlayerAgentOnField[];
   playerAgentsOnFields: PlayerAgentOnField[];
@@ -38,7 +39,7 @@ export type GameState = Readonly<{
   isFinale: boolean;
   enemyPlayers: Player[];
   playerLeader: LeaderDeckCard;
-  conflict: Conflict;
+  conflict?: Conflict;
   availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;
   playerDeckSizeTotal: number;

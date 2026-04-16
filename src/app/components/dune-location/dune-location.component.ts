@@ -40,7 +40,7 @@ export class DuneLocationComponent implements OnInit {
 
   constructor(
     private locationManager: LocationManager,
-    private playerManager: PlayersService,
+    private playersService: PlayersService,
     private leaderService: LeadersService,
     private audioManager: AudioManager,
     private gameManager: GameManager,
@@ -50,7 +50,7 @@ export class DuneLocationComponent implements OnInit {
   ngOnInit(): void {
     this.locationManager.locationOwnerId$(this.location.actionField.title.en).subscribe((ownerId) => {
       if (ownerId) {
-        this.owner = this.playerManager.getPlayer(ownerId);
+        this.owner = this.playersService.getPlayer(ownerId);
         if (this.owner) {
           this.leaderInitials = this.leaderService.getLeader(this.owner.id)?.house?.en ?? '';
         }

@@ -1,30 +1,27 @@
-<ng-container *ngIf="currentConflict">
+@if (currentConflict) {
   <dune-conflict-card
     [class]="currentconflictIsActive ? 'active ' : ''"
     (click)="onSetCurrentConflictActiveClicked()"
     [conflict]="currentConflict"
   ></dune-conflict-card>
-  <div
-    [class]="
-      'conflict-card backside clickable ' +
-      (conflictStackIsActive ? 'active ' : '') +
-      (currentConflict.lvl === 1 ? 'one' : 'two')
-    "
-    (click)="onSetConflictStackActiveClicked()"
-  >
-    <div class="conflict-action-container" *ngIf="conflictStackIsActive">
-      <button mat-fab [color]="'accent'" (click)="onSearchConflictsClicked()" matTooltip="Search">
-        <mat-icon>search</mat-icon>
-      </button>
-      <button
-        class="card-buy-button"
-        mat-fab
-        [color]="'accent'"
-        (click)="onShowNextConflictClicked()"
-        matTooltip="Show top card"
-      >
-        <mat-icon>visibility</mat-icon>
-      </button>
-    </div>
+}
+<div
+  [class]="'conflict-card backside clickable ' + (!currentConflict || currentConflict.lvl === 1 ? 'one' : 'two')"
+  [class.active]="conflictStackIsActive"
+  (click)="onSetConflictStackActiveClicked()"
+>
+  <div class="conflict-action-container" *ngIf="conflictStackIsActive">
+    <button mat-fab [color]="'accent'" (click)="onSearchConflictsClicked()" matTooltip="Search">
+      <mat-icon>search</mat-icon>
+    </button>
+    <button
+      class="card-buy-button"
+      mat-fab
+      [color]="'accent'"
+      (click)="onShowNextConflictClicked()"
+      matTooltip="Show top card"
+    >
+      <mat-icon>visibility</mat-icon>
+    </button>
   </div>
-</ng-container>
+</div>

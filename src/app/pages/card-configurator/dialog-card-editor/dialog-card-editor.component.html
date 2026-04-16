@@ -17,13 +17,15 @@
     <mat-select [(ngModel)]="card.faction">
       <mat-select-trigger>
         <div class="reward-container">
-          <img class="reward" [src]="card.faction || ''" />
+          @if (card.faction) {
+            <img class="reward" [src]="card.faction | factionTypePath" />
+          }
           <span class="reward-label">{{ card.faction }}</span>
         </div>
       </mat-select-trigger>
       <mat-option *ngFor="let faction of factions" [value]="faction"
         ><div class="reward-container">
-          <img class="reward" [src]="faction" />
+          <img class="reward" [src]="faction | factionTypePath" />
           <span class="reward-label">{{ faction }}</span>
         </div></mat-option
       >

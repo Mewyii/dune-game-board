@@ -11,13 +11,13 @@ export type Locale = { [key: string]: string };
 export class TranslateService {
   private en = enLocale;
   private de = deLocale;
-  public language: LanguageType = 'de';
+  language: LanguageType = 'de';
 
   constructor(private settingsService: SettingsService) {
     this.language = this.settingsService.language;
   }
 
-  public translate(string: LocaleType, hightlightVars = false, ...vars: (string | number | undefined)[]) {
+  translate(string: LocaleType, hightlightVars = false, ...vars: (string | number | undefined)[]) {
     switch (this.language) {
       case 'de':
         return this.replacePlaceholders(this.de[string] ?? string, hightlightVars, ...vars);
@@ -27,7 +27,7 @@ export class TranslateService {
     }
   }
 
-  public translateLS(string: LanguageString) {
+  translateLS(string: LanguageString) {
     return string[this.language];
   }
 

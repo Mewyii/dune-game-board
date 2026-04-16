@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
 import { EFFECT_TYPE_PATHS } from 'src/app/helpers/reward-types';
+import { AIManager } from 'src/app/services/ai/ai.manager';
+import { EffectsService } from 'src/app/services/game-effects.service';
 
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
@@ -16,18 +18,20 @@ import { SettingsService } from 'src/app/services/settings.service';
 export class ScoreboardComponent implements OnInit {
   @Input() mode: AppMode = 'board';
 
-  public scoreArray: number[] = [];
+  scoreArray: number[] = [];
 
-  public playerVictoryPoints: { playerId: number; amount: number }[] = [];
+  playerVictoryPoints: { playerId: number; amount: number }[] = [];
 
-  public victoryPointBoni: VictoryPointReward[] | undefined;
-  public finaleTrigger = 9;
+  victoryPointBoni: VictoryPointReward[] | undefined;
+  finaleTrigger = 9;
 
   constructor(
-    private playerManager: PlayersService,
-    public playerScoreManager: PlayerScoreManager,
+    private playersService: PlayersService,
+    private playerScoreManager: PlayerScoreManager,
     private settingsService: SettingsService,
     private gameManager: GameManager,
+    private effectsService: EffectsService,
+    private aiManager: AIManager,
   ) {}
 
   ngOnInit(): void {
@@ -48,39 +52,48 @@ export class ScoreboardComponent implements OnInit {
   }
 
   onIncreaseFactionScoreClicked(playerId: number) {
-    this.gameManager.addRewardToPlayer(playerId, {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+    this.effectsService.addRewardToPlayer(playerId, {
       type: 'victory-point',
     });
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
   onDecreaseFactionScoreClicked(playerId: number) {
-    this.gameManager.payCostForPlayer(playerId, {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+
+    this.effectsService.payCostForPlayer(playerId, {
       type: 'victory-point',
     });
-    this.gameManager.setPreferredFieldsForAIPlayer(playerId);
+    this.aiManager.setPreferredFieldsForAIPlayer(player);
 
     return false;
   }
 
-  public getPlayerColor(playerId: number) {
-    return this.playerManager.getPlayerColor(playerId);
+  getPlayerColor(playerId: number) {
+    return this.playersService.getPlayerColor(playerId);
   }
 
-  public scoreHasReward(score: number) {
+  scoreHasReward(score: number) {
     return this.victoryPointBoni?.some((x) => x.score === score);
   }
 
-  public getRewardAmount(score: number) {
+  getRewardAmount(score: number) {
     return this.victoryPointBoni?.find((x) => x.score === score)?.reward.amount;
   }
 
-  public getEffectTypePath(score: number) {
+  getEffectTypePath(score: number) {
     const reward = this.victoryPointBoni?.find((x) => x.score === score);
     return reward ? EFFECT_TYPE_PATHS[reward.reward.type] : '';
   }
 
-  public trackPlayerScore(playerScore: { playerId: number; amount: number }) {
+  trackPlayerScore(playerScore: { playerId: number; amount: number }) {
     return playerScore.playerId * 100 + playerScore.amount;
   }
 }

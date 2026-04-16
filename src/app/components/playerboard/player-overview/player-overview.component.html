@@ -12,7 +12,7 @@
     <mat-slide-toggle
       [color]="'accent'"
       [checked]="player.isAI"
-      (change)="onSetAIActiveClicked(player.id, $event)"
+      (change)="onSetAIActiveClicked(player, $event)"
       [matTooltip]="t.translate('playerboardButtonToggleAI')"
       >AI</mat-slide-toggle
     >

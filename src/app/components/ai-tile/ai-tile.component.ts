@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { aiPersonalities } from 'src/app/constants/ai';
 import { Player } from 'src/app/models/player';
-import { AIManager, AIPlayer } from 'src/app/services/ai/ai.manager';
+import { AIPlayer, AIPlayersService } from 'src/app/services/ai/ai-players.service';
+import { AIManager } from 'src/app/services/ai/ai.manager';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -14,19 +15,24 @@ import { TranslateService } from 'src/app/services/translate-service';
 export class AITileComponent implements OnInit {
   @Input() showDetails = false;
 
-  public activeAIPlayerId: number = 0;
-  public activePlayer: Player | undefined;
-  public activeAIPlayer: AIPlayer | undefined;
+  activeAIPlayerId: number = 0;
+  activePlayer: Player | undefined;
+  activeAIPlayer: AIPlayer | undefined;
 
-  constructor(public t: TranslateService, public gameManager: GameManager, public aiManager: AIManager) {}
+  constructor(
+    public t: TranslateService,
+    private gameManager: GameManager,
+    private aiManager: AIManager,
+    private aIPlayersService: AIPlayersService,
+  ) {}
 
   ngOnInit(): void {
-    this.aiManager.activeAIPlayerId$.subscribe((playerId) => {
+    this.aIPlayersService.activeAIPlayerId$.subscribe((playerId) => {
       this.activeAIPlayerId = playerId;
-      this.activeAIPlayer = this.aiManager.getAIPlayer(playerId);
+      this.activeAIPlayer = this.aIPlayersService.getAIPlayer(playerId);
     });
 
-    this.aiManager.aiPlayers$.subscribe((aiPlayers) => {
+    this.aIPlayersService.aiPlayers$.subscribe((aiPlayers) => {
       this.activeAIPlayer = aiPlayers.find((x) => x.playerId === this.activePlayer?.id);
     });
 
@@ -36,40 +42,48 @@ export class AITileComponent implements OnInit {
   }
 
   onChangeFieldAccessClicked(canAccessBlockedFields: boolean) {
-    this.aiManager.setAccessToBlockedFieldsForPlayer(this.activeAIPlayerId, canAccessBlockedFields);
+    if (!this.activePlayer) {
+      return;
+    }
 
-    this.gameManager.setPreferredFieldsForAIPlayer(this.activeAIPlayerId);
+    this.aIPlayersService.setAccessToBlockedFieldsForPlayer(this.activeAIPlayerId, canAccessBlockedFields);
+
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }
 
   onSetNextAIPersonalityClicked() {
-    const personalityName = this.activeAIPlayer?.name;
-    if (personalityName) {
-      const keys = Object.keys(aiPersonalities);
-      const nextIndex = keys.indexOf(personalityName) + 1;
-      if (nextIndex < keys.length) {
-        const nextPersonalityName = keys[nextIndex];
+    if (!this.activePlayer || !this.activeAIPlayer) {
+      return;
+    }
 
-        const personality = (aiPersonalities as any)[nextPersonalityName];
+    const personalityName = this.activeAIPlayer.name;
+    const keys = Object.keys(aiPersonalities);
+    const nextIndex = keys.indexOf(personalityName) + 1;
+    if (nextIndex < keys.length) {
+      const nextPersonalityName = keys[nextIndex];
 
-        this.aiManager.setAIPersonalityToPlayer(this.activeAIPlayerId, nextPersonalityName, personality);
-        this.gameManager.setPreferredFieldsForAIPlayer(this.activeAIPlayerId);
-      }
+      const personality = (aiPersonalities as any)[nextPersonalityName];
+
+      this.aIPlayersService.setAIPersonalityToPlayer(this.activeAIPlayerId, nextPersonalityName, personality);
+      this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
     }
   }
 
   onSetPreviousAIPersonalityClicked() {
-    const personalityName = this.activeAIPlayer?.name;
-    if (personalityName) {
-      const keys = Object.keys(aiPersonalities);
-      const previousIndex = keys.indexOf(personalityName) - 1;
-      if (previousIndex >= 0) {
-        const previousPersonalityName = keys[previousIndex];
+    if (!this.activePlayer || !this.activeAIPlayer) {
+      return;
+    }
 
-        const personality = (aiPersonalities as any)[previousPersonalityName];
+    const personalityName = this.activeAIPlayer.name;
+    const keys = Object.keys(aiPersonalities);
+    const previousIndex = keys.indexOf(personalityName) - 1;
+    if (previousIndex >= 0) {
+      const previousPersonalityName = keys[previousIndex];
 
-        this.aiManager.setAIPersonalityToPlayer(this.activeAIPlayerId, previousPersonalityName, personality);
-        this.gameManager.setPreferredFieldsForAIPlayer(this.activeAIPlayerId);
-      }
+      const personality = (aiPersonalities as any)[previousPersonalityName];
+
+      this.aIPlayersService.setAIPersonalityToPlayer(this.activeAIPlayerId, previousPersonalityName, personality);
+      this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
     }
   }
 }

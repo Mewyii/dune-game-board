@@ -8,7 +8,7 @@ import { Leader, leaders } from 'src/app/constants/leaders';
 })
 export class LeaderConfiguratorService {
   private leadersSubject = new BehaviorSubject<Leader[]>(leaders);
-  public leaders$ = this.leadersSubject.asObservable();
+  leaders$ = this.leadersSubject.asObservable();
 
   constructor() {
     const leadersString = localStorage.getItem('leaders');
@@ -22,7 +22,7 @@ export class LeaderConfiguratorService {
     });
   }
 
-  public get leaders() {
+  get leaders() {
     return cloneDeep(this.leadersSubject.value);
   }
 

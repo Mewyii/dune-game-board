@@ -11,6 +11,7 @@ import { getFlattenedEffectRewardArray } from 'src/app/helpers/rewards';
 import { ActionField, EffectType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { BoardSpaceService } from 'src/app/services/board-space.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { EffectWithModifier, GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
@@ -68,15 +69,16 @@ export class DuneActionComponent implements OnInit, OnChanges {
   public playerFieldMarkers: { playerId: number; amount: number }[] = [];
 
   constructor(
-    public gameManager: GameManager,
-    public playerManager: PlayersService,
-    public ts: TranslateService,
+    public t: TranslateService,
+    private gameManager: GameManager,
+    private playersService: PlayersService,
     private audioManager: AudioManager,
     private cardsService: CardsService,
     private playerScoreManager: PlayerScoreManager,
     private gameModifierService: GameModifiersService,
     private playerAgentsService: PlayerAgentsService,
     private playerResourcesService: PlayerResourcesService,
+    private boardSpaceService: BoardSpaceService,
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +96,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const playerIds = agentsOnFields.filter((x) => x.fieldId === this.actionField.title.en).map((x) => x.playerId);
       if (playerIds.length > 0) {
         const firstPlayerId = playerIds.shift()!;
-        const players = this.playerManager.getPlayers();
+        const players = this.playersService.getPlayers();
         this.playerOnField = players.find((x) => x.id === firstPlayerId);
 
         this.additionalPlayersOnField = [];
@@ -112,7 +114,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
     this.gameManager.activePlayerId$.subscribe((playerId) => {
       this.activePlayerId = playerId;
-      const player = this.playerManager.getPlayer(this.activePlayerId);
+      const player = this.playersService.getPlayer(this.activePlayerId);
 
       this.activePlayerTurnState = player?.turnState;
       this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
@@ -144,8 +146,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
-    this.playerManager.players$.subscribe((players) => {
-      const player = this.playerManager.getPlayer(this.activePlayerId);
+    this.playersService.players$.subscribe((players) => {
+      const player = this.playersService.getPlayer(this.activePlayerId);
       this.activePlayerIsAI = player?.isAI ?? false;
 
       this.activePlayerTurnState = player?.turnState;
@@ -154,8 +156,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
-    this.gameManager.accumulatedSpiceOnFields$.subscribe((accumulatedSpice) => {
-      const spiceOnField = accumulatedSpice.find((x) => x.fieldId === this.actionField.title.en);
+    this.boardSpaceService.accumulatedSpiceOnBoardSpaces$.subscribe((accumulatedSpice) => {
+      const spiceOnField = accumulatedSpice.find((x) => x.boardSpaceId === this.actionField.title.en);
       this.accumulatedSpice = spiceOnField?.amount ?? 0;
     });
 
@@ -184,7 +186,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
       (x) => x.type === 'council-seat-small' || x.type === 'council-seat-large',
     );
     if (this.isHighCouncilField) {
-      this.playerManager.players$.subscribe((players) => {
+      this.playersService.players$.subscribe((players) => {
         this.highCouncilSeats = players.filter((x) => x.hasCouncilSeat).map((x) => x.color);
       });
     }
@@ -217,7 +219,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     }
 
     if (rewardType === 'spice-accumulation') {
-      this.gameManager.increaseAccumulatedSpiceOnField(fieldId);
+      this.boardSpaceService.increaseAccumulatedSpiceOnBoardSpace(fieldId);
       this.audioManager.playSound('click-soft');
     }
   }
@@ -228,14 +230,14 @@ export class DuneActionComponent implements OnInit, OnChanges {
     }
 
     if (rewardType === 'spice-accumulation') {
-      this.gameManager.decreaseAccumulatedSpiceOnField(fieldId);
+      this.boardSpaceService.decreaseAccumulatedSpiceOnBoardSpace(fieldId);
       this.audioManager.playSound('click-soft');
     }
     return false;
   }
 
   public getPlayerColor(playerId: number) {
-    return this.playerManager.getPlayerColor(playerId);
+    return this.playersService.getPlayerColor(playerId);
   }
 
   public trackSpiceOnField(index: number, spiceOnField: number) {

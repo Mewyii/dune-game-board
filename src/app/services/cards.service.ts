@@ -66,52 +66,52 @@ export interface PlayerPlotStack {
 })
 export class CardsService {
   private imperiumDeckSubject = new BehaviorSubject<(ImperiumDeckCard | ImperiumDeckPlot)[]>([]);
-  public imperiumDeck$ = this.imperiumDeckSubject.asObservable();
+  imperiumDeck$ = this.imperiumDeckSubject.asObservable();
 
   private imperiumRowSubject = new BehaviorSubject<(ImperiumRowCard | ImperiumRowPlot)[]>([]);
-  public imperiumRow$ = this.imperiumRowSubject.asObservable();
+  imperiumRow$ = this.imperiumRowSubject.asObservable();
 
   private playerDecksSubject = new BehaviorSubject<PlayerCardStack[]>([]);
-  public playerDecks$ = this.playerDecksSubject.asObservable();
-  public playerDeck$ = (playerId: number) =>
+  playerDecks$ = this.playerDecksSubject.asObservable();
+  playerDeck$ = (playerId: number) =>
     this.playerDecks$.pipe(
       map((decks) => decks.find((deck) => deck.playerId === playerId)?.cards),
       distinctUntilChanged(),
     );
 
   private playerHandsSubject = new BehaviorSubject<PlayerCardStack[]>([]);
-  public playerHands$ = this.playerHandsSubject.asObservable();
-  public playerHand$ = (playerId: number) =>
+  playerHands$ = this.playerHandsSubject.asObservable();
+  playerHand$ = (playerId: number) =>
     this.playerHands$.pipe(
       map((hands) => hands.find((hand) => hand.playerId === playerId)?.cards),
       distinctUntilChanged(),
     );
 
   private playerDiscardPilesSubject = new BehaviorSubject<PlayerCardStack[]>([]);
-  public playerDiscardPiles$ = this.playerDiscardPilesSubject.asObservable();
-  public playerDiscardPile$ = (playerId: number) =>
+  playerDiscardPiles$ = this.playerDiscardPilesSubject.asObservable();
+  playerDiscardPile$ = (playerId: number) =>
     this.playerDiscardPiles$.pipe(
       map((dps) => dps.find((dp) => dp.playerId === playerId)?.cards),
       distinctUntilChanged(),
     );
 
   private playerTrashPilesSubject = new BehaviorSubject<PlayerCardStack[]>([]);
-  public playerTrashPiles$ = this.playerTrashPilesSubject.asObservable();
+  playerTrashPiles$ = this.playerTrashPilesSubject.asObservable();
 
   private playerPlotsSubject = new BehaviorSubject<PlayerPlotStack[]>([]);
-  public playerPlots$ = this.playerPlotsSubject.asObservable();
+  playerPlots$ = this.playerPlotsSubject.asObservable();
 
   private playedPlayerCardsSubject = new BehaviorSubject<PlayerCard[]>([]);
-  public playedPlayerCards$ = this.playedPlayerCardsSubject.asObservable();
+  playedPlayerCards$ = this.playedPlayerCardsSubject.asObservable();
 
   private limitedCustomCardsSubject = new BehaviorSubject<ImperiumDeckCard[]>([]);
-  public limitedCustomCards$ = this.limitedCustomCardsSubject.asObservable();
+  limitedCustomCards$ = this.limitedCustomCardsSubject.asObservable();
 
   private unlimitedCustomCardsSubject = new BehaviorSubject<ImperiumCard[]>([]);
-  public unlimitedCustomCards$ = this.unlimitedCustomCardsSubject.asObservable();
+  unlimitedCustomCards$ = this.unlimitedCustomCardsSubject.asObservable();
 
   constructor(
-    private playerManager: PlayersService,
+    private playersService: PlayersService,
     private cardConfiguratorService: CardConfiguratorService,
     private plotConfiguratorService: PlotConfiguratorService,
     private settingsService: SettingsService,
@@ -290,43 +290,43 @@ export class CardsService {
     });
   }
 
-  public get imperiumDeck() {
+  get imperiumDeck() {
     return cloneDeep(this.imperiumDeckSubject.value);
   }
 
-  public get imperiumRow() {
+  get imperiumRow() {
     return cloneDeep(this.imperiumRowSubject.value);
   }
 
-  public get playerDecks() {
+  get playerDecks() {
     return cloneDeep(this.playerDecksSubject.value);
   }
 
-  public get playerHands() {
+  get playerHands() {
     return cloneDeep(this.playerHandsSubject.value);
   }
 
-  public get playedPlayerCards() {
+  get playedPlayerCards() {
     return cloneDeep(this.playedPlayerCardsSubject.value);
   }
 
-  public get playerDiscardPiles() {
+  get playerDiscardPiles() {
     return cloneDeep(this.playerDiscardPilesSubject.value);
   }
 
-  public get playerTrashPiles() {
+  get playerTrashPiles() {
     return cloneDeep(this.playerTrashPilesSubject.value);
   }
 
-  public get playerPlots() {
+  get playerPlots() {
     return cloneDeep(this.playerPlotsSubject.value);
   }
 
-  public get limitedCustomCards() {
+  get limitedCustomCards() {
     return cloneDeep(this.limitedCustomCardsSubject.value);
   }
 
-  public get unlimitedCustomCards() {
+  get unlimitedCustomCards() {
     return cloneDeep(this.unlimitedCustomCardsSubject.value);
   }
 
@@ -354,8 +354,32 @@ export class CardsService {
     return this.playerDecks.find((x) => x.playerId === playerId);
   }
 
-  public getPlayedPlayerCard(playerId: number) {
+  getPlayedPlayerCard(playerId: number) {
     return this.playedPlayerCards.find((x) => x.playerId === playerId);
+  }
+
+  getAllBuyableCards(factionRecruitment?: ('emperor' | 'guild' | 'bene' | 'fremen')[]) {
+    const imperiumRowCards = this.imperiumRow.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[];
+
+    const alwaysBuyableCards = [
+      ...this.limitedCustomCards,
+      ...this.unlimitedCustomCards.map((x) => this.instantiateImperiumCard(x)),
+    ];
+
+    let recruitableCards: ImperiumDeckCard[] = [];
+    if (factionRecruitment && factionRecruitment.length > 0) {
+      const recruitmentCardAmount = this.settingsService.getRecruitmentCardAmount();
+      recruitableCards = this.getTopDeckCards(recruitmentCardAmount).filter(
+        (x) => factionRecruitment.some((y) => y === x.faction) && x.type === 'imperium-card',
+      ) as ImperiumDeckCard[];
+    }
+
+    return {
+      imperiumRowCards,
+      recruitableCards,
+      alwaysBuyableCards,
+      allCards: [...imperiumRowCards, ...recruitableCards, ...shuffle(alwaysBuyableCards)],
+    };
   }
 
   createImperiumDeck(filter: (imperiumCard: ImperiumCard) => boolean = () => true) {
@@ -443,7 +467,7 @@ export class CardsService {
 
     const playerDecks: PlayerCardStack[] = [];
 
-    const playerIds = this.playerManager.getPlayerIds();
+    const playerIds = this.playersService.getPlayerIds();
     for (const playerId of playerIds) {
       const startingCards: ImperiumDeckCard[] = [];
 
@@ -851,7 +875,7 @@ export class CardsService {
     this.playerPlotsSubject.next([]);
   }
 
-  public instantiateImperiumCard(card: ImperiumCard): ImperiumDeckCard {
+  instantiateImperiumCard(card: ImperiumCard): ImperiumDeckCard {
     return {
       ...card,
       type: 'imperium-card',
@@ -864,7 +888,7 @@ export class CardsService {
     };
   }
 
-  public instantiateImperiumPlot(card: ImperiumPlot): ImperiumDeckPlot {
+  instantiateImperiumPlot(card: ImperiumPlot): ImperiumDeckPlot {
     return { ...card, type: 'plot', id: crypto.randomUUID(), cardAmount: 1 };
   }
 }

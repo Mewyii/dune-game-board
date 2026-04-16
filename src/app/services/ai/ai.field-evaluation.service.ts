@@ -13,7 +13,7 @@ import { Player } from 'src/app/models/player';
 import { LeaderDeckCard } from '../leaders.service';
 import { Resources } from '../player-resources.service';
 import { SettingsService } from '../settings.service';
-import { AIPlayer } from './ai.manager';
+import { AIPlayer } from './ai-players.service';
 
 interface FieldEvaluation {
   fieldId: string;
@@ -33,7 +33,7 @@ export interface ViableField {
   providedIn: 'root',
 })
 export class AIFieldEvaluationService {
-  public aiGoals: FieldsForGoals | undefined;
+  aiGoals: FieldsForGoals | undefined;
 
   constructor(private settingsService: SettingsService) {
     this.settingsService.AI$.subscribe((x) => {
@@ -41,7 +41,7 @@ export class AIFieldEvaluationService {
     });
   }
 
-  public getPreferredFieldsForAIPlayer(
+  getPreferredFieldsForAIPlayer(
     player: Player,
     gameState: GameState,
     playerLeader: LeaderDeckCard,

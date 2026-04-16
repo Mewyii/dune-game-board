@@ -13,17 +13,24 @@
 }
 
 .card-header {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  position: relative;
+  padding-top: 6px;
+  padding-bottom: 6px;
   padding-left: 4px;
   padding-right: 4px;
   border-radius: 8px 8px 0px 0px;
   color: #f3f5de;
   background-image: url(/assets/images/conflicts/heading.png);
   background-size: cover;
-  gap: 6px;
-  font-size: x-small;
+  gap: 4px;
+  font-size: small;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  color: rgb(255, 199, 142);
 }
 
 .card-content {
@@ -68,10 +75,4 @@
 .conflict-rank.first {
   color: #ffd489;
   font-size: large;
-}
-
-.card-title {
-  padding: 4px;
-  font-size: large;
-  text-align: center;
 }

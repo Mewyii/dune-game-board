@@ -53,12 +53,12 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           (gameState.playerDiscardPileCards?.filter((x) => x.faction === 'guild').length ?? 0);
 
         if (playerGuildCardAmount > 2) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'tech', amount: 2 });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'solari' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'tech', amount: 2 });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'solari' });
         } else if (playerGuildCardAmount > 1) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'tech' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'tech' });
         } else if (playerGuildCardAmount > 0) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'solari' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'solari' });
         }
       },
     },
@@ -75,12 +75,12 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           (gameState.playerDiscardPileCards?.filter((x) => x.faction === 'fremen').length ?? 0);
 
         if (playerFremenCardAmount > 2) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'focus' });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'focus' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'persuasion' });
         } else if (playerFremenCardAmount > 1) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'focus' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'focus' });
         } else if (playerFremenCardAmount > 0) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'persuasion' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'persuasion' });
         }
       },
     },
@@ -97,12 +97,12 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           (gameState.playerDiscardPileCards?.filter((x) => x.faction === 'emperor').length ?? 0);
 
         if (playerEmperorCardAmount > 2) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'sword', amount: 2 });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'sword', amount: 2 });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
         } else if (playerEmperorCardAmount > 1) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'sword', amount: 2 });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'sword', amount: 2 });
         } else if (playerEmperorCardAmount > 0) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'sword' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'sword' });
         }
       },
     },
@@ -119,12 +119,12 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           (gameState.playerDiscardPileCards?.filter((x) => x.faction === 'bene').length ?? 0);
 
         if (playerBeneCardAmount > 2) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
         } else if (playerBeneCardAmount > 1) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
         } else if (playerBeneCardAmount > 0) {
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue-trash' });
-          services.gameManager.addRewardToPlayer(player.id, { type: 'intrigue' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue-trash' });
+          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
         }
       },
     },
@@ -152,7 +152,9 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       timing: 'timing-reveal-turn',
       function: (player: Player, gameState: GameState, services: GameServices, gameElement) => {
         const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
-        const { allCards, imperiumRowCards, recruitableCards } = services.gameManager.getAllBuyableCards(player.id);
+        const { allCards, imperiumRowCards, recruitableCards } = services.cardsService.getAllBuyableCards(
+          services.turnInfoService.getPlayerTurnInfo(player.id, 'factionRecruitment'),
+        );
 
         const reducedCards = allCards.map((x) => {
           return {
@@ -161,7 +163,13 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           };
         });
 
-        const cardToBuy = services.aiManager.getImperiumCardToBuy(availablePersuasion, reducedCards, player, gameState, []);
+        const cardToBuy = services.aiCardsService.getImperiumCardToBuy(
+          availablePersuasion,
+          reducedCards,
+          player,
+          gameState,
+          [],
+        );
         if (cardToBuy) {
           let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
           if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
@@ -172,12 +180,12 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
 
           services.gameManager.acquireImperiumCard(player.id, cardToBuy, source);
           if (cardToBuy.structuredRevealEffects) {
-            services.gameManager.resolveStructuredEffects(cardToBuy.structuredRevealEffects, player, gameState);
+            services.effectsService.resolveStructuredEffects(cardToBuy.structuredRevealEffects, player, gameState);
           } else if (cardToBuy.customRevealEffect) {
             // TODO
           }
 
-          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+          services.effectsService.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
         }
       },
     },
@@ -194,7 +202,9 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           return;
         }
         const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
-        const { allCards, imperiumRowCards, recruitableCards } = services.gameManager.getAllBuyableCards(player.id);
+        const { allCards, imperiumRowCards, recruitableCards } = services.cardsService.getAllBuyableCards(
+          services.turnInfoService.getPlayerTurnInfo(player.id, 'factionRecruitment'),
+        );
 
         const reducedCards = allCards.map((x) => {
           return {
@@ -203,7 +213,13 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           };
         });
 
-        const cardToBuy = services.aiManager.getImperiumCardToBuy(availablePersuasion, reducedCards, player, gameState, []);
+        const cardToBuy = services.aiCardsService.getImperiumCardToBuy(
+          availablePersuasion,
+          reducedCards,
+          player,
+          gameState,
+          [],
+        );
         if (cardToBuy) {
           let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
           if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
@@ -214,8 +230,8 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
 
           services.gameManager.acquireImperiumCard(player.id, cardToBuy, source, { acquireLocation: 'above-deck' });
 
-          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
-          services.gameManager.payCostForPlayer(player.id, { type: 'solari' }, { gameElement });
+          services.effectsService.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+          services.effectsService.payCostForPlayer(player.id, { type: 'solari' }, { gameElement });
         }
       },
     },
@@ -249,8 +265,8 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         }
 
         if (targetSpace) {
-          services.gameManager.addAccumulatedSpiceToField(targetSpace.title.en, 1);
-          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+          services.boardSpaceService.increaseAccumulatedSpiceOnBoardSpace(targetSpace.title.en);
+          services.effectsService.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
         }
       },
     },
@@ -286,7 +302,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
                   fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location, currentRoundOnly: true }],
                 });
               }
-              services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+              services.effectsService.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
               activatedEffect = true;
             }
           }
@@ -316,8 +332,8 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           for (const enemy of gameState.enemyPlayers) {
             services.combatManager.removePlayerShipsFromCombat(enemy.id, 1);
           }
-          services.gameManager.payCostForPlayer(player.id, { type: 'tech' });
-          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+          services.effectsService.payCostForPlayer(player.id, { type: 'tech' });
+          services.effectsService.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
         }
       },
     },
@@ -336,7 +352,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         );
         if (locationThreat && Math.random() > 0.33) {
           services.playerAgentsService.setPlayerAgentInTimeout(locationThreat.playerId, locationThreat.fieldId);
-          services.gameManager.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
+          services.effectsService.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
         }
       },
     },

@@ -9,7 +9,7 @@ import { SettingsService } from './settings.service';
 })
 export class PlayersService {
   private playersSubject = new BehaviorSubject<Player[]>([]);
-  public players$ = this.playersSubject.asObservable();
+  players$ = this.playersSubject.asObservable();
 
   constructor(private settingsService: SettingsService) {
     const playersString = localStorage.getItem('players');
@@ -23,37 +23,37 @@ export class PlayersService {
     });
   }
 
-  public getPlayers() {
+  getPlayers() {
     return cloneDeep(this.playersSubject.value);
   }
 
-  public getPlayerIds() {
+  getPlayerIds() {
     return cloneDeep(this.playersSubject.value).map((x) => x.id);
   }
 
-  public getPlayerCount() {
+  getPlayerCount() {
     return this.playersSubject.value.length;
   }
 
-  public getPlayer(playerId: number) {
+  getPlayer(playerId: number) {
     return cloneDeep(this.playersSubject.value.find((x) => x.id === playerId));
   }
 
-  public getEnemyPlayers(playerId: number) {
+  getEnemyPlayers(playerId: number) {
     return cloneDeep(this.playersSubject.value.filter((x) => x.id !== playerId));
   }
 
-  public getPlayerColor(playerId: number) {
+  getPlayerColor(playerId: number) {
     const player = this.playersSubject.value.find((x) => x.id === playerId);
     return player ? cloneDeep(player.color) : '';
   }
 
-  public getPlayerPersuasion(playerId: number) {
+  getPlayerPersuasion(playerId: number) {
     const player = this.playersSubject.value.find((x) => x.id === playerId);
     return player ? player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound : 0;
   }
 
-  public addPlayer() {
+  addPlayer() {
     const players = this.getPlayers();
 
     if (players.length < this.settingsService.getMaxPlayers()) {
@@ -74,7 +74,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public removePlayer() {
+  removePlayer() {
     const players = this.getPlayers();
 
     players.pop();
@@ -82,7 +82,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public resetPlayers() {
+  resetPlayers() {
     const players: Player[] = this.getPlayers().map((player) => ({
       ...player,
       agents: 2,
@@ -101,7 +101,7 @@ export class PlayersService {
     return players;
   }
 
-  public setTurnStateForPlayer(id: number, turnState: PlayerTurnState) {
+  setTurnStateForPlayer(id: number, turnState: PlayerTurnState) {
     const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
@@ -112,14 +112,14 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public resetTurnStateForPlayers() {
+  resetTurnStateForPlayers() {
     this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, turnState: 'agent-placement' })));
   }
 
-  public setAIActiveForPlayer(id: number, active: boolean) {
+  setAIActiveForPlayer(playerId: number, active: boolean) {
     const players = this.getPlayers();
 
-    const player = players.find((x) => x.id === id);
+    const player = players.find((x) => x.id === playerId);
     if (player) {
       player.isAI = active;
     }
@@ -127,7 +127,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public increaseTurnNumberForPlayer(id: number) {
+  increaseTurnNumberForPlayer(id: number) {
     const players = this.getPlayers();
 
     const player = players.find((x) => x.id === id);
@@ -138,11 +138,11 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public resetTurnNumberForPlayers() {
+  resetTurnNumberForPlayers() {
     this.playersSubject.next(this.getPlayers().map((x) => ({ ...x, turnNumber: 0 })));
   }
 
-  public addPermanentAgentToPlayer(playerId: number) {
+  addPermanentAgentToPlayer(playerId: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -152,7 +152,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public addCouncilSeatToPlayer(playerId: number) {
+  addCouncilSeatToPlayer(playerId: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -166,7 +166,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public addPersuasionGainedToPlayer(playerId: number, amount: number) {
+  addPersuasionGainedToPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -176,7 +176,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public removePersuasionGainedFromPlayer(playerId: number, amount: number) {
+  removePersuasionGainedFromPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -186,7 +186,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public addPersuasionSpentToPlayer(playerId: number, amount: number) {
+  addPersuasionSpentToPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -196,13 +196,13 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public resetPersuasionForPlayers() {
+  resetPersuasionForPlayers() {
     this.playersSubject.next(
       this.getPlayers().map((x) => ({ ...x, persuasionGainedThisRound: 0, persuasionSpentThisRound: 0 })),
     );
   }
 
-  public addPermanentPersuasionToPlayer(playerId: number, amount: number) {
+  addPermanentPersuasionToPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -212,7 +212,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public removePermanentPersuasionFromPlayer(playerId: number, amount: number) {
+  removePermanentPersuasionFromPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -222,11 +222,11 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  public getFirstPlayerId() {
+  getFirstPlayerId() {
     return cloneDeep(this.playersSubject.value[0].id);
   }
 
-  public getNextPlayerId(activePlayerId?: number) {
+  getNextPlayerId(activePlayerId?: number) {
     if (activePlayerId) {
       const nextPlayerId = activePlayerId + 1;
       if (nextPlayerId > this.getPlayerCount()) {
@@ -239,7 +239,7 @@ export class PlayersService {
     }
   }
 
-  public isLastPlayer(activePlayerId?: number) {
+  isLastPlayer(activePlayerId?: number) {
     if (activePlayerId) {
       const nextPlayerId = activePlayerId + 1;
       if (nextPlayerId > this.getPlayerCount()) {

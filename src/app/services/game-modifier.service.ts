@@ -118,7 +118,7 @@ export type EffectWithModifier = EffectChoiceConversionMultiplierOrReward & {
 })
 export class GameModifiersService {
   private playerGameModifiersSubject = new BehaviorSubject<PlayerGameModifiers[]>([]);
-  public playerGameModifiers$ = this.playerGameModifiersSubject.asObservable();
+  playerGameModifiers$ = this.playerGameModifiersSubject.asObservable();
   constructor() {
     const playerGameModifiersString = localStorage.getItem('playerGameModifiers');
     if (playerGameModifiersString) {
@@ -131,15 +131,15 @@ export class GameModifiersService {
     });
   }
 
-  public get playerGameModifiers() {
+  get playerGameModifiers() {
     return cloneDeep(this.playerGameModifiersSubject.value);
   }
 
-  public getPlayerGameModifiers(playerId: number) {
+  getPlayerGameModifiers(playerId: number) {
     return cloneDeep(this.playerGameModifiersSubject.value.find((x) => x.playerId === playerId));
   }
 
-  public getPlayerGameModifier<T extends keyof GameModifiers>(playerId: number, type: T) {
+  getPlayerGameModifier<T extends keyof GameModifiers>(playerId: number, type: T) {
     const playerModifiers = this.playerGameModifiersSubject.value.find((x) => x.playerId === playerId);
     if (!playerModifiers) {
       return undefined;
@@ -148,7 +148,7 @@ export class GameModifiersService {
     return cloneDeep(playerModifiers[type]);
   }
 
-  public getPlayerFieldUnlocksForFactions(playerId: number): ActiveFactionType[] | undefined {
+  getPlayerFieldUnlocksForFactions(playerId: number): ActiveFactionType[] | undefined {
     const modifiers = this.getPlayerGameModifiers(playerId);
     if (modifiers && modifiers.fieldFactionAccess) {
       return compact(modifiers.fieldFactionAccess.map((x) => x.factionType));
@@ -157,7 +157,7 @@ export class GameModifiersService {
     }
   }
 
-  public getPlayerFieldUnlocksForIds(playerId: number): string[] | undefined {
+  getPlayerFieldUnlocksForIds(playerId: number): string[] | undefined {
     const modifiers = this.getPlayerGameModifiers(playerId);
     if (modifiers && modifiers.fieldFactionAccess) {
       return compact(modifiers.fieldFactionAccess.map((x) => x.fieldId));
@@ -166,7 +166,7 @@ export class GameModifiersService {
     }
   }
 
-  public getPlayerFieldEnemyAcessForActionTypes(playerId: number): ActionType[] | undefined {
+  getPlayerFieldEnemyAcessForActionTypes(playerId: number): ActionType[] | undefined {
     const modifiers = this.getPlayerGameModifiers(playerId);
     if (modifiers && modifiers.fieldEnemyAgentAccess) {
       return compact(flatten(modifiers.fieldEnemyAgentAccess.map((x) => x.actionTypes)));
@@ -175,7 +175,7 @@ export class GameModifiersService {
     }
   }
 
-  public getPlayerBlockedFieldsForActionTypes(playerId: number): ActionType[] | undefined {
+  getPlayerBlockedFieldsForActionTypes(playerId: number): ActionType[] | undefined {
     const modifiers = this.getPlayerGameModifiers(playerId);
     if (modifiers && modifiers.fieldBlock) {
       return compact(modifiers.fieldBlock.map((x) => x.actionType));
@@ -184,7 +184,7 @@ export class GameModifiersService {
     }
   }
 
-  public getPlayerBlockedFieldsForIds(playerId: number): string[] | undefined {
+  getPlayerBlockedFieldsForIds(playerId: number): string[] | undefined {
     const modifiers = this.getPlayerGameModifiers(playerId);
     if (modifiers && modifiers.fieldBlock) {
       return compact(modifiers.fieldBlock.map((x) => x.fieldId));
@@ -193,11 +193,11 @@ export class GameModifiersService {
     }
   }
 
-  public getPlayerCustomActionModifiers(playerId: number) {
+  getPlayerCustomActionModifiers(playerId: number) {
     return this.playerGameModifiers.find((x) => x.playerId === playerId)?.customActions;
   }
 
-  public getPlayerFieldMarkers(fieldId: string) {
+  getPlayerFieldMarkers(fieldId: string) {
     return this.playerGameModifiers
       .filter((x) => x.fieldMarkers)
       .map((x) => ({
@@ -213,7 +213,7 @@ export class GameModifiersService {
     if (playerGameModifierIndex > -1) {
       playerGameModifiers[playerGameModifierIndex] = mergeObjects(
         playerGameModifiers[playerGameModifierIndex],
-        gameModifiers
+        gameModifiers,
       );
     } else {
       playerGameModifiers.push({ playerId, ...gameModifiers });
@@ -240,7 +240,7 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
-  public changeFieldMarkerModifier(playerId: number, fieldId: string, changeAmount = 1) {
+  changeFieldMarkerModifier(playerId: number, fieldId: string, changeAmount = 1) {
     const playerGameModifiers = this.playerGameModifiers;
     const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
     if (playerGameModifierIndex > -1) {
@@ -270,7 +270,7 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
-  public removePlayerGameModifier(playerId: number, modifierType: keyof GameModifiers, modifierId: string) {
+  removePlayerGameModifier(playerId: number, modifierType: keyof GameModifiers, modifierId: string) {
     const playerGameModifiers = this.playerGameModifiers;
     const playerGameModifierIndex = playerGameModifiers.findIndex((x) => x.playerId === playerId);
     if (playerGameModifierIndex > -1) {
@@ -283,7 +283,7 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
-  public removeTemporaryGameModifiers() {
+  removeTemporaryGameModifiers() {
     const playerModifiers = this.playerGameModifiers;
     for (const modifiers of playerModifiers) {
       for (const keyString in modifiers) {
@@ -303,7 +303,7 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerModifiers);
   }
 
-  public resetplayerGameModifiers(players: Player[]) {
+  resetplayerGameModifiers(players: Player[]) {
     const playerGameModifiers: PlayerGameModifiers[] = [];
     for (let player of players) {
       playerGameModifiers.push({
@@ -315,11 +315,11 @@ export class GameModifiersService {
     this.playerGameModifiersSubject.next(playerGameModifiers);
   }
 
-  public resetAllPlayerGameModifiers() {
+  resetAllPlayerGameModifiers() {
     this.playerGameModifiersSubject.next([]);
   }
 
-  public playerHasCustomActionAvailable(playerId: number, actionType: CustomGameActionType) {
+  playerHasCustomActionAvailable(playerId: number, actionType: CustomGameActionType) {
     return !!this.playerGameModifiers
       .find((x) => x.playerId === playerId)
       ?.customActions?.some((x) => x.action === actionType);
