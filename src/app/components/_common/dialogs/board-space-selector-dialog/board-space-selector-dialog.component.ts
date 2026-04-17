@@ -4,12 +4,12 @@ import { ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
-export type ImperiumCardSelectorMode = 'preview' | 'select';
+export type BoardSpaceSelectorMode = 'preview' | 'select';
 
-export interface ImperiumCardSelectorData {
+export interface BoardSpaceSelectorData {
   title: string;
   imperiumCards: ImperiumDeckCard[];
-  mode: ImperiumCardSelectorMode;
+  mode: BoardSpaceSelectorMode;
   playerId?: number;
   canAquireCards?: boolean;
   aquirableFactionTypes?: string[];
@@ -17,22 +17,23 @@ export interface ImperiumCardSelectorData {
 }
 
 @Component({
-  selector: 'dune-imperium-cards-preview-dialog',
-  templateUrl: './imperium-cards-preview-dialog.component.html',
-  styleUrl: './imperium-cards-preview-dialog.component.scss',
+  selector: 'dune-board-space-selector-dialog',
+  templateUrl: './board-space-selector-dialog.component.html',
+  styleUrl: './board-space-selector-dialog.component.scss',
   standalone: false,
 })
-export class ImperiumCardsPreviewDialogComponent implements OnInit {
+export class BoardSpaceSelectorDialogComponent implements OnInit {
   public searchString = '';
   public imperiumCards: ImperiumDeckCard[] = [];
   selectedCard: ImperiumDeckCard | null = null;
-  hoveredCardId = '';
+  hoveredBoardSpaceId = '';
+
   constructor(
     public gameManager: GameManager,
     public t: TranslateService,
-    public dialogRef: MatDialogRef<ImperiumCardsPreviewDialogComponent>,
+    public dialogRef: MatDialogRef<BoardSpaceSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: ImperiumCardSelectorData,
+    public data: BoardSpaceSelectorData,
   ) {}
 
   ngOnInit(): void {

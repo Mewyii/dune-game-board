@@ -68,6 +68,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
   public canPlaceFieldMarkers = false;
   public playerFieldMarkers: { playerId: number; amount: number }[] = [];
 
+  playerColors: { [key: number]: string } = {};
+
   constructor(
     public t: TranslateService,
     private gameManager: GameManager,
@@ -182,6 +184,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
 
+    this.playersService.playerColors$.subscribe((playerColors) => {
+      this.playerColors = playerColors;
+    });
+
     this.isHighCouncilField = this.actionField.rewards.some(
       (x) => x.type === 'council-seat-small' || x.type === 'council-seat-large',
     );
@@ -234,10 +240,6 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.audioManager.playSound('click-soft');
     }
     return false;
-  }
-
-  public getPlayerColor(playerId: number) {
-    return this.playersService.getPlayerColor(playerId);
   }
 
   public trackSpiceOnField(index: number, spiceOnField: number) {

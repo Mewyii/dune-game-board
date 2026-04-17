@@ -48,20 +48,24 @@ export class DuneFactionComponent implements OnInit {
   @Input() marginLeft: number = 33;
   @Input() mode: AppMode = 'board';
 
-  public influenceScoreArray: number[] = [];
-  public allianceTreshold = 0;
+  influenceScoreArray: number[] = [];
+  allianceTreshold = 0;
 
-  public playerScores: { playerId: number; score: number }[] = [];
+  playerScores: { playerId: number; score: number }[] = [];
 
-  public allianceTakenByPlayerId = 0;
+  allianceTakenByPlayerId = 0;
 
-  public excludedPlayers: number[] = [];
+  excludedPlayers: number[] = [];
+
+  titleColor = '';
+
+  playerColors: { [key: number]: string } = {};
 
   constructor(
-    public playersService: PlayersService,
-    public playerScoreManager: PlayerScoreManager,
     public t: TranslateService,
-    public gameModifiersService: GameModifiersService,
+    private playersService: PlayersService,
+    private playerScoreManager: PlayerScoreManager,
+    private gameModifiersService: GameModifiersService,
     private settingsService: SettingsService,
     private gameManager: GameManager,
   ) {}
@@ -102,29 +106,25 @@ export class DuneFactionComponent implements OnInit {
         )
         .map((x) => x.playerId);
     });
+
+    this.playersService.playerColors$.subscribe((playerColors) => {
+      this.playerColors = playerColors;
+    });
+
+    this.titleColor = this.getTitleColor(this.faction.primaryColor);
   }
 
   onIncreaseFactionScoreClicked(playerId: number) {
-    const player = this.playersService.getPlayer(playerId);
-    if (player) {
-      this.gameManager.increasePlayerFactionScore(player, this.faction.type);
-    }
+    this.gameManager.increasePlayerFactionScore(playerId, this.faction.type);
   }
 
   onDecreaseFactionScoreClicked(playerId: number) {
-    const player = this.playersService.getPlayer(playerId);
-    if (player) {
-      this.gameManager.decreasePlayerFactionScore(player, this.faction.type);
-    }
+    this.gameManager.decreasePlayerFactionScore(playerId, this.faction.type);
 
     return false;
   }
 
-  public getPlayerColor(playerId: number) {
-    return this.playersService.getPlayerColor(playerId);
-  }
-
-  public getTitleColor(rgbColor: string) {
+  getTitleColor(rgbColor: string) {
     const parts = rgbColor
       .substring(4, rgbColor.length - 1)
       .split(' ')
@@ -138,11 +138,11 @@ export class DuneFactionComponent implements OnInit {
     return result;
   }
 
-  public isExcluded(playerId: number) {
+  isExcluded(playerId: number) {
     return this.excludedPlayers.includes(playerId);
   }
 
-  public trackPlayerScore(playerScore: { playerId: number; score: number }) {
+  trackPlayerScore(playerScore: { playerId: number; score: number }) {
     return playerScore.playerId * 100 + playerScore.score;
   }
 }

@@ -2,22 +2,24 @@
 <div mat-dialog-content class="cards-container">
   <div
     class="card-container"
-    *ngFor="let conflict of data.conflicts"
+    *ngFor="let factionType of data.factionTypes"
     [class.selectable]="isSelectMode"
-    [class.selected]="isSelected(conflict)"
-    (click)="onConflictClick(conflict)"
-    (mouseenter)="hoveredCardId = conflict.name.en"
-    (mouseleave)="hoveredCardId = ''"
+    [class.selected]="isSelected(factionType)"
+    (click)="onCardClick(factionType)"
+    (mouseenter)="hoveredFactionId = factionType"
+    (mouseleave)="hoveredFactionId = ''"
   >
     <dune-highlighting
-      *ngIf="conflict.name.en === selectedConflict?.name?.en || conflict.name.en === hoveredCardId"
-      [id]="conflict.name.en"
-      [width]="220"
-      [height]="300"
-      [bottom]="-20"
-      [left]="-25"
+      *ngIf="factionType === selectedFaction || factionType === hoveredFactionId"
+      [id]="factionType"
+      [width]="75"
+      [height]="75"
+      [bottom]="-5"
+      [left]="-10"
     ></dune-highlighting>
-    <dune-conflict-card [conflict]="conflict"> </dune-conflict-card>
+    <div class="resource-container">
+      <img class="resource" [src]="factionType | factionTypePath" />
+    </div>
   </div>
 </div>
 <div mat-dialog-actions>
@@ -25,7 +27,7 @@
     <button
       mat-mini-fab
       [color]="'accent'"
-      [disabled]="!selectedConflict"
+      [disabled]="!selectedFaction"
       (click)="onConfirm()"
       [matTooltip]="t.translate('commonConfirm')"
     >

@@ -1,16 +1,44 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content>
-  <div class="intrigues-container">
-    <div class="card-container" *ngFor="let card of data.intrigues">
-      <dune-intrigue-card [card]="card"></dune-intrigue-card>
-      <div class="card-action-container" *ngIf="data.canAquireCards">
-        <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
-          <mat-icon>check</mat-icon>
-        </button>
-      </div>
+<div mat-dialog-content class="intrigues-container">
+  <div
+    class="card-container"
+    *ngFor="let card of data.intrigues"
+    [class.selectable]="isSelectMode"
+    [class.selected]="isSelected(card)"
+    (click)="onIntrigueClick(card)"
+    (mouseenter)="hoveredCardId = card.id"
+    (mouseleave)="hoveredCardId = ''"
+  >
+    <dune-highlighting
+      *ngIf="card.id === selectedIntrigue?.id || card.id === hoveredCardId"
+      [id]="card.id"
+      [width]="220"
+      [height]="300"
+      [bottom]="-20"
+      [left]="-25"
+    ></dune-highlighting>
+    <dune-intrigue-card [card]="card"></dune-intrigue-card>
+    <div class="card-action-container" *ngIf="data.canAquireCards">
+      <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
+        <mat-icon>check</mat-icon>
+      </button>
     </div>
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onClose()">{{ t.translate('commonCancel') }}</button>
+  @if (isSelectMode) {
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      [disabled]="!selectedIntrigue"
+      (click)="onConfirm()"
+      [matTooltip]="t.translate('commonConfirm')"
+    >
+      <mat-icon>check</mat-icon>
+    </button>
+  } @else {
+    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
 </div>

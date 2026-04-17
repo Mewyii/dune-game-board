@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
-import { Effect, EffectRewardType, StructuredChoiceEffect, StructuredEffect } from '../models';
+import { Effect, EffectRewardType, EffectType, StructuredChoiceEffect, StructuredEffect } from '../models';
 
 export interface PlayerRewardChoice<T> {
   id: string;
@@ -14,11 +14,18 @@ export interface PlayerRewardChoices {
   rewardsChoices: PlayerRewardChoice<Effect[]>[];
   effectChoices: StructuredEffect[];
   customChoices: PlayerRewardChoice<string>[];
+  conflictChoice: PlayerRewardChoice<boolean> | undefined;
 }
 
 export type PlayerScoreType = keyof Omit<PlayerRewardChoices, 'playerId'>;
 
 export type PlayerFactionScoreType = keyof Omit<PlayerRewardChoices, 'playerId' | 'victoryPoints'>;
+
+interface ImmediateEffect {
+  id: string;
+  playerId: number;
+  choice: EffectType | 'conflict-pick';
+}
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +33,17 @@ export type PlayerFactionScoreType = keyof Omit<PlayerRewardChoices, 'playerId' 
 export class PlayerRewardChoicesService {
   private playerRewardChoicesSubject = new BehaviorSubject<PlayerRewardChoices[]>([]);
   playerRewardChoices$ = this.playerRewardChoicesSubject.asObservable();
+
+  immediateEffectStackSubject = new BehaviorSubject<ImmediateEffect[]>([]);
+  immediateEffectStack$ = this.immediateEffectStackSubject.asObservable();
+
+  immediateEffects: EffectType[] = [
+    'card-discard',
+    'intrigue-trash',
+    'faction-influence-up-choice',
+    'faction-influence-up-twice-choice',
+    'faction-influence-down-choice',
+  ];
 
   constructor() {
     const playerRewardChoicesString = localStorage.getItem('playerRewardChoices');
@@ -36,6 +54,25 @@ export class PlayerRewardChoicesService {
 
     this.playerRewardChoices$.subscribe((playerRewardChoices) => {
       localStorage.setItem('playerRewardChoices', JSON.stringify(playerRewardChoices));
+
+      const immediateEffectStack: ImmediateEffect[] = playerRewardChoices.flatMap((x) => {
+        return x.rewardChoices
+          .filter((x) => this.immediateEffects.includes(x.choice.type))
+          .map((y) => ({ id: y.id, playerId: x.playerId, choice: y.choice.type }));
+      });
+      const conflictRewardChoice = playerRewardChoices.find((x) => x.conflictChoice?.choice);
+      if (conflictRewardChoice && conflictRewardChoice.conflictChoice) {
+        immediateEffectStack.push({
+          id: conflictRewardChoice.conflictChoice.id,
+          playerId: conflictRewardChoice.playerId,
+          choice: 'conflict-pick',
+        });
+      }
+      for (const immediateEffect of immediateEffectStack) {
+        if (!this.immediateEffectStackSubject.value.some((x) => x.id === immediateEffect.id)) {
+          this.immediateEffectStackSubject.next([...this.immediateEffectStackSubject.value, immediateEffect]);
+        }
+      }
     });
   }
 
@@ -45,6 +82,10 @@ export class PlayerRewardChoicesService {
 
   resetPlayerRewardChoices() {
     this.playerRewardChoicesSubject.next([]);
+  }
+
+  getPlayerRewardChoices(playerId: number) {
+    return cloneDeep(this.playerRewardChoicesSubject.value.find((x) => x.playerId === playerId));
   }
 
   addPlayerRewardChoice(playerId: number, reward: Effect) {
@@ -115,6 +156,23 @@ export class PlayerRewardChoicesService {
     }
   }
 
+  setPlayerConflictChoice(playerId: number, choice: boolean) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
+
+    if (index > -1) {
+      playerRewardChoices[index].conflictChoice = { id: crypto.randomUUID(), choice };
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    } else {
+      const newPlayerRewardChoices = this.getInitialPlayerRewardChoices(playerId);
+      newPlayerRewardChoices.conflictChoice = { id: crypto.randomUUID(), choice };
+      playerRewardChoices.push(newPlayerRewardChoices);
+
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    }
+  }
+
   removePlayerRewardChoice(playerId: number, id: string) {
     const playerRewardChoices = this.playerRewardChoices;
 
@@ -155,6 +213,21 @@ export class PlayerRewardChoicesService {
     this.playerRewardChoicesSubject.next(playerRewardChoices);
   }
 
+  removePlayerConflictChoice(playerId: number) {
+    const playerRewardChoices = this.playerRewardChoices;
+
+    const index = playerRewardChoices.findIndex((x) => x.playerId === playerId);
+
+    if (index > -1) {
+      playerRewardChoices[index].conflictChoice = undefined;
+      this.playerRewardChoicesSubject.next(playerRewardChoices);
+    }
+  }
+
+  removeImmediateEffect(id: string) {
+    this.immediateEffectStackSubject.next(this.immediateEffectStackSubject.value.filter((x) => x.id !== id));
+  }
+
   getPlayerRewardChoice(playerId: number, rewardType: EffectRewardType) {
     const playerRewardChoices = this.playerRewardChoices;
 
@@ -174,6 +247,7 @@ export class PlayerRewardChoicesService {
       rewardsChoices: [],
       customChoices: [],
       effectChoices: [],
+      conflictChoice: undefined,
     };
   }
 }

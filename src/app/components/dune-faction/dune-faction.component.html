@@ -4,7 +4,7 @@
   [style.left]="faction.position.marginLeft + 'px'"
   [style.backgroundColor]="faction.secondaryColor"
 >
-  <div class="title-container font-scifi" [style.color]="getTitleColor(faction.primaryColor)">
+  <div class="title-container font-scifi" [style.color]="titleColor">
     <span class="title">{{ t.translateLS(faction.title).toLocaleUpperCase() }} </span>
   </div>
   <div class="content">
@@ -39,7 +39,7 @@
         <div class="alliance-token-container">
           <dune-alliance-token
             [faction]="faction"
-            [customColor]="getPlayerColor(allianceTakenByPlayerId)"
+            [customColor]="playerColors[allianceTakenByPlayerId]"
           ></dune-alliance-token>
         </div>
         @for (playerScore of playerScores; track trackPlayerScore(playerScore); let i = $index) {
@@ -48,7 +48,7 @@
             [class.hidden]="isExcluded(playerScore.playerId)"
             [style.bottom]="15 + playerScore.score * 48 + 'px'"
             [style.left]="15 + i * 35 + 'px'"
-            [style.background-color]="getPlayerColor(playerScore.playerId)"
+            [style.background-color]="playerColors[playerScore.playerId]"
             (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
             (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"
           ></div>

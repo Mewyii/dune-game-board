@@ -13,7 +13,10 @@ import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
-import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
+import {
+  ImperiumCardSelectorData,
+  ImperiumCardsPreviewDialogComponent,
+} from '../_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 
 @Component({
   selector: 'dune-imperium-row',
@@ -131,7 +134,7 @@ export class ImperiumRowComponent implements OnInit {
           imperiumCards: imperiumDeck,
           canAquireCards: true,
           search: true,
-        },
+        } as ImperiumCardSelectorData,
       });
 
       dialogRef.afterClosed().subscribe(() => {

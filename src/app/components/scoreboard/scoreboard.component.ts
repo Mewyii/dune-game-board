@@ -4,7 +4,6 @@ import { EFFECT_TYPE_PATHS } from 'src/app/helpers/reward-types';
 import { AIManager } from 'src/app/services/ai/ai.manager';
 import { EffectsService } from 'src/app/services/game-effects.service';
 
-import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -25,11 +24,12 @@ export class ScoreboardComponent implements OnInit {
   victoryPointBoni: VictoryPointReward[] | undefined;
   finaleTrigger = 9;
 
+  playerColors: { [key: number]: string } = {};
+
   constructor(
     private playersService: PlayersService,
     private playerScoreManager: PlayerScoreManager,
     private settingsService: SettingsService,
-    private gameManager: GameManager,
     private effectsService: EffectsService,
     private aiManager: AIManager,
   ) {}
@@ -48,6 +48,10 @@ export class ScoreboardComponent implements OnInit {
       if (x.finaleTrigger) {
         this.finaleTrigger = x.finaleTrigger;
       }
+    });
+
+    this.playersService.playerColors$.subscribe((playerColors) => {
+      this.playerColors = playerColors;
     });
   }
 
@@ -74,10 +78,6 @@ export class ScoreboardComponent implements OnInit {
     this.aiManager.setPreferredFieldsForAIPlayer(player);
 
     return false;
-  }
-
-  getPlayerColor(playerId: number) {
-    return this.playersService.getPlayerColor(playerId);
   }
 
   scoreHasReward(score: number) {

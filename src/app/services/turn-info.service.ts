@@ -133,6 +133,7 @@ export class TurnInfoService {
       needsToPassTurn: false,
       canRetreatUnits: false,
       techTileTrashAmount: 0,
+      needsToPickConflict: false,
     };
   }
 }

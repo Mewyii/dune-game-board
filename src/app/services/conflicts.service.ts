@@ -65,6 +65,7 @@ export class ConflictsService {
     }
 
     this.conflictStackSubject.next(conflictStack);
+    this.currentConflictSubject.next(undefined);
   }
 
   setNextConflict() {
@@ -75,6 +76,15 @@ export class ConflictsService {
     if (nextConflict) {
       this.conflictStackSubject.next(conflictStack);
       this.currentConflictSubject.next(nextConflict);
+    }
+  }
+
+  setCurrentConflict(conflictId: string) {
+    const conflictStack = this.conflictStack;
+    const newCurrentConflict = conflictStack.find((x) => x.name.en === conflictId);
+    if (newCurrentConflict) {
+      this.currentConflictSubject.next(newCurrentConflict);
+      this.conflictStackSubject.next(conflictStack.filter((x) => x.name.en !== conflictId));
     }
   }
 

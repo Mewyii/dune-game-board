@@ -1,5 +1,5 @@
 <div class="reward-choices-container">
-  <ng-container *ngIf="playerRewardChoices">
+  @if (playerRewardChoices) {
     @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
       <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
         @for (reward of rewardsChoice.choice; track $index) {
@@ -19,7 +19,7 @@
         (click)="onCustomChoiceClicked(rewardChoice.id)"
       ></div>
     }
-  </ng-container>
+  }
   @for (effectOption of playerEffectOptions; track $index; let idx = $index) {
     <div
       [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"

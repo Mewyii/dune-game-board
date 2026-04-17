@@ -95,6 +95,16 @@ h5 {
     pointer !important;
 }
 
+.mat-mdc-dialog-title {
+  text-align: center;
+}
+
+.mat-mdc-dialog-actions {
+  justify-content: center !important;
+  gap: 8px;
+  margin-bottom: 6px !important;
+}
+
 // Angular Material Notification
 .mdc-snackbar.notification {
   margin-top: 10vh;

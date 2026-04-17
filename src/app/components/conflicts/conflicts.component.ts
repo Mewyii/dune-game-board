@@ -7,17 +7,17 @@ import { GameModifiersService } from 'src/app/services/game-modifier.service';
 import { ConflictsPreviewDialogComponent } from '../_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
 
 @Component({
-    selector: 'dune-conflicts',
-    templateUrl: './conflicts.component.html',
-    styleUrls: ['./conflicts.component.scss'],
-    standalone: false
+  selector: 'dune-conflicts',
+  templateUrl: './conflicts.component.html',
+  styleUrls: ['./conflicts.component.scss'],
+  standalone: false,
 })
 export class ConflictsComponent implements OnInit {
   constructor(
     public conflictsService: ConflictsService,
     private gameManager: GameManager,
     private gameModifierService: GameModifiersService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   public currentConflict: Conflict | undefined;
@@ -36,7 +36,7 @@ export class ConflictsComponent implements OnInit {
 
       this.hasConflictVision = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'vision-conflict'
+        'vision-conflict',
       );
 
       this.conflictStackIsActive = false;
@@ -46,7 +46,7 @@ export class ConflictsComponent implements OnInit {
     this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.hasConflictVision = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
-        'vision-conflict'
+        'vision-conflict',
       );
     });
   }

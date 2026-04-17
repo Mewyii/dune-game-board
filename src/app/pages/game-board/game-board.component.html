@@ -27,6 +27,7 @@
         <dune-intrigues *ngIf="mode === 'game' && currentRound !== 0"></dune-intrigues>
         <dune-tech-tiles *ngIf="mode === 'game' && gameContent.useTechTiles"></dune-tech-tiles>
         <dune-always-buyable-cards></dune-always-buyable-cards>
+        <dune-immediate-effects></dune-immediate-effects>
       </div>
     </div>
     <dune-turn-infos *ngIf="mode === 'game' && currentRound !== 0"></dune-turn-infos>

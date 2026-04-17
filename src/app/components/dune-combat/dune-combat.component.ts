@@ -6,6 +6,7 @@ import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { EffectsService } from 'src/app/services/game-effects.service';
+import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TurnInfoService } from 'src/app/services/turn-info.service';
@@ -51,6 +52,8 @@ export class DuneCombatComponent implements OnInit {
     3: { x: '950px', y: '-25px' },
   };
 
+  playerColors: { [key: number]: string } = {};
+
   constructor(
     public settingsService: SettingsService,
     private combatManager: CombatManager,
@@ -58,6 +61,7 @@ export class DuneCombatComponent implements OnInit {
     private audioManager: AudioManager,
     private turnInfoService: TurnInfoService,
     private effectsService: EffectsService,
+    private gameManager: GameManager,
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +74,10 @@ export class DuneCombatComponent implements OnInit {
 
     this.playersService.players$.subscribe((players) => {
       this.players = players;
+    });
+
+    this.playersService.playerColors$.subscribe((playerColors) => {
+      this.playerColors = playerColors;
     });
 
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
@@ -85,7 +93,7 @@ export class DuneCombatComponent implements OnInit {
 
   onAddTroopToCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.effectsService.addUnitsToCombatIfPossible(playerId, 'troop', 1);
+    this.gameManager.addUnitsIntoCombat(playerId, 'troop', 1);
   }
 
   onRemoveTroopFromCombatClicked(playerId: number) {
@@ -96,7 +104,7 @@ export class DuneCombatComponent implements OnInit {
 
   onAddShipToCombatClicked(playerId: number) {
     this.audioManager.playSound('click');
-    this.effectsService.addUnitsToCombatIfPossible(playerId, 'dreadnought', 1);
+    this.gameManager.addUnitsIntoCombat(playerId, 'dreadnought', 1);
   }
 
   onRemoveShipFromCombatClicked(playerId: number) {
@@ -107,10 +115,6 @@ export class DuneCombatComponent implements OnInit {
 
   getPlayersOnScore(score: number) {
     return this.combatScores.filter((x) => x.score === score);
-  }
-
-  getPlayerColor(playerId: number) {
-    return this.playersService.getPlayerColor(playerId);
   }
 
   trackCombatUnits(combatUnits: PlayerCombatUnits) {

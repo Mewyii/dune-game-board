@@ -31,11 +31,11 @@ export class PlayerRewardChoicesComponent implements OnInit {
   activeEffectId = '';
 
   constructor(
+    public t: TranslateService,
     private gameManager: GameManager,
     private playerRewardChoicesService: PlayerRewardChoicesService,
     private turnInfoService: TurnInfoService,
     private effectsService: EffectsService,
-    public t: TranslateService,
   ) {}
 
   ngOnInit(): void {

@@ -89,6 +89,10 @@ export class LeadersService {
     return cloneDeep(this.playerLeaders.find((x) => x.playerId === playerId));
   }
 
+  getPlayerLeaderName(playerId: number) {
+    return cloneDeep(this.playerLeaders.find((x) => x.playerId === playerId)?.leader.name);
+  }
+
   createLeaderDeck() {
     const leaders = this.leaderConfiguratorService.leaders;
     this.playerLeadersSubject.next([]);

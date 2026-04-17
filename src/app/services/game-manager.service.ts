@@ -37,6 +37,7 @@ import { Player } from '../models/player';
 import { AIManager } from './ai/ai.manager';
 
 import { CardAcquiringPlacementType } from '../constants/board-settings';
+import { getPlayerCombatStrength, getPlayerGarrisonStrength } from '../helpers/ai';
 import { delay, sum } from '../helpers/common';
 import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn-infos';
 import { GameServices, GameState } from '../models/ai';
@@ -902,36 +903,73 @@ export class GameManager {
     this.loggingService.logPlayerTrashedIntrigue(playerId, this.t.translateLS(intrigue.name));
   }
 
-  increasePlayerFactionScore(player: Player, factionType: FactionType) {
+  increasePlayerFactionScore(playerId: number, factionType: FactionType) {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
     const influenceUpChoiceTodo = this.playerRewardChoicesService.getPlayerRewardChoice(
-      player.id,
+      playerId,
       'faction-influence-up-choice',
     );
     if (influenceUpChoiceTodo) {
-      this.playerRewardChoicesService.removePlayerRewardChoice(player.id, influenceUpChoiceTodo.id);
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, influenceUpChoiceTodo.id);
     }
 
-    this.effectsService.addRewardToPlayer(player.id, {
+    this.effectsService.addRewardToPlayer(playerId, {
       type: ('faction-influence-up-' + factionType) as EffectRewardType,
     });
 
     this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
-  decreasePlayerFactionScore(player: Player, factionType: FactionType) {
+  decreasePlayerFactionScore(playerId: number, factionType: FactionType) {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+
     const influenceDownChoiceTodo = this.playerRewardChoicesService.getPlayerRewardChoice(
-      player.id,
+      playerId,
       'faction-influence-down-choice',
     );
     if (influenceDownChoiceTodo) {
-      this.playerRewardChoicesService.removePlayerRewardChoice(player.id, influenceDownChoiceTodo.id);
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, influenceDownChoiceTodo.id);
     }
 
-    this.effectsService.addRewardToPlayer(player.id, {
+    this.effectsService.addRewardToPlayer(playerId, {
       type: ('faction-influence-down-' + factionType) as EffectRewardType,
     });
 
     this.aiManager.setPreferredFieldsForAIPlayer(player);
+  }
+
+  addUnitsIntoCombat(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+    const currentConflict = this.conflictsService.currentConflict;
+    if (!currentConflict) {
+      this.turnInfoService.setPlayerTurnInfo(playerId, { needsToPickConflict: true });
+      this.resolveRewardChoices(player);
+    }
+
+    this.effectsService.addUnitsToCombatIfPossible(playerId, unitType, amount);
+  }
+
+  pickCurrentConflict(playerId: number, conflictId: string) {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+
+    const conflictChoice = this.playerRewardChoicesService.getPlayerRewardChoices(playerId)?.conflictChoice;
+    if (conflictChoice) {
+      this.playerRewardChoicesService.removePlayerConflictChoice(playerId);
+    }
+
+    this.conflictsService.setCurrentConflict(conflictId);
   }
 
   private resolveImperiumCardEffects(card: ImperiumDeckCard, player: Player, timing: EffectTimingType) {
@@ -1241,6 +1279,10 @@ export class GameManager {
       });
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardReturnToHandAmount: 0 });
     }
+    if (turnInfo.needsToPickConflict) {
+      this.playerRewardChoicesService.setPlayerConflictChoice(player.id, true);
+      this.turnInfoService.setPlayerTurnInfo(player.id, { needsToPickConflict: false });
+    }
     if (turnInfo.enemiesEffects.length > 0) {
       const enemies = this.playersService.getEnemyPlayers(player.id);
 
@@ -1398,7 +1440,18 @@ export class GameManager {
       const deployableTroops = turnInfo.deployableTroops - turnInfo.deployedTroops;
       const deployableDreadnoughts = turnInfo.deployableDreadnoughts - turnInfo.deployedDreadnoughts;
 
-      this.aiManager.aiAddUnitsToCombat(player, gameState, deployableUnits, deployableTroops, deployableDreadnoughts);
+      const addedUnitsToCombat = this.aiManager.aiAddUnitsToCombat(
+        player,
+        gameState,
+        deployableUnits,
+        deployableTroops,
+        deployableDreadnoughts,
+      );
+
+      const currentConflict = this.conflictsService.currentConflict;
+      if (addedUnitsToCombat && !currentConflict) {
+        this.turnInfoService.setPlayerTurnInfo(player.id, { needsToPickConflict: true });
+      }
     }
     if (turnInfo.signetRingAmount > 0) {
       for (let i = 0; i < turnInfo.signetRingAmount; i++) {
@@ -1426,6 +1479,39 @@ export class GameManager {
         }
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
+    }
+    if (turnInfo.needsToPickConflict) {
+      const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(player.id);
+      const pickableConflicts = this.conflictsService.conflictStack.filter((x) =>
+        playerAgentsOnFields.some((y) => y.fieldId === x.boardSpaceId),
+      );
+      if (pickableConflicts.length > 1) {
+        pickableConflicts.sort(
+          (a, b) =>
+            this.effectEvaluationService.getRewardArrayEvaluationForTurnState(b.rewards[0], player, gameState) -
+            this.effectEvaluationService.getRewardArrayEvaluationForTurnState(a.rewards[0], player, gameState),
+        );
+
+        const enemyGarrisonStrengths = gameState.enemyCombatUnits.map((x) => ({
+          ...x,
+          garrisonStrength: getPlayerGarrisonStrength(x, gameState),
+        }));
+        enemyGarrisonStrengths.sort((a, b) => b.garrisonStrength - a.garrisonStrength);
+        const highestEnemyGarrisonStrength = enemyGarrisonStrengths[0].garrisonStrength;
+
+        if (
+          getPlayerCombatStrength(gameState.playerCombatUnits, gameState) +
+            getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState) >=
+          highestEnemyGarrisonStrength
+        ) {
+          this.conflictsService.setCurrentConflict(pickableConflicts[0].name.en);
+        } else {
+          this.conflictsService.setCurrentConflict(pickableConflicts[pickableConflicts.length - 1].name.en);
+        }
+      } else {
+        this.conflictsService.setCurrentConflict(pickableConflicts[0].name.en);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { needsToPickConflict: false });
     }
     if (turnInfo.enemiesEffects.length > 0) {
       const enemies = this.playersService.getEnemyPlayers(player.id);

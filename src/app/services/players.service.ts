@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { Player, PlayerTurnState } from '../models/player';
 import { SettingsService } from './settings.service';
 
@@ -10,6 +10,16 @@ import { SettingsService } from './settings.service';
 export class PlayersService {
   private playersSubject = new BehaviorSubject<Player[]>([]);
   players$ = this.playersSubject.asObservable();
+  playerColors$ = this.players$.pipe(
+    map((players) => {
+      const playerColors: { [key: number]: string } = {};
+      for (const player of players) {
+        playerColors[player.id] = player.color;
+      }
+      return playerColors;
+    }),
+    distinctUntilChanged(),
+  );
 
   constructor(private settingsService: SettingsService) {
     const playersString = localStorage.getItem('players');

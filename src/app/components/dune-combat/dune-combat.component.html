@@ -18,7 +18,7 @@
               <div class="ship-marker-container">
                 <div
                   class="ship-marker"
-                  [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                  [style.background-color]="playerColors[combatUnits.playerId]"
                   (click)="onAddShipToCombatClicked(combatUnits.playerId)"
                 ></div>
               </div>
@@ -27,7 +27,7 @@
               <div class="troop-marker-container">
                 <div
                   class="troop-marker"
-                  [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                  [style.background-color]="playerColors[combatUnits.playerId]"
                   (click)="onAddTroopToCombatClicked(combatUnits.playerId)"
                 ></div>
               </div>
@@ -43,7 +43,7 @@
             <div class="ship-marker-container">
               <div
                 class="ship-marker combat"
-                [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                [style.background-color]="playerColors[combatUnits.playerId]"
                 (click)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
                 (contextmenu)="onRemoveShipFromCombatClicked(combatUnits.playerId)"
               ></div>
@@ -53,7 +53,7 @@
             <div class="troop-marker-container">
               <div
                 class="troop-marker combat"
-                [style.background-color]="getPlayerColor(combatUnits.playerId)"
+                [style.background-color]="playerColors[combatUnits.playerId]"
                 (click)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
                 (contextmenu)="onRemoveTroopFromCombatClicked(combatUnits.playerId)"
               ></div>
@@ -75,7 +75,7 @@
             <div
               *ngIf="playerScore.score === 0"
               class="score-marker"
-              [style.background-color]="getPlayerColor(playerScore.playerId)"
+              [style.background-color]="playerColors[playerScore.playerId]"
               [style.top]="25 + i * 25 + 'px'"
             ></div>
           }
@@ -92,7 +92,7 @@
                 <div
                   *ngIf="playerScore.score === scoreIndex + 1"
                   class="score-marker"
-                  [style.background-color]="getPlayerColor(playerScore.playerId)"
+                  [style.background-color]="playerColors[playerScore.playerId]"
                 ></div>
               }
             </div>
@@ -122,7 +122,7 @@
     @for (combatScore of combatScores; track $index) {
       <div
         *ngIf="combatScore.score > maxCombatScore"
-        [style.color]="getPlayerColor(combatScore.playerId)"
+        [style.color]="playerColors[combatScore.playerId]"
         [style.padding]="'6px'"
       >
         {{ combatScore.score }}

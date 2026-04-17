@@ -26,6 +26,7 @@ export function turnInfosNeedToBeResolved(turnInfo: TurnInfo) {
     turnInfo.effectChoices.length > 0 ||
     turnInfo.effectConversions.length > 0 ||
     turnInfo.canLiftAgent ||
-    turnInfo.signetRingAmount > 0
+    turnInfo.signetRingAmount > 0 ||
+    turnInfo.needsToPickConflict
   );
 }

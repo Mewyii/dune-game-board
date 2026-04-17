@@ -151,7 +151,7 @@
     <div class="field-marker-container">
       @for (fieldMarker of playerFieldMarkers; track $index) {
         @for (marker of fieldMarker.amount | numberToArray; track $index) {
-          <div class="field-marker" [style.background]="getPlayerColor(fieldMarker.playerId)"></div>
+          <div class="field-marker" [style.background]="playerColors[marker.playerId]"></div>
         }
       }
     </div>

@@ -11,7 +11,6 @@ import { ImperiumCard } from '../models/imperium-card';
 import { ImperiumPlot } from '../models/imperium-plot';
 import { Player } from '../models/player';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
-import { PlotConfiguratorService } from './configurators/plot-configurator.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
 
@@ -113,7 +112,6 @@ export class CardsService {
   constructor(
     private playersService: PlayersService,
     private cardConfiguratorService: CardConfiguratorService,
-    private plotConfiguratorService: PlotConfiguratorService,
     private settingsService: SettingsService,
   ) {
     const imperiumDeckString = localStorage.getItem('imperiumDeck');

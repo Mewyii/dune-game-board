@@ -15,14 +15,14 @@
       [class.selectable]="isSelectMode"
       [class.selected]="isSelected(card)"
       (click)="onCardClick(card)"
-      (mouseenter)="hoveredCardId = card.id"
-      (mouseleave)="hoveredCardId = ''"
+      (mouseenter)="hoveredBoardSpaceId = card.id"
+      (mouseleave)="hoveredBoardSpaceId = ''"
     >
       <dune-highlighting
-        *ngIf="card.id === selectedCard?.id || card.id === hoveredCardId"
+        *ngIf="card.id === selectedCard?.id || card.id === hoveredBoardSpaceId"
         [id]="card.id"
-        [width]="300"
-        [height]="400"
+        [width]="220"
+        [height]="300"
         [bottom]="-20"
         [left]="-25"
       ></dune-highlighting>

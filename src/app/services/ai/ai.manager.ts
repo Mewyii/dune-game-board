@@ -431,6 +431,8 @@ export class AIManager {
     deployableTroops: number,
     deployableDreadnoughts: number,
   ) {
+    let addedUnitsToCombat = false;
+
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id);
     const enemyCombatScores = this.combatManager.getEnemyCombatScores(player.id);
     const playerHasAgentsLeft = this.playerAgentsService.getAvailablePlayerAgentCount(player.id) > 1;
@@ -466,11 +468,17 @@ export class AIManager {
       if (addUnitsDecision === 'all' || this.roundService.isFinale) {
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'troop', addableTroops);
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
+        addedUnitsToCombat = true;
       } else if (addUnitsDecision === 'minimum') {
         this.aiAddMinimumUnitsToCombat(player.id, playerCombatUnits, enemyCombatScores, playerHasAgentsLeft);
+        addedUnitsToCombat = true;
       } else if (addUnitsDecision !== 'none') {
-        this.effectsService.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
-        const addedShipCombatStrength = this.settingsService.getDreadnoughtStrength() * addableDreadnoughts;
+        let addedShipCombatStrength = 0;
+        if (addableDreadnoughts) {
+          this.effectsService.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
+          addedShipCombatStrength = this.settingsService.getDreadnoughtStrength() * addableDreadnoughts;
+          addedUnitsToCombat = true;
+        }
 
         if (addUnitsDecision > addedShipCombatStrength) {
           const strengthToAdd = addUnitsDecision - addedShipCombatStrength;
@@ -480,9 +488,11 @@ export class AIManager {
             'troop',
             addableTroops > troopsToAdd ? troopsToAdd : addableTroops,
           );
+          addedUnitsToCombat = true;
         }
       }
     }
+    return addedUnitsToCombat;
   }
 
   private aiAddMinimumUnitsToCombat(

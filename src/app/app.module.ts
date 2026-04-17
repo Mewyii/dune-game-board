@@ -36,7 +36,9 @@ import { NgxParticlesModule } from '@tsparticles/angular';
 import { AllianceTokenComponent } from './components/_common/alliance-token/alliance-token.component';
 import { ConflictCardComponent } from './components/_common/conflict-card/conflict-card.component';
 import { AdditionalPlayerActionsDialogComponent } from './components/_common/dialogs/additional-player-actions-dialog/additional-player-actions-dialog.component';
+import { BoardSpaceSelectorDialogComponent } from './components/_common/dialogs/board-space-selector-dialog/board-space-selector-dialog.component';
 import { ConflictsPreviewDialogComponent } from './components/_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
+import { FactionSelectorDialogComponent } from './components/_common/dialogs/faction-selector-dialog/faction-selector-dialog.component';
 import { GameSummaryDialogComponent } from './components/_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 import { ImperiumCardsPreviewDialogComponent } from './components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
@@ -59,6 +61,7 @@ import { ConflictsComponent } from './components/conflicts/conflicts.component';
 import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
 import { DuneVersionUpdaterComponent } from './components/dune-version-updater/dune-version-updater.component';
 import { GameLogComponent } from './components/game-log/game-log.component';
+import { ImmediateEffectsComponent } from './components/immediate-effects/immediate-effects.component';
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { LeadersComponent } from './components/leaders/leaders.component';
@@ -163,6 +166,8 @@ import { SafeUrlPipe } from './pipes/safe-url';
     DialogTechTileEditorComponent,
     TechTileEditorComponent,
     ImperiumCardsPreviewDialogComponent,
+    BoardSpaceSelectorDialogComponent,
+    FactionSelectorDialogComponent,
     PlayerRewardChoicesComponent,
     ConflictsPreviewDialogComponent,
     IntrigueConfiguratorComponent,
@@ -191,6 +196,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     ManualComponent,
     DialogGameManualComponent,
     HighlightingComponent,
+    ImmediateEffectsComponent,
   ],
   imports: [
     BrowserModule,
