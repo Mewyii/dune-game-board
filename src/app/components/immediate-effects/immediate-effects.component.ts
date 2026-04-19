@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ActiveFactionType, activeFactionTypes } from 'src/app/models';
-import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
-import { ConflictsService } from 'src/app/services/conflicts.service';
+import { ConflictDeckCard, ConflictsService } from 'src/app/services/conflicts.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeadersService } from 'src/app/services/leaders.service';
@@ -210,9 +209,9 @@ export class ImmediateEffectsComponent implements OnInit {
             } as ConflictSelectorData,
             disableClose: true,
           });
-          dialogRef.afterClosed().subscribe((conflict: Conflict) => {
+          dialogRef.afterClosed().subscribe((conflict: ConflictDeckCard) => {
             this.immediateEffectDialogOpen = false;
-            this.gameManager.pickCurrentConflict(currentEffect.playerId, conflict.name.en);
+            this.gameManager.pickCurrentConflict(currentEffect.playerId, conflict.id);
             this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
           });
         }

@@ -5,20 +5,24 @@ import { shuffleMultipleTimes } from '../helpers/common';
 import { Conflict } from '../models/conflict';
 import { SettingsService } from './settings.service';
 
+export interface ConflictDeckCard extends Conflict {
+  id: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ConflictsService {
-  private conflictStackSubject = new BehaviorSubject<Conflict[]>([]);
+  private conflictStackSubject = new BehaviorSubject<ConflictDeckCard[]>([]);
   conflictStack$ = this.conflictStackSubject.asObservable();
 
-  private currentConflictSubject = new BehaviorSubject<Conflict | undefined>(undefined);
+  private currentConflictSubject = new BehaviorSubject<ConflictDeckCard | undefined>(undefined);
   currentConflict$ = this.currentConflictSubject.asObservable();
 
   constructor(private settingsService: SettingsService) {
     const conflictStackString = localStorage.getItem('conflictStack');
     if (conflictStackString) {
-      const conflictStack = JSON.parse(conflictStackString) as Conflict[];
+      const conflictStack = JSON.parse(conflictStackString) as ConflictDeckCard[];
 
       this.conflictStackSubject.next(conflictStack);
     }
@@ -29,7 +33,7 @@ export class ConflictsService {
 
     const currentConflictString = localStorage.getItem('currentConflict');
     if (currentConflictString) {
-      const currentConflict = JSON.parse(currentConflictString) as Conflict | undefined;
+      const currentConflict = JSON.parse(currentConflictString) as ConflictDeckCard | undefined;
 
       this.currentConflictSubject.next(currentConflict);
     }
@@ -51,14 +55,14 @@ export class ConflictsService {
 
   createConflictDeck() {
     const allConflicts = this.settingsService.getConflicts();
-    const conflictStack: Conflict[] = [];
+    const conflictStack: ConflictDeckCard[] = [];
     for (const [index, conflictCardAmount] of this.settingsService.getConflictCardsPerLevel().entries()) {
-      let conflictsOfLevel = allConflicts.filter((x) => x.lvl === index + 1);
+      let conflictsOfLevel = allConflicts.filter((x) => x.lvl === index + 1).map((x) => this.instantiateConflict(x));
       if (this.settingsService.getConflictsMode() === 'random') {
         conflictsOfLevel = shuffleMultipleTimes(conflictsOfLevel);
       } else {
         conflictsOfLevel = conflictsOfLevel
-          .sort((a, b) => a.name.en.localeCompare(b.name.en))
+          .sort((a, b) => a.id.localeCompare(b.id))
           .sort((a, b) => (a?.boardSpaceId ?? '').localeCompare(b?.boardSpaceId ?? ''));
       }
       conflictStack.push(...conflictsOfLevel.slice(0, conflictCardAmount));
@@ -81,15 +85,19 @@ export class ConflictsService {
 
   setCurrentConflict(conflictId: string) {
     const conflictStack = this.conflictStack;
-    const newCurrentConflict = conflictStack.find((x) => x.name.en === conflictId);
+    const newCurrentConflict = conflictStack.find((x) => x.id === conflictId);
     if (newCurrentConflict) {
       this.currentConflictSubject.next(newCurrentConflict);
-      this.conflictStackSubject.next(conflictStack.filter((x) => x.name.en !== conflictId));
+      this.conflictStackSubject.next(conflictStack.filter((x) => x.id !== conflictId));
     }
   }
 
   resetConflicts() {
     this.conflictStackSubject.next([]);
     this.currentConflictSubject.next(undefined);
+  }
+
+  private instantiateConflict(conflict: Conflict): ConflictDeckCard {
+    return { id: crypto.randomUUID(), ...conflict };
   }
 }

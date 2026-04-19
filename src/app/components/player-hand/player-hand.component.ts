@@ -155,7 +155,7 @@ export class PlayerHandComponent implements OnInit {
   }
 
   onTrashHandCardClicked(card: ImperiumDeckCard) {
-    this.gameManager.trashImperiumCardFromHand(this.activePlayerId, card);
+    this.gameManager.trashImperiumCard(this.activePlayerId, card, 'hand');
     this.activeCardId = '';
   }
 
@@ -222,18 +222,8 @@ export class PlayerHandComponent implements OnInit {
 
   onTrashDiscardedCardClicked(card: ImperiumDeckCard) {
     if (this.activePlayer) {
-      if (this.activePlayer.turnState === 'agent-placement') {
-        this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
-        this.activeCardId = '';
-
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      } else if (this.playerresourcesService.getPlayerResourceAmount(this.activePlayerId, 'focus') > 0) {
-        this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
-        this.playerresourcesService.removeResourceFromPlayer(this.activePlayerId, 'focus', 1);
-        this.activeCardId = '';
-
-        this.logService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
-      }
+      this.gameManager.trashImperiumCard(this.activePlayerId, card, 'discard-pile');
+      this.activeCardId = '';
     }
   }
 

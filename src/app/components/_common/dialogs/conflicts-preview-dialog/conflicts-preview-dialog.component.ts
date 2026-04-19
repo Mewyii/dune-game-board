@@ -1,13 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Conflict } from 'src/app/models/conflict';
+import { ConflictDeckCard } from 'src/app/services/conflicts.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 export type ConflictSelectorMode = 'preview' | 'select';
 
 export interface ConflictSelectorData {
   title: string;
-  conflicts: Conflict[];
+  conflicts: ConflictDeckCard[];
   mode: ConflictSelectorMode;
 }
 
@@ -18,7 +18,7 @@ export interface ConflictSelectorData {
   standalone: false,
 })
 export class ConflictsPreviewDialogComponent {
-  selectedConflict: Conflict | null = null;
+  selectedConflict: ConflictDeckCard | null = null;
   hoveredCardId = '';
 
   constructor(
@@ -35,13 +35,13 @@ export class ConflictsPreviewDialogComponent {
     return this.data.mode === 'preview';
   }
 
-  onConflictClick(conflict: Conflict) {
+  onConflictClick(conflict: ConflictDeckCard) {
     if (this.isSelectMode) {
       this.selectedConflict = conflict;
     }
   }
 
-  isSelected(conflict: Conflict): boolean {
+  isSelected(conflict: ConflictDeckCard): boolean {
     return this.selectedConflict === conflict;
   }
 

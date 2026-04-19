@@ -6,12 +6,12 @@
     [class.selectable]="isSelectMode"
     [class.selected]="isSelected(conflict)"
     (click)="onConflictClick(conflict)"
-    (mouseenter)="hoveredCardId = conflict.name.en"
+    (mouseenter)="hoveredCardId = conflict.id"
     (mouseleave)="hoveredCardId = ''"
   >
     <dune-highlighting
-      *ngIf="conflict.name.en === selectedConflict?.name?.en || conflict.name.en === hoveredCardId"
-      [id]="conflict.name.en"
+      *ngIf="conflict.id === selectedConflict?.name?.en || conflict.id === hoveredCardId"
+      [id]="conflict.id"
       [width]="220"
       [height]="300"
       [bottom]="-20"

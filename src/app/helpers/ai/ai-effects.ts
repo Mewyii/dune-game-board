@@ -148,7 +148,7 @@ export function getPlayerCombatStrengthPotential(
     troopCombatStrengthPotential +
     0.5 * gameState.playerHandCardsRewards.sword +
     0.025 * gameState.playerCardsRewards.sword +
-    0.5 * playerIntrigueCount +
+    1.0 * playerIntrigueCount +
     0.3 * gameState.playerTechTilesRewards.sword +
     1 * (playerAgentsAvailable - 1) * Math.random() +
     0.25 * (gameState.currentRound - 1)

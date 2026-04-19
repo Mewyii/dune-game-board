@@ -7,9 +7,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Arrakeen',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }],
-      [{ type: 'solari', amount: 2 }],
+      [{ type: 'victory-point' }, { type: 'location-control' }],
+      [{ type: 'victory-point' }, { type: 'intrigue' }],
+      [{ type: 'solari', amount: 4 }],
     ],
   },
   {
@@ -17,11 +17,8 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Arrakeen',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'spice' }],
-      [
-        { type: 'spice', amount: 2 },
-        { type: 'solari', amount: 2 },
-      ],
+      [{ type: 'location-control' }, { type: 'water' }],
+      [{ type: 'water' }, { type: 'solari', amount: 4 }],
       [{ type: 'solari', amount: 2 }],
     ],
   },
@@ -31,10 +28,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'spice' }],
-      [
-        { type: 'spice', amount: 2 },
-        { type: 'solari', amount: 2 },
-      ],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice' }, { type: 'solari' }],
       [{ type: 'solari', amount: 2 }],
     ],
   },
@@ -45,9 +39,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Carthag',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }],
-      [{ type: 'solari', amount: 2 }],
+      [{ type: 'victory-point' }, { type: 'location-control' }],
+      [{ type: 'victory-point' }, { type: 'intrigue' }],
+      [{ type: 'solari', amount: 2 }, { type: 'intrigue' }],
     ],
   },
   {
@@ -55,9 +49,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Carthag',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'intrigue' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 2 }],
-      [{ type: 'intrigue' }],
+      [{ type: 'location-control' }, { type: 'tech' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'tech', amount: 2 }],
+      [{ type: 'tech' }],
     ],
   },
   {
@@ -65,9 +59,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Carthag',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'intrigue' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 2 }],
-      [{ type: 'intrigue' }],
+      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
+      [{ type: 'solari', amount: 6 }],
+      [{ type: 'solari', amount: 2 }],
     ],
   },
 
@@ -77,8 +71,8 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Space Port',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech' }],
-      [{ type: 'water' }, { type: 'tech', amount: 2 }],
+      [{ type: 'location-control' }, { type: 'foldspace' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
       [{ type: 'water' }],
     ],
   },
@@ -88,30 +82,30 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'solari', amount: 3 }],
+      [{ type: 'water' }, { type: 'water' }, { type: 'water' }],
       [{ type: 'water' }],
     ],
   },
   {
-    name: { de: 'Schlacht am Kontrollturm', en: 'Battle at the Control Tower' },
+    name: { de: 'Schlacht an den Versorgungsdepots', en: 'Battle at the Supply Depots' },
     boardSpaceId: 'Space Port',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'solari', amount: 3 }],
-      [{ type: 'water' }],
+      [{ type: 'location-control' }, { type: 'leader-heal' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'leader-heal' }, { type: 'leader-heal' }],
+      [{ type: 'leader-heal' }],
     ],
   },
 
   // Sietch Tabr
   {
-    name: { de: 'Schlacht am Sietch Eingang', en: 'Battle at the Sietch Entrance' },
+    name: { de: 'Schlacht am Sietch', en: 'Battle at the Sietch' },
     boardSpaceId: 'Sietch Tabr',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'solari', amount: 3 }],
-      [{ type: 'water' }],
+      [{ type: 'victory-point' }, { type: 'location-control' }],
+      [{ type: 'victory-point' }, { type: 'focus' }],
+      [{ type: 'focus' }, { type: 'troop', amount: 2 }],
     ],
   },
   {
@@ -120,7 +114,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'solari', amount: 3 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
       [{ type: 'water' }],
     ],
   },
@@ -129,9 +123,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Sietch Tabr',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'solari', amount: 3 }],
-      [{ type: 'water' }],
+      [{ type: 'location-control' }, { type: 'spice' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
+      [{ type: 'spice' }],
     ],
   },
 
@@ -140,7 +134,11 @@ export const conflictsCustomExpert: Conflict[] = [
     name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle in the Spice Fields' },
     boardSpaceId: 'Imperial Basin',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'spice' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
+      [{ type: 'spice' }],
+    ],
   },
   {
     name: { de: 'Schlacht am Schildwall', en: 'Battle at the Shield Wall' },
@@ -148,8 +146,8 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
-      [{ type: 'water' }, { type: 'tech', amount: 2 }],
+      [{ type: 'victory-point' }, { type: 'tech' }],
+      [{ type: 'tech' }],
     ],
   },
   {
@@ -158,8 +156,8 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'focus' }],
-      [{ type: 'water' }, { type: 'spice' }, { type: 'focus' }],
-      [{ type: 'spice' }],
+      [{ type: 'water' }, { type: 'tech' }, { type: 'focus' }],
+      [{ type: 'focus' }],
     ],
   },
 
@@ -168,19 +166,31 @@ export const conflictsCustomExpert: Conflict[] = [
     name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle in the Spice Fields' },
     boardSpaceId: 'Hagga Basin',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'spice' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
+      [{ type: 'spice' }],
+    ],
   },
   {
     name: { de: 'Schlacht bei Tsimpo', en: 'Battle at Tsimpo Village' },
     boardSpaceId: 'Hagga Basin',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'tech' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }, { type: 'intrigue' }],
+      [{ type: 'intrigue' }],
+    ],
   },
   {
     name: { de: 'Schlacht bei Felssplitterberg', en: 'Battle at Splintered Rock' },
     boardSpaceId: 'Hagga Basin',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'focus' }],
+      [{ type: 'spice', amount: 2 }, { type: 'focus' }, { type: 'focus' }],
+      [{ type: 'spice' }],
+    ],
   },
 
   // The Great Flat
@@ -188,19 +198,31 @@ export const conflictsCustomExpert: Conflict[] = [
     name: { de: 'Schlacht in den Spice-Feldern', en: 'Battle in the Spice Fields' },
     boardSpaceId: 'The Great Flat',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'spice' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice', amount: 2 }],
+      [{ type: 'spice' }],
+    ],
   },
   {
     name: { de: 'Schlacht am falschen Wall (West)', en: 'Battle at the False Wall West' },
     boardSpaceId: 'The Great Flat',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'focus' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'spice' }, { type: 'focus' }],
+      [{ type: 'spice' }],
+    ],
   },
   {
     name: { de: 'Schlacht am Wind Pass', en: 'Battle at the Wind Pass' },
     boardSpaceId: 'The Great Flat',
     lvl: 1,
-    rewards: [[{ type: 'location-control' }, { type: 'spice' }], [{ type: 'spice', amount: 2 }], [{ type: 'spice' }]],
+    rewards: [
+      [{ type: 'location-control' }, { type: 'leader-heal' }],
+      [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'leader-heal' }],
+      [{ type: 'intrigue' }],
+    ],
   },
 
   // Tueks Sietch
@@ -210,7 +232,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
-      [{ type: 'solari', amount: 5 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 3 }],
       [{ type: 'solari', amount: 2 }],
     ],
   },
@@ -219,9 +241,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: "Tuek's Sietch",
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
-      [{ type: 'solari', amount: 5 }],
-      [{ type: 'solari', amount: 2 }],
+      [{ type: 'location-control' }, { type: 'tech' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
+      [{ type: 'tech' }],
     ],
   },
   {
@@ -229,9 +251,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: "Tuek's Sietch",
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
-      [{ type: 'solari', amount: 5 }],
-      [{ type: 'solari', amount: 2 }],
+      [{ type: 'location-control' }, { type: 'focus' }],
+      [{ type: 'solari', amount: 3 }, { type: 'focus' }, { type: 'leader-heal' }],
+      [{ type: 'leader-heal' }],
     ],
   },
 ];

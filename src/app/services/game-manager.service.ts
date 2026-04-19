@@ -1504,12 +1504,12 @@ export class GameManager {
             getPlayerGarrisonStrength(gameState.playerCombatUnits, gameState) >=
           highestEnemyGarrisonStrength
         ) {
-          this.conflictsService.setCurrentConflict(pickableConflicts[0].name.en);
+          this.conflictsService.setCurrentConflict(pickableConflicts[0].id);
         } else {
-          this.conflictsService.setCurrentConflict(pickableConflicts[pickableConflicts.length - 1].name.en);
+          this.conflictsService.setCurrentConflict(pickableConflicts[pickableConflicts.length - 1].id);
         }
       } else {
-        this.conflictsService.setCurrentConflict(pickableConflicts[0].name.en);
+        this.conflictsService.setCurrentConflict(pickableConflicts[0].id);
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { needsToPickConflict: false });
     }
@@ -1672,16 +1672,33 @@ export class GameManager {
     this.loggingService.logPlayerDiscardedCard(this.activePlayerId, this.t.translateLS(card.name));
   }
 
-  trashImperiumCardFromHand(playerId: number, card: ImperiumDeckCard) {
-    const cardTrashTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'card-destroy');
-    if (cardTrashTodo) {
-      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, cardTrashTodo.id);
+  trashImperiumCard(playerId: number, card: ImperiumDeckCard, source: 'hand' | 'discard-pile') {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return;
+    }
+    const hasFocus = this.playersResourcesService.getPlayerResourceAmount(this.activePlayerId, 'focus') > 0;
+    const hasTrashTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'card-destroy');
+    let canTrashCard = false;
+    if (hasTrashTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, hasTrashTodo.id);
+      canTrashCard = true;
+    } else if (hasFocus) {
+      this.playersResourcesService.removeResourceFromPlayer(this.activePlayerId, 'focus', 1);
+      canTrashCard = true;
+    } else {
+      this.notificationService.showWarning(this.t.translate('playerboardWarningNotEnoughResources'));
     }
 
-    this.audioManager.playSound('card-discard');
-    this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
-
-    this.loggingService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
+    if (canTrashCard) {
+      this.audioManager.playSound('card-discard');
+      if (source === 'hand') {
+        this.cardsService.trashPlayerHandCard(this.activePlayerId, card);
+      } else {
+        this.cardsService.trashDiscardedPlayerCard(this.activePlayerId, card);
+      }
+      this.loggingService.logPlayerTrashedCard(this.activePlayerId, this.t.translateLS(card.name));
+    }
   }
 
   acquirePlayerTechTile(playerId: number, techTile: TechTileDeckCard) {

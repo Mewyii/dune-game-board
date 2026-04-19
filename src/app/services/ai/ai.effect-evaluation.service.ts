@@ -46,13 +46,20 @@ export class AIEffectEvaluationService {
 
     const result = this.getStructuredEffectsRewardsAndCosts(structuredEffects, player, gameState);
     effectsCosts = result.costs;
-    if (effectsCosts.some((x) => x.type === 'location-control-choice')) {
-      if (
-        !gameState.playerAgentsOnFields.some((agent) =>
-          gameState.freeLocations.some((locationId) => locationId === agent.fieldId),
-        )
-      ) {
-        effectsCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+    if (result.rewards.some((x) => x.type === 'location-control-choice')) {
+      const hasAgentsOnFreeLocations = gameState.freeLocations.some((locationId) =>
+        gameState.playerAgentsOnFields.some((agent) => agent.fieldId === locationId),
+      );
+      const hasAgentsOnEnemyLocations = gameState.enemyLocations.some((location) =>
+        gameState.playerAgentsOnFields.some((agent) => agent.fieldId === location.locationId),
+      );
+      if (!hasAgentsOnFreeLocations && hasAgentsOnEnemyLocations) {
+        const troopCosts = effectsCosts.find((x) => x.type === 'troop' || x.type === 'loose-troop');
+        if (troopCosts) {
+          troopCosts.amount = troopCosts.amount ? troopCosts.amount + 1 : 2;
+        } else {
+          effectsCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+        }
       }
     }
 

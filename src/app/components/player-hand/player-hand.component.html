@@ -1,17 +1,18 @@
 <div class="container-wrapper">
   <div class="player-hand-container">
     <div class="action-container left">
-      <div
-        *ngIf="cardsShown === 'hand' && activePlayer?.isAI"
-        class="draw-card-button"
-        (click)="onAITrashIntrigueClicked()"
-        [matTooltip]="t.translate('playerHandTooltipAITrashIntrigue')"
-      >
-        <img class="draw-card-icon" [src]="'intrigue-trash'" />
-      </div>
+      @if (playerIntrigues && playerIntrigues.length > 0 && cardsShown === 'hand' && activePlayer?.isAI) {
+        <div
+          class="draw-card-button"
+          (click)="onAITrashIntrigueClicked()"
+          [matTooltip]="t.translate('playerHandTooltipAITrashIntrigue')"
+        >
+          <img class="draw-card-icon" [src]="'intrigue-trash' | effectTypePath" />
+        </div>
+      }
     </div>
     <div class="player-cards-container intrigues">
-      <ng-container *ngIf="playerIntrigues && playerIntrigues.length > 0">
+      @if (playerIntrigues && playerIntrigues.length > 0) {
         @for (intrigue of playerIntrigues; track intrigue.id; let i = $index) {
           <div
             [class]="'intrigue-container' + (showCards ? ' ' : ' hidden')"
@@ -59,40 +60,42 @@
             </div>
           </div>
         }
-      </ng-container>
-    </div>
-    <div class="player-cards-container plots" *ngIf="playerPlots && playerPlots.cards.length > 0">
-      @for (plot of playerPlots.cards; track plot.id; let i = $index) {
-        <div
-          [class]="'card-container' + (showCards ? ' ' : ' hidden')"
-          [style.left]="(i * 250) / (-1.25 + 1.25 * playerPlots.cards.length) + 'px'"
-          (click)="setCardActive(plot.id)"
-          (mouseenter)="setCardHover(plot.id)"
-          (mouseleave)="hoveredCardId = ''"
-        >
-          <dune-highlighting
-            *ngIf="plot.id === activeCardId || plot.id === hoveredCardId"
-            [id]="plot.id"
-            [width]="420"
-            [height]="570"
-            [bottom]="-70"
-            [left]="-80"
-          ></dune-highlighting>
-          <dune-plot-card
-            *ngIf="!activePlayer?.isAI || revealPlots"
-            [plot]="plot"
-            [class]="plot.id === activeCardId ? 'active' : ''"
-          ></dune-plot-card>
-          <div
-            *ngIf="activePlayer?.isAI && !revealPlots"
-            [class]="'imperium-card background' + (plot.id === activeCardId ? ' active' : '')"
-          ></div>
-          <div class="card-action-container" *ngIf="plot.id === activeCardId"></div>
-        </div>
       }
     </div>
+    @if (playerPlots && playerPlots.cards.length > 0) {
+      <div class="player-cards-container plots">
+        @for (plot of playerPlots.cards; track plot.id; let i = $index) {
+          <div
+            [class]="'card-container' + (showCards ? ' ' : ' hidden')"
+            [style.left]="(i * 250) / (-1.25 + 1.25 * playerPlots.cards.length) + 'px'"
+            (click)="setCardActive(plot.id)"
+            (mouseenter)="setCardHover(plot.id)"
+            (mouseleave)="hoveredCardId = ''"
+          >
+            <dune-highlighting
+              *ngIf="plot.id === activeCardId || plot.id === hoveredCardId"
+              [id]="plot.id"
+              [width]="420"
+              [height]="570"
+              [bottom]="-70"
+              [left]="-80"
+            ></dune-highlighting>
+            <dune-plot-card
+              *ngIf="!activePlayer?.isAI || revealPlots"
+              [plot]="plot"
+              [class]="plot.id === activeCardId ? 'active' : ''"
+            ></dune-plot-card>
+            <div
+              *ngIf="activePlayer?.isAI && !revealPlots"
+              [class]="'imperium-card background' + (plot.id === activeCardId ? ' active' : '')"
+            ></div>
+            <div class="card-action-container" *ngIf="plot.id === activeCardId"></div>
+          </div>
+        }
+      </div>
+    }
     <div class="player-cards-container">
-      <ng-container *ngIf="playerHandCards && cardsShown === 'hand'">
+      @if (playerHandCards && cardsShown === 'hand') {
         @for (handCard of playerHandCards.cards; track handCard.id; let i = $index) {
           <div
             [class]="'card-container' + (showCards ? ' ' : ' hidden')"
@@ -164,8 +167,8 @@
             }
           </div>
         }
-      </ng-container>
-      <ng-container *ngIf="playerDiscardPiles && cardsShown === 'discard'">
+      }
+      @if (playerDiscardPiles && cardsShown === 'discard') {
         @for (card of playerDiscardPiles.cards; track card.id; let i = $index) {
           <div
             [class]="'card-container' + (showCards ? ' ' : ' hidden')"
@@ -201,7 +204,7 @@
             </div>
           </div>
         }
-      </ng-container>
+      }
     </div>
     <div class="action-container">
       <div

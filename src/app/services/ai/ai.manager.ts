@@ -466,6 +466,12 @@ export class AIManager {
       const addUnitsDecision = this.aiConflictService.getAddAdditionalUnitsToCombatDecision(playerCombatUnits, gameState);
 
       if (addUnitsDecision === 'all' || this.roundService.isFinale) {
+        const currentConflict = gameState.conflict;
+        if (currentConflict && currentConflict.rewards[0]?.some((x) => x.type === 'location-control') && addableTroops > 0) {
+          if (gameState.enemyLocations.some((x) => x.locationId === currentConflict.boardSpaceId)) {
+            addableTroops -= 1;
+          }
+        }
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'troop', addableTroops);
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
         addedUnitsToCombat = true;

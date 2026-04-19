@@ -44,5 +44,5 @@ export const gameContentCustomExpert: GameContent = {
   churnRowCards: true,
   leaderCombatStrength: 3,
   conflictsMode: 'pick',
-  conflictCardsPerLevel: [20],
+  conflictCardsPerLevel: [24],
 };

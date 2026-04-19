@@ -32,9 +32,9 @@ export class AIConflictService {
     enemyCombatScores.sort((a, b) => b.combatStrength - a.combatStrength);
     const highestEnemyCombatScore = enemyCombatScores[0];
 
-    const combatPowerDifference = playerCombatStrength - highestEnemyCombatScore.combatStrength;
+    const combatPowerSurplus = playerCombatStrength - highestEnemyCombatScore.combatStrength;
 
-    if (combatPowerDifference > 0) {
+    if (combatPowerSurplus > 0) {
       const enemyAgentsAvailable = gameState.enemyAgentsAvailable.filter(
         (x) => x.playerId === highestEnemyCombatScore.playerId,
       ).length;
@@ -84,7 +84,7 @@ export class AIConflictService {
         playerCombatStrengthPotentialAgainstEnemy >= 1 &&
         playerCombatStrengthPotentialAgainstEnemy > enemyGarrisonStrength
       ) {
-        return playerCombatStrengthPotentialAgainstEnemy + Math.abs(combatPowerDifference);
+        return playerCombatStrengthPotentialAgainstEnemy + Math.abs(combatPowerSurplus);
       } else {
         return 'all';
       }
