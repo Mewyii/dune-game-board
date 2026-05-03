@@ -1,20 +1,35 @@
+import {
+  BoardSpaceSelectorData,
+  BoardSpaceSelectorDialogComponent,
+} from '../components/_common/dialogs/board-space-selector-dialog/board-space-selector-dialog.component';
+import {
+  ImperiumCardSelectorData,
+  ImperiumCardsPreviewDialogComponent,
+} from '../components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
+import {
+  TechTileSelectorData,
+  TechTileSelectorDialogComponent,
+} from '../components/_common/dialogs/tech-tile-selector-dialog/tech-tile-selector-dialog.component';
+import { getPlayerCombatStrength } from '../helpers/ai';
+import { getPlayerPersuasion } from '../helpers/player';
 import { playerCanPayCosts } from '../helpers/rewards';
-import { ActionField, StructuredEffect } from '../models';
-import { AIAdjustments, GameServices, GameState, TimedFunction } from '../models/ai';
+import { ActionField, DuneLocation, StructuredEffect } from '../models';
+import { AIAdjustments, GameCommands, GameState, TimedFunction } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard, ImperiumRowCard } from '../services/cards.service';
 import { GameModifiers } from '../services/game-modifier.service';
+import { TechTileDeckCard } from '../services/tech-tiles.service';
 
 export interface LeaderGameAdjustments {
   id: string;
   aiAdjustments?: AIAdjustments;
   gameModifiers?: GameModifiers;
   customSignetEffects?: StructuredEffect[];
-  customSignetFunction?: (player: Player, gameState: GameState, services: GameServices) => void;
-  customSignetAIFunction?: (player: Player, gameState: GameState, services: GameServices) => void;
-  customTimedFunction?: TimedFunction;
-  customTimedAIFunction?: TimedFunction;
-  customEffects?: StructuredEffect[];
+  customSignetFunction?: (player: Player, gameState: GameState, game: GameCommands) => void;
+  customSignetAIFunction?: (player: Player, gameState: GameState, game: GameCommands) => void;
+  customTimedActivatedFunctions?: TimedFunction[];
+  customTimedFunctions?: TimedFunction[];
+  customTimedAIFunctions?: TimedFunction[];
   signetRingValue?: (player: Player, gameState: GameState, targetBoardSpace?: ActionField) => number;
   signetTokenOrFieldMarkerValue?: (player: Player, gameState: GameState, targetBoardSpace?: ActionField) => number;
 }
@@ -25,16 +40,16 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     gameModifiers: {
       fieldBlock: [{ id: 'paul-fremen-access', actionType: 'fremen' }],
     },
-    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const fremenInfluence = gameState.playerScore['fremen'];
       if (fremenInfluence > 3) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
-        services.effectsService.addRewardToPlayer(player.id, { type: 'troop' });
+        game.addRewardToPlayer(player.id, { type: 'card-draw' });
+        game.addRewardToPlayer(player.id, { type: 'troop' });
       } else if (fremenInfluence > 1) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
-        services.effectsService.addRewardToPlayer(player.id, { type: 'agent-lift' });
+        game.addRewardToPlayer(player.id, { type: 'card-draw' });
+        game.addRewardToPlayer(player.id, { type: 'agent-lift' });
       }
-      services.gameModifierService.addPlayerGameModifiers(player.id, {
+      game.addPlayerGameModifiers(player.id, {
         customActions: [
           {
             id: 'paul-vision-intrigues',
@@ -42,8 +57,8 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             currentRoundOnly: true,
           },
           {
-            id: 'paul-vision-conflict',
-            action: 'vision-conflict',
+            id: 'paul-vision-deck',
+            action: 'vision-deck',
             currentRoundOnly: true,
           },
         ],
@@ -64,14 +79,16 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Alia Atreides',
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player, gameState, services) => {
-        if (gameState.playerHandCards.some((card) => card.agentEffects?.some((x) => x.type === 'signet-ring'))) {
-          services.effectsService.addRewardToPlayer(player.id, { type: 'faction-influence-down-choice' });
-        }
+    customTimedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          if (gameState.playerHandCards.some((card) => card.agentEffects?.some((x) => x.type === 'signet-ring'))) {
+            game.addRewardToPlayer(player.id, { type: 'faction-influence-down-choice' });
+          }
+        },
       },
-    },
+    ],
     signetRingValue: (player, gameState) => 5,
   },
   {
@@ -84,29 +101,62 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      const possibleNewMarkerLocations = gameState.boardSpaces.filter(
-        (x) => x.ownerReward && gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.title.en),
+    customSignetFunction: (player, gameState, game) => {
+      const fieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
+      const locationChoices = gameState.locations.filter(
+        (location) =>
+          fieldMarkers?.some((marker) => marker.amount > 1 && location.actionField.title.en === marker.fieldId) ||
+          gameState.playerAgentsOnFields.some((agent) => location.actionField.title.en === agent.fieldId),
       );
-      const playerOwnedLocations = services.locationManager.getPlayerLocations(player.id);
-      const fieldMarkers = services.gameModifierService.getPlayerGameModifier(player.id, 'fieldMarkers');
+
+      const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationChoice')}`,
+          playerId: player.id,
+          locations: locationChoices,
+          mode: 'select',
+          colorScheme: 'positive',
+        } as BoardSpaceSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((location: DuneLocation) => {
+        const fieldMarker = fieldMarkers?.find((x) => x.fieldId === location.actionField.title.en);
+        if (fieldMarker && fieldMarker.amount > 1) {
+          game.playSound('location-control');
+          game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
+          game.setLocationOwner(fieldMarker.fieldId, player.id);
+          game.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
+        } else {
+          game.playSound('click-soft');
+          game.changeFieldMarkerModifier(player.id, location.actionField.title.en, 1);
+        }
+      });
+    },
+    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      const possibleNewMarkerLocations = gameState.locations.filter((x) =>
+        gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.actionField.title.en),
+      );
+      const playerOwnedLocations = gameState.playerLocations;
+      const fieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
 
       if (fieldMarkers) {
         fieldMarkers.sort((a, b) => a.amount - b.amount);
         for (const fieldMarker of fieldMarkers) {
-          if (fieldMarker.amount > 1 && !playerOwnedLocations.some((x) => x.locationId === fieldMarker.fieldId)) {
-            services.audioManager.playSound('location-control');
-            services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
-            services.locationManager.setLocationOwner(fieldMarker.fieldId, player.id);
-            services.loggingService.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
+          if (fieldMarker.amount > 1 && !playerOwnedLocations.some((locationId) => locationId === fieldMarker.fieldId)) {
+            game.playSound('location-control');
+            game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
+            game.setLocationOwner(fieldMarker.fieldId, player.id);
+            game.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
           } else {
-            if (possibleNewMarkerLocations.some((x) => x.title.en === fieldMarker.fieldId)) {
-              services.gameModifierService.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, 1);
+            if (possibleNewMarkerLocations.some((x) => x.actionField.title.en === fieldMarker.fieldId)) {
+              game.playSound('click-soft');
+              game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, 1);
             }
           }
         }
       } else if (possibleNewMarkerLocations.length > 0) {
-        services.gameModifierService.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0].title.en, 1);
+        game.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0].actionField.title.en, 1);
       }
     },
     signetRingValue: (player, gameState, targetBoardSpace) => {
@@ -127,56 +177,156 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Feyd-Rautha Harkonnen',
     customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet' }] }],
-    customTimedAIFunction: {
-      timing: 'timing-round-start',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        if (
-          gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
-          gameState.playerIntrigueCount < 2 &&
-          Math.random() > 0.33
-        ) {
-          services.effectsService.addRewardToPlayer(player.id, { type: 'card-destroy' });
-          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
-          services.effectsService.addRewardToPlayer(player.id, { type: 'intrigue' });
-          services.effectsService.payCostForPlayer(player.id, { type: 'intrigue-trash' });
-        }
-      },
-    },
-    customEffects: [
+    customTimedActivatedFunctions: [
       {
-        type: 'helper-trade',
-        timing: { type: 'timing-combat' },
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword' }] },
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
+            data: {
+              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardTrash')}`,
+              playerId: player.id,
+              imperiumCards: gameState.playerHandCards,
+              mode: 'select',
+              colorScheme: 'negative',
+            } as ImperiumCardSelectorData,
+            disableClose: true,
+          });
+
+          dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
+            game.trashImperiumCard(player.id, cardToTrash, 'hand');
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+          });
+        },
+      },
+      {
+        timing: 'timing-combat',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
+
+          const exclusiveID = crypto.randomUUID();
+          for (let i = 1; i <= gameState.playerResources.signet; i++) {
+            game.updatePlayerTurnInfo(player.id, {
+              effectConversions: [
+                {
+                  type: 'helper-trade',
+                  effectCosts: {
+                    type: 'reward',
+                    effectRewards: [
+                      {
+                        type: 'signet',
+                        amount: i,
+                      },
+                    ],
+                  },
+                  effectConversions: {
+                    type: 'reward',
+                    effectRewards: [
+                      {
+                        type: 'sword',
+                        amount: i,
+                      },
+                    ],
+                  },
+                  exlusiveChoiceOfMultipleEffectsId: exclusiveID,
+                },
+              ],
+            });
+          }
+        },
+      },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (
+            gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
+            gameState.playerIntrigueCount < 2 &&
+            Math.random() > 0.33
+          ) {
+            game.addRewardToPlayer(player.id, { type: 'card-destroy' });
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+          }
+        },
+      },
+      {
+        timing: 'timing-combat',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
+
+          const playerCombatIntrigues = gameState.playerCombatIntrigues;
+          const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+          const maxAdditionalScoreTroughSignets = gameState.playerResources.signet;
+
+          const sortedEnemyCombatScores = gameState.enemyCombatUnits
+            .map((x) => getPlayerCombatStrength(x, gameState))
+            .sort((a, b) => b - a);
+          const currentCombatRank = sortedEnemyCombatScores.filter((x) => x >= playerCombatScore).length + 1;
+
+          const { playableIntriguesWithSwords, playableIntriguesWithoutSwords } = game.getPlayableCombatIntrigues(
+            player,
+            gameState,
+            playerCombatIntrigues,
+          );
+
+          const maxAdditionalScoreThroughIntrigues = playableIntriguesWithSwords.reduce((sum, x) => sum + x.addedScore, 0);
+          const maxAdditionalCombatScore = maxAdditionalScoreTroughSignets + maxAdditionalScoreThroughIntrigues;
+
+          const potentialCombatRank =
+            sortedEnemyCombatScores.filter((x) => x >= playerCombatScore + maxAdditionalCombatScore).length + 1;
+
+          if (potentialCombatRank < currentCombatRank) {
+            const targetEnemyCombatScore = sortedEnemyCombatScores.find(
+              (x) => playerCombatScore + maxAdditionalCombatScore > x,
+            )!;
+
+            const signetsToBePlayed = Math.min(targetEnemyCombatScore - playerCombatScore, maxAdditionalScoreTroughSignets);
+
+            game.payCostForPlayer(player.id, { type: 'signet', amount: signetsToBePlayed });
+            game.addRewardToPlayer(player.id, { type: 'sword', amount: signetsToBePlayed });
+          }
+        },
       },
     ],
     signetTokenOrFieldMarkerValue: (player, gameState) => 0.75,
   },
   {
     id: 'Count Glossu Rabban',
-    customEffects: [{ type: 'reward', timing: { type: 'timing-round-start' }, effectRewards: [{ type: 'card-destroy' }] }],
-    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const resourceOptions = gameState.boardSpaces
         .filter((bs) => gameState.playerLocations.includes(bs.title.en))
         .map((x) => x.ownerReward)
         .filter((x) => x !== undefined);
 
-      const resourceChoices = services.aiEffectEvaluationService.getDesiredRewardEffects(player, resourceOptions, gameState);
+      const resourceChoices = game.ai.getDesiredRewardEffects(player, resourceOptions, gameState);
       for (const choice of resourceChoices) {
-        services.effectsService.addRewardToPlayer(player.id, choice);
+        game.addRewardToPlayer(player.id, choice);
       }
     },
-    customTimedAIFunction: {
-      timing: 'timing-game-start',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        const possibleLocations = ['Arrakeen', 'Carthag', 'Imperial Basin'];
-        const randomIndex = Math.floor(Math.random() * possibleLocations.length);
-        const chosenLocation = possibleLocations[randomIndex];
-
-        services.loggingService.logPlayerGainedLocationControl(player.id, 1, chosenLocation);
-        services.locationManager.setLocationOwner(chosenLocation, player.id);
+    customTimedFunctions: [
+      {
+        timing: 'timing-game-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          game.setLocationOwner('Carthag', player.id);
+          game.logPlayerGainedLocationControl(player.id, 1, 'Carthag');
+          game.addRewardToPlayer(player.id, { type: 'victory-point' });
+        },
       },
-    },
+      {
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          game.addRewardToPlayer(player.id, { type: 'card-discard' });
+        },
+      },
+    ],
     signetRingValue: (player, gameState) => {
       return gameState.playerLocations.length * 2;
     },
@@ -187,64 +337,207 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       fieldCost: [{ id: 'chani-spice-field-costs', actionType: 'spice', costType: 'water', amount: -1 }],
       fieldReward: [{ id: 'chani-spice-field-rewards', actionType: 'spice', rewardType: 'spice', amount: -1 }],
     },
-    customTimedAIFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        const availableSignetTokens = gameState.playerResources.signet;
-        if (availableSignetTokens < 1) {
-          return;
-        }
-
-        const availablePersuasion = services.playersService.getPlayerPersuasion(player.id);
-        const { allCards, imperiumRowCards, recruitableCards } = services.cardsService.getAllBuyableCards(
-          services.turnInfoService.getPlayerTurnInfo(player.id, 'factionRecruitment'),
-        );
-
-        const reducedFremenCards: (ImperiumDeckCard & { originalPersuasionCosts?: number })[] = allCards.map((x) => {
-          if (x.faction !== 'fremen') {
-            return x;
-          } else {
-            return {
-              ...x,
-              persuasionCosts: x.persuasionCosts
-                ? x.persuasionCosts >= availableSignetTokens
-                  ? x.persuasionCosts - availableSignetTokens
-                  : 0
-                : 0,
-              originalPersuasionCosts: x.persuasionCosts ?? 0,
-            };
-          }
-        });
-
-        const cardToBuy = services.aiCardsService.getImperiumCardToBuy(
-          availablePersuasion,
-          reducedFremenCards,
-          player,
-          gameState,
-          [],
-        );
-        if (cardToBuy?.faction === 'fremen' && cardToBuy.originalPersuasionCosts) {
-          let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
-          if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
-            source = 'row';
-          } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
-            source = 'deck';
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
           }
 
-          const usedSignetTokens =
-            cardToBuy.originalPersuasionCosts < availableSignetTokens
-              ? cardToBuy.originalPersuasionCosts
-              : availableSignetTokens;
+          const { allCards, imperiumRowCards, recruitableCards, alwaysBuyableCards } = game.getAllBuyableCards(
+            gameState.playerTurnInfos?.factionRecruitment,
+          );
 
-          services.gameManager.acquireImperiumCard(player.id, cardToBuy, source);
-          services.effectsService.payCostForPlayer(player.id, { type: 'signet', amount: usedSignetTokens });
-        }
+          const reducedFremenCards = allCards
+            .filter((x) => x.faction === 'fremen')
+            .map((x) => {
+              const costs = x.persuasionCosts ?? 0;
+              const costReduction = costs > gameState.playerResources.signet ? gameState.playerResources.signet : costs;
+
+              return {
+                ...x,
+                persuasionCosts: costs - costReduction,
+              };
+            });
+
+          const availablePersuasion = getPlayerPersuasion(player);
+
+          const buyableUniqueCards = reducedFremenCards.filter(
+            (card, index, self) =>
+              (!card.persuasionCosts || card.persuasionCosts <= availablePersuasion) &&
+              index === self.findIndex((c) => c.name.en === card.name.en),
+          );
+
+          if (buyableUniqueCards.length < 1) {
+            return;
+          }
+
+          const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
+            data: {
+              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardAcquire')}`,
+              playerId: player.id,
+              imperiumCards: buyableUniqueCards,
+              mode: 'select',
+              colorScheme: 'positive',
+            } as ImperiumCardSelectorData,
+            disableClose: true,
+          });
+
+          dialogRef.afterClosed().subscribe((pickedCard: ImperiumDeckCard) => {
+            let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
+            const reducedCardCosts = pickedCard.persuasionCosts ?? 0;
+
+            if (imperiumRowCards.some((x) => x.id === pickedCard.id)) {
+              source = 'row';
+            } else if (recruitableCards.some((x) => x.id === pickedCard.id)) {
+              source = 'deck';
+            }
+
+            const originalCardCosts = allCards.find((x) => x.id === pickedCard.id)?.persuasionCosts ?? 0;
+            const costReduction = originalCardCosts - reducedCardCosts;
+            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction });
+            game.acquireImperiumCard(player.id, pickedCard, source);
+          });
+        },
       },
-    },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          const availableSignetTokens = gameState.playerResources.signet;
+          if (availableSignetTokens < 1) {
+            return;
+          }
+
+          const availablePersuasion = getPlayerPersuasion(player);
+          const { allCards, imperiumRowCards, recruitableCards } = game.getAllBuyableCards(
+            gameState.playerTurnInfos?.factionRecruitment,
+          );
+
+          const reducedFremenCards: (ImperiumDeckCard & { originalPersuasionCosts?: number })[] = allCards.map((x) => {
+            if (x.faction !== 'fremen') {
+              return x;
+            } else {
+              return {
+                ...x,
+                persuasionCosts: x.persuasionCosts
+                  ? x.persuasionCosts >= availableSignetTokens
+                    ? x.persuasionCosts - availableSignetTokens
+                    : 0
+                  : 0,
+                originalPersuasionCosts: x.persuasionCosts ?? 0,
+              };
+            }
+          });
+
+          const cardToBuy = game.ai.getImperiumCardToBuy(availablePersuasion, reducedFremenCards, player, gameState, []);
+          if (cardToBuy?.faction === 'fremen' && cardToBuy.originalPersuasionCosts) {
+            let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
+            if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
+              source = 'row';
+            } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
+              source = 'deck';
+            }
+
+            const usedSignetTokens =
+              cardToBuy.originalPersuasionCosts < availableSignetTokens
+                ? cardToBuy.originalPersuasionCosts
+                : availableSignetTokens;
+
+            game.acquireImperiumCard(player.id, cardToBuy, source);
+            game.payCostForPlayer(player.id, { type: 'signet', amount: usedSignetTokens });
+          }
+        },
+      },
+    ],
     signetTokenOrFieldMarkerValue: (player, gameState) => 1.75,
   },
   {
     id: 'Stilgar',
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-combat',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
+
+          const exclusiveID = crypto.randomUUID();
+          for (let i = 1; i <= gameState.playerResources.signet; i++) {
+            game.updatePlayerTurnInfo(player.id, {
+              effectConversions: [
+                {
+                  type: 'helper-trade',
+                  effectCosts: {
+                    type: 'reward',
+                    effectRewards: [
+                      {
+                        type: 'signet',
+                        amount: i,
+                      },
+                    ],
+                  },
+                  effectConversions: {
+                    type: 'reward',
+                    effectRewards: [
+                      {
+                        type: 'sword',
+                        amount: i * 3,
+                      },
+                    ],
+                  },
+                  exlusiveChoiceOfMultipleEffectsId: exclusiveID,
+                },
+              ],
+            });
+          }
+        },
+      },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-combat',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
+
+          const playerCombatIntrigues = gameState.playerCombatIntrigues;
+          const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+          const maxAdditionalScoreTroughSignets = gameState.playerResources.signet * 3;
+
+          const sortedEnemyCombatScores = gameState.enemyCombatUnits
+            .map((x) => getPlayerCombatStrength(x, gameState))
+            .sort((a, b) => b - a);
+          const currentCombatRank = sortedEnemyCombatScores.filter((x) => x >= playerCombatScore).length + 1;
+
+          const { playableIntriguesWithSwords, playableIntriguesWithoutSwords } = game.getPlayableCombatIntrigues(
+            player,
+            gameState,
+            playerCombatIntrigues,
+          );
+
+          const maxAdditionalScoreThroughIntrigues = playableIntriguesWithSwords.reduce((sum, x) => sum + x.addedScore, 0);
+          const maxAdditionalCombatScore = maxAdditionalScoreTroughSignets + maxAdditionalScoreThroughIntrigues;
+
+          const potentialCombatRank =
+            sortedEnemyCombatScores.filter((x) => x >= playerCombatScore + maxAdditionalCombatScore).length + 1;
+
+          if (potentialCombatRank < currentCombatRank) {
+            const targetEnemyCombatScore = sortedEnemyCombatScores.find(
+              (x) => playerCombatScore + maxAdditionalCombatScore > x,
+            )!;
+
+            const signetsToBePlayed = Math.min(targetEnemyCombatScore - playerCombatScore, maxAdditionalScoreTroughSignets);
+
+            game.payCostForPlayer(player.id, { type: 'signet', amount: signetsToBePlayed });
+            game.addRewardToPlayer(player.id, { type: 'sword', amount: signetsToBePlayed * 3 });
+          }
+        },
+      },
+    ],
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => {
         if (gameState.playerResources.signet < 1 || gameState.playerCombatUnits.troopsInGarrison < 1) {
@@ -254,14 +547,6 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    customEffects: [
-      {
-        timing: { type: 'timing-combat' },
-        type: 'helper-trade',
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 3 }] },
-      },
-    ],
     gameModifiers: {
       fieldFactionAccess: [
         {
@@ -292,15 +577,102 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetAIFunction(player, gameState, services) {
+    customSignetFunction: (player, gameState, game) => {
+      const exclusiveID = crypto.randomUUID();
+      let hasOptions = false;
+      if (gameState.playerResources.water > 1) {
+        hasOptions = true;
+        game.updatePlayerTurnInfo(player.id, {
+          effectConversions: [
+            {
+              type: 'helper-trade',
+              effectCosts: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'water',
+                  },
+                  {
+                    type: 'water',
+                  },
+                ],
+              },
+              effectConversions: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'signet',
+                    amount: 3,
+                  },
+                ],
+              },
+              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
+            },
+          ],
+        });
+      }
       if (gameState.playerResources.signet > 2) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'victory-point' });
-        services.effectsService.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
-      } else if (gameState.playerResources.water > 1) {
-        services.effectsService.payCostForPlayer(player.id, { type: 'water', amount: 2 });
-        services.effectsService.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
+        hasOptions = true;
+        game.updatePlayerTurnInfo(player.id, {
+          effectConversions: [
+            {
+              type: 'helper-trade',
+              effectCosts: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'signet',
+                    amount: 3,
+                  },
+                ],
+              },
+              effectConversions: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'victory-point',
+                  },
+                ],
+              },
+              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
+            },
+          ],
+        });
+      }
+      if (hasOptions) {
+        game.updatePlayerTurnInfo(player.id, {
+          effectConversions: [
+            {
+              type: 'helper-trade',
+              effectCosts: {
+                type: 'reward',
+                effectRewards: [],
+              },
+              effectConversions: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'signet',
+                  },
+                ],
+              },
+              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
+            },
+          ],
+        });
       } else {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'signet' });
+        game.addRewardToPlayer(player.id, { type: 'signet' });
+      }
+    },
+    customSignetAIFunction(player, gameState, game) {
+      if (gameState.playerResources.signet > 2) {
+        game.addRewardToPlayer(player.id, { type: 'victory-point' });
+        game.payCostForPlayer(player.id, { type: 'signet', amount: 3 });
+      } else if (gameState.playerResources.water > 1) {
+        game.payCostForPlayer(player.id, { type: 'water', amount: 2 });
+        game.addRewardToPlayer(player.id, { type: 'signet', amount: 3 });
+      } else {
+        game.addRewardToPlayer(player.id, { type: 'signet' });
       }
     },
     signetRingValue: (player, gameState) => {
@@ -339,31 +711,57 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetAIFunction: (player, gameState, services) => {
+    customSignetFunction: (player, gameState, game) => {
+      const possibleNewMarkerLocations = gameState.locations.filter(
+        (x) => !gameState.playerAgentsOnFields.some((y) => y.fieldId === x.actionField.title.en),
+      );
+
+      if (possibleNewMarkerLocations.length < 1) {
+        return;
+      }
+
+      const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationChoice')}`,
+          playerId: player.id,
+          locations: possibleNewMarkerLocations,
+          mode: 'select',
+          colorScheme: 'positive',
+        } as BoardSpaceSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((location: DuneLocation) => {
+        game.changeFieldMarkerModifier(player.id, location.actionField.title.en, 1);
+      });
+    },
+    customSignetAIFunction: (player, gameState, game) => {
       const possibleNewMarkerLocations = gameState.playerAgentsOnFields.map((x) => x.fieldId);
 
       if (possibleNewMarkerLocations.length > 0) {
         const randomIndex = Math.floor(Math.random() * possibleNewMarkerLocations.length);
-        services.gameModifierService.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[randomIndex], 1);
+        game.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[randomIndex], 1);
       }
     },
-    customTimedFunction: {
-      timing: 'timing-agent-placement',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        const playerFieldMarkers = services.gameModifierService.getPlayerGameModifier(player.id, 'fieldMarkers');
-        if (!playerFieldMarkers) {
-          return;
-        } else {
+    customTimedFunctions: [
+      {
+        timing: 'timing-agent-placement',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          const playerFieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
+          if (!playerFieldMarkers) {
+            return;
+          }
+
           const fieldWithMarker = gameState.playerAgentsOnFields.find((x) =>
             playerFieldMarkers.some((marker) => marker.fieldId === x.fieldId && marker.amount > 0),
           );
           if (fieldWithMarker) {
-            services.gameModifierService.changeFieldMarkerModifier(player.id, fieldWithMarker.fieldId, -1);
-            services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw', amount: 2 });
+            game.changeFieldMarkerModifier(player.id, fieldWithMarker.fieldId, -1);
+            game.addRewardToPlayer(player.id, { type: 'card-draw', amount: 2 });
           }
-        }
+        },
       },
-    },
+    ],
     signetRingValue: (player, gameState, targetBoardSpace) => {
       const playerAgentsOnFields = gameState.playerAgentsOnFields;
       if (targetBoardSpace) {
@@ -375,26 +773,59 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Lady Margot Fenring',
-    customEffects: [
+    customTimedFunctions: [
       {
-        type: 'helper-trade',
-        timing: { type: 'timing-round-start' },
-        effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
-        effectConversions: { type: 'reward', effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }] },
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          game.updatePlayerTurnInfo(player.id, {
+            effectConversions: [
+              {
+                type: 'helper-trade',
+                effectCosts: {
+                  type: 'reward',
+                  effectRewards: [{ type: 'card-discard' }],
+                },
+                effectConversions: {
+                  type: 'reward',
+                  effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
+                },
+              },
+            ],
+          });
+        },
       },
     ],
-    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
-      services.gameModifierService.addPlayerGameModifiers(player.id, {
-        customActions: [
-          {
-            id: 'margot-charm',
-            action: 'charm',
-            currentRoundOnly: true,
-          },
-        ],
+    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      const { allCards, imperiumRowCards, recruitableCards, alwaysBuyableCards } = game.getAllBuyableCards(
+        gameState.playerTurnInfos?.factionRecruitment,
+      );
+
+      const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardAcquire')}`,
+          playerId: player.id,
+          imperiumCards: [...imperiumRowCards, ...recruitableCards],
+          mode: 'select',
+          colorScheme: 'positive',
+        } as ImperiumCardSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((pickedCard: ImperiumDeckCard) => {
+        game.addPlayerImperiumRowModifier(player.id, {
+          cardId: pickedCard.id,
+          persuasionAmount: -1,
+        });
+        const enemyPlayers = gameState.enemyPlayers;
+        for (const player of enemyPlayers) {
+          game.addPlayerImperiumRowModifier(player.id, {
+            cardId: pickedCard.id,
+            persuasionAmount: 1,
+          });
+        }
       });
     },
-    customSignetAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       let targetCard: ImperiumRowCard | undefined;
       const handCardAmount = gameState.playerHandCards.length;
       const buyableCards = gameState.imperiumRowCards.filter(
@@ -413,13 +844,13 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       }
       if (targetCard) {
-        services.gameModifierService.addPlayerImperiumRowModifier(player.id, {
+        game.addPlayerImperiumRowModifier(player.id, {
           cardId: targetCard.id,
           persuasionAmount: -1,
         });
-        const enemyPlayers = services.playersService.getEnemyPlayers(player.id);
+        const enemyPlayers = gameState.enemyPlayers;
         for (const player of enemyPlayers) {
-          services.gameModifierService.addPlayerImperiumRowModifier(player.id, {
+          game.addPlayerImperiumRowModifier(player.id, {
             cardId: targetCard.id,
             persuasionAmount: 1,
           });
@@ -439,56 +870,113 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player, gameState, services) => {
-        if (gameState.playerResources.signet > 0) {
-          services.effectsService.resolveStructuredEffects(
-            [
-              {
-                type: 'helper-or',
-                timing: { type: 'timing-reveal-turn' },
-                effectLeft: {
-                  type: 'helper-trade',
-                  effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-                  effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
-                },
-                effectRight: {
-                  type: 'helper-trade',
-                  effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-                  effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
-                },
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
+
+          game.resolveStructuredEffect(
+            {
+              type: 'helper-or',
+              effectLeft: {
+                type: 'helper-trade',
+                effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
               },
-            ],
+              effectRight: {
+                type: 'helper-trade',
+                effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
+              },
+            },
             player,
             gameState,
           );
-        }
+        },
       },
-    },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          for (let i = 0; i < gameState.playerResources.signet; i++) {
+            game.resolveStructuredEffects(
+              [
+                {
+                  type: 'helper-or',
+                  effectLeft: {
+                    type: 'helper-trade',
+                    effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                    effectConversions: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
+                  },
+                  effectRight: {
+                    type: 'helper-trade',
+                    effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                    effectConversions: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
+                  },
+                },
+              ],
+              player,
+              gameState,
+            );
+          }
+        },
+      },
+    ],
     signetTokenOrFieldMarkerValue: (player, gameState) => 2.5 - 1.0 * gameState.playerResources.signet,
   },
   {
     id: 'Tessia Vernius',
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player, gameState, services) => {
-        if (gameState.playerTechTiles.length > 0) {
-          services.effectsService.resolveStructuredEffects(
-            [
-              {
-                type: 'helper-trade',
-                timing: { type: 'timing-reveal-turn' },
-                effectCosts: { type: 'reward', effectRewards: [{ type: 'tech-tile-trash' }] },
-                effectConversions: { type: 'reward', effectRewards: [{ type: 'faction-influence-up-choice' }] },
-              },
-            ],
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          if (gameState.playerTechTiles.length < 1) {
+            return;
+          }
+
+          const dialogRef = game.dialog.open(TechTileSelectorDialogComponent, {
+            data: {
+              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectTechTileTrash')}`,
+              playerId: player.id,
+              techTiles: gameState.playerTechTiles,
+              mode: 'select',
+              colorScheme: 'negative',
+            } as TechTileSelectorData,
+            disableClose: true,
+          });
+
+          dialogRef.afterClosed().subscribe((pickedCard: TechTileDeckCard) => {
+            game.trashPlayerTechTile(player.id, pickedCard);
+            game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
+            game.resolveRewardChoices(player);
+          });
+        },
+      },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          if (gameState.playerTechTiles.length < 1) {
+            return;
+          }
+
+          game.resolveStructuredEffect(
+            {
+              type: 'helper-trade',
+              effectCosts: { type: 'reward', effectRewards: [{ type: 'tech-tile-trash' }] },
+              effectConversions: { type: 'reward', effectRewards: [{ type: 'faction-influence-up-choice' }] },
+            },
             player,
             gameState,
           );
-        }
+        },
       },
-    },
+    ],
   },
   {
     id: 'Count August Metulli',
@@ -497,24 +985,63 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        const playerVictoryPoints = gameState.playerScore.victoryPoints;
-        const playerPersuasion =
-          player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound;
+    customTimedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          const playerVictoryPoints = gameState.playerScore.victoryPoints;
+          const playerPersuasion =
+            player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound;
 
-        services.playerResourcesService.addResourceToPlayer(player.id, 'signet', playerVictoryPoints + playerPersuasion);
-        services.playersService.removePersuasionGainedFromPlayer(
-          player.id,
-          player.permanentPersuasion + player.persuasionGainedThisRound,
-        );
+          game.addRewardToPlayer(player.id, { type: 'signet', amount: playerVictoryPoints + playerPersuasion });
+          game.removePersuasionFromPlayer(player.id, player.permanentPersuasion + player.persuasionGainedThisRound);
+        },
       },
-    },
-    customSignetAIFunction: (player, gameState, services) => {
-      const playerSignetTokens = gameState.playerResources.signet;
+    ],
+    customSignetFunction: (player, gameState, game) => {
+      if (gameState.playerResources.signet < 1) {
+        return;
+      }
+
       const imperiumRowCards = gameState.imperiumRowCards.filter(
-        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= playerSignetTokens,
+        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= gameState.playerResources.signet,
+      ) as ImperiumRowCard[];
+      if (imperiumRowCards.length < 1) {
+        return;
+      }
+
+      const discardPileCards = gameState.enemyDiscardPiles.flatMap((x) => x.cards);
+
+      const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardChoice')}`,
+          playerId: player.id,
+          imperiumCards: [...imperiumRowCards, ...discardPileCards],
+          mode: 'select',
+          colorScheme: 'neutral',
+        } as ImperiumCardSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((chosenImperiumRowCard: ImperiumDeckCard) => {
+        if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
+          if (chosenImperiumRowCard.persuasionCosts) {
+            game.payCostForPlayer(player.id, {
+              type: 'signet',
+              amount: chosenImperiumRowCard.persuasionCosts,
+            });
+          }
+          game.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+        }
+      });
+    },
+    customSignetAIFunction: (player, gameState, game) => {
+      if (gameState.playerResources.signet < 1) {
+        return;
+      }
+
+      const imperiumRowCards = gameState.imperiumRowCards.filter(
+        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= gameState.playerResources.signet,
       ) as ImperiumRowCard[];
       if (imperiumRowCards.length < 1) {
         return;
@@ -524,7 +1051,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       let bestEffectValue = 0;
       for (const card of imperiumRowCards) {
         if (card.structuredAgentEffects) {
-          const effectEvaluation = services.aiEffectEvaluationService.getStructuredEffectUsefulnesAndCosts(
+          const effectEvaluation = game.ai.getStructuredEffectUsefulnesAndCosts(
             card.structuredAgentEffects,
             player,
             gameState,
@@ -541,12 +1068,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
         if (chosenImperiumRowCard.persuasionCosts) {
-          services.effectsService.payCostForPlayer(player.id, {
+          game.payCostForPlayer(player.id, {
             type: 'signet',
             amount: chosenImperiumRowCard.persuasionCosts,
           });
         }
-        services.effectsService.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+        game.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
       }
     },
     signetRingValue: (player, gameState) => {
@@ -570,49 +1097,80 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    customTimedFunction: {
-      timing: 'timing-game-start',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
+    customTimedFunctions: [
+      {
+        timing: 'timing-game-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          game.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
+        },
       },
-    },
-    customTimedAIFunction: {
-      timing: 'timing-agent-placement',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        if (gameState.playerResources.signet < 1) {
-          return;
-        }
+    ],
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-agent-placement',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
 
-        const boardSpace = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
-        if (boardSpace) {
-          for (const reward of boardSpace.rewards) {
-            if (reward.type === 'water' || reward.type === 'spice') {
-              services.effectsService.addRewardToPlayer(player.id, { type: reward.type });
-              services.effectsService.payCostForPlayer(player.id, { type: 'signet' });
-              break;
-            }
-            if (reward.type === 'solari' && gameState.playerResources.signet > 1) {
-              services.effectsService.addRewardToPlayer(player.id, { type: reward.type });
-              services.effectsService.payCostForPlayer(player.id, { type: 'signet' });
-              break;
+          const boardSpace = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
+          if (boardSpace) {
+            for (const reward of boardSpace.rewards) {
+              if (reward.type === 'solari' || reward.type === 'water' || reward.type === 'spice') {
+                game.resolveStructuredEffect(
+                  {
+                    type: 'helper-trade',
+                    effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+                    effectConversions: { type: 'reward', effectRewards: [{ type: reward.type }] },
+                  },
+                  player,
+                  gameState,
+                );
+              }
             }
           }
-        }
+        },
       },
-    },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-agent-placement',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.signet < 1) {
+            return;
+          }
+
+          const boardSpace = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
+          if (boardSpace) {
+            for (const reward of boardSpace.rewards) {
+              if (reward.type === 'water' || reward.type === 'spice') {
+                game.addRewardToPlayer(player.id, { type: reward.type });
+                game.payCostForPlayer(player.id, { type: 'signet' });
+                break;
+              }
+              if (reward.type === 'solari' && gameState.playerResources.signet > 1) {
+                game.addRewardToPlayer(player.id, { type: reward.type });
+                game.payCostForPlayer(player.id, { type: 'signet' });
+                break;
+              }
+            }
+          }
+        },
+      },
+    ],
     signetTokenOrFieldMarkerValue: (player, gameState) => 2.75,
   },
-  {
-    id: 'Eva Moritani',
-    gameModifiers: {
-      customActions: [
-        {
-          id: 'eva-labour-camps',
-          action: 'field-marker',
-        },
-      ],
-    },
-  },
+  // {
+  //   id: 'Eva Moritani',
+  //   gameModifiers: {
+  //     customActions: [
+  //       {
+  //         id: 'eva-labour-camps',
+  //         action: 'field-marker',
+  //       },
+  //     ],
+  //   },
+  // },
   {
     id: 'Dara Moritani',
     aiAdjustments: {
@@ -627,12 +1185,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       ],
       fieldCost: [{ id: 'dara-landsraad-costs', actionType: 'landsraad', costType: 'solari', amount: 2 }],
     },
-    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const rewardAmount = gameState.playerAgentsOnFields.filter((pa) =>
         gameState.enemyAgentsOnFields.some((ea) => ea.fieldId === pa.fieldId),
       ).length;
 
-      services.effectsService.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });
+      game.addRewardToPlayer(player.id, { type: 'spice', amount: rewardAmount });
     },
     signetRingValue: (player, gameState, targetBoardSpace) => {
       const playerAgentsOnFields = gameState.playerAgentsOnFields;
@@ -659,26 +1217,42 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    customTimedAIFunction: {
-      timing: 'timing-agent-placement',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        if (!player.hasSwordmaster && gameState.currentRound < 4) {
-          return;
-        }
-
-        const field = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
-        if (!field || field.actionType !== 'landsraad') {
-          return;
-        }
-
-        if (gameState.playerCombatUnits.troopsInGarrison < 6) {
-          if (gameState.playerResources.solari > 0) {
-            services.effectsService.payCostForPlayer(player.id, { type: 'solari' });
-            services.effectsService.addRewardToPlayer(player.id, { type: 'troop' });
+    customTimedFunctions: [
+      {
+        timing: 'timing-agent-placement',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          if (gameState.playerResources.solari < 1) {
+            return;
           }
-        }
+
+          const field = gameState.boardSpaces.find((x) => x.title.en === gameState.playerAgentPlacedOnFieldThisTurn);
+          if (!field || field.actionType !== 'landsraad') {
+            return;
+          }
+
+          if (!player.isAI) {
+            game.resolveStructuredEffect(
+              {
+                type: 'helper-trade',
+                effectCosts: { type: 'reward', effectRewards: [{ type: 'solari' }] },
+                effectConversions: { type: 'reward', effectRewards: [{ type: 'troop' }] },
+              },
+              player,
+              gameState,
+            );
+          } else {
+            if (!player.hasSwordmaster && gameState.currentRound < 4) {
+              return;
+            }
+
+            if (gameState.playerCombatUnits.troopsInGarrison < 6) {
+              game.payCostForPlayer(player.id, { type: 'solari' });
+              game.addRewardToPlayer(player.id, { type: 'troop' });
+            }
+          }
+        },
       },
-    },
+    ],
   },
   {
     id: 'The Preacher',
@@ -690,27 +1264,29 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const enemyLocation = gameState.enemyLocations.find(
         (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
       );
       if (enemyLocation) {
-        services.effectsService.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
+        game.payCostForPlayer(enemyLocation.playerId, { type: 'card-discard' });
       } else {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'focus' });
+        game.addRewardToPlayer(player.id, { type: 'focus' });
       }
     },
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player: Player, gameState: GameState, services: GameServices) => {
-        for (const agentOnField of gameState.playerAgentsOnFields) {
-          const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
-          if (isEnemyLocation) {
-            services.effectsService.addRewardToPlayer(player.id, { type: 'persuasion' });
+    customTimedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          for (const agentOnField of gameState.playerAgentsOnFields) {
+            const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
+            if (isEnemyLocation) {
+              game.addRewardToPlayer(player.id, { type: 'persuasion' });
+            }
           }
-        }
+        },
       },
-    },
+    ],
     signetRingValue: (player, gameState) => 2,
   },
 ];

@@ -33,12 +33,18 @@ export interface ImperiumRowModifier extends GameModifier {
 
 export interface TechTileModifier extends GameModifier {
   techTileId?: string;
-  spiceAmount: number;
+  techAmount: number;
   minCosts?: number;
 }
 
 export interface FieldMarkerModifier extends GameModifier {
   fieldId: string;
+  amount: number;
+}
+
+export interface LocationTakeoverTroopCostsModifier extends GameModifier {
+  locationId?: string;
+  locationType?: ActionType;
   amount: number;
 }
 
@@ -99,6 +105,7 @@ export interface GameModifiers {
   fieldReward?: FieldRewardsModifier[];
   fieldBlock?: FieldBlockModifier[];
   combat?: CombatModifier;
+  locationTakeoverTroopCosts?: LocationTakeoverTroopCostsModifier[];
 }
 
 export interface PlayerGameModifiers extends GameModifiers {
@@ -191,10 +198,6 @@ export class GameModifiersService {
     } else {
       return undefined;
     }
-  }
-
-  getPlayerCustomActionModifiers(playerId: number) {
-    return this.playerGameModifiers.find((x) => x.playerId === playerId)?.customActions;
   }
 
   getPlayerFieldMarkers(fieldId: string) {

@@ -1716,8 +1716,8 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffectSize: 'large',
     rarity: 'rare',
     customAgentEffect: {
-      en: 'You may look at the top card of the intrigue deck as well as the conflict deck.',
-      de: 'Du kannst dir die oberste Karte des Intrigen-Stapels sowie des Konflikt-Stapels ansehen.',
+      en: 'You may look at the top card of your deck aswell as the intrigue deck.',
+      de: 'Du kannst dir die oberste Karte deines Decks sowie des Intrigenstapels  ansehen.',
       fontSize: 'small',
     },
     revealEffectSize: 'large',

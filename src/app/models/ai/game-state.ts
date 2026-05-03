@@ -1,15 +1,21 @@
 import { GameContent } from 'src/app/constants/board-settings';
 import { DuneEvent } from 'src/app/constants/events';
-import { ActionField, ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
+import { ActionField, ActionType, ActiveFactionType, DuneLocation, EffectRewardType } from 'src/app/models';
 import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard, PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { SpiceAccumulation } from 'src/app/services/board-space.service';
-import { ImperiumDeckCard, ImperiumDeckPlot, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
+import {
+  ImperiumDeckCard,
+  ImperiumDeckPlot,
+  ImperiumRowCard,
+  ImperiumRowPlot,
+  PlayerCardStack,
+} from 'src/app/services/cards.service';
 import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { PlayerGameModifiers } from 'src/app/services/game-modifier.service';
-import { LeaderDeckCard } from 'src/app/services/leaders.service';
+import { LeaderDeckCard, PlayerLeader } from 'src/app/services/leaders.service';
 import { OwnedLocation } from 'src/app/services/location-manager.service';
 import { PlayerAgent, PlayerAgentOnField } from 'src/app/services/player-agents.service';
 import { Resources } from 'src/app/services/player-resources.service';
@@ -68,9 +74,12 @@ export type GameState = Readonly<{
   playerIntrigueStealAmount: number;
   enemyIntrigues: PlayerIntrigueStack[];
   enemyIntrigueCounts: { playerId: number; intrigueCount: number }[];
+  locations: DuneLocation[];
   freeLocations: string[];
   playerLocations: string[];
   enemyLocations: OwnedLocation[];
+  enemyLeaders: PlayerLeader[];
+  enemyDiscardPiles: PlayerCardStack[];
   rival?: Player;
   playerTurnInfos?: TurnInfo;
   playerCardsFactions: PlayerGameElementFactions;

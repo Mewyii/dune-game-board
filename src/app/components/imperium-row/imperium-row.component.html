@@ -123,6 +123,7 @@
                 : '')
             "
             [card]="limitedCard"
+            [costModifier]="getCardCostModifier(limitedCard)"
           ></dune-imperium-row-card>
           <div class="card-action-container" *ngIf="limitedCard.name.en === activeCardId">
             <button

@@ -92,6 +92,10 @@ export class ConflictsService {
     }
   }
 
+  resetCurrentConflict() {
+    this.currentConflictSubject.next(undefined);
+  }
+
   resetConflicts() {
     this.conflictStackSubject.next([]);
     this.currentConflictSubject.next(undefined);

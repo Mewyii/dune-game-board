@@ -28,6 +28,7 @@ import {
   EffectTiming,
   EffectTimingConditionChoiceConversionMultiplierOrReward,
   effectTimings,
+  EffectTimingType,
   EffectType,
   resourceTypes,
   RewardArrayInfo,
@@ -117,6 +118,15 @@ export function isConditionalEffect(reward: Effect): reward is EffectCondition {
     effectConditions.some((x) => x === reward.type) ||
     effectFactionConditions.some((x) => x === reward.type) ||
     effectActionConditions.some((x) => x === reward.type)
+  );
+}
+
+export function isDreadnoughtEffectType(type: EffectType) {
+  return (
+    type === 'dreadnought' ||
+    type === 'dreadnought-insert' ||
+    type === 'dreadnought-insert-or-retreat' ||
+    type === 'dreadnought-retreat'
   );
 }
 
@@ -302,6 +312,7 @@ export function getStructuredEffectConditionIfPossible(
         const conditionalEffect = {
           type: effect.type,
           affects: 'enemies',
+          action: effect.action,
         } as StructuredEffectCondition;
         return [effectsWithoutCondition, conditionalEffect];
       } else if (effect.type === 'condition-enemy-controlling-this-field') {
@@ -387,25 +398,28 @@ export function getStructuredEffectReward(effects: EffectMultiplierOrReward[]): 
 }
 
 export function isEffectTimingFullfilled(
-  timingEffect: StructuredEffectTiming,
+  effectTimingType: EffectTimingType,
   player: Player,
   gameState: Pick<GameState, 'currentRound' | 'playerAgentsOnFields' | 'playerTurnInfos' | 'currentRoundPhase'>,
 ) {
   let timingFullfilled = false;
-  if (timingEffect.type === 'timing-game-start') {
-    if (gameState.currentRoundPhase === 'select leaders' && gameState.currentRound === 1) {
+  if (effectTimingType === 'timing-game-start') {
+    if (gameState.currentRound == 1 && player.turnNumber === 0 && !gameState.playerTurnInfos?.agentPlacedOnFieldId) {
       timingFullfilled = true;
     }
-  } else if (timingEffect.type === 'timing-round-start') {
-    const hasPlacedAgentThisRound = gameState.playerAgentsOnFields.length > 0;
-    if (player.turnState === 'agent-placement' && player.turnNumber < 2 && !hasPlacedAgentThisRound) {
+  } else if (effectTimingType === 'timing-round-start') {
+    if (gameState.currentRound > 0 && player.turnNumber === 1 && !gameState.playerTurnInfos?.agentPlacedOnFieldId) {
       timingFullfilled = true;
     }
-  } else if (timingEffect.type === 'timing-turn-start') {
+  } else if (effectTimingType === 'timing-turn-start') {
     if (player.turnState === 'agent-placement' && !gameState.playerTurnInfos?.agentPlacedOnFieldId) {
       timingFullfilled = true;
     }
-  } else if (timingEffect.type === 'timing-reveal-turn') {
+  } else if (effectTimingType === 'timing-agent-placement') {
+    if (player.turnState === 'agent-placement' && gameState.playerTurnInfos?.agentPlacedOnFieldId) {
+      timingFullfilled = true;
+    }
+  } else if (effectTimingType === 'timing-reveal-turn') {
     if (player.turnState === 'reveal') {
       timingFullfilled = true;
     }

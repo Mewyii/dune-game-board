@@ -58,11 +58,6 @@ export class PlayersService {
     return player ? cloneDeep(player.color) : '';
   }
 
-  getPlayerPersuasion(playerId: number) {
-    const player = this.playersSubject.value.find((x) => x.id === playerId);
-    return player ? player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound : 0;
-  }
-
   addPlayer() {
     const players = this.getPlayers();
 
@@ -78,6 +73,8 @@ export class PlayersService {
         permanentPersuasion: 0,
         isAI: true,
         turnNumber: 0,
+        hasSwordmaster: false,
+        hasCouncilSeat: false,
       });
     }
 
@@ -176,7 +173,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  addPersuasionGainedToPlayer(playerId: number, amount: number) {
+  addPersuasionToPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -186,7 +183,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  removePersuasionGainedFromPlayer(playerId: number, amount: number) {
+  removePersuasionFromPlayer(playerId: number, amount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 
+import { getPlayerPersuasion } from 'src/app/helpers/player';
 import { ActiveFactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
@@ -24,7 +26,9 @@ import {
   styleUrls: ['./imperium-row.component.scss'],
   standalone: false,
 })
-export class ImperiumRowComponent implements OnInit {
+export class ImperiumRowComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   imperiumRowCardsLeft: (ImperiumRowCard | ImperiumRowPlot)[] = [];
   imperiumRowCardsRight: (ImperiumRowCard | ImperiumRowPlot)[] = [];
   activeCardId = '';
@@ -53,47 +57,63 @@ export class ImperiumRowComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cardsService.imperiumRow$.subscribe((imperiumCards) => {
+    const imperiumRowSub = this.cardsService.imperiumRow$.subscribe((imperiumCards) => {
       this.setRowCards();
     });
 
-    this.cardsService.unlimitedCustomCards$.subscribe((unlimitedCards) => {
+    const unlimitedCustomCardsSub = this.cardsService.unlimitedCustomCards$.subscribe((unlimitedCards) => {
       this.setRowCards();
     });
 
-    this.cardsService.limitedCustomCards$.subscribe((limitedCards) => {
+    const limitedCustomCardsSub = this.cardsService.limitedCustomCards$.subscribe((limitedCards) => {
       this.setRowCards();
     });
 
-    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+    const activePlayerSub = this.gameManager.activePlayer$.subscribe((activePlayer) => {
       this.activePlayer = activePlayer;
       this.activePlayerId = activePlayer?.id ?? 0;
 
       if (this.activePlayer) {
         this.activePlayerTurnState = this.activePlayer.turnState;
 
-        this.activePlayerPersuasion = this.playersService.getPlayerPersuasion(this.activePlayer.id);
+        this.activePlayerPersuasion = getPlayerPersuasion(this.activePlayer);
 
         this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
         this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
       }
     });
 
-    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+    const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
       this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
     });
 
-    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+    const turnInfosSub = this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       const playerTurnInfo = turnInfos.find((x) => x.playerId === this.activePlayerId);
       if (playerTurnInfo) {
         this.factionRecruitment = playerTurnInfo.factionRecruitment;
       }
     });
 
-    this.roundService.currentRound$.subscribe((round) => {
+    const currentRoundSub = this.roundService.currentRound$.subscribe((round) => {
       this.setRowCards();
     });
+
+    this.subscriptions.push(
+      imperiumRowSub,
+      unlimitedCustomCardsSub,
+      limitedCustomCardsSub,
+      activePlayerSub,
+      playerGameModifiersSub,
+      turnInfosSub,
+      currentRoundSub,
+    );
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onBuyCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
@@ -204,7 +224,7 @@ export class ImperiumRowComponent implements OnInit {
     }
   }
 
-  getCardCostModifier(card: ImperiumRowCard | ImperiumRowPlot) {
+  getCardCostModifier(card: ImperiumDeckCard | ImperiumRowCard | ImperiumRowPlot) {
     return getCardCostModifier(card, this.imperiumRowModifiers);
   }
 }

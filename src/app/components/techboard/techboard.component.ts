@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ActionField } from 'src/app/models';
-import { AudioManager } from 'src/app/services/audio-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
@@ -12,9 +12,11 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
   styleUrls: ['./techboard.component.scss'],
   standalone: false,
 })
-export class TechboardComponent implements OnInit {
+export class TechboardComponent implements OnInit, OnDestroy {
   @Input() ix: ActionField | undefined;
   @Input() useTechTiles = false;
+
+  subscriptions: Subscription[] = [];
 
   public activePlayerId = 0;
   public playerTech: { playerId: number; amount: number }[] = [];
@@ -25,17 +27,24 @@ export class TechboardComponent implements OnInit {
     public playersService: PlayersService,
     public playerScoreManager: PlayerScoreManager,
     private gameManager: GameManager,
-    private audioManager: AudioManager,
     private turnInfoService: TurnInfoService,
   ) {}
 
   ngOnInit(): void {
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+    const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
     });
 
-    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+    const turnInfosSub = this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       this.playerCanBuyTech = turnInfos.some((x) => x.canBuyTech);
     });
+
+    this.subscriptions.push(activePlayerIdSub, turnInfosSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 }

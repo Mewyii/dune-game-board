@@ -20,6 +20,8 @@
           Player {{ logEntry.playerId }} trashed card {{ logEntry.cardName }}.
         } @else if (logEntry.type === 'card-discard') {
           Player {{ logEntry.playerId }} discarded card {{ logEntry.cardName }}.
+        } @else if (logEntry.type === 'card-return-to-hand') {
+          Player {{ logEntry.playerId }} returned card {{ logEntry.cardName }} to his hand.
         } @else if (logEntry.type === 'intrigue-play') {
           Player {{ logEntry.playerId }} played intrigue {{ logEntry.cardName }}.
         } @else if (logEntry.type === 'intrigue-trash') {

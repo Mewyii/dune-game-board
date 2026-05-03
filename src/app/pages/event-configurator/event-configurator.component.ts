@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { DuneEvent } from 'src/app/constants/events';
 import { DuneEventsManager } from 'src/app/services/dune-events.service';
@@ -8,22 +9,36 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogEventEditorComponent } from './dialog-event-editor/dialog-event-editor.component';
 
 @Component({
-    selector: 'dune-event-configurator',
-    templateUrl: './event-configurator.component.html',
-    styleUrls: ['./event-configurator.component.scss'],
-    standalone: false
+  selector: 'dune-event-configurator',
+  templateUrl: './event-configurator.component.html',
+  styleUrls: ['./event-configurator.component.scss'],
+  standalone: false,
 })
-export class EventConfiguratorComponent {
+export class EventConfiguratorComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public events: DuneEvent[] = [];
   public showControls = true;
   public imagePadding = 0;
 
-  constructor(public t: TranslateService, public eventsService: DuneEventsManager, private dialog: MatDialog) {}
+  constructor(
+    public t: TranslateService,
+    public eventsService: DuneEventsManager,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
-    this.eventsService.events$.subscribe((events) => {
+    const eventsSub = this.eventsService.events$.subscribe((events) => {
       this.events = events;
     });
+
+    this.subscriptions.push(eventsSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onExportCardsClicked() {

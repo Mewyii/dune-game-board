@@ -1,20 +1,20 @@
-@if (activeLeader) {
+@if (playerLeader && activeLeader) {
   <div class="leader-board">
     <div class="leader-container">
       <div class="leader-viewer">
-        <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setPreviousLeader()">
+        <div class="control-button" *ngIf="!playerLeader.isLockedIn" (click)="setPreviousLeader()">
           <mat-icon>navigate_before</mat-icon>
         </div>
         <dune-leader-card
           [class.active]="isLeaderActive"
-          [class.flipped]="playerLeader?.isFlipped"
+          [class.flipped]="playerLeader.isFlipped"
           *ngIf="activeLeader.type === 'new'"
           [leader]="activeLeader"
           (click)="isLeaderActive = !isLeaderActive"
         ></dune-leader-card>
-        @if (!playerLeader?.isLockedIn || isLeaderActive) {
+        @if (!playerLeader.isLockedIn || isLeaderActive) {
           <div class="leader-action-container">
-            @if (!playerLeader?.isLockedIn) {
+            @if (!playerLeader.isLockedIn) {
               <button
                 class="buy-button"
                 mat-fab
@@ -34,7 +34,32 @@
                 <mat-icon>shuffle</mat-icon>
               </button>
             } @else {
-              @if (playerLeader?.isFlipped) {
+              @if (!playerLeader.isFlipped) {
+                <button
+                  *ngIf="playerLeader.hasActiveEffect"
+                  class="tech-flip-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onActivateLeaderClicked(playerLeader, 'effect')"
+                >
+                  <mat-icon>flash_on</mat-icon>
+                  @if (playerLeader.hasActiveFunction) {
+                    <mat-icon style="position: absolute; top: 10px; right: 4px">arrow_drop_up</mat-icon>
+                  }
+                </button>
+                <button
+                  *ngIf="playerLeader.hasActiveFunction"
+                  class="tech-flip-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onActivateLeaderClicked(playerLeader, 'function')"
+                >
+                  <mat-icon>flash_on</mat-icon>
+                  @if (playerLeader.hasActiveEffect) {
+                    <mat-icon style="position: absolute; top: 14px; right: 4px">arrow_drop_down</mat-icon>
+                  }
+                </button>
+              } @else {
                 <button
                   class="buy-button"
                   mat-fab
@@ -58,7 +83,7 @@
           </div>
         }
 
-        <div class="control-button" *ngIf="!playerLeader?.isLockedIn" (click)="setNextLeader()">
+        <div class="control-button" *ngIf="!playerLeader.isLockedIn" (click)="setNextLeader()">
           <mat-icon>navigate_next</mat-icon>
         </div>
       </div>
@@ -80,7 +105,7 @@
           </div>
           <div class="info-container">
             <button
-              *ngIf="currentRound"
+              *ngIf="currentRoundPhase === 'select leaders' || currentRound"
               mat-fab
               color="accent"
               (click)="onEndTurnClicked(activePlayer.id)"
@@ -95,7 +120,7 @@
               (click)="onAiActionClicked(activePlayer.id)"
               [matTooltip]="t.translate('leadersTooltipAIAction')"
               [disabled]="
-                !playerLeader?.isLockedIn ||
+                !playerLeader.isLockedIn ||
                 currentRoundPhase === 'select leaders' ||
                 (currentRoundPhase === 'agent-placement' && activePlayer.turnState === 'revealed') ||
                 (currentRoundPhase === 'combat' && activePlayer.turnState === 'done') ||
@@ -363,7 +388,7 @@
         </ng-container>
       </div>
       <dune-player-reward-choices></dune-player-reward-choices>
-      <div class="control-bar center" *ngIf="playerTechTiles.length > 0">
+      <div class="control-bar center" [style.paddingBottom]="'32px'" *ngIf="playerTechTiles.length > 0">
         @for (playerTechTile of playerTechTiles; track playerTechTile.techTile.name.en) {
           <div
             class="tech-tile-container"
@@ -389,15 +414,32 @@
               [card]="playerTechTile.techTile"
             ></dune-tech-tile>
             <div class="tech-tile-action-container" *ngIf="playerTechTile.techTile.id === activeTechTileId">
-              <button
-                *ngIf="playerTechTile.techTile.structuredEffects && !playerTechTile.isFlipped"
-                class="tech-flip-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onActivateTechClicked(playerTechTile.techTile)"
-              >
-                <mat-icon>flash_on</mat-icon>
-              </button>
+              @if (!playerTechTile.isFlipped) {
+                <button
+                  *ngIf="playerTechTile.hasActiveEffect"
+                  class="tech-flip-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onActivateTechClicked(playerTechTile.techTile, 'effect')"
+                >
+                  <mat-icon>flash_on</mat-icon>
+                  @if (playerTechTile.hasActiveFunction) {
+                    <mat-icon style="position: absolute; top: 10px; right: 4px">arrow_drop_up</mat-icon>
+                  }
+                </button>
+                <button
+                  *ngIf="playerTechTile.hasActiveFunction"
+                  class="tech-flip-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onActivateTechClicked(playerTechTile.techTile, 'function')"
+                >
+                  <mat-icon>flash_on</mat-icon>
+                  @if (playerTechTile.hasActiveEffect) {
+                    <mat-icon style="position: absolute; top: 14px; right: 4px">arrow_drop_down</mat-icon>
+                  }
+                </button>
+              }
               <button
                 class="tech-flip-button"
                 mat-fab
@@ -410,7 +452,7 @@
                 class="tech-trash-button"
                 mat-fab
                 [color]="'accent'"
-                (click)="onTrashTechClicked(playerTechTile.techTile.id)"
+                (click)="onTrashTechClicked(playerTechTile.techTile)"
               >
                 <mat-icon>delete</mat-icon>
               </button>

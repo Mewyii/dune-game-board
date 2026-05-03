@@ -10,7 +10,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
     actionField: {
       title: { de: 'Arrakeen', en: 'Arrakeen' },
       actionType: 'town',
-      rewards: [{ type: 'solari', amount: 2 }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'card-draw' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_2.png',
       ownerReward: { type: 'solari', amount: 2 },
     },
@@ -25,10 +25,10 @@ export const locationsCustomBeginner: DuneLocation[] = [
       title: { de: "Tuek's Sietch", en: "Tuek's Sietch" },
       actionType: 'spice',
       costs: [{ type: 'water' }],
-      rewards: [{ type: 'spice' }, { type: 'troop' }, { type: 'faction-influence-up-choice' }],
+      rewards: [{ type: 'spice' }, { type: 'faction-influence-up-choice' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_5.png',
       requiresInfluence: { type: 'guild' },
-      ownerReward: { type: 'spice' },
+      ownerReward: { type: 'persuasion', amount: 1 },
     },
   },
   {
@@ -42,7 +42,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
       actionType: 'town',
       rewards: [{ type: 'intrigue' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
-      ownerReward: { type: 'solari', amount: 2 },
+      ownerReward: { type: 'persuasion', amount: 1 },
     },
   },
   {
@@ -54,9 +54,9 @@ export const locationsCustomBeginner: DuneLocation[] = [
     actionField: {
       title: { de: 'Raumhafen', en: 'Space Port' },
       actionType: 'town',
-      rewards: [{ type: 'card-draw' }, { type: 'foldspace' }, { type: 'combat' }],
+      rewards: [{ type: 'foldspace' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/troops.png',
-      ownerReward: { type: 'tech' },
+      ownerReward: { type: 'solari', amount: 2 },
     },
   },
   {
@@ -69,7 +69,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
       title: { de: 'Sietch Tabr', en: 'Sietch Tabr' },
       actionType: 'town',
       costs: [{ type: 'water' }, { type: 'water' }],
-      rewards: [{ type: 'card-draw-or-destroy' }, { type: 'troop', amount: 3 }, { type: 'combat' }],
+      rewards: [{ type: 'troop', amount: 4 }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert_2.png',
       requiresInfluence: { type: 'fremen' },
       ownerReward: { type: 'troop' },
@@ -101,6 +101,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
       costs: [{ type: 'water' }],
       rewards: [{ type: 'spice', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/sandworm.png',
+      ownerReward: { type: 'spice' },
     },
   },
   {
@@ -115,6 +116,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
       costs: [{ type: 'water' }, { type: 'water' }],
       rewards: [{ type: 'spice', amount: 3 }, { type: 'spice-accumulation' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/desert.png',
+      ownerReward: { type: 'spice' },
     },
   },
 ];

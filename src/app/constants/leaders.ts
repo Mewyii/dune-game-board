@@ -42,8 +42,8 @@ export const leaders: Leader[] = [
       de: 'Kwisatz Haderach',
     },
     signetDescription: {
-      en: 'You may look at the top card of the intrigue or conflict deck.<br>{faction:fremen} 2 Influence: {resource:card-draw}{resource:troop}{resource:helper-or}4 Influence:  {resource:card-draw}{resource:agent-lift}',
-      de: 'Du kannst dir die oberste Karte des Intrigen- oder Konfliktstapels ansehen.<br>{faction:fremen} 2 Einfluss: {resource:card-draw}{resource:troop}{resource:helper-or}4 Einfluss:  {resource:card-draw}{resource:agent-lift}',
+      en: 'You may look at the top card of your deck or the intrigue deck.<br>{faction:fremen} 2 Influence: {resource:card-draw}{resource:troop}{resource:helper-or}4 Influence:  {resource:card-draw}{resource:agent-lift}',
+      de: 'Du kannst dir die oberste Karte deines Decks oder des Intrigenstapels ansehen.<br>{faction:fremen} 2 Einfluss: {resource:card-draw}{resource:troop}{resource:helper-or}4 Einfluss:  {resource:card-draw}{resource:agent-lift}',
     },
     imageUrl: '/assets/images/leaders/paul_atreides.png',
     type: 'new',

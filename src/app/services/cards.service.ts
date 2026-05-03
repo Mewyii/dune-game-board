@@ -6,10 +6,8 @@ import { imperiumCardsGameAdjustments } from '../constants/imperium-cards-game-a
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { ActionType, FactionType, StructuredEffect } from '../models';
-import { CustomEffectFunctionWithGameElement, GameState } from '../models/ai';
 import { ImperiumCard } from '../models/imperium-card';
 import { ImperiumPlot } from '../models/imperium-plot';
-import { Player } from '../models/player';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
@@ -19,12 +17,6 @@ export interface ImperiumDeckCard extends ImperiumCard {
   type: 'imperium-card';
   structuredAgentEffects?: StructuredEffect[];
   structuredRevealEffects?: StructuredEffect[];
-  aiAgentEvaluation?: (player: Player, gameState: GameState) => number; //Keep costs in mind, Max value should be 20, min 0
-  aiRevealEvaluation?: (player: Player, gameState: GameState) => number; //Keep costs in mind, Max value should be 20, min 0
-  customAgentFunction?: CustomEffectFunctionWithGameElement;
-  customAgentAIFunction?: CustomEffectFunctionWithGameElement;
-  customRevealFunction?: CustomEffectFunctionWithGameElement;
-  customRevealAIFunction?: CustomEffectFunctionWithGameElement;
 }
 
 export interface ImperiumRowCard extends ImperiumDeckCard {
@@ -117,17 +109,7 @@ export class CardsService {
     const imperiumDeckString = localStorage.getItem('imperiumDeck');
     if (imperiumDeckString) {
       const imperiumDeck = JSON.parse(imperiumDeckString) as ImperiumDeckCard[];
-
-      // Workaround for local storage not being able to store functions
-      const realImperiumDeck = imperiumDeck.map((x) => {
-        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
-        return {
-          ...imperiumCardGameAdjustments,
-          ...x,
-        };
-      });
-
-      this.imperiumDeckSubject.next(realImperiumDeck);
+      this.imperiumDeckSubject.next(imperiumDeck);
     }
 
     this.imperiumDeck$.subscribe((imperiumDeck) => {
@@ -137,16 +119,7 @@ export class CardsService {
     const imperiumRowString = localStorage.getItem('imperiumRow');
     if (imperiumRowString) {
       const imperiumRow = JSON.parse(imperiumRowString) as ImperiumRowCard[];
-
-      const realImperiumRow = imperiumRow.map((x) => {
-        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
-        return {
-          ...imperiumCardGameAdjustments,
-          ...x,
-        };
-      });
-
-      this.imperiumRowSubject.next(realImperiumRow);
+      this.imperiumRowSubject.next(imperiumRow);
     }
 
     this.imperiumRow$.subscribe((imperiumRow) => {
@@ -156,17 +129,7 @@ export class CardsService {
     const playerDecksString = localStorage.getItem('playerDecks');
     if (playerDecksString) {
       const playerDecks = JSON.parse(playerDecksString) as PlayerCardStack[];
-      const realPlayerDecks = playerDecks.map((playerDeck) => ({
-        ...playerDeck,
-        cards: playerDeck.cards.map((card) => {
-          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
-          return {
-            ...imperiumCardGameAdjustments,
-            ...card,
-          };
-        }),
-      }));
-      this.playerDecksSubject.next(realPlayerDecks);
+      this.playerDecksSubject.next(playerDecks);
     }
 
     this.playerDecks$.subscribe((playerDecks) => {
@@ -176,17 +139,7 @@ export class CardsService {
     const playerHandCardsString = localStorage.getItem('playerHandCards');
     if (playerHandCardsString) {
       const playerHandCards = JSON.parse(playerHandCardsString) as PlayerCardStack[];
-      const realPlayerHandCards = playerHandCards.map((playerHand) => ({
-        ...playerHand,
-        cards: playerHand.cards.map((card) => {
-          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
-          return {
-            ...imperiumCardGameAdjustments,
-            ...card,
-          };
-        }),
-      }));
-      this.playerHandsSubject.next(realPlayerHandCards);
+      this.playerHandsSubject.next(playerHandCards);
     }
 
     this.playerHands$.subscribe((playerHandCards) => {
@@ -196,17 +149,7 @@ export class CardsService {
     const playerDiscardPilesString = localStorage.getItem('playerDiscardPiles');
     if (playerDiscardPilesString) {
       const playerDiscardPiles = JSON.parse(playerDiscardPilesString) as PlayerCardStack[];
-      const realPlayerDiscardPiles = playerDiscardPiles.map((playerDiscardPile) => ({
-        ...playerDiscardPile,
-        cards: playerDiscardPile.cards.map((card) => {
-          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
-          return {
-            ...imperiumCardGameAdjustments,
-            ...card,
-          };
-        }),
-      }));
-      this.playerDiscardPilesSubject.next(realPlayerDiscardPiles);
+      this.playerDiscardPilesSubject.next(playerDiscardPiles);
     }
 
     this.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
@@ -216,17 +159,7 @@ export class CardsService {
     const playerTrashPilesString = localStorage.getItem('playerTrashPiles');
     if (playerTrashPilesString) {
       const playerTrashPiles = JSON.parse(playerTrashPilesString) as PlayerCardStack[];
-      const realPlayerTrashPiles = playerTrashPiles.map((playerTrashPile) => ({
-        ...playerTrashPile,
-        cards: playerTrashPile.cards.map((card) => {
-          const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === card.name.en);
-          return {
-            ...imperiumCardGameAdjustments,
-            ...card,
-          };
-        }),
-      }));
-      this.playerTrashPilesSubject.next(realPlayerTrashPiles);
+      this.playerTrashPilesSubject.next(playerTrashPiles);
     }
 
     this.playerTrashPiles$.subscribe((playerTrashPiles) => {
@@ -333,27 +266,31 @@ export class CardsService {
   }
 
   getPlayerHand(playerId: number) {
-    return this.playerHands.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playerHandsSubject.value.find((x) => x.playerId === playerId));
   }
 
   getPlayerHandCard(playerId: number, cardId: string) {
-    return this.getPlayerHand(playerId)?.cards.find((x) => x.id === cardId);
+    return cloneDeep(this.playerHandsSubject.value.find((x) => x.playerId === playerId)?.cards.find((x) => x.id === cardId));
   }
 
   getPlayerDiscardPile(playerId: number) {
-    return this.playerDiscardPiles.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playerDiscardPilesSubject.value.find((x) => x.playerId === playerId));
   }
 
   getPlayerTrashPile(playerId: number) {
-    return this.playerTrashPiles.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playerTrashPilesSubject.value.find((x) => x.playerId === playerId));
   }
 
   getPlayerDeck(playerId: number) {
-    return this.playerDecks.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playerDecksSubject.value.find((x) => x.playerId === playerId));
   }
 
   getPlayedPlayerCard(playerId: number) {
-    return this.playedPlayerCards.find((x) => x.playerId === playerId);
+    return cloneDeep(this.playedPlayerCardsSubject.value.find((x) => x.playerId === playerId));
+  }
+
+  getEnemyDiscardPiles(playerId: number) {
+    return cloneDeep(this.playerDiscardPilesSubject.value.filter((x) => x.playerId !== playerId));
   }
 
   getAllBuyableCards(factionRecruitment?: ('emperor' | 'guild' | 'bene' | 'fremen')[]) {

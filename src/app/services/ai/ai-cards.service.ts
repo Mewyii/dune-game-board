@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { shuffle } from 'lodash';
+import { imperiumCardsGameAdjustments } from 'src/app/constants/imperium-cards-game-adjustments';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 import {
@@ -190,8 +191,9 @@ export class AICardsService {
       );
     }
     if (hasCustomAgentEffect(card)) {
-      if (card.aiAgentEvaluation) {
-        evaluationValue += card.aiAgentEvaluation(player, gameState);
+      const customEffects = imperiumCardsGameAdjustments.find((x) => x.id === card.name.en);
+      if (customEffects?.aiAgentEvaluation) {
+        evaluationValue += customEffects.aiAgentEvaluation(player, gameState);
       } else {
         let evaluationEstimation = 0.5;
         if (card.structuredAgentEffects) {
@@ -230,8 +232,9 @@ export class AICardsService {
       }
     }
     if (hasCustomRevealEffect(card)) {
-      if (card.aiRevealEvaluation) {
-        evaluationValue += card.aiRevealEvaluation(player, gameState);
+      const customEffects = imperiumCardsGameAdjustments.find((x) => x.id === card.name.en);
+      if (customEffects?.aiRevealEvaluation) {
+        evaluationValue += customEffects.aiRevealEvaluation(player, gameState);
       } else {
         let evaluationEstimation = 0.5;
         if (card.structuredRevealEffects) {
@@ -280,8 +283,9 @@ export class AICardsService {
       );
     }
     if (hasCustomAgentEffect(card)) {
-      if (card.aiAgentEvaluation) {
-        evaluationValue += card.aiAgentEvaluation(player, gameState);
+      const customEffects = imperiumCardsGameAdjustments.find((x) => x.id === card.name.en);
+      if (customEffects?.aiAgentEvaluation) {
+        evaluationValue += customEffects.aiAgentEvaluation(player, gameState);
       } else {
         let evaluationEstimation = 0.5;
         if (card.structuredAgentEffects) {
@@ -300,8 +304,9 @@ export class AICardsService {
       );
     }
     if (hasCustomRevealEffect(card)) {
-      if (card.aiRevealEvaluation) {
-        evaluationValue += card.aiRevealEvaluation(player, gameState);
+      const customEffects = imperiumCardsGameAdjustments.find((x) => x.id === card.name.en);
+      if (customEffects?.aiRevealEvaluation) {
+        evaluationValue += customEffects.aiRevealEvaluation(player, gameState);
       } else {
         let evaluationEstimation = 0.5;
         if (card.structuredRevealEffects) {
@@ -342,8 +347,9 @@ export class AICardsService {
       );
     }
     if (hasCustomAgentEffect(card)) {
-      if (card.aiAgentEvaluation) {
-        evaluationValue += card.aiAgentEvaluation(player, gameState);
+      const customEffects = imperiumCardsGameAdjustments.find((x) => x.id === card.name.en);
+      if (customEffects?.aiAgentEvaluation) {
+        evaluationValue += customEffects.aiAgentEvaluation(player, gameState);
       } else {
         let evaluationEstimation = 0.5;
         if (card.structuredAgentEffects) {
@@ -362,8 +368,9 @@ export class AICardsService {
       );
     }
     if (hasCustomRevealEffect(card)) {
-      if (card.aiRevealEvaluation) {
-        evaluationValue += card.aiRevealEvaluation(player, gameState);
+      const customEffects = imperiumCardsGameAdjustments.find((x) => x.id === card.name.en);
+      if (customEffects?.aiRevealEvaluation) {
+        evaluationValue += customEffects.aiRevealEvaluation(player, gameState);
       } else {
         let evaluationEstimation = 0.5;
         if (card.structuredRevealEffects) {

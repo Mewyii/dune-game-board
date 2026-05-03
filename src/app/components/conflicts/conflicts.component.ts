@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { Conflict } from 'src/app/models/conflict';
 import { ConflictsService } from 'src/app/services/conflicts.service';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -12,7 +13,9 @@ import { ConflictsPreviewDialogComponent } from '../_common/dialogs/conflicts-pr
   styleUrls: ['./conflicts.component.scss'],
   standalone: false,
 })
-export class ConflictsComponent implements OnInit {
+export class ConflictsComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   constructor(
     public conflictsService: ConflictsService,
     private gameManager: GameManager,
@@ -27,11 +30,11 @@ export class ConflictsComponent implements OnInit {
   public currentconflictIsActive = false;
 
   ngOnInit(): void {
-    this.conflictsService.currentConflict$.subscribe((currentConflict) => {
+    const currentConflictSub = this.conflictsService.currentConflict$.subscribe((currentConflict) => {
       this.currentConflict = currentConflict;
     });
 
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+    const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
 
       this.hasConflictVision = this.gameModifierService.playerHasCustomActionAvailable(
@@ -43,12 +46,20 @@ export class ConflictsComponent implements OnInit {
       this.currentconflictIsActive = false;
     });
 
-    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+    const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.hasConflictVision = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
         'vision-conflict',
       );
     });
+
+    this.subscriptions.push(currentConflictSub, activePlayerIdSub, playerGameModifiersSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onSetCurrentConflictActiveClicked() {

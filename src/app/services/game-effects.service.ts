@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getRandomElementFromArray } from '../helpers/common';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward } from '../helpers/faction-score';
-import { getFactionInfluenceModifier } from '../helpers/game-modifiers';
+import { getFactionInfluenceModifier, getModifiedLocationTakeoverTroopCosts } from '../helpers/game-modifiers';
 import { isResourceType } from '../helpers/resources';
 import {
   getMultipliedRewardEffects,
@@ -80,57 +80,67 @@ export class EffectsService {
   ) {
     const effects = structuredEffects;
     for (const effect of effects) {
-      let timingFullfilled = true;
-      let conditionFullfilled = true;
-      let affects = 'player';
-      if (effect.timing) {
-        timingFullfilled = isEffectTimingFullfilled(effect.timing, player, gameState);
-      }
-      if (effect.condition) {
-        conditionFullfilled = isEffectConditionFullfilled(effect.condition, player, gameState, timing, gameElement);
-        affects = effect.condition.affects;
-      }
+      this.resolveStructuredEffect(effect, player, gameState, gameElement, timing);
+    }
+  }
 
-      if (timingFullfilled && conditionFullfilled) {
-        if (affects === 'player') {
-          if (isStructuredRewardEffect(effect)) {
-            const rewards = getMultipliedRewardEffects(effect, gameState, timing);
+  resolveStructuredEffect(
+    structuredEffect: StructuredEffect,
+    player: Player,
+    gameState: GameState,
+    gameElement?: GameElement,
+    timing?: EffectPlayerTurnTiming,
+  ) {
+    let timingFullfilled = true;
+    let conditionFullfilled = true;
+    let affects = 'player';
+    if (structuredEffect.timing) {
+      timingFullfilled = isEffectTimingFullfilled(structuredEffect.timing.type, player, gameState);
+    }
+    if (structuredEffect.condition) {
+      conditionFullfilled = isEffectConditionFullfilled(structuredEffect.condition, player, gameState, timing, gameElement);
+      affects = structuredEffect.condition.affects;
+    }
 
-            for (const reward of rewards) {
-              this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
-            }
-          } else if (isStructuredChoiceEffect(effect)) {
-            this.resolveStructuredChoiceEffect(effect, player.id, gameElement);
-          } else if (isStructuredConversionEffect(effect)) {
-            this.resolveStructuredConversionEffect(effect, player.id, gameElement);
+    if (timingFullfilled && conditionFullfilled) {
+      if (affects === 'player') {
+        if (isStructuredRewardEffect(structuredEffect)) {
+          const rewards = getMultipliedRewardEffects(structuredEffect, gameState, timing);
+
+          for (const reward of rewards) {
+            this.addRewardToPlayer(player.id, reward, { gameElement, source: gameElement?.type });
           }
-        } else if (affects === 'enemies') {
-          const enemies = this.playersService.getEnemyPlayers(player.id);
-          for (const enemy of enemies) {
-            let enemyConditionFullfilled = true;
-            if (effect.condition) {
-              const enemyAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(enemy.id);
-              enemyConditionFullfilled = isEffectEnemyConditionFullfilled(
-                effect.condition,
-                enemy,
-                enemyAgentsOnFields,
-                gameState.boardSpaces,
-                gameState.playerAgentPlacedOnFieldThisTurn,
-                gameState.enemyLocations,
-              );
-            }
-            if (enemyConditionFullfilled) {
-              if (isStructuredRewardEffect(effect)) {
-                const rewards = getMultipliedRewardEffects(effect, gameState, timing);
+        } else if (isStructuredChoiceEffect(structuredEffect)) {
+          this.resolveStructuredChoiceEffect(structuredEffect, player.id, gameElement);
+        } else if (isStructuredConversionEffect(structuredEffect)) {
+          this.resolveStructuredConversionEffect(structuredEffect, player.id, gameElement);
+        }
+      } else if (affects === 'enemies') {
+        const enemies = this.playersService.getEnemyPlayers(player.id);
+        for (const enemy of enemies) {
+          let enemyConditionFullfilled = true;
+          if (structuredEffect.condition) {
+            const enemyAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(enemy.id);
+            enemyConditionFullfilled = isEffectEnemyConditionFullfilled(
+              structuredEffect.condition,
+              enemy,
+              enemyAgentsOnFields,
+              gameState.boardSpaces,
+              gameState.playerAgentPlacedOnFieldThisTurn,
+              gameState.enemyLocations,
+            );
+          }
+          if (enemyConditionFullfilled) {
+            if (isStructuredRewardEffect(structuredEffect)) {
+              const rewards = getMultipliedRewardEffects(structuredEffect, gameState, timing);
 
-                for (const reward of rewards) {
-                  this.addRewardToPlayer(enemy.id, reward, { gameElement, source: gameElement?.type });
-                }
-              } else if (isStructuredChoiceEffect(effect)) {
-                this.resolveStructuredChoiceEffect(effect, enemy.id, gameElement);
-              } else if (isStructuredConversionEffect(effect)) {
-                this.resolveStructuredConversionEffect(effect, enemy.id, gameElement);
+              for (const reward of rewards) {
+                this.addRewardToPlayer(enemy.id, reward, { gameElement, source: gameElement?.type });
               }
+            } else if (isStructuredChoiceEffect(structuredEffect)) {
+              this.resolveStructuredChoiceEffect(structuredEffect, enemy.id, gameElement);
+            } else if (isStructuredConversionEffect(structuredEffect)) {
+              this.resolveStructuredConversionEffect(structuredEffect, enemy.id, gameElement);
             }
           }
         }
@@ -265,7 +275,7 @@ export class EffectsService {
     } else if (rewardType === 'card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: 1 });
     } else if (rewardType == 'persuasion') {
-      this.playersService.addPersuasionGainedToPlayer(playerId, rewardAmount);
+      this.playersService.addPersuasionToPlayer(playerId, rewardAmount);
     } else if (rewardType == 'sword') {
       this.audioManager.playSound('sword');
       this.combatManager.addAdditionalCombatPowerToPlayer(playerId, rewardAmount);
@@ -308,6 +318,7 @@ export class EffectsService {
         if (!playerLocation) {
           this.audioManager.playSound('location-control');
           this.locationManager.setLocationOwner(currentConflict.boardSpaceId, playerId);
+          this.addRewardToPlayer(playerId, { type: 'victory-point' }, { source: 'Location' });
           this.loggingService.logPlayerGainedLocationControl(
             playerId,
             this.roundService.currentRound,
@@ -315,12 +326,20 @@ export class EffectsService {
           );
         } else if (playerLocation.playerId !== playerId) {
           const garrisonedTroops = this.combatManager.getPlayerTroopsInGarrison(playerId);
-          const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
+          const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
+            this.settingsService.getLocationTakeoverTroopCosts(),
+            this.settingsService.getBoardField(currentConflict.boardSpaceId),
+            this.gameModifiersService.getPlayerGameModifier(playerId, 'locationTakeoverTroopCosts'),
+          );
 
-          if (garrisonedTroops >= locationTakeoverTroopCosts) {
+          if (garrisonedTroops >= effectiveTakeOverTroopCosts) {
             this.audioManager.playSound('location-control');
-            this.payCostForPlayer(playerId, { type: 'loose-troop', amount: locationTakeoverTroopCosts });
+            if (effectiveTakeOverTroopCosts > 0) {
+              this.payCostForPlayer(playerId, { type: 'loose-troop', amount: effectiveTakeOverTroopCosts });
+            }
+            this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, { source: 'Location-Loss' });
             this.locationManager.setLocationOwner(currentConflict.boardSpaceId, playerId);
+            this.addRewardToPlayer(playerId, { type: 'victory-point' }, { source: 'Location' });
             this.loggingService.logPlayerGainedLocationControl(
               playerId,
               this.roundService.currentRound,

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modifiers';
 import { DuneLocation } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
@@ -49,13 +50,26 @@ export class AIBoardSpacesService {
         !enemyLocations.some((y) => x.actionField.title.en === y.locationId),
     );
 
-    const enemyControllableLocations = locationsWithPlayerAgents.filter((x) =>
-      enemyLocations.some((y) => x.actionField.title.en === y.locationId),
-    );
-
     const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
+
+    const enemyControllableLocations = locationsWithPlayerAgents
+      .filter((x) => enemyLocations.some((y) => x.actionField.title.en === y.locationId))
+      .map((x) => {
+        const location = this.settingsService.getBoardField(x.actionField.title.en);
+        return {
+          ...x,
+          effectiveTakeOverTroopCosts: getModifiedLocationTakeoverTroopCosts(
+            locationTakeoverTroopCosts,
+            location,
+            gameState.playerGameModifiers?.locationTakeoverTroopCosts,
+          ),
+        };
+      });
+
     const playerTroopAmount = gameState.playerCombatUnits.troopsInGarrison;
-    const playerCanConquerLocations = playerTroopAmount >= locationTakeoverTroopCosts;
+    const playerCanConquerLocations = enemyControllableLocations.some(
+      (x) => playerTroopAmount >= x.effectiveTakeOverTroopCosts,
+    );
 
     let controllableLocations = freeControllableLocations;
 

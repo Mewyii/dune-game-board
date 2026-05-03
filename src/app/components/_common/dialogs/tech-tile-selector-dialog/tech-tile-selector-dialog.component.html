@@ -3,22 +3,22 @@
   <div class="cards-container">
     <div
       class="card-container"
-      *ngFor="let location of locations"
+      *ngFor="let techTile of techTiles"
       [class.selectable]="isSelectMode"
-      [class.selected]="isSelected(location)"
-      (click)="onCardClick(location)"
-      (mouseenter)="hoveredBoardSpaceId = location.actionField.title.en"
+      [class.selected]="isSelected(techTile)"
+      (click)="onCardClick(techTile)"
+      (mouseenter)="hoveredBoardSpaceId = techTile.id"
       (mouseleave)="hoveredBoardSpaceId = ''"
     >
       <dune-highlighting
-        *ngIf="location.actionField.title.en === selectedCard?.actionField?.title?.en"
-        [id]="location.actionField.title.en"
+        *ngIf="techTile.id === selectedCard?.id"
+        [id]="techTile.id"
         [width]="220"
         [height]="300"
         [bottom]="-20"
         [left]="-25"
       ></dune-highlighting>
-      <dune-location [location]="location" [readonly]="true"></dune-location>
+      <dune-tech-tile [card]="techTile"></dune-tech-tile>
     </div>
   </div>
 </div>

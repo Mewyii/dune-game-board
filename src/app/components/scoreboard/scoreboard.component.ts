@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
 import { EFFECT_TYPE_PATHS } from 'src/app/helpers/reward-types';
 import { AIManager } from 'src/app/services/ai/ai.manager';
@@ -14,8 +15,10 @@ import { SettingsService } from 'src/app/services/settings.service';
   styleUrls: ['./scoreboard.component.scss'],
   standalone: false,
 })
-export class ScoreboardComponent implements OnInit {
+export class ScoreboardComponent implements OnInit, OnDestroy {
   @Input() mode: AppMode = 'board';
+
+  subscriptions: Subscription[] = [];
 
   scoreArray: number[] = [];
 
@@ -35,14 +38,14 @@ export class ScoreboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
+    const playerScoresSub = this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       this.playerVictoryPoints = playerScores.map((x) => ({
         playerId: x.playerId,
         amount: x.victoryPoints,
       }));
     });
 
-    this.settingsService.gameContent$.subscribe((x) => {
+    const gameContentSub = this.settingsService.gameContent$.subscribe((x) => {
       this.scoreArray = new Array(x.maxVictoryPoints ?? 13);
       this.victoryPointBoni = x.victoryPointBoni;
       if (x.finaleTrigger) {
@@ -50,9 +53,17 @@ export class ScoreboardComponent implements OnInit {
       }
     });
 
-    this.playersService.playerColors$.subscribe((playerColors) => {
+    const playerColorsSub = this.playersService.playerColors$.subscribe((playerColors) => {
       this.playerColors = playerColors;
     });
+
+    this.subscriptions.push(playerScoresSub, gameContentSub, playerColorsSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onIncreaseFactionScoreClicked(playerId: number) {

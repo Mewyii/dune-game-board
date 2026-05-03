@@ -282,6 +282,7 @@ export class GameStateService {
       .filter((x) => x.playerId === player.id)
       .map((x) => x.locationId);
     const enemyLocations = this.locationManager.ownedLocations.filter((x) => x.playerId !== player.id);
+    const locations = this.settingsService.getBoardLocations();
     const freeLocations = this.settingsService.controllableLocations.filter(
       (x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x),
     );
@@ -311,6 +312,7 @@ export class GameStateService {
       isOpeningTurn: this.isOpeningTurn(player.id, currentRound),
       isFinale: isFinale,
       enemyPlayers: this.playersService.getEnemyPlayers(player.id),
+      enemyLeaders: this.leadersService.getEnemyPlayerLeaders(player.id),
       playerLeader: playerLeader!,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.buyableTechTiles,
@@ -340,6 +342,7 @@ export class GameStateService {
       playerIntrigueCount,
       playerCombatIntrigueCount,
       playerIntrigueStealAmount,
+      locations,
       playerLocations,
       enemyLocations,
       freeLocations,
@@ -364,6 +367,7 @@ export class GameStateService {
       playerTechTilesConversionCosts,
       enemyIntrigues,
       enemyIntrigueCounts,
+      enemyDiscardPiles: this.cardsService.getEnemyDiscardPiles(player.id),
       gameSettings: {
         combatMaxDeployableUnits: this.settingsService.getCombatMaxDeployableUnits(),
         troopCombatStrength: this.settingsService.getTroopStrength(),

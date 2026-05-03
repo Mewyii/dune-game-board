@@ -54,7 +54,7 @@
       <mat-icon>start</mat-icon>
     </button>
     <button
-      *ngIf="!currentRound"
+      *ngIf="currentRoundPhase === 'none'"
       mat-fab
       color="accent"
       (click)="onStartGameClicked()"
@@ -63,7 +63,7 @@
     >
       <mat-icon>play_arrow</mat-icon>
     </button>
-    @if (currentRound === 1 && currentRoundPhase === 'select leaders') {
+    @if (currentRound === 0 && currentRoundPhase === 'select leaders') {
       <button
         mat-fab
         color="accent"

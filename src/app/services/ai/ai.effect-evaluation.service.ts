@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { min } from 'lodash';
 import { getParticipateInCombatDesire, getWinCombatDesire } from 'src/app/helpers/ai';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
+import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modifiers';
 import {
   getFlattenedEffectRewardArray,
   getMultipliedRewardEffects,
@@ -50,15 +52,26 @@ export class AIEffectEvaluationService {
       const hasAgentsOnFreeLocations = gameState.freeLocations.some((locationId) =>
         gameState.playerAgentsOnFields.some((agent) => agent.fieldId === locationId),
       );
-      const hasAgentsOnEnemyLocations = gameState.enemyLocations.some((location) =>
+      const agentsOnEnemyLocations = gameState.enemyLocations.filter((location) =>
         gameState.playerAgentsOnFields.some((agent) => agent.fieldId === location.locationId),
       );
-      if (!hasAgentsOnFreeLocations && hasAgentsOnEnemyLocations) {
+      if (!hasAgentsOnFreeLocations && agentsOnEnemyLocations.length > 0) {
+        const effectiveTakeOverTroopCosts = min(
+          agentsOnEnemyLocations.map((x) =>
+            getModifiedLocationTakeoverTroopCosts(
+              this.settingsService.getLocationTakeoverTroopCosts(),
+              this.settingsService.getBoardField(x.locationId),
+              gameState.playerGameModifiers?.locationTakeoverTroopCosts,
+            ),
+          ),
+        ) as number;
+
         const troopCosts = effectsCosts.find((x) => x.type === 'troop' || x.type === 'loose-troop');
         if (troopCosts) {
-          troopCosts.amount = troopCosts.amount ? troopCosts.amount + 1 : 2;
+          const baseAmount = troopCosts.amount ?? 1;
+          troopCosts.amount = baseAmount + effectiveTakeOverTroopCosts;
         } else {
-          effectsCosts.push({ type: 'troop', amount: this.settingsService.getLocationTakeoverTroopCosts() });
+          effectsCosts.push({ type: 'troop', amount: effectiveTakeOverTroopCosts });
         }
       }
     }
@@ -78,7 +91,7 @@ export class AIEffectEvaluationService {
     let conditionFullfilled = true;
 
     if (structuredEffect.timing) {
-      timingFullfilled = isEffectTimingFullfilled(structuredEffect.timing, player, gameState);
+      timingFullfilled = isEffectTimingFullfilled(structuredEffect.timing.type, player, gameState);
     }
     if (structuredEffect.condition) {
       conditionFullfilled = isEffectConditionFullfilled(structuredEffect.condition, player, gameState);
@@ -237,7 +250,7 @@ export class AIEffectEvaluationService {
       let timingFullfilled = true;
       let conditionFullfilled = true;
       if (effect.timing) {
-        timingFullfilled = isEffectTimingFullfilled(effect.timing, player, gameState);
+        timingFullfilled = isEffectTimingFullfilled(effect.timing.type, player, gameState);
       }
       if (effect.condition) {
         conditionFullfilled = isEffectConditionFullfilled(effect.condition, player, gameState);
@@ -915,10 +928,13 @@ export class AIEffectEvaluationService {
         const conflictBoardSpaceId = gameState.conflict?.boardSpaceId;
         if (conflictBoardSpaceId) {
           const enemyLocation = gameState.enemyLocations.find((x) => x.locationId === conflictBoardSpaceId);
-          if (
-            enemyLocation &&
-            gameState.playerCombatUnits.troopsInGarrison < this.settingsService.getLocationTakeoverTroopCosts()
-          ) {
+          const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
+            this.settingsService.getLocationTakeoverTroopCosts(),
+            this.settingsService.getBoardField(conflictBoardSpaceId),
+            gameState.playerGameModifiers?.locationTakeoverTroopCosts,
+          );
+
+          if (enemyLocation && gameState.playerCombatUnits.troopsInGarrison < effectiveTakeOverTroopCosts) {
             canTakeOverLocation = false;
           }
         }
@@ -933,9 +949,16 @@ export class AIEffectEvaluationService {
         const controllableFreeLocations = playerAgentsOnFields.some((x) =>
           gameState.freeLocations.some((y) => x.fieldId === y),
         );
-        const controllableEnemyLocations =
-          playerAgentsOnFields.some((x) => gameState.enemyLocations.some((y) => x.fieldId === y.locationId)) &&
-          gameState.playerCombatUnits.troopsInGarrison >= this.settingsService.getLocationTakeoverTroopCosts();
+        const controllableEnemyLocations = playerAgentsOnFields.some(
+          (x) =>
+            gameState.enemyLocations.some((y) => x.fieldId === y.locationId) &&
+            gameState.playerCombatUnits.troopsInGarrison >=
+              getModifiedLocationTakeoverTroopCosts(
+                this.settingsService.getLocationTakeoverTroopCosts(),
+                this.settingsService.getBoardField(x.fieldId),
+                gameState.playerGameModifiers?.locationTakeoverTroopCosts,
+              ),
+        );
 
         return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -3;
       case 'loose-troop':
@@ -944,6 +967,11 @@ export class AIEffectEvaluationService {
         return value;
       case 'troop-insert':
       case 'troop-insert-or-retreat':
+        const combatBoardSpaces = gameState.boardSpaces.filter((x) => x.rewards.some((y) => y.type === 'combat'));
+        const playerAgentsOnCombatBoardSpaces = gameState.playerAgentsOnFields.filter((x) =>
+          combatBoardSpaces.some((y) => x.fieldId === y.title.en),
+        );
+        return playerAgentsOnCombatBoardSpaces.length > 0 && gameState.playerCombatUnits.troopsInGarrison > 0 ? value : 0;
       case 'troop-retreat':
         return gameState.playerCombatUnits.troopsInGarrison > 0 ? value : 0;
       case 'dreadnought-insert':
@@ -964,7 +992,8 @@ export class AIEffectEvaluationService {
           (value * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length) / (gameState.playersCount - 1)
         );
       case 'enemies-leader-assassinate':
-        return value - 0.1 * gameState.enemyAgentsOnFields.length;
+        const woundedEnemyLeaders = gameState.enemyLeaders.filter((leader) => leader.isFlipped);
+        return value - woundedEnemyLeaders.length - 0.1 * gameState.enemyAgentsOnFields.length;
       case 'card-return-to-hand':
         const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
         return playerDiscardPileCount > 0 ? value : -3;

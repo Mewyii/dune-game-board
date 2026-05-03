@@ -13,8 +13,8 @@ export const factionsCustomBeginner: Faction[] = [
         title: { de: 'Die Wüste Verstehen', en: 'Desert Knowledge' },
         actionType: 'fremen',
         costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }, { type: 'combat' }],
-        pathToImage: 'assets/images/action-backgrounds/fremen_warriors_2.png',
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }],
+        pathToImage: 'assets/images/action-backgrounds/spice_2.png',
       },
       {
         title: { de: 'Wüstenausrüstung', en: 'Desert Equipment' },
@@ -52,8 +52,8 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Hellsicht', en: 'Truthsay' },
         actionType: 'bene',
-        costs: [{ type: 'spice' }],
-        rewards: [{ type: 'card-draw' }, { type: 'card-discard' }, { type: 'agent-lift' }],
+        costs: [{ type: 'spice', amount: 2 }],
+        rewards: [{ type: 'card-draw' }, { type: 'agent-lift' }],
         pathToImage: 'assets/images/action-backgrounds/bene_gesserit_4.png',
       },
       {
@@ -71,9 +71,6 @@ export const factionsCustomBeginner: Faction[] = [
       2: [
         {
           type: 'intrigue',
-        },
-        {
-          type: 'intrigue-draw',
         },
       ],
       4: [
@@ -95,10 +92,7 @@ export const factionsCustomBeginner: Faction[] = [
         title: { de: 'Heighliner', en: 'Heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [
-          { type: 'card-draw', amount: 2 },
-          { type: 'troop', amount: 5 },
-        ],
+        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 6 }],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
       },
       {
@@ -143,7 +137,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
         actionType: 'emperor',
-        rewards: [{ type: 'solari' }, { type: 'intrigue' }, { type: 'intrigue-draw' }],
+        rewards: [{ type: 'solari' }, { type: 'intrigue' }],
         pathToImage: 'assets/images/action-backgrounds/wealth.png',
       },
     ],
@@ -177,7 +171,7 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
+        costs: [{ type: 'solari', amount: 2 }],
         rewards: [
           { type: 'card-draw', amount: 2 },
           { type: 'troop', amount: 2 },
@@ -188,8 +182,8 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 10 }],
-        rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
+        costs: [{ type: 'solari', amount: 12 }],
+        rewards: [{ type: 'council-seat-small', amount: 4, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
       },
@@ -197,14 +191,10 @@ export const factionsCustomBeginner: Faction[] = [
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
         rewards: [
-          { type: 'persuasion', amount: 2 },
-          { type: 'helper-or' },
+          { type: 'solari', amount: 2 },
           { type: 'troop', amount: 2 },
-          { type: 'solari' },
         ],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
-        customWidth: '130px',
-        noColumnGap: true,
       },
       {
         title: { de: 'Mentat', en: 'Mentat' },
@@ -212,7 +202,7 @@ export const factionsCustomBeginner: Faction[] = [
         costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
-        customWidth: '135px',
+        customWidth: '175px',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
@@ -241,12 +231,12 @@ export const factionsCustomBeginner: Faction[] = [
           [
             { type: 'spice', amount: 2, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 7, width: 45 },
+            { type: 'solari', amount: 8, width: 45 },
           ],
           [
             { type: 'spice', amount: 3, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 9, width: 45 },
+            { type: 'solari', amount: 10, width: 45 },
           ],
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',
@@ -256,10 +246,12 @@ export const factionsCustomBeginner: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
-        rewards: [{ type: 'water' }, { type: 'water' }, { type: 'troop' }],
+        costs: [{ type: 'solari', amount: 2 }],
+        rewards: [{ type: 'water' }, { type: 'helper-or' }, { type: 'leader-heal' }, { type: 'water' }],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         requiresInfluence: { type: 'emperor' },
+        customWidth: '115px',
+        noColumnGap: true,
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',

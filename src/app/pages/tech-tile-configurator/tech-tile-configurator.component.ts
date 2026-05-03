@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { TechTileConfiguratorService } from 'src/app/services/configurators/tech-tile-configurator.service';
@@ -8,12 +9,14 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 
 @Component({
-    selector: 'dune-tech-tile-configurator',
-    templateUrl: './tech-tile-configurator.component.html',
-    styleUrl: './tech-tile-configurator.component.scss',
-    standalone: false
+  selector: 'dune-tech-tile-configurator',
+  templateUrl: './tech-tile-configurator.component.html',
+  styleUrl: './tech-tile-configurator.component.scss',
+  standalone: false,
 })
-export class TechTileConfiguratorComponent implements OnInit {
+export class TechTileConfiguratorComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public techTiles: TechTileCard[] = [];
   public showControls = true;
   public imagePadding = 0;
@@ -32,10 +35,14 @@ export class TechTileConfiguratorComponent implements OnInit {
     9: 0,
   };
 
-  constructor(public t: TranslateService, public techTilesService: TechTileConfiguratorService, private dialog: MatDialog) {}
+  constructor(
+    public t: TranslateService,
+    public techTilesService: TechTileConfiguratorService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
-    this.techTilesService.techTiles$.subscribe((techTiles) => {
+    const techTilesSub = this.techTilesService.techTiles$.subscribe((techTiles) => {
       this.totalTechTileAmount = 0;
 
       this.costs = {
@@ -58,6 +65,14 @@ export class TechTileConfiguratorComponent implements OnInit {
         this.costs[techTile.costs]++;
       }
     });
+
+    this.subscriptions.push(techTilesSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onExportCardsClicked() {

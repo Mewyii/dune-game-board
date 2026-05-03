@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
 
@@ -15,7 +16,9 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./tech-tiles.component.scss'],
   standalone: false,
 })
-export class TechTilesComponent {
+export class TechTilesComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public availableTechTiles: TechTileDeckCard[] = [];
   public title: LanguageString = { de: 'haus', en: 'house' };
   public activeTechTileId = '';
@@ -31,18 +34,26 @@ export class TechTilesComponent {
   ) {}
 
   ngOnInit(): void {
-    this.techTilesService.availableTechTiles$.subscribe((techTiles) => {
+    const availableTechTilesSub = this.techTilesService.availableTechTiles$.subscribe((techTiles) => {
       this.availableTechTiles = techTiles;
     });
 
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+    const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
       this.techTileModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'techTiles');
     });
 
-    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+    const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.techTileModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'techTiles');
     });
+
+    this.subscriptions.push(availableTechTilesSub, activePlayerIdSub, playerGameModifiersSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onTakeCardClicked(techTile: TechTileDeckCard) {

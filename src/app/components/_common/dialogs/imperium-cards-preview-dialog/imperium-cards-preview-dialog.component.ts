@@ -14,6 +14,7 @@ export interface ImperiumCardSelectorData {
   canAquireCards?: boolean;
   aquirableFactionTypes?: string[];
   search?: boolean;
+  colorScheme: 'neutral' | 'positive' | 'negative';
 }
 
 @Component({

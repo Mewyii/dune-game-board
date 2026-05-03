@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { ActionType, ActiveFactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
@@ -9,12 +10,14 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogCardEditorComponent } from '../card-configurator/dialog-card-editor/dialog-card-editor.component';
 
 @Component({
-    selector: 'dune-starting-card-configurator',
-    templateUrl: './starting-card-configurator.component.html',
-    styleUrls: ['./starting-card-configurator.component.scss'],
-    standalone: false
+  selector: 'dune-starting-card-configurator',
+  templateUrl: './starting-card-configurator.component.html',
+  styleUrls: ['./starting-card-configurator.component.scss'],
+  standalone: false,
 })
-export class StartingCardConfiguratorComponent implements OnInit {
+export class StartingCardConfiguratorComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public startingCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
@@ -41,11 +44,11 @@ export class StartingCardConfiguratorComponent implements OnInit {
   constructor(
     public t: TranslateService,
     public cardConfiguratorService: CardConfiguratorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
-    this.cardConfiguratorService.startingCards$.subscribe((startingCards) => {
+    const startingCardsSub = this.cardConfiguratorService.startingCards$.subscribe((startingCards) => {
       this.startingCards = startingCards;
 
       this.totalCardAmount = 0;
@@ -71,6 +74,14 @@ export class StartingCardConfiguratorComponent implements OnInit {
         }
       }
     });
+
+    this.subscriptions.push(startingCardsSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onExportCardsClicked() {

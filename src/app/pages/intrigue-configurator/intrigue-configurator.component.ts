@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { IntrigueCard } from 'src/app/models/intrigue';
 import { IntrigueConfiguratorService } from 'src/app/services/configurators/intrigue-configurator.service';
@@ -13,7 +14,9 @@ import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-i
   styleUrl: './intrigue-configurator.component.scss',
   standalone: false,
 })
-export class IntrigueConfiguratorComponent implements OnInit {
+export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public intrigues: IntrigueCard[] = [];
   public showControls = true;
   public imagePadding = 0;
@@ -23,11 +26,11 @@ export class IntrigueConfiguratorComponent implements OnInit {
   constructor(
     public t: TranslateService,
     public intrigueConfigService: IntrigueConfiguratorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
-    this.intrigueConfigService.intrigues$.subscribe((intrigues) => {
+    const intriguesSub = this.intrigueConfigService.intrigues$.subscribe((intrigues) => {
       this.totalIntrigueAmount = 0;
 
       this.intrigues = intrigues;
@@ -36,6 +39,14 @@ export class IntrigueConfiguratorComponent implements OnInit {
         this.totalIntrigueAmount += intrigue.amount ?? 1;
       }
     });
+
+    this.subscriptions.push(intriguesSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onExportCardsClicked() {

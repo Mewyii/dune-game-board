@@ -98,10 +98,10 @@ export class IntriguesService {
     );
   }
 
-  createIntrigueDeck() {
+  createIntrigueDeck(filter: (intrigueCard: IntrigueCard) => boolean = () => true) {
     this.playerIntriguesSubject.next([]);
     const intrigueDeck: IntrigueDeckCard[] = [];
-    const intriguesCards = this.intrigueConfigService.intrigues;
+    const intriguesCards = this.intrigueConfigService.intrigues.filter((x) => filter(x));
     for (const intriguesCard of intriguesCards) {
       for (let i = 0; i < intriguesCard.amount; i++) {
         intrigueDeck.push(this.instantiateIntrigueCard(intriguesCard));

@@ -50,6 +50,11 @@ export interface PlayerCardTrashLog extends LogBase {
   cardName: string;
 }
 
+export interface PlayerCardReturnToHandLog extends LogBase {
+  type: 'card-return-to-hand';
+  cardName: string;
+}
+
 export interface PlayerIntriguePlayLog extends LogBase {
   type: 'intrigue-play';
   cardName: string;
@@ -112,6 +117,7 @@ export type PlayerActionLog =
   | PlayerCardPlayLog
   | PlayerCardTrashLog
   | PlayerCardDiscardLog
+  | PlayerCardReturnToHandLog
   | PlayerIntriguePlayLog
   | PlayerIntrigueTrashLog
   | PlayerIntrigueStealLog
@@ -222,6 +228,13 @@ export class LoggingService {
 
   logPlayerTrashedCard(playerId: number, cardName: string) {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'card-trash', cardName: cardName }]);
+  }
+
+  logPlayerReturnedCardToHand(playerId: number, cardName: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'card-return-to-hand', cardName: cardName },
+    ]);
   }
 
   logPlayerTrashedIntrigue(playerId: number, cardName: string) {

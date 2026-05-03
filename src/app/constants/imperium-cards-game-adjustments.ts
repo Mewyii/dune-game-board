@@ -1,6 +1,6 @@
 import { shuffle } from 'lodash';
 import { getPlayerCombatStrength } from '../helpers/ai';
-import { CustomEffectFunctionWithGameElement, GameServices, GameState } from '../models/ai';
+import { CustomEffectFunctionWithGameElement, GameCommands, GameState } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard } from '../services/cards.service';
 
@@ -19,9 +19,9 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Plans over generations',
     aiRevealEvaluation: (player: Player, gameState: GameState) =>
       getPlayerCombatStrength(gameState.playerCombatUnits, gameState) > 0 ? 0 : 5,
-    customRevealFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customRevealFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       if (gameState.playerCombatUnits.troopsInCombat < 1 && gameState.playerCombatUnits.shipsInCombat < 1) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'persuasion', amount: 3 });
+        game.addRewardToPlayer(player.id, { type: 'persuasion', amount: 3 });
       }
     },
   },
@@ -41,11 +41,11 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       }
       return result + playerCount * 2;
     },
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const greenFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'landsraad').map((x) => x.title.en);
       const enemiesOnGreenFields = gameState.enemyAgentsOnFields.filter((x) => greenFieldIds.includes(x.fieldId));
       for (const enemyOnGreenField of enemiesOnGreenFields) {
-        services.effectsService.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-destroy' });
+        game.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-destroy' });
       }
     },
   },
@@ -54,10 +54,10 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       (gameState.imperiumDeckCards.some((x) => x.name.en === 'Water of Life') ? 6 : 0) +
       1 * gameState.playerFactionFriendships.filter((x) => x === 'bene' || x === 'fremen').length,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const waterOfLifeCard = gameState.imperiumDeckCards.find((x) => x.name.en === 'Water of Life') as ImperiumDeckCard;
       if (waterOfLifeCard) {
-        services.gameManager.acquireImperiumCard(player.id, waterOfLifeCard, 'deck', {
+        game.acquireImperiumCard(player.id, waterOfLifeCard, 'deck', {
           acquireLocation: 'below-deck',
           additionalCostModifier: -8,
         });
@@ -67,15 +67,15 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
   {
     id: 'Provoked Hostilities',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 3,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       return;
     },
     aiRevealEvaluation: (player: Player, gameState: GameState) =>
       0 + 1.5 * gameState.enemyCombatUnits.filter((x) => getPlayerCombatStrength(x, gameState)).length,
-    customRevealFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customRevealFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       for (const enemy of gameState.enemyCombatUnits) {
         if (enemy.troopsInCombat > 0) {
-          services.combatManager.retreatPlayerTroopsFromCombat(enemy.playerId, 1);
+          game.retreatPlayerTroopsFromCombat(enemy.playerId, 1);
         }
       }
     },
@@ -84,18 +84,18 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Insurgents',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       0.75 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
-    customAgentAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
       );
 
       const randomizedBoardSpaces = shuffle(blockableBoardSpaces).slice(0, 1);
       for (const boardSpace of randomizedBoardSpaces) {
-        services.gameModifierService.addPlayerGameModifiers(player.id, {
+        game.addPlayerGameModifiers(player.id, {
           fieldBlock: [{ id: 'embargo-field-block', fieldId: boardSpace.title.en, currentRoundOnly: true }],
         });
         for (const enemyPlayer of gameState.enemyPlayers) {
-          services.gameModifierService.addPlayerGameModifiers(enemyPlayer.id, {
+          game.addPlayerGameModifiers(enemyPlayer.id, {
             fieldBlock: [{ id: 'embargo-field-block', fieldId: boardSpace.title.en, currentRoundOnly: true }],
           });
         }
@@ -106,18 +106,18 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Embargo',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       2 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
-    customAgentAIFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
       );
 
       const randomizedBoardSpaces = shuffle(blockableBoardSpaces).slice(0, 3);
       for (const boardSpace of randomizedBoardSpaces) {
-        services.gameModifierService.addPlayerGameModifiers(player.id, {
+        game.addPlayerGameModifiers(player.id, {
           fieldBlock: [{ id: 'embargo-field-block', fieldId: boardSpace.title.en, currentRoundOnly: true }],
         });
         for (const enemyPlayer of gameState.enemyPlayers) {
-          services.gameModifierService.addPlayerGameModifiers(enemyPlayer.id, {
+          game.addPlayerGameModifiers(enemyPlayer.id, {
             fieldBlock: [{ id: 'embargo-field-block', fieldId: boardSpace.title.en, currentRoundOnly: true }],
           });
         }
@@ -128,10 +128,10 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Betrayal',
     aiRevealEvaluation: (player: Player, gameState: GameState) =>
       0 + 4 * gameState.enemyCombatUnits.filter((x) => x.troopsInCombat > 2).length,
-    customRevealFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customRevealFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       for (const enemy of gameState.enemyCombatUnits) {
         if (enemy.troopsInCombat > 0) {
-          services.combatManager.retreatPlayerTroopsFromCombat(enemy.playerId, 3);
+          game.retreatPlayerTroopsFromCombat(enemy.playerId, 3);
         }
       }
     },
@@ -152,23 +152,23 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       }
       return result + playerCount * 2.5;
     },
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const spiceFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'spice').map((x) => x.title.en);
       const enemiesOnSpiceFields = gameState.enemyAgentsOnFields.filter((x) => spiceFieldIds.includes(x.fieldId));
       for (const enemyOnSpiceField of enemiesOnSpiceFields) {
-        services.effectsService.payCostForPlayer(enemyOnSpiceField.playerId, { type: 'spice', amount: 2 });
+        game.payCostForPlayer(enemyOnSpiceField.playerId, { type: 'spice', amount: 2 });
       }
     },
   },
   {
     id: 'Duncan Idaho, Swordmaster',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 0.5 + 1 * gameState.playerAgentsOnFields.length,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const currentField = gameState.playerAgentPlacedOnFieldThisTurn;
       if (currentField) {
         for (const enemyOnField of gameState.enemyAgentsOnFields) {
           if (enemyOnField.fieldId === currentField) {
-            services.playerAgentsService.setPlayerAgentInTimeout(enemyOnField.playerId, currentField);
+            game.setPlayerAgentInTimeout(enemyOnField.playerId, currentField);
           }
         }
       }
@@ -178,12 +178,12 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Turncoats',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       -1 + 2 * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       for (const enemyIntrigues of gameState.enemyIntrigues) {
         if (enemyIntrigues.intrigues.length > 0) {
           const randomIntrigue = shuffle(enemyIntrigues.intrigues)[0];
-          services.intriguesService.trashPlayerIntrigue(enemyIntrigues.playerId, randomIntrigue.id, false);
-          services.intriguesService.addPlayerIntrigue(player.id, randomIntrigue);
+          game.trashPlayerIntrigue(enemyIntrigues.playerId, randomIntrigue.id, false);
+          game.addPlayerIntrigue(player.id, randomIntrigue);
         }
       }
     },
@@ -192,14 +192,14 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Guild Banker',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       0 + 1.25 * (gameState.playerScore.guild < 4 ? gameState.playerScore.guild : 4),
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const guildInfluence = gameState.playerScore.guild;
       if (guildInfluence < 2) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
+        game.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
       } else if (guildInfluence < 4) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: 3 });
+        game.addRewardToPlayer(player.id, { type: 'solari', amount: 3 });
       } else {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'solari', amount: 4 });
+        game.addRewardToPlayer(player.id, { type: 'solari', amount: 4 });
       }
     },
   },
@@ -207,15 +207,15 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Truthsayer',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       0 + 1.5 * (gameState.playerScore.guild < 4 ? gameState.playerScore.guild : 4),
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const beneInfluence = gameState.playerScore.bene;
       if (beneInfluence < 2) {
-        services.effectsService.payCostForPlayer(player.id, { type: 'card-discard' });
-        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
+        game.payCostForPlayer(player.id, { type: 'card-discard' });
+        game.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else if (beneInfluence < 4) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'card-draw' });
+        game.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'agent-lift' });
+        game.addRewardToPlayer(player.id, { type: 'agent-lift' });
       }
     },
   },
@@ -223,28 +223,48 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Guild Envoy',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       0 + 1 * (gameState.playerScore.guild < 4 ? gameState.playerScore.guild : 4),
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const guildInfluence = gameState.playerScore.guild;
       if (guildInfluence < 2) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'foldspace' });
+        game.addRewardToPlayer(player.id, { type: 'foldspace' });
       } else if (guildInfluence < 4) {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'water' });
+        game.addRewardToPlayer(player.id, { type: 'water' });
       } else {
-        services.effectsService.addRewardToPlayer(player.id, { type: 'foldspace' });
-        services.effectsService.addRewardToPlayer(player.id, { type: 'water' });
+        game.addRewardToPlayer(player.id, { type: 'foldspace' });
+        game.addRewardToPlayer(player.id, { type: 'water' });
       }
     },
   },
   {
     id: 'Arrival of the Emperor',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 5 + 0.1 * gameState.currentRound - 1,
-    customAgentFunction: (player: Player, gameState: GameState, services: GameServices) => {
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const enemyLocation = gameState.enemyLocations.find(
         (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
       );
       if (enemyLocation) {
-        services.locationManager.setLocationOwner(enemyLocation.locationId, player.id);
+        game.setLocationOwner(enemyLocation.locationId, player.id);
       }
+    },
+  },
+  {
+    id: 'Mohiam, Reverend Mother',
+    aiAgentEvaluation: (player: Player, gameState: GameState) => 1.5 + 0.1 * gameState.currentRound - 1,
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      game.addPlayerGameModifiers(player.id, {
+        customActions: [
+          {
+            id: 'mohiam-vision-intrigues',
+            action: 'vision-intrigues',
+            currentRoundOnly: true,
+          },
+          {
+            id: 'mohiam-vision-deck',
+            action: 'vision-deck',
+            currentRoundOnly: true,
+          },
+        ],
+      });
     },
   },
 ];

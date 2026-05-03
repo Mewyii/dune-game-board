@@ -17,7 +17,7 @@ export const startingCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -63,7 +63,7 @@ export const startingCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -76,6 +76,7 @@ export const startingCards: ImperiumCard[] = [
         type: 'tech',
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -109,7 +110,7 @@ export const startingCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -122,6 +123,7 @@ export const startingCards: ImperiumCard[] = [
         type: 'focus',
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -217,7 +219,7 @@ export const startingCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -230,5 +232,6 @@ export const startingCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+    rarity: 'normal',
   },
 ];

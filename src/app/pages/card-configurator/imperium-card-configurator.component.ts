@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 import { getFlattenedEffectRewardArray, isRewardEffect } from 'src/app/helpers/rewards';
@@ -16,7 +17,9 @@ import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-edit
   styleUrls: ['./imperium-card-configurator.component.scss'],
   standalone: false,
 })
-export class ImperiumCardConfiguratorComponent implements OnInit {
+export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public imperiumCards: ImperiumCard[] = [];
   public showControls = true;
   public imagePadding = 0;
@@ -69,7 +72,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cardConfiguratorService.imperiumCards$.subscribe((imperiumCards) => {
+    const imperiumCardsSub = this.cardConfiguratorService.imperiumCards$.subscribe((imperiumCards) => {
       this.imperiumCards = imperiumCards;
 
       this.totalCardAmount = 0;
@@ -192,6 +195,14 @@ export class ImperiumCardConfiguratorComponent implements OnInit {
       this.resources.sort((a, b) => a.resourceType.localeCompare(b.resourceType));
       this.filterImperiumCards();
     });
+
+    this.subscriptions.push(imperiumCardsSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   filterImperiumCards() {

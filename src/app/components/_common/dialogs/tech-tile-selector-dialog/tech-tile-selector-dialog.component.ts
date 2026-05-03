@@ -1,40 +1,40 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DuneLocation } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
-export type BoardSpaceSelectorMode = 'preview' | 'select';
+export type TechTileSelectorMode = 'preview' | 'select';
 
-export interface BoardSpaceSelectorData {
+export interface TechTileSelectorData {
   title: string;
-  locations: DuneLocation[];
-  mode: BoardSpaceSelectorMode;
+  techTiles: TechTileDeckCard[];
+  mode: TechTileSelectorMode;
   playerId?: number;
   colorScheme: 'neutral' | 'positive' | 'negative';
 }
 
 @Component({
-  selector: 'dune-board-space-selector-dialog',
-  templateUrl: './board-space-selector-dialog.component.html',
-  styleUrl: './board-space-selector-dialog.component.scss',
+  selector: 'dune-tech-tile-selector-dialog',
+  templateUrl: './tech-tile-selector-dialog.component.html',
+  styleUrl: './tech-tile-selector-dialog.component.scss',
   standalone: false,
 })
-export class BoardSpaceSelectorDialogComponent implements OnInit {
-  public locations: DuneLocation[] = [];
-  selectedCard: DuneLocation | null = null;
+export class TechTileSelectorDialogComponent implements OnInit {
+  public techTiles: TechTileDeckCard[] = [];
+  selectedCard: TechTileDeckCard | null = null;
   hoveredBoardSpaceId = '';
 
   constructor(
     public gameManager: GameManager,
     public t: TranslateService,
-    public dialogRef: MatDialogRef<BoardSpaceSelectorDialogComponent>,
+    public dialogRef: MatDialogRef<TechTileSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: BoardSpaceSelectorData,
+    public data: TechTileSelectorData,
   ) {}
 
   ngOnInit(): void {
-    this.locations = this.data.locations;
+    this.techTiles = this.data.techTiles;
   }
 
   get isSelectMode(): boolean {
@@ -45,13 +45,13 @@ export class BoardSpaceSelectorDialogComponent implements OnInit {
     return this.data.mode === 'preview';
   }
 
-  onCardClick(card: DuneLocation) {
+  onCardClick(card: TechTileDeckCard) {
     if (this.isSelectMode) {
       this.selectedCard = card;
     }
   }
 
-  isSelected(card: DuneLocation): boolean {
+  isSelected(card: TechTileDeckCard): boolean {
     return this.selectedCard === card;
   }
 

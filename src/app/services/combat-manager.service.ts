@@ -460,24 +460,6 @@ export class CombatManager {
     }
   }
 
-  getPlayerCombatScore(playerId: number) {
-    const troopCombatStrength = this.settingsService.getTroopStrength();
-    const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();
-
-    const playerCombatUnits = this.playerCombatUnits.find((x) => x.playerId === playerId);
-    if (playerCombatUnits) {
-      if (playerCombatUnits.troopsInCombat > 0 || playerCombatUnits.shipsInCombat > 0) {
-        return (
-          playerCombatUnits.troopsInCombat * troopCombatStrength +
-          playerCombatUnits.shipsInCombat * dreadnoughtCombatStrength +
-          playerCombatUnits.additionalCombatPower
-        );
-      }
-    }
-
-    return 0;
-  }
-
   getPlayerCombatScores() {
     const troopCombatStrength = this.settingsService.getTroopStrength();
     const dreadnoughtCombatStrength = this.settingsService.getDreadnoughtStrength();

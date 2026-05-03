@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { shuffle } from 'lodash';
+import { Subscription } from 'rxjs';
 import { House } from 'src/app/constants/minor-houses';
 
+import { leadersGameAdjustments } from 'src/app/constants/leaders-game-adjustments';
+import { techTilesGameAdjustments } from 'src/app/constants/tech-tiles-game-adjustments';
+import { isEffectTimingFullfilled } from 'src/app/helpers/rewards';
 import { EffectRewardType, LanguageString, ResourceType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
 import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
-import { CardsService } from 'src/app/services/cards.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -17,7 +20,6 @@ import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/l
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { PlayerAgent, PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayerResourcesService, Resources } from 'src/app/services/player-resources.service';
-import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundPhaseType, RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -33,14 +35,16 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   styleUrls: ['./leaders.component.scss'],
   standalone: false,
 })
-export class LeadersComponent implements OnInit {
+export class LeadersComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   leaders: LeaderDeckCard[] = [];
 
   currentRound = 0;
 
   currentRoundPhase: RoundPhaseType | undefined;
 
-  playerLeader: PlayerLeader | undefined;
+  playerLeader: (PlayerLeader & { hasActiveEffect: boolean; hasActiveFunction: boolean }) | undefined;
   activePlayerId: number = 0;
 
   activeLeader: LeaderDeckCard | undefined;
@@ -59,7 +63,7 @@ export class LeadersComponent implements OnInit {
   playerHouses: PlayerHouse[] = [];
   houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
-  playerTechTiles: PlayerTechTile[] = [];
+  playerTechTiles: (PlayerTechTile & { hasActiveEffect: boolean; hasActiveFunction: boolean })[] = [];
   activeTechTileId = '';
   hoveredTechTileId = '';
 
@@ -73,10 +77,8 @@ export class LeadersComponent implements OnInit {
     private gameManager: GameManager,
     private playersService: PlayersService,
     private combatManager: CombatManager,
-    private playerScoreManager: PlayerScoreManager,
     private minorHouseService: MinorHousesService,
     private techTilesService: TechTilesService,
-    private cardsService: CardsService,
     private intriguesService: IntriguesService,
     private audioManager: AudioManager,
     private dialog: MatDialog,
@@ -90,72 +92,111 @@ export class LeadersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.leadersService.leaderDeck$.subscribe((leaderDeck) => {
+    const leaderDeckSub = this.leadersService.leaderDeck$.subscribe((leaderDeck) => {
       this.leaders = leaderDeck;
     });
-    this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
-      this.playerLeader = playerLeaders.find((x) => x.playerId === this.activePlayerId);
 
+    const playerLeadersSub = this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
+      this.activeLeader = this.playerLeader?.leader;
+
+      this.playerLeader = this.getLeaderWithMetadata(
+        this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
+      );
       this.activeLeader = this.playerLeader?.leader;
     });
 
-    this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
+    const currentRoundPhaseSub = this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
       this.currentRoundPhase = roundPhase;
+
+      this.playerLeader = this.getLeaderWithMetadata(
+        this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
+      );
+      this.activeLeader = this.playerLeader?.leader;
     });
 
-    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+    const activePlayerSub = this.gameManager.activePlayer$.subscribe((activePlayer) => {
       this.activePlayer = activePlayer;
       this.activePlayerId = activePlayer?.id ?? 0;
 
-      this.playerLeader = this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId);
-
+      this.playerLeader = this.getLeaderWithMetadata(
+        this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
+      );
       this.activeLeader = this.playerLeader?.leader;
-
       this.activePlayerCombatUnits = this.combatManager.getPlayerCombatUnits(this.activePlayerId);
-
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
-
-      this.playerTechTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
-
+      this.playerTechTiles = this.getPlayerTechTilesWithMetadata();
       this.activePlayerAvailableAgents = this.playerAgentsService.getAvailablePlayerAgents(this.activePlayerId);
-
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
-
       this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
     });
 
-    this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
+    const playerCombatUnitsSub = this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
       this.activePlayerCombatUnits = playerCombatUnits.find((x) => x.playerId === this.activePlayerId);
     });
 
-    this.playerAgentsService.availablePlayersAgents$.subscribe((availablePlayerAgents) => {
+    const availablePlayersAgentsSub = this.playerAgentsService.availablePlayersAgents$.subscribe((availablePlayerAgents) => {
       this.activePlayerAvailableAgents = availablePlayerAgents.filter((x) => x.playerId === this.activePlayerId);
     });
 
-    this.minorHouseService.playerHouses$.subscribe((playerHouses) => {
+    const playerHousesSub = this.minorHouseService.playerHouses$.subscribe((playerHouses) => {
       this.playerHouses = playerHouses;
       this.houses = this.minorHouseService.getPlayerHouses(this.activePlayerId);
     });
 
-    this.techTilesService.playerTechTiles$.subscribe((playerTechTiles) => {
-      this.playerTechTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
+    const playerTechTilesSub = this.techTilesService.playerTechTiles$.subscribe((playerTechTiles) => {
+      this.playerTechTiles = this.getPlayerTechTilesWithMetadata();
     });
 
-    this.roundService.currentRound$.subscribe((currentTurn) => {
+    const currentRoundSub = this.roundService.currentRound$.subscribe((currentTurn) => {
       this.currentRound = currentTurn;
+
+      this.playerLeader = this.getLeaderWithMetadata(
+        this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
+      );
+      this.activeLeader = this.playerLeader?.leader;
     });
 
-    this.intriguesService.playersIntrigues$.subscribe(() => {
+    const playersIntriguesSub = this.intriguesService.playersIntrigues$.subscribe(() => {
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
     });
 
-    this.turnInfoService.turnInfos$.subscribe(() => {
-      this.turnInfos = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
+    const turnInfosSub = this.turnInfoService.turnInfos$.subscribe(() => {
+      const newTurnInfos = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
+      if (this.turnInfos?.agentPlacedOnFieldId !== newTurnInfos?.agentPlacedOnFieldId) {
+        this.turnInfos = newTurnInfos;
+        this.playerLeader = this.getLeaderWithMetadata(
+          this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
+        );
+        this.activeLeader = this.playerLeader?.leader;
+      } else {
+        this.turnInfos = newTurnInfos;
+      }
     });
 
-    this.playerResourcesService.playersResources$.subscribe(() => {
+    const playersResourcesSub = this.playerResourcesService.playersResources$.subscribe(() => {
       this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
     });
+
+    this.subscriptions.push(
+      leaderDeckSub,
+      playerLeadersSub,
+      currentRoundPhaseSub,
+      activePlayerSub,
+      playerCombatUnitsSub,
+      availablePlayersAgentsSub,
+      playerHousesSub,
+      playerTechTilesSub,
+      currentRoundSub,
+      playersIntriguesSub,
+      turnInfosSub,
+      playersResourcesSub,
+    );
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   setNextLeader() {
@@ -218,6 +259,10 @@ export class LeadersComponent implements OnInit {
     }
   }
 
+  onActivateLeaderClicked(leader: PlayerLeader, type: 'effect' | 'function') {
+    this.gameManager.activatePlayerLeader(this.activePlayerId, leader, type);
+  }
+
   onAddTroopToGarrisonClicked(player: Player) {
     this.effectsService.addTroopsToPlayer(player.id, 1);
     this.aiManager.setPreferredFieldsForAIPlayer(player);
@@ -278,8 +323,8 @@ export class LeadersComponent implements OnInit {
     this.minorHouseService.removePlayerHouseLevel(this.activePlayerId, houseId);
   }
 
-  onActivateTechClicked(techTile: TechTileDeckCard) {
-    this.gameManager.activatePlayerTechtile(this.activePlayerId, techTile);
+  onActivateTechClicked(techTile: TechTileDeckCard, type: 'effect' | 'function') {
+    this.gameManager.activatePlayerTechtile(this.activePlayerId, techTile, type);
   }
 
   onFlipTechClicked(techTileId: string) {
@@ -287,7 +332,11 @@ export class LeadersComponent implements OnInit {
     this.techTilesService.flipTechTile(techTileId);
   }
 
-  onTrashTechClicked(techTileId: string) {
+  onTrashTechClicked(techTile: TechTileDeckCard) {
+    if (!this.activePlayer) {
+      return;
+    }
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Are you sure you want to trash this tech tile?',
@@ -296,21 +345,21 @@ export class LeadersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
       if (result) {
-        this.techTilesService.trashPlayerTechTile(techTileId);
+        this.gameManager.trashPlayerTechTile(this.activePlayer!.id, techTile);
       }
     });
   }
 
   onAddPersuasionGainedThisRoundClicked(player: Player) {
     this.audioManager.playSound('click-soft');
-    this.playersService.addPersuasionGainedToPlayer(player.id, 1);
+    this.playersService.addPersuasionToPlayer(player.id, 1);
 
     this.aiManager.setPreferredFieldsForAIPlayer(player);
   }
 
   onRemovePersuasionGainedThisRoundClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
-    this.playersService.removePersuasionGainedFromPlayer(player.id, 1);
+    this.playersService.removePersuasionFromPlayer(player.id, 1);
 
     this.aiManager.setPreferredFieldsForAIPlayer(player);
     return false;
@@ -411,5 +460,79 @@ export class LeadersComponent implements OnInit {
   getTransparentColor(color: string, opacity: number) {
     var _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
     return color + _opacity.toString(16).toUpperCase();
+  }
+
+  private getPlayerTechTilesWithMetadata() {
+    const playerTechTiles = this.techTilesService.getPlayerTechTiles(this.activePlayerId);
+    if (!this.activePlayer || !this.currentRoundPhase || playerTechTiles.length < 1) {
+      return [];
+    }
+
+    return playerTechTiles.map((x) => {
+      let hasActiveEffect = false;
+      let hasActiveFunction = false;
+
+      if (!!x.techTile.structuredEffects) {
+        hasActiveEffect = x.techTile.structuredEffects.some(
+          (x) =>
+            x.type !== 'reward' &&
+            (!x.timing || isEffectTimingFullfilled(x.timing.type, this.activePlayer!, this.getPartialGameState())),
+        );
+      }
+
+      const activeFunction = techTilesGameAdjustments.find(
+        (y) => x.techTile.name.en === y.id && y.customTimedActivatedFunction,
+      )?.customTimedActivatedFunction;
+
+      if (activeFunction) {
+        if (isEffectTimingFullfilled(activeFunction.timing, this.activePlayer!, this.getPartialGameState())) {
+          hasActiveFunction = true;
+        }
+      }
+      return {
+        ...x,
+        hasActiveEffect,
+        hasActiveFunction,
+      };
+    });
+  }
+
+  private getLeaderWithMetadata(playerLeader: PlayerLeader | undefined) {
+    const activeLeader = playerLeader?.leader;
+    if (!activeLeader) {
+      return undefined;
+    }
+
+    let hasActiveEffect = false;
+    let hasActiveFunction = false;
+
+    if (activeLeader.structuredPassiveEffects) {
+      hasActiveEffect = activeLeader.structuredPassiveEffects.some(
+        (x) =>
+          x.type !== 'reward' &&
+          (!x.timing || isEffectTimingFullfilled(x.timing.type, this.activePlayer!, this.getPartialGameState())),
+      );
+    }
+
+    const activeFunctions = leadersGameAdjustments.find(
+      (x) => x.id === activeLeader.name.en && x.customTimedActivatedFunctions,
+    )?.customTimedActivatedFunctions;
+
+    if (activeFunctions) {
+      hasActiveFunction = activeFunctions?.some((x) =>
+        isEffectTimingFullfilled(x.timing, this.activePlayer!, this.getPartialGameState()),
+      );
+    }
+
+    return { ...playerLeader, hasActiveEffect, hasActiveFunction };
+  }
+
+  private getPartialGameState() {
+    return {
+      currentRound: this.roundService.currentRound,
+      currentRoundPhase: this.roundService.currentRoundPhase,
+      playerAgentsOnFields: this.playerAgentsService.getPlayerAgentsOnFields(this.activePlayerId),
+      playerTurnInfos: this.turnInfos,
+    };
   }
 }

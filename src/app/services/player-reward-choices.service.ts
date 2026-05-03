@@ -21,7 +21,7 @@ export type PlayerScoreType = keyof Omit<PlayerRewardChoices, 'playerId'>;
 
 export type PlayerFactionScoreType = keyof Omit<PlayerRewardChoices, 'playerId' | 'victoryPoints'>;
 
-interface ImmediateEffect {
+export interface ImmediateEffect {
   id: string;
   playerId: number;
   choice: EffectType | 'conflict-pick';
@@ -43,6 +43,8 @@ export class PlayerRewardChoicesService {
     'faction-influence-up-choice',
     'faction-influence-up-twice-choice',
     'faction-influence-down-choice',
+    'location-control-choice',
+    'card-return-to-hand',
   ];
 
   constructor() {

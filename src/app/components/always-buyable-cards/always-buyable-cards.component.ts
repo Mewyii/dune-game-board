@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AppMode } from 'src/app/constants/board-settings';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 
@@ -16,7 +17,9 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./always-buyable-cards.component.scss'],
   standalone: false,
 })
-export class AlwaysBuyableCardsComponent {
+export class AlwaysBuyableCardsComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public mode: AppMode | undefined;
 
   public limitedCustomCards: ImperiumDeckCard[] = [];
@@ -41,11 +44,11 @@ export class AlwaysBuyableCardsComponent {
   ) {}
 
   ngOnInit(): void {
-    this.settingsService.mode$.subscribe((mode) => {
+    const modeSub = this.settingsService.mode$.subscribe((mode) => {
       this.mode = mode;
     });
 
-    this.cardsService.limitedCustomCards$.subscribe((cards) => {
+    const limitedCustomCardsSub = this.cardsService.limitedCustomCards$.subscribe((cards) => {
       this.limitedCustomCards = cards;
 
       if (cards.length > 0) {
@@ -55,7 +58,7 @@ export class AlwaysBuyableCardsComponent {
       }
     });
 
-    this.cardsService.unlimitedCustomCards$.subscribe((cards) => {
+    const unlimitedCustomCardsSub = this.cardsService.unlimitedCustomCards$.subscribe((cards) => {
       if (cards.length > 0) {
         this.unlimitedCard = cards[0];
       } else {
@@ -63,7 +66,7 @@ export class AlwaysBuyableCardsComponent {
       }
     });
 
-    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+    const activePlayerSub = this.gameManager.activePlayer$.subscribe((activePlayer) => {
       this.activePlayer = activePlayer;
       this.activePlayerId = activePlayer?.id ?? 0;
 
@@ -76,9 +79,23 @@ export class AlwaysBuyableCardsComponent {
       }
     });
 
-    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+    const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
     });
+
+    this.subscriptions.push(
+      modeSub,
+      limitedCustomCardsSub,
+      unlimitedCustomCardsSub,
+      activePlayerSub,
+      playerGameModifiersSub,
+    );
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onBuyAlwaysAvailableCardClicked(card: ImperiumCard) {

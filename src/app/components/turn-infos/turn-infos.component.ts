@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { isFactionType } from 'src/app/helpers/faction-types';
 
 import { ActionField } from 'src/app/models';
@@ -14,7 +15,9 @@ import { TurnInfoService } from 'src/app/services/turn-info.service';
   styleUrl: './turn-infos.component.scss',
   standalone: false,
 })
-export class TurnInfosComponent implements OnInit {
+export class TurnInfosComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   activePlayerId = 0;
   playerTurnInfo: TurnInfo | undefined;
   showCardsPlayedThisTurn = false;
@@ -32,16 +35,24 @@ export class TurnInfosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+    const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
       this.showTurnInfos();
 
       this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
     });
 
-    this.turnInfoService.turnInfos$.subscribe(() => {
+    const turnInfosSub = this.turnInfoService.turnInfos$.subscribe(() => {
       this.playerTurnInfo = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
     });
+
+    this.subscriptions.push(activePlayerIdSub, turnInfosSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   public getColor(actionField: ActionField) {

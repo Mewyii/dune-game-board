@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
@@ -22,7 +23,9 @@ import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium
   styleUrls: ['./player-hand.component.scss'],
   standalone: false,
 })
-export class PlayerHandComponent implements OnInit {
+export class PlayerHandComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   activePlayer: Player | undefined;
   activePlayerId: number = 0;
 
@@ -58,7 +61,7 @@ export class PlayerHandComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gameManager.activePlayer$.subscribe((activePlayer) => {
+    const activePlayerSub = this.gameManager.activePlayer$.subscribe((activePlayer) => {
       if (!this.activePlayer || activePlayer?.id !== this.activePlayer?.id) {
         this.activePlayerId = activePlayer?.id ?? 0;
 
@@ -74,29 +77,45 @@ export class PlayerHandComponent implements OnInit {
       this.activePlayer = activePlayer;
     });
 
-    this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
+    const currentRoundPhaseSub = this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
       this.revealPlots = roundPhase === 'combat-resolvement' && this.roundService.isFinale;
     });
 
-    this.cardsService.playerHands$.subscribe((playerHandCards) => {
+    const playerHandsSub = this.cardsService.playerHands$.subscribe((playerHandCards) => {
       this.playerHandCards = playerHandCards.find((x) => x.playerId === this.activePlayerId);
     });
 
-    this.cardsService.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
+    const playerDiscardPilesSub = this.cardsService.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
       this.playerDiscardPiles = playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
     });
 
-    this.cardsService.playerPlots$.subscribe((playerPlots) => {
+    const playerPlotsSub = this.cardsService.playerPlots$.subscribe((playerPlots) => {
       this.playerPlots = playerPlots.find((x) => x.playerId === this.activePlayerId);
     });
 
-    this.cardsService.playedPlayerCards$.subscribe((playedPlayerCards) => {
+    const playedPlayerCardsSub = this.cardsService.playedPlayerCards$.subscribe((playedPlayerCards) => {
       this.playedPlayerCardId = playedPlayerCards.find((x) => x.playerId === this.activePlayerId)?.cardId;
     });
 
-    this.intriguesService.playersIntrigues$.subscribe((playerIntrigues) => {
+    const playersIntriguesSub = this.intriguesService.playersIntrigues$.subscribe((playerIntrigues) => {
       this.playerIntrigues = this.intriguesService.getPlayerIntrigues(this.activePlayerId);
     });
+
+    this.subscriptions.push(
+      activePlayerSub,
+      currentRoundPhaseSub,
+      playerHandsSub,
+      playerDiscardPilesSub,
+      playerPlotsSub,
+      playedPlayerCardsSub,
+      playersIntriguesSub,
+    );
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onToggleShowCardsClicked() {
@@ -198,7 +217,7 @@ export class PlayerHandComponent implements OnInit {
     }
 
     this.audioManager.playSound('card-discard');
-    this.aiManager.aiAddCardToHandFromDiscardPile(this.activePlayerId);
+    this.aiManager.getCardToReturnToHandFromDiscardPile(this.activePlayerId);
 
     this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
   }

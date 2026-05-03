@@ -42,6 +42,7 @@ import { FactionSelectorDialogComponent } from './components/_common/dialogs/fac
 import { GameSummaryDialogComponent } from './components/_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 import { ImperiumCardsPreviewDialogComponent } from './components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { IntriguesPreviewDialogComponent } from './components/_common/dialogs/intrigues-preview-dialog/intrigues-preview-dialog.component';
+import { TechTileSelectorDialogComponent } from './components/_common/dialogs/tech-tile-selector-dialog/tech-tile-selector-dialog.component';
 import { HighlightingComponent } from './components/_common/effects/highlighting/highlighting.component';
 import { EventCardComponent } from './components/_common/event-card/event-card.component';
 import { ImperiumRowCardComponent } from './components/_common/imperium-row-card/imperium-row-card.component';
@@ -167,6 +168,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     TechTileEditorComponent,
     ImperiumCardsPreviewDialogComponent,
     BoardSpaceSelectorDialogComponent,
+    TechTileSelectorDialogComponent,
     FactionSelectorDialogComponent,
     PlayerRewardChoicesComponent,
     ConflictsPreviewDialogComponent,

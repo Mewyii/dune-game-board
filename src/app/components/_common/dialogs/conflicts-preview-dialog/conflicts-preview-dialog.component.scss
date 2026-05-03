@@ -49,3 +49,16 @@
   gap: 16px;
   z-index: 3;
 }
+
+.mat-mdc-dialog-title {
+  font-family: 'medieval';
+  filter: drop-shadow(0px 0px 1px rgba(255, 170, 73, 0.732));
+}
+
+.mat-mdc-dialog-title.positive {
+  filter: drop-shadow(0px 0px 1px #5ff15fbf);
+}
+
+.mat-mdc-dialog-title.negative {
+  filter: drop-shadow(0px 0px 1px #f15f5fbb);
+}

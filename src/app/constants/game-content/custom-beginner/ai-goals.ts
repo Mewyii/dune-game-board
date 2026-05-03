@@ -1,6 +1,5 @@
 import { clamp } from 'lodash';
 import {
-  enemyIsCloseToPlayerFactionScore,
   getAvoidCombatTiesModifier,
   getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
@@ -9,8 +8,10 @@ import {
   getViableBoardFieldsForFaction,
   getWinCombatDesire,
   noOneHasMoreInfluence,
+  playerAllianceIsContested,
   playerCanDrawCards,
   playerCanGetAllianceThisTurn,
+  playerHasUncontestedAlliance,
 } from 'src/app/helpers/ai';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
@@ -30,11 +31,10 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * gameState.playerResources.solari -
       0.0175 * (gameState.currentRound - 1) +
-      (gameState.playerResources.solari > 9 ? 0.2 : 0),
+      (gameState.playerResources.solari > 11 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
     desiredFields: (fields) => ({
-      // Three because "amount" is used for the persuasion indicator
       ...getViableBoardFields(fields, 'council-seat-small', false),
     }),
     viableFields: () => ({}),
@@ -44,8 +44,8 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals) =>
       0.01 * gameState.playerResources.solari -
       0.025 * (gameState.currentRound - 1) +
-      (gameState.playerResources.solari > 9 ? 0.2 : 0),
-    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 9,
+      (gameState.playerResources.solari > 8 ? 0.2 : 0),
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 7,
     reachedGoal: (player, gameState) => player.hasSwordmaster || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'sword-master', false),
@@ -60,7 +60,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       0.01 * gameState.playerCombatUnits.troopsInGarrison +
       0.0075 * (gameState.currentRound - 1) -
       0.05 * gameState.playerDreadnoughtCount,
-    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 4,
+    goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 5,
     reachedGoal: (player, gameState) => gameState.playerDreadnoughtCount > 1 || gameState.isFinale,
     desiredFields: (fields) => ({
       ...getViableBoardFields(fields, 'dreadnought', false),
@@ -77,9 +77,19 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         modifier += 0.2 * gameState.playerCombatUnits.shipsInCombat;
       }
       if (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control')) {
-        const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
         possibleLocationControls += 1;
-        modifier += 0.02 * playerCombatStrength;
+
+        const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+        if (playerCombatStrength > 0) {
+          let playerIsWinningCombat = true;
+          for (const enemy of gameState.enemyCombatUnits) {
+            if (playerCombatStrength < getPlayerCombatStrength(enemy, gameState)) {
+              playerIsWinningCombat = false;
+            }
+          }
+
+          modifier += (playerIsWinningCombat ? 0.0375 : 0.225) * playerCombatStrength;
+        }
       }
       if (gameState.playerHandCardsRewards['location-control-choice'] > 0) {
         possibleLocationControls += gameState.playerHandCardsRewards['location-control-choice'];
@@ -87,7 +97,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       }
       if (gameState.playerIntriguesRewards['location-control-choice'] > 0) {
         possibleLocationControls += gameState.playerIntriguesRewards['location-control-choice'];
-        modifier += 0.15 * gameState.playerIntriguesRewards['location-control-choice'];
+        modifier += 0.2 * gameState.playerIntriguesRewards['location-control-choice'];
       }
       if (gameState.playerTechTilesRewards['location-control-choice'] > 0) {
         possibleLocationControls += gameState.playerTechTilesRewards['location-control-choice'];
@@ -125,6 +135,13 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
       (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
+      (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control-choice') &&
+      gameState.playerAgentsOnFields.every(
+        (x) =>
+          gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.some((y) => x.fieldId === y.locationId),
+      )
+        ? 0
+        : 1.0) *
       (0.15 +
         0.01 * gameState.playerResources.spice +
         0.025 * (gameState.currentRound - 1) +
@@ -139,11 +156,14 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
       0.025 * gameState.playerScore.fremen +
+      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.02 * gameState.currentRound : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'fremen') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'fremen') ? 0.015 * gameState.currentRound : 0),
+      (playerAllianceIsContested(gameState, 'fremen') ? 0.1 : 0) -
+      (gameState.enemyScore.some((x) => x.fremen >= gameState.gameSettings.factionInfluenceMaxScore) ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
-      gameState.playerScore.fremen > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'fremen'),
+      playerHasUncontestedAlliance(gameState, 'fremen') ||
+      gameState.playerScore.fremen >= gameState.gameSettings.factionInfluenceMaxScore,
     viableFields: (fields) => ({
       ...getViableBoardFieldsForFaction(fields, 'fremen'),
     }),
@@ -151,12 +171,15 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'bg-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
-      0.025 * gameState.playerScore.fremen +
+      0.025 * gameState.playerScore.bene +
+      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.02 * gameState.currentRound : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'bene') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'bene') ? 0.015 * gameState.currentRound : 0),
+      (playerAllianceIsContested(gameState, 'bene') ? 0.1 : 0) -
+      (gameState.enemyScore.some((x) => x.bene >= gameState.gameSettings.factionInfluenceMaxScore) ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
-      gameState.playerScore.bene > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'bene'),
+      playerHasUncontestedAlliance(gameState, 'bene') ||
+      gameState.playerScore.bene >= gameState.gameSettings.factionInfluenceMaxScore,
     viableFields: (fields) => ({
       ...getViableBoardFieldsForFaction(fields, 'bene'),
     }),
@@ -164,12 +187,15 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'guild-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
-      0.025 * gameState.playerScore.fremen +
+      0.025 * gameState.playerScore.guild +
+      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.02 * gameState.currentRound : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'guild') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'guild') ? 0.015 * gameState.currentRound : 0),
+      (playerAllianceIsContested(gameState, 'guild') ? 0.1 : 0) -
+      (gameState.enemyScore.some((x) => x.guild >= gameState.gameSettings.factionInfluenceMaxScore) ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
-      gameState.playerScore.guild > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'guild'),
+      playerHasUncontestedAlliance(gameState, 'guild') ||
+      gameState.playerScore.guild >= gameState.gameSettings.factionInfluenceMaxScore,
     viableFields: (fields) => ({
       ...getViableBoardFieldsForFaction(fields, 'guild'),
     }),
@@ -177,12 +203,15 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'emperor-alliance': {
     baseDesire: 0.25,
     desireModifier: (player, gameState, goals) =>
-      0.025 * gameState.playerScore.fremen +
+      0.025 * gameState.playerScore.emperor +
+      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.02 * gameState.currentRound : 0) +
       (playerCanGetAllianceThisTurn(player, gameState, 'emperor') ? 0.2 : 0) +
-      (noOneHasMoreInfluence(player, gameState, 'emperor') ? 0.015 * gameState.currentRound : 0),
+      (playerAllianceIsContested(gameState, 'emperor') ? 0.1 : 0) -
+      (gameState.enemyScore.some((x) => x.emperor >= gameState.gameSettings.factionInfluenceMaxScore) ? 0.25 : 0),
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) =>
-      gameState.playerScore.emperor > 3 && !enemyIsCloseToPlayerFactionScore(gameState, 'emperor'),
+      playerHasUncontestedAlliance(gameState, 'emperor') ||
+      gameState.playerScore.emperor >= gameState.gameSettings.factionInfluenceMaxScore,
     viableFields: (fields) => ({
       ...getViableBoardFieldsForFaction(fields, 'emperor'),
     }),
@@ -211,12 +240,12 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     }),
   },
   troops: {
-    baseDesire: 0.1,
+    baseDesire: 0.05,
     desireModifier: (player, gameState, goals) =>
       0.15 * (5 - gameState.playerCombatUnits.troopsInGarrison) +
-      (gameState.playerTurnInfos?.canEnterCombat ? 0.25 : 0) +
-      0.2 * gameState.playerIntriguesConversionCosts['loose-troop'] +
-      0.1 * gameState.playerTechTilesConversionCosts['loose-troop'],
+      (gameState.playerTurnInfos?.canEnterCombat ? 0.2 : 0) +
+      0.04 * gameState.playerIntriguesConversionCosts['loose-troop'] +
+      0.025 * gameState.playerTechTilesConversionCosts['loose-troop'],
     goalIsReachable: () => false,
     reachedGoal: (player, gameState) => gameState.playerCombatUnits.troopsInGarrison > 5,
     viableFields: (fields) => ({
@@ -245,10 +274,12 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
   'fold-space': {
     baseDesire: 0.1,
     desireModifier: (player, gameState, goals) =>
-      (gameState.playerAgentsOnFields.length + 1 < player.agents ? 0.1 : 0) -
-      0.01 * gameState.playerCardsBought -
-      0.01 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
-      0.033 * (7 - gameState.playerHandCardsFieldAccess.length),
+      gameState.playerAgentsAvailable > 1
+        ? 0.075 * (7 - gameState.playerHandCardsFieldAccess.length) +
+          0.025 * (5 - gameState.playerHandCards.length) -
+          0.01 * gameState.playerCardsBought -
+          0.01 * (gameState.playerCardsTrashed + gameState.playerResources.focus)
+        : 0,
     goalIsReachable: () => false,
     reachedGoal: () => false,
     viableFields: (fields) => ({
@@ -272,25 +303,28 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
     desireModifier: (player, gameState, goals) => {
       const deckBuildingDesire = !gameState.isFinale
         ? clamp(
-            0.4 +
-              (player.hasCouncilSeat ? 0.1 : 0) -
-              0.0066 * (gameState.currentRound - 1) * gameState.currentRound +
-              0.033 * gameState.playerCardsBought +
+            0.25 +
+              (player.hasCouncilSeat ? 0.05 : 0) -
+              0.005 * (gameState.currentRound - 1) * gameState.currentRound +
+              0.02 * gameState.playerCardsBought +
               0.025 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
-              0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
+              (gameState.playerAgentsAvailable > 1 ? 0.025 * (7 - gameState.playerHandCardsFieldAccess.length) : 0),
             0,
             0.6,
           )
         : 0;
 
       const getSpiceMustFlowsDesire =
-        gameState.playerDeckSizeTotal > 7
+        gameState.playerDeckSizeTotal > 7 &&
+        gameState.currentRound - 1 > 4 &&
+        gameState.playerHandCardsRewards['persuasion'] > 2
           ? clamp(
-              0.1 +
+              0.0 +
                 (player.hasCouncilSeat ? 0.1 : 0) +
-                0.05 * gameState.playerCardsBought +
-                0.05 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
-                0.025 * (7 - gameState.playerHandCardsFieldAccess.length),
+                0.01 * gameState.playerCardsBought +
+                0.0075 * (gameState.playerCardsTrashed + gameState.playerResources.focus) +
+                0.02 * gameState.playerHandCardsRewards['persuasion'] +
+                0.01 * gameState.playerCardsRewards['persuasion'],
               0,
               0.6,
             )
@@ -325,7 +359,7 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         -(0.0066 * (gameState.currentRound - 1) * gameState.currentRound) +
           0.125 * gameState.playerCardsBought -
           0.15 * (gameState.playerCardsTrashed + gameState.playerResources.focus),
-        -0.4,
+        -0.2,
         0.4,
       ),
     goalIsReachable: () => false,
@@ -341,14 +375,14 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       let maxDesire = 0.0;
 
       const waterDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
-        { type: 'collect-spice', modifier: 0.9 },
-        { type: 'enter-combat', modifier: 0.8 },
-        { type: 'troops', modifier: 0.7 },
+        { type: 'collect-spice', modifier: 0.85 },
+        { type: 'enter-combat', modifier: 0.7 },
+        { type: 'troops', modifier: 0.45 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, waterDependentGoalTypes, maxDesire) +
-        0.05 * gameState.playerIntriguesConversionCosts.water +
+        0.04 * gameState.playerIntriguesConversionCosts.water +
         0.025 * gameState.playerTechTilesConversionCosts.water
       );
     },
@@ -364,15 +398,16 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
       let maxDesire = 0.0;
 
       const spiceDependentGoalTypes: { type: AIGoals; modifier: number }[] = [
-        { type: 'collect-solari', modifier: 0.9 },
-        { type: 'draw-cards', modifier: 0.8 },
-        { type: 'troops', modifier: 0.7 },
-        { type: 'intrigues', modifier: 0.6 },
+        { type: 'collect-solari', modifier: 0.85 },
+        { type: 'draw-cards', modifier: 0.75 },
+        { type: 'mentat', modifier: 0.75 },
+        { type: 'troops', modifier: 0.45 },
+        { type: 'intrigues', modifier: 0.3 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, spiceDependentGoalTypes, maxDesire) +
-        0.05 * gameState.playerIntriguesConversionCosts.spice +
+        0.04 * gameState.playerIntriguesConversionCosts.spice +
         0.025 * gameState.playerTechTilesConversionCosts.spice
       );
     },
@@ -391,19 +426,30 @@ export const aiGoalsCustomBeginner: FieldsForGoals = {
         { type: 'swordmaster', modifier: 1.0 },
         { type: 'high-council', modifier: 1.0 },
         { type: 'dreadnought', modifier: 1.0 },
+        { type: 'tech', modifier: 0.75 },
       ];
 
       return (
         getMaxDesireOfUnreachedOrUnreachableGoals(player, gameState, goals, solariDependentGoalTypes, maxDesire) +
-        0.05 * gameState.playerIntriguesConversionCosts.solari +
+        0.04 * gameState.playerIntriguesConversionCosts.solari +
         0.025 * gameState.playerTechTilesConversionCosts.solari
       );
     },
     goalIsReachable: (player, gameState) => gameState.playerResources.solari > 2,
     reachedGoal: (player, gameState, goals) =>
-      gameState.playerResources.solari > (!player.hasSwordmaster || !player.hasCouncilSeat ? 7 : 3),
+      gameState.playerResources.solari > (!player.hasSwordmaster || !player.hasCouncilSeat ? 9 : 4),
     viableFields: (fields) => ({
-      ...getViableBoardFields(fields, 'solari'),
+      ...getViableBoardFields(fields, 'solari', true, 6),
+    }),
+  },
+  'regain-health': {
+    baseDesire: 0.025,
+    desireModifier: (player, gameState, goals) =>
+      0.075 * (4 - gameState.playerResources['leader-heal']) - 0.02 * (gameState.currentRound - 1),
+    goalIsReachable: () => false,
+    reachedGoal: (player, gameState) => gameState.playerResources['leader-heal'] > 3,
+    viableFields: (fields) => ({
+      ...getViableBoardFields(fields, 'leader-heal'),
     }),
   },
   'swordmaster-helper': {

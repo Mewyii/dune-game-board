@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
-import { GameState, TimedFunctionWithGameElement } from 'src/app/models/ai';
+import { GameState } from 'src/app/models/ai';
 import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustments';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
@@ -16,8 +16,6 @@ export interface TechTileDeckCard extends TechTileCard {
   structuredEffects?: StructuredEffect[];
   aiEvaluation?: (player: Player, gameState: GameState) => number;
   gameModifiers?: GameModifiers;
-  customTimedFunction?: TimedFunctionWithGameElement;
-  customTimedAIFunction?: TimedFunctionWithGameElement;
 }
 
 export interface PlayerTechTile {
@@ -41,20 +39,7 @@ export class TechTilesService {
     const techTileDeckString = localStorage.getItem('techTileDeck');
     if (techTileDeckString) {
       const techTileDeck = JSON.parse(techTileDeckString) as TechTileDeckCard[];
-
-      // Workaround for local storage not being able to store functions
-      const realTechTiles = techTileDeck.map((x) => {
-        const techTileGameAdjustments = techTilesGameAdjustments.find((y) => y.id === x.name.en);
-        return {
-          ...x,
-          gameModifiers: techTileGameAdjustments?.gameModifiers,
-          aiEvaluation: techTileGameAdjustments?.aiEvaluation,
-          customTimedFunction: techTileGameAdjustments?.customTimedFunction,
-          customTimedAIFunction: techTileGameAdjustments?.customTimedAIFunction,
-        };
-      });
-
-      this.techTileDeckSubject.next(realTechTiles);
+      this.techTileDeckSubject.next(techTileDeck);
     }
 
     this.techTileDeck$.subscribe((techTileDeck) => {
@@ -64,22 +49,7 @@ export class TechTilesService {
     const playerTechTilesString = localStorage.getItem('playerTechTiles');
     if (playerTechTilesString) {
       const playerTechTiles = JSON.parse(playerTechTilesString) as PlayerTechTile[];
-
-      // Workaround for local storage not being able to store functions
-      const realPlayerTechTiles = playerTechTiles.map((x) => {
-        const techTileGameAdjustments = techTilesGameAdjustments.find((y) => y.id === x.techTile.name.en);
-        return {
-          ...x,
-          techTile: {
-            ...x.techTile,
-            gameModifiers: techTileGameAdjustments?.gameModifiers,
-            aiEvaluation: techTileGameAdjustments?.aiEvaluation,
-            customTimedFunction: techTileGameAdjustments?.customTimedFunction,
-            customTimedAIFunction: techTileGameAdjustments?.customTimedAIFunction,
-          },
-        };
-      });
-      this.playerTechTilesSubject.next(realPlayerTechTiles);
+      this.playerTechTilesSubject.next(playerTechTiles);
     }
 
     this.playerTechTiles$.subscribe((playerTechTiles) => {
@@ -159,8 +129,6 @@ export class TechTilesService {
       structuredEffects: card.effects && card.effects.length > 0 ? getStructuredEffectArrayInfos(card.effects) : undefined,
       aiEvaluation: techTileGameAdjustments?.aiEvaluation,
       gameModifiers: techTileGameAdjustments?.gameModifiers,
-      customTimedFunction: techTileGameAdjustments?.customTimedFunction,
-      customTimedAIFunction: techTileGameAdjustments?.customTimedAIFunction,
     };
   }
 }

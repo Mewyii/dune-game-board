@@ -6,8 +6,8 @@ export interface Player {
   turnNumber: number;
   turnState: PlayerTurnState;
   color: string;
-  hasSwordmaster?: boolean;
-  hasCouncilSeat?: boolean;
+  hasSwordmaster: boolean;
+  hasCouncilSeat: boolean;
   cardsDrawnAtRoundStart: number;
   persuasionGainedThisRound: number;
   persuasionSpentThisRound: number;

@@ -9,6 +9,7 @@ export interface ConflictSelectorData {
   title: string;
   conflicts: ConflictDeckCard[];
   mode: ConflictSelectorMode;
+  colorScheme: 'neutral' | 'positive' | 'negative';
 }
 
 @Component({

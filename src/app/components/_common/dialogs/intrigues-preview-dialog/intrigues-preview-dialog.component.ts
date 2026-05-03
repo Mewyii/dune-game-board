@@ -12,6 +12,7 @@ export interface IntrigueSelectorData {
   mode: IntrigueSelectorMode;
   canAquireCards?: boolean;
   playerId?: number;
+  colorScheme: 'neutral' | 'positive' | 'negative';
 }
 
 @Component({

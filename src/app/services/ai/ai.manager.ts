@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { clamp, take } from 'lodash';
-import { getLeastDesiredFactionScoreType, getMostDesiredFactionScoreType } from 'src/app/helpers/ai';
+import {
+  getLeastDesiredFactionScoreType,
+  getMostDesiredFactionScoreType,
+  getPlayerCombatStrength,
+} from 'src/app/helpers/ai';
 import { getNumberAverage, normalizeNumber } from 'src/app/helpers/common';
 import { getCardCostModifier, getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
 import {
@@ -98,7 +102,7 @@ export class AIManager {
 
       if (usableCards.length > 0) {
         const evaluations = usableCards.map((cardEvaluation) => {
-          const evaluation = cardEvaluation.evaluationValue - fieldIndex - fieldIndex * (1 - preferredField.value) * 3;
+          const evaluation = cardEvaluation.evaluationValue - fieldIndex - fieldIndex * (1 - preferredField.value) * 2.5;
           return { field: preferredField, evaluation, card: cardEvaluation.card };
         });
 
@@ -338,7 +342,7 @@ export class AIManager {
     }
   }
 
-  aiAddCardToHandFromDiscardPile(playerId: number) {
+  getCardToReturnToHandFromDiscardPile(playerId: number) {
     const playerDiscardPileCards = this.cardsService.getPlayerDiscardPile(playerId)?.cards;
     if (!playerDiscardPileCards) {
       return;
@@ -349,10 +353,7 @@ export class AIManager {
     }
 
     const gameState = this.getGameState(player);
-    const cardToAddToHand = this.aiCardsService.getCardToPlay(playerDiscardPileCards, player, gameState);
-    if (cardToAddToHand) {
-      this.cardsService.returnDiscardedPlayerCardToHand(player.id, cardToAddToHand);
-    }
+    return this.aiCardsService.getCardToPlay(playerDiscardPileCards, player, gameState);
   }
 
   aiTrashIntrigue(playerId: number) {
@@ -374,22 +375,19 @@ export class AIManager {
     }
   }
 
-  aiTrashTechTile(playerId: number) {
+  getTechTileToTrash(playerId: number) {
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(playerId);
     if (playerTechTiles && playerTechTiles.length > 0) {
       const player = this.playersService.getPlayer(playerId);
       if (!player) {
-        return;
+        return undefined;
       }
 
       const gameState = this.getGameState(player);
 
-      const techTileToTrash = this.aiTechTilesService.getTechTileToTrash(playerTechTiles, player, gameState);
-      if (techTileToTrash) {
-        this.techTilesService.trashPlayerTechTile(techTileToTrash.techTile.id);
-        this.loggingService.logPlayerTrashedTechTile(playerId, this.t.translateLS(techTileToTrash.techTile.name));
-      }
+      return this.aiTechTilesService.getTechTileToTrash(playerTechTiles, player, gameState);
     }
+    return undefined;
   }
 
   aiGetTechTileToBuyIfPossible(playerId: number, costModifiers: TechTileModifier[] | undefined) {
@@ -476,7 +474,7 @@ export class AIManager {
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
         addedUnitsToCombat = true;
       } else if (addUnitsDecision === 'minimum') {
-        this.aiAddMinimumUnitsToCombat(player.id, playerCombatUnits, enemyCombatScores, playerHasAgentsLeft);
+        this.aiAddMinimumUnitsToCombat(player.id, playerCombatUnits, enemyCombatScores, playerHasAgentsLeft, gameState);
         addedUnitsToCombat = true;
       } else if (addUnitsDecision !== 'none') {
         let addedShipCombatStrength = 0;
@@ -506,6 +504,7 @@ export class AIManager {
     playerCombatUnits: PlayerCombatUnits,
     enemyCombatScores: PlayerCombatScore[],
     playerHasAgentsLeft: boolean,
+    gameState: GameState,
   ) {
     if (playerHasAgentsLeft) {
       let troopsAdded = 0;
@@ -528,7 +527,7 @@ export class AIManager {
       let troopsToAdd = playerCombatUnits.troopsInGarrison > 1 && Math.random() < maxTroopAddChance ? 2 : 1;
 
       const projectedCombatStrength =
-        this.combatManager.getPlayerCombatScore(playerId) + this.combatManager.getCombatScore(troopsToAdd, 0);
+        getPlayerCombatStrength(playerCombatUnits, gameState) + this.combatManager.getCombatScore(troopsToAdd, 0);
 
       if (enemyCombatScores.some((x) => projectedCombatStrength === x.score)) {
         if (troopsToAdd === 1 && playerCombatUnits.troopsInGarrison > 1) {
@@ -649,12 +648,22 @@ export class AIManager {
     gameState: GameState,
     maxConversions = 1,
   ) {
-    const conversionEvaluations = conversionEffects.map((x) =>
-      this.effectEvaluationService.getConversionEffectEvaluation(x, player, gameState),
-    );
-    conversionEvaluations.sort((a, b) => b - a);
+    const conversionEvaluations = conversionEffects.map((x) => ({
+      effect: x,
+      evaluation: this.effectEvaluationService.getConversionEffectEvaluation(x, player, gameState),
+    }));
+    conversionEvaluations.sort((a, b) => b.evaluation - a.evaluation);
 
-    this.effectsService.resolveStructuredEffects(conversionEffects.slice(0, maxConversions), player, gameState);
+    const effectsToConvert: StructuredConversionEffect[] = [];
+    let effectsAdded = 0;
+    for (const conversionEvaluation of conversionEvaluations) {
+      if (effectsAdded < maxConversions) {
+        effectsToConvert.push(conversionEvaluation.effect);
+        effectsAdded++;
+      }
+    }
+
+    this.effectsService.resolveStructuredEffects(effectsToConvert, player, gameState);
   }
 
   aiChooseRewardOption(
@@ -712,7 +721,7 @@ export class AIManager {
     }
 
     if (chosenEffect) {
-      this.effectsService.resolveStructuredEffects([chosenEffect], player, gameState, gameElement);
+      this.effectsService.resolveStructuredEffect(chosenEffect, player, gameState, gameElement);
     }
   }
 

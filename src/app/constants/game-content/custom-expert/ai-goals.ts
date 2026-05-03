@@ -26,10 +26,10 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     }),
   },
   'high-council': {
-    baseDesire: 0.7,
+    baseDesire: 0.6,
     desireModifier: (player, gameState, goals) =>
       0.01 * gameState.playerResources.solari -
-      0.0175 * (gameState.currentRound - 1) +
+      0.01 * (gameState.currentRound - 1) +
       (gameState.playerResources.solari > 11 ? 0.2 : 0),
     goalIsReachable: (player, gameState, goals) => gameState.playerResources.solari > 9,
     reachedGoal: (player, gameState) => !!player.hasCouncilSeat,
@@ -148,18 +148,18 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
   mentat: {
     baseDesire: 0.0,
     desireModifier: (player, gameState, goals) =>
-      (gameState.playerAgentsOnFields.length > 0 ? 1.0 : 0) *
+      (gameState.playerAgentsOnFields.length > 0 ? 1 : 0) *
       (gameState.conflict?.rewards[0].some((x) => x.type === 'location-control-choice') &&
       gameState.playerAgentsOnFields.every(
         (x) =>
           gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.some((y) => x.fieldId === y.locationId),
       )
         ? 0
-        : 1.0) *
-      (0.15 +
+        : 1) *
+      (0.125 +
         0.01 * gameState.playerResources.spice +
         0.025 * (gameState.currentRound - 1) +
-        0.02 * gameState.playerCardsBought),
+        0.01 * gameState.playerCardsBought),
     goalIsReachable: (player, gameState) => gameState.playerResources.spice > 0,
     reachedGoal: () => false,
     viableFields: (fields) => ({

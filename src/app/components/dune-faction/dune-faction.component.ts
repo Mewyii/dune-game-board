@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AppMode } from 'src/app/constants/board-settings';
 
 import { Faction } from 'src/app/models';
@@ -15,7 +16,9 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./dune-faction.component.scss'],
   standalone: false,
 })
-export class DuneFactionComponent implements OnInit {
+export class DuneFactionComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   @Input() faction: Faction = {
     title: { de: 'fremen', en: 'fremen' },
     type: 'fremen',
@@ -74,7 +77,7 @@ export class DuneFactionComponent implements OnInit {
     this.influenceScoreArray = new Array(this.settingsService.getFactionInfluenceMaxScore() + 1);
     this.allianceTreshold = this.settingsService.getFactionInfluenceAllianceTreshold() - 1;
 
-    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
+    const playerScoresSub = this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       const factionType = this.faction.type;
       if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'emperor') {
         this.playerScores = playerScores.map((x) => ({
@@ -89,7 +92,7 @@ export class DuneFactionComponent implements OnInit {
       }
     });
 
-    this.playerScoreManager.playerAlliances$.subscribe((playerAlliances) => {
+    const playerAlliancesSub = this.playerScoreManager.playerAlliances$.subscribe((playerAlliances) => {
       const factionType = this.faction.type;
       if (factionType === 'fremen' || factionType === 'bene' || factionType === 'guild' || factionType === 'emperor') {
         this.allianceTakenByPlayerId =
@@ -97,7 +100,7 @@ export class DuneFactionComponent implements OnInit {
       }
     });
 
-    this.gameModifiersService.playerGameModifiers$.subscribe((gameModifiers) => {
+    const playerGameModifiersSub = this.gameModifiersService.playerGameModifiers$.subscribe((gameModifiers) => {
       this.excludedPlayers = gameModifiers
         .filter(
           (x) =>
@@ -107,11 +110,19 @@ export class DuneFactionComponent implements OnInit {
         .map((x) => x.playerId);
     });
 
-    this.playersService.playerColors$.subscribe((playerColors) => {
+    const playerColorsSub = this.playersService.playerColors$.subscribe((playerColors) => {
       this.playerColors = playerColors;
     });
 
+    this.subscriptions.push(playerScoresSub, playerAlliancesSub, playerGameModifiersSub, playerColorsSub);
+
     this.titleColor = this.getTitleColor(this.faction.primaryColor);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onIncreaseFactionScoreClicked(playerId: number) {

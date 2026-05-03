@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
@@ -15,7 +16,9 @@ import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-pr
   styleUrl: './intrigues.component.scss',
   standalone: false,
 })
-export class IntriguesComponent {
+export class IntriguesComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   activePlayerId = 0;
   hasIntrigueVision = false;
   intrigueStackIsActive = false;
@@ -32,7 +35,7 @@ export class IntriguesComponent {
   ) {}
 
   ngOnInit(): void {
-    this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
+    const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {
       this.activePlayerId = activePlayerId;
 
       this.hasIntrigueVision = this.gameModifierService.playerHasCustomActionAvailable(
@@ -43,16 +46,24 @@ export class IntriguesComponent {
       this.intrigueStackIsActive = false;
     });
 
-    this.gameModifierService.playerGameModifiers$.subscribe(() => {
+    const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.hasIntrigueVision = this.gameModifierService.playerHasCustomActionAvailable(
         this.activePlayerId,
         'vision-intrigues',
       );
     });
 
-    this.intriguesService.intrigueDiscardPile$.subscribe((discardPile) => {
+    const intrigueDiscardPileSub = this.intriguesService.intrigueDiscardPile$.subscribe((discardPile) => {
       this.intrigueDiscardPileTopCard = discardPile[discardPile.length - 1];
     });
+
+    this.subscriptions.push(activePlayerIdSub, playerGameModifiersSub, intrigueDiscardPileSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onDrawIntrigueClicked() {

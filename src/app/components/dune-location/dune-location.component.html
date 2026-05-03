@@ -1,13 +1,15 @@
-<div
-  class="location-tile"
-  [style.top]="location.position.marginTop + 'px'"
-  [style.left]="location.position.marginLeft + 'px'"
->
-  <app-dune-action [actionField]="location.actionField" [backgroundColor]="location.color"></app-dune-action>
+<div class="location-tile">
+  <app-dune-action
+    [actionField]="location.actionField"
+    [backgroundColor]="location.color"
+    [disabled]="readonly"
+  ></app-dune-action>
   <ng-container *ngIf="location.actionField.ownerReward">
     <div class="location-owning-area">
       <div
         [class]="'location-owner-indicator' + (owner ? ' owned' : '')"
+        [class.owned]="owner"
+        [class.active]="!readonly"
         [style.border-color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
       >

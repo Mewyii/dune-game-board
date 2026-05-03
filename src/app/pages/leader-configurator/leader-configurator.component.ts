@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { Leader } from 'src/app/constants/leaders';
 import { LeaderConfiguratorService } from 'src/app/services/configurators/leader.service';
@@ -8,22 +9,36 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leader-editor.component';
 
 @Component({
-    selector: 'dune-leader-configurator',
-    templateUrl: './leader-configurator.component.html',
-    styleUrls: ['./leader-configurator.component.scss'],
-    standalone: false
+  selector: 'dune-leader-configurator',
+  templateUrl: './leader-configurator.component.html',
+  styleUrls: ['./leader-configurator.component.scss'],
+  standalone: false,
 })
-export class LeaderConfiguratorComponent {
+export class LeaderConfiguratorComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   public leaders: Leader[] = [];
   public showControls = true;
   public imagePadding = 0;
 
-  constructor(public t: TranslateService, public leadersService: LeaderConfiguratorService, private dialog: MatDialog) {}
+  constructor(
+    public t: TranslateService,
+    public leadersService: LeaderConfiguratorService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
-    this.leadersService.leaders$.subscribe((leaders) => {
+    const leadersSub = this.leadersService.leaders$.subscribe((leaders) => {
       this.leaders = leaders.filter((x) => x.type === 'new') as Leader[];
     });
+
+    this.subscriptions.push(leadersSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onExportCardsClicked() {

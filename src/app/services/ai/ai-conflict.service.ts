@@ -5,14 +5,19 @@ import {
   getPlayerCombatStrengthPotentialAgainstEnemy,
   getPlayerGarrisonStrength,
 } from 'src/app/helpers/ai';
+import { getFlattenedEffectRewardArray, playerCanPayCosts } from 'src/app/helpers/rewards';
+import { EffectReward } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
+import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { Player } from 'src/app/models/player';
 import { PlayerCombatUnits } from '../combat-manager.service';
+import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AIConflictService {
-  constructor() {}
+  constructor(private aiEffectEvaluationService: AIEffectEvaluationService) {}
 
   getAddAdditionalUnitsToCombatDecision(
     playerCombatUnits: PlayerCombatUnits,
@@ -89,5 +94,34 @@ export class AIConflictService {
         return 'all';
       }
     }
+  }
+
+  getPlayableCombatIntrigues(player: Player, gameState: GameState, playerCombatIntrigues: IntrigueDeckCard[]) {
+    const playableIntriguesWithSwords: { intrigue: IntrigueDeckCard; addedScore: number }[] = [];
+    const playableIntriguesWithoutSwords: { intrigue: IntrigueDeckCard; subtractedScore: number }[] = [];
+
+    let trackedCosts: EffectReward[] = [];
+    for (const intrigue of playerCombatIntrigues) {
+      if (intrigue.structuredCombatEffects) {
+        const result = this.aiEffectEvaluationService.getStructuredEffectsRewardsAndCosts(
+          intrigue.structuredCombatEffects,
+          player,
+          gameState,
+        );
+
+        const combinedCosts = getFlattenedEffectRewardArray([...trackedCosts, ...result.costs]);
+        if (playerCanPayCosts(combinedCosts, player, gameState)) {
+          const addedSwordAmount = result.rewards.find((x) => x.type === 'sword');
+          if (addedSwordAmount) {
+            trackedCosts = combinedCosts;
+            playableIntriguesWithSwords.push({ intrigue, addedScore: addedSwordAmount.amount ?? 1 });
+          } else {
+            const subtractedSwordAmount = result.costs.find((x) => x.type === 'sword');
+            playableIntriguesWithoutSwords.push({ intrigue, subtractedScore: subtractedSwordAmount?.amount ?? 1 });
+          }
+        }
+      }
+    }
+    return { playableIntriguesWithSwords, playableIntriguesWithoutSwords };
   }
 }

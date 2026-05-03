@@ -7,10 +7,12 @@ import { ActionField } from './location';
 import { TechTileCard } from './tech-tile';
 
 export interface StructuredChoiceEffectWithGameElement extends StructuredChoiceEffect {
+  exlusiveChoiceOfMultipleEffectsId?: string;
   element?: GameElement;
 }
 
 export interface StructuredConversionEffectWithGameElement extends StructuredConversionEffect {
+  exlusiveChoiceOfMultipleEffectsId?: string;
   element?: GameElement;
 }
 

@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { boardSettings } from 'src/app/constants/board-settings';
 
 import { playerCanEnterCombat } from 'src/app/helpers/turn-infos';
@@ -22,8 +23,10 @@ export interface CombatScore {
   styleUrls: ['./dune-combat.component.scss'],
   standalone: false,
 })
-export class DuneCombatComponent implements OnInit {
+export class DuneCombatComponent implements OnInit, OnDestroy {
   @Input() useDreadnoughts = false;
+
+  subscriptions: Subscription[] = [];
 
   maxCombatScore = 28;
 
@@ -67,28 +70,36 @@ export class DuneCombatComponent implements OnInit {
   ngOnInit(): void {
     this.combatScoreArray = new Array(this.maxCombatScore);
 
-    this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
+    const playerCombatUnitsSub = this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
       this.playerCombatUnits = playerCombatUnits.sort((a, b) => a.playerId - b.playerId);
       this.combatScores = this.combatManager.getPlayerCombatScores();
     });
 
-    this.playersService.players$.subscribe((players) => {
+    const playersSub = this.playersService.players$.subscribe((players) => {
       this.players = players;
     });
 
-    this.playersService.playerColors$.subscribe((playerColors) => {
+    const playerColorsSub = this.playersService.playerColors$.subscribe((playerColors) => {
       this.playerColors = playerColors;
     });
 
-    this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
+    const turnInfosSub = this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       this.activeGarrisonPlayerId = turnInfos.find((x) => playerCanEnterCombat(x))?.playerId ?? 0;
     });
 
-    this.settingsService.gameContent$.subscribe((x) => {
+    const gameContentSub = this.settingsService.gameContent$.subscribe((x) => {
       this.dreadnoughtCombatStrength = x.dreadnoughtCombatStrength;
       this.troopCombatStrength = x.troopCombatStrength;
       this.leaderHitPointCombatStrength = x.leaderCombatStrength;
     });
+
+    this.subscriptions.push(playerCombatUnitsSub, playersSub, playerColorsSub, turnInfosSub, gameContentSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onAddTroopToCombatClicked(playerId: number) {

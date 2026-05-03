@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import { LanguageString } from 'src/app/models';
 import { Player } from 'src/app/models/player';
@@ -21,7 +22,9 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
   styleUrls: ['./playerboard.component.scss'],
   standalone: false,
 })
-export class PlayerboardComponent implements OnInit {
+export class PlayerboardComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+
   players: Player[] = [];
   currentRound = 0;
   currentRoundPhase = '';
@@ -48,32 +51,40 @@ export class PlayerboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.playersService.players$.subscribe((players) => {
+    const playersSub = this.playersService.players$.subscribe((players) => {
       this.players = players;
 
       this.canSwitchToCombatPhase = !players.some((x) => x.turnState === 'agent-placement');
     });
 
-    this.roundService.currentRound$.subscribe((currentTurn) => {
+    const currentRoundSub = this.roundService.currentRound$.subscribe((currentTurn) => {
       this.currentRound = currentTurn;
     });
 
-    this.roundService.currentRoundPhase$.subscribe((currentRoundPhase) => {
+    const currentRoundPhaseSub = this.roundService.currentRoundPhase$.subscribe((currentRoundPhase) => {
       this.currentRoundPhase = currentRoundPhase;
     });
 
-    this.roundService.isFinale$.subscribe((isFinale) => {
+    const isFinaleS = this.roundService.isFinale$.subscribe((isFinale) => {
       this.isFinale = isFinale;
     });
 
-    this.settingsService.gameContent$.subscribe((gameContent) => {
+    const gameContentSub = this.settingsService.gameContent$.subscribe((gameContent) => {
       this.maxPlayers = gameContent.maxPlayers;
       this.subTitle = gameContent.name;
     });
 
-    this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
+    const playerLeadersSub = this.leadersService.playerLeaders$.subscribe((playerLeaders) => {
       this.allLeadersLockedIn = playerLeaders.filter((x) => x.isLockedIn).length === this.players.length;
     });
+
+    this.subscriptions.push(playersSub, currentRoundSub, currentRoundPhaseSub, isFinaleS, gameContentSub, playerLeadersSub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onAddPlayerClicked() {

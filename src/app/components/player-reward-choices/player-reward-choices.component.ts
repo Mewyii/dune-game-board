@@ -113,7 +113,9 @@ export class PlayerRewardChoicesComponent implements OnInit {
     const conversionSuccessFull = this.gameManager.resolveEffectConversionIfPossible(this.activePlayerId, effect);
     if (conversionSuccessFull) {
       this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-        effectConversions: this.playerEffectConversions.filter((x, idx) => idx !== index),
+        effectConversions: this.playerEffectConversions.filter(
+          (x, idx) => idx !== index && x.exlusiveChoiceOfMultipleEffectsId !== effect.exlusiveChoiceOfMultipleEffectsId,
+        ),
       });
     }
   }

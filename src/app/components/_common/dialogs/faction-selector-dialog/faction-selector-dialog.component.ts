@@ -11,6 +11,7 @@ export interface FactionSelectorData {
   mode: FactionSelectorMode;
   factionTypes: ActiveFactionType[];
   playerId?: number;
+  colorScheme: 'neutral' | 'positive' | 'negative';
 }
 @Component({
   selector: 'dune-faction-selector-dialog',

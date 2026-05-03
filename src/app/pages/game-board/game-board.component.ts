@@ -3,7 +3,7 @@ import { NgParticlesService } from '@tsparticles/angular';
 import { AppMode, GameContent } from 'src/app/constants/board-settings';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
 import { spiceGlitter } from 'src/app/services/effects/constants/spice-glitter';
-import { RoundService } from 'src/app/services/round.service';
+import { RoundPhaseType, RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { loadFull } from 'tsparticles';
 
@@ -17,6 +17,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   @ViewChild('gameBoardContainer', { static: true }) gameBoardRef!: ElementRef;
 
   currentRound = 0;
+  roundPhase: RoundPhaseType | undefined;
 
   gameContent: GameContent | undefined;
   mode: AppMode | undefined;
@@ -50,6 +51,10 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
 
     this.roundService.currentRound$.subscribe((currentRound) => {
       this.currentRound = currentRound;
+    });
+
+    this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
+      this.roundPhase = roundPhase;
     });
   }
 

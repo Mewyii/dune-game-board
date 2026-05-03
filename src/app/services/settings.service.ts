@@ -6,7 +6,7 @@ import { gameContentCustomBeginner, gameContentCustomExpert, gameContentOriginal
 import { aiCustomBeginner } from '../constants/game-content/custom-beginner/ai';
 import { aiCustomExpert } from '../constants/game-content/custom-expert/ai';
 import { aiOriginal } from '../constants/game-content/original/ai';
-import { ActionField, FactionInfluenceReward, FactionType, LanguageType } from '../models';
+import { ActionField, ActionType, FactionInfluenceReward, FactionType, LanguageType } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -126,6 +126,16 @@ export class SettingsService {
 
   getBoardLocation(id: string) {
     return cloneDeep(this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.title.en === id));
+  }
+
+  getBoardSpaceColor(actionType: ActionType) {
+    if (actionType === 'town' || actionType === 'spice' || actionType === 'choam') {
+      return cloneDeep(
+        this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.actionType === actionType)?.color,
+      );
+    } else {
+      return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === actionType)?.primaryColor);
+    }
   }
 
   getConflicts() {

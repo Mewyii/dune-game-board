@@ -9,6 +9,7 @@ import {
   FieldCostsModifier,
   FieldRewardsModifier,
   ImperiumRowModifier,
+  LocationTakeoverTroopCostsModifier,
   PlayerGameModifiers,
   RewardWithModifier,
   TechTileModifier,
@@ -18,7 +19,7 @@ import { getFlattenedEffectRewardArray } from './rewards';
 
 export function hasFactionInfluenceModifier(
   playerGameModifier: PlayerGameModifiers | undefined,
-  factionType: FactionType | undefined
+  factionType: FactionType | undefined,
 ) {
   if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
@@ -29,7 +30,7 @@ export function hasFactionInfluenceModifier(
 
 export function getFactionInfluenceModifier(
   playerGameModifier: PlayerGameModifiers | undefined,
-  factionType: FactionType | undefined
+  factionType: FactionType | undefined,
 ) {
   if (!playerGameModifier || !playerGameModifier.factionInfluence || !factionType) {
     return false;
@@ -70,9 +71,9 @@ export function getTechTileCostModifier(card: TechTileCard, modifiers?: TechTile
 
   for (const modifier of modifiers) {
     if (modifier.techTileId === card.name.en) {
-      result += modifier.spiceAmount;
+      result += modifier.techAmount;
     } else {
-      result += modifier.spiceAmount;
+      result += modifier.techAmount;
     }
     if (modifier.minCosts && (minCostAmount === undefined || modifier.minCosts < minCostAmount)) {
       minCostAmount = modifier.minCosts;
@@ -91,7 +92,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
 
   const actionCosts: RewardWithModifier[] = (cloneDeep(actionField.costs) as RewardWithModifier[]) ?? [];
   const filteredModifiers = flattenedModifiers.filter(
-    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
+    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en),
   );
   if (actionCosts.length < 1) {
     for (const modifier of filteredModifiers) {
@@ -149,7 +150,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
 
 export function getModifiedRewardsForField(
   actionField: ActionField,
-  modifiers?: FieldRewardsModifier[]
+  modifiers?: FieldRewardsModifier[],
 ): EffectWithModifier[] {
   if (!modifiers || actionField.rewards.length < 1) {
     return actionField.rewards;
@@ -160,7 +161,7 @@ export function getModifiedRewardsForField(
   const actionRewards = cloneDeep(actionField.rewards);
 
   const filteredModifiers = flattenedModifiers.filter(
-    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
+    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en),
   );
 
   for (const modifier of filteredModifiers) {
@@ -200,13 +201,30 @@ export function getModifiedRewardsForField(
   return actionRewards;
 }
 
+export function getModifiedLocationTakeoverTroopCosts(
+  defaultLocationTakeoverTroopCosts: number,
+  boardSpace?: ActionField,
+  modifiers?: LocationTakeoverTroopCostsModifier[],
+) {
+  if (!modifiers || modifiers.length < 1 || !boardSpace) {
+    return defaultLocationTakeoverTroopCosts;
+  }
+
+  const filteredModifiers = modifiers.filter(
+    (x) => x.locationType === boardSpace.actionType || x.locationId === boardSpace.title.en,
+  );
+
+  const totalModifier = filteredModifiers.reduce((sum, modifier) => sum + modifier.amount, 0);
+  return Math.max(0, defaultLocationTakeoverTroopCosts + totalModifier);
+}
+
 export function getFieldIsBlocked(actionField: ActionField, modifiers?: FieldBlockModifier[]) {
   if (!modifiers) {
     return false;
   }
 
   const filteredModifiers = modifiers.filter(
-    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en)
+    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en),
   );
 
   return filteredModifiers.length > 0;
