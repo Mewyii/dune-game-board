@@ -7,7 +7,9 @@ export const effectRewards = [
   'agent',
   'agent-lift',
   'beetle',
-  'card-destroy',
+  'card-trash',
+  'card-trash-from-hand',
+  'card-trash-in-play',
   'card-discard',
   'card-draw',
   'card-draw-or-destroy',
@@ -205,7 +207,7 @@ export interface StructuredChoiceEffect extends StructuredEffectBase {
 export interface StructuredConversionEffect extends StructuredEffectBase {
   type: EffectConversionType;
   effectCosts: StructuredRewardEffect;
-  effectConversions: StructuredRewardEffect;
+  effectConversionRewards: StructuredRewardEffect;
 }
 
 export interface StructuredRewardEffect extends StructuredEffectBase {

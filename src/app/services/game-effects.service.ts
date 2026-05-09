@@ -267,9 +267,15 @@ export class EffectsService {
     } else if (rewardType === 'card-draw') {
       this.audioManager.playSound('card-draw');
       this.cardsService.drawPlayerCardsFromDeck(playerId, rewardAmount);
-    } else if (rewardType === 'card-destroy') {
+    } else if (rewardType === 'card-trash') {
       this.audioManager.playSound('sword');
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDestroyAmount: rewardAmount });
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashAmount: rewardAmount });
+    } else if (rewardType === 'card-trash-from-hand') {
+      this.audioManager.playSound('sword');
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashFromHandAmount: rewardAmount });
+    } else if (rewardType === 'card-trash-in-play') {
+      this.audioManager.playSound('sword');
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashInPlayAmount: rewardAmount });
     } else if (rewardType == 'card-draw-or-destroy') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDrawOrDestroyAmount: 1 });
     } else if (rewardType === 'card-discard') {
@@ -459,11 +465,15 @@ export class EffectsService {
     } else if (costType === 'dreadnought') {
       this.combatManager.removePlayerShipsFromGarrison(playerId, costAmount);
     } else if (costType === 'dreadnought-retreat') {
-      this.combatManager.removePlayerShipsFromCombat(playerId, costAmount);
+      this.combatManager.retreatPlayerShipsFromCombat(playerId, costAmount);
     } else if (costType === 'card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: costAmount });
-    } else if (costType === 'card-destroy') {
-      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDestroyAmount: costAmount });
+    } else if (costType === 'card-trash') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashAmount: costAmount });
+    } else if (costType === 'card-trash-from-hand') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashFromHandAmount: costAmount });
+    } else if (costType === 'card-trash-in-play') {
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashInPlayAmount: costAmount });
     } else if (costType === 'persuasion') {
       this.playersService.addPersuasionSpentToPlayer(playerId, costAmount);
     } else if (costType === 'victory-point') {
@@ -581,7 +591,7 @@ export class EffectsService {
       this.combatManager.retreatPlayerTroopsFromCombat(playerId, amount);
       retreatedAmount += amount;
     } else if (unitType === 'dreadnought') {
-      this.combatManager.removePlayerShipsFromCombat(playerId, amount);
+      this.combatManager.retreatPlayerShipsFromCombat(playerId, amount);
       retreatedAmount += amount;
     }
   }

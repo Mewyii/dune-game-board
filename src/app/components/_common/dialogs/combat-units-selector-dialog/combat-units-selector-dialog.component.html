@@ -1,0 +1,70 @@
+<h1 mat-dialog-title [class]="data.colorScheme">{{ data.title }}</h1>
+<div mat-dialog-content class="dialog-content">
+  <div class="combat-units-container">
+    <div class="units-display-area">
+      @for (troop of data.troops | numberToArray; track $index; let it = $index) {
+        <div class="troop-marker-container" (mouseenter)="hoveredUnitId = 'troop-' + it" (mouseleave)="hoveredUnitId = ''">
+          <dune-highlighting
+            *ngIf="isSelected(it, 'troop')"
+            [id]="'troop-' + it"
+            [width]="60"
+            [height]="45"
+            [bottom]="-5"
+            [left]="-5"
+          ></dune-highlighting>
+          <div
+            class="troop-marker"
+            [style.background-color]="data.playerColor"
+            [class.selectable]="isSelectMode"
+            [class.selected]="isSelected(it, 'troop')"
+            [class.hovered]="hoveredUnitId === 'troop-' + it"
+            (click)="onCardClick(it, 'troop')"
+            [matTooltip]="'Troop ' + (it + 1)"
+          ></div>
+        </div>
+      }
+      @for (dreadnought of data.dreadnoughts | numberToArray; track $index; let id = $index) {
+        <div
+          class="ship-marker-container"
+          (mouseenter)="hoveredUnitId = 'dreadnought-' + id"
+          (mouseleave)="hoveredUnitId = ''"
+        >
+          <dune-highlighting
+            *ngIf="isSelected(id, 'dreadnought')"
+            [id]="'dreadnought-' + id"
+            [width]="80"
+            [height]="55"
+            [bottom]="-5"
+            [left]="-5"
+          ></dune-highlighting>
+          <div
+            class="ship-marker"
+            [style.background-color]="data.playerColor"
+            [class.selectable]="isSelectMode"
+            [class.selected]="isSelected(id, 'dreadnought')"
+            [class.hovered]="hoveredUnitId === 'dreadnought-' + id"
+            (click)="onCardClick(id, 'dreadnought')"
+            [matTooltip]="'Dreadnought ' + (id + 1)"
+          ></div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  @if (isSelectMode) {
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      [disabled]="selectedTotal < minSelected || selectedTotal > maxSelected"
+      (click)="onConfirm()"
+      [matTooltip]="t.translate('commonConfirm')"
+    >
+      <mat-icon>check</mat-icon>
+    </button>
+  } @else {
+    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+</div>

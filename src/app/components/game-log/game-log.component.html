@@ -40,6 +40,16 @@
           Player {{ logEntry.playerId }} gained location {{ logEntry.locationId }}.
         } @else if (logEntry.type === 'location-control-loss') {
           Player {{ logEntry.playerId }} lost locatione {{ logEntry.locationId }}.
+        } @else if (logEntry.type === 'agent-lift') {
+          Player {{ logEntry.playerId }} lifted agent from board space {{ logEntry.fieldName }}.
+        } @else if (logEntry.type === 'troops-added-to-combat') {
+          Player {{ logEntry.playerId }} added {{ logEntry.amount }} troops to combat.
+        } @else if (logEntry.type === 'troops-retreated-from-combat') {
+          Player {{ logEntry.playerId }} retreated {{ logEntry.amount }} troops from combat.
+        } @else if (logEntry.type === 'dreadnoughts-added-to-combat') {
+          Player {{ logEntry.playerId }} added {{ logEntry.amount }} dreadnoughts to combat.
+        } @else if (logEntry.type === 'dreadnoughts-retreated-from-combat') {
+          Player {{ logEntry.playerId }} retreated {{ logEntry.amount }} dreadnoughts from combat.
         }
       </div>
     }

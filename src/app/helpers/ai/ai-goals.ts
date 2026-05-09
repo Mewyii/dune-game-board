@@ -2,7 +2,6 @@ import { clamp } from 'lodash';
 import { Effect, EffectRewardType, Resource, ResourceType } from 'src/app/models';
 import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
-import { PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { Resources } from 'src/app/services/player-resources.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
 
@@ -12,18 +11,6 @@ export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
     return spice.amount;
   }
   return 0;
-}
-
-export function getPlayerCombatStrength(player: PlayerCombatUnits, gamestate: Pick<GameState, 'gameSettings'>) {
-  return (
-    player.troopsInCombat * gamestate.gameSettings.troopCombatStrength +
-    player.shipsInCombat * gamestate.gameSettings.dreadnoughtCombatStrength +
-    player.additionalCombatPower
-  );
-}
-
-export function getPlayerGarrisonStrength(player: PlayerCombatUnits, gamestate: GameState) {
-  return player.troopsInGarrison * gamestate.gameSettings.troopCombatStrength + player.shipsInGarrison * 4;
 }
 
 export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {

@@ -43,7 +43,7 @@ import { CardAcquiringPlacementType } from '../constants/board-settings';
 import { imperiumCardsGameAdjustments } from '../constants/imperium-cards-game-adjustments';
 import { leadersGameAdjustments } from '../constants/leaders-game-adjustments';
 import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustments';
-import { getPlayerCombatStrength, getPlayerGarrisonStrength } from '../helpers/ai';
+import { getPlayerCombatStrength, getPlayerGarrisonStrength } from '../helpers/combat';
 import { delay } from '../helpers/common';
 import { getPlayerPersuasion } from '../helpers/player';
 import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn-infos';
@@ -696,7 +696,7 @@ export class GameManager {
                 {
                   type: 'helper-trade',
                   effectCosts: conversionEffect.effectCosts,
-                  effectConversions: conversionEffect.effectConversions,
+                  effectConversionRewards: conversionEffect.effectConversionRewards,
                   exlusiveChoiceOfMultipleEffectsId: exclusiveID,
                 },
               ],
@@ -749,6 +749,18 @@ export class GameManager {
     this.turnInfoService.setPlayerTurnInfo(playerId, { agentPlacedOnFieldId: field.title.en });
 
     this.loggingService.logPlayerSentAgentToField(playerId, this.t.translateLS(field.title));
+  }
+
+  liftPlayerAgentFromField(playerId: number, field: ActionField) {
+    this.audioManager.playSound('click-reverse');
+
+    const agentLiftTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'agent-lift');
+    if (agentLiftTodo) {
+      this.playerRewardChoicesService.removePlayerRewardChoice(playerId, agentLiftTodo.id);
+    }
+
+    this.playerAgentsService.removePlayerAgentFromField(playerId, field.title.en);
+    this.loggingService.logPlayerLiftedAgentFromField(playerId, this.t.translateLS(field.title));
   }
 
   async endPlayerTurn(playerId: number) {
@@ -1277,13 +1289,29 @@ export class GameManager {
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
     }
-    if (turnInfo.cardDestroyAmount) {
-      for (let i = 0; i < turnInfo.cardDestroyAmount; i++) {
+    if (turnInfo.cardTrashAmount) {
+      for (let i = 0; i < turnInfo.cardTrashAmount; i++) {
         this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-          type: 'card-destroy',
+          type: 'card-trash',
         });
       }
-      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDestroyAmount: 0 });
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardTrashAmount: 0 });
+    }
+    if (turnInfo.cardTrashFromHandAmount) {
+      for (let i = 0; i < turnInfo.cardTrashFromHandAmount; i++) {
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'card-trash-from-hand',
+        });
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardTrashFromHandAmount: 0 });
+    }
+    if (turnInfo.cardTrashInPlayAmount) {
+      for (let i = 0; i < turnInfo.cardTrashInPlayAmount; i++) {
+        this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+          type: 'card-trash-in-play',
+        });
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardTrashInPlayAmount: 0 });
     }
     if (turnInfo.shippingAmount > 0) {
       this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
@@ -1425,11 +1453,23 @@ export class GameManager {
       }
       this.turnInfoService.setPlayerTurnInfo(player.id, { cardDiscardAmount: 0 });
     }
-    if (turnInfo.cardDestroyAmount) {
-      for (let i = 0; i < turnInfo.cardDestroyAmount; i++) {
+    if (turnInfo.cardTrashAmount) {
+      for (let i = 0; i < turnInfo.cardTrashAmount; i++) {
         this.aiManager.aiTrashCardInPlay(player.id);
       }
-      this.turnInfoService.setPlayerTurnInfo(player.id, { cardDestroyAmount: 0 });
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardTrashAmount: 0 });
+    }
+    if (turnInfo.cardTrashFromHandAmount) {
+      for (let i = 0; i < turnInfo.cardTrashFromHandAmount; i++) {
+        this.aiManager.aiTrashCardFromDiscardPile(player.id);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardTrashFromHandAmount: 0 });
+    }
+    if (turnInfo.cardTrashInPlayAmount) {
+      for (let i = 0; i < turnInfo.cardTrashInPlayAmount; i++) {
+        this.aiManager.aiTrashCardFromHand(player.id);
+      }
+      this.turnInfoService.setPlayerTurnInfo(player.id, { cardTrashInPlayAmount: 0 });
     }
     if (turnInfo.shippingAmount > 0) {
       const desiredEffects = this.effectEvaluationService.getDesiredRewardEffects(
@@ -1702,7 +1742,7 @@ export class GameManager {
     const effectCosts = getMultipliedRewardEffects(effect.effectCosts, realGameState);
 
     if (playerCanPayCosts(effectCosts, player, realGameState)) {
-      const rewards = getMultipliedRewardEffects(effect.effectConversions, realGameState);
+      const rewards = getMultipliedRewardEffects(effect.effectConversionRewards, realGameState);
 
       for (const cost of effectCosts) {
         this.effectsService.payCostForPlayer(player.id, cost, { gameElement: effect.element });
@@ -1792,7 +1832,7 @@ export class GameManager {
       return;
     }
     const hasFocus = this.playersResourcesService.getPlayerResourceAmount(playerId, 'focus') > 0;
-    const hasTrashTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'card-destroy');
+    const hasTrashTodo = this.playerRewardChoicesService.getPlayerRewardChoice(playerId, 'card-trash');
     let canTrashCard = false;
     if (hasTrashTodo) {
       this.playerRewardChoicesService.removePlayerRewardChoice(playerId, hasTrashTodo.id);
@@ -1945,7 +1985,7 @@ export class GameManager {
       addPlayerGameModifiers: (playerId, modifiers) => this.gameModifiersService.addPlayerGameModifiers(playerId, modifiers),
       increaseAccumulatedSpiceOnBoardSpace: (boardSpaceId) =>
         this.boardSpaceService.increaseAccumulatedSpiceOnBoardSpace(boardSpaceId),
-      removePlayerShipsFromCombat: (playerId, amount) => this.combatManager.removePlayerShipsFromCombat(playerId, amount),
+      removePlayerShipsFromCombat: (playerId, amount) => this.combatManager.retreatPlayerShipsFromCombat(playerId, amount),
       setPlayerAgentInTimeout: (playerId, fieldId) => this.playerAgentsService.setPlayerAgentInTimeout(playerId, fieldId),
       setLocationOwner: (boardSpaceId, playerId) => this.locationManager.setLocationOwner(boardSpaceId, playerId),
       changeFieldMarkerModifier: (playerId, fieldId, changeAmount) =>
@@ -1960,6 +2000,8 @@ export class GameManager {
         this.effectsService.resolveStructuredEffects(effects, player, gameState, gameElement, timing),
       retreatPlayerTroopsFromCombat: (playerId, amount) =>
         this.combatManager.retreatPlayerTroopsFromCombat(playerId, amount),
+      retreatPlayerShipsFromCombat: (playerId, amount) => this.combatManager.retreatPlayerShipsFromCombat(playerId, amount),
+      removePlayerTroopsFromCombat: (playerId, amount) => this.combatManager.retreatPlayerTroopsFromCombat(playerId, amount),
       addPlayerIntrigue: (playerId, intrigue) => this.intriguesService.addPlayerIntrigue(playerId, intrigue),
       trashPlayerIntrigue: (playerId, intrigueId, addToDiscardPile?) =>
         this.intriguesService.trashPlayerIntrigue(playerId, intrigueId, addToDiscardPile),
@@ -1969,6 +2011,7 @@ export class GameManager {
       ai: {
         getImperiumCardToBuy: (availablePersuasion, cards, player, gameState, imperiumRowModifiers) =>
           this.aiCardsService.getImperiumCardToBuy(availablePersuasion, cards, player, gameState, imperiumRowModifiers),
+        getCardToTrash: (cards, player, gameState) => this.aiCardsService.getCardToTrash(cards, player, gameState),
         getDesiredRewardEffects: (player, resourceOptions, gameState) =>
           this.effectEvaluationService.getDesiredRewardEffects(player, resourceOptions, gameState),
         getStructuredEffectUsefulnesAndCosts: (player, effect, gameState) =>
@@ -1980,6 +2023,8 @@ export class GameManager {
         this.aIConflictService.getPlayableCombatIntrigues(player, gameState, playerCombatIntrigues),
       trashPlayerTechTile: (playerId, techTile) => this.trashPlayerTechTile(playerId, techTile),
       returnDiscardedPlayerCardToHand: (playerId, card) => this.returnDiscardedPlayerCardToHand(playerId, card),
+      addPlayerRewardChoice: (playerId, reward) => this.playerRewardChoicesService.addPlayerRewardChoice(playerId, reward),
+      removePlayerRewardChoice: (playerId, id) => this.playerRewardChoicesService.removePlayerRewardChoice(playerId, id),
       dialog: this.dialog,
       translation: this.t,
     };

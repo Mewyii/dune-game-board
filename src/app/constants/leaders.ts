@@ -254,8 +254,8 @@ export const leaders: Leader[] = [
       de: 'Unkontrollierte Agression',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: {resource:location-control-choice} (only Carthag, Arrakeen or imperial basin)<br><b>Round start</b>: Trash one of your handcards.',
-      de: '<b>Spielbeginn</b>: {resource:location-control-choice} (nur Carthag, Arrakeen oder Imperiales Becken)<br><b>Rundenbeginn</b>: Entsorge eine der Karten auf deiner Hand.',
+      en: '<b>Game start</b>: {resource:location-control} for Carthag.<br><br><b>Round start</b>: Discard one of your handcards.',
+      de: '<b>Spielbeginn</b>: {resource:location-control} für Carthag.<br><br><b>Rundenbeginn</b>: Wirf eine der Karten auf deiner Hand ab.',
     },
     signetName: {
       en: 'Oppression',
@@ -267,7 +267,7 @@ export const leaders: Leader[] = [
     },
     imageUrl: '/assets/images/leaders/rabban.png',
     type: 'new',
-    passiveEffectSize: 'medium',
+    passiveEffectSize: 'small',
     signetEffectSize: 'medium',
     passiveDescriptionSize: 'small',
     signetDescriptionSize: 'medium',
@@ -847,8 +847,8 @@ export const leaders: Leader[] = [
       de: 'Bedrängtes Haus',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: Place a debt marker ({resource:troop}) on this space. Whenever you have {resource:solari;amount:2}, remove it and the marker.',
-      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf dieses Feld. Sobald du {resource:solari;amount:2} hast, entferne sie und den Marker.',
+      en: '<b>Game start</b>: Place a debt marker ({resource:troop}) on this area. Whenever you have {resource:solari;amount:2}, remove them and the marker.',
+      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf diesen Bereich. Sobald du {resource:solari;amount:2} besitzt, entferne sie und den Marker.',
     },
     signetName: {
       en: 'Thorough approach',

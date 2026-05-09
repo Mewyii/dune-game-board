@@ -52,7 +52,7 @@ export const factionsOriginal: Faction[] = [
         title: { de: 'selektive züchtung', en: 'selective breeding' },
         actionType: 'bene',
         costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-destroy' }],
+        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-trash' }],
         pathToImage: 'assets/images/action-backgrounds/bene_gesserit_4.png',
       },
       {

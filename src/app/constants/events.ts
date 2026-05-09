@@ -169,7 +169,7 @@ export const duneEvents: DuneEvent[] = [
             },
           ],
         },
-        effectConversions: {
+        effectConversionRewards: {
           type: 'reward',
           effectRewards: [
             {
@@ -246,7 +246,7 @@ export const duneEvents: DuneEvent[] = [
             },
           ],
         },
-        effectConversions: {
+        effectConversionRewards: {
           type: 'reward',
           effectRewards: [
             {
@@ -283,7 +283,7 @@ export const duneEvents: DuneEvent[] = [
             },
           ],
         },
-        effectConversions: {
+        effectConversionRewards: {
           type: 'reward',
           effectRewards: [
             {
@@ -317,7 +317,7 @@ export const duneEvents: DuneEvent[] = [
             },
           ],
         },
-        effectConversions: {
+        effectConversionRewards: {
           type: 'reward',
           effectRewards: [
             {

@@ -12,6 +12,8 @@ export interface BoardSpaceSelectorData {
   mode: BoardSpaceSelectorMode;
   playerId?: number;
   colorScheme: 'neutral' | 'positive' | 'negative';
+  minSelected?: number;
+  maxSelected?: number;
 }
 
 @Component({
@@ -22,8 +24,10 @@ export interface BoardSpaceSelectorData {
 })
 export class BoardSpaceSelectorDialogComponent implements OnInit {
   public locations: DuneLocation[] = [];
-  selectedCard: DuneLocation | null = null;
+  selectedCards: DuneLocation[] = [];
   hoveredBoardSpaceId = '';
+  minSelected = 1;
+  maxSelected = 1;
 
   constructor(
     public gameManager: GameManager,
@@ -35,6 +39,12 @@ export class BoardSpaceSelectorDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.locations = this.data.locations;
+    if (this.data.minSelected) {
+      this.minSelected = this.data.minSelected;
+    }
+    if (this.data.maxSelected) {
+      this.maxSelected = this.data.maxSelected;
+    }
   }
 
   get isSelectMode(): boolean {
@@ -47,17 +57,32 @@ export class BoardSpaceSelectorDialogComponent implements OnInit {
 
   onCardClick(card: DuneLocation) {
     if (this.isSelectMode) {
-      this.selectedCard = card;
+      if (this.minSelected === 1 && this.maxSelected === 1) {
+        this.selectedCards = [card];
+      } else {
+        if (!this.isSelected(card)) {
+          if (this.selectedCards.length < this.maxSelected) {
+            this.selectedCards.push(card);
+          }
+        } else {
+          if (this.selectedCards.length > this.minSelected)
+            this.selectedCards = this.selectedCards.filter((x) => x.actionField.title.en !== card.actionField.title.en);
+        }
+      }
     }
   }
 
   isSelected(card: DuneLocation): boolean {
-    return this.selectedCard === card;
+    return this.selectedCards.some((x) => x.actionField.title.en === card.actionField.title.en);
   }
 
   onConfirm() {
-    if (this.selectedCard) {
-      this.dialogRef.close(this.selectedCard);
+    if (this.selectedCards.length >= this.minSelected && this.selectedCards.length <= this.maxSelected) {
+      if (this.minSelected === 1 && this.maxSelected === 1) {
+        this.dialogRef.close(this.selectedCards[0]);
+      } else {
+        this.dialogRef.close(this.selectedCards);
+      }
     }
   }
 

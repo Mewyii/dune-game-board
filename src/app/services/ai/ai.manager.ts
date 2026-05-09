@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { clamp, take } from 'lodash';
-import {
-  getLeastDesiredFactionScoreType,
-  getMostDesiredFactionScoreType,
-  getPlayerCombatStrength,
-} from 'src/app/helpers/ai';
+import { getLeastDesiredFactionScoreType, getMostDesiredFactionScoreType } from 'src/app/helpers/ai';
+import { getPlayerCombatStrength } from 'src/app/helpers/combat';
 import { getNumberAverage, normalizeNumber } from 'src/app/helpers/common';
 import { getCardCostModifier, getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
 import {
@@ -44,7 +41,6 @@ import { AIPlayersService } from './ai-players.service';
 import { AITechTilesService } from './ai-tech-tiles.service';
 import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 import { AIFieldEvaluationService, ViableField } from './ai.field-evaluation.service';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -627,7 +623,7 @@ export class AIManager {
     overrideConversionIsUseful?: boolean,
   ) {
     const effectCosts = getMultipliedRewardEffects(effect.effectCosts, gameState);
-    const effectRewards = getMultipliedRewardEffects(effect.effectConversions, gameState);
+    const effectRewards = getMultipliedRewardEffects(effect.effectConversionRewards, gameState);
     const conversionIsUseful = overrideConversionIsUseful
       ? overrideConversionIsUseful
       : this.effectEvaluationService.getEffectConversionDecision(player, gameState, effectCosts, effectRewards);

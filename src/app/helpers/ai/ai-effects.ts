@@ -1,7 +1,7 @@
 import { clamp } from 'lodash';
 import { GameState } from 'src/app/models/ai';
 import { PlayerCombatUnits } from '../../services/combat-manager.service';
-import { getPlayerCombatStrength, getPlayerGarrisonStrength } from './ai-goals';
+import { getPlayerCombatStrength, getPlayerGarrisonStrength } from '../combat';
 
 export function getParticipateInCombatDesire(gameState: GameState) {
   let desire = 0.0;

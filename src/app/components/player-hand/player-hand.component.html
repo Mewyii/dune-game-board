@@ -237,7 +237,7 @@
         (click)="onAITrashCardFromHandClicked()"
         [matTooltip]="t.translate('playerHandTooltipAITrashCard')"
       >
-        <img class="draw-card-icon" [src]="'card-destroy' | effectTypePath" />
+        <img class="draw-card-icon" [src]="'card-trash' | effectTypePath" />
       </div>
       <div
         *ngIf="cardsShown === 'discard' && activePlayer?.isAI"
@@ -245,7 +245,7 @@
         (click)="onAITrashCardFromDiscardPileClicked()"
         [matTooltip]="t.translate('playerHandTooltipAITrashCard')"
       >
-        <img class="draw-card-icon" [src]="'card-destroy' | effectTypePath" />
+        <img class="draw-card-icon" [src]="'card-trash' | effectTypePath" />
       </div>
       <button
         *ngIf="cardsShown === 'discard' && activePlayer?.isAI"

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   getEnemyCombatStrengthPotentialAgainstPlayer,
-  getPlayerCombatStrength,
   getPlayerCombatStrengthPotentialAgainstEnemy,
-  getPlayerGarrisonStrength,
 } from 'src/app/helpers/ai';
+import { getPlayerCombatStrength, getPlayerGarrisonStrength } from 'src/app/helpers/combat';
 import { getFlattenedEffectRewardArray, playerCanPayCosts } from 'src/app/helpers/rewards';
 import { EffectReward } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';

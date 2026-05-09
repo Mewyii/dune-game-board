@@ -212,6 +212,18 @@
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardCardReturnToHand', true, reward.amount)"
           ></div>
+        } @else if (reward.type === 'card-trash-from-hand') {
+          <div
+            [class]="rewardTextClass('text inline')"
+            [style.fontSize]="fontSize"
+            [innerHTML]="t.translate('commonEffectRewardCardTrashFromHand', true, reward.amount)"
+          ></div>
+        } @else if (reward.type === 'card-trash-in-play') {
+          <div
+            [class]="rewardTextClass('text inline')"
+            [style.fontSize]="fontSize"
+            [innerHTML]="t.translate('commonEffectRewardCardTrashInPlay', true, reward.amount)"
+          ></div>
         } @else if (reward.type === 'enemies-card-discard') {
           <div
             [class]="rewardTextClass('text custom-with-reward')"

@@ -45,6 +45,7 @@ export class PlayerRewardChoicesService {
     'faction-influence-down-choice',
     'location-control-choice',
     'card-return-to-hand',
+    'agent-lift',
   ];
 
   constructor() {

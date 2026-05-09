@@ -3,7 +3,6 @@ import {
   getAvoidCombatTiesModifier,
   getMaxDesireOfUnreachedOrUnreachableGoals,
   getParticipateInCombatDesire,
-  getPlayerCombatStrength,
   getWinCombatDesire,
   noOneHasMoreInfluence,
   playerAllianceIsContested,
@@ -12,6 +11,7 @@ import {
   playerHasUncontestedAlliance,
 } from 'src/app/helpers/ai';
 import { getViableBoardFields, getViableBoardFieldsForFaction } from 'src/app/helpers/ai/ai-fields';
+import { getPlayerCombatStrength } from 'src/app/helpers/combat';
 import { AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 
@@ -380,7 +380,7 @@ export const aiGoalsCustomExpert: FieldsForGoals = {
     reachedGoal: (player, gameState) => gameState.playerDeckSizeTotal < 9 || gameState.isFinale,
     viableFields: (fields) => ({
       ...getViableBoardFields(fields, 'focus'),
-      ...getViableBoardFields(fields, 'card-destroy'),
+      ...getViableBoardFields(fields, 'card-trash'),
     }),
   },
   'collect-water': {

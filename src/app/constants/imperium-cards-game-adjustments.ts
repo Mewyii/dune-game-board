@@ -1,5 +1,15 @@
 import { shuffle } from 'lodash';
-import { getPlayerCombatStrength } from '../helpers/ai';
+import {
+  BoardSpaceSelectorData,
+  BoardSpaceSelectorDialogComponent,
+} from '../components/_common/dialogs/board-space-selector-dialog/board-space-selector-dialog.component';
+import {
+  CombatUnitsSelectorData,
+  CombatUnitsSelectorDialogComponent,
+  CombatUnitsSelectorResult,
+} from '../components/_common/dialogs/combat-units-selector-dialog/combat-units-selector-dialog.component';
+import { getPlayerCombatStrength } from '../helpers/combat';
+import { DuneLocation } from '../models';
 import { CustomEffectFunctionWithGameElement, GameCommands, GameState } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard } from '../services/cards.service';
@@ -26,13 +36,23 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
   },
   {
+    id: 'Bene Gesserit Missionary',
+    customRevealFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      game.addPlayerImperiumRowModifier(player.id, {
+        factionType: 'fremen',
+        persuasionAmount: -1,
+        currentRoundOnly: true,
+      });
+    },
+  },
+  {
     id: 'Seduction',
     aiAgentEvaluation: (player: Player, gameState: GameState) => {
       const result = 0;
-      const boardSpaces = gameState.boardSpaces.filter((field) => field.actionType === 'landsraad');
+      const greenBoardSpaces = gameState.boardSpaces.filter((field) => field.actionType === 'landsraad');
       const affectedPlayerIds: number[] = [];
       let playerCount = 0;
-      for (const boardSpace of boardSpaces) {
+      for (const boardSpace of greenBoardSpaces) {
         const enemyAgent = gameState.enemyAgentsOnFields.find((agent) => agent.fieldId === boardSpace.title.en);
         if (enemyAgent && !affectedPlayerIds.some((playerId) => playerId === enemyAgent.playerId)) {
           affectedPlayerIds.push(enemyAgent.playerId);
@@ -45,7 +65,11 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       const greenFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'landsraad').map((x) => x.title.en);
       const enemiesOnGreenFields = gameState.enemyAgentsOnFields.filter((x) => greenFieldIds.includes(x.fieldId));
       for (const enemyOnGreenField of enemiesOnGreenFields) {
-        game.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-destroy' });
+        const enemyPlayer = gameState.enemyPlayers.find((x) => x.id === enemyOnGreenField.playerId);
+        if (enemyPlayer) {
+          game.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-trash-from-hand' });
+          game.resolveRewardChoices(enemyPlayer);
+        }
       }
     },
   },
@@ -68,14 +92,23 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Provoked Hostilities',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 3,
     customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
-      return;
+      const townFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'town').map((x) => x.title.en);
+      const enemiesOnTownFields = gameState.enemyAgentsOnFields.filter((x) => townFieldIds.includes(x.fieldId));
+      for (const enemyOnTownField of enemiesOnTownFields) {
+        const enemyPlayer = gameState.enemyPlayers.find((x) => x.id === enemyOnTownField.playerId);
+        const enemyDiscardPile = gameState.enemyDiscardPiles.find((x) => x.playerId === enemyOnTownField.playerId);
+        if (enemyPlayer && enemyDiscardPile && enemyDiscardPile.cards.length > 1) {
+          game.payCostForPlayer(enemyOnTownField.playerId, { type: 'card-trash-in-play' });
+          game.resolveRewardChoices(enemyPlayer);
+        }
+      }
     },
     aiRevealEvaluation: (player: Player, gameState: GameState) =>
       0 + 1.5 * gameState.enemyCombatUnits.filter((x) => getPlayerCombatStrength(x, gameState)).length,
     customRevealFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       for (const enemy of gameState.enemyCombatUnits) {
         if (enemy.troopsInCombat > 0) {
-          game.retreatPlayerTroopsFromCombat(enemy.playerId, 1);
+          game.removePlayerTroopsFromCombat(enemy.playerId, 1);
         }
       }
     },
@@ -84,6 +117,39 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Insurgents',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       0.75 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      if (player.isAI) return;
+
+      const blockableBoardSpaces = gameState.boardSpaces.filter(
+        (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
+      );
+
+      if (blockableBoardSpaces.length < 1) {
+        return;
+      }
+
+      const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationChoice')}`,
+          playerId: player.id,
+          locations: blockableBoardSpaces.map((x) => ({ actionField: x, color: game.getBoardSpaceColor(x.actionType) })),
+          mode: 'select',
+          colorScheme: 'positive',
+        } as BoardSpaceSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((location: DuneLocation) => {
+        game.addPlayerGameModifiers(player.id, {
+          fieldBlock: [{ id: 'embargo-field-block', fieldId: location.actionField.title.en, currentRoundOnly: true }],
+        });
+        for (const enemyPlayer of gameState.enemyPlayers) {
+          game.addPlayerGameModifiers(enemyPlayer.id, {
+            fieldBlock: [{ id: 'embargo-field-block', fieldId: location.actionField.title.en, currentRoundOnly: true }],
+          });
+        }
+      });
+    },
     customAgentAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
@@ -106,6 +172,43 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Embargo',
     aiAgentEvaluation: (player: Player, gameState: GameState) =>
       2 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      if (player.isAI) return;
+
+      const blockableBoardSpaces = gameState.boardSpaces.filter(
+        (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
+      );
+
+      if (blockableBoardSpaces.length < 1) {
+        return;
+      }
+
+      const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationChoice')} (max. 3)`,
+          playerId: player.id,
+          locations: blockableBoardSpaces.map((x) => ({ actionField: x, color: game.getBoardSpaceColor(x.actionType) })),
+          mode: 'select',
+          colorScheme: 'positive',
+          minSelected: 0,
+          maxSelected: 3,
+        } as BoardSpaceSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((locations: DuneLocation[]) => {
+        for (const location of locations) {
+          game.addPlayerGameModifiers(player.id, {
+            fieldBlock: [{ id: 'embargo-field-block', fieldId: location.actionField.title.en, currentRoundOnly: true }],
+          });
+          for (const enemyPlayer of gameState.enemyPlayers) {
+            game.addPlayerGameModifiers(enemyPlayer.id, {
+              fieldBlock: [{ id: 'embargo-field-block', fieldId: location.actionField.title.en, currentRoundOnly: true }],
+            });
+          }
+        }
+      });
+    },
     customAgentAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
@@ -211,11 +314,13 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       const beneInfluence = gameState.playerScore.bene;
       if (beneInfluence < 2) {
         game.payCostForPlayer(player.id, { type: 'card-discard' });
+        game.resolveRewardChoices(player);
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else if (beneInfluence < 4) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else {
         game.addRewardToPlayer(player.id, { type: 'agent-lift' });
+        game.resolveRewardChoices(player);
       }
     },
   },
@@ -239,11 +344,21 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Arrival of the Emperor',
     aiAgentEvaluation: (player: Player, gameState: GameState) => 5 + 0.1 * gameState.currentRound - 1,
     customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
-      const enemyLocation = gameState.enemyLocations.find(
-        (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
+      const freeLocation = gameState.freeLocations.find(
+        (locationId) => locationId === gameState.playerAgentPlacedOnFieldThisTurn,
       );
-      if (enemyLocation) {
-        game.setLocationOwner(enemyLocation.locationId, player.id);
+      if (freeLocation) {
+        game.setLocationOwner(freeLocation, player.id);
+        game.addRewardToPlayer(player.id, { type: 'victory-point' });
+      } else {
+        const enemyLocation = gameState.enemyLocations.find(
+          (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
+        );
+        if (enemyLocation) {
+          game.setLocationOwner(enemyLocation.locationId, player.id);
+          game.payCostForPlayer(enemyLocation.playerId, { type: 'victory-point' });
+          game.addRewardToPlayer(player.id, { type: 'victory-point' });
+        }
       }
     },
   },
@@ -265,6 +380,87 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
           },
         ],
       });
+    },
+  },
+  {
+    id: 'Instilling Fear',
+    aiAgentEvaluation: (player: Player, gameState: GameState) => {
+      let value = 0.5;
+      const spiceFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'spice').map((x) => x.title.en);
+      const enemiesOnSpiceFields = gameState.enemyAgentsOnFields.filter((x) => spiceFieldIds.includes(x.fieldId));
+      for (const enemyOnSpiceField of enemiesOnSpiceFields) {
+        const combatUnits = gameState.enemyCombatUnits.find((x) => x.playerId === enemyOnSpiceField.playerId);
+        if (combatUnits && getPlayerCombatStrength(combatUnits, gameState) > 0) {
+          value += 2;
+        }
+      }
+      return value;
+    },
+    customAgentFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+      const spiceFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'spice').map((x) => x.title.en);
+      const enemiesOnSpiceFields = gameState.enemyAgentsOnFields.filter((x) => spiceFieldIds.includes(x.fieldId));
+      for (const enemyOnSpiceField of enemiesOnSpiceFields) {
+        const enemyPlayer = gameState.enemyPlayers.find((x) => x.id === enemyOnSpiceField.playerId);
+        if (enemyPlayer) {
+          const combatUnits = gameState.enemyCombatUnits.find((x) => x.playerId === enemyOnSpiceField.playerId);
+          if (combatUnits && (combatUnits.troopsInCombat > 0 || combatUnits.shipsInCombat > 0)) {
+            const unitsInCombat = combatUnits.troopsInCombat + combatUnits.shipsInCombat;
+            let unitsToRetreat = unitsInCombat < 2 ? unitsInCombat : 2;
+
+            if (!enemyPlayer.isAI) {
+              if (combatUnits.shipsInCombat < 1) {
+                game.retreatPlayerTroopsFromCombat(enemyPlayer.id, unitsToRetreat);
+              } else if (combatUnits.troopsInCombat < 1) {
+                game.retreatPlayerShipsFromCombat(enemyPlayer.id, unitsToRetreat);
+              } else {
+                const dialogRef = game.dialog.open<
+                  CombatUnitsSelectorDialogComponent,
+                  CombatUnitsSelectorData,
+                  CombatUnitsSelectorResult
+                >(CombatUnitsSelectorDialogComponent, {
+                  data: {
+                    title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${unitsToRetreat} ${game.translation.translate('commonEffectCombatUnitChoice')} `,
+                    playerId: player.id,
+                    playerColor: player.color,
+                    troops: combatUnits.troopsInCombat,
+                    dreadnoughts: combatUnits.shipsInCombat,
+                    mode: 'select',
+                    colorScheme: 'negative',
+                    minSelected: unitsToRetreat,
+                    maxSelected: unitsToRetreat,
+                  },
+                  disableClose: true,
+                });
+
+                dialogRef.afterClosed().subscribe((result) => {
+                  if (result) {
+                    if (result.selectedTroops > 0) {
+                      game.retreatPlayerTroopsFromCombat(enemyPlayer.id, result.selectedTroops);
+                    }
+                    if (result.selectedDreadnoughts > 0) {
+                      game.retreatPlayerShipsFromCombat(enemyPlayer.id, result.selectedDreadnoughts);
+                    }
+                  }
+                });
+              }
+            } else {
+              if (combatUnits.shipsInCombat < 1) {
+                game.retreatPlayerTroopsFromCombat(enemyPlayer.id, unitsToRetreat);
+              } else if (combatUnits.troopsInCombat < 1) {
+                game.retreatPlayerShipsFromCombat(enemyPlayer.id, unitsToRetreat);
+              } else {
+                const troopsToRetreat =
+                  unitsToRetreat <= combatUnits.troopsInCombat ? unitsToRetreat : combatUnits.troopsInCombat;
+                game.retreatPlayerTroopsFromCombat(enemyPlayer.id, troopsToRetreat);
+                unitsToRetreat -= troopsToRetreat;
+                if (unitsToRetreat > 0) {
+                  game.retreatPlayerShipsFromCombat(enemyPlayer.id, unitsToRetreat);
+                }
+              }
+            }
+          }
+        }
+      }
     },
   },
 ];

@@ -152,19 +152,19 @@ export function getModifiedRewardsForField(
   actionField: ActionField,
   modifiers?: FieldRewardsModifier[],
 ): EffectWithModifier[] {
-  if (!modifiers || actionField.rewards.length < 1) {
+  if (!modifiers || modifiers.length < 1) {
     return actionField.rewards;
   }
 
-  const flattenedModifiers = getFlattenedRewardModifiers(modifiers);
-
-  const actionRewards = cloneDeep(actionField.rewards);
-
-  const filteredModifiers = flattenedModifiers.filter(
+  const filteredModifiers = modifiers.filter(
     (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en),
   );
 
-  for (const modifier of filteredModifiers) {
+  const flattenedModifiers = getFlattenedRewardModifiers(filteredModifiers);
+
+  const actionRewards = cloneDeep(actionField.rewards);
+
+  for (const modifier of flattenedModifiers) {
     let remainingRewardModifier = modifier.amount;
 
     for (const reward of actionRewards as RewardWithModifier[]) {

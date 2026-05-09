@@ -127,10 +127,6 @@ export class DuneActionComponent implements OnInit, OnChanges {
       const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
       this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
 
-      if (this.actionField.title.en.includes('Imperial')) {
-        const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
-        this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
-      }
       const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
       this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
 
@@ -220,9 +216,8 @@ export class DuneActionComponent implements OnInit, OnChanges {
     }
   }
 
-  onPlayerMarkerRightClicked(playerId: number, fieldId: string) {
-    this.playerAgentsService.removePlayerAgentFromField(playerId, fieldId);
-    this.audioManager.playSound('click');
+  onPlayerMarkerRightClicked(playerId: number, field: ActionField) {
+    this.gameManager.liftPlayerAgentFromField(playerId, field);
     return false;
   }
 

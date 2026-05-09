@@ -6,7 +6,7 @@ import {
   ImperiumCardSelectorData,
   ImperiumCardsPreviewDialogComponent,
 } from '../components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
-import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
+import { getPlayerdreadnoughtCount } from '../helpers/combat';
 import { getPlayerPersuasion } from '../helpers/player';
 import { getFlattenedEffectRewardArray } from '../helpers/rewards';
 import { DuneLocation } from '../models';
@@ -139,11 +139,13 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
 
         if (playerBeneCardAmount > 2) {
           game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
+          game.resolveRewardChoices(player);
         } else if (playerBeneCardAmount > 1) {
           game.addRewardToPlayer(player.id, { type: 'intrigue' });
         } else if (playerBeneCardAmount > 0) {
           game.addRewardToPlayer(player.id, { type: 'intrigue-trash' });
           game.addRewardToPlayer(player.id, { type: 'intrigue' });
+          game.resolveRewardChoices(player);
         }
       },
     },

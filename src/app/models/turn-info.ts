@@ -33,7 +33,9 @@ export interface TurnInfo {
   retreatableDreadnoughts: number;
   cardDrawOrDestroyAmount: number;
   cardDiscardAmount: number;
-  cardDestroyAmount: number;
+  cardTrashAmount: number;
+  cardTrashFromHandAmount: number;
+  cardTrashInPlayAmount: number;
   canLiftAgent: boolean;
   canRetreatUnits: boolean;
   factionInfluenceUpChoiceAmount: number;

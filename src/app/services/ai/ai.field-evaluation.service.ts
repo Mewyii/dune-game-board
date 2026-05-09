@@ -272,8 +272,8 @@ export class AIFieldEvaluationService {
 
         const cardDestroyOption = {
           ...field,
-          title: { ...field.title, en: field.title.en + ' (card-destroy)' },
-          rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-destroy' : x.type })),
+          title: { ...field.title, en: field.title.en + ' (card-trash)' },
+          rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-trash' : x.type })),
         } as ActionField;
 
         result.push(cardDrawOption);

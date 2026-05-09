@@ -11,17 +11,17 @@
     }
   }
   <dune-reward-array [rewards]="[{ type: 'helper-trade' }]"></dune-reward-array>
-  @if (effectConversion.effectConversions.multiplier) {
+  @if (effectConversion.effectConversionRewards.multiplier) {
     <dune-reward-array
-      [rewards]="[{ type: effectConversion.effectConversions.multiplier.type }]"
+      [rewards]="[{ type: effectConversion.effectConversionRewards.multiplier.type }]"
       [textColor]="'white'"
     ></dune-reward-array>
     <dune-reward-array
-      [rewards]="effectConversion.effectConversions.effectRewards"
+      [rewards]="effectConversion.effectConversionRewards.effectRewards"
       [textColor]="'white'"
     ></dune-reward-array>
   } @else {
-    @for (leftEffect of effectConversion.effectConversions.effectRewards; track $index) {
+    @for (leftEffect of effectConversion.effectConversionRewards.effectRewards; track $index) {
       <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
     }
   }

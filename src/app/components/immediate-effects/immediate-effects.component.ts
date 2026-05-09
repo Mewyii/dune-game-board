@@ -86,8 +86,20 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
           case 'location-control-choice':
             this.showLocationControlDialog(currentEffect);
             break;
+          case 'agent-lift':
+            this.showAgentLiftDialog(currentEffect);
+            break;
           case 'card-return-to-hand':
             this.showCardReturnToHandDialog(currentEffect);
+            break;
+          case 'card-trash':
+            this.showCardTrashDialog(currentEffect);
+            break;
+          case 'card-trash-from-hand':
+            this.showCardTrashFromHandDialog(currentEffect);
+            break;
+          case 'card-trash-in-play':
+            this.showCardTrashInPlayDialog(currentEffect);
             break;
         }
       }
@@ -155,6 +167,97 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((cardToReturn: ImperiumDeckCard) => {
       this.immediateEffectDialogOpen = false;
       this.gameManager.returnDiscardedPlayerCardToHand(currentEffect.playerId, cardToReturn);
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+    });
+  }
+
+  private showCardTrashInPlayDialog(currentEffect: ImmediateEffect): void {
+    this.immediateEffectDialogOpen = true;
+
+    const playerDiscardPile = this.cardsService.getPlayerDiscardPile(currentEffect.playerId);
+
+    if (!playerDiscardPile || playerDiscardPile.cards.length < 1) {
+      this.immediateEffectDialogOpen = false;
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      return;
+    }
+
+    const leaderName = this.leadersService.getPlayerLeaderName(currentEffect.playerId);
+    const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
+      data: {
+        title: `${this.t.translateLS(leaderName!)}: ${this.t.translate('commonEffectCardTrash')}`,
+        playerId: currentEffect.playerId,
+        imperiumCards: playerDiscardPile.cards,
+        mode: 'select',
+        colorScheme: 'positive',
+      } as ImperiumCardSelectorData,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
+      this.immediateEffectDialogOpen = false;
+      this.gameManager.trashImperiumCard(currentEffect.playerId, cardToTrash, 'discard-pile');
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+    });
+  }
+
+  private showCardTrashFromHandDialog(currentEffect: ImmediateEffect): void {
+    this.immediateEffectDialogOpen = true;
+
+    const playerHand = this.cardsService.getPlayerHand(currentEffect.playerId);
+
+    if (!playerHand || playerHand.cards.length < 1) {
+      this.immediateEffectDialogOpen = false;
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      return;
+    }
+
+    const leaderName = this.leadersService.getPlayerLeaderName(currentEffect.playerId);
+    const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
+      data: {
+        title: `${this.t.translateLS(leaderName!)}: ${this.t.translate('commonEffectCardTrash')}`,
+        playerId: currentEffect.playerId,
+        imperiumCards: playerHand.cards,
+        mode: 'select',
+        colorScheme: 'positive',
+      } as ImperiumCardSelectorData,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
+      this.immediateEffectDialogOpen = false;
+      this.gameManager.trashImperiumCard(currentEffect.playerId, cardToTrash, 'hand');
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+    });
+  }
+
+  private showCardTrashDialog(currentEffect: ImmediateEffect): void {
+    this.immediateEffectDialogOpen = true;
+
+    const playerHandCards = this.cardsService.getPlayerHand(currentEffect.playerId)?.cards ?? [];
+    const playerDiscardPileCards = this.cardsService.getPlayerDiscardPile(currentEffect.playerId)?.cards ?? [];
+    if (playerHandCards.length < 1 && playerDiscardPileCards.length < 1) {
+      this.immediateEffectDialogOpen = false;
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      return;
+    }
+
+    const leaderName = this.leadersService.getPlayerLeaderName(currentEffect.playerId);
+    const dialogRef = this.dialog.open(ImperiumCardsPreviewDialogComponent, {
+      data: {
+        title: `${this.t.translateLS(leaderName!)}: ${this.t.translate('commonEffectCardTrash')}`,
+        playerId: currentEffect.playerId,
+        imperiumCards: [...playerHandCards, ...playerDiscardPileCards],
+        mode: 'select',
+        colorScheme: 'positive',
+      } as ImperiumCardSelectorData,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
+      this.immediateEffectDialogOpen = false;
+      const source = playerHandCards.some((x) => x.id === cardToTrash.id) ? 'hand' : 'discard-pile';
+      this.gameManager.trashImperiumCard(currentEffect.playerId, cardToTrash, source);
       this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
     });
   }
@@ -383,6 +486,40 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((location: DuneLocation) => {
       this.immediateEffectDialogOpen = false;
       this.gameManager.changeLocationOwner(location.actionField.title.en, currentEffect.playerId);
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+    });
+  }
+
+  private showAgentLiftDialog(currentEffect: ImmediateEffect) {
+    this.immediateEffectDialogOpen = true;
+
+    const locations = this.settingsService.getBoardLocations();
+    const playerLocations = locations.filter((x) =>
+      this.playerAgentsService
+        .getPlayerAgentsOnFields(currentEffect.playerId)
+        .some((y) => y.fieldId === x.actionField.title.en),
+    );
+
+    if (playerLocations.length < 1) {
+      this.immediateEffectDialogOpen = false;
+      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      return;
+    }
+
+    const leaderName = this.leadersService.getPlayerLeaderName(currentEffect.playerId);
+    const dialogRef = this.dialog.open(BoardSpaceSelectorDialogComponent, {
+      data: {
+        title: `${this.t.translateLS(leaderName!)}: ${this.t.translate('commonEffectLocationChoice')}`,
+        playerId: currentEffect.playerId,
+        locations: playerLocations,
+        mode: 'select',
+        colorScheme: 'positive',
+      } as BoardSpaceSelectorData,
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((location: DuneLocation) => {
+      this.immediateEffectDialogOpen = false;
+      this.gameManager.liftPlayerAgentFromField(currentEffect.playerId, location.actionField);
       this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
     });
   }

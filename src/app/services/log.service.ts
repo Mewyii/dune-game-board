@@ -30,6 +30,11 @@ export interface PlayerFieldLog extends LogBase {
   fieldName: string;
 }
 
+export interface AgentLiftlog extends LogBase {
+  type: 'agent-lift';
+  fieldName: string;
+}
+
 export interface PlayerCardBuyLog extends LogBase {
   type: 'card-buy';
   cardName: string;
@@ -109,10 +114,31 @@ export interface PlayerTechTileTrashLog extends LogBase {
   techTileName: string;
 }
 
+export interface PlayerTroopsAddedToCombatLog extends LogBase {
+  type: 'troops-added-to-combat';
+  amount: number;
+}
+
+export interface PlayerTroopsRetreatedFromCombatLog extends LogBase {
+  type: 'troops-retreated-from-combat';
+  amount: number;
+}
+
+export interface PlayerDreadnoughtsAddedToCombatLog extends LogBase {
+  type: 'dreadnoughts-added-to-combat';
+  amount: number;
+}
+
+export interface PlayerDreadnoughtsRetreatedFromCombatLog extends LogBase {
+  type: 'dreadnoughts-retreated-from-combat';
+  amount: number;
+}
+
 export type PlayerActionLog =
   | playerRewardGainLog
   | playerRewardPayLog
   | PlayerFieldLog
+  | AgentLiftlog
   | PlayerCardBuyLog
   | PlayerCardPlayLog
   | PlayerCardTrashLog
@@ -128,7 +154,11 @@ export type PlayerActionLog =
   | PlayerVictoryPointLossLog
   | PlayerTechTilePlayLog
   | PlayerTechTileTrashLog
-  | PlayerTechTileBuyLog;
+  | PlayerTechTileBuyLog
+  | PlayerTroopsAddedToCombatLog
+  | PlayerTroopsRetreatedFromCombatLog
+  | PlayerDreadnoughtsAddedToCombatLog
+  | PlayerDreadnoughtsRetreatedFromCombatLog;
 
 @Injectable({
   providedIn: 'root',
@@ -214,6 +244,10 @@ export class LoggingService {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'field-visit', fieldName: fieldName }]);
   }
 
+  logPlayerLiftedAgentFromField(playerId: number, fieldName: string) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'agent-lift', fieldName: fieldName }]);
+  }
+
   logPlayerBoughtCard(playerId: number, cardName: string) {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'card-buy', cardName: cardName }]);
   }
@@ -290,6 +324,25 @@ export class LoggingService {
     this.playerActionLogSubject.next([
       ...this.playerActionLogs,
       { playerId, type: 'victory-point-loss', roundNumber, source },
+    ]);
+  }
+
+  logPlayerAddedTroopsToCombat(playerId: number, amount: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'troops-added-to-combat', amount }]);
+  }
+
+  logPlayerRetreatedTroopsFromCombat(playerId: number, amount: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'troops-retreated-from-combat', amount }]);
+  }
+
+  logPlayerAddedDreadnoughtsToCombat(playerId: number, amount: number) {
+    this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'dreadnoughts-added-to-combat', amount }]);
+  }
+
+  logPlayerRetreatedDreadnoughtsFromCombat(playerId: number, amount: number) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'dreadnoughts-retreated-from-combat', amount },
     ]);
   }
 

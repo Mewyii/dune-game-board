@@ -112,7 +112,7 @@
     *ngIf="!disabled && playerOnField"
     [style.color]="playerOnField.color"
     class="player-marker"
-    (contextmenu)="onPlayerMarkerRightClicked(playerOnField.id, actionField.title.en)"
+    (contextmenu)="onPlayerMarkerRightClicked(playerOnField.id, actionField)"
   >
     <dune-marker [type]="'ornithopter'"></dune-marker>
   </div>
@@ -121,7 +121,7 @@
       class="player-marker small"
       [style.color]="player.color"
       [style.top]="40 + i * 35 + 'px'"
-      (contextmenu)="onPlayerMarkerRightClicked(player.id, actionField.title.en)"
+      (contextmenu)="onPlayerMarkerRightClicked(player.id, actionField)"
     >
       <dune-marker [type]="'ornithopter'"></dune-marker>
     </div>

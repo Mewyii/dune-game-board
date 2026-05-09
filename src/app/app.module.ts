@@ -37,6 +37,7 @@ import { AllianceTokenComponent } from './components/_common/alliance-token/alli
 import { ConflictCardComponent } from './components/_common/conflict-card/conflict-card.component';
 import { AdditionalPlayerActionsDialogComponent } from './components/_common/dialogs/additional-player-actions-dialog/additional-player-actions-dialog.component';
 import { BoardSpaceSelectorDialogComponent } from './components/_common/dialogs/board-space-selector-dialog/board-space-selector-dialog.component';
+import { CombatUnitsSelectorDialogComponent } from './components/_common/dialogs/combat-units-selector-dialog/combat-units-selector-dialog.component';
 import { ConflictsPreviewDialogComponent } from './components/_common/dialogs/conflicts-preview-dialog/conflicts-preview-dialog.component';
 import { FactionSelectorDialogComponent } from './components/_common/dialogs/faction-selector-dialog/faction-selector-dialog.component';
 import { GameSummaryDialogComponent } from './components/_common/dialogs/game-summary-dialog/game-summary-dialog.component';
@@ -170,6 +171,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     BoardSpaceSelectorDialogComponent,
     TechTileSelectorDialogComponent,
     FactionSelectorDialogComponent,
+    CombatUnitsSelectorDialogComponent,
     PlayerRewardChoicesComponent,
     ConflictsPreviewDialogComponent,
     IntrigueConfiguratorComponent,

@@ -100,6 +100,12 @@ export const techTiles: TechTileCard[] = [
         type: 'timing-turn-start',
       },
       {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
         type: 'troop-insert',
         amount: 1,
       },
@@ -474,8 +480,8 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove an enemy <br>{resource:agent} from a board space. It is no longer available for this round.',
-      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne einen gegnerischen {resource:agent} von einem Feld. Er ist für diese Runde nicht mehr verfügbar.',
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Remove enemy <br>{resource:agent} from a board space of your choice. They are no longer available for this round.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Entferne gegnerische {resource:agent} von einem Feld deiner Wahl. Sie sind für diese Runde nicht mehr verfügbar.',
       fontSize: 'small',
     },
   },
@@ -1417,9 +1423,6 @@ export const techTiles: TechTileCard[] = [
         type: 'timing-round-start',
       },
       {
-        type: 'tech-tile-flip',
-      },
-      {
         type: 'solari',
         amount: 2,
       },
@@ -1434,8 +1437,8 @@ export const techTiles: TechTileCard[] = [
       },
     ],
     customEffect: {
-      en: '<br>It costs you {resource:troop} less to conquer<br> enemy locations and enemies {resource:troop} more to conquer your locations.',
-      de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern und Gegner {resource:troop} mehr, deine Orte zu erobern.',
+      en: '<br>It costs you {resource:troop} less to conquer<br> enemy locations.',
+      de: '<br>Es kostet dich {resource:troop} weniger, <br>gegnerische Orte zu erobern.',
       fontSize: 'small',
     },
   },

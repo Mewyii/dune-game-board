@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { min } from 'lodash';
 import { getParticipateInCombatDesire, getWinCombatDesire } from 'src/app/helpers/ai';
-import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat-units';
+import { getPlayerCombatStrength, getPlayerdreadnoughtCount } from 'src/app/helpers/combat';
 import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modifiers';
 import {
   getFlattenedEffectRewardArray,
@@ -28,7 +28,6 @@ import {
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import {
-  getPlayerCombatStrength,
   noOneHasMoreInfluence,
   playerAllianceIsContested,
   playerCanGetAllianceThisTurn,
@@ -111,14 +110,14 @@ export class AIEffectEvaluationService {
         if (chosenEffect) {
           if (isStructuredConversionEffect(chosenEffect)) {
             costs = getMultipliedRewardEffects(chosenEffect.effectCosts, gameState);
-            rewards = getMultipliedRewardEffects(chosenEffect.effectConversions, gameState);
+            rewards = getMultipliedRewardEffects(chosenEffect.effectConversionRewards, gameState);
           } else {
             rewards = getMultipliedRewardEffects(chosenEffect, gameState);
           }
         }
       } else if (isStructuredConversionEffect(structuredEffect)) {
         costs = getMultipliedRewardEffects(structuredEffect.effectCosts, gameState);
-        rewards = getMultipliedRewardEffects(structuredEffect.effectConversions, gameState);
+        rewards = getMultipliedRewardEffects(structuredEffect.effectConversionRewards, gameState);
       }
     }
 
@@ -352,7 +351,7 @@ export class AIEffectEvaluationService {
   ) {
     let evaluationValue = 0;
     const costs = this.getMultipliedRewardEffectEstimation(conversionEffect.effectCosts, gameState, timing);
-    const rewards = this.getMultipliedRewardEffectEstimation(conversionEffect.effectConversions, gameState, timing);
+    const rewards = this.getMultipliedRewardEffectEstimation(conversionEffect.effectConversionRewards, gameState, timing);
 
     const costsEvaluation = this.getCostsArrayEvaluation(costs, player, gameState);
     const rewardsEvaluation = this.getRewardArrayEvaluation(rewards, player, gameState);
@@ -372,7 +371,7 @@ export class AIEffectEvaluationService {
   ) {
     let evaluationValue = 0;
     const costs = getMultipliedRewardEffects(conversionEffect.effectCosts, gameState, timing);
-    const rewards = getMultipliedRewardEffects(conversionEffect.effectConversions, gameState, timing);
+    const rewards = getMultipliedRewardEffects(conversionEffect.effectConversionRewards, gameState, timing);
 
     const costsEvaluation = this.getCostsArrayEvaluationForTurnState(costs, player, gameState);
     const rewardsEvaluation = this.getRewardArrayEvaluationForTurnState(rewards, player, gameState, targetBoardSpace);
@@ -594,7 +593,9 @@ export class AIEffectEvaluationService {
         );
       case 'card-discard':
         return -1.6 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
-      case 'card-destroy':
+      case 'card-trash':
+      case 'card-trash-from-hand':
+      case 'card-trash-in-play':
       case 'focus':
         return (
           2 +
@@ -782,7 +783,9 @@ export class AIEffectEvaluationService {
         }
       case 'card-discard':
         return value;
-      case 'card-destroy':
+      case 'card-trash':
+      case 'card-trash-from-hand':
+      case 'card-trash-in-play':
       case 'focus':
         return gameState.playerDeckSizeTotal > 7 ? value : 0;
       case 'card-draw-or-destroy':

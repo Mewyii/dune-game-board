@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { flatten } from 'lodash';
-import { getPlayerdreadnoughtCount } from '../helpers/combat-units';
+import { getPlayerdreadnoughtCount } from '../helpers/combat';
 import { isFactionScoreType } from '../helpers/faction-score';
 import {
   getMultipliedRewardEffects,
@@ -208,7 +208,9 @@ export class GameStateService {
           } else if (isStructuredChoiceEffect(effect)) {
           } else if (isStructuredConversionEffect(effect)) {
             conversionCosts.push(...getMultipliedRewardEffects(effect.effectCosts, partialGameStateForEffectMultipliers));
-            rewards.push(...getMultipliedRewardEffects(effect.effectConversions, partialGameStateForEffectMultipliers));
+            rewards.push(
+              ...getMultipliedRewardEffects(effect.effectConversionRewards, partialGameStateForEffectMultipliers),
+            );
           }
         }
 
@@ -235,7 +237,9 @@ export class GameStateService {
           } else if (isStructuredChoiceEffect(effect)) {
           } else if (isStructuredConversionEffect(effect)) {
             conversionCosts.push(...getMultipliedRewardEffects(effect.effectCosts, partialGameStateForEffectMultipliers));
-            rewards.push(...getMultipliedRewardEffects(effect.effectConversions, partialGameStateForEffectMultipliers));
+            rewards.push(
+              ...getMultipliedRewardEffects(effect.effectConversionRewards, partialGameStateForEffectMultipliers),
+            );
           }
         }
 
@@ -429,7 +433,9 @@ export class GameStateService {
       dreadnought: 0,
       agent: 0,
       'agent-lift': 0,
-      'card-destroy': 0,
+      'card-trash': 0,
+      'card-trash-from-hand': 0,
+      'card-trash-in-play': 0,
       'card-discard': 0,
       'card-draw': 0,
       'card-draw-or-destroy': 0,

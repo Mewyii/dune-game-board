@@ -44,8 +44,7 @@ import { Player } from '../models/player';
 import { GameElement } from '../services/game-manager.service';
 import { OwnedLocation } from '../services/location-manager.service';
 import { PlayerAgentOnField } from '../services/player-agents.service';
-import { getPlayerCombatStrength } from './ai';
-import { getPlayerdreadnoughtCount } from './combat-units';
+import { getPlayerCombatStrength, getPlayerdreadnoughtCount } from './combat';
 import { getFactionScoreTypeFromCost } from './faction-score';
 import { isResourceType } from './resources';
 
@@ -183,7 +182,7 @@ export function isStructuredRewardEffect(effect: StructuredEffect): effect is St
 export function isNegativeEffect(effect: Effect) {
   if (
     effect.type === 'card-discard' ||
-    effect.type === 'card-destroy' ||
+    effect.type === 'card-trash' ||
     effect.type === 'loose-troop' ||
     effect.type === 'intrigue-trash' ||
     effect.type === 'dreadnought-retreat' ||
@@ -375,7 +374,7 @@ export function getStructuredConversionEffectIfPossible(
       const conversionEffect = {
         type: effect.type,
         effectCosts: structuredCosts,
-        effectConversions: structuredRewards,
+        effectConversionRewards: structuredRewards,
       };
       return [undefined, conversionEffect];
     }

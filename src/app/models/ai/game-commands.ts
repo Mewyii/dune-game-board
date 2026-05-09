@@ -6,7 +6,7 @@ import { GameElement } from 'src/app/services/game-manager.service';
 import { GameModifiers, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { EffectReward, StructuredEffect } from '../effect';
+import { Effect, EffectReward, StructuredEffect } from '../effect';
 import { IntrigueDeckCard } from '../intrigue';
 import { ActionType } from '../location';
 import { Player } from '../player';
@@ -73,6 +73,8 @@ export interface GameCommands {
   increaseAccumulatedSpiceOnBoardSpace: (boardSpaceId: string) => void;
   removePersuasionFromPlayer: (playerId: number, amount: number) => void;
   updatePlayerTurnInfo: (playerId: number, turnInfo: Partial<TurnInfo>) => void;
+  addPlayerRewardChoice: (playerId: number, reward: Effect) => void;
+  removePlayerRewardChoice: (playerId: number, id: string) => void;
 
   // Game Modifiers
   addPlayerGameModifiers: (playerId: number, gameModifiers: GameModifiers) => void;
@@ -82,7 +84,9 @@ export interface GameCommands {
 
   // Combat
   removePlayerShipsFromCombat: (playerId: number, amount: number) => void;
-  retreatPlayerTroopsFromCombat: (playerId: number, troops: number) => void;
+  retreatPlayerTroopsFromCombat: (playerId: number, troopAmount: number) => void;
+  retreatPlayerShipsFromCombat: (playerId: number, troopAmount: number) => void;
+  removePlayerTroopsFromCombat: (playerId: number, troopAmount: number) => void;
   getPlayableCombatIntrigues: (
     player: Player,
     gameState: GameState,
@@ -116,6 +120,7 @@ export interface GameCommands {
       gameState: GameState,
       imperiumRowModifiers?: ImperiumRowModifier[],
     ): T | undefined;
+    getCardToTrash: (cards: ImperiumDeckCard[], player: Player, gameState: GameState) => ImperiumDeckCard | undefined;
     getDesiredRewardEffects(
       player: Player,
       rewards: EffectReward[],

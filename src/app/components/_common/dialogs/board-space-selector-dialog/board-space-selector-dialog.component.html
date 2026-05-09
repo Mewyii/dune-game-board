@@ -11,7 +11,7 @@
       (mouseleave)="hoveredBoardSpaceId = ''"
     >
       <dune-highlighting
-        *ngIf="location.actionField.title.en === selectedCard?.actionField?.title?.en"
+        *ngIf="isSelected(location)"
         [id]="location.actionField.title.en"
         [width]="220"
         [height]="300"
@@ -27,7 +27,7 @@
     <button
       mat-mini-fab
       [color]="'accent'"
-      [disabled]="!selectedCard"
+      [disabled]="selectedCards.length < minSelected || selectedCards.length > maxSelected"
       (click)="onConfirm()"
       [matTooltip]="t.translate('commonConfirm')"
     >
