@@ -11,7 +11,6 @@ import {
   TechTileSelectorDialogComponent,
 } from '../components/_common/dialogs/tech-tile-selector-dialog/tech-tile-selector-dialog.component';
 import { getPlayerCombatStrength } from '../helpers/combat';
-import { getPlayerPersuasion } from '../helpers/player';
 import { playerCanPayCosts } from '../helpers/rewards';
 import { ActionField, DuneLocation, StructuredEffect } from '../models';
 import { AIAdjustments, GameCommands, GameState, TimedFunction } from '../models/ai';
@@ -38,16 +37,16 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Paul Atreides',
     gameModifiers: {
-      fieldBlock: [{ id: 'paul-fremen-access', actionType: 'fremen' }],
+      fieldEnemyAgentAccess: [{ id: 'paul-fremen-access', actionTypes: ['fremen'] }],
     },
     customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
       const fremenInfluence = gameState.playerScore['fremen'];
       if (fremenInfluence > 3) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
-        game.addRewardToPlayer(player.id, { type: 'troop' });
+        game.addRewardToPlayer(player.id, { type: 'agent-lift' });
       } else if (fremenInfluence > 1) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
-        game.addRewardToPlayer(player.id, { type: 'agent-lift' });
+        game.addRewardToPlayer(player.id, { type: 'troop' });
         game.resolveRewardChoices(player);
       }
       game.addPlayerGameModifiers(player.id, {
@@ -373,7 +372,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
               };
             });
 
-          const availablePersuasion = getPlayerPersuasion(player);
+          const availablePersuasion = gameState.playerResources.persuasion;
 
           const buyableUniqueCards = reducedFremenCards.filter(
             (card, index, self) =>
@@ -423,7 +422,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             return;
           }
 
-          const availablePersuasion = getPlayerPersuasion(player);
+          const availablePersuasion = gameState.playerResources.persuasion;
           const { allCards, imperiumRowCards, recruitableCards } = game.getAllBuyableCards(
             gameState.playerTurnInfos?.factionRecruitment,
           );
@@ -783,7 +782,29 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Lady Margot Fenring',
-    customTimedFunctions: [
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: GameCommands) => {
+          game.updatePlayerTurnInfo(player.id, {
+            effectConversions: [
+              {
+                type: 'helper-trade',
+                effectCosts: {
+                  type: 'reward',
+                  effectRewards: [{ type: 'card-discard' }],
+                },
+                effectConversionRewards: {
+                  type: 'reward',
+                  effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
+                },
+              },
+            ],
+          });
+        },
+      },
+    ],
+    customTimedAIFunctions: [
       {
         timing: 'timing-round-start',
         function: (player: Player, gameState: GameState, game: GameCommands) => {
@@ -1002,11 +1023,10 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         timing: 'timing-reveal-turn',
         function: (player: Player, gameState: GameState, game: GameCommands) => {
           const playerVictoryPoints = gameState.playerScore.victoryPoints;
-          const playerPersuasion =
-            player.permanentPersuasion + player.persuasionGainedThisRound - player.persuasionSpentThisRound;
+          const playerPersuasion = gameState.playerResources.persuasion;
 
           game.addRewardToPlayer(player.id, { type: 'signet', amount: playerVictoryPoints + playerPersuasion });
-          game.removePersuasionFromPlayer(player.id, player.permanentPersuasion + player.persuasionGainedThisRound);
+          game.removePersuasionFromPlayer(player.id, playerPersuasion);
         },
       },
     ],

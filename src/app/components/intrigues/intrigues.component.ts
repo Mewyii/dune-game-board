@@ -75,7 +75,7 @@ export class IntriguesComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('intrigue');
     this.intriguesService.drawPlayerIntriguesFromDeck(this.activePlayerId, 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   onShowNextIntrigueClicked() {

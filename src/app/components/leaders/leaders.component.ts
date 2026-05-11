@@ -265,34 +265,34 @@ export class LeadersComponent implements OnInit, OnDestroy {
 
   onAddTroopToGarrisonClicked(player: Player) {
     this.effectsService.addTroopsToPlayer(player.id, 1);
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   onRemoveTroopFromGarrisonClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
     this.combatManager.removePlayerTroopsFromGarrison(player.id, 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     return false;
   }
 
   onAddShipToGarrisonClicked(player: Player) {
     this.effectsService.addDreadnoughtToPlayer(player.id);
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   onRemoveShipFromGarrisonClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
     this.combatManager.removePlayerShipsFromGarrison(player.id, 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     return false;
   }
 
   onAddRewardClicked(player: Player, type: EffectRewardType) {
     this.effectsService.addRewardToPlayer(player.id, { type });
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     return false;
   }
 
@@ -300,7 +300,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('click-reverse');
     this.playerResourcesService.removeResourceFromPlayer(player.id, type, 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     return false;
   }
 
@@ -352,16 +352,16 @@ export class LeadersComponent implements OnInit, OnDestroy {
 
   onAddPersuasionGainedThisRoundClicked(player: Player) {
     this.audioManager.playSound('click-soft');
-    this.playersService.addPersuasionToPlayer(player.id, 1);
+    this.playerResourcesService.addResourceToPlayer(player.id, 'persuasion', 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   onRemovePersuasionGainedThisRoundClicked(player: Player) {
     this.audioManager.playSound('click-reverse');
-    this.playersService.removePersuasionFromPlayer(player.id, 1);
+    this.playerResourcesService.removeResourceFromPlayer(player.id, 'persuasion', 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     return false;
   }
 

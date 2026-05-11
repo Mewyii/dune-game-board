@@ -7,7 +7,6 @@ import {
   ImperiumCardsPreviewDialogComponent,
 } from '../components/_common/dialogs/imperium-cards-preview-dialog/imperium-cards-preview-dialog.component';
 import { getPlayerdreadnoughtCount } from '../helpers/combat';
-import { getPlayerPersuasion } from '../helpers/player';
 import { getFlattenedEffectRewardArray } from '../helpers/rewards';
 import { DuneLocation } from '../models';
 import { GameCommands, GameState, TimedFunctionWithGameElement } from '../models/ai';
@@ -206,7 +205,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           };
         });
 
-        const availablePersuasion = getPlayerPersuasion(player);
+        const availablePersuasion = gameState.playerResources.persuasion;
 
         const buyableUniqueCards = reducedCards.filter(
           (card, index, self) =>
@@ -262,7 +261,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           };
         });
 
-        const availablePersuasion = getPlayerPersuasion(player);
+        const availablePersuasion = gameState.playerResources.persuasion;
         const cardToBuy = game.ai.getImperiumCardToBuy(availablePersuasion, reducedCards, player, gameState, []);
         if (cardToBuy) {
           let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
@@ -294,7 +293,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         if (gameState.playerResources.solari < 1) {
           return;
         }
-        const availablePersuasion = getPlayerPersuasion(player);
+        const availablePersuasion = gameState.playerResources.persuasion;
         const { allCards, imperiumRowCards, recruitableCards } = game.getAllBuyableCards(
           gameState.playerTurnInfos?.factionRecruitment,
         );
@@ -348,7 +347,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         if (gameState.playerResources.solari < 1) {
           return;
         }
-        const availablePersuasion = getPlayerPersuasion(player);
+        const availablePersuasion = gameState.playerResources.persuasion;
         const { allCards, imperiumRowCards, recruitableCards } = game.getAllBuyableCards(
           gameState.playerTurnInfos?.factionRecruitment,
         );

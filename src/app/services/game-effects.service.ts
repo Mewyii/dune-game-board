@@ -280,8 +280,6 @@ export class EffectsService {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDrawOrDestroyAmount: 1 });
     } else if (rewardType === 'card-discard') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardDiscardAmount: 1 });
-    } else if (rewardType == 'persuasion') {
-      this.playersService.addPersuasionToPlayer(playerId, rewardAmount);
     } else if (rewardType == 'sword') {
       this.audioManager.playSound('sword');
       this.combatManager.addAdditionalCombatPowerToPlayer(playerId, rewardAmount);
@@ -474,8 +472,6 @@ export class EffectsService {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashFromHandAmount: costAmount });
     } else if (costType === 'card-trash-in-play') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { cardTrashInPlayAmount: costAmount });
-    } else if (costType === 'persuasion') {
-      this.playersService.addPersuasionSpentToPlayer(playerId, costAmount);
     } else if (costType === 'victory-point') {
       this.playerScoreManager.removePlayerScore(playerId, 'victoryPoints', costAmount, this.roundService.currentRound);
       this.loggingService.logPlayerLostVictoryPoint(playerId, this.roundService.currentRound, source);

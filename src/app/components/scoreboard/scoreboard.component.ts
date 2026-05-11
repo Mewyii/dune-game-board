@@ -74,7 +74,7 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
     this.effectsService.addRewardToPlayer(playerId, {
       type: 'victory-point',
     });
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   onDecreaseFactionScoreClicked(playerId: number) {
@@ -86,7 +86,7 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
     this.effectsService.payCostForPlayer(playerId, {
       type: 'victory-point',
     });
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
 
     return false;
   }

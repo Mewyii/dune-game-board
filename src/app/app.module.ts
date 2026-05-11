@@ -54,7 +54,6 @@ import { MinorHouseCardComponent } from './components/_common/minor-house-card/m
 import { PlotCardComponent } from './components/_common/plot-card/plot-card.component';
 import { RewardArrayComponent } from './components/_common/reward-array/reward-array.component';
 import { TechTileComponent } from './components/_common/tech-tile/tech-tile.component';
-import { AlwaysBuyableCardsComponent } from './components/always-buyable-cards/always-buyable-cards.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { SoundcloudPlayerComponent } from './components/audio-player/soundcloud-player/soundcloud-player.component';
 import { BoardEvaluationComponent } from './components/board-evaluation/board-evaluation.component';
@@ -162,7 +161,6 @@ import { SafeUrlPipe } from './pipes/safe-url';
     StartingCardConfiguratorComponent,
     PlayerHandComponent,
     ImperiumRowComponent,
-    AlwaysBuyableCardsComponent,
     StopPropagationClickDirective,
     TechTileConfiguratorComponent,
     DialogTechTileEditorComponent,

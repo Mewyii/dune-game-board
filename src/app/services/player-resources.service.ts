@@ -79,6 +79,10 @@ export class PlayerResourcesService {
     this.addResourceToPlayer(id, type, -amount, valuesCanGetNegative);
   }
 
+  resetResourceForPlayer(id: number, type: ResourceType) {
+    this.addResourceToPlayer(id, type, -this.getPlayerResourceAmount(id, type), true);
+  }
+
   getInitialPlayerResources() {
     const initialResources: Resources = {
       water: 0,
@@ -88,6 +92,7 @@ export class PlayerResourcesService {
       focus: 0,
       signet: 0,
       'leader-heal': 0,
+      persuasion: 0,
     };
     return initialResources;
   }

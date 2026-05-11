@@ -48,7 +48,7 @@ export class AITileComponent implements OnInit {
 
     this.aIPlayersService.setAccessToBlockedFieldsForPlayer(this.activeAIPlayerId, canAccessBlockedFields);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activeAIPlayerId);
   }
 
   onSetNextAIPersonalityClicked() {
@@ -65,7 +65,7 @@ export class AITileComponent implements OnInit {
       const personality = (aiPersonalities as any)[nextPersonalityName];
 
       this.aIPlayersService.setAIPersonalityToPlayer(this.activeAIPlayerId, nextPersonalityName, personality);
-      this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+      this.aiManager.setPreferredFieldsForAIPlayer(this.activeAIPlayerId);
     }
   }
 
@@ -83,7 +83,7 @@ export class AITileComponent implements OnInit {
       const personality = (aiPersonalities as any)[previousPersonalityName];
 
       this.aIPlayersService.setAIPersonalityToPlayer(this.activeAIPlayerId, previousPersonalityName, personality);
-      this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+      this.aiManager.setPreferredFieldsForAIPlayer(this.activeAIPlayerId);
     }
   }
 }

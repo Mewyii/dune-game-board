@@ -671,11 +671,6 @@ export function playerCanPayCosts(
       if (gameState.playerHandCards.length < costAmount) {
         canPayCosts = false;
       }
-    } else if (costType === 'persuasion') {
-      player.persuasionSpentThisRound += costAmount;
-      if (player.persuasionSpentThisRound > player.permanentPersuasion + player.persuasionGainedThisRound) {
-        canPayCosts = false;
-      }
     } else if (costType === 'sword') {
       const playerCombatStrength = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
 

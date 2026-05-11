@@ -82,7 +82,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
     const player = this.playersService.getPlayer(playerId);
     if (player) {
-      this.aiManager.setPreferredFieldsForAIPlayer(player);
+      this.aiManager.setPreferredFieldsForAIPlayer(playerId);
     }
   }
 
@@ -92,7 +92,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
     const player = this.playersService.getPlayer(playerId);
     if (player) {
-      this.aiManager.setPreferredFieldsForAIPlayer(player);
+      this.aiManager.setPreferredFieldsForAIPlayer(playerId);
     }
     return false;
   }
@@ -132,7 +132,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
     this.effectsService.addRewardToPlayer(player.id, { type });
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
 
     return false;
   }
@@ -143,7 +143,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
     const player = this.playersService.getPlayer(id);
     if (player) {
-      this.aiManager.setPreferredFieldsForAIPlayer(player);
+      this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     }
     return false;
   }

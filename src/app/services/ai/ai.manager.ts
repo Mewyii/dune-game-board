@@ -182,7 +182,11 @@ export class AIManager {
     if (cardToBuy) {
       const costModifier = getCardCostModifier(cardToBuy, imperiumRowModifiers);
       if (cardToBuy.persuasionCosts) {
-        this.playersService.addPersuasionSpentToPlayer(playerId, cardToBuy.persuasionCosts + costModifier);
+        this.playersResourcesService.removeResourceFromPlayer(
+          playerId,
+          'persuasion',
+          cardToBuy.persuasionCosts + costModifier,
+        );
       }
       if (cardToBuy.buyEffects) {
         for (const effect of cardToBuy.buyEffects) {
@@ -235,7 +239,11 @@ export class AIManager {
     if (plotToBuy) {
       const costModifier = getCardCostModifier(plotToBuy, imperiumRowModifiers);
       if (plotToBuy.persuasionCosts) {
-        this.playersService.addPersuasionSpentToPlayer(playerId, plotToBuy.persuasionCosts + costModifier);
+        this.playersResourcesService.removeResourceFromPlayer(
+          playerId,
+          'persuasion',
+          plotToBuy.persuasionCosts + costModifier,
+        );
       }
       this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, plotToBuy);
 
@@ -721,8 +729,9 @@ export class AIManager {
     }
   }
 
-  setPreferredFieldsForAIPlayer(player: Player) {
-    if (!player.isAI) {
+  setPreferredFieldsForAIPlayer(playerId: number) {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player || !player.isAI) {
       return;
     }
 

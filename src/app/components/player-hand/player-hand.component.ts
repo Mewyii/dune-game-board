@@ -131,7 +131,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('card-draw');
     this.cardsService.drawPlayerCardsFromDeck(this.activePlayerId, 1);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAddFoldspaceToHandClicked() {
@@ -144,7 +144,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
       this.effectsService.addRewardToPlayer(this.activePlayerId, { type: 'foldspace' });
     }
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onShowHandClicked() {
@@ -186,7 +186,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('card-discard');
     this.aiManager.aiDiscardHandCard(this.activePlayerId);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAITrashCardFromHandClicked() {
@@ -197,7 +197,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('card-discard');
     this.aiManager.aiTrashCardFromHand(this.activePlayerId);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAITrashCardFromDiscardPileClicked() {
@@ -208,7 +208,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('card-discard');
     this.aiManager.aiTrashCardFromDiscardPile(this.activePlayerId);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAIAddCardToHandFromDiscardPileClicked() {
@@ -219,7 +219,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
     this.audioManager.playSound('card-discard');
     this.aiManager.getCardToReturnToHandFromDiscardPile(this.activePlayerId);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onAITrashIntrigueClicked() {
@@ -229,7 +229,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
 
     this.aiManager.aiTrashIntrigue(this.activePlayerId);
 
-    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayer);
+    this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);
   }
 
   onReturnDiscardedCardToHandClicked(card: ImperiumDeckCard) {

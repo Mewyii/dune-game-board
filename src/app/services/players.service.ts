@@ -68,8 +68,6 @@ export class PlayersService {
         turnState: 'agent-placement',
         color: this.createPlayerColor(players.length + 1),
         cardsDrawnAtRoundStart: 5,
-        persuasionGainedThisRound: 0,
-        persuasionSpentThisRound: 0,
         permanentPersuasion: 0,
         isAI: true,
         turnNumber: 0,
@@ -94,7 +92,6 @@ export class PlayersService {
       ...player,
       agents: 2,
       turnState: 'agent-placement',
-      cardsBought: 0,
       cardsDrawnAtRoundStart: 5,
       persuasionGainedThisRound: 0,
       persuasionSpentThisRound: 0,
@@ -171,42 +168,6 @@ export class PlayersService {
     };
 
     this.playersSubject.next(players);
-  }
-
-  addPersuasionToPlayer(playerId: number, amount: number) {
-    const players = this.getPlayers();
-
-    const playerIndex = players.findIndex((x) => x.id === playerId);
-    const player = players[playerIndex];
-    players[playerIndex] = { ...player, persuasionGainedThisRound: player.persuasionGainedThisRound + amount };
-
-    this.playersSubject.next(players);
-  }
-
-  removePersuasionFromPlayer(playerId: number, amount: number) {
-    const players = this.getPlayers();
-
-    const playerIndex = players.findIndex((x) => x.id === playerId);
-    const player = players[playerIndex];
-    players[playerIndex] = { ...player, persuasionGainedThisRound: player.persuasionGainedThisRound - amount };
-
-    this.playersSubject.next(players);
-  }
-
-  addPersuasionSpentToPlayer(playerId: number, amount: number) {
-    const players = this.getPlayers();
-
-    const playerIndex = players.findIndex((x) => x.id === playerId);
-    const player = players[playerIndex];
-    players[playerIndex] = { ...player, persuasionSpentThisRound: player.persuasionSpentThisRound + amount };
-
-    this.playersSubject.next(players);
-  }
-
-  resetPersuasionForPlayers() {
-    this.playersSubject.next(
-      this.getPlayers().map((x) => ({ ...x, persuasionGainedThisRound: 0, persuasionSpentThisRound: 0 })),
-    );
   }
 
   addPermanentPersuasionToPlayer(playerId: number, amount: number) {

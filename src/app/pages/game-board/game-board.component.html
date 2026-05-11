@@ -10,7 +10,6 @@
           <app-scoreboard [mode]="mode"></app-scoreboard>
           <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
           <app-card-areas></app-card-areas>
-          <dune-always-buyable-cards></dune-always-buyable-cards>
           <dune-immediate-effects></dune-immediate-effects>
           @for (faction of gameContent.factions; track $index) {
             <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>

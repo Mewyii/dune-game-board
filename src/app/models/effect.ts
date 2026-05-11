@@ -43,7 +43,6 @@ export const effectRewards = [
   'location-control-choice',
   'loose-troop',
   'mentat',
-  'persuasion',
   'placeholder',
   'recruitment-bene',
   'recruitment-emperor',

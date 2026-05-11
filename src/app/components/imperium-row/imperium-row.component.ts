@@ -3,13 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 
-import { getPlayerPersuasion } from 'src/app/helpers/player';
 import { ActiveFactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
+import { PlayerResourcesService } from 'src/app/services/player-resources.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -54,6 +54,7 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
     private turnInfoService: TurnInfoService,
     private settingsService: SettingsService,
     private roundService: RoundService,
+    private playerResourcesService: PlayerResourcesService,
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +77,7 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
       if (this.activePlayer) {
         this.activePlayerTurnState = this.activePlayer.turnState;
 
-        this.activePlayerPersuasion = getPlayerPersuasion(this.activePlayer);
+        this.activePlayerPersuasion = this.playerResourcesService.getPlayerResourceAmount(this.activePlayerId, 'persuasion');
 
         this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
         this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
@@ -99,6 +100,10 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
       this.setRowCards();
     });
 
+    const playerResourcesSub = this.playerResourcesService.playersResources$.subscribe(() => {
+      this.activePlayerPersuasion = this.playerResourcesService.getPlayerResourceAmount(this.activePlayerId, 'persuasion');
+    });
+
     this.subscriptions.push(
       imperiumRowSub,
       unlimitedCustomCardsSub,
@@ -107,6 +112,7 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
       playerGameModifiersSub,
       turnInfosSub,
       currentRoundSub,
+      playerResourcesSub,
     );
   }
 

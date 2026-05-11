@@ -45,7 +45,6 @@ import { leadersGameAdjustments } from '../constants/leaders-game-adjustments';
 import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustments';
 import { getPlayerCombatStrength, getPlayerGarrisonStrength } from '../helpers/combat';
 import { delay } from '../helpers/common';
-import { getPlayerPersuasion } from '../helpers/player';
 import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn-infos';
 import { GameCommands, GameState } from '../models/ai';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from '../models/turn-info';
@@ -297,8 +296,8 @@ export class GameManager {
     this.roundService.setRoundPhase('agent-placement');
 
     for (const player of this.playersService.getPlayers()) {
-      this.resolveLeaderEffects(player, 'timing-game-start');
-      this.resolveLeaderEffects(player, 'timing-round-start', true);
+      this.resolveLeaderEffects(player.id, 'timing-game-start');
+      this.resolveLeaderEffects(player.id, 'timing-round-start', true);
     }
 
     this.playersService.increaseTurnNumberForPlayer(1);
@@ -306,7 +305,7 @@ export class GameManager {
     const player = this.playersService.getPlayer(1);
     if (player?.isAI) {
       this.setActiveAIPlayer(this.startingPlayerId);
-      this.aiManager.setPreferredFieldsForAIPlayer(player);
+      this.aiManager.setPreferredFieldsForAIPlayer(player.id);
     }
   }
 
@@ -415,7 +414,6 @@ export class GameManager {
     this.combatManager.setAllPlayerShipsFromCombatToTimeout();
     this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.resetAdditionalCombatPower();
-    this.playersService.resetPersuasionForPlayers();
     this.playersService.resetTurnStateForPlayers();
     this.playersService.resetTurnNumberForPlayers();
 
@@ -456,6 +454,8 @@ export class GameManager {
 
     const players = this.playersService.getPlayers();
     for (const player of players) {
+      this.playersResourcesService.resetResourceForPlayer(player.id, 'persuasion');
+
       if (nextEvent) {
         if (nextEvent.gameModifiers) {
           this.gameModifiersService.addPlayerGameModifiers(player.id, nextEvent.gameModifiers);
@@ -479,12 +479,12 @@ export class GameManager {
       this.cardsService.drawPlayerCardsFromDeck(player.id, player.cardsDrawnAtRoundStart);
 
       if (player.id === this.startingPlayerId) {
-        this.resolveLeaderEffects(player, 'timing-round-start');
-        await this.resolveTechTileEffects(player, 'timing-round-start');
+        this.resolveLeaderEffects(player.id, 'timing-round-start');
+        await this.resolveTechTileEffects(player.id, 'timing-round-start');
 
         if (player.isAI) {
           this.setActiveAIPlayer(this.startingPlayerId);
-          this.aiManager.setPreferredFieldsForAIPlayer(player);
+          this.aiManager.setPreferredFieldsForAIPlayer(player.id);
         }
       }
     }
@@ -521,6 +521,8 @@ export class GameManager {
 
     this.playersService.setTurnStateForPlayer(playerId, 'reveal');
 
+    this.playersResourcesService.addResourceToPlayer(player.id, 'persuasion', player.permanentPersuasion);
+
     const playerLocations = this.locationManager.getPlayerLocations(playerId);
     for (const playerLocation of playerLocations) {
       const field = this.settingsService.getBoardField(playerLocation.locationId);
@@ -536,8 +538,8 @@ export class GameManager {
       }
     }
 
-    this.resolveLeaderEffects(player, 'timing-reveal-turn');
-    await this.resolveTechTileEffects(player, 'timing-reveal-turn');
+    this.resolveLeaderEffects(playerId, 'timing-reveal-turn');
+    await this.resolveTechTileEffects(playerId, 'timing-reveal-turn');
 
     this.resolveRewardChoices(player);
   }
@@ -797,9 +799,9 @@ export class GameManager {
       }
       this.setActiveAIPlayer(nextPlayer.id);
       if (nextPlayer.isAI && this.roundService.currentRoundPhase === 'agent-placement') {
-        this.aiManager.setPreferredFieldsForAIPlayer(nextPlayer);
-        this.resolveLeaderEffects(nextPlayer, 'timing-round-start');
-        await this.resolveTechTileEffects(nextPlayer, 'timing-round-start');
+        this.aiManager.setPreferredFieldsForAIPlayer(nextPlayer.id);
+        this.resolveLeaderEffects(nextPlayer.id, 'timing-round-start');
+        await this.resolveTechTileEffects(nextPlayer.id, 'timing-round-start');
       }
     }
   }
@@ -830,7 +832,7 @@ export class GameManager {
     if (active) {
       this.aiPlayersService.addAIPlayer(player.id);
       if (this.roundService.currentRound > 0) {
-        this.aiManager.setPreferredFieldsForAIPlayer(player);
+        this.aiManager.setPreferredFieldsForAIPlayer(player.id);
       }
     } else {
       this.aiPlayersService.removeAIPlayer(player.id);
@@ -974,7 +976,7 @@ export class GameManager {
       type: ('faction-influence-up-' + factionType) as EffectRewardType,
     });
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   decreasePlayerFactionScore(playerId: number, factionType: FactionType) {
@@ -995,7 +997,7 @@ export class GameManager {
       type: ('faction-influence-down-' + factionType) as EffectRewardType,
     });
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player);
+    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
   addUnitsIntoCombat(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
@@ -1100,14 +1102,14 @@ export class GameManager {
     this.resolveRewardChoices(player);
   }
 
-  private resolveLeaderEffects(player: Player, timing: EffectTimingType, ignoreStructuredEffects = false) {
-    let effectsResolved = false;
-
-    const playerLeader = this.leadersService.getPlayerLeader(player.id);
+  private resolveLeaderEffects(playerId: number, timing: EffectTimingType, ignoreStructuredEffects = false) {
+    const player = this.playersService.getPlayer(playerId);
+    const playerLeader = this.leadersService.getPlayerLeader(playerId);
     const leader = playerLeader?.leader;
-    if (!leader || playerLeader?.isFlipped) {
+    if (!player || !leader || playerLeader?.isFlipped) {
       return;
     }
+    let effectsResolved = false;
 
     if (leader.customTimedFunctions) {
       for (const customTimedFunction of leader.customTimedFunctions) {
@@ -1165,7 +1167,12 @@ export class GameManager {
     return effectsResolved;
   }
 
-  private async resolveTechTileEffects(player: Player, timing: EffectTimingType) {
+  private async resolveTechTileEffects(playerId: number, timing: EffectTimingType) {
+    const player = this.playersService.getPlayer(playerId);
+    if (!player) {
+      return false;
+    }
+
     let effectsResolved = false;
 
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id);
@@ -1358,6 +1365,8 @@ export class GameManager {
 
     if (turnInfo.signetRingAmount > 0) {
       for (let i = 0; i < turnInfo.signetRingAmount; i++) {
+        this.turnInfoService.updatePlayerTurnInfo(player.id, { signetRingAmount: -1 });
+
         const playerLeader = this.leadersService.getLeader(player.id);
         if (playerLeader) {
           if (playerLeader.structuredSignetEffects) {
@@ -1607,6 +1616,8 @@ export class GameManager {
     }
     if (turnInfo.signetRingAmount > 0) {
       for (let i = 0; i < turnInfo.signetRingAmount; i++) {
+        this.turnInfoService.updatePlayerTurnInfo(player.id, { signetRingAmount: -1 });
+
         const playerLeader = this.leadersService.getLeader(player.id);
         if (playerLeader) {
           if (playerLeader.structuredSignetEffects) {
@@ -1630,6 +1641,7 @@ export class GameManager {
           });
         }
       }
+
       this.turnInfoService.setPlayerTurnInfo(player.id, { signetRingAmount: 0 });
     }
     if (turnInfo.needsToPickConflict) {
@@ -1774,13 +1786,13 @@ export class GameManager {
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'imperiumRow');
     const costModifier = getCardCostModifier(card, costModifiers) + (options?.additionalCostModifier ?? 0);
 
-    const availablePersuasion = getPlayerPersuasion(player);
+    const availablePersuasion = this.playersResourcesService.getPlayerResourceAmount(playerId, 'persuasion');
     const totalPersuasionCosts = card.persuasionCosts ? card.persuasionCosts + costModifier : 0;
     const playerCanAffordCard = availablePersuasion >= totalPersuasionCosts;
 
     if (playerCanAffordCard) {
       if (card.persuasionCosts) {
-        this.playersService.addPersuasionSpentToPlayer(playerId, totalPersuasionCosts);
+        this.playersResourcesService.removeResourceFromPlayer(playerId, 'persuasion', totalPersuasionCosts);
       }
       if (card.type === 'imperium-card') {
         if (card.buyEffects) {
@@ -2005,7 +2017,8 @@ export class GameManager {
       addPlayerIntrigue: (playerId, intrigue) => this.intriguesService.addPlayerIntrigue(playerId, intrigue),
       trashPlayerIntrigue: (playerId, intrigueId, addToDiscardPile?) =>
         this.intriguesService.trashPlayerIntrigue(playerId, intrigueId, addToDiscardPile),
-      removePersuasionFromPlayer: (playerId, amount) => this.playersService.removePersuasionFromPlayer(playerId, amount),
+      removePersuasionFromPlayer: (playerId, amount) =>
+        this.playersResourcesService.removeResourceFromPlayer(playerId, 'persuasion', amount),
       getAllBuyableCards: (playerId) => this.cardsService.getAllBuyableCards(playerId),
       getBoardSpaceColor: (actionType) => this.settingsService.getBoardSpaceColor(actionType),
       ai: {
@@ -2116,14 +2129,14 @@ export class GameManager {
     if (roundPhase === 'agent-placement') {
       this.aiManager.aiHealLeadersIfUsefulAndPossible(player.id, 'agent-placement');
 
-      const leaderEffectsHandled = this.resolveLeaderEffects(player, 'timing-turn-start');
+      const leaderEffectsHandled = this.resolveLeaderEffects(playerId, 'timing-turn-start');
 
       if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
         this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
         return;
       }
 
-      const techTilesPlayed = await this.resolveTechTileEffects(player, 'timing-turn-start');
+      const techTilesPlayed = await this.resolveTechTileEffects(playerId, 'timing-turn-start');
 
       if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
         this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
@@ -2154,7 +2167,7 @@ export class GameManager {
       }
 
       if (leaderEffectsHandled || techTilesPlayed || intriguesPlayed) {
-        this.aiManager.setPreferredFieldsForAIPlayer(player);
+        this.aiManager.setPreferredFieldsForAIPlayer(player.id);
       }
 
       if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
@@ -2181,8 +2194,8 @@ export class GameManager {
             this.turnInfoService.updatePlayerTurnInfo(playerId, { cardsPlayedThisTurn: [cardAndField.cardToPlay] });
             this.addAgentToField(boardField);
 
-            this.resolveLeaderEffects(player, 'timing-agent-placement');
-            await this.resolveTechTileEffects(player, 'timing-agent-placement');
+            this.resolveLeaderEffects(playerId, 'timing-agent-placement');
+            await this.resolveTechTileEffects(playerId, 'timing-agent-placement');
 
             couldPlaceAgent = true;
             this.turnInfoService.setPlayerTurnInfo(player.id, { aiStatus: 'done' });
@@ -2197,7 +2210,7 @@ export class GameManager {
       if (player.turnState === 'reveal') {
         const maxCardsBoughtPerTurn = 3;
         for (let i = 0; i < maxCardsBoughtPerTurn; i++) {
-          const playerPersuasionAvailable = getPlayerPersuasion(player);
+          const playerPersuasionAvailable = this.playersResourcesService.getPlayerResourceAmount(playerId, 'persuasion');
 
           const cardBought = this.aiManager.aiBuyImperiumCard(playerId, playerPersuasionAvailable);
           if (cardBought) {
@@ -2207,7 +2220,7 @@ export class GameManager {
           }
         }
 
-        const playerPersuasionLeft = getPlayerPersuasion(player);
+        const playerPersuasionLeft = this.playersResourcesService.getPlayerResourceAmount(playerId, 'persuasion');
         if (playerPersuasionLeft > 0) {
           this.aiManager.aiBuyPlotCards(playerId, playerPersuasionLeft);
         }
@@ -2233,7 +2246,7 @@ export class GameManager {
       if (player.turnState === 'revealed') {
         const gameState = this.getGameState(player);
 
-        this.resolveLeaderEffects(player, 'timing-combat');
+        this.resolveLeaderEffects(playerId, 'timing-combat');
 
         const playerCombatIntrigues = gameState.playerCombatIntrigues;
         const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);

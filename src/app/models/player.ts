@@ -9,8 +9,6 @@ export interface Player {
   hasSwordmaster: boolean;
   hasCouncilSeat: boolean;
   cardsDrawnAtRoundStart: number;
-  persuasionGainedThisRound: number;
-  persuasionSpentThisRound: number;
   permanentPersuasion: number;
   isAI?: boolean;
 }

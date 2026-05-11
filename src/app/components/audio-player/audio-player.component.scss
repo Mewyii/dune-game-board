@@ -17,7 +17,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 4px;
   padding: 8px;
   overflow: hidden;
   transition: 0.7s;
@@ -37,4 +37,8 @@
 .control-bar {
   display: flex;
   justify-content: center;
+}
+
+.subtitle {
+  font-size: small;
 }
