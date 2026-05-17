@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ISourceOptions } from '@tsparticles/engine';
-import type { IEmitter } from '@tsparticles/plugin-emitters/types/Options/Interfaces/IEmitter.js';
 
 @Component({
   selector: 'dune-highlighting',
@@ -82,25 +81,25 @@ export class HighlightingComponent implements OnInit {
             rate: { delay: { min: adjustedDelayMin, max: adjustedDelayMax }, quantity: 1 },
             size: { width: 85, height: 1 },
             position: { x: 5, y: 92 },
-          } as IEmitter,
+          } as any,
           {
             direction: 'bottom',
             rate: { delay: { min: adjustedDelayMin + 0.1, max: adjustedDelayMax + 0.2 }, quantity: 1 },
             size: { width: 85, height: 1 },
             position: { x: 5, y: 8 },
-          } as IEmitter,
+          } as any,
           {
             direction: 'left',
             rate: { delay: { min: adjustedDelayMin, max: adjustedDelayMax }, quantity: 1 },
             size: { width: 1, height: 85 },
             position: { x: 8, y: 5 },
-          } as IEmitter,
+          } as any,
           {
             direction: 'right',
             rate: { delay: { min: adjustedDelayMin + 0.1, max: adjustedDelayMax + 0.2 }, quantity: 1 },
             size: { width: 1, height: 85 },
             position: { x: 92, y: 5 },
-          } as IEmitter,
+          } as any,
         ],
       } as ISourceOptions;
     } else {
@@ -152,25 +151,25 @@ export class HighlightingComponent implements OnInit {
             rate: { delay: { min: adjustedDelayMin, max: adjustedDelayMax }, quantity: 1 },
             size: { width: 85, height: 1 },
             position: { x: 5, y: 92 },
-          } as IEmitter,
+          } as any,
           {
             direction: 'top',
             rate: { delay: { min: adjustedDelayMin + 0.1, max: adjustedDelayMax + 0.2 }, quantity: 1 },
             size: { width: 85, height: 1 },
             position: { x: 5, y: 8 },
-          } as IEmitter,
+          } as any,
           {
             direction: 'right',
             rate: { delay: { min: adjustedDelayMin, max: adjustedDelayMax }, quantity: 1 },
             size: { width: 1, height: 85 },
             position: { x: 8, y: 5 },
-          } as IEmitter,
+          } as any,
           {
             direction: 'left',
             rate: { delay: { min: adjustedDelayMin + 0.1, max: adjustedDelayMax + 0.2 }, quantity: 1 },
             size: { width: 1, height: 85 },
             position: { x: 92, y: 5 },
-          } as IEmitter,
+          } as any,
         ],
       } as ISourceOptions;
     }

@@ -1,5 +1,4 @@
 import type { ISourceOptions } from '@tsparticles/engine';
-import type { IEmitter } from '@tsparticles/plugin-emitters/types/Options/Interfaces/IEmitter.js';
 
 const shootingStarEmitters = Array.from(
   { length: 5 },
@@ -33,7 +32,7 @@ const shootingStarEmitters = Array.from(
         color: { value: '#fff' },
         life: { duration: { value: { min: 2, max: 6 } }, count: 1 },
       },
-    } as IEmitter)
+    }) as any,
 );
 
 const blinkingStarsEmitters = Array.from(
@@ -80,7 +79,7 @@ const blinkingStarsEmitters = Array.from(
           enable: false,
         },
       },
-    } as IEmitter)
+    }) as any,
 );
 
 export const stars: ISourceOptions = {
