@@ -1,13 +1,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
-import { EFFECT_TYPE_PATHS } from 'src/app/helpers/reward-types';
+import { EffectReward } from 'src/app/models';
 import { AIManager } from 'src/app/services/ai/ai.manager';
 import { EffectsService } from 'src/app/services/game-effects.service';
 
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
+
+interface VictoryPointScore {
+  amount: number;
+  reward?: EffectReward;
+}
 
 @Component({
   selector: 'app-scoreboard',
@@ -20,7 +25,7 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  scoreArray: number[] = [];
+  scoreArray: VictoryPointScore[] = [];
 
   playerVictoryPoints: { playerId: number; amount: number }[] = [];
 
@@ -46,7 +51,16 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
     });
 
     const gameContentSub = this.settingsService.gameContent$.subscribe((x) => {
-      this.scoreArray = new Array(x.maxVictoryPoints ?? 13);
+      this.scoreArray = [];
+      const maxVictoryPoints = x.maxVictoryPoints ?? 13;
+      for (let i = 0; i < maxVictoryPoints; i++) {
+        const victoryPointReward = x.victoryPointBoni?.find((x) => x.score === i)?.reward;
+        if (!victoryPointReward) {
+          this.scoreArray.push({ amount: i });
+        } else {
+          this.scoreArray.push({ amount: i, reward: victoryPointReward });
+        }
+      }
       this.victoryPointBoni = x.victoryPointBoni;
       if (x.finaleTrigger) {
         this.finaleTrigger = x.finaleTrigger;
@@ -89,19 +103,6 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
     this.aiManager.setPreferredFieldsForAIPlayer(player.id);
 
     return false;
-  }
-
-  scoreHasReward(score: number) {
-    return this.victoryPointBoni?.some((x) => x.score === score);
-  }
-
-  getRewardAmount(score: number) {
-    return this.victoryPointBoni?.find((x) => x.score === score)?.reward.amount;
-  }
-
-  getEffectTypePath(score: number) {
-    const reward = this.victoryPointBoni?.find((x) => x.score === score);
-    return reward ? EFFECT_TYPE_PATHS[reward.reward.type] : '';
   }
 
   trackPlayerScore(playerScore: { playerId: number; amount: number }) {

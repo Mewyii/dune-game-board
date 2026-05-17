@@ -19,26 +19,25 @@
       (mouseleave)="mouseHover = false"
     >
       <div class="costs-area font-text">
-        <ng-container *ngIf="actionField.requiresInfluence">
+        @if (actionField.requiresInfluence) {
           <div class="costs-container">
             <img class="costs faction" [src]="actionField.requiresInfluence.type | factionTypePath" />
             <div *ngIf="actionField.requiresInfluence.amount" class="costs-amount faction">
               <span>{{ actionField.requiresInfluence.amount }}</span>
             </div>
           </div>
-        </ng-container>
+        }
         @for (costs of actionCosts; track $index) {
-          <ng-container *ngIf="!costs.amount">
+          @if (!costs.amount) {
             <img [class]="'costs ' + costs.modifier" [src]="costs.type | effectTypePath" />
-          </ng-container>
-          <ng-container *ngIf="costs.amount">
+          } @else {
             <div class="costs-container">
               <img [class]="'costs ' + costs.modifier" [src]="costs.type | effectTypePath" />
               <div [class]="'costs-amount '">
                 {{ costs.amount }}
               </div>
             </div>
-          </ng-container>
+          }
         }
       </div>
     </div>
@@ -136,7 +135,7 @@
       <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
     }
   </div>
-  <ng-container *ngIf="!disabled && canPlaceFieldMarkers">
+  @if (!disabled && canPlaceFieldMarkers) {
     <button
       class="field-history-button"
       mat-mini-fab
@@ -146,7 +145,7 @@
     >
       <mat-icon>pin_drop </mat-icon>
     </button>
-  </ng-container>
+  }
   @if (playerFieldMarkers.length > 0) {
     <div class="field-marker-container">
       @for (fieldMarker of playerFieldMarkers; track $index) {

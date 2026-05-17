@@ -1,14 +1,16 @@
-<div *ngIf="ix" class="faction-tile">
-  <div class="title-container">
-    <span class="title font-scifi">IX </span>
+@if (ix) {
+  <div class="faction-tile">
+    <div class="title-container">
+      <span class="title font-scifi">IX </span>
+    </div>
+    <div class="content">
+      <app-dune-action [actionField]="ix" [backgroundColor]="'rgb(73, 82, 97)'"></app-dune-action>
+      @if (useTechTiles) {
+        <div class="card-area" [style]="'margin-top: 12px'"></div>
+        <div class="card-area"></div>
+        <div class="card-area"></div>
+      }
+    </div>
+    <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
   </div>
-  <div class="content">
-    <app-dune-action [actionField]="ix" [backgroundColor]="'rgb(73, 82, 97)'"></app-dune-action>
-    <ng-container *ngIf="useTechTiles">
-      <div class="card-area" [style]="'margin-top: 12px'"></div>
-      <div class="card-area"></div>
-      <div class="card-area"></div>
-    </ng-container>
-  </div>
-  <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
-</div>
+}

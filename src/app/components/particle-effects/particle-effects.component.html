@@ -1,26 +1,18 @@
-<div
-  class="combat-animation"
-  [style.animation-duration]="combatAnimation.duration + 's'"
-  *ngIf="combatAnimation && combatAnimation.show"
->
-  <ngx-particles class="combat-particles" [id]="combatAnimation.id" [options]="combatAnimation.effect"> </ngx-particles>
-  <div class="effect-title font-medieval red">{{ t.translateLS(combatAnimation.title) }}</div>
-</div>
-
-<div
-  class="spice-animation"
-  [style.animation-duration]="spiceAnimation.duration + 's'"
-  *ngIf="spiceAnimation && spiceAnimation.show"
->
-  <ngx-particles class="spice-particles" [id]="spiceAnimation.id" [options]="spiceAnimation.effect"> </ngx-particles>
-  <div class="effect-title font-medieval gold">{{ t.translateLS(spiceAnimation.title) }}</div>
-</div>
-
-<div
-  class="spice-animation"
-  [style.animation-duration]="welcomeAnimation.duration + 's'"
-  *ngIf="welcomeAnimation && welcomeAnimation.show"
->
-  <ngx-particles class="spice-particles" [id]="welcomeAnimation.id" [options]="welcomeAnimation.effect"> </ngx-particles>
-  <div class="effect-title font-medieval gold">{{ t.translateLS(welcomeAnimation.title) }}</div>
-</div>
+@if (combatAnimation && combatAnimation.show) {
+  <div class="combat-animation" [style.animation-duration]="combatAnimation.duration + 's'">
+    <ngx-particles class="combat-particles" [id]="combatAnimation.id" [options]="combatAnimation.effect"> </ngx-particles>
+    <div class="effect-title font-medieval red">{{ t.translateLS(combatAnimation.title) }}</div>
+  </div>
+}
+@if (spiceAnimation && spiceAnimation.show) {
+  <div class="spice-animation" [style.animation-duration]="spiceAnimation.duration + 's'">
+    <ngx-particles class="spice-particles" [id]="spiceAnimation.id" [options]="spiceAnimation.effect"> </ngx-particles>
+    <div class="effect-title font-medieval gold">{{ t.translateLS(spiceAnimation.title) }}</div>
+  </div>
+}
+@if (welcomeAnimation && welcomeAnimation.show) {
+  <div class="spice-animation" [style.animation-duration]="welcomeAnimation.duration + 's'">
+    <ngx-particles class="spice-particles" [id]="welcomeAnimation.id" [options]="welcomeAnimation.effect"> </ngx-particles>
+    <div class="effect-title font-medieval gold">{{ t.translateLS(welcomeAnimation.title) }}</div>
+  </div>
+}

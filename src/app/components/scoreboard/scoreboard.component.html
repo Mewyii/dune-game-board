@@ -2,29 +2,28 @@
   @for (score of scoreArray; track $index; let i = $index; let last = $last) {
     <div
       class="score-element light"
-      [class.finale-four-players]="i > finaleTrigger - 1"
-      [class.finale-three-players]="i > finaleTrigger"
+      [class.finale-four-players]="score.amount > finaleTrigger - 1"
+      [class.finale-three-players]="score.amount > finaleTrigger"
     >
-      <div class="score">{{ i }}</div>
-      <ng-container *ngIf="victoryPointBoni"
-        ><ng-container *ngIf="scoreHasReward(i)">
-          <div class="reward-container">
-            <img class="reward" [src]="getEffectTypePath(i)" />
-            <ng-container *ngIf="getRewardAmount(i)">
-              <div class="reward-amount">
-                {{ getRewardAmount(i) }}
-              </div>
-            </ng-container>
-          </div>
-        </ng-container></ng-container
-      >
+      <div class="score">{{ score.amount }}</div>
+      @if (victoryPointBoni && score.reward) {
+        <div class="reward-container">
+          <img class="reward" [src]="score.reward.type | effectTypePath" />
+          @if (score.reward.amount) {
+            <div class="reward-amount">
+              {{ score.reward.amount }}
+            </div>
+          }
+        </div>
+      }
     </div>
-    <div
-      *ngIf="!last"
-      class="divider light"
-      [class.finale-four-players]="i === finaleTrigger - 1"
-      [class.finale-three-players]="i === finaleTrigger"
-    ></div>
+    @if (!last) {
+      <div
+        class="divider light"
+        [class.finale-four-players]="score.amount === finaleTrigger - 1"
+        [class.finale-three-players]="score.amount === finaleTrigger"
+      ></div>
+    }
   }
   @if (mode === 'game') {
     @for (playerScore of playerVictoryPoints; track trackPlayerScore(playerScore); let i = $index) {

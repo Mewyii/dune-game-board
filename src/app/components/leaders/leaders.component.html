@@ -364,29 +364,6 @@
         </div>
       </div>
 
-      <div class="control-bar center" *ngIf="houses.length > 0">
-        <ng-container *ngFor="let house of houses">
-          <div class="house-card-container">
-            <dune-minor-house-card [house]="house"></dune-minor-house-card>
-            <button
-              class="house-level-up-button"
-              mat-mini-fab
-              [color]="'accent'"
-              (click)="onHouseLevelUpClicked(house.name.en)"
-            >
-              <mat-icon>expand_less</mat-icon>
-            </button>
-            <button
-              class="house-level-down-button"
-              mat-mini-fab
-              [color]="'accent'"
-              (click)="onHouseLevelDownClicked(house.name.en)"
-            >
-              <mat-icon>expand_more</mat-icon>
-            </button>
-          </div>
-        </ng-container>
-      </div>
       <dune-player-reward-choices></dune-player-reward-choices>
       <div class="control-bar center" [style.paddingBottom]="'32px'" *ngIf="playerTechTiles.length > 0">
         @for (playerTechTile of playerTechTiles; track playerTechTile.techTile.name.en) {

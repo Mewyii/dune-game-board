@@ -6,8 +6,11 @@
       (click)="showNavigationSelection = !showNavigationSelection"
       [matTooltip]="t.translate('commonMenuNavigation')"
     >
-      <mat-icon *ngIf="!showNavigationSelection">menu</mat-icon>
-      <mat-icon *ngIf="showNavigationSelection">chevron_left</mat-icon>
+      @if (!showNavigationSelection) {
+        <mat-icon>menu</mat-icon>
+      } @else {
+        <mat-icon>chevron_left</mat-icon>
+      }
     </button>
   </div>
   <div [class]="'navigation-item-container ' + (showNavigationSelection ? 'shown' : 'hidden')">

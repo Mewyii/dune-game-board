@@ -50,7 +50,6 @@ import { ImperiumRowCardComponent } from './components/_common/imperium-row-card
 import { IntrigueCardComponent } from './components/_common/intrigue-card/intrigue-card.component';
 import { LeaderCardComponent } from './components/_common/leader-card/leader-card.component';
 import { MarkerComponent } from './components/_common/marker/marker.component';
-import { MinorHouseCardComponent } from './components/_common/minor-house-card/minor-house-card.component';
 import { PlotCardComponent } from './components/_common/plot-card/plot-card.component';
 import { RewardArrayComponent } from './components/_common/reward-array/reward-array.component';
 import { TechTileComponent } from './components/_common/tech-tile/tech-tile.component';
@@ -68,7 +67,6 @@ import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { LeadersComponent } from './components/leaders/leaders.component';
 import { DialogGameManualComponent } from './components/manual/dialog-game-manual/dialog-game-manual.component';
 import { ManualComponent } from './components/manual/manual.component';
-import { MinorHousesComponent } from './components/minor-houses/minor-houses.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { PlayerHandComponent } from './components/player-hand/player-hand.component';
@@ -134,8 +132,6 @@ import { SafeUrlPipe } from './pipes/safe-url';
     ActionTypePathPipe,
     NumberToArrayPipe,
     SafeUrlPipe,
-    MinorHousesComponent,
-    MinorHouseCardComponent,
     ImperiumRowCardComponent,
     TechTileComponent,
     GameBoardComponent,

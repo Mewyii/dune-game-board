@@ -4,7 +4,7 @@
     [backgroundColor]="location.color"
     [disabled]="readonly"
   ></app-dune-action>
-  <ng-container *ngIf="location.actionField.ownerReward">
+  @if (location.actionField.ownerReward) {
     <div class="location-owning-area">
       <div
         [class]="'location-owner-indicator' + (owner ? ' owned' : '')"
@@ -13,7 +13,9 @@
         [style.border-color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
       >
-        <span *ngIf="owner" class="location-owner-name font-medieval">{{ leaderInitials.toUpperCase() }}</span>
+        @if (owner) {
+          <span class="location-owner-name font-medieval">{{ leaderInitials.toUpperCase() }}</span>
+        }
       </div>
       <div class="location-owner-reward-area">
         <div class="location-owner-game-reward-area" [style.background-color]="location.color">
@@ -30,5 +32,5 @@
         <div class="border-remover" [style.background-color]="location.color"></div>
       </div>
     </div>
-  </ng-container>
+  }
 </div>

@@ -1,4 +1,4 @@
-import { ActionField, DuneLocation, Effect, EffectReward, Faction, LanguageType } from '../models';
+import { ActionField, DuneLocation, EffectReward, Faction, LanguageType } from '../models';
 import { FieldsForGoals } from '../models/ai';
 import { Conflict } from '../models/conflict';
 import { CustomCard } from '../models/imperium-card';
@@ -6,7 +6,7 @@ import { gameContentCustomExpert } from './game-content';
 
 export interface VictoryPointReward {
   score: number;
-  reward: Effect;
+  reward: EffectReward;
 }
 
 export interface AI {

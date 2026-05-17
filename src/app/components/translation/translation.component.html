@@ -6,8 +6,11 @@
       (click)="showLanguageSelection = !showLanguageSelection"
       [matTooltip]="t.translate('commonMenuLanguage')"
     >
-      <mat-icon *ngIf="!showLanguageSelection">translate</mat-icon>
-      <mat-icon *ngIf="showLanguageSelection">chevron_left</mat-icon>
+      @if (!showLanguageSelection) {
+        <mat-icon>translate</mat-icon>
+      } @else {
+        <mat-icon>chevron_left</mat-icon>
+      }
     </button>
   </div>
   <div [class]="'language-container ' + (showLanguageSelection ? 'shown' : 'hidden')">

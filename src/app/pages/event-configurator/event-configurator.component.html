@@ -1,4 +1,4 @@
-<div class="cards-configurator">
+<main class="cards-configurator">
   <div class="cards-manager">
     <div class="action-bar">
       <div class="settings-container"></div>
@@ -24,23 +24,23 @@
     </div>
     <div class="cards-preview-container">
       @for (event of events; track $index) {
-      <div class="card-container">
-        <div #cardimg [style]="'padding:' + imagePadding + 'px'">
-          <dune-event-card [event]="event"></dune-event-card>
+        <div class="card-container">
+          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
+            <dune-event-card [event]="event"></dune-event-card>
+          </div>
+          <div class="card-action-bar" *ngIf="showControls">
+            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(event)" matTooltip="Edit">
+              <mat-icon>settings</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(event.title.en)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, event.title.en)" matTooltip="Save">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="card-action-bar" *ngIf="showControls">
-          <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(event)" matTooltip="Edit">
-            <mat-icon>settings</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(event.title.en)" matTooltip="Delete">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, event.title.en)" matTooltip="Save">
-            <mat-icon>download</mat-icon>
-          </button>
-        </div>
-      </div>
       }
     </div>
   </div>
-</div>
+</main>

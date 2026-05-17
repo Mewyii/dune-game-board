@@ -1,6 +1,6 @@
 <div class="combat-tile">
   <div class="units-area">
-    <ng-container *ngIf="settingsService.mode === 'game'">
+    @if (settingsService.mode === 'game') {
       @for (combatUnits of playerCombatUnits; track trackCombatUnits(combatUnits); let i = $index) {
         <div
           class="garrison-container"
@@ -61,7 +61,7 @@
           }
         </div>
       }
-    </ng-container>
+    }
     <img class="battlefield-background" [src]="'assets/images/battefield_background.png'" />
   </div>
 </div>
@@ -69,7 +69,7 @@
   <div class="lower-row">
     <div class="score-element first">
       <div class="score">0</div>
-      <ng-container *ngIf="settingsService.mode === 'game'">
+      @if (settingsService.mode === 'game') {
         <div class="score-container large">
           @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
             <div
@@ -80,13 +80,13 @@
             ></div>
           }
         </div>
-      </ng-container>
+      }
     </div>
     <div class="combat-score-board">
       @for (score of combatScoreArray; track $index; let scoreIndex = $index; let last = $last) {
         <div class="score-element">
           <div class="score">{{ scoreIndex + 1 }}</div>
-          <ng-container *ngIf="settingsService.mode === 'game'">
+          @if (settingsService.mode === 'game') {
             <div class="score-container">
               @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
                 <div
@@ -96,7 +96,7 @@
                 ></div>
               }
             </div>
-          </ng-container>
+          }
         </div>
       }
     </div>
