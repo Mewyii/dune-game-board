@@ -15,7 +15,7 @@ export class HighlightingComponent implements OnInit {
   @Input() bottom = 0;
   @Input() direction: 'inwards' | 'outwards' = 'outwards';
 
-  highlightingEffect: ISourceOptions = this.getHighlightingAnimation();
+  highlightingEffect: ISourceOptions | undefined;
 
   constructor() {}
 
@@ -46,7 +46,7 @@ export class HighlightingComponent implements OnInit {
           width: `${this.width}px`,
           height: `${this.height}px`,
         },
-        fullScreen: { enable: false },
+        fullScreen: false,
         background: { color: { value: 'transparent' } },
         particles: {
           number: { value: 0 },
@@ -111,7 +111,7 @@ export class HighlightingComponent implements OnInit {
           width: `${this.width}px`,
           height: `${this.height}px`,
         },
-        fullScreen: { enable: false },
+        fullScreen: false,
         background: { color: { value: 'transparent' } },
         particles: {
           number: { value: 0 },

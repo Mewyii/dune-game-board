@@ -1,1 +1,3 @@
-<ngx-particles [id]="'spiceParticles-' + id" [options]="highlightingEffect"></ngx-particles>
+@if (highlightingEffect) {
+  <ngx-particles [id]="'spiceParticles-' + id" [options]="highlightingEffect"></ngx-particles>
+}
