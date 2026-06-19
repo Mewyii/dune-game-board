@@ -32,7 +32,7 @@ export class AIBoardSpacesService {
       return undefined;
     }
 
-    const fields = this.settingsService.boardFields;
+    const fields = this.settingsService.boardSpaces;
     return fields.find((x) => preferredField.fieldId.includes(x.title.en));
   }
 

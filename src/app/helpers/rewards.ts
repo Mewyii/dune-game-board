@@ -542,10 +542,12 @@ export function getMultipliedRewardEffects(
     | 'playerAgentsOnFields'
     | 'playerAgentPlacedOnFieldThisTurn'
     | 'playerCombatUnits'
+    | 'playerHandCards'
     | 'playerHandCardsRewards'
     | 'playerHandCardsFactions'
     | 'playerCardsFactionsInPlay'
     | 'enemyAgentsOnFields'
+    | 'boardSpaces'
   >,
   timing: EffectPlayerTurnTiming = 'agent-placement',
   gameElement?: GameElement,
@@ -582,7 +584,7 @@ export function getMultipliedRewardEffects(
         effectMultiplierAmount = troopsInConflict;
       }
     } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-cards-with-sword') {
-      const swordAmount = gameState.playerHandCardsRewards.sword;
+      const swordAmount = gameState.playerHandCards.filter((x) => x.revealEffects?.some((x) => x.type === 'sword')).length;
       if (swordAmount > 0) {
         effectMultiplierAmount = 1 * swordAmount;
       }
@@ -613,6 +615,17 @@ export function getMultipliedRewardEffects(
             effectMultiplierAmount -= 1;
           }
         }
+      }
+    } else if (multiplierEffectOrRewardArray.multiplier.type === 'multiplier-own-agents-on-field-type') {
+      const action = multiplierEffectOrRewardArray.multiplier.action;
+      const actionTypeFieldIds = gameState.boardSpaces.filter((x) => x.actionType === action).map((x) => x.title.en);
+
+      const agentsOnBoardSpacesCount = gameState.playerAgentsOnFields.filter((x) =>
+        actionTypeFieldIds.includes(x.fieldId),
+      ).length;
+
+      if (agentsOnBoardSpacesCount > 0) {
+        effectMultiplierAmount = agentsOnBoardSpacesCount;
       }
     }
     if (effectMultiplierAmount > 0) {

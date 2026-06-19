@@ -81,6 +81,7 @@ export const EFFECT_TYPE_PATHS: Record<EffectType, string> = {
   'condition-enemies-on-field-type': '',
   'condition-enemy-controlling-this-field': '',
   'multiplier-agents-on-board-spaces': '',
+  'multiplier-own-agents-on-field-type': '',
   'multiplier-cards-with-sword': '',
   'multiplier-connections': '',
   'multiplier-dreadnought-amount': '',

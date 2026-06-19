@@ -316,7 +316,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
 
   onAddCardClicked() {
     const dialogRef = this.dialog.open(DialogCardEditorComponent, {
-      width: '875px',
+      width: '900px',
       data: {
         title: 'Create New Imperium Card',
         imperiumCard: this.createEmptyImperiumCard(),
@@ -356,7 +356,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
 
   onEditCardClicked(imperiumCard: ImperiumCard) {
     const dialogRef = this.dialog.open(DialogCardEditorComponent, {
-      width: '875px',
+      width: '900px',
       data: {
         title: 'Edit Imperium Card',
         imperiumCard: imperiumCard,

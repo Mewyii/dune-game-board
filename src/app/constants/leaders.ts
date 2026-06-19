@@ -81,8 +81,8 @@ export const leaders: Leader[] = [
       de: 'Alia Atreides',
     },
     house: {
-      en: 'house atreides',
-      de: 'haus atreides',
+      en: 'House Atreides',
+      de: 'Haus Atreides',
     },
     passiveName: {
       en: 'Pre-born',
@@ -199,8 +199,8 @@ export const leaders: Leader[] = [
       de: 'Feyd-Rautha Harkonnen',
     },
     house: {
-      en: 'house harkonnen',
-      de: 'haus harkonnen',
+      en: 'House Harkonnen',
+      de: 'Haus Harkonnen',
     },
     passiveName: {
       en: 'Ruthless ambition',
@@ -250,8 +250,8 @@ export const leaders: Leader[] = [
       de: 'Haus Harkonnen',
     },
     passiveName: {
-      en: 'Uncontrolled aggression',
-      de: 'Unkontrollierte Agression',
+      en: 'Uncontrolled Aggression',
+      de: 'Unkontrollierte Aggression',
     },
     passiveDescription: {
       en: '<b>Game start</b>: {resource:location-control} for Carthag.<br><br><b>Round start</b>: Discard one of your handcards.',
@@ -358,23 +358,23 @@ export const leaders: Leader[] = [
       de: 'Chani Kynes',
     },
     house: {
-      en: 'fremen',
-      de: 'fremen',
+      en: 'Fremen',
+      de: 'Fremen',
     },
     passiveName: {
-      en: 'Child of the desert',
+      en: 'Child of the Desert',
       de: 'Kind der Wüste',
     },
     passiveDescription: {
-      en: '{faction:spice} fields cost you {resource:water} less. You receive {resource:spice} less from them.',
+      en: '{faction:spice} board spaces cost you {resource:water} less. You receive {resource:spice} less from them.',
       de: '{faction:spice}-Felder kosten dich {resource:water} weniger. Du erhältst von ihnen {resource:spice} weniger.',
     },
     signetName: {
-      en: 'Fremen bonds',
+      en: 'Fremen Bonds',
       de: 'Fremenbande',
     },
     signetDescription: {
-      en: 'You may trash {resource:signet} on your reveal turn to reduce the costs of a fremen card by <b>1</b>.',
+      en: 'You may use {resource:signet} as {resource:persuasion} to acquire Fremen cards.',
       de: 'Du kannst {resource:signet} als {resource:persuasion} verwenden, um Fremen-Karten zu erwerben.',
     },
     imageUrl: '/assets/images/leaders/chani.png',
@@ -405,8 +405,8 @@ export const leaders: Leader[] = [
       de: 'Stilgar',
     },
     house: {
-      en: 'fremen',
-      de: 'fremen',
+      en: 'Fremen',
+      de: 'Fremen',
     },
     passiveName: {
       en: 'Naib of Sietch Tabr',
@@ -417,7 +417,7 @@ export const leaders: Leader[] = [
       de: 'Du hast Zugang zu Sietch Tabr.',
     },
     signetName: {
-      en: 'The fremen ways',
+      en: 'The Fremen Ways',
       de: 'Die Wege der Fremen',
     },
     signetDescription: {
@@ -465,11 +465,11 @@ export const leaders: Leader[] = [
       de: 'Liet Kynes',
     },
     house: {
-      en: 'fremen',
-      de: 'fremen',
+      en: 'Fremen',
+      de: 'Fremen',
     },
     passiveName: {
-      en: 'Leader of the fremen',
+      en: 'Leader of the Fremen',
       de: 'Anführer der Fremen',
     },
     passiveDescription: {
@@ -477,7 +477,7 @@ export const leaders: Leader[] = [
       de: 'Lege keinen Marker auf die {faction:fremen}-Einflussleiste. Immer wenn du dort Einfluss erhalten würdest: {resource:water}<br>Du erfüllst alle {faction:fremen} Einfluss-Bedingungen.',
     },
     signetName: {
-      en: 'Planting the paradise',
+      en: 'Planting the Paradise',
       de: 'Pflanzen des Paradieses',
     },
     signetDescription: {
@@ -507,11 +507,11 @@ export const leaders: Leader[] = [
       de: 'Prinzessin Irulan Corrino',
     },
     house: {
-      en: 'house corrino',
-      de: 'haus corrino',
+      en: 'House Corrino',
+      de: 'Haus Corrino',
     },
     passiveName: {
-      en: 'Daughter of the emperor',
+      en: 'Daughter of the Emperor',
       de: 'Tochter des Imperators',
     },
     passiveDescription: {
@@ -554,7 +554,7 @@ export const leaders: Leader[] = [
       de: 'haus fenring',
     },
     passiveName: {
-      en: 'Bene gesserit training',
+      en: 'Bene Gesserit Training',
       de: 'Bene Gesserit Ausbildung',
     },
     passiveDescription: {
@@ -562,7 +562,7 @@ export const leaders: Leader[] = [
       de: 'Du kannst deinen 1. Zug jeder Runde passen. Tust du das: {resource:card-discard}{resource:helper-trade}{resource:card-draw}',
     },
     signetName: {
-      en: 'Hypnotic seduction',
+      en: 'Hypnotic Seduction',
       de: 'Hypnotische Verführung',
     },
     signetDescription: {
@@ -594,11 +594,11 @@ export const leaders: Leader[] = [
       de: 'Graf Hasimir Fenring',
     },
     house: {
-      en: 'house fenring',
-      de: 'haus fenring',
+      en: 'House Fenring',
+      de: 'Haus Fenring',
     },
     passiveName: {
-      en: 'Agent of the emperor',
+      en: 'Agent of the Emperor',
       de: 'Agent des Imperators',
     },
     passiveDescription: {
@@ -606,7 +606,7 @@ export const leaders: Leader[] = [
       de: '',
     },
     signetName: {
-      en: 'Orchestrated weakness',
+      en: 'Orchestrated Weakness',
       de: 'Inszenierte Schwächlichkeit',
     },
     signetDescription: {
@@ -662,15 +662,15 @@ export const leaders: Leader[] = [
       de: 'haus vernius',
     },
     passiveName: {
-      en: 'Ixian gifts',
+      en: 'Ixian Gifts',
       de: 'Ixianische Geschenke',
     },
     passiveDescription: {
-      en: '<b>Reveal turn</b>: You may trash ein tech tile to get {resource:faction-influence-up-choice}.',
+      en: '<b>Reveal turn</b>: You may trash a tech tile to get {resource:faction-influence-up-choice}.',
       de: '<b>Aufdeckzug</b>: Du kannst ein Tech-Plättchen entsorgen, um {resource:faction-influence-up-choice} zu erhalten.',
     },
     signetName: {
-      en: 'Inspiring presence',
+      en: 'Inspiring Presence',
       de: 'Inspirierende Präsenz',
     },
     signetDescription: {
@@ -706,11 +706,11 @@ export const leaders: Leader[] = [
       de: 'Graf Rhombur Vernius',
     },
     house: {
-      en: 'house vernius',
-      de: 'haus vernius',
+      en: 'House Vernius',
+      de: 'Haus Vernius',
     },
     passiveName: {
-      en: 'Cybernetic implants',
+      en: 'Cybernetic Implants',
       de: 'Kybernetische Implantate',
     },
     passiveDescription: {
@@ -718,7 +718,7 @@ export const leaders: Leader[] = [
       de: '',
     },
     signetName: {
-      en: 'Earl of ix',
+      en: 'Earl of Ix',
       de: 'Graf von Ix',
     },
     signetDescription: {
@@ -803,7 +803,7 @@ export const leaders: Leader[] = [
       de: 'Isolationist',
     },
     passiveDescription: {
-      en: 'You cannot acquire cards.<br><br><b>Reveal turn</b>: Receive a {resource:signet} for each {resource:persuasion}.',
+      en: 'You cannot acquire cards.<br><br><b>Reveal turn</b>: Receive a {resource:signet} for each of your {resource:victory-point} and each of your {resource:persuasion}.',
       de: '<b>Aufdeckzug</b>: Du kannst keine Karten erwerben. Erhalte für jeden deiner {resource:victory-point} und für jeden deiner {resource:persuasion} ein {resource:signet}.',
     },
     signetName: {
@@ -839,11 +839,11 @@ export const leaders: Leader[] = [
       de: 'Lunara Metulli',
     },
     house: {
-      en: 'house metulli',
-      de: 'haus metulli',
+      en: 'House Metulli',
+      de: 'Haus Metulli',
     },
     passiveName: {
-      en: 'Struggling house',
+      en: 'Struggling House',
       de: 'Bedrängtes Haus',
     },
     passiveDescription: {
@@ -851,11 +851,11 @@ export const leaders: Leader[] = [
       de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf diesen Bereich. Sobald du {resource:solari;amount:2} besitzt, entferne sie und den Marker.',
     },
     signetName: {
-      en: 'Thorough approach',
+      en: 'Thorough Approach',
       de: 'Sorgfältiges Vorgehen',
     },
     signetDescription: {
-      en: 'You may trash {resource:signet} when you receive {resource:solari}, {resource:spice}, {resource:water} to get <b>1</b> more of it.',
+      en: 'You may trash {resource:signet} when you receive <br>{resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} to get <b>1</b> more of it.',
       de: 'Du kannst {resource:signet} entsorgen, wenn du <br>{resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} erhältst, um 1 mehr zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
@@ -890,7 +890,7 @@ export const leaders: Leader[] = [
       de: 'Haus Ecaz',
     },
     passiveName: {
-      en: 'Renowned house',
+      en: 'Renowned House',
       de: 'Renommiertes Haus',
     },
     passiveDescription: {
@@ -898,7 +898,7 @@ export const leaders: Leader[] = [
       de: '',
     },
     signetName: {
-      en: 'Battle-hardened',
+      en: 'Battle-Hardened',
       de: 'Kriegserfahren',
     },
     signetDescription: {
@@ -946,7 +946,7 @@ export const leaders: Leader[] = [
       de: 'Haus Moritani',
     },
     passiveName: {
-      en: 'In the shadows',
+      en: 'In the Shadows',
       de: 'In den Schatten',
     },
     passiveDescription: {
@@ -985,20 +985,20 @@ export const leaders: Leader[] = [
       de: 'Haus Moritani',
     },
     passiveName: {
-      en: 'Forced recruitment',
+      en: 'Forced Recruitment',
       de: 'Zwangsrekrutierung',
     },
     passiveDescription: {
-      en: '<b>Reveal turn:</b> You may trash one of your {resource:signet} to gain {resource:troop}.',
-      de: '<b>Aufdeckzug:</b> Du kannst eines deiner {resource:signet} entsorgen, um dafür {resource:troop} zu erhalten.',
+      en: '<b>Reveal turn:</b> You may trash one of your {resource:signet} to gain {resource:troop} or trash 2 {resource:signet} to gain {resource:faction-influence-up-choice}.',
+      de: '<b>Aufdeckzug</b>: Du kannst einen deiner {resource:signet} entsorgen, um {resource:troop} zu erhalten oder 2 {resource:signet} entsorgen, um {resource:faction-influence-up-choice} zu erhalten.',
     },
     signetName: {
-      en: 'Labour camps',
+      en: 'Labour Camps',
       de: 'Arbeitslager',
     },
     signetDescription: {
-      en: 'Place {resource:signet} on a board space that has one of your agents on it. If a player places an agent there, you and this player gain {resource:solari}.',
-      de: 'Lege {resource:signet} auf ein {faction:town}-Feld mit einem deiner Agenten. Wenn ein Spieler dort einen Agent platziert, erhältst du und der Spieler jeweils {resource:solari}.',
+      en: 'Gain {resource:solari}. Put {resource:signet} on a {faction:town} or {faction:spice} board space with one of your agents. If a player puts an agent there, he receivces {resource:solari}.',
+      de: 'Erhalte {resource:solari}. Lege {resource:signet} auf ein {faction:town}- oder {faction:spice}-Feld mit einem deiner Agenten. Wenn ein Spieler dort einen Agenten platziert, erhält er {resource:solari}.',
     },
     imageUrl: '/assets/images/leaders/yuna_2.png',
     type: 'new',
@@ -1032,7 +1032,7 @@ export const leaders: Leader[] = [
       de: '',
     },
     signetName: {
-      en: 'Equipment production',
+      en: 'Equipment Production',
       de: 'Ausrüstungsproduktion',
     },
     signetDescription: {
@@ -1092,7 +1092,7 @@ export const leaders: Leader[] = [
       de: 'Immer wenn du einen Agenten zu einem {faction:landsraad}-Feld entsendest: {resource:solari}{resource:helper-trade}{resource:troop}',
     },
     signetName: {
-      en: 'Smuggling connections',
+      en: 'Smuggling Connections',
       de: 'Schmuggler-Verbindungen',
     },
     signetDescription: {
@@ -1132,15 +1132,15 @@ export const leaders: Leader[] = [
       de: '-',
     },
     passiveName: {
-      en: 'Blind but seeing',
+      en: 'Blind but Seeing',
       de: 'Blind und doch Sehend',
     },
     passiveDescription: {
-      en: 'Enemy agents on {faction:town} board spaces do not block your agents.<br><b>Reveal turn</b>: For each of your {resource:agent} on {faction:town} board spaces: {resource:persuasion;amount:1}{resource:helper-or}{resource:focus}',
+      en: 'Enemy agents on {faction:town} board spaces do not block your agents.<br><b>Reveal turn</b>: For each of your agents on board spaces controlled by an opponent: {resource:persuasion;amount:1}',
       de: 'Gegnerische Agenten blockieren {faction:town}-Felder für dich nicht.<br><b>Aufdeckzug</b>: Für jeden deiner Agenten auf Feldern, die ein Gegner kontrolliert: {resource:persuasion;amount:1}',
     },
     signetName: {
-      en: 'Accusing prophet',
+      en: 'Accusing Prophet',
       de: 'Anklagender Prophet',
     },
     signetDescription: {

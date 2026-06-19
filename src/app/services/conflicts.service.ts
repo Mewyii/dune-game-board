@@ -41,6 +41,8 @@ export class ConflictsService {
     this.currentConflict$.subscribe((currentConflict) => {
       if (currentConflict) {
         localStorage.setItem('currentConflict', JSON.stringify(currentConflict));
+      } else {
+        localStorage.removeItem('currentConflict');
       }
     });
   }

@@ -493,14 +493,12 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
   private showAgentLiftDialog(currentEffect: ImmediateEffect) {
     this.immediateEffectDialogOpen = true;
 
-    const locations = this.settingsService.getBoardLocations();
-    const playerLocations = locations.filter((x) =>
-      this.playerAgentsService
-        .getPlayerAgentsOnFields(currentEffect.playerId)
-        .some((y) => y.fieldId === x.actionField.title.en),
+    const boardSpaces = this.settingsService.boardSpaces;
+    const playerBoardSpaces = boardSpaces.filter((x) =>
+      this.playerAgentsService.getPlayerAgentsOnFields(currentEffect.playerId).some((y) => y.fieldId === x.title.en),
     );
 
-    if (playerLocations.length < 1) {
+    if (playerBoardSpaces.length < 1) {
       this.immediateEffectDialogOpen = false;
       this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
       return;
@@ -511,7 +509,10 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       data: {
         title: `${this.t.translateLS(leaderName!)}: ${this.t.translate('commonEffectLocationChoice')}`,
         playerId: currentEffect.playerId,
-        locations: playerLocations,
+        locations: playerBoardSpaces.map((x) => ({
+          actionField: x,
+          color: this.settingsService.getBoardSpaceColor(x.actionType),
+        })),
         mode: 'select',
         colorScheme: 'positive',
       } as BoardSpaceSelectorData,

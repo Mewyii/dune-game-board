@@ -53,7 +53,7 @@ export class AIFieldEvaluationService {
   ) {
     const boardFields = this.getFieldsWithAdjustedRewardsAndCosts(
       gameState,
-      this.getFieldsSplitByRewardChoices(this.settingsService.boardFields),
+      this.getFieldsSplitByRewardChoices(this.settingsService.boardSpaces),
     );
 
     let leaderGoalModifiers: GoalModifier[] = [];

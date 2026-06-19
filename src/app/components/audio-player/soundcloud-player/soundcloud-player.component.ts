@@ -1,12 +1,14 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
-    selector: 'dune-soundcloud-player',
-    templateUrl: './soundcloud-player.component.html',
-    styleUrl: './soundcloud-player.component.scss',
-    standalone: false
+  selector: 'dune-soundcloud-player',
+  templateUrl: './soundcloud-player.component.html',
+  styleUrl: './soundcloud-player.component.scss',
+  standalone: false,
 })
-export class SoundcloudPlayerComponent implements AfterViewInit {
+export class SoundcloudPlayerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() musicId = 0;
   @Input() type: 'tracks' | 'playlists' = 'tracks';
   @Input() volume = 50;
@@ -18,6 +20,21 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
 
   public playlistLength = 0;
   public widget: Widget | undefined;
+
+  subscriptions: Subscription[] = [];
+
+  constructor(private settingsService: SettingsService) {}
+
+  ngOnInit(): void {
+    const autoPlaySub = this.settingsService.autoplayMusic$.subscribe((value) => {
+      if (value === true) {
+        this.playRandomSound();
+      } else {
+        this.widget?.pause();
+      }
+    });
+    this.subscriptions.push(autoPlaySub);
+  }
 
   ngAfterViewInit(): void {
     this.widget = SC.Widget(this.musicId + '');
@@ -44,6 +61,12 @@ export class SoundcloudPlayerComponent implements AfterViewInit {
           this.playRandomSound();
         }
       });
+    }
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
     }
   }
 

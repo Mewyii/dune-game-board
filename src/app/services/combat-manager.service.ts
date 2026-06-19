@@ -268,32 +268,6 @@ export class CombatManager {
     }
   }
 
-  addAllPossibleUnitsToCombat(playerId: number, deployableUnitAmount: number) {
-    const combatUnits = this.getPlayerCombatUnits(playerId);
-    if (!combatUnits) {
-      return 0;
-    }
-    let addedUnits = 0;
-
-    let unitsAllowedToEnterCombat = deployableUnitAmount;
-    if (combatUnits.shipsInGarrison > 0) {
-      const shipsToAdd =
-        combatUnits.shipsInGarrison > unitsAllowedToEnterCombat ? unitsAllowedToEnterCombat : combatUnits.shipsInGarrison;
-
-      this.addPlayerShipsToCombat(playerId, shipsToAdd);
-      unitsAllowedToEnterCombat -= shipsToAdd;
-      addedUnits += shipsToAdd;
-    }
-    if (unitsAllowedToEnterCombat > 0 && combatUnits.troopsInGarrison > 0) {
-      const troopsToAdd =
-        combatUnits.troopsInGarrison > unitsAllowedToEnterCombat ? unitsAllowedToEnterCombat : combatUnits.troopsInGarrison;
-
-      this.addPlayerTroopsToCombat(playerId, troopsToAdd);
-      addedUnits += troopsToAdd;
-    }
-    return addedUnits;
-  }
-
   setPlayerShipsInCombat(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);

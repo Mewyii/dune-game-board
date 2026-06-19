@@ -94,6 +94,201 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Spice-Supremacy',
+      de: 'Kontrolle über das Spice',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'helper-separator',
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'small',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+    customRevealEffect: {
+      en: 'If you control <b>2</b> {faction:spice} locations and have {resource:spice;amount:4}: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>2</b> {faction:spice}-Orte kontrollierst und {resource:spice;amount:4} hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 2,
+    imageUrl: '/assets/images/action-backgrounds/spice.png',
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
+      en: 'Military Might',
+      de: 'Militärische Macht',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have <b>8</b> troops in your garrison: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>8</b> Truppen in deiner Garnison hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/troops_3.png',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
+      en: 'Landsraad leadership',
+      de: 'Landsraad-Führerschaft',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have a high council seat, <b>15</b> persuasion and not more than <b>2</b> {faction:emperor}-influence: <br>{resource:trash-self} {resource:victory-point} {resource:victory-point}',
+      de: 'Wenn du einen Sitz im hohen Rat, <b>15</b> Überzeugung und maximal <b>2</b> {faction:emperor}-Einfluss hast: <br>{resource:trash-self} {resource:victory-point} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/signet_ring.png',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
+      en: 'Against the old order',
+      de: 'Gegen die alte Ordnung',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: "If you control <b>3</b> locations and don't have more than <b>1</b> {faction:emperor}-, {faction:guild}- and {faction:bene}-influence: <br>{resource:trash-self} {resource:victory-point} {resource:victory-point}",
+      de: 'Wenn du <b>3</b> Orte kontrollierst und maximal <b>1</b> {faction:emperor}-, {faction:guild}- und {faction:bene}-Einfluss hast: <br>{resource:trash-self} {resource:victory-point} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/lighter_2.png',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
+      en: 'Machine Pact with Ix',
+      de: 'Maschinenpakt mit IX',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have <b>4</b> {resource:tech-tile}: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>4</b> {resource:tech-tile} besitzt: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/spaceship_landing.png',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
+      en: 'Comprehending the connections',
+      de: 'Verstehen der Zusammenhänge',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have <b>2</b> influence at every influence track: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>2</b> Einfluss bei allen Einflussleisten hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/ecological_testing_station.png',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
       en: 'Dr. Yueh, Suk Doctor',
       de: 'Dr. Yueh, Suk-Arzt',
     },
@@ -189,6 +384,134 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+  },
+  {
+    name: {
+      en: 'Covert Pact with House Wayku',
+      de: 'Geheimes Bündnis mit Haus Wayku',
+    },
+    buyEffects: [
+      {
+        type: 'intrigue',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'foldspace',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'intrigue',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'dreadnought',
+      },
+      {
+        type: 'faction-influence-up-choice',
+      },
+    ],
+    fieldAccess: ['guild', 'landsraad', 'town'],
+    agentEffectSize: 'large',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 5,
+    imageUrl: '/assets/images/action-backgrounds/house_wayku.png',
+  },
+  {
+    name: {
+      en: 'Intelligence Trade with House Wydras',
+      de: 'Informationshandel mit Haus Wydras',
+    },
+    buyEffects: [
+      {
+        type: 'intrigue',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-enemies-on-this-field',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'agent',
+      },
+    ],
+    fieldAccess: ['landsraad', 'town'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 5,
+    canInfiltrate: true,
+    imageUrl: '/assets/images/action-backgrounds/house_wydras.png',
   },
   {
     name: {
@@ -306,6 +629,200 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'House Maros Trade Accord',
+      de: 'Handelsvertrag mit Haus Maros',
+    },
+    buyEffects: [
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-own-agents-on-field-type',
+        action: 'landsraad',
+      },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['landsraad', 'town'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/house_maros.png',
+    persuasionCosts: 6,
+  },
+  {
+    name: {
+      en: 'Supply Accord with House Alexin',
+      de: 'Versorgungsvertrag mit Haus Alexin',
+    },
+    buyEffects: [
+      {
+        type: 'water',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'water',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['fremen', 'landsraad', 'town'],
+    agentEffectSize: 'large',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 6,
+    imageUrl: '/assets/images/action-backgrounds/house_alexin.png',
+  },
+  {
+    name: {
+      en: 'Propaganda Pact with House Taligari',
+      de: 'Propagandavertrag mit Haus Taligari',
+    },
+    buyEffects: [
+      {
+        type: 'focus',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-own-agents-on-field-type',
+        action: 'town',
+      },
+      {
+        type: 'solari',
+        amount: 2,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'focus',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['emperor', 'landsraad'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 6,
+    imageUrl: '/assets/images/action-backgrounds/house_taligari.png',
+  },
+  {
+    name: {
       en: 'Twisted Mentat',
       de: 'Verderbter Mentat',
     },
@@ -420,6 +937,336 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
     ],
+  },
+  {
+    name: {
+      en: 'Trade Agreement with House Hagal',
+      de: 'Handelsabkommen mit Haus Hagal',
+    },
+    buyEffects: [
+      {
+        type: 'solari',
+        amount: 3,
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-own-agents-on-field-type',
+        amount: 2,
+        action: 'landsraad',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'solari',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['emperor', 'landsraad', 'town'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/house_hagal.png',
+    persuasionCosts: 7,
+  },
+  {
+    name: {
+      en: 'Secret Trade with House Mikarrol',
+      de: 'Geheimer Handel mit Haus Mikarrol',
+    },
+    buyEffects: [
+      {
+        type: 'solari',
+        amount: 3,
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-own-agents-on-field-type',
+        action: 'town',
+      },
+      {
+        type: 'solari',
+        amount: 3,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['emperor', 'guild', 'landsraad'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 7,
+    imageUrl: '/assets/images/action-backgrounds/house_mikarrol.png',
+  },
+  {
+    name: {
+      en: 'House Novebruns Resource Accord',
+      de: 'Rohstoffabkommen mit Haus Novebruns',
+    },
+    buyEffects: [
+      {
+        type: 'tech',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'tech',
+        amount: 2,
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['landsraad', 'spice', 'town'],
+    agentEffectSize: 'large',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 7,
+    imageUrl: '/assets/images/action-backgrounds/house_novebruns.png',
+  },
+  {
+    name: {
+      en: 'Training Alliance with House Wallach',
+      de: 'Ausbildungsbündnis mit Haus Wallach',
+    },
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-own-agents-on-field-type',
+        action: 'town',
+      },
+      {
+        type: 'troop',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['bene', 'landsraad', 'town'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 7,
+    canInfiltrate: false,
+    imageUrl: '/assets/images/action-backgrounds/house_wallach.png',
+  },
+  {
+    name: {
+      en: 'Espionage Accord with House Spinette',
+      de: 'Spionageabkommen mit Haus Spinette',
+    },
+    buyEffects: [
+      {
+        type: 'intrigue',
+      },
+    ],
+    agentEffects: [
+      {
+        type: 'multiplier-enemies-on-this-field',
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'troop',
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'condition-high-council-seat',
+      },
+      {
+        type: 'spice',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'victory-point',
+      },
+    ],
+    fieldAccess: ['landsraad', 'spice', 'town'],
+    agentEffectSize: 'small',
+    revealEffectSize: 'small',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    persuasionCosts: 7,
+    canInfiltrate: true,
+    imageUrl: '/assets/images/action-backgrounds/house_spinette.png',
   },
   {
     name: {
@@ -810,6 +1657,39 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Control over the religion',
+      de: 'Kontrolle über die Religion',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you control <b>2</b> {faction:town} locations and have <b>4</b> {faction:bene}-influence: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>2</b> {faction:town}-Orte kontrollierst <br>und <b>4</b> {faction:bene}-Einfluss hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/sayadina.png',
+    faction: 'bene',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
       en: 'Promise of Stability',
       de: 'Stabilitäts-versprechen',
     },
@@ -856,6 +1736,8 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
     ],
+    rarity: 'normal',
+    factionSecondary: 'emperor',
   },
   {
     name: {
@@ -1002,6 +1884,8 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'recruitment-fremen',
       },
     ],
+    rarity: 'normal',
+    factionSecondary: 'fremen',
   },
   {
     name: {
@@ -1060,7 +1944,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     revealEffectSize: 'large',
     customRevealEffect: {
-      en: 'Fremen-Karten kosten für dich in dieser Runde {resource:persuasion;amount:-1}',
+      en: 'Fremen cards cost {resource:persuasion;amount:-1} for you this round',
       de: 'Fremen-Karten kosten für dich in dieser Runde {resource:persuasion;amount:-1}',
       fontSize: 'small',
     },
@@ -1519,7 +2403,7 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Bene Gesserit Archivar',
+      en: 'Bene Gesserit Archivist',
       de: 'Bene Gesserit Archivarin',
     },
     faction: 'bene',
@@ -1750,7 +2634,7 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Bene gesserit chapter',
+      en: 'Bene Gesserit Chapter',
       de: 'Bene Gesserit Kapitel',
     },
     faction: 'bene',
@@ -1924,6 +2808,8 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    rarity: 'normal',
+    factionSecondary: 'guild',
   },
   {
     name: {
@@ -2186,6 +3072,39 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+  },
+  {
+    name: {
+      en: 'Favorite of the Emperor',
+      de: 'Favorit des Imperators',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have <b>3</b> {resource:intrigue} and <b>4</b> {faction:emperor}-influence: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>3</b> {resource:intrigue} und <b>4</b> {faction:emperor}-Einfluss hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/emperor_3.png',
+    persuasionCosts: 2,
+    faction: 'emperor',
+    backgroundColor: 'orange',
   },
   {
     name: {
@@ -2998,7 +3917,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/lighter_2.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'medium',
+    agentEffectSize: 'small',
     rarity: 'normal',
     customAgentEffect: {
       en: 'Take over control of this location.',
@@ -3169,7 +4088,7 @@ export const imperiumCards: ImperiumCard[] = [
   {
     name: {
       en: 'Imperial Court Member',
-      de: 'imperiales Hofmitglied',
+      de: 'Imperiales Hofmitglied',
     },
     faction: 'emperor',
     persuasionCosts: 6,
@@ -3265,6 +4184,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'trash-self',
       },
     ],
+    factionSecondary: 'guild',
   },
   {
     name: {
@@ -3373,91 +4293,6 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Fief: Caladan',
-      de: 'Lehen: Caladan',
-    },
-    faction: 'emperor',
-    persuasionCosts: 9,
-    fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/caladan.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    rarity: 'rare',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'water',
-      },
-      {
-        type: 'troop',
-      },
-      {
-        type: 'focus',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Fief: Giedi Prime',
-      de: 'Lehen: Giedi Prime',
-    },
-    faction: 'emperor',
-    persuasionCosts: 9,
-    fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/giedi_prime.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    rarity: 'rare',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'intrigue',
-      },
-      {
-        type: 'troop',
-        amount: 2,
-      },
-      {
-        type: 'tech',
-      },
-    ],
-  },
-  {
-    name: {
       en: 'CHOAM Directorship',
       de: 'MAFEA Vorsitz',
     },
@@ -3497,7 +4332,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    rarity: 'normal',
+    rarity: 'rare',
     cardAmount: 1,
     persuasionCosts: 9,
     faction: 'emperor',
@@ -3664,7 +4499,7 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Drawing the Knifes',
+      en: 'Drawing the Knives',
       de: 'Ziehen der Messer',
     },
     faction: 'fremen',
@@ -3922,6 +4757,39 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Desert power',
+      de: 'Wüstenmacht',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have <b>8</b> troops in combat and <b>4</b> {faction:fremen}-influence: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>8</b> Truppen in der Schlacht und <b>4</b> {faction:fremen}-Einfluss hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/worm_assault.png',
+    faction: 'fremen',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
       en: 'Desert Ambush',
       de: 'Wüsten-Hinterhalt',
     },
@@ -4037,7 +4905,7 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Understanding the Signs',
+      en: 'Signs of Shai-Hulud',
       de: 'Zeichen von Shai-Hulud',
     },
     faction: 'fremen',
@@ -4076,7 +4944,7 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Fremen believers',
+      en: 'Fremen Believers',
       de: 'Fremen Gläubige',
     },
     faction: 'fremen',
@@ -4125,6 +4993,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    factionSecondary: 'bene',
   },
   {
     name: {
@@ -4320,6 +5189,14 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'water',
       },
     ],
+    agentEffects: [],
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    factionSecondary: 'bene',
   },
   {
     name: {
@@ -4860,6 +5737,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 2,
       },
     ],
+    factionSecondary: 'bene',
   },
   {
     name: {
@@ -5223,49 +6101,6 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'persuasion',
         amount: 1,
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Fremen Sietch',
-      de: 'Fremen Sietch',
-    },
-    faction: 'fremen',
-    persuasionCosts: 9,
-    fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/sietch_4.png',
-    cardAmount: 1,
-    canInfiltrate: false,
-    agentEffectSize: 'large',
-    rarity: 'rare',
-    customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    revealEffectSize: 'large',
-    customRevealEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
-    },
-    buyEffects: [
-      {
-        type: 'victory-point',
-      },
-    ],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'water',
-      },
-      {
-        type: 'spice',
-      },
-      {
-        type: 'troop',
-        amount: 2,
       },
     ],
   },
@@ -5657,6 +6492,39 @@ export const imperiumCards: ImperiumCard[] = [
   },
   {
     name: {
+      en: 'Trade blockade',
+      de: 'Handelsblockade',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 2,
+      },
+    ],
+    fieldAccess: [],
+    agentEffectSize: 'large',
+    revealEffectSize: 'medium',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: 'If you have <b>2</b> {resource:dreadnought} in your garrison and <b>4</b> {faction:guild}-influence: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du <b>2</b> {resource:dreadnought} in deiner Garnison und <b>4</b> {faction:guild}-Einfluss hast: {resource:trash-self} {resource:victory-point}',
+      fontSize: 'small',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/spaceship_fleet.png',
+    faction: 'guild',
+    persuasionCosts: 2,
+    backgroundColor: 'orange',
+  },
+  {
+    name: {
       en: 'Staban Tuek, Smuggler',
       de: 'Staban Tuek, Schmuggler',
     },
@@ -5906,6 +6774,8 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'tech',
       },
     ],
+    rarity: 'normal',
+    factionSecondary: 'emperor',
   },
   {
     name: {

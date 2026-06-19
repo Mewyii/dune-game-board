@@ -39,7 +39,7 @@
         } @else if (logEntry.type === 'location-control-gain') {
           Player {{ logEntry.playerId }} gained location {{ logEntry.locationId }}.
         } @else if (logEntry.type === 'location-control-loss') {
-          Player {{ logEntry.playerId }} lost locatione {{ logEntry.locationId }}.
+          Player {{ logEntry.playerId }} lost location {{ logEntry.locationId }}.
         } @else if (logEntry.type === 'agent-lift') {
           Player {{ logEntry.playerId }} lifted agent from board space {{ logEntry.fieldName }}.
         } @else if (logEntry.type === 'troops-added-to-combat') {
@@ -50,6 +50,16 @@
           Player {{ logEntry.playerId }} added {{ logEntry.amount }} dreadnoughts to combat.
         } @else if (logEntry.type === 'dreadnoughts-retreated-from-combat') {
           Player {{ logEntry.playerId }} retreated {{ logEntry.amount }} dreadnoughts from combat.
+        } @else if (logEntry.type === 'combat-win') {
+          Player {{ logEntry.playerId }} won the conflict!
+        } @else if (logEntry.type === 'player-pick-faction-influence-up') {
+          Player {{ logEntry.playerId }} increased faction influence for {{ logEntry.faction }}.
+        } @else if (logEntry.type === 'player-pick-faction-influence-down') {
+          Player {{ logEntry.playerId }} decreased faction influence for {{ logEntry.faction }}.
+        } @else if (logEntry.type === 'player-gain-faction-alliance') {
+          Player {{ logEntry.playerId }} gained alliance with {{ logEntry.faction }}.
+        } @else if (logEntry.type === 'player-loss-faction-alliance') {
+          Player {{ logEntry.playerId }} lost alliance with {{ logEntry.faction }}.
         }
       </div>
     }

@@ -27,6 +27,10 @@
   align-items: center;
 }
 
+.card-header.orange {
+  background-image: url(/assets/images/plots/heading.png);
+}
+
 .rare .card-header {
   color: rgb(255 199 142);
 }
@@ -59,6 +63,10 @@
   background-color: #1f2533;
   flex-wrap: wrap;
   gap: 2px;
+}
+
+.card-reveal-effect-container.orange {
+  background-image: url(/assets/images/plots/reveal-effect.png);
 }
 
 .card-agent-effect-container {
@@ -166,12 +174,22 @@ dune-reward-array {
 }
 
 .faction-container {
-  width: -webkit-fill-available;
+  width: 150px;
   padding: 2px 32px 2px 4px;
   font-size: x-small;
   text-wrap: nowrap;
-  clip-path: polygon(0% 0, 120px 0%, 105px 100%, 0% 100%);
+  clip-path: polygon(0% 0, 125px 0%, 110px 100%, 0% 100%);
   letter-spacing: 1px;
+}
+
+.faction-secondary-container {
+  width: 125px;
+  padding: 2px 32px 2px 4px;
+  font-size: x-small;
+  text-wrap: nowrap;
+  clip-path: polygon(0% 0, 110px 0%, 95px 100%, 0% 100%);
+  letter-spacing: 1px;
+  margin-top: 2px;
 }
 
 .card-aquire-costs-container.highlighted {

@@ -118,7 +118,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Smuggler outposts',
+      en: 'Smuggler Outposts',
       de: 'Schmuggler-Aussenposten',
     },
     faction: 'guild',
@@ -270,7 +270,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Improved projectile rifles',
+      en: 'Improved Projectile Weapons',
       de: 'Verbesserte Projektilwaffen',
     },
     costs: 2,
@@ -380,7 +380,7 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '<b>Aufdeckzug:</b> <br>Wenn du einen Agenten auf einem <br>{faction:spice}-Feld hast: {resource:persuasion;amount:1} {resource:focus}',
+      en: '<b>Reveal turn:</b> <br>If you have an agent on a <br>{faction:spice} board space: {resource:persuasion;amount:1} {resource:focus}',
       de: '<b>Aufdeckzug:</b> <br>Wenn du einen Agenten auf einem <br>{faction:spice}-Feld hast: {resource:persuasion;amount:1} {resource:focus}',
       fontSize: 'small',
     },
@@ -398,7 +398,7 @@ export const techTiles: TechTileCard[] = [
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf {faction:spice}-Feldern: {resource:sword}',
+      en: '<b>Reveal turn:</b> <br>For each of your agents on <br>{faction:spice} board spaces: {resource:sword}{resource:sword}',
       de: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf <br>{faction:spice}-Feldern: {resource:sword}{resource:sword}',
       fontSize: 'small',
     },
@@ -654,7 +654,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Recruitment Hub',
+      en: 'Recruitment Center',
       de: 'Anwerbungszentrum',
     },
     costs: 3,
@@ -753,7 +753,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Upgraded Ornithoper Engines',
+      en: 'Upgraded Ornithopter Engines',
       de: 'Verbesserte Ornithopertriebwerke',
     },
     costs: 4,
@@ -942,7 +942,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Ornithoper Squadron',
+      en: 'Ornithopter Squadron',
       de: 'Ornithopterstaffel',
     },
     costs: 4,
@@ -1218,7 +1218,7 @@ export const techTiles: TechTileCard[] = [
   {
     name: {
       en: 'Deployment Ship',
-      de: 'Einsatzsschiff',
+      de: 'Einsatzschiff',
     },
     costs: 5,
     imageUrl: '/assets/images/action-backgrounds/landing_ship_2.png',

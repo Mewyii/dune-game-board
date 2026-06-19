@@ -126,7 +126,8 @@
                 (currentRoundPhase === 'combat' && activePlayer.turnState === 'done') ||
                 currentRoundPhase === 'combat-resolvement' ||
                 turnInfos?.aiStatus === 'working' ||
-                turnInfos?.aiStatus === 'done'
+                turnInfos?.aiStatus === 'done' ||
+                turnInfos?.needsToPassTurn
               "
               *ngIf="activePlayer.isAI"
             >

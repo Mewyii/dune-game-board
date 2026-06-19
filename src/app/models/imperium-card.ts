@@ -12,6 +12,7 @@ export interface LanguageStringAndFontSize extends LanguageString {
 export interface ImperiumCard {
   name: LanguageString;
   faction?: ActiveFactionType;
+  factionSecondary?: ActiveFactionType;
   persuasionCosts?: number;
   fieldAccess?: ActionType[];
   agentEffects?: Effect[];
@@ -25,6 +26,7 @@ export interface ImperiumCard {
   imageUrl?: string;
   cardAmount?: number;
   rarity?: 'normal' | 'rare';
+  backgroundColor?: 'blue' | 'orange';
 }
 
 export type CustomCardType = 'foldspace' | 'unlimited' | 'limited';

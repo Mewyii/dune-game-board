@@ -184,14 +184,18 @@ export class GameStateService {
     const playerTechTilesConversionCosts = this.getInitialGameElementRewards();
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id).map((x) => x.techTile);
 
+    const boardSpaces = this.settingsService.boardSpaces;
+
     const partialGameStateForEffectMultipliers = {
       playerAgentsOnFields,
       playerCombatUnits,
+      playerHandCards,
       playerHandCardsRewards,
       playerHandCardsFactions,
       playerCardsFactionsInPlay,
       enemyAgentsOnFields,
       playerAgentPlacedOnFieldThisTurn,
+      boardSpaces,
     };
 
     for (const techTile of playerTechTiles) {
@@ -379,7 +383,7 @@ export class GameStateService {
         factionInfluenceMaxScore: this.settingsService.getFactionInfluenceMaxScore(),
         factionInfluenceAllianceTreshold: this.settingsService.getFactionInfluenceAllianceTreshold(),
       },
-      boardSpaces: this.settingsService.boardFields,
+      boardSpaces,
       playerAgentPlacedOnFieldThisTurn,
       playerResources: this.playersResourcesService.getPlayerResources(player.id),
     } as GameState;

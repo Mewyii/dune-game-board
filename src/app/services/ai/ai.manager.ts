@@ -440,16 +440,15 @@ export class AIManager {
     const playerHasAgentsLeft = this.playerAgentsService.getAvailablePlayerAgentCount(player.id) > 1;
 
     if (playerCombatUnits) {
-      let addableTroops =
-        playerCombatUnits.troopsInGarrison >= deployableTroops ? deployableTroops : playerCombatUnits.troopsInGarrison;
+      const troopsInGarrison = playerCombatUnits.troopsInGarrison;
+      const shipsInGarrison = playerCombatUnits.shipsInGarrison;
 
-      let addableDreadnoughts =
-        playerCombatUnits.shipsInGarrison >= deployableDreadnoughts
-          ? deployableDreadnoughts
-          : playerCombatUnits.shipsInGarrison;
+      let addableTroops = troopsInGarrison >= deployableTroops ? deployableTroops : troopsInGarrison;
+
+      let addableDreadnoughts = shipsInGarrison >= deployableDreadnoughts ? deployableDreadnoughts : shipsInGarrison;
 
       if (deployableUnits > 0) {
-        const potentialDreadnoughtsToAdd = playerCombatUnits.shipsInGarrison - addableDreadnoughts;
+        const potentialDreadnoughtsToAdd = shipsInGarrison - addableDreadnoughts;
         if (potentialDreadnoughtsToAdd > 0) {
           const additionalAddableDreadnoughts =
             deployableUnits >= potentialDreadnoughtsToAdd ? potentialDreadnoughtsToAdd : deployableUnits;
@@ -457,7 +456,7 @@ export class AIManager {
           deployableUnits -= additionalAddableDreadnoughts;
         }
 
-        const potentialTroopsToAdd = playerCombatUnits.troopsInGarrison - addableTroops;
+        const potentialTroopsToAdd = troopsInGarrison - addableTroops;
         if (potentialTroopsToAdd > 0) {
           const additionalAddableTroops = deployableUnits >= potentialTroopsToAdd ? potentialTroopsToAdd : deployableUnits;
           addableTroops += additionalAddableTroops;
@@ -465,15 +464,34 @@ export class AIManager {
         }
       }
 
+      let minimumTroopsToKeep = 0;
+      const currentConflict = gameState.conflict;
+      if (currentConflict && currentConflict.rewards[0]?.some((x) => x.type === 'location-control') && addableTroops > 0) {
+        if (gameState.enemyLocations.some((x) => x.locationId === currentConflict.boardSpaceId)) {
+          minimumTroopsToKeep += 1;
+        }
+      }
+      const cardsPlayedThisTurn = gameState.playerTurnInfos?.cardsPlayedThisTurn;
+      if (cardsPlayedThisTurn && cardsPlayedThisTurn.length > 0) {
+        for (const playedCard of cardsPlayedThisTurn) {
+          if (playedCard.agentEffects?.some((x) => x.type === 'location-control-choice')) {
+            if (
+              gameState.playerAgentsOnFields.some((agent) =>
+                gameState.enemyLocations.some((location) => location.locationId === agent.fieldId),
+              )
+            ) {
+              minimumTroopsToKeep += 1;
+            }
+          }
+        }
+      }
+      if (addableTroops <= troopsInGarrison) {
+        addableTroops -= minimumTroopsToKeep;
+      }
+
       const addUnitsDecision = this.aiConflictService.getAddAdditionalUnitsToCombatDecision(playerCombatUnits, gameState);
 
       if (addUnitsDecision === 'all' || this.roundService.isFinale) {
-        const currentConflict = gameState.conflict;
-        if (currentConflict && currentConflict.rewards[0]?.some((x) => x.type === 'location-control') && addableTroops > 0) {
-          if (gameState.enemyLocations.some((x) => x.locationId === currentConflict.boardSpaceId)) {
-            addableTroops -= 1;
-          }
-        }
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'troop', addableTroops);
         this.effectsService.addUnitsToCombatIfPossible(player.id, 'dreadnought', addableDreadnoughts);
         addedUnitsToCombat = true;
@@ -544,38 +562,26 @@ export class AIManager {
     }
   }
 
-  aiIncreaseFactionInfluenceChoice(player: Player, amount: number) {
+  getFactionInfluenceIncreaseChoice(player: Player) {
     const increasedFactionScoreTypes: PlayerFactionScoreType[] = [];
-    for (let i = amount; i > 0; i--) {
-      const playerScores = this.playerScoreManager.playerScores;
-      if (playerScores) {
-        const factionAllianceTreshold = this.settingsService.getFactionInfluenceAllianceTreshold();
-        const maxFactionInfluence = this.settingsService.getFactionInfluenceMaxScore();
-        const desiredScoreType = getMostDesiredFactionScoreType(
-          player.id,
-          playerScores,
-          1,
-          factionAllianceTreshold,
-          maxFactionInfluence,
-          increasedFactionScoreTypes,
-        );
+    const playerScores = this.playerScoreManager.playerScores;
+    if (playerScores) {
+      const factionAllianceTreshold = this.settingsService.getFactionInfluenceAllianceTreshold();
+      const maxFactionInfluence = this.settingsService.getFactionInfluenceMaxScore();
+      const desiredScoreType = getMostDesiredFactionScoreType(
+        player.id,
+        playerScores,
+        1,
+        factionAllianceTreshold,
+        maxFactionInfluence,
+        increasedFactionScoreTypes,
+      );
 
-        if (desiredScoreType) {
-          const factionRewards = this.playerScoreManager.addFactionScore(
-            player.id,
-            desiredScoreType,
-            1,
-            this.roundService.currentRound,
-          );
-          this.audioManager.playSound('influence');
-          increasedFactionScoreTypes.push(desiredScoreType);
-
-          for (const reward of factionRewards) {
-            this.effectsService.addRewardToPlayer(player.id, reward, { source: 'Influence' });
-          }
-        }
+      if (desiredScoreType) {
+        return desiredScoreType;
       }
     }
+    return undefined;
   }
 
   aiIncreaseFactionInfluenceChoiceTwice(player: Player, amount: number) {
@@ -612,16 +618,15 @@ export class AIManager {
     }
   }
 
-  aiDecreaseFactionInfluenceChoice(playerId: number, amount: number) {
-    for (let i = amount; i > 0; i--) {
-      const playerScores = this.playerScoreManager.getPlayerScore(playerId);
-      if (playerScores) {
-        const leastDesiredScoreType = getLeastDesiredFactionScoreType(playerScores);
-        if (leastDesiredScoreType) {
-          this.playerScoreManager.removePlayerScore(playerId, leastDesiredScoreType, 1, this.roundService.currentRound);
-        }
+  getFactionInfluenceDecreaseChoice(playerId: number) {
+    const playerScores = this.playerScoreManager.getPlayerScore(playerId);
+    if (playerScores) {
+      const leastDesiredScoreType = getLeastDesiredFactionScoreType(playerScores);
+      if (leastDesiredScoreType) {
+        return leastDesiredScoreType;
       }
     }
+    return undefined;
   }
 
   aiConvertRewardIfUsefulAndPossible(

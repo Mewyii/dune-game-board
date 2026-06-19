@@ -263,12 +263,15 @@ export class PlayerScoreManager {
           const enemyFactionScore = enemyPlayerScores[factionType];
           if (score > enemyFactionScore) {
             this.removeAllianceFromPlayer(playerWithAlliance.playerId, factionType, roundNumber);
+            this.loggingService.logPlayerLostFactionAlliance(playerWithAlliance.playerId, factionType);
             this.addAllianceToPlayer(playerId, factionType, roundNumber);
+            this.loggingService.logPlayerGainedFactionAlliance(playerId, factionType);
           }
         }
       }
     } else {
       this.addAllianceToPlayer(playerId, factionType, roundNumber);
+      this.loggingService.logPlayerGainedFactionAlliance(playerId, factionType);
     }
   }
 }

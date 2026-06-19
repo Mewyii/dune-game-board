@@ -134,6 +134,26 @@ export interface PlayerDreadnoughtsRetreatedFromCombatLog extends LogBase {
   amount: number;
 }
 
+export interface PlayerPickedFactionInfluenceUpChoice extends LogBase {
+  type: 'player-pick-faction-influence-up';
+  faction: string;
+}
+
+export interface PlayerPickedFactionInfluenceDownChoice extends LogBase {
+  type: 'player-pick-faction-influence-down';
+  faction: string;
+}
+
+export interface PlayerGainedFactionAlliance extends LogBase {
+  type: 'player-gain-faction-alliance';
+  faction: string;
+}
+
+export interface PlayerlostFactionAlliance extends LogBase {
+  type: 'player-loss-faction-alliance';
+  faction: string;
+}
+
 export type PlayerActionLog =
   | playerRewardGainLog
   | playerRewardPayLog
@@ -158,7 +178,11 @@ export type PlayerActionLog =
   | PlayerTroopsAddedToCombatLog
   | PlayerTroopsRetreatedFromCombatLog
   | PlayerDreadnoughtsAddedToCombatLog
-  | PlayerDreadnoughtsRetreatedFromCombatLog;
+  | PlayerDreadnoughtsRetreatedFromCombatLog
+  | PlayerPickedFactionInfluenceUpChoice
+  | PlayerPickedFactionInfluenceDownChoice
+  | PlayerGainedFactionAlliance
+  | PlayerlostFactionAlliance;
 
 @Injectable({
   providedIn: 'root',
@@ -339,10 +363,37 @@ export class LoggingService {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'dreadnoughts-added-to-combat', amount }]);
   }
 
+  logPlayerPickedFactionInfluenceUpChoice(playerId: number, faction: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'player-pick-faction-influence-up', faction },
+    ]);
+  }
+
+  logPlayerPickedFactionInfluenceDownChoice(playerId: number, faction: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'player-pick-faction-influence-down', faction },
+    ]);
+  }
+
   logPlayerRetreatedDreadnoughtsFromCombat(playerId: number, amount: number) {
     this.playerActionLogSubject.next([
       ...this.playerActionLogs,
       { playerId, type: 'dreadnoughts-retreated-from-combat', amount },
+    ]);
+  }
+  logPlayerGainedFactionAlliance(playerId: number, faction: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'player-gain-faction-alliance', faction },
+    ]);
+  }
+
+  logPlayerLostFactionAlliance(playerId: number, faction: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'player-loss-faction-alliance', faction },
     ]);
   }
 

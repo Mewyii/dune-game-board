@@ -310,32 +310,45 @@ export class GameManager {
   }
 
   resolveConflict() {
-    const conflict = this.conflictsService.currentConflict;
-    if (!conflict) {
-      return;
-    }
     this.audioManager.playSound('fog');
 
-    let playerCombatScores = this.combatManager.getPlayerCombatScores().filter((x) => x.score > 0);
-    playerCombatScores.sort((a, b) => b.score - a.score);
+    const conflict = this.conflictsService.currentConflict;
+    if (conflict) {
+      let playerCombatScores = this.combatManager.getPlayerCombatScores().filter((x) => x.score > 0);
+      playerCombatScores.sort((a, b) => b.score - a.score);
 
-    const conflictRewards = conflict.rewards;
+      const conflictRewards = conflict.rewards;
 
-    let previousWasTie = false;
-    let isFirstCycle = true;
+      let previousWasTie = false;
+      let isFirstCycle = true;
 
-    for (const conflictReward of conflictRewards) {
-      const firstPlayer = playerCombatScores[0];
-      if (!firstPlayer || firstPlayer.score < 1) {
-        break;
-      }
+      for (const conflictReward of conflictRewards) {
+        const firstPlayer = playerCombatScores[0];
+        if (!firstPlayer || firstPlayer.score < 1) {
+          break;
+        }
 
-      const playersWithSameScore = playerCombatScores.filter((x) => x.score === firstPlayer.score);
-      const isTie = playersWithSameScore.length > 1;
+        const playersWithSameScore = playerCombatScores.filter((x) => x.score === firstPlayer.score);
+        const isTie = playersWithSameScore.length > 1;
 
-      if (previousWasTie) {
-        for (const playerScore of playersWithSameScore) {
-          const player = this.playersService.getPlayer(playerScore.playerId);
+        if (previousWasTie) {
+          for (const playerScore of playersWithSameScore) {
+            const player = this.playersService.getPlayer(playerScore.playerId);
+            if (player) {
+              for (const reward of conflictReward) {
+                this.effectsService.addRewardToPlayer(player.id, reward, { source: 'Combat' });
+              }
+
+              this.resolveRewardChoices(player);
+
+              playerCombatScores = playerCombatScores.filter((x) => x.playerId !== playerScore.playerId);
+            }
+          }
+
+          previousWasTie = false;
+        } else if (!isTie) {
+          const player = this.playersService.getPlayer(firstPlayer.playerId);
+
           if (player) {
             for (const reward of conflictReward) {
               this.effectsService.addRewardToPlayer(player.id, reward, { source: 'Combat' });
@@ -343,56 +356,44 @@ export class GameManager {
 
             this.resolveRewardChoices(player);
 
-            playerCombatScores = playerCombatScores.filter((x) => x.playerId !== playerScore.playerId);
-          }
-        }
-
-        previousWasTie = false;
-      } else if (!isTie) {
-        const player = this.playersService.getPlayer(firstPlayer.playerId);
-
-        if (player) {
-          for (const reward of conflictReward) {
-            this.effectsService.addRewardToPlayer(player.id, reward, { source: 'Combat' });
-          }
-
-          this.resolveRewardChoices(player);
-
-          if (isFirstCycle) {
-            const dreadnoughtCount = this.combatManager.getPlayerCombatUnits(player.id)?.shipsInCombat;
-            if (dreadnoughtCount && dreadnoughtCount > 0) {
-              if (!player.isAI) {
-                this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-                  type: 'location-control-choice',
-                  amount: dreadnoughtCount,
-                });
-              } else {
-                for (let i = 0; i < dreadnoughtCount; i++) {
-                  const updatedGameState = this.getGameState(player);
-                  const desiredLocation = this.aiBoardSpacesService.getLocationToControl(player, updatedGameState);
-                  if (desiredLocation) {
-                    this.changeLocationOwner(desiredLocation.actionField.title.en, player.id);
+            if (isFirstCycle) {
+              const dreadnoughtCount = this.combatManager.getPlayerCombatUnits(player.id)?.shipsInCombat;
+              if (dreadnoughtCount && dreadnoughtCount > 0) {
+                if (!player.isAI) {
+                  this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
+                    type: 'location-control-choice',
+                    amount: dreadnoughtCount,
+                  });
+                } else {
+                  for (let i = 0; i < dreadnoughtCount; i++) {
+                    const updatedGameState = this.getGameState(player);
+                    const desiredLocation = this.aiBoardSpacesService.getLocationToControl(player, updatedGameState);
+                    if (desiredLocation) {
+                      this.changeLocationOwner(desiredLocation.actionField.title.en, player.id);
+                    }
                   }
                 }
               }
+
+              const otherPlayersScoresCombined = playerCombatScores.slice(1).reduce((sum, x) => sum + x.score, 0);
+
+              if (firstPlayer.score > otherPlayersScoresCombined) {
+                const returnedTroops = Math.floor(
+                  (firstPlayer.score - otherPlayersScoresCombined) / this.settingsService.getTroopStrength(),
+                );
+                this.combatManager.addPlayerTroopsToGarrison(player.id, returnedTroops);
+              }
+
+              this.loggingService.logPlayerWonCombat(player.id, this.roundService.currentRound);
             }
-
-            const otherPlayersScoresCombined = playerCombatScores.slice(1).reduce((sum, x) => sum + x.score, 0);
-
-            if (firstPlayer.score > otherPlayersScoresCombined) {
-              const returnedTroops = Math.floor((firstPlayer.score - otherPlayersScoresCombined) / 2);
-              this.combatManager.addPlayerTroopsToGarrison(player.id, returnedTroops);
-            }
-
-            this.loggingService.logPlayerWonCombat(player.id, this.roundService.currentRound);
           }
-        }
 
-        playerCombatScores = playerCombatScores.filter((x) => x.playerId !== firstPlayer.playerId);
-      } else {
-        previousWasTie = true;
+          playerCombatScores = playerCombatScores.filter((x) => x.playerId !== firstPlayer.playerId);
+        } else {
+          previousWasTie = true;
+        }
+        isFirstCycle = false;
       }
-      isFirstCycle = false;
     }
 
     this.roundService.setRoundPhase('combat-resolvement');
@@ -800,8 +801,10 @@ export class GameManager {
       this.setActiveAIPlayer(nextPlayer.id);
       if (nextPlayer.isAI && this.roundService.currentRoundPhase === 'agent-placement') {
         this.aiManager.setPreferredFieldsForAIPlayer(nextPlayer.id);
-        this.resolveLeaderEffects(nextPlayer.id, 'timing-round-start');
-        await this.resolveTechTileEffects(nextPlayer.id, 'timing-round-start');
+        // if (nextPlayer.turnNumber === 1) {
+        //   this.resolveLeaderEffects(nextPlayer.id, 'timing-round-start');
+        //   await this.resolveTechTileEffects(nextPlayer.id, 'timing-round-start');
+        // }
       }
     }
   }
@@ -976,7 +979,7 @@ export class GameManager {
       type: ('faction-influence-up-' + factionType) as EffectRewardType,
     });
 
-    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
+    this.loggingService.logPlayerPickedFactionInfluenceUpChoice(playerId, factionType);
   }
 
   decreasePlayerFactionScore(playerId: number, factionType: FactionType) {
@@ -996,8 +999,7 @@ export class GameManager {
     this.effectsService.addRewardToPlayer(playerId, {
       type: ('faction-influence-down-' + factionType) as EffectRewardType,
     });
-
-    this.aiManager.setPreferredFieldsForAIPlayer(player.id);
+    this.loggingService.logPlayerPickedFactionInfluenceDownChoice(playerId, factionType);
   }
 
   addUnitsIntoCombat(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
@@ -1503,7 +1505,12 @@ export class GameManager {
       this.turnInfoService.setPlayerTurnInfo(player.id, { locationControlAmount: 0 });
     }
     if (turnInfo.factionInfluenceUpChoiceAmount > 0) {
-      this.aiManager.aiIncreaseFactionInfluenceChoice(player, turnInfo.factionInfluenceUpChoiceAmount);
+      for (let i = 0; i < turnInfo.factionInfluenceUpChoiceAmount; i++) {
+        const factionType = this.aiManager.getFactionInfluenceIncreaseChoice(player);
+        if (factionType) {
+          this.increasePlayerFactionScore(player.id, factionType);
+        }
+      }
       this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceUpChoiceAmount: 0 });
     }
     if (turnInfo.factionInfluenceUpChoiceTwiceAmount > 0) {
@@ -1511,7 +1518,12 @@ export class GameManager {
       this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceUpChoiceTwiceAmount: 0 });
     }
     if (turnInfo.factionInfluenceDownChoiceAmount > 0) {
-      this.aiManager.aiDecreaseFactionInfluenceChoice(player.id, turnInfo.factionInfluenceDownChoiceAmount);
+      for (let i = 0; i < turnInfo.factionInfluenceDownChoiceAmount; i++) {
+        const factionType = this.aiManager.getFactionInfluenceDecreaseChoice(player.id);
+        if (factionType) {
+          this.decreasePlayerFactionScore(player.id, factionType);
+        }
+      }
       this.turnInfoService.setPlayerTurnInfo(player.id, { factionInfluenceDownChoiceAmount: 0 });
     }
     if (turnInfo.intrigueTrashAmount > 0) {
@@ -2185,7 +2197,7 @@ export class GameManager {
         if (playerHandCards && playerHandCards.length > 0) {
           const cardAndField = this.aiManager.getCardAndFieldToPlay(playerHandCards, player, gameState);
 
-          const boardField = this.settingsService.boardFields.find((x) =>
+          const boardField = this.settingsService.boardSpaces.find((x) =>
             cardAndField?.preferredField.fieldId.includes(x.title.en),
           );
           if (boardField && cardAndField) {

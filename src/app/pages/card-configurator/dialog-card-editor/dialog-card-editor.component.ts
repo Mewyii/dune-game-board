@@ -5,6 +5,7 @@ import {
   activeFactionTypes,
   combatUnitTypes,
   effectActionConditions,
+  effectActionMultipliers,
   effectChoices,
   effectConditions,
   effectConversions,
@@ -37,7 +38,9 @@ export class DialogCardEditorComponent {
   conditionTypes = [...effectConditions, ...effectFactionConditions, ...effectActionConditions].sort((a, b) =>
     a.localeCompare(b),
   );
-  multiplierTypes = [...effectMultipliers, ...effectFactionMultipliers].sort((a, b) => a.localeCompare(b));
+  multiplierTypes = [...effectMultipliers, ...effectFactionMultipliers, ...effectActionMultipliers].sort((a, b) =>
+    a.localeCompare(b),
+  );
   effectTypes = [
     ...effectSeparators,
     ...this.conditionTypes,

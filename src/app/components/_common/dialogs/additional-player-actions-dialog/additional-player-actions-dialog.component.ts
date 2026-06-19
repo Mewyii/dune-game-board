@@ -69,7 +69,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       this.playerCanRetreatUnits = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId, 'canRetreatUnits');
     });
 
-    this.boardFields = this.settingsService.boardFields;
+    this.boardFields = this.settingsService.boardSpaces;
   }
 
   onClose() {

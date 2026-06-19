@@ -1,15 +1,43 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  <div [class]="'card-header-row' + (editMode ? ' card-header-row--padded' : '')">
-    <mat-form-field class="medium-text-field flex">
-      <mat-label>Name (English)</mat-label>
-      <input matInput [(ngModel)]="card.name.en" />
-    </mat-form-field>
-    <mat-form-field class="medium-text-field flex">
-      <mat-label>Name (German)</mat-label>
-      <input matInput [(ngModel)]="card.name.de" />
-    </mat-form-field>
-  </div>
+  <mat-form-field class="medium-text-field flex">
+    <mat-label>Name (English)</mat-label>
+    <input matInput [(ngModel)]="card.name.en" />
+  </mat-form-field>
+  <mat-form-field class="medium-text-field flex">
+    <mat-label>Name (German)</mat-label>
+    <input matInput [(ngModel)]="card.name.de" />
+  </mat-form-field>
+
+  <!-- Card Amount -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Amount</mat-label>
+    <input matInput type="number" [(ngModel)]="card.cardAmount" />
+  </mat-form-field>
+
+  <!-- Image -->
+  <mat-form-field class="big-text-field flex">
+    <mat-label>Image URL</mat-label>
+    <input matInput [(ngModel)]="card.imageUrl" />
+  </mat-form-field>
+
+  <!-- Card Color -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Card Color</mat-label>
+    <mat-select [(ngModel)]="card.backgroundColor">
+      <mat-option value="blue"> Blue </mat-option>
+      <mat-option value="orange"> Orange </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Rarity -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Rarity</mat-label>
+    <mat-select [(ngModel)]="card.rarity">
+      <mat-option value="normal"> Normal </mat-option>
+      <mat-option value="rare"> Rare </mat-option>
+    </mat-select>
+  </mat-form-field>
 
   <!-- Faction -->
   <mat-form-field class="small-text-field">
@@ -32,14 +60,35 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Secondary Faction -->
+  <mat-form-field class="small-text-field">
+    <mat-label>2. Faction</mat-label>
+    <mat-select [(ngModel)]="card.factionSecondary">
+      <mat-select-trigger>
+        <div class="reward-container">
+          @if (card.factionSecondary) {
+            <img class="reward" [src]="card.factionSecondary | factionTypePath" />
+          }
+          <span class="reward-label">{{ card.factionSecondary }}</span>
+        </div>
+      </mat-select-trigger>
+      <mat-option *ngFor="let faction of factions" [value]="faction"
+        ><div class="reward-container">
+          <img class="reward" [src]="faction | factionTypePath" />
+          <span class="reward-label">{{ faction }}</span>
+        </div></mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
   <!-- Persuasion Costs -->
   <mat-form-field class="small-text-field">
     <mat-label>Persuasion Costs</mat-label>
     <input matInput [(ngModel)]="card.persuasionCosts" type="number" />
   </mat-form-field>
 
-  <!-- Field Access -->
-  <mat-form-field class="medium-text-field flex">
+  <!-- Board Space Access -->
+  <mat-form-field class="small-text-field flex">
     <mat-label>Board Space Access</mat-label>
     <mat-select [(ngModel)]="card.fieldAccess" multiple>
       <mat-option *ngFor="let actionType of actionTypes; let i = index" [value]="actionType">
@@ -55,27 +104,6 @@
       <mat-option [value]="false"> {{ t.translate('commonNo') }} </mat-option>
       <mat-option [value]="true"> {{ t.translate('commonYes') }} </mat-option>
     </mat-select>
-  </mat-form-field>
-
-  <!-- Rarity -->
-  <mat-form-field class="small-text-field">
-    <mat-label>Rarity</mat-label>
-    <mat-select [(ngModel)]="card.rarity">
-      <mat-option value="normal"> Normal </mat-option>
-      <mat-option value="rare"> Rare </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Image -->
-  <mat-form-field class="larger-text-field flex">
-    <mat-label>Image URL</mat-label>
-    <input matInput [(ngModel)]="card.imageUrl" />
-  </mat-form-field>
-
-  <!-- Card Amount -->
-  <mat-form-field class="small-text-field">
-    <mat-label>Card Amount</mat-label>
-    <input matInput type="number" [(ngModel)]="card.cardAmount" />
   </mat-form-field>
 
   <!-- Buy Effects -->

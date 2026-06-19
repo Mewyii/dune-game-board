@@ -445,6 +445,9 @@ export class AIEffectEvaluationService {
             effectMultiplierAmount = 0.5 * cardAmount;
           }
         }
+      } else if (rewardEffect.multiplier.type === 'multiplier-own-agents-on-field-type') {
+        const totalAgentCount = gameState.playerAgentsAvailable + gameState.playerAgentsOnFields.length;
+        effectMultiplierAmount = 0.4 * totalAgentCount;
       }
 
       if (effectMultiplierAmount > 0) {
@@ -586,13 +589,13 @@ export class AIEffectEvaluationService {
       case 'card-draw':
         return (
           1.7 +
-          0.1 * gameState.playerCardsBought +
-          0.1 * gameState.playerCardsTrashed +
+          0.075 * gameState.playerCardsBought +
+          0.075 * gameState.playerCardsTrashed +
           0.033 * (7 - gameState.playerCardsFieldAccess.length) -
           0.015 * gameState.playerCardsRewards['card-draw']
         );
       case 'card-discard':
-        return -1.6 - 0.075 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
+        return -1.7 - 0.05 * gameState.playerCardsBought - 0.05 * gameState.playerCardsTrashed;
       case 'card-trash':
       case 'card-trash-from-hand':
       case 'card-trash-in-play':
@@ -678,9 +681,9 @@ export class AIEffectEvaluationService {
             ? this.getStructuredEffectsEvaluation(gameState.playerLeader.structuredSignetEffects, player, gameState)
             : 3;
       case 'location-control':
-        return 7.5 + 0.25 * (gameState.currentRound - 1);
+        return 8 + 0.25 * (gameState.currentRound - 1);
       case 'location-control-choice':
-        return 7.5 + 0.25 * (gameState.currentRound - 1);
+        return 8 + 0.25 * (gameState.currentRound - 1);
       case 'loose-troop':
         return -1.5 + 0.1 * (gameState.currentRound - 1);
       case 'trash-self':
@@ -782,7 +785,7 @@ export class AIEffectEvaluationService {
           return value * efficiency;
         }
       case 'card-discard':
-        return value;
+        return value + 0.033 * gameState.playerHandCards.length;
       case 'card-trash':
       case 'card-trash-from-hand':
       case 'card-trash-in-play':
@@ -963,7 +966,7 @@ export class AIEffectEvaluationService {
               ),
         );
 
-        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.8 : -3;
+        return controllableFreeLocations ? value : controllableEnemyLocations ? value * 0.9 : -3;
       case 'loose-troop':
         return value + 0.33 * gameState.playerCombatUnits.troopsInGarrison;
       case 'trash-self':

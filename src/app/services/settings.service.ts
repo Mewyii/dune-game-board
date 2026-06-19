@@ -104,7 +104,7 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.eventsEnabled);
   }
 
-  get boardFields() {
+  get boardSpaces() {
     return cloneDeep(this.fields);
   }
 
@@ -114,6 +114,10 @@ export class SettingsService {
 
   getFactionColor(factionType: FactionType) {
     return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === factionType)?.primaryColor);
+  }
+
+  getFactionSecondaryColor(factionType: FactionType) {
+    return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === factionType)?.secondaryColor);
   }
 
   getBoardField(id: string) {

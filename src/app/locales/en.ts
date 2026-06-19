@@ -33,6 +33,7 @@ export const enLocale = {
   commonEffectMultiplierTroopsInConflictAmount: 'For each of your troops in conflict',
   commonEffectMultiplierCardsWithSwordAmount: 'For each card with a {resource:sword}-symbol you have in play',
   commonEffectMultiplierConnections: 'For each {0} -Connection',
+  commonEffectMultiplierOwnAgentsOnFieldType: 'For each of your {resource:agent} on {0} board spaces',
   commonEffectRewardUnitInsert: 'You may deploy up to {0} of your units.',
   commonEffectRewardTroopInsert: 'You may deploy up to {0} of your troops.',
   commonEffectRewardTroopInsertOrRetreat: 'You may deploy or retreat up to {0} of your troops.',

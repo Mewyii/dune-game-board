@@ -164,6 +164,17 @@
               "
             ></div>
           </div>
+        } @else if (reward.type === 'multiplier-own-agents-on-field-type') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
+            <div
+              [class]="rewardTextClass('text inline')"
+              [style.fontSize]="fontSize"
+              [innerHTML]="
+                t.translate('commonEffectMultiplierOwnAgentsOnFieldType', false, '{faction:' + reward?.action + '}') + ':'
+                  | duneSymbols: size
+              "
+            ></div>
+          </div>
         } @else if (reward.type === 'multiplier-troops-in-conflict') {
           <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div

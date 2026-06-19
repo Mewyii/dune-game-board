@@ -31,6 +31,7 @@ export const deLocale: Locale = {
   commonEffectMultiplierTroopsInConflictAmount: 'Für jede deiner Truppen im Konflikt',
   commonEffectMultiplierCardsWithSwordAmount: 'Für jede Karte mit {resource:sword}-Symbol, die du im Spiel hast',
   commonEffectMultiplierConnections: 'Für jede {0} -Verbindung',
+  commonEffectMultiplierOwnAgentsOnFieldType: 'Für jeden deiner {resource:agent} auf {0}-Feldern',
   commonEffectTimingGameStart: 'Spielbeginn',
   commonEffectTimingRoundStart: 'Rundenbeginn',
   commonEffectTimingTurnStart: 'Zugbeginn',

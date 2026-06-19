@@ -17,6 +17,10 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
 
   public factionName = '';
   public factionColor = '';
+  public factionColorDark = '';
+  public factionNameSecondary = '';
+  public factionColorSecondary = '';
+  public factionColorSecondaryDark = '';
   public agentEffectSize = '30px';
   public revealEffectSize = '30px';
 
@@ -29,6 +33,13 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     if (this.card.faction) {
       this.factionName = this.getFactionName(this.card.faction);
       this.factionColor = this.getFactionColor(this.card.faction);
+      this.factionColorDark = this.getFactionSecondaryColor(this.card.faction);
+
+      if (this.card.factionSecondary) {
+        this.factionNameSecondary = this.getFactionName(this.card.factionSecondary);
+        this.factionColorSecondary = this.getFactionColor(this.card.factionSecondary);
+        this.factionColorSecondaryDark = this.getFactionSecondaryColor(this.card.factionSecondary);
+      }
     }
     if (this.card.agentEffectSize) {
       this.agentEffectSize =
@@ -44,6 +55,13 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     if (this.card.faction) {
       this.factionName = this.getFactionName(this.card.faction);
       this.factionColor = this.getFactionColor(this.card.faction);
+      this.factionColorDark = this.getFactionSecondaryColor(this.card.faction);
+
+      if (this.card.factionSecondary) {
+        this.factionNameSecondary = this.getFactionName(this.card.factionSecondary);
+        this.factionColorSecondary = this.getFactionColor(this.card.factionSecondary);
+        this.factionColorSecondaryDark = this.getFactionSecondaryColor(this.card.factionSecondary);
+      }
     }
     if (this.card.agentEffectSize) {
       this.agentEffectSize =
@@ -57,6 +75,10 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
 
   private getFactionColor(factionType: FactionType) {
     return this.settingsService.getFactionColor(factionType) ?? '';
+  }
+
+  private getFactionSecondaryColor(factionType: FactionType) {
+    return this.settingsService.getFactionSecondaryColor(factionType) ?? '';
   }
 
   private getFactionName(factionType: FactionType) {

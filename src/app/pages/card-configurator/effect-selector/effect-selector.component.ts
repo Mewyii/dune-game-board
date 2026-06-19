@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import {
   ActionType,
   effectActionConditions,
+  effectActionMultipliers,
   effectFactionConditions,
   effectFactionMultipliers,
   EffectType,
@@ -33,7 +34,7 @@ export class EffectSelectorComponent {
   }
 
   effectRequiresAction(type: EffectType) {
-    return effectActionConditions.some((x) => x === type);
+    return effectActionConditions.some((x) => x === type) || effectActionMultipliers.some((x) => x === type);
   }
 
   onTypeChanged(effect: SimpleEffect) {

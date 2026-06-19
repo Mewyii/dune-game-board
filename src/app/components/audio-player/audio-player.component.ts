@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -8,16 +9,28 @@ import { TranslateService } from 'src/app/services/translate-service';
   styleUrls: ['./audio-player.component.scss'],
   standalone: false,
 })
-export class AudioPlayerComponent implements OnInit {
+export class AudioPlayerComponent implements OnInit, OnDestroy {
   public showAudioSelection = false;
   public autoplayMusic = false;
 
-  constructor(private settingsService: SettingsService, public t: TranslateService) {}
+  subscriptions: Subscription[] = [];
+
+  constructor(
+    private settingsService: SettingsService,
+    public t: TranslateService,
+  ) {}
 
   ngOnInit(): void {
-    this.settingsService.autoplayMusic$.subscribe((value) => {
+    const autoPlaySub = this.settingsService.autoplayMusic$.subscribe((value) => {
       this.autoplayMusic = value;
     });
+    this.subscriptions.push(autoPlaySub);
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onAutoplayMusicClicked() {

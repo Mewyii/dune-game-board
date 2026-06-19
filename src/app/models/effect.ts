@@ -105,6 +105,8 @@ export const effectMultipliers = [
 
 export const effectFactionMultipliers = ['multiplier-connections'] as const;
 
+export const effectActionMultipliers = ['multiplier-own-agents-on-field-type'] as const;
+
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
 
 export type EffectSeparatorType = (typeof effectSeparators)[number];
@@ -116,6 +118,7 @@ export type EffectActionConditionType = (typeof effectActionConditions)[number];
 export type EffectConversionType = (typeof effectConversions)[number];
 export type EffectMultiplierType = (typeof effectMultipliers)[number];
 export type EffectFactionMultiplierType = (typeof effectFactionMultipliers)[number];
+export type EffectActionMultiplierType = (typeof effectActionMultipliers)[number];
 
 export type EffectType =
   | EffectSeparatorType
@@ -127,6 +130,7 @@ export type EffectType =
   | EffectConversionType
   | EffectMultiplierType
   | EffectFactionMultiplierType
+  | EffectActionMultiplierType
   | EffectRewardType;
 
 interface EffectBase {
@@ -159,8 +163,9 @@ export interface EffectConversion extends EffectBase {
 }
 
 export interface EffectMultiplier extends EffectBase {
-  type: EffectMultiplierType | EffectFactionMultiplierType;
+  type: EffectMultiplierType | EffectFactionMultiplierType | EffectActionMultiplierType;
   faction?: ActiveFactionType;
+  action?: ActionType;
 }
 
 export interface EffectReward extends EffectBase {
