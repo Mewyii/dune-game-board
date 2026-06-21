@@ -1,3 +1,3 @@
-import { AIGoals } from './goals';
+import { EffectRewardType } from '../effect';
 
-export type AIPersonality = Partial<Record<AIGoals, number>>;
+export type AIPersonality = Partial<Record<EffectRewardType, number>>;

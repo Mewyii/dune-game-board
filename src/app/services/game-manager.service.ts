@@ -46,7 +46,7 @@ import { techTilesGameAdjustments } from '../constants/tech-tiles-game-adjustmen
 import { getPlayerCombatStrength, getPlayerGarrisonStrength } from '../helpers/combat';
 import { delay } from '../helpers/common';
 import { playerCanEnterCombat, turnInfosNeedToBeResolved } from '../helpers/turn-infos';
-import { GameCommands, GameState } from '../models/ai';
+import { CardGameAdjustmentsGameInterface, GameState } from '../models/ai';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from '../models/turn-info';
 import { AIBoardSpacesService } from './ai/ai-board-spaces.service';
 import { AICardsService } from './ai/ai-cards.service';
@@ -1996,7 +1996,7 @@ export class GameManager {
     }
   }
 
-  private getUsableGameCommands(): GameCommands {
+  private getUsableGameCommands(): CardGameAdjustmentsGameInterface {
     return {
       // High-level game actions
       acquireImperiumCard: (playerId, card, source, options) => this.acquireImperiumCard(playerId, card, source, options),

@@ -1,7 +1,17 @@
-import { ActionField, DuneLocation, EffectReward, Faction, LanguageType } from '../models';
-import { FieldsForGoals } from '../models/ai';
+import {
+  ActionField,
+  DuneLocation,
+  EffectPlayerTurnTiming,
+  EffectReward,
+  EffectRewardType,
+  Faction,
+  LanguageType,
+  StructuredEffect,
+} from '../models';
+import { GameState } from '../models/ai';
 import { Conflict } from '../models/conflict';
 import { CustomCard } from '../models/imperium-card';
+import { Player } from '../models/player';
 import { gameContentCustomExpert } from './game-content';
 
 export interface VictoryPointReward {
@@ -11,7 +21,43 @@ export interface VictoryPointReward {
 
 export interface AI {
   name: string;
-  aiGoals: FieldsForGoals;
+  rewardEffectEvaluation: (
+    rewardType: EffectRewardType,
+    player: Player,
+    gameState: GameState,
+    game: AIRewardEffectGameInterface,
+  ) => number;
+  rewardEffectEvaluationForTurnState: (
+    rewardType: EffectRewardType,
+    rewardAmount: number,
+    player: Player,
+    gameState: GameState,
+    game: AIRewardEffectGameInterface,
+    targetBoardSpace?: ActionField,
+  ) => number;
+}
+
+export interface AIRewardEffectGameInterface {
+  settings: {
+    locationTakeoverTroopCosts: number;
+    maxPlayerIntrigueCount: number | undefined;
+    maxPlayerDreadnoughtCount: number;
+    getBoardField: (id: string) => ActionField | undefined;
+  };
+  getStructuredEffectsEvaluation: (
+    effects: StructuredEffect[],
+    player: Player,
+    gameState: GameState,
+    timing?: EffectPlayerTurnTiming,
+  ) => number;
+  getStructuredEffectsEvaluationForTurnState: (
+    effects: StructuredEffect[],
+    player: Player,
+    gameState: GameState,
+    timing?: EffectPlayerTurnTiming,
+    ignoreConversionCosts?: boolean,
+    targetBoardSpace?: ActionField,
+  ) => number;
 }
 
 export type CardAcquiringPlacementType = 'hand' | 'below-deck' | 'above-deck' | 'discard-pile';

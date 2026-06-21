@@ -1,26 +1,29 @@
-import { ActionField, EffectTimingType, Resource } from 'src/app/models';
+import { ActionField, EffectRewardType, EffectTimingType, Resource } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { GameElement } from 'src/app/services/game-manager.service';
-import { GameCommands } from './game-commands';
+import { CardGameAdjustmentsGameInterface } from './game-commands';
 import { GameState } from './game-state';
-import { AIGoals } from './goals';
 
-export interface GoalModifier {
-  type: AIGoals;
+export interface RewardModifier {
+  type: EffectRewardType;
   modifier: number;
 }
 
 export interface AIAdjustments {
   fieldAccessModifier?: Resource[];
   fieldEvaluationModifier?: (player: Player, gameState: GameState, field: ActionField) => number;
-  goalEvaluationModifier?: (player: Player, gameState: GameState) => GoalModifier[];
+  rewardEvaluationModifier?: (player: Player, gameState: GameState) => RewardModifier[];
 }
 
-export type CustomEffectFunction = (player: Player, gameState: GameState, services: GameCommands) => void;
+export type CustomEffectFunction = (
+  player: Player,
+  gameState: GameState,
+  services: CardGameAdjustmentsGameInterface,
+) => void;
 export type CustomEffectFunctionWithGameElement = (
   player: Player,
   gameState: GameState,
-  services: GameCommands,
+  services: CardGameAdjustmentsGameInterface,
   gameElement: GameElement,
 ) => void;
 

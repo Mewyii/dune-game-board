@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { getAccumulatedSpice, getDesire } from 'src/app/helpers/ai';
+import { AI } from 'src/app/constants/board-settings';
+import { getAccumulatedSpice } from 'src/app/helpers/ai';
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
 import { randomizeArray } from 'src/app/helpers/common';
 import { isFactionScoreType } from 'src/app/helpers/faction-score';
 import { getModifiedCostsForField, getModifiedRewardsForField } from 'src/app/helpers/game-modifiers';
 import { isResourceType } from 'src/app/helpers/resources';
-import { getFlattenedEffectRewardArray, getRewardArrayAIInfos } from 'src/app/helpers/rewards';
+import {
+  getFlattenedEffectRewardArray,
+  getRewardArrayAIInfos,
+  isRewardEffect,
+  playerCanPayCosts,
+} from 'src/app/helpers/rewards';
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
-import { AIGoals, FieldsForGoals, GameState, GoalModifier } from 'src/app/models/ai';
+import { GameState, RewardModifier } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { LeaderDeckCard } from '../leaders.service';
 import { Resources } from '../player-resources.service';
 import { SettingsService } from '../settings.service';
 import { AIPlayer } from './ai-players.service';
+import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
 
 interface FieldEvaluation {
   fieldId: string;
@@ -33,11 +40,14 @@ export interface ViableField {
   providedIn: 'root',
 })
 export class AIFieldEvaluationService {
-  aiGoals: FieldsForGoals | undefined;
+  ai: AI | undefined;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(
+    private settingsService: SettingsService,
+    private aiEffectEvaluationService: AIEffectEvaluationService,
+  ) {
     this.settingsService.AI$.subscribe((x) => {
-      this.aiGoals = x.aiGoals;
+      this.ai = x;
     });
   }
 
@@ -56,9 +66,9 @@ export class AIFieldEvaluationService {
       this.getFieldsSplitByRewardChoices(this.settingsService.boardSpaces),
     );
 
-    let leaderGoalModifiers: GoalModifier[] = [];
-    if (playerLeader.aiAdjustments && playerLeader.aiAdjustments.goalEvaluationModifier) {
-      leaderGoalModifiers = playerLeader.aiAdjustments.goalEvaluationModifier(player, gameState);
+    let leaderGoalModifiers: RewardModifier[] = [];
+    if (playerLeader.aiAdjustments && playerLeader.aiAdjustments.rewardEvaluationModifier) {
+      leaderGoalModifiers = playerLeader.aiAdjustments.rewardEvaluationModifier(player, gameState);
     }
 
     const fieldEvaluations = this.getEvaluatedFieldsByGoals(
@@ -80,6 +90,8 @@ export class AIFieldEvaluationService {
       gameState.playerResources,
     );
 
+    accessibleFields.sort((a, b) => b.value - a.value);
+
     const randomFactor = gameState.isOpeningTurn
       ? 0.3
       : aiDifficulty === 'hard'
@@ -96,59 +108,106 @@ export class AIFieldEvaluationService {
     player: Player,
     aiPlayer: AIPlayer,
     gameState: GameState,
-    leaderGoalModifiers: GoalModifier[],
-    boardFields: ActionField[],
+    leaderGoalModifiers: RewardModifier[],
+    boardSpaces: ActionField[],
     conflictEvaluation: number,
     techEvaluation: number,
     imperiumRowEvaluation: number,
   ) {
     const fieldEvaluations: FieldEvaluation[] = [];
 
-    if (!this.aiGoals) {
+    if (!this.ai) {
       return fieldEvaluations;
     }
 
-    for (let [goalId, goal] of Object.entries(this.aiGoals)) {
-      if (!goal.reachedGoal(player, gameState, this.aiGoals)) {
-        const aiGoalId = goalId as AIGoals;
+    for (const boardSpace of boardSpaces) {
+      const boardSpaceId = boardSpace.title.en;
 
-        const goalDesire =
-          getDesire(goal, player, gameState, this.aiGoals) *
-            (aiPlayer.personality[aiGoalId] ?? 1.0) *
-            this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation) +
-          this.getLeaderGoalModifier(goalId, leaderGoalModifiers);
-
-        let desireCanBeFullfilled = false;
-
-        if (goal.goalIsReachable(player, gameState, this.aiGoals) && goal.desiredFields) {
-          for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields(boardFields))) {
-            const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
-
-            const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
-            if (index > -1) {
-              fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
-            } else {
-              fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
-            }
-
-            desireCanBeFullfilled = true;
-          }
+      let boardSpaceEvaluation = 0;
+      for (const reward of boardSpace.rewards) {
+        if (isRewardEffect(reward)) {
+          const rewardEvaluation = this.aiEffectEvaluationService.getRewardEffectEvaluationForTurnState(
+            reward.type,
+            reward.amount ?? 1,
+            player,
+            gameState,
+            boardSpace,
+          );
+          boardSpaceEvaluation += rewardEvaluation;
         }
-
-        if (!desireCanBeFullfilled) {
-          for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields(boardFields))) {
-            const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
-
-            const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
-            if (index > -1) {
-              fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
-            } else {
-              fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
-            }
+      }
+      if (boardSpace.costs) {
+        if (playerCanPayCosts(boardSpace.costs, player, gameState)) {
+          for (const cost of boardSpace.costs) {
+            const rewardEvaluation = this.aiEffectEvaluationService.getRewardEffectEvaluationForTurnState(
+              cost.type,
+              cost.amount ?? 1,
+              player,
+              gameState,
+              boardSpace,
+            );
+            boardSpaceEvaluation -= rewardEvaluation;
           }
+        } else {
+          boardSpaceEvaluation = 0;
+        }
+      }
+
+      boardSpaceEvaluation = Math.round(boardSpaceEvaluation * 100) / 100;
+
+      if (boardSpaceEvaluation > 0) {
+        const fieldEvaluation = fieldEvaluations.find((x) => x.fieldId === boardSpaceId);
+        if (fieldEvaluation) {
+          if (fieldEvaluation.value < boardSpaceEvaluation) {
+            fieldEvaluation.value = boardSpaceEvaluation;
+          }
+        } else {
+          fieldEvaluations.push({ fieldId: boardSpaceId, value: boardSpaceEvaluation });
         }
       }
     }
+
+    // for (let [goalId, goal] of Object.entries(this.aiGoals)) {
+    //   if (!goal.reachedGoal(player, gameState, this.aiGoals)) {
+    //     const aiGoalId = goalId as AIGoals;
+
+    //     const goalDesire =
+    //       getDesire(goal, player, gameState, this.aiGoals) *
+    //         (aiPlayer.personality[aiGoalId] ?? 1.0) *
+    //         this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation) +
+    //       this.getLeaderGoalModifier(goalId, leaderGoalModifiers);
+
+    //     let desireCanBeFullfilled = false;
+
+    //     if (goal.goalIsReachable(player, gameState, this.aiGoals) && goal.desiredFields) {
+    //       for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields(boardSpaces))) {
+    //         const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
+
+    //         const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
+    //         if (index > -1) {
+    //           fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
+    //         } else {
+    //           fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
+    //         }
+
+    //         desireCanBeFullfilled = true;
+    //       }
+    //     }
+
+    //     if (!desireCanBeFullfilled) {
+    //       for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields(boardSpaces))) {
+    //         const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
+
+    //         const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
+    //         if (index > -1) {
+    //           fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
+    //         } else {
+    //           fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     return fieldEvaluations;
   }
 
@@ -255,8 +314,6 @@ export class AIFieldEvaluationService {
       })
       .filter((x) => !!x) as ViableField[];
 
-    accessibleFields.sort((a, b) => b.value - a.value);
-
     return accessibleFields;
   }
 
@@ -335,6 +392,8 @@ export class AIFieldEvaluationService {
 
       // Faction Reward Adjustments
       if (isFactionScoreType(field.actionType)) {
+        fieldRewards.push({ type: `faction-influence-up-${field.actionType}` });
+
         const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
           (x) => x.factionId === field.actionType,
         )?.rewards;
@@ -397,32 +456,32 @@ export class AIFieldEvaluationService {
     });
   }
 
-  private getLeaderGoalModifier(goalId: string, goalModifiers: GoalModifier[]) {
-    return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
-  }
+  // private getLeaderGoalModifier(goalId: string, goalModifiers: GoalModifier[]) {
+  //   return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
+  // }
 
-  private getGameStateModifier(
-    goal: AIGoals,
-    conflictEvaluation: number,
-    techEvaluation: number,
-    imperiumRowEvaluation: number,
-  ) {
-    let modifier = 1.0;
+  // private getGameStateModifier(
+  //   goal: AIGoals,
+  //   conflictEvaluation: number,
+  //   techEvaluation: number,
+  //   imperiumRowEvaluation: number,
+  // ) {
+  //   let modifier = 1.0;
 
-    if (goal === 'enter-combat') {
-      modifier = 0.5 + conflictEvaluation;
-    } else if (goal === 'troops') {
-      modifier = (0.5 + conflictEvaluation + 2) / 3;
-    } else if (goal === 'dreadnought') {
-      modifier = (1.5 - conflictEvaluation + 1) / 2;
-    } else if (goal === 'tech') {
-      modifier = 0.5 + techEvaluation;
-    } else if (goal === 'draw-cards' || goal === 'get-board-persuasion') {
-      modifier = 0.5 + imperiumRowEvaluation;
-    } else if (goal === 'high-council') {
-      modifier = (0.5 + imperiumRowEvaluation + 1) / 2;
-    }
+  //   if (goal === 'enter-combat') {
+  //     modifier = 0.5 + conflictEvaluation;
+  //   } else if (goal === 'troops') {
+  //     modifier = (0.5 + conflictEvaluation + 2) / 3;
+  //   } else if (goal === 'dreadnought') {
+  //     modifier = (1.5 - conflictEvaluation + 1) / 2;
+  //   } else if (goal === 'tech') {
+  //     modifier = 0.5 + techEvaluation;
+  //   } else if (goal === 'draw-cards' || goal === 'get-board-persuasion') {
+  //     modifier = 0.5 + imperiumRowEvaluation;
+  //   } else if (goal === 'high-council') {
+  //     modifier = (0.5 + imperiumRowEvaluation + 1) / 2;
+  //   }
 
-    return modifier;
-  }
+  //   return modifier;
+  // }
 }

@@ -14,7 +14,7 @@ import { EffectPlayerTurnTiming } from '../reward';
 import { TurnInfo } from '../turn-info';
 import { GameState } from './game-state';
 
-export interface GameCommands {
+export interface CardGameAdjustmentsGameInterface {
   // Cards
   acquireImperiumCard: (
     playerId: number,

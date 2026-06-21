@@ -13,7 +13,7 @@ import {
 import { getPlayerCombatStrength } from '../helpers/combat';
 import { playerCanPayCosts } from '../helpers/rewards';
 import { ActionField, DuneLocation, StructuredEffect } from '../models';
-import { AIAdjustments, GameCommands, GameState, TimedFunction } from '../models/ai';
+import { AIAdjustments, CardGameAdjustmentsGameInterface, GameState, TimedFunction } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard, ImperiumRowCard } from '../services/cards.service';
 import { FieldMarkerModifier, GameModifiers } from '../services/game-modifier.service';
@@ -24,8 +24,8 @@ export interface LeaderGameAdjustments {
   aiAdjustments?: AIAdjustments;
   gameModifiers?: GameModifiers;
   customSignetEffects?: StructuredEffect[];
-  customSignetFunction?: (player: Player, gameState: GameState, game: GameCommands) => void;
-  customSignetAIFunction?: (player: Player, gameState: GameState, game: GameCommands) => void;
+  customSignetFunction?: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => void;
+  customSignetAIFunction?: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => void;
   customTimedActivatedFunctions?: TimedFunction[];
   customTimedFunctions?: TimedFunction[];
   customTimedAIFunctions?: TimedFunction[];
@@ -39,7 +39,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     gameModifiers: {
       fieldEnemyAgentAccess: [{ id: 'paul-fremen-access', actionTypes: ['fremen'] }],
     },
-    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const fremenInfluence = gameState.playerScore['fremen'];
       if (fremenInfluence > 3) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
@@ -140,7 +140,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       });
     },
-    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const possibleNewMarkerLocations = gameState.locations.filter((x) =>
         gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.actionField.title.en),
       );
@@ -187,7 +187,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerHandCards.length < 1) return;
 
           const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
@@ -212,7 +212,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       },
       {
         timing: 'timing-combat',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -252,7 +252,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunctions: [
       {
         timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (
             gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
             gameState.playerIntrigueCount < 2 &&
@@ -267,7 +267,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       },
       {
         timing: 'timing-combat',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -310,7 +310,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   },
   {
     id: 'Count Glossu Rabban',
-    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const resourceOptions = gameState.boardSpaces
         .filter((bs) => gameState.playerLocations.includes(bs.title.en))
         .map((x) => x.ownerReward)
@@ -324,7 +324,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunctions: [
       {
         timing: 'timing-game-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           game.setLocationOwner('Carthag', player.id);
           game.logPlayerGainedLocationControl(player.id, 1, 'Carthag');
           game.addRewardToPlayer(player.id, { type: 'victory-point' });
@@ -332,7 +332,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       },
       {
         timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           game.addRewardToPlayer(player.id, { type: 'card-discard' });
           game.resolveRewardChoices(player);
         },
@@ -351,7 +351,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -416,7 +416,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const availableSignetTokens = gameState.playerResources.signet;
           if (availableSignetTokens < 1) {
             return;
@@ -470,7 +470,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-combat',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -510,7 +510,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunctions: [
       {
         timing: 'timing-combat',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -755,7 +755,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunctions: [
       {
         timing: 'timing-agent-placement',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const playerFieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
           if (!playerFieldMarkers || playerFieldMarkers.length < 1) {
             return;
@@ -785,7 +785,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           game.updatePlayerTurnInfo(player.id, {
             effectConversions: [
               {
@@ -807,7 +807,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunctions: [
       {
         timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           game.updatePlayerTurnInfo(player.id, {
             effectConversions: [
               {
@@ -826,7 +826,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       },
     ],
-    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       if (player.isAI) return;
 
       const { allCards, imperiumRowCards, recruitableCards, alwaysBuyableCards } = game.getAllBuyableCards(
@@ -858,7 +858,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       });
     },
-    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       let targetCard: ImperiumRowCard | undefined;
       const handCardAmount = gameState.playerHandCards.length;
       const buyableCards = gameState.imperiumRowCards.filter(
@@ -906,7 +906,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -1014,14 +1014,17 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Count August Metulli',
     aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'high-council', modifier: -0.2 }],
+      rewardEvaluationModifier: () => [
+        { type: 'council-seat-small', modifier: -0.2 },
+        { type: 'council-seat-large', modifier: -0.2 },
+      ],
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
     },
     customTimedFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const playerVictoryPoints = gameState.playerScore.victoryPoints;
           const playerPersuasion = gameState.playerResources.persuasion;
 
@@ -1132,7 +1135,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunctions: [
       {
         timing: 'timing-game-start',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           game.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
         },
       },
@@ -1140,7 +1143,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-agent-placement',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -1167,7 +1170,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunctions: [
       {
         timing: 'timing-agent-placement',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
@@ -1197,7 +1200,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedActivatedFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const playerFieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
           if (!playerFieldMarkers || playerFieldMarkers.length < 1) {
             return;
@@ -1262,7 +1265,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedAIFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const playerFieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
           if (!playerFieldMarkers || playerFieldMarkers.length < 1) {
             return;
@@ -1291,7 +1294,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       },
     ],
-    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       if (player.isAI) return;
       game.addRewardToPlayer(player.id, { type: 'solari' });
 
@@ -1329,7 +1332,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       });
     },
-    customSignetAIFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       game.addRewardToPlayer(player.id, { type: 'solari' });
 
       const spiceOrTownFieldIds = gameState.boardSpaces
@@ -1355,7 +1358,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Dara Moritani',
     aiAdjustments: {
-      goalEvaluationModifier: () => [{ type: 'swordmaster', modifier: 0.2 }],
+      rewardEvaluationModifier: () => [{ type: 'sword-master', modifier: 0.2 }],
     },
     gameModifiers: {
       fieldEnemyAgentAccess: [
@@ -1366,7 +1369,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       ],
       fieldCost: [{ id: 'dara-landsraad-costs', actionType: 'landsraad', costType: 'solari', amount: 2 }],
     },
-    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const rewardAmount = gameState.playerAgentsOnFields.filter((pa) =>
         gameState.enemyAgentsOnFields.some((ea) => ea.fieldId === pa.fieldId),
       ).length;
@@ -1401,7 +1404,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunctions: [
       {
         timing: 'timing-agent-placement',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.solari < 1) {
             return;
           }
@@ -1445,7 +1448,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       ],
     },
-    customSignetFunction: (player: Player, gameState: GameState, game: GameCommands) => {
+    customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const enemyLocation = gameState.enemyLocations.find(
         (x) => x.locationId === gameState.playerAgentPlacedOnFieldThisTurn,
       );
@@ -1458,7 +1461,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customTimedFunctions: [
       {
         timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: GameCommands) => {
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           for (const agentOnField of gameState.playerAgentsOnFields) {
             const isEnemyLocation = gameState.enemyLocations.some((x) => x.locationId === agentOnField.fieldId);
             if (isEnemyLocation) {

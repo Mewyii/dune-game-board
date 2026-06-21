@@ -9,7 +9,7 @@ import {
 import { getPlayerdreadnoughtCount } from '../helpers/combat';
 import { getFlattenedEffectRewardArray } from '../helpers/rewards';
 import { DuneLocation } from '../models';
-import { GameCommands, GameState, TimedFunctionWithGameElement } from '../models/ai';
+import { CardGameAdjustmentsGameInterface, GameState, TimedFunctionWithGameElement } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard } from '../services/cards.service';
 import { GameModifiers } from '../services/game-modifier.service';
@@ -21,7 +21,7 @@ export interface TechTileGameAdjustments {
   customTimedActivatedFunction?: TimedFunctionWithGameElement;
   customTimedFunction?: TimedFunctionWithGameElement;
   customTimedAIFunction?: TimedFunctionWithGameElement;
-  onTrashFunction?: (player: Player, gameState: GameState, game: GameCommands) => void;
+  onTrashFunction?: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => void;
 }
 
 export const techTilesGameAdjustments: TechTileGameAdjustments[] = [

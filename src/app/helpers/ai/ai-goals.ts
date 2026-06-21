@@ -1,6 +1,6 @@
 import { clamp } from 'lodash';
 import { Effect, EffectRewardType, Resource, ResourceType } from 'src/app/models';
-import { AIGoal, AIGoals, FieldsForGoals, GameState } from 'src/app/models/ai';
+import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { Resources } from 'src/app/services/player-resources.service';
 import { PlayerScore } from 'src/app/services/player-score-manager.service';
@@ -13,45 +13,45 @@ export function getAccumulatedSpice(gameState: GameState, fieldId: string) {
   return 0;
 }
 
-export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {
-  const goalDesire = goal.desireModifier(player, gameState, goals);
-  return clamp(goal.baseDesire + goalDesire, -1, goal.maxDesire ?? 1);
-}
+// export function getDesire(goal: AIGoal, player: Player, gameState: GameState, goals: FieldsForGoals) {
+//   const goalDesire = goal.desireModifier(player, gameState, goals);
+//   return clamp(goal.baseDesire + goalDesire, -1, goal.maxDesire ?? 1);
+// }
 
-export function getMaxDesireOfUnreachedOrUnreachableGoal(
-  player: Player,
-  gameState: GameState,
-  goals: FieldsForGoals,
-  goalType: { type: AIGoals; modifier: number },
-) {
-  const goal = goals[goalType.type];
-  if (!goal) {
-    return 0.0;
-  }
-  if (!goal.goalIsReachable(player, gameState, goals) && !goal.reachedGoal(player, gameState, goals)) {
-    const goalDesire = getDesire(goal, player, gameState, goals);
+// export function getMaxDesireOfUnreachedOrUnreachableGoal(
+//   player: Player,
+//   gameState: GameState,
+//   goals: FieldsForGoals,
+//   goalType: { type: AIGoals; modifier: number },
+// ) {
+//   const goal = goals[goalType.type];
+//   if (!goal) {
+//     return 0.0;
+//   }
+//   if (!goal.goalIsReachable(player, gameState, goals) && !goal.reachedGoal(player, gameState, goals)) {
+//     const goalDesire = getDesire(goal, player, gameState, goals);
 
-    return goalDesire * goalType.modifier;
-  } else {
-    return 0.0;
-  }
-}
+//     return goalDesire * goalType.modifier;
+//   } else {
+//     return 0.0;
+//   }
+// }
 
-export function getMaxDesireOfUnreachedOrUnreachableGoals(
-  player: Player,
-  gameState: GameState,
-  goals: FieldsForGoals,
-  goalTypes: { type: AIGoals; modifier: number }[],
-  currentDesire: number,
-) {
-  for (const goalType of goalTypes) {
-    const goalDesire = getMaxDesireOfUnreachedOrUnreachableGoal(player, gameState, goals, goalType);
-    if (goalDesire > currentDesire) {
-      currentDesire = goalDesire;
-    }
-  }
-  return currentDesire;
-}
+// export function getMaxDesireOfUnreachedOrUnreachableGoals(
+//   player: Player,
+//   gameState: GameState,
+//   goals: FieldsForGoals,
+//   goalTypes: { type: AIGoals; modifier: number }[],
+//   currentDesire: number,
+// ) {
+//   for (const goalType of goalTypes) {
+//     const goalDesire = getMaxDesireOfUnreachedOrUnreachableGoal(player, gameState, goals, goalType);
+//     if (goalDesire > currentDesire) {
+//       currentDesire = goalDesire;
+//     }
+//   }
+//   return currentDesire;
+// }
 
 export function enemyIsCloseToPlayerFactionScore(gameState: GameState, faction: keyof PlayerScore) {
   const playerScore = gameState.playerScore[faction];

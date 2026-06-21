@@ -1,7 +1,8 @@
 import { AI } from '../../board-settings';
-import { aiGoalsOriginal } from './ai-goals';
+import { getRewardEffectEvaluation, getRewardEffectEvaluationForTurnState } from './ai-effect-evaluation';
 
 export const aiOriginal: AI = {
-  name: 'original',
-  aiGoals: aiGoalsOriginal,
+  name: 'custom-expert',
+  rewardEffectEvaluation: getRewardEffectEvaluation,
+  rewardEffectEvaluationForTurnState: getRewardEffectEvaluationForTurnState,
 };
