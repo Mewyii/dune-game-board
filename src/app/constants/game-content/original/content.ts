@@ -7,7 +7,7 @@ import { locationsOriginal } from './locations';
 export const gameContentOriginal: GameContent = {
   name: 'Original',
   factions: factionsOriginal,
-  locations: locationsOriginal,
+  locations: [{ playerCount: 0, locations: locationsOriginal }],
   conflicts: conflictsOriginal,
   useTechTiles: false,
   useDreadnoughts: false,
@@ -21,7 +21,10 @@ export const gameContentOriginal: GameContent = {
   ],
   customCards: customCardsOriginal,
   recruitmentCardAmount: 5,
-  finaleTrigger: 8,
+  finaleTrigger: [
+    { playerCount: 0, trigger: 8 },
+    { playerCount: 3, trigger: 7 },
+  ],
   combatMaxDeployableUnits: 2,
   factionInfluenceMaxScore: 6,
   factionInfluenceAllianceTreshold: 4,

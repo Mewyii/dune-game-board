@@ -54,7 +54,7 @@ import { AIConflictService } from './ai/ai-conflict.service';
 import { AIPlayersService } from './ai/ai-players.service';
 import { AIEffectEvaluationService } from './ai/ai.effect-evaluation.service';
 import { AudioManager } from './audio-manager.service';
-import { BoardSpaceService } from './board-space.service';
+import { BoardSpacesService } from './board-spaces.service';
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from './cards.service';
 import { CombatManager } from './combat-manager.service';
 import { ConflictsService } from './conflicts.service';
@@ -64,7 +64,7 @@ import { GameModifiersService } from './game-modifier.service';
 import { GameStateService } from './game-state.service';
 import { IntriguesService } from './intrigues.service';
 import { LeaderDeckCard, LeadersService, PlayerLeader } from './leaders.service';
-import { LocationManager } from './location-manager.service';
+import { LocationsService } from './location-manager.service';
 import { LoggingService } from './log.service';
 import { NotificationService } from './notification.service';
 import { PlayerAgentsService } from './player-agents.service';
@@ -110,7 +110,7 @@ export class GameManager {
     private playerScoreManager: PlayerScoreManager,
     private playersService: PlayersService,
     private combatManager: CombatManager,
-    private locationManager: LocationManager,
+    private locationsService: LocationsService,
     private loggingService: LoggingService,
     private leadersService: LeadersService,
     private conflictsService: ConflictsService,
@@ -127,7 +127,7 @@ export class GameManager {
     private playerAgentsService: PlayerAgentsService,
     private playersResourcesService: PlayerResourcesService,
     private gameStateService: GameStateService,
-    private boardSpaceService: BoardSpaceService,
+    private boardSpacesService: BoardSpacesService,
     private roundService: RoundService,
     private effectsService: EffectsService,
     private duneEventsManager: DuneEventsManager,
@@ -181,14 +181,14 @@ export class GameManager {
     this.combatManager.deleteAllPlayerTroopsFromCombat();
     this.combatManager.resetAllPlayerShips();
     this.combatManager.setInitialPlayerCombatUnits(newPlayers);
-    this.locationManager.resetLocationOwners();
+    this.locationsService.resetLocationOwners();
     this.playerRewardChoicesService.resetPlayerRewardChoices();
     this.playerAgentsService.deleteAllPlayerAgents();
 
     this.playerScoreManager.resetPlayersScores(newPlayers);
     this.playersResourcesService.resetPlayerResources(newPlayers);
     this.playerScoreManager.resetPlayerAlliances();
-    this.boardSpaceService.resetAccumulatedSpiceOnBoardSpaces();
+    this.boardSpacesService.resetAccumulatedSpiceOnBoardSpaces();
 
     this.cardsService.setLimitedCustomCards();
     this.cardsService.setUnlimitedCustomCards();
@@ -409,7 +409,7 @@ export class GameManager {
     this.audioManager.playSound('ping');
     this.gameModifiersService.removeTemporaryGameModifiers();
 
-    this.boardSpaceService.accumulateSpiceOnBoardSpaces();
+    this.boardSpacesService.accumulateSpiceOnBoardSpaces();
     this.playerAgentsService.resetPlayerAgents();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
     this.combatManager.setAllPlayerShipsFromCombatToTimeout();
@@ -524,9 +524,9 @@ export class GameManager {
 
     this.playersResourcesService.addResourceToPlayer(player.id, 'persuasion', player.permanentPersuasion);
 
-    const playerLocations = this.locationManager.getPlayerLocations(playerId);
+    const playerLocations = this.locationsService.getPlayerLocations(playerId);
     for (const playerLocation of playerLocations) {
-      const field = this.settingsService.getBoardField(playerLocation.locationId);
+      const field = this.boardSpacesService.getBoardSpace(playerLocation.locationId);
       if (field && field.ownerReward) {
         this.effectsService.addRewardToPlayer(player.id, field.ownerReward);
       }
@@ -645,10 +645,10 @@ export class GameManager {
     for (const reward of getFlattenedEffectRewardArray(rewards)) {
       this.effectsService.addRewardToPlayer(activePlayer.id, reward);
 
-      if (reward.type === 'spice-accumulation' && this.boardSpaceService.boardSpaceHasAccumulatedSpice(field.title.en)) {
-        const accumulatedSpice = this.boardSpaceService.getAccumulatedSpiceForBoardSpace(field.title.en);
+      if (reward.type === 'spice-accumulation' && this.boardSpacesService.boardSpaceHasAccumulatedSpice(field.title.en)) {
+        const accumulatedSpice = this.boardSpacesService.getAccumulatedSpiceForBoardSpace(field.title.en);
         this.effectsService.addRewardToPlayer(activePlayer.id, { type: 'spice', amount: accumulatedSpice });
-        this.boardSpaceService.resetAccumulatedSpiceOnBoardSpace(field.title.en);
+        this.boardSpacesService.resetAccumulatedSpiceOnBoardSpace(field.title.en);
       }
     }
 
@@ -855,7 +855,7 @@ export class GameManager {
 
     const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(playerId).map((x) => x.fieldId);
     if (playerAgentsOnFields.some((x) => x === locationId)) {
-      const playerLocation = this.locationManager.getPlayerLocation(locationId);
+      const playerLocation = this.locationsService.getPlayerLocation(locationId);
       if (playerLocation?.playerId === playerId) {
         return;
       }
@@ -867,7 +867,7 @@ export class GameManager {
       }
 
       if (playerLocation && takeOverFromEnemy) {
-        const location = this.settingsService.getBoardField(locationId);
+        const location = this.boardSpacesService.getBoardSpace(locationId);
         const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
           this.settingsService.getLocationTakeoverTroopCosts(),
           location,
@@ -905,7 +905,7 @@ export class GameManager {
 
       this.audioManager.playSound('location-control');
 
-      this.locationManager.setLocationOwner(locationId, playerId);
+      this.locationsService.setLocationOwner(locationId, playerId);
       this.effectsService.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
       this.loggingService.logPlayerGainedLocationControl(playerId, this.roundService.currentRound, locationId);
     }
@@ -1253,7 +1253,7 @@ export class GameManager {
     if (gameEffects.imperiumRowCards) {
       this.cardsService.addCardsToImperiumRow(gameEffects.imperiumRowCards.amount);
     } else if (gameEffects.spiceAccumulation) {
-      this.boardSpaceService.accumulateSpiceOnBoardSpaces(gameEffects.spiceAccumulation.amount);
+      this.boardSpacesService.accumulateSpiceOnBoardSpaces(gameEffects.spiceAccumulation.amount);
     }
   }
 
@@ -1580,10 +1580,10 @@ export class GameManager {
         .filter((x) => x.fieldId !== turnInfo.agentPlacedOnFieldId);
       if (playerAgentsOnOtherFields.length > 0) {
         const locations = playerAgentsOnOtherFields.filter(
-          (x) => this.settingsService.getBoardField(x.fieldId)?.ownerReward,
+          (x) => this.boardSpacesService.getBoardSpace(x.fieldId)?.ownerReward,
         );
         const nonLocations = playerAgentsOnOtherFields.filter(
-          (x) => !this.settingsService.getBoardField(x.fieldId)?.ownerReward,
+          (x) => !this.boardSpacesService.getBoardSpace(x.fieldId)?.ownerReward,
         );
 
         if (locations.length > 0) {
@@ -2008,10 +2008,10 @@ export class GameManager {
         this.gameModifiersService.removePlayerGameModifier(playerId, modifierType, modifierId),
       addPlayerGameModifiers: (playerId, modifiers) => this.gameModifiersService.addPlayerGameModifiers(playerId, modifiers),
       increaseAccumulatedSpiceOnBoardSpace: (boardSpaceId) =>
-        this.boardSpaceService.increaseAccumulatedSpiceOnBoardSpace(boardSpaceId),
+        this.boardSpacesService.increaseAccumulatedSpiceOnBoardSpace(boardSpaceId),
       removePlayerShipsFromCombat: (playerId, amount) => this.combatManager.retreatPlayerShipsFromCombat(playerId, amount),
       setPlayerAgentInTimeout: (playerId, fieldId) => this.playerAgentsService.setPlayerAgentInTimeout(playerId, fieldId),
-      setLocationOwner: (boardSpaceId, playerId) => this.locationManager.setLocationOwner(boardSpaceId, playerId),
+      setLocationOwner: (boardSpaceId, playerId) => this.locationsService.setLocationOwner(boardSpaceId, playerId),
       changeFieldMarkerModifier: (playerId, fieldId, changeAmount) =>
         this.gameModifiersService.changeFieldMarkerModifier(playerId, fieldId, changeAmount),
       addPlayerImperiumRowModifier: (playerId, content) =>
@@ -2088,12 +2088,19 @@ export class GameManager {
   }
 
   private shouldTriggerFinale() {
-    const playerScores = this.playerScoreManager.playerScores;
-    const finaleTrigger = this.settingsService.getFinaleTrigger();
-    if (playerScores.length < 4) {
-      return playerScores.some((x) => x.victoryPoints > finaleTrigger);
+    const players = this.playersService.getPlayers();
+    const playerCount = players.length;
+
+    const finaleTrigger = this.settingsService
+      .getFinaleTriggers()
+      .filter((trigger) => trigger.playerCount <= playerCount)
+      .sort((a, b) => a.playerCount - b.playerCount)
+      .pop()?.trigger;
+
+    if (finaleTrigger) {
+      return this.playerScoreManager.playerScores.some((x) => x.victoryPoints >= finaleTrigger);
     } else {
-      return playerScores.some((x) => x.victoryPoints > finaleTrigger - 1);
+      return false;
     }
   }
 
@@ -2197,7 +2204,7 @@ export class GameManager {
         if (playerHandCards && playerHandCards.length > 0) {
           const cardAndField = this.aiManager.getCardAndFieldToPlay(playerHandCards, player, gameState);
 
-          const boardField = this.settingsService.boardSpaces.find((x) =>
+          const boardField = this.boardSpacesService.boardSpaces.find((x) =>
             cardAndField?.preferredField.fieldId.includes(x.title.en),
           );
           if (boardField && cardAndField) {
@@ -2332,7 +2339,7 @@ export class GameManager {
       this.roundService.currentRound,
       this.roundService.currentRoundPhase,
       this.roundService.isFinale,
-      this.boardSpaceService.accumulatedSpiceOnBoardSpaces,
+      this.boardSpacesService.accumulatedSpiceOnBoardSpaces,
     );
   }
 }

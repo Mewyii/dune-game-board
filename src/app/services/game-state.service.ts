@@ -11,7 +11,7 @@ import {
 import { ActionType, EffectReward } from '../models';
 import { GameState, PlayerGameElementFactions, PlayerGameElementFieldAccess, PlayerGameElementRewards } from '../models/ai';
 import { Player } from '../models/player';
-import { SpiceAccumulation } from './board-space.service';
+import { BoardSpacesService, SpiceAccumulation } from './board-spaces.service';
 import { CardsService } from './cards.service';
 import { CombatManager } from './combat-manager.service';
 import { ConflictsService } from './conflicts.service';
@@ -19,7 +19,7 @@ import { DuneEventsManager } from './dune-events.service';
 import { GameModifiersService } from './game-modifier.service';
 import { IntriguesService } from './intrigues.service';
 import { LeadersService } from './leaders.service';
-import { LocationManager } from './location-manager.service';
+import { LocationsService } from './location-manager.service';
 import { PlayerAgentsService } from './player-agents.service';
 import { PlayerResourcesService } from './player-resources.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
@@ -35,6 +35,7 @@ import { TurnInfoService } from './turn-info.service';
 export class GameStateService {
   constructor(
     private settingsService: SettingsService,
+    private boardSpacesService: BoardSpacesService,
     private cardsService: CardsService,
     private playerAgentsService: PlayerAgentsService,
     private turnInfoService: TurnInfoService,
@@ -42,7 +43,7 @@ export class GameStateService {
     private gameModifiersService: GameModifiersService,
     private techTilesService: TechTilesService,
     private intriguesService: IntriguesService,
-    private locationManager: LocationManager,
+    private locationsService: LocationsService,
     private playerScoreManager: PlayerScoreManager,
     private playersService: PlayersService,
     private leadersService: LeadersService,
@@ -184,7 +185,7 @@ export class GameStateService {
     const playerTechTilesConversionCosts = this.getInitialGameElementRewards();
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id).map((x) => x.techTile);
 
-    const boardSpaces = this.settingsService.boardSpaces;
+    const boardSpaces = this.boardSpacesService.boardSpaces;
 
     const partialGameStateForEffectMultipliers = {
       playerAgentsOnFields,
@@ -286,14 +287,14 @@ export class GameStateService {
     const enemyIntrigues = this.intriguesService.getEnemyIntrigues(player.id);
     const enemyIntrigueCounts = enemyIntrigues.map((x) => ({ playerId: x.playerId, intrigueCount: x.intrigues.length }));
 
-    const playerLocations = this.locationManager.ownedLocations
+    const playerLocations = this.locationsService.ownedLocations
       .filter((x) => x.playerId === player.id)
       .map((x) => x.locationId);
-    const enemyLocations = this.locationManager.ownedLocations.filter((x) => x.playerId !== player.id);
-    const locations = this.settingsService.getBoardLocations();
-    const freeLocations = this.settingsService.controllableLocations.filter(
-      (x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x),
-    );
+    const enemyLocations = this.locationsService.ownedLocations.filter((x) => x.playerId !== player.id);
+    const locations = this.locationsService.locations;
+    const freeLocations = locations
+      .map((x) => x.actionField.title.en)
+      .filter((x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x));
 
     const enemyScore = this.playerScoreManager.getEnemyScore(player.id)!;
 
@@ -321,7 +322,7 @@ export class GameStateService {
       isFinale: isFinale,
       enemyPlayers: this.playersService.getEnemyPlayers(player.id),
       enemyLeaders: this.leadersService.getEnemyPlayerLeaders(player.id),
-      playerLeader: playerLeader!,
+      playerLeader: playerLeader,
       conflict: this.conflictsService.currentConflict,
       availableTechTiles: this.techTilesService.buyableTechTiles,
       currentEvent: this.duneEventsManager.eventDeck[currentRound - 1],

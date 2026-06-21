@@ -117,7 +117,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     aiAgentEvaluation: (player, gameState) =>
       0.75 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
     customAgentFunction: (player, gameState, game) => {
-      if (player.isAI) return;
+      if (player.isAI || !gameState.playerLeader) return;
 
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
@@ -171,7 +171,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Embargo',
     aiAgentEvaluation: (player, gameState) => 2 + 0.1 * gameState.currentRound - 1 * gameState.playerAgentsOnFields.length,
     customAgentFunction: (player, gameState, game) => {
-      if (player.isAI) return;
+      if (player.isAI || !gameState.playerLeader) return;
 
       const blockableBoardSpaces = gameState.boardSpaces.filter(
         (field) => !gameState.agentsOnFields.some((agent) => agent.fieldId === field.title.en),
@@ -391,6 +391,8 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       return value;
     },
     customAgentFunction: (player, gameState, game) => {
+      if (!gameState.playerLeader) return;
+
       const spiceFieldIds = gameState.boardSpaces.filter((x) => x.actionType === 'spice').map((x) => x.title.en);
       const enemiesOnSpiceFields = gameState.enemyAgentsOnFields.filter((x) => spiceFieldIds.includes(x.fieldId));
       for (const enemyOnSpiceField of enemiesOnSpiceFields) {

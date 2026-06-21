@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgParticlesService } from '@tsparticles/angular';
-import { AppMode, GameContent } from 'src/app/constants/board-settings';
+import { AppMode } from 'src/app/constants/board-settings';
+import { ActionField, DuneLocation, Faction } from 'src/app/models';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
 import { spiceGlitter } from 'src/app/services/effects/constants/spice-glitter';
+import { LocationsService } from 'src/app/services/location-manager.service';
 import { RoundPhaseType, RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { loadFull } from 'tsparticles';
@@ -19,7 +21,6 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   currentRound = 0;
   roundPhase: RoundPhaseType | undefined;
 
-  gameContent: GameContent | undefined;
   mode: AppMode | undefined;
   eventsEnabled: boolean | undefined;
 
@@ -33,13 +34,21 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   isChrome = false;
   isFirefox = false;
 
+  factions: Faction[] = [];
+  locations: DuneLocation[] = [];
+  ix: ActionField | undefined;
+  useTechTiles = false;
+
   constructor(
     private settingsService: SettingsService,
+    private locationsService: LocationsService,
     private roundService: RoundService,
     private readonly ngParticlesService: NgParticlesService,
   ) {
     this.settingsService.gameContent$.subscribe((gameContent) => {
-      this.gameContent = gameContent;
+      this.factions = gameContent.factions;
+      this.ix = gameContent.ix;
+      this.useTechTiles = gameContent.useTechTiles;
     });
 
     this.settingsService.mode$.subscribe((mode) => {
@@ -55,6 +64,10 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
 
     this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
       this.roundPhase = roundPhase;
+    });
+
+    this.locationsService.locations$.subscribe((locations) => {
+      this.locations = locations;
     });
   }
 

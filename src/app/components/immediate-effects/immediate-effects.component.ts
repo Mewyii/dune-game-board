@@ -4,11 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { ActiveFactionType, activeFactionTypes, DuneLocation } from 'src/app/models';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { ConflictDeckCard, ConflictsService } from 'src/app/services/conflicts.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeadersService } from 'src/app/services/leaders.service';
+import { LocationsService } from 'src/app/services/location-manager.service';
 import { PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { ImmediateEffect, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
@@ -55,6 +57,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     private leadersService: LeadersService,
     private intriguesService: IntriguesService,
     private settingsService: SettingsService,
+    private locationsService: LocationsService,
+    private boardSpacesService: BoardSpacesService,
     private playerScoreManager: PlayerScoreManager,
     private playerAgentsService: PlayerAgentsService,
     private conflictsService: ConflictsService,
@@ -459,8 +463,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
   private showLocationControlDialog(currentEffect: ImmediateEffect): void {
     this.immediateEffectDialogOpen = true;
 
-    const locations = this.settingsService.getBoardLocations();
-    const playerLocations = locations.filter((x) =>
+    const playerLocations = this.locationsService.locations.filter((x) =>
       this.playerAgentsService
         .getPlayerAgentsOnFields(currentEffect.playerId)
         .some((y) => y.fieldId === x.actionField.title.en),
@@ -493,7 +496,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
   private showAgentLiftDialog(currentEffect: ImmediateEffect) {
     this.immediateEffectDialogOpen = true;
 
-    const boardSpaces = this.settingsService.boardSpaces;
+    const boardSpaces = this.boardSpacesService.boardSpaces;
     const playerBoardSpaces = boardSpaces.filter((x) =>
       this.playerAgentsService.getPlayerAgentsOnFields(currentEffect.playerId).some((y) => y.fieldId === x.title.en),
     );

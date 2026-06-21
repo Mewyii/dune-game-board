@@ -42,7 +42,7 @@ export interface AIRewardEffectGameInterface {
     locationTakeoverTroopCosts: number;
     maxPlayerIntrigueCount: number | undefined;
     maxPlayerDreadnoughtCount: number;
-    getBoardField: (id: string) => ActionField | undefined;
+    getBoardSpace: (id: string) => ActionField | undefined;
   };
   getStructuredEffectsEvaluation: (
     effects: StructuredEffect[],
@@ -72,7 +72,7 @@ export interface CardAcquiringRules {
 export interface GameContent {
   name: string;
   factions: Faction[];
-  locations: DuneLocation[];
+  locations: { playerCount: number; locations: DuneLocation[] }[];
   conflicts: Conflict[];
   conflictsMode: 'random' | 'pick';
   ix?: ActionField;
@@ -80,7 +80,7 @@ export interface GameContent {
   useDreadnoughts: boolean;
   victoryPointBoni?: VictoryPointReward[];
   maxVictoryPoints?: number;
-  finaleTrigger: number;
+  finaleTrigger: { playerCount: number; trigger: number }[];
   troopCombatStrength: number;
   dreadnoughtCombatStrength: number;
   maxPlayerDreadnoughtCount: number;

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { isFactionType } from 'src/app/helpers/faction-types';
 
 import { ActionField } from 'src/app/models';
 import { TurnInfo } from 'src/app/models/turn-info';
@@ -56,17 +55,7 @@ export class TurnInfosComponent implements OnInit, OnDestroy {
   }
 
   public getColor(actionField: ActionField) {
-    const location = this.settingsService.getBoardLocation(actionField.title.en);
-    if (location) {
-      return location.color;
-    }
-    if (isFactionType(actionField.actionType)) {
-      const factionColor = this.settingsService.getFactionColor(actionField.actionType);
-      if (factionColor) {
-        return factionColor;
-      }
-    }
-    return '';
+    return this.settingsService.getBoardSpaceColor(actionField.actionType) ?? '';
   }
 
   public showTurnInfos() {

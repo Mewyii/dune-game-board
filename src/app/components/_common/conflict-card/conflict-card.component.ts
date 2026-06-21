@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Conflict } from 'src/app/models/conflict';
-import { SettingsService } from 'src/app/services/settings.service';
+import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -16,7 +16,7 @@ export class ConflictCardComponent implements OnInit, OnChanges {
 
   constructor(
     public t: TranslateService,
-    private settingsService: SettingsService,
+    private boardSpacesService: BoardSpacesService,
   ) {}
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class ConflictCardComponent implements OnInit, OnChanges {
 
   private getBoardSpaceName() {
     if (this.conflict.boardSpaceId) {
-      const boardSpace = this.settingsService.getBoardField(this.conflict.boardSpaceId);
+      const boardSpace = this.boardSpacesService.getBoardSpace(this.conflict.boardSpaceId);
       if (boardSpace) {
         return this.t.translateLS(boardSpace.title);
       }

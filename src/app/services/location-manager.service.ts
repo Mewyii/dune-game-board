@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
+import { DuneLocation } from '../models';
+import { PlayersService } from './players.service';
+import { SettingsService } from './settings.service';
 
 export interface OwnedLocation {
   locationId: string;
@@ -10,11 +13,17 @@ export interface OwnedLocation {
 @Injectable({
   providedIn: 'root',
 })
-export class LocationManager {
+export class LocationsService {
+  private locationsSubject = new BehaviorSubject<DuneLocation[]>([]);
+  locations$ = this.locationsSubject.asObservable();
+
   private ownedLocationsSubject = new BehaviorSubject<OwnedLocation[]>([]);
   ownedLocations$ = this.ownedLocationsSubject.asObservable();
 
-  constructor() {
+  constructor(
+    private playersService: PlayersService,
+    private settingsService: SettingsService,
+  ) {
     const ownedLocationsString = localStorage.getItem('ownedLocations');
     if (ownedLocationsString) {
       const ownedLocations = JSON.parse(ownedLocationsString) as OwnedLocation[];
@@ -24,10 +33,34 @@ export class LocationManager {
     this.ownedLocations$.subscribe((ownedLocations) => {
       localStorage.setItem('ownedLocations', JSON.stringify(ownedLocations));
     });
+
+    this.playersService.players$.subscribe((players) => {
+      this.locationsSubject.next(
+        this.settingsService.gameContent.locations
+          .filter((x) => x.playerCount <= players.length)
+          .flatMap((x) => x.locations),
+      );
+    });
+
+    this.settingsService.gameContent$.subscribe((gameContent) => {
+      this.locationsSubject.next(
+        gameContent.locations
+          .filter((x) => x.playerCount <= this.playersService.getPlayerCount())
+          .flatMap((x) => x.locations),
+      );
+    });
+  }
+
+  get locations() {
+    return cloneDeep(this.locationsSubject.value);
   }
 
   get ownedLocations() {
     return cloneDeep(this.ownedLocationsSubject.value);
+  }
+
+  getLocation(locationId: string) {
+    return this.locations.find((x) => x.actionField.title.en === locationId);
   }
 
   getPlayerLocations(playerId: number) {

@@ -5,7 +5,7 @@ import { Conflict } from 'src/app/models/conflict';
 import { IntrigueDeckCard, PlayerIntrigueStack } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { TurnInfo } from 'src/app/models/turn-info';
-import { SpiceAccumulation } from 'src/app/services/board-space.service';
+import { SpiceAccumulation } from 'src/app/services/board-spaces.service';
 import {
   ImperiumDeckCard,
   ImperiumDeckPlot,
@@ -44,7 +44,7 @@ export type GameState = Readonly<{
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];
-  playerLeader: LeaderDeckCard;
+  playerLeader: LeaderDeckCard | undefined;
   conflict?: Conflict;
   availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;

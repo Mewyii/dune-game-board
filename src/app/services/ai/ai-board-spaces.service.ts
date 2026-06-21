@@ -3,6 +3,8 @@ import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modi
 import { DuneLocation } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
+import { BoardSpacesService } from '../board-spaces.service';
+import { LocationsService } from '../location-manager.service';
 import { PlayerResourcesService } from '../player-resources.service';
 import { SettingsService } from '../settings.service';
 import { AIPlayersService } from './ai-players.service';
@@ -16,6 +18,8 @@ export type AIVariableValues = 'good' | 'okay' | 'bad';
 export class AIBoardSpacesService {
   constructor(
     private settingsService: SettingsService,
+    private boardSpacesService: BoardSpacesService,
+    private locationsService: LocationsService,
     private effectEvaluationService: AIEffectEvaluationService,
     private playerResourcesService: PlayerResourcesService,
     private aiPlayersService: AIPlayersService,
@@ -32,14 +36,14 @@ export class AIBoardSpacesService {
       return undefined;
     }
 
-    const fields = this.settingsService.boardSpaces;
+    const fields = this.boardSpacesService.boardSpaces;
     return fields.find((x) => preferredField.fieldId.includes(x.title.en));
   }
 
   getLocationToControl(player: Player, gameState: GameState) {
-    const locationsWithPlayerAgents = this.settingsService
-      .getBoardLocations()
-      .filter((x) => gameState.playerAgentsOnFields.some((y) => y.fieldId === x.actionField.title.en));
+    const locationsWithPlayerAgents = this.locationsService.locations.filter((x) =>
+      gameState.playerAgentsOnFields.some((y) => y.fieldId === x.actionField.title.en),
+    );
 
     const playerLocations = gameState.playerLocations;
     const enemyLocations = gameState.enemyLocations;
@@ -55,7 +59,7 @@ export class AIBoardSpacesService {
     const enemyControllableLocations = locationsWithPlayerAgents
       .filter((x) => enemyLocations.some((y) => x.actionField.title.en === y.locationId))
       .map((x) => {
-        const location = this.settingsService.getBoardField(x.actionField.title.en);
+        const location = this.boardSpacesService.getBoardSpace(x.actionField.title.en);
         return {
           ...x,
           effectiveTakeOverTroopCosts: getModifiedLocationTakeoverTroopCosts(

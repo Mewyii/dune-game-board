@@ -23,11 +23,6 @@ export class SettingsService {
   ]);
   gameContents$ = this.gameContentsSubject.asObservable();
 
-  private fields: ActionField[] = [];
-  spiceAccumulationFields: string[] = [];
-  controllableLocations: string[] = [];
-  unblockableFields: ActionField[] = [];
-
   factionInfluenceRewards: { factionId: FactionType; rewards: FactionInfluenceReward }[] = [];
 
   private settingsSubject = new BehaviorSubject<Settings>(boardSettings);
@@ -104,8 +99,8 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.eventsEnabled);
   }
 
-  get boardSpaces() {
-    return cloneDeep(this.fields);
+  get locations() {
+    return cloneDeep(this.settingsSubject.value.gameContent.locations);
   }
 
   getFactionName(factionType: FactionType) {
@@ -120,25 +115,17 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === factionType)?.secondaryColor);
   }
 
-  getBoardField(id: string) {
-    return this.fields.find((x) => x.title.en === id);
-  }
-
-  getBoardLocations() {
-    return cloneDeep(this.settingsSubject.value.gameContent.locations);
-  }
-
-  getBoardLocation(id: string) {
-    return cloneDeep(this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.title.en === id));
-  }
-
   getBoardSpaceColor(actionType: ActionType) {
-    if (actionType === 'town' || actionType === 'spice' || actionType === 'choam') {
-      return cloneDeep(
-        this.settingsSubject.value.gameContent.locations.find((x) => x.actionField.actionType === actionType)?.color,
-      );
+    const locationColor = this.settingsSubject.value.gameContent.locations
+      .flatMap((x) => x.locations)
+      .find((x) => x.actionField.actionType === actionType)?.color;
+
+    const factionColor = this.settingsSubject.value.gameContent.factions.find((x) => x.type === actionType)?.primaryColor;
+
+    if (locationColor) {
+      return cloneDeep(locationColor);
     } else {
-      return cloneDeep(this.settingsSubject.value.gameContent.factions.find((x) => x.type === actionType)?.primaryColor);
+      return cloneDeep(factionColor);
     }
   }
 
@@ -202,7 +189,7 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.victoryPointBoni);
   }
 
-  getFinaleTrigger() {
+  getFinaleTriggers() {
     return cloneDeep(this.settingsSubject.value.gameContent.finaleTrigger);
   }
 
@@ -246,7 +233,7 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.churnRowCards);
   }
 
-  setFields() {
+  setFields(players = 0) {
     const gameContent = this.gameContent;
     const result: ActionField[] = [];
     for (const faction of gameContent.factions) {
@@ -254,21 +241,14 @@ export class SettingsService {
         result.push(field);
       }
     }
-    for (const location of gameContent.locations) {
+    const locations = gameContent.locations.filter((x) => x.playerCount >= players).flatMap((x) => x.locations);
+    for (const location of locations) {
       result.push(location.actionField);
     }
+
     if (gameContent.ix) {
       result.push(gameContent.ix);
     }
-
-    this.fields = result;
-    this.unblockableFields = this.fields.filter((x) => x.isNonBlockingField);
-    this.spiceAccumulationFields = this.fields
-      .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
-      .map((x) => x.title.en);
-    this.controllableLocations = gameContent.locations
-      .filter((x) => x.actionField.ownerReward)
-      .map((x) => x.actionField.title.en);
 
     this.factionInfluenceRewards = gameContent.factions
       .filter((x) => x.influenceRewards)

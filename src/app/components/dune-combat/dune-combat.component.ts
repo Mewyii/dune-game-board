@@ -49,10 +49,21 @@ export class DuneCombatComponent implements OnInit, OnDestroy {
   leaderHitPointCombatStrength: number | undefined;
 
   playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
-    0: { x: '-20px', y: '-30px' },
-    1: { x: '-30px', y: '170px' },
-    2: { x: '920px', y: '205px' },
-    3: { x: '950px', y: '-25px' },
+    0: { x: '60px', y: '-50px' },
+    1: { x: '990px', y: '-55px' },
+    2: { x: '-70px', y: '55px' },
+    3: { x: '900px', y: '60px' },
+    4: { x: '-10px', y: '170px' },
+    5: { x: '970px', y: '190px' },
+  };
+
+  playerCombatLocations: { [key: number]: { x: string; y: string } } = {
+    0: { x: '330px', y: '270px' },
+    1: { x: '650px', y: '270px' },
+    2: { x: '315px', y: '160px' },
+    3: { x: '635px', y: '160px' },
+    4: { x: '300px', y: '50px' },
+    5: { x: '620px', y: '50px' },
   };
 
   playerColors: { [key: number]: string } = {};

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { ActionField } from '../models';
 import { PlayerAgentsService } from './player-agents.service';
+import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
 
 export interface SpiceAccumulation {
@@ -12,17 +14,32 @@ export interface SpiceAccumulation {
 @Injectable({
   providedIn: 'root',
 })
-export class BoardSpaceService {
+export class BoardSpacesService {
+  private boardSpacesSubject = new BehaviorSubject<ActionField[]>([]);
+  boardSpaces$ = this.boardSpacesSubject.asObservable();
+
   private accumulatedSpiceOnBoardSpacesSubject = new BehaviorSubject<SpiceAccumulation[]>([]);
   accumulatedSpiceOnBoardSpaces$ = this.accumulatedSpiceOnBoardSpacesSubject.asObservable();
+
+  unblockableBoardSpaces: ActionField[] = [];
+  spiceAccumulationBoardSpaces: string[] = [];
+
+  get boardSpaces() {
+    return cloneDeep(this.boardSpacesSubject.value);
+  }
 
   get accumulatedSpiceOnBoardSpaces() {
     return cloneDeep(this.accumulatedSpiceOnBoardSpacesSubject.value);
   }
 
+  getBoardSpace(id: string) {
+    return this.boardSpaces.find((x) => x.title.en === id);
+  }
+
   constructor(
     private settingsService: SettingsService,
     private playerAgentsService: PlayerAgentsService,
+    private playersService: PlayersService,
   ) {
     const accumulatedSpiceOnBoardSpacesString = localStorage.getItem('accumulatedSpiceOnBoardSpaces');
     if (accumulatedSpiceOnBoardSpacesString) {
@@ -32,6 +49,43 @@ export class BoardSpaceService {
 
     this.accumulatedSpiceOnBoardSpaces$.subscribe((accumulatedSpiceOnBoardSpaces) => {
       localStorage.setItem('accumulatedSpiceOnBoardSpaces', JSON.stringify(accumulatedSpiceOnBoardSpaces));
+    });
+
+    this.playersService.players$.subscribe((players) => {
+      const gameContent = this.settingsService.gameContent;
+
+      this.boardSpacesSubject.next([
+        ...this.settingsService.gameContent.locations
+          .filter((x) => x.playerCount >= players.length)
+          .flatMap((x) => x.locations)
+          .map((x) => x.actionField),
+        ...gameContent.factions.flatMap((x) => x.actionFields),
+        ...(gameContent.ix ? [gameContent.ix] : []),
+      ]);
+
+      this.unblockableBoardSpaces = this.boardSpaces.filter((x) => x.isNonBlockingField);
+
+      this.spiceAccumulationBoardSpaces = this.boardSpaces
+        .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
+        .map((x) => x.title.en);
+    });
+
+    this.settingsService.gameContent$.subscribe((gameContent) => {
+      const players = this.playersService.getPlayers();
+
+      this.boardSpacesSubject.next([
+        ...gameContent.locations
+          .filter((x) => x.playerCount >= players.length)
+          .flatMap((x) => x.locations)
+          .map((x) => x.actionField),
+        ...gameContent.factions.flatMap((x) => x.actionFields),
+        ...(gameContent.ix ? [gameContent.ix] : []),
+      ]);
+
+      this.unblockableBoardSpaces = this.boardSpaces.filter((x) => x.isNonBlockingField);
+      this.spiceAccumulationBoardSpaces = this.boardSpaces
+        .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
+        .map((x) => x.title.en);
     });
   }
 
@@ -44,7 +98,7 @@ export class BoardSpaceService {
   }
 
   accumulateSpiceOnBoardSpaces(amount = 1) {
-    const spiceBoardSpaceNames = this.settingsService.spiceAccumulationFields;
+    const spiceBoardSpaceNames = this.spiceAccumulationBoardSpaces;
 
     const accumulatedSpiceOnBoardSpaces = this.accumulatedSpiceOnBoardSpaces;
 

@@ -3,17 +3,25 @@ import { conflictsCustomExpert } from './conflicts';
 import { customCardsCustomExpert } from './custom-cards';
 import { factionsCustomExpert } from './factions';
 import { ixCustomExpert } from './ix';
-import { locationsCustomExpert } from './locations';
+import { fivePlayerLocations, threePlayerLocations, zeroPlayerLocations } from './locations';
 
 export const gameContentCustomExpert: GameContent = {
   name: 'Sands of Arrakis',
   factions: factionsCustomExpert,
-  locations: locationsCustomExpert,
+  locations: [
+    { playerCount: 0, locations: zeroPlayerLocations },
+    { playerCount: 3, locations: threePlayerLocations },
+    { playerCount: 5, locations: fivePlayerLocations },
+  ],
   conflicts: conflictsCustomExpert,
   ix: ixCustomExpert,
   useTechTiles: true,
   useDreadnoughts: true,
-  finaleTrigger: 8,
+  finaleTrigger: [
+    { playerCount: 0, trigger: 9 },
+    { playerCount: 3, trigger: 8 },
+    { playerCount: 5, trigger: 7 },
+  ],
   victoryPointBoni: [
     { score: 2, reward: { type: 'persuasion', amount: 1 } },
     { score: 5, reward: { type: 'persuasion', amount: 1 } },
@@ -34,7 +42,7 @@ export const gameContentCustomExpert: GameContent = {
   factionInfluenceAllianceTreshold: 4,
   imperiumRowCards: 6,
   aiName: 'custom-expert',
-  maxPlayers: 4,
+  maxPlayers: 6,
   cardAcquiringRules: {
     imperiumRow: 'below-deck',
     limited: 'below-deck',

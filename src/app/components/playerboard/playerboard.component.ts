@@ -6,8 +6,10 @@ import { LanguageString } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
+import { CombatManager } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LeadersService } from 'src/app/services/leaders.service';
+import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -42,6 +44,8 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
     public t: TranslateService,
     private gameManager: GameManager,
     private playersService: PlayersService,
+    private playerScoreManager: PlayerScoreManager,
+    private combatManager: CombatManager,
     private leadersService: LeadersService,
     private cardsService: CardsService,
     private audioManager: AudioManager,
@@ -90,11 +94,17 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
   onAddPlayerClicked() {
     this.audioManager.playSound('click-soft');
     this.playersService.addPlayer();
+    const players = this.playersService.getPlayers();
+    this.playerScoreManager.resetPlayersScores(players);
+    this.combatManager.setInitialPlayerCombatUnits(players);
   }
 
   onRemovePlayerClicked() {
     this.audioManager.playSound('click-soft');
     this.playersService.removePlayer();
+    const players = this.playersService.getPlayers();
+    this.playerScoreManager.resetPlayersScores(players);
+    this.combatManager.setInitialPlayerCombatUnits(players);
   }
 
   onStartGameClicked() {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isActiveFactionType } from 'src/app/helpers/faction-types';
-import { ActionField, Effect } from 'src/app/models';
-import { SettingsService } from 'src/app/services/settings.service';
+import { Effect } from 'src/app/models';
+import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 
 interface FieldValue {
   fieldId: string;
@@ -17,21 +17,13 @@ interface FieldValue {
 export class BoardEvaluationComponent implements OnInit {
   public fieldValues: FieldValue[] = [];
 
-  constructor(public settingsService: SettingsService) {}
+  constructor(public boardSpacesService: BoardSpacesService) {}
 
   ngOnInit(): void {
-    this.settingsService.gameContent$.subscribe((x) => {
-      const actionFields: ActionField[] = [
-        ...x.factions.map((x) => x.actionFields).flat(),
-        ...x.locations.map((x) => x.actionField),
-      ];
-      if (x.ix) {
-        actionFields.push(x.ix);
-      }
-
+    this.boardSpacesService.boardSpaces$.subscribe((boardSpaces) => {
       this.fieldValues = [];
 
-      for (const actionField of actionFields) {
+      for (const actionField of boardSpaces) {
         const fieldCosts = actionField.costs ? this.getRewardValue(actionField.costs) : 0;
 
         const rewardOptionIndex = actionField.rewards.findIndex(

@@ -1,20 +1,20 @@
 <main #gameBoardContainer>
-  @if (mode && gameContent) {
+  @if (mode) {
     <div
       [style]="'display:flex; padding-left: 32px; padding-top: 8px; gap: 8px; justify-content: center; min-width: 3550px'"
     >
       <app-playerboard></app-playerboard>
       <div class="board">
         <div [class]="mode === 'game' ? 'overlay' : ''">
-          <app-dune-combat [useDreadnoughts]="!!gameContent.ix"></app-dune-combat>
+          <app-dune-combat [useDreadnoughts]="!!ix"></app-dune-combat>
           <app-scoreboard [mode]="mode"></app-scoreboard>
-          <app-techboard [ix]="gameContent.ix" [useTechTiles]="gameContent.useTechTiles"></app-techboard>
+          <app-techboard [ix]="ix" [useTechTiles]="useTechTiles"></app-techboard>
           <app-card-areas></app-card-areas>
           <dune-immediate-effects></dune-immediate-effects>
-          @for (faction of gameContent.factions; track $index) {
+          @for (faction of factions; track $index) {
             <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
           }
-          @for (location of gameContent.locations; track $index) {
+          @for (location of locations; track $index) {
             <div
               [style]="'position: absolute'"
               [style.left]="location.position.marginLeft + 'px'"
@@ -25,8 +25,12 @@
           }
           @if (mode === 'game') {
             <dune-conflicts></dune-conflicts>
-            <dune-intrigues *ngIf="roundPhase !== 'none'"></dune-intrigues>
-            <dune-tech-tiles *ngIf="gameContent.useTechTiles"></dune-tech-tiles>
+            @if (roundPhase !== 'none') {
+              <dune-intrigues></dune-intrigues>
+            }
+            @if (useTechTiles) {
+              <dune-tech-tiles></dune-tech-tiles>
+            }
             @if (viewInitialized) {
               <ngx-particles [id]="'stars'" [options]="stars"></ngx-particles>
               <ngx-particles [id]="'ships'" [options]="ships"></ngx-particles>
@@ -37,19 +41,31 @@
           }
         </div>
       </div>
-      <dune-turn-infos *ngIf="mode === 'game' && roundPhase !== 'none'"></dune-turn-infos>
-      <dune-imperium-row *ngIf="mode === 'game'"></dune-imperium-row>
+      @if (mode === 'game' && roundPhase !== 'none') {
+        <dune-turn-infos></dune-turn-infos>
+      }
+      @if (mode === 'game') {
+        <dune-imperium-row></dune-imperium-row>
+      }
       <div class="sideboard-container">
         @if (mode === 'game') {
-          <dune-events *ngIf="eventsEnabled"></dune-events>
-          <dune-game-manual *ngIf="roundPhase === 'none'"></dune-game-manual>
-          <dune-leaders *ngIf="roundPhase !== 'none'"></dune-leaders>
+          @if (eventsEnabled) {
+            <dune-events></dune-events>
+          }
+          @if (roundPhase === 'none') {
+            <dune-game-manual></dune-game-manual>
+          }
+          @if (roundPhase !== 'none') {
+            <dune-leaders></dune-leaders>
+          }
           <dune-game-log></dune-game-log>
         } @else if (mode === 'board') {
           <dune-board-evaluation></dune-board-evaluation>
         }
       </div>
-      <dune-player-hand *ngIf="mode === 'game'"></dune-player-hand>
+      @if (mode === 'game') {
+        <dune-player-hand></dune-player-hand>
+      }
     </div>
   }
   <dune-particle-effects></dune-particle-effects>

@@ -63,7 +63,11 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
       }
       this.victoryPointBoni = x.victoryPointBoni;
       if (x.finaleTrigger) {
-        this.finaleTrigger = x.finaleTrigger;
+        this.finaleTrigger =
+          x.finaleTrigger
+            .filter((trigger) => trigger.playerCount <= this.playersService.getPlayerCount())
+            .sort((a, b) => a.playerCount - b.playerCount)
+            .pop()?.trigger ?? 7;
       }
     });
 
@@ -80,7 +84,11 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  onIncreaseFactionScoreClicked(playerId: number) {
+  onIncreaseFactionScoreClicked(playerId: number, currentScore: number) {
+    if (currentScore === this.scoreArray.length) {
+      return;
+    }
+
     const player = this.playersService.getPlayer(playerId);
     if (!player) {
       return;
@@ -91,10 +99,14 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
     this.aiManager.setPreferredFieldsForAIPlayer(player.id);
   }
 
-  onDecreaseFactionScoreClicked(playerId: number) {
+  onDecreaseFactionScoreClicked(playerId: number, currentScore: number) {
+    if (currentScore === 0) {
+      return false;
+    }
+
     const player = this.playersService.getPlayer(playerId);
     if (!player) {
-      return;
+      return false;
     }
 
     this.effectsService.payCostForPlayer(playerId, {

@@ -50,7 +50,7 @@
               class="score-marker"
               [class.hidden]="isExcluded(playerScore.playerId)"
               [style.bottom]="15 + playerScore.score * 48 + 'px'"
-              [style.left]="15 + i * 35 + 'px'"
+              [style.left]="35 - 5 * playerScores.length + (i * 160) / playerScores.length + 'px'"
               [style.background-color]="playerColors[playerScore.playerId]"
               (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
               (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"

@@ -11,7 +11,7 @@ import { getFlattenedEffectRewardArray } from 'src/app/helpers/rewards';
 import { ActionField, EffectType } from 'src/app/models';
 import { Player, PlayerTurnState } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
-import { BoardSpaceService } from 'src/app/services/board-space.service';
+import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { EffectWithModifier, GameModifiersService, RewardWithModifier } from 'src/app/services/game-modifier.service';
@@ -80,7 +80,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     private gameModifierService: GameModifiersService,
     private playerAgentsService: PlayerAgentsService,
     private playerResourcesService: PlayerResourcesService,
-    private boardSpaceService: BoardSpaceService,
+    private boardSpaceService: BoardSpacesService,
   ) {}
 
   ngOnInit(): void {

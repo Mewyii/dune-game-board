@@ -190,10 +190,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Propaganda', en: 'Propaganda' },
         actionType: 'landsraad',
-        rewards: [
-          { type: 'solari', amount: 2 },
-          { type: 'troop', amount: 2 },
-        ],
+        rewards: [{ type: 'solari' }, { type: 'troop' }, { type: 'persuasion', amount: 1 }],
         pathToImage: 'assets/images/action-backgrounds/troops_2.png',
       },
       {
@@ -226,17 +223,17 @@ export const factionsCustomExpert: Faction[] = [
           [
             { type: 'spice', amount: 1, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 5, width: 45 },
+            { type: 'solari', amount: 6, width: 45 },
           ],
           [
             { type: 'spice', amount: 2, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 8, width: 45 },
+            { type: 'solari', amount: 9, width: 45 },
           ],
           [
             { type: 'spice', amount: 3, width: 45 },
             { type: 'helper-trade-horizontal', iconHeight: 30, width: 45 },
-            { type: 'solari', amount: 10, width: 45 },
+            { type: 'solari', amount: 11, width: 45 },
           ],
         ],
         pathToImage: 'assets/images/action-backgrounds/spaceship_fleet.png',

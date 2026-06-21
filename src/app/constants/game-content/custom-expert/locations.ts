@@ -1,6 +1,6 @@
 import { DuneLocation } from '../../../models';
 
-export const locationsCustomExpert: DuneLocation[] = [
+export const zeroPlayerLocations: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
@@ -48,20 +48,6 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 660,
-      marginLeft: 1250,
-    },
-    actionField: {
-      title: { de: 'Raumhafen', en: 'Space Port' },
-      actionType: 'town',
-      rewards: [{ type: 'tech' }, { type: 'foldspace' }, { type: 'combat' }],
-      pathToImage: 'assets/images/action-backgrounds/troops.png',
-      ownerReward: { type: 'tech' },
-    },
-  },
-  {
-    color: 'rgb(74, 58, 46)',
-    position: {
       marginTop: 800,
       marginLeft: 600,
     },
@@ -92,21 +78,6 @@ export const locationsCustomExpert: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1080,
-      marginLeft: 790,
-    },
-    actionField: {
-      title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
-      actionType: 'spice',
-      costs: [{ type: 'water' }],
-      rewards: [{ type: 'spice', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
-      pathToImage: 'assets/images/action-backgrounds/sandworm.png',
-      ownerReward: { type: 'spice' },
-    },
-  },
-  {
-    color: 'rgb(176, 147, 109)',
-    position: {
       marginTop: 1300,
       marginLeft: 610,
     },
@@ -119,90 +90,53 @@ export const locationsCustomExpert: DuneLocation[] = [
       ownerReward: { type: 'spice' },
     },
   },
-  // 5-6Player Stuff
-  // {
-  //   color: 'rgb(74, 58, 46)',
-  //   position: {
-  //     marginTop: 635,
-  //     marginLeft: 1375,
-  //   },
-  //   actionField: {
-  //     title: { de: 'Raumhafen', en: 'Space Port' },
-  //     actionType: 'town',
-  //     rewards: [{ type: 'foldspace' }, { type: 'solari', amount: 2 }, { type: 'tech' }],
-  //     pathToImage: 'assets/images/action-backgrounds/carthag.png',
-  //   },
-  // },
-  // {
-  //   color: 'rgb(77, 94, 75)',
-  //   position: {
-  //     marginTop: 630,
-  //     marginLeft: 595,
-  //   },
-  //   actionField: {
-  //     title: { de: 'Spice-Schmuggel', en: 'Spice-Smuggling' },
-  //     actionType: 'landsraad',
-  //     rewards: [{ type: 'spice' }, { type: 'persuasion', amount: 1 }],
-  //     pathToImage: 'assets/images/action-backgrounds/carthag.png',
-  //   },
-  // },
-  // {
-  //   color: 'rgb(74, 58, 46)',
-  //   position: {
-  //     marginTop: 1000,
-  //     marginLeft: 1444,
-  //   },
-  //   actionField: {
-  //     title: "tuek's sietch",
-  //     actionType: 'town',
-  //     rewards: [{ type: 'water' }, { type: 'solari', amount: 1 }, { type: 'combat' }],
-  //     pathToImage: 'assets/images/action-backgrounds/desert_2.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(196, 172, 139)',
-  //   position: {
-  //     marginTop: 1080,
-  //     marginLeft: 540,
-  //   },
-  //   actionField: {
-  //     title: 'ebene der toten',
-  //     actionType: 'spice',
-  //     costs: [{ type: 'water' }],
-  //     rewards: [{ type: 'spice' }, { type: 'spice-accumulation' }, { type: 'focus' }],
-  //     pathToImage: 'assets/images/action-backgrounds/desert.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(79, 94, 78)',
-  //   position: {
-  //     marginTop: 1170,
-  //     marginLeft: 1800,
-  //   },
-  //   actionField: {
-  //     title: 'bashar',
-  //     actionType: 'landsraad',
-  //     rewards: [{ type: 'troop', amount: 3 }],
-  //     pathToImage: 'assets/images/action-backgrounds/sardaukar.png',
-  //
-  //   },
-  // },
-  // {
-  //   color: 'rgb(79, 94, 78)',
-  //   position: {
-  //     marginTop: 1370,
-  //     marginLeft: 1800,
-  //   },
-  //   actionField: {
-  //     title: 'twisted mentat',
-  //     actionType: 'landsraad',
-  //     costs: [{ type: 'solari', amount: 2 }],
-  //     rewards: [{ type: 'focus' }, { type: 'mentat', iconHeight: 95 }],
-  //     pathToImage: 'assets/images/action-backgrounds/mentat_2.png',
-  //
-  //     customWidth: 'fit-content',
-  //   },
-  // },
+];
+
+export const threePlayerLocations: DuneLocation[] = [
+  {
+    color: 'rgb(74, 58, 46)',
+    position: {
+      marginTop: 660,
+      marginLeft: 1250,
+    },
+    actionField: {
+      title: { de: 'Raumhafen', en: 'Space Port' },
+      actionType: 'town',
+      rewards: [{ type: 'tech' }, { type: 'foldspace' }, { type: 'combat' }],
+      pathToImage: 'assets/images/action-backgrounds/troops.png',
+      ownerReward: { type: 'tech' },
+    },
+  },
+  {
+    color: 'rgb(176, 147, 109)',
+    position: {
+      marginTop: 1080,
+      marginLeft: 790,
+    },
+    actionField: {
+      title: { de: 'Hagga-Becken', en: 'Hagga Basin' },
+      actionType: 'spice',
+      costs: [{ type: 'water' }],
+      rewards: [{ type: 'spice', amount: 2 }, { type: 'spice-accumulation' }, { type: 'combat' }],
+      pathToImage: 'assets/images/action-backgrounds/sandworm.png',
+      ownerReward: { type: 'spice' },
+    },
+  },
+];
+
+export const fivePlayerLocations: DuneLocation[] = [
+  {
+    color: 'rgb(74, 58, 46)',
+    position: {
+      marginTop: 630,
+      marginLeft: 900,
+    },
+    actionField: {
+      title: { de: 'Tsimpo', en: 'Tsimpo' },
+      actionType: 'town',
+      rewards: [{ type: 'solari', amount: 2 }, { type: 'troop' }, { type: 'combat' }],
+      pathToImage: 'assets/images/action-backgrounds/troops.png',
+      ownerReward: { type: 'focus' },
+    },
+  },
 ];

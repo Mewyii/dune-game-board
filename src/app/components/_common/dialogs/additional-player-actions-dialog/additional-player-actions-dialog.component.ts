@@ -7,9 +7,11 @@ import { ActionField, EffectRewardType } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AIManager } from 'src/app/services/ai/ai.manager';
 import { AudioManager } from 'src/app/services/audio-manager.service';
+import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { FieldBlockModifier, GameModifiersService } from 'src/app/services/game-modifier.service';
+import { LocationsService } from 'src/app/services/location-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundService } from 'src/app/services/round.service';
@@ -39,6 +41,8 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
     private audioManager: AudioManager,
     private gameManager: GameManager,
     private playersService: PlayersService,
+    private boardSpacesService: BoardSpacesService,
+    private locationsService: LocationsService,
     private settingsService: SettingsService,
     private gameModifiersService: GameModifiersService,
     private playerScoreManager: PlayerScoreManager,
@@ -69,7 +73,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       this.playerCanRetreatUnits = this.turnInfoService.getPlayerTurnInfo(this.activePlayerId, 'canRetreatUnits');
     });
 
-    this.boardFields = this.settingsService.boardSpaces;
+    this.boardFields = this.boardSpacesService.boardSpaces;
   }
 
   onClose() {
@@ -157,7 +161,7 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
   }
 
   getColor(actionField: ActionField) {
-    const location = this.settingsService.getBoardLocation(actionField.title.en);
+    const location = this.locationsService.getLocation(actionField.title.en);
     if (location) {
       return location.color;
     }

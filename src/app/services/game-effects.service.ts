@@ -27,6 +27,7 @@ import {
 import { GameState } from '../models/ai';
 import { Player } from '../models/player';
 import { AudioManager } from './audio-manager.service';
+import { BoardSpacesService } from './board-spaces.service';
 import { CardsService } from './cards.service';
 import { CombatManager } from './combat-manager.service';
 import { ConflictsService } from './conflicts.service';
@@ -34,7 +35,7 @@ import { GameElement } from './game-manager.service';
 import { GameModifiersService } from './game-modifier.service';
 import { IntriguesService } from './intrigues.service';
 import { LeadersService } from './leaders.service';
-import { LocationManager } from './location-manager.service';
+import { LocationsService } from './location-manager.service';
 import { LoggingService } from './log.service';
 import { PlayerAgentsService } from './player-agents.service';
 import { PlayerResourcesService } from './player-resources.service';
@@ -54,7 +55,8 @@ export class EffectsService {
     private playerScoreManager: PlayerScoreManager,
     private playersService: PlayersService,
     private combatManager: CombatManager,
-    private locationManager: LocationManager,
+    private boardSpacesService: BoardSpacesService,
+    private locationsService: LocationsService,
     private loggingService: LoggingService,
     private leadersService: LeadersService,
     private conflictsService: ConflictsService,
@@ -316,12 +318,12 @@ export class EffectsService {
     } else if (rewardType === 'location-control') {
       const currentConflict = this.conflictsService.currentConflict;
       if (currentConflict && currentConflict.boardSpaceId) {
-        const playerLocation = this.locationManager.ownedLocations.find(
+        const playerLocation = this.locationsService.ownedLocations.find(
           (x) => x.locationId === currentConflict.boardSpaceId,
         );
         if (!playerLocation) {
           this.audioManager.playSound('location-control');
-          this.locationManager.setLocationOwner(currentConflict.boardSpaceId, playerId);
+          this.locationsService.setLocationOwner(currentConflict.boardSpaceId, playerId);
           this.addRewardToPlayer(playerId, { type: 'victory-point' }, { source: 'Location' });
           this.loggingService.logPlayerGainedLocationControl(
             playerId,
@@ -332,7 +334,7 @@ export class EffectsService {
           const garrisonedTroops = this.combatManager.getPlayerTroopsInGarrison(playerId);
           const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
             this.settingsService.getLocationTakeoverTroopCosts(),
-            this.settingsService.getBoardField(currentConflict.boardSpaceId),
+            this.boardSpacesService.getBoardSpace(currentConflict.boardSpaceId),
             this.gameModifiersService.getPlayerGameModifier(playerId, 'locationTakeoverTroopCosts'),
           );
 
@@ -342,7 +344,7 @@ export class EffectsService {
               this.payCostForPlayer(playerId, { type: 'loose-troop', amount: effectiveTakeOverTroopCosts });
             }
             this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, { source: 'Location-Loss' });
-            this.locationManager.setLocationOwner(currentConflict.boardSpaceId, playerId);
+            this.locationsService.setLocationOwner(currentConflict.boardSpaceId, playerId);
             this.addRewardToPlayer(playerId, { type: 'victory-point' }, { source: 'Location' });
             this.loggingService.logPlayerGainedLocationControl(
               playerId,

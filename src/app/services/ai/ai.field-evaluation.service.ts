@@ -16,6 +16,7 @@ import {
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
 import { GameState, RewardModifier } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
+import { BoardSpacesService } from '../board-spaces.service';
 import { LeaderDeckCard } from '../leaders.service';
 import { Resources } from '../player-resources.service';
 import { SettingsService } from '../settings.service';
@@ -44,6 +45,7 @@ export class AIFieldEvaluationService {
 
   constructor(
     private settingsService: SettingsService,
+    private boardSpacesService: BoardSpacesService,
     private aiEffectEvaluationService: AIEffectEvaluationService,
   ) {
     this.settingsService.AI$.subscribe((x) => {
@@ -63,7 +65,7 @@ export class AIFieldEvaluationService {
   ) {
     const boardFields = this.getFieldsWithAdjustedRewardsAndCosts(
       gameState,
-      this.getFieldsSplitByRewardChoices(this.settingsService.boardSpaces),
+      this.getFieldsSplitByRewardChoices(this.boardSpacesService.boardSpaces),
     );
 
     let leaderGoalModifiers: RewardModifier[] = [];

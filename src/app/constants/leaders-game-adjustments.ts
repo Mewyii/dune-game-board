@@ -103,7 +103,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       ],
     },
     customSignetFunction: (player, gameState, game) => {
-      if (player.isAI) return;
+      if (player.isAI || !gameState.playerLeader) return;
 
       const fieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
       const locationChoices = gameState.locations.filter(
@@ -188,7 +188,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-round-start',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          if (gameState.playerHandCards.length < 1) return;
+          if (gameState.playerHandCards.length < 1 || !gameState.playerLeader) return;
 
           const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
             data: {
@@ -352,7 +352,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-reveal-turn',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          if (gameState.playerResources.signet < 1) {
+          if (gameState.playerResources.signet < 1 || !gameState.playerLeader) {
             return;
           }
 
@@ -725,7 +725,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         gameState.playerAgentsOnFields.some((y) => y.fieldId === x.actionField.title.en),
       );
 
-      if (possibleNewMarkerLocations.length < 1) {
+      if (possibleNewMarkerLocations.length < 1 || !gameState.playerLeader) {
         return;
       }
 
@@ -827,7 +827,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       },
     ],
     customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-      if (player.isAI) return;
+      if (player.isAI || !gameState.playerLeader) return;
 
       const { allCards, imperiumRowCards, recruitableCards, alwaysBuyableCards } = game.getAllBuyableCards(
         gameState.playerTurnInfos?.factionRecruitment,
@@ -967,7 +967,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-reveal-turn',
         function: (player, gameState, game) => {
-          if (gameState.playerTechTiles.length < 1) {
+          if (gameState.playerTechTiles.length < 1 || !gameState.playerLeader) {
             return;
           }
 
@@ -1041,7 +1041,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       const imperiumRowCards = gameState.imperiumRowCards.filter(
         (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= gameState.playerResources.signet,
       ) as ImperiumRowCard[];
-      if (imperiumRowCards.length < 1) {
+      if (imperiumRowCards.length < 1 || !gameState.playerLeader) {
         return;
       }
 
@@ -1202,7 +1202,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         timing: 'timing-reveal-turn',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const playerFieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
-          if (!playerFieldMarkers || playerFieldMarkers.length < 1) {
+          if (!playerFieldMarkers || playerFieldMarkers.length < 1 || !gameState.playerLeader) {
             return;
           }
 
@@ -1304,7 +1304,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           gameState.playerAgentsOnFields.some((y) => y.fieldId === x.actionField.title.en),
       );
 
-      if (possibleNewMarkerLocations.length < 1) {
+      if (possibleNewMarkerLocations.length < 1 || !gameState.playerLeader) {
         return;
       }
 

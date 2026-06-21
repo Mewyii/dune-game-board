@@ -213,7 +213,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
             index === self.findIndex((c) => c.name.en === card.name.en),
         );
 
-        if (buyableUniqueCards.length < 1) {
+        if (buyableUniqueCards.length < 1 || !gameState.playerLeader) {
           return;
         }
 
@@ -311,7 +311,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
             index === self.findIndex((c) => c.name.en === card.name.en),
         );
 
-        if (buyableUniqueCards.length < 1) {
+        if (buyableUniqueCards.length < 1 || !gameState.playerLeader) {
           return;
         }
 
@@ -384,7 +384,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       function: (player, gameState, game, gameElement) => {
         const spiceSpaces = gameState.locations.filter((x) => x.actionField.actionType === 'spice');
 
-        if (spiceSpaces.length < 1) {
+        if (spiceSpaces.length < 1 || !gameState.playerLeader) {
           return;
         }
 
@@ -442,6 +442,10 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     customTimedActivatedFunction: {
       timing: 'timing-turn-start',
       function: (player, gameState, game, gameElement) => {
+        if (!gameState.playerLeader) {
+          return;
+        }
+
         const boardSpaces = gameState.boardSpaces;
         const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
           data: {
@@ -554,6 +558,10 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     customTimedActivatedFunction: {
       timing: 'timing-turn-start',
       function: (player, gameState, game, gameElement) => {
+        if (!gameState.playerLeader) {
+          return;
+        }
+
         const boardSpaces = gameState.boardSpaces.filter((boardSpace) =>
           gameState.enemyAgentsOnFields.some((agent) => boardSpace.title.en === agent.fieldId),
         );

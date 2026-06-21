@@ -8,13 +8,16 @@ import { locationsCustomBeginner } from './locations';
 export const gameContentCustomBeginner: GameContent = {
   name: 'New Beginnings',
   factions: factionsCustomBeginner,
-  locations: locationsCustomBeginner,
+  locations: [{ playerCount: 0, locations: locationsCustomBeginner }],
   conflicts: conflictsCustomBeginner,
   ix: ixCustomBeginner,
   useTechTiles: false,
   useDreadnoughts: true,
   customCards: customCardsCustomBeginner,
-  finaleTrigger: 8,
+  finaleTrigger: [
+    { playerCount: 0, trigger: 9 },
+    { playerCount: 3, trigger: 8 },
+  ],
   victoryPointBoni: [
     { score: 2, reward: { type: 'persuasion', amount: 1 } },
     { score: 5, reward: { type: 'persuasion', amount: 1 } },

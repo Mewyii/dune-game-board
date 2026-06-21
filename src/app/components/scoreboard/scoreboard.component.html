@@ -16,24 +16,26 @@
           }
         </div>
       }
+      @if (mode === 'game') {
+        <div class="player-score-container" [style.width]="playerVictoryPoints.length < 5 ? '66%' : '90%'">
+          @for (playerScore of playerVictoryPoints; track trackPlayerScore(playerScore); let id = $index) {
+            @if (playerScore.amount === score.amount) {
+              <div
+                class="score-marker"
+                [style.background-color]="playerColors[playerScore.playerId]"
+                (click)="onIncreaseFactionScoreClicked(playerScore.playerId, playerScore.amount)"
+                (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId, playerScore.amount)"
+              ></div>
+            }
+          }
+        </div>
+      }
     </div>
     @if (!last) {
       <div
         class="divider light"
         [class.finale-four-players]="score.amount === finaleTrigger - 1"
         [class.finale-three-players]="score.amount === finaleTrigger"
-      ></div>
-    }
-  }
-  @if (mode === 'game') {
-    @for (playerScore of playerVictoryPoints; track trackPlayerScore(playerScore); let i = $index) {
-      <div
-        class="score-marker"
-        [style.left]="(i < 2 ? 10 : 90) + playerScore.amount * 163 + 'px'"
-        [style.top]="10 + (i % 2 === 0 ? 0 : 40) + 'px'"
-        [style.background-color]="playerColors[playerScore.playerId]"
-        (click)="onIncreaseFactionScoreClicked(playerScore.playerId)"
-        (contextmenu)="onDecreaseFactionScoreClicked(playerScore.playerId)"
       ></div>
     }
   }

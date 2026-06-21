@@ -5,7 +5,7 @@ import { DuneLocation } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LeadersService } from 'src/app/services/leaders.service';
-import { LocationManager } from 'src/app/services/location-manager.service';
+import { LocationsService } from 'src/app/services/location-manager.service';
 import { PlayersService } from 'src/app/services/players.service';
 
 @Component({
@@ -41,14 +41,14 @@ export class DuneLocationComponent implements OnInit, OnDestroy {
   public leaderInitials = '';
 
   constructor(
-    private locationManager: LocationManager,
+    private locationsService: LocationsService,
     private playersService: PlayersService,
     private leaderService: LeadersService,
     private gameManager: GameManager,
   ) {}
 
   ngOnInit(): void {
-    const locationOwnerIdSub = this.locationManager
+    const locationOwnerIdSub = this.locationsService
       .locationOwnerId$(this.location.actionField.title.en)
       .subscribe((ownerId) => {
         if (ownerId) {

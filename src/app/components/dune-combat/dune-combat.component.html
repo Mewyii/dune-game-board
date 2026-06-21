@@ -7,7 +7,7 @@
           [style.left]="playerGarrisonLocations[i].x"
           [style.bottom]="playerGarrisonLocations[i].y"
         >
-          <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === 2 ? ' active' : '')"></div>
+          <div [class]="'units-gathering-area' + (activeGarrisonPlayerId === combatUnits.playerId ? ' active' : '')"></div>
           <div class="units-in-timeout-container">
             @for (ship of combatUnits.shipsInTimeout | numberToArray; track $index; let is = $index) {
               <div class="ship-marker timeout"></div>
@@ -36,8 +36,8 @@
         </div>
         <div
           [class]="'units-in-combat-container ' + (i > 0 && i < 3 ? 'top ' : '') + (i > 1 ? 'right' : '')"
-          [style.top]="270 - (i > 0 && i < 3 ? 110 : 0) + 'px'"
-          [style.left]="330 - (i > 0 && i < 3 ? 30 : 0) + (i > 1 ? 340 : 0) + 'px'"
+          [style.top]="playerCombatLocations[i].y"
+          [style.left]="playerCombatLocations[i].x"
         >
           @for (ship of combatUnits.shipsInCombat | numberToArray; track $index; let is = $index) {
             <div class="ship-marker-container">
@@ -72,12 +72,13 @@
       @if (settingsService.mode === 'game') {
         <div class="score-container large">
           @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
-            <div
-              *ngIf="playerScore.score === 0"
-              class="score-marker"
-              [style.background-color]="playerColors[playerScore.playerId]"
-              [style.top]="25 + i * 25 + 'px'"
-            ></div>
+            @if (playerScore.score === 0) {
+              <div
+                class="score-marker"
+                [style.background-color]="playerColors[playerScore.playerId]"
+                [style.top]="25 + i * 25 + 'px'"
+              ></div>
+            }
           }
         </div>
       }
@@ -89,11 +90,9 @@
           @if (settingsService.mode === 'game') {
             <div class="score-container">
               @for (playerScore of combatScores; track trackPlayerScore(playerScore); let i = $index) {
-                <div
-                  *ngIf="playerScore.score === scoreIndex + 1"
-                  class="score-marker"
-                  [style.background-color]="playerColors[playerScore.playerId]"
-                ></div>
+                @if (playerScore.score === scoreIndex + 1) {
+                  <div class="score-marker" [style.background-color]="playerColors[playerScore.playerId]"></div>
+                }
               }
             </div>
           }
@@ -120,13 +119,11 @@
   </div>
   <div class="absolute-scores">
     @for (combatScore of combatScores; track $index) {
-      <div
-        *ngIf="combatScore.score > maxCombatScore"
-        [style.color]="playerColors[combatScore.playerId]"
-        [style.padding]="'6px'"
-      >
-        {{ combatScore.score }}
-      </div>
+      @if (combatScore.score > maxCombatScore) {
+        <div [style.color]="playerColors[combatScore.playerId]" [style.padding]="'6px'">
+          {{ combatScore.score }}
+        </div>
+      }
     }
   </div>
 </div>

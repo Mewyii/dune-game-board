@@ -27,6 +27,7 @@ import {
 } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
+import { BoardSpacesService } from '../board-spaces.service';
 import { SettingsService } from '../settings.service';
 
 @Injectable({
@@ -35,7 +36,10 @@ import { SettingsService } from '../settings.service';
 export class AIEffectEvaluationService {
   ai: AI | undefined;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(
+    private settingsService: SettingsService,
+    private boardSpacesService: BoardSpacesService,
+  ) {
     this.settingsService.AI$.subscribe((x) => {
       this.ai = x;
     });
@@ -59,7 +63,7 @@ export class AIEffectEvaluationService {
           agentsOnEnemyLocations.map((x) =>
             getModifiedLocationTakeoverTroopCosts(
               this.settingsService.getLocationTakeoverTroopCosts(),
-              this.settingsService.getBoardField(x.locationId),
+              this.boardSpacesService.getBoardSpace(x.locationId),
               gameState.playerGameModifiers?.locationTakeoverTroopCosts,
             ),
           ),
@@ -544,7 +548,7 @@ export class AIEffectEvaluationService {
         maxPlayerIntrigueCount: this.settingsService.getMaxPlayerIntrigueCount(),
         locationTakeoverTroopCosts: this.settingsService.getLocationTakeoverTroopCosts(),
         maxPlayerDreadnoughtCount: this.settingsService.getMaxPlayerDreadnoughtCount(),
-        getBoardField: (id) => this.settingsService.getBoardField(id),
+        getBoardSpace: (id) => this.boardSpacesService.getBoardSpace(id),
       },
       getStructuredEffectsEvaluation: (effects, player, gameState, timing) =>
         this.getStructuredEffectsEvaluation(effects, player, gameState, timing),
@@ -570,7 +574,7 @@ export class AIEffectEvaluationService {
         maxPlayerIntrigueCount: this.settingsService.getMaxPlayerIntrigueCount(),
         locationTakeoverTroopCosts: this.settingsService.getLocationTakeoverTroopCosts(),
         maxPlayerDreadnoughtCount: this.settingsService.getMaxPlayerDreadnoughtCount(),
-        getBoardField: (id) => this.settingsService.getBoardField(id),
+        getBoardSpace: (id) => this.boardSpacesService.getBoardSpace(id),
       },
       getStructuredEffectsEvaluation: (effects, player, gameState, timing) =>
         this.getStructuredEffectsEvaluation(effects, player, gameState, timing),

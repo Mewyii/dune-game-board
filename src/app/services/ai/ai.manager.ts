@@ -16,7 +16,7 @@ import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { Player } from 'src/app/models/player';
 import { StructuredConversionEffectWithGameElement } from 'src/app/models/turn-info';
 import { AudioManager } from '../audio-manager.service';
-import { BoardSpaceService } from '../board-space.service';
+import { BoardSpacesService } from '../board-spaces.service';
 import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from '../cards.service';
 import { CombatManager, PlayerCombatScore, PlayerCombatUnits } from '../combat-manager.service';
 import { EffectsService } from '../game-effects.service';
@@ -62,7 +62,7 @@ export class AIManager {
     private playerAgentsService: PlayerAgentsService,
     private playersResourcesService: PlayerResourcesService,
     private gameStateService: GameStateService,
-    private boardSpaceService: BoardSpaceService,
+    private boardSpaceService: BoardSpacesService,
     private roundService: RoundService,
     private effectsService: EffectsService,
     private aiCardsService: AICardsService,
@@ -753,7 +753,7 @@ export class AIManager {
 
     const playerLeader = gameState.playerLeader;
 
-    if (!aiPlayer || !gameState.playerHandCards) {
+    if (!aiPlayer || !gameState.playerHandCards || !playerLeader) {
       return;
     }
 

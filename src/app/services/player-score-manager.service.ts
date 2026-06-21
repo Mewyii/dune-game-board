@@ -183,7 +183,7 @@ export class PlayerScoreManager {
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
-    const newPlayerScore = playerScore[scoreType] - amount;
+    const newPlayerScore = playerScore[scoreType] - amount >= 0 ? playerScore[scoreType] - amount : 0;
 
     if (playerScore) {
       playerScores[playerScoreIndex] = {

@@ -155,15 +155,18 @@ export function getRewardEffectEvaluation(
     case 'mentat':
       return 2.5 + 0.25 * (gameState.currentRound - 1);
     case 'signet':
-      return gameState.playerLeader.signetTokenOrFieldMarkerValue
+      return gameState.playerLeader && gameState.playerLeader.signetTokenOrFieldMarkerValue
         ? gameState.playerLeader.signetTokenOrFieldMarkerValue(player, gameState)
         : 0.75;
     case 'signet-ring':
-      return gameState.playerLeader.signetRingValue
-        ? gameState.playerLeader.signetRingValue(player, gameState)
-        : gameState.playerLeader.structuredSignetEffects
-          ? game.getStructuredEffectsEvaluation(gameState.playerLeader.structuredSignetEffects, player, gameState)
-          : 3;
+      if (gameState.playerLeader) {
+        if (gameState.playerLeader.signetRingValue) {
+          return gameState.playerLeader.signetRingValue(player, gameState);
+        } else if (gameState.playerLeader.structuredSignetEffects) {
+          return game.getStructuredEffectsEvaluation(gameState.playerLeader.structuredSignetEffects, player, gameState);
+        }
+      }
+      return 3;
     case 'location-control':
       return 9 + 0.25 * (gameState.currentRound - 1);
     case 'location-control-choice':
@@ -443,22 +446,25 @@ export function getRewardEffectEvaluationForTurnState(
           : value;
       }
     case 'signet':
-      return gameState.playerLeader.signetTokenOrFieldMarkerValue
+      return gameState.playerLeader && gameState.playerLeader.signetTokenOrFieldMarkerValue
         ? gameState.playerLeader.signetTokenOrFieldMarkerValue(player, gameState, targetBoardSpace)
         : 0.75;
     case 'signet-ring':
-      return gameState.playerLeader.signetRingValue
-        ? gameState.playerLeader.signetRingValue(player, gameState, targetBoardSpace)
-        : gameState.playerLeader.structuredSignetEffects
-          ? game.getStructuredEffectsEvaluationForTurnState(
-              gameState.playerLeader.structuredSignetEffects,
-              player,
-              gameState,
-              'agent-placement',
-              false,
-              targetBoardSpace,
-            )
-          : value;
+      if (gameState.playerLeader) {
+        if (gameState.playerLeader.signetRingValue) {
+          return gameState.playerLeader.signetRingValue(player, gameState, targetBoardSpace);
+        } else if (gameState.playerLeader.structuredSignetEffects) {
+          return game.getStructuredEffectsEvaluationForTurnState(
+            gameState.playerLeader.structuredSignetEffects,
+            player,
+            gameState,
+            'agent-placement',
+            false,
+            targetBoardSpace,
+          );
+        }
+      }
+      return value;
     case 'location-control':
       let canTakeOverLocation = true;
 
@@ -467,7 +473,7 @@ export function getRewardEffectEvaluationForTurnState(
         const enemyLocation = gameState.enemyLocations.find((x) => x.locationId === conflictBoardSpaceId);
         const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
           game.settings.locationTakeoverTroopCosts,
-          game.settings.getBoardField(conflictBoardSpaceId),
+          game.settings.getBoardSpace(conflictBoardSpaceId),
           gameState.playerGameModifiers?.locationTakeoverTroopCosts,
         );
 
@@ -492,7 +498,7 @@ export function getRewardEffectEvaluationForTurnState(
           gameState.playerCombatUnits.troopsInGarrison >=
             getModifiedLocationTakeoverTroopCosts(
               game.settings.locationTakeoverTroopCosts,
-              game.settings.getBoardField(x.fieldId),
+              game.settings.getBoardSpace(x.fieldId),
               gameState.playerGameModifiers?.locationTakeoverTroopCosts,
             ),
       );
