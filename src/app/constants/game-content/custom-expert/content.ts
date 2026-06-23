@@ -18,15 +18,14 @@ export const gameContentCustomExpert: GameContent = {
   useTechTiles: true,
   useDreadnoughts: true,
   finaleTrigger: [
-    { playerCount: 0, trigger: 9 },
-    { playerCount: 3, trigger: 8 },
-    { playerCount: 5, trigger: 7 },
+    { playerCount: 0, trigger: 8 },
+    { playerCount: 3, trigger: 7 },
+    { playerCount: 5, trigger: 6 },
   ],
   victoryPointBoni: [
     { score: 2, reward: { type: 'persuasion', amount: 1 } },
     { score: 5, reward: { type: 'persuasion', amount: 1 } },
     { score: 8, reward: { type: 'persuasion', amount: 1 } },
-    { score: 11, reward: { type: 'persuasion', amount: 1 } },
   ],
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 5,

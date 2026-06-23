@@ -5,7 +5,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Fremen', en: 'Fremen' },
     type: 'fremen',
     position: {
-      marginTop: 1670,
+      marginTop: 1665,
       marginLeft: 15,
     },
     actionFields: [
@@ -45,7 +45,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Bene Gesserit', en: 'Bene Gesserit' },
     type: 'bene',
     position: {
-      marginTop: 1170,
+      marginTop: 1155,
       marginLeft: 15,
     },
     actionFields: [
@@ -84,7 +84,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Raumgilde', en: 'Spacing Guild' },
     type: 'guild',
     position: {
-      marginTop: 670,
+      marginTop: 645,
       marginLeft: 15,
     },
     actionFields: [
@@ -123,7 +123,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Imperator', en: 'Emperor' },
     type: 'emperor',
     position: {
-      marginTop: 170,
+      marginTop: 130,
       marginLeft: 15,
     },
     actionFields: [
@@ -163,7 +163,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Landsraad', en: 'Landsraad' },
     type: 'landsraad',
     position: {
-      marginTop: 170,
+      marginTop: 130,
       marginLeft: 580,
       width: 662,
     },
@@ -199,7 +199,7 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
-        customWidth: '175px',
+        customWidth: '169px',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
@@ -210,7 +210,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'MAFEA', en: 'CHOAM' },
     type: 'choam',
     position: {
-      marginTop: 170,
+      marginTop: 130,
       marginLeft: 1345,
       width: 320,
     },

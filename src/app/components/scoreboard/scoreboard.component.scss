@@ -18,11 +18,15 @@
   padding-top: 6px;
 }
 
-.score-element.finale-four-players {
+.score-element.finale-low {
+  background: #ffd78e32;
+}
+
+.score-element.finale-medium {
   background: #ffd88e61;
 }
 
-.score-element.finale-three-players {
+.score-element.finale-high {
   background: #ffd88e75;
 }
 
@@ -37,13 +41,19 @@
   box-shadow: 0px 0px 6px 0px #ffefc3;
 }
 
-.divider.finale-four-players {
+.divider.finale-low {
+  background: #ffd4898b;
+  width: 10px;
+  box-shadow: 0px 0px 6px 0px #ffdf89;
+}
+
+.divider.finale-medium {
   background: #ffd489de;
   width: 10px;
   box-shadow: 0px 0px 6px 0px #ffdf89;
 }
 
-.divider.finale-three-players {
+.divider.finale-high {
   background: #ffd489;
   width: 10px;
   box-shadow: 0px 0px 6px 0px #ffdf89;

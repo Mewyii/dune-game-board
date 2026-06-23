@@ -4,7 +4,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 870,
+      marginTop: 860,
       marginLeft: 1430,
     },
     actionField: {
@@ -18,7 +18,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1310,
+      marginTop: 1300,
       marginLeft: 1380,
     },
     actionField: {
@@ -34,7 +34,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 880,
+      marginTop: 870,
       marginLeft: 1010,
     },
     actionField: {
@@ -48,7 +48,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 660,
+      marginTop: 650,
       marginLeft: 1250,
     },
     actionField: {
@@ -62,7 +62,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(74, 58, 46)',
     position: {
-      marginTop: 800,
+      marginTop: 790,
       marginLeft: 600,
     },
     actionField: {
@@ -78,7 +78,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1070,
+      marginTop: 1060,
       marginLeft: 1230,
     },
     actionField: {
@@ -92,7 +92,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1080,
+      marginTop: 1070,
       marginLeft: 790,
     },
     actionField: {
@@ -107,7 +107,7 @@ export const locationsCustomBeginner: DuneLocation[] = [
   {
     color: 'rgb(176, 147, 109)',
     position: {
-      marginTop: 1300,
+      marginTop: 1290,
       marginLeft: 610,
     },
     actionField: {

@@ -173,13 +173,13 @@ export const conflictsCustomExpert: Conflict[] = [
     ],
   },
   {
-    name: { de: 'Schlacht bei Tsimpo', en: 'Battle at Tsimpo Village' },
+    name: { de: "Schlacht bei Mirzabah's Schädel", en: "Battle at Mirzabah's Head" },
     boardSpaceId: 'Hagga Basin',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }, { type: 'intrigue' }],
-      [{ type: 'intrigue' }],
+      [{ type: 'location-control' }, { type: 'water' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'focus' }],
+      [{ type: 'focus' }],
     ],
   },
   {
@@ -254,6 +254,38 @@ export const conflictsCustomExpert: Conflict[] = [
       [{ type: 'location-control' }, { type: 'focus' }],
       [{ type: 'solari', amount: 3 }, { type: 'focus' }, { type: 'leader-heal' }],
       [{ type: 'leader-heal' }],
+    ],
+  },
+
+  // Tsimpo
+  {
+    name: { de: 'Schlacht bei der Festung', en: 'Battle at the Fortress' },
+    boardSpaceId: 'Tsimpo',
+    lvl: 1,
+    rewards: [
+      [{ type: 'victory-point' }, { type: 'location-control' }],
+      [{ type: 'victory-point' }, { type: 'water' }],
+      [{ type: 'water' }, { type: 'troop' }],
+    ],
+  },
+  {
+    name: { de: 'Schlacht bei den Forschungsanlagen', en: 'Battle at the Research Stations' },
+    boardSpaceId: 'Tsimpo',
+    lvl: 1,
+    rewards: [
+      [{ type: 'location-control' }, { type: 'tech' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }, { type: 'leader-heal' }],
+      [{ type: 'leader-heal' }],
+    ],
+  },
+  {
+    name: { de: 'Schlacht bei den Gefängnissen', en: 'Battle at the Prisons' },
+    boardSpaceId: 'Tsimpo',
+    lvl: 1,
+    rewards: [
+      [{ type: 'location-control' }, { type: 'intrigue' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'intrigue' }, { type: 'troop' }],
+      [{ type: 'troop', amount: 2 }],
     ],
   },
 ];

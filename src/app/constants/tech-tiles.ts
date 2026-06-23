@@ -118,7 +118,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Smuggler Outposts',
+      en: 'Smuggler outposts',
       de: 'Schmuggler-Aussenposten',
     },
     faction: 'guild',
@@ -270,7 +270,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Improved Projectile Weapons',
+      en: 'Improved projectile rifles',
       de: 'Verbesserte Projektilwaffen',
     },
     costs: 2,
@@ -369,18 +369,46 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Axolotl-Tanks',
+      de: 'Axolotl-Tanks',
+    },
+    costs: 2,
+    imageUrl: '/assets/images/action-backgrounds/axolotl_tanks.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'trash-self',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'leader-heal',
+        amount: 2,
+      },
+    ],
+    customEffect: {
+      en: '',
+      de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Stilltents',
       de: 'Destillzelte',
     },
     faction: 'fremen',
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/stilltent.png',
     effectSize: 'medium',
     imagePosition: 'center',
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>If you have an agent on a <br>{faction:spice} board space: {resource:persuasion;amount:1} {resource:focus}',
+      en: '<b>Aufdeckzug:</b> <br>Wenn du einen Agenten auf einem <br>{faction:spice}-Feld hast: {resource:persuasion;amount:1} {resource:focus}',
       de: '<b>Aufdeckzug:</b> <br>Wenn du einen Agenten auf einem <br>{faction:spice}-Feld hast: {resource:persuasion;amount:1} {resource:focus}',
       fontSize: 'small',
     },
@@ -391,14 +419,14 @@ export const techTiles: TechTileCard[] = [
       de: 'Gepanzerte Sandcrawler',
     },
     faction: 'guild',
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/spice_harvester_2.png',
     effectSize: 'medium',
     imagePosition: 'bottom',
     buyEffects: [],
     effects: [],
     customEffect: {
-      en: '<b>Reveal turn:</b> <br>For each of your agents on <br>{faction:spice} board spaces: {resource:sword}{resource:sword}',
+      en: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf {faction:spice}-Feldern: {resource:sword}',
       de: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf <br>{faction:spice}-Feldern: {resource:sword}{resource:sword}',
       fontSize: 'small',
     },
@@ -408,7 +436,7 @@ export const techTiles: TechTileCard[] = [
       en: 'Maula Pistol Works',
       de: 'Maula-Pistolen Werk',
     },
-    costs: 2,
+    costs: 3,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
     effectSize: 'medium',
     imagePosition: 'top',
@@ -438,34 +466,6 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'medium',
-    },
-  },
-  {
-    name: {
-      en: 'Axolotl-Tanks',
-      de: 'Axolotl-Tanks',
-    },
-    costs: 2,
-    imageUrl: '/assets/images/action-backgrounds/axolotl_tanks.png',
-    effectSize: 'medium',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'trash-self',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'leader-heal',
-        amount: 2,
-      },
-    ],
-    customEffect: {
-      en: '',
-      de: '',
-      fontSize: 'small',
     },
   },
   {
@@ -550,23 +550,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Upgraded Carryall Suspensors',
-      de: 'Verbesserte Carryall-Suspensoren',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/carryall.png',
-    effectSize: 'medium',
-    imagePosition: 'top',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: 'Access to {faction:spice} board spaces costs {resource:water} less.',
-      de: 'Der Zugang zu {faction:spice}-Feldern kostet {resource:water} weniger.',
-      fontSize: 'medium',
-    },
-  },
-  {
-    name: {
       en: 'Spy Network',
       de: 'Spionage-Netzwerk',
     },
@@ -604,23 +587,6 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Enhanced Sandcrawler Engines',
-      de: 'Verbesserte Sandcrawler- Antriebe',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/tech.png',
-    effectSize: 'medium',
-    imagePosition: 'top',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: '<b>When you place an agent <br>on a {faction:spice} board space:</b><br>{resource:spice}',
-      de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
       en: 'Barrage Rockets',
       de: 'Sperrfeuerraketen',
     },
@@ -649,23 +615,6 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '<b>Turn start:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Put {resource:troop} on <b>1</b> board space of your choice. It is blocked for this round.',
       de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip}{resource:helper-trade}Lege {resource:troop} auf <b>1</b> Feld deiner Wahl. Es ist für diese Runde blockiert.',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Recruitment Center',
-      de: 'Anwerbungszentrum',
-    },
-    costs: 3,
-    imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
-    effectSize: 'medium',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:solari} {resource:helper-trade}Acquire a card for {resource:persuasion;amount:-2} and place it on top of your deck.',
-      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:solari} {resource:helper-trade}Erwirb eine Karte für {resource:persuasion;amount:-2} und lege sie oben auf dein Deck.',
       fontSize: 'small',
     },
   },
@@ -714,6 +663,57 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Upgraded Carryall Suspensors',
+      de: 'Verbesserte Carryall-Suspensoren',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/carryall.png',
+    effectSize: 'medium',
+    imagePosition: 'top',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: 'Access to {faction:spice} board spaces costs {resource:water} less.',
+      de: 'Der Zugang zu {faction:spice}-Feldern kostet {resource:water} weniger.',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Enhanced Sandcrawler Engines',
+      de: 'Verbesserte Sandcrawler- Antriebe',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/tech.png',
+    effectSize: 'medium',
+    imagePosition: 'top',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>When you place an agent <br>on a {faction:spice} board space:</b><br>{resource:spice}',
+      de: '<b>Wenn du einen Agenten auf <br>einem {faction:spice}-Feld platzierst:</b><br>{resource:spice}',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Recruitment Hub',
+      de: 'Anwerbungszentrum',
+    },
+    costs: 4,
+    imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:solari} {resource:helper-trade}Acquire a card for {resource:persuasion;amount:-2} and place it on top of your deck.',
+      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:solari} {resource:helper-trade}Erwirb eine Karte für {resource:persuasion;amount:-2} und lege sie oben auf dein Deck.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Trade Port',
       de: 'Handelshafen',
     },
@@ -753,7 +753,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Upgraded Ornithopter Engines',
+      en: 'Upgraded Ornithoper Engines',
       de: 'Verbesserte Ornithopertriebwerke',
     },
     costs: 4,
@@ -925,24 +925,7 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
-      en: 'Spice Refineries',
-      de: 'Spice Raffinerien',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
-    effectSize: 'medium',
-    imagePosition: 'center',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: 'All {resource:spice} -costs are reduced by 1 (min. 1).',
-      de: 'Alle {resource:spice} -Kosten sind um 1 reduziert (min. 1).',
-      fontSize: 'medium',
-    },
-  },
-  {
-    name: {
-      en: 'Ornithopter Squadron',
+      en: 'Ornithoper Squadron',
       de: 'Ornithopterstaffel',
     },
     costs: 4,
@@ -969,45 +952,6 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '',
-      fontSize: 'small',
-    },
-  },
-  {
-    name: {
-      en: 'Shieldbreakers',
-      de: 'Schildbrecher',
-    },
-    costs: 4,
-    imageUrl: '/assets/images/action-backgrounds/shields.png',
-    effectSize: 'small',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    effects: [
-      {
-        type: 'timing-turn-start',
-      },
-      {
-        type: 'tech-tile-flip',
-      },
-      {
-        type: 'dreadnought-retreat',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-    ],
-    customEffect: {
-      en: '<b>Turn start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Each opponent retreats one of his {resource:dreadnought}.',
-      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Jeder Gegner zieht eines seiner {resource:dreadnought} zurück.',
       fontSize: 'small',
     },
   },
@@ -1042,6 +986,62 @@ export const techTiles: TechTileCard[] = [
     customEffect: {
       en: '',
       de: '',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
+      en: 'Spice Refineries',
+      de: 'Spice Raffinerien',
+    },
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/spice_port.png',
+    effectSize: 'medium',
+    imagePosition: 'center',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: 'All {resource:spice} -costs are reduced by 1 (min. 1).',
+      de: 'Alle {resource:spice} -Kosten sind um 1 reduziert (min. 1).',
+      fontSize: 'medium',
+    },
+  },
+  {
+    name: {
+      en: 'Shieldbreakers',
+      de: 'Schildbrecher',
+    },
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/shields.png',
+    effectSize: 'small',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [
+      {
+        type: 'timing-turn-start',
+      },
+      {
+        type: 'tech-tile-flip',
+      },
+      {
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+    customEffect: {
+      en: '<b>Turn start:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Each opponent retreats one of his {resource:dreadnought}.',
+      de: '<b>Zugbeginn:</b><br>{resource:tech-tile-flip} {resource:tech}{resource:helper-trade} Jeder Gegner zieht eines seiner {resource:dreadnought} zurück.',
       fontSize: 'small',
     },
   },
@@ -1103,11 +1103,28 @@ export const techTiles: TechTileCard[] = [
   },
   {
     name: {
+      en: 'Deployment Ship',
+      de: 'Einsatzsschiff',
+    },
+    costs: 5,
+    imageUrl: '/assets/images/action-backgrounds/landing_ship_2.png',
+    effectSize: 'medium',
+    imagePosition: 'bottom',
+    buyEffects: [],
+    effects: [],
+    customEffect: {
+      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Acquire a card for {resource:persuasion;amount:-1}. Immediately execute its reveal effect.',
+      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Erwirb eine Karte für {resource:persuasion;amount:-1}. Führe ihren Aufdeck-Effekt sofort aus.',
+      fontSize: 'small',
+    },
+  },
+  {
+    name: {
       en: 'Sietch',
       de: 'Sietch',
     },
     faction: 'fremen',
-    costs: 5,
+    costs: 6,
     imageUrl: '/assets/images/action-backgrounds/desert_4.png',
     effectSize: 'medium',
     imagePosition: 'top',
@@ -1166,7 +1183,7 @@ export const techTiles: TechTileCard[] = [
       de: 'Gilden-Bank',
     },
     faction: 'guild',
-    costs: 5,
+    costs: 6,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_13.png',
     effectSize: 'medium',
     imagePosition: 'center',
@@ -1213,23 +1230,6 @@ export const techTiles: TechTileCard[] = [
       en: '',
       de: '',
       fontSize: 'medium',
-    },
-  },
-  {
-    name: {
-      en: 'Deployment Ship',
-      de: 'Einsatzschiff',
-    },
-    costs: 5,
-    imageUrl: '/assets/images/action-backgrounds/landing_ship_2.png',
-    effectSize: 'medium',
-    imagePosition: 'bottom',
-    buyEffects: [],
-    effects: [],
-    customEffect: {
-      en: '<b>Reveal turn:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Acquire a card for {resource:persuasion;amount:-1}. Immediately execute its reveal effect.',
-      de: '<b>Aufdeckzug:</b> <br>{resource:tech-tile-flip} {resource:helper-trade}Erwirb eine Karte für {resource:persuasion;amount:-1}. Führe ihren Aufdeck-Effekt sofort aus.',
-      fontSize: 'small',
     },
   },
   {
@@ -1350,7 +1350,7 @@ export const techTiles: TechTileCard[] = [
       en: 'Lighter',
       de: 'Leichter',
     },
-    costs: 6,
+    costs: 7,
     imageUrl: '/assets/images/action-backgrounds/spaceship.png',
     effectSize: 'medium',
     imagePosition: 'top',

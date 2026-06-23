@@ -51,10 +51,10 @@ export class DuneCombatComponent implements OnInit, OnDestroy {
   playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
     0: { x: '60px', y: '-50px' },
     1: { x: '990px', y: '-55px' },
-    2: { x: '-70px', y: '55px' },
-    3: { x: '900px', y: '60px' },
-    4: { x: '-10px', y: '170px' },
-    5: { x: '970px', y: '190px' },
+    2: { x: '-70px', y: '65px' },
+    3: { x: '900px', y: '65px' },
+    4: { x: '-10px', y: '185px' },
+    5: { x: '970px', y: '210px' },
   };
 
   playerCombatLocations: { [key: number]: { x: string; y: string } } = {

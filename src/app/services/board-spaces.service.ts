@@ -56,7 +56,7 @@ export class BoardSpacesService {
 
       this.boardSpacesSubject.next([
         ...this.settingsService.gameContent.locations
-          .filter((x) => x.playerCount >= players.length)
+          .filter((x) => x.playerCount <= players.length)
           .flatMap((x) => x.locations)
           .map((x) => x.actionField),
         ...gameContent.factions.flatMap((x) => x.actionFields),
@@ -75,7 +75,7 @@ export class BoardSpacesService {
 
       this.boardSpacesSubject.next([
         ...gameContent.locations
-          .filter((x) => x.playerCount >= players.length)
+          .filter((x) => x.playerCount <= players.length)
           .flatMap((x) => x.locations)
           .map((x) => x.actionField),
         ...gameContent.factions.flatMap((x) => x.actionFields),

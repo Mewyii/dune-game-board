@@ -25,21 +25,6 @@ export class AIBoardSpacesService {
     private aiPlayersService: AIPlayersService,
   ) {}
 
-  getPreferredFieldForPlayer(playerId: number) {
-    const aiPlayer = this.aiPlayersService.aiPlayers.find((x) => x.playerId === playerId);
-    if (!aiPlayer) {
-      return undefined;
-    }
-
-    const preferredField = aiPlayer.preferredFields[0];
-    if (!preferredField) {
-      return undefined;
-    }
-
-    const fields = this.boardSpacesService.boardSpaces;
-    return fields.find((x) => preferredField.fieldId.includes(x.title.en));
-  }
-
   getLocationToControl(player: Player, gameState: GameState) {
     const locationsWithPlayerAgents = this.locationsService.locations.filter((x) =>
       gameState.playerAgentsOnFields.some((y) => y.fieldId === x.actionField.title.en),

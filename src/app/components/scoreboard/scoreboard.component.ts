@@ -30,7 +30,9 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   playerVictoryPoints: { playerId: number; amount: number }[] = [];
 
   victoryPointBoni: VictoryPointReward[] | undefined;
-  finaleTrigger = 9;
+  finaleTriggerLow: number | undefined;
+  finaleTriggerMedium: number | undefined;
+  finaleTriggerHigh: number | undefined;
 
   playerColors: { [key: number]: string } = {};
 
@@ -62,12 +64,13 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
         }
       }
       this.victoryPointBoni = x.victoryPointBoni;
-      if (x.finaleTrigger) {
-        this.finaleTrigger =
-          x.finaleTrigger
-            .filter((trigger) => trigger.playerCount <= this.playersService.getPlayerCount())
-            .sort((a, b) => a.playerCount - b.playerCount)
-            .pop()?.trigger ?? 7;
+
+      const finaleTriggers = x.finaleTrigger;
+      if (finaleTriggers && finaleTriggers.length > 0) {
+        finaleTriggers.sort((a, b) => a.trigger - b.trigger);
+        this.finaleTriggerLow = finaleTriggers[0]?.trigger;
+        this.finaleTriggerMedium = finaleTriggers[1]?.trigger;
+        this.finaleTriggerHigh = finaleTriggers[2]?.trigger;
       }
     });
 

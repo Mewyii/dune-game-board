@@ -2,8 +2,9 @@
   @for (score of scoreArray; track $index; let i = $index; let last = $last) {
     <div
       class="score-element light"
-      [class.finale-four-players]="score.amount > finaleTrigger - 1"
-      [class.finale-three-players]="score.amount > finaleTrigger"
+      [class.finale-low]="finaleTriggerLow && score.amount > finaleTriggerLow"
+      [class.finale-medium]="finaleTriggerMedium && score.amount > finaleTriggerMedium"
+      [class.finale-high]="finaleTriggerHigh && score.amount > finaleTriggerHigh"
     >
       <div class="score">{{ score.amount }}</div>
       @if (victoryPointBoni && score.reward) {
@@ -34,8 +35,9 @@
     @if (!last) {
       <div
         class="divider light"
-        [class.finale-four-players]="score.amount === finaleTrigger - 1"
-        [class.finale-three-players]="score.amount === finaleTrigger"
+        [class.finale-low]="finaleTriggerLow && score.amount === finaleTriggerLow"
+        [class.finale-medium]="finaleTriggerMedium && score.amount === finaleTriggerMedium"
+        [class.finale-high]="finaleTriggerHigh && score.amount === finaleTriggerHigh"
       ></div>
     }
   }
