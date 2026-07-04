@@ -65,6 +65,11 @@ export const effectRewards = [
   'turn-pass',
   'victory-point',
   'leader-wound',
+  'contract',
+  'maker-hook',
+  'spy',
+  'wall-break',
+  'sandworm',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;

@@ -99,4 +99,9 @@ export const EFFECT_TYPE_PATHS: Record<EffectType, string> = {
   'troop-insert-or-retreat': '',
   'troop-retreat': '',
   'turn-pass': '',
+  'maker-hook': 'assets/images/reward-markers/marker_maker_hook.png',
+  spy: 'assets/images/reward-markers/marker_spy.png',
+  'wall-break': 'assets/images/reward-markers/marker_wall_break.png',
+  sandworm: 'assets/images/reward-markers/marker_sandworm.png',
+  contract: 'assets/images/reward-markers/marker_contract.png',
 };

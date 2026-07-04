@@ -502,6 +502,11 @@ export class GameStateService {
       'turn-pass': 0,
       'leader-heal': 0,
       'leader-wound': 0,
+      'maker-hook': 0,
+      spy: 0,
+      'wall-break': 0,
+      sandworm: 0,
+      contract: 0,
     };
   }
 }
