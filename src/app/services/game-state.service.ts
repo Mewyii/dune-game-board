@@ -277,7 +277,7 @@ export class GameStateService {
       this.gameModifiersService.getPlayerBlockedFieldsForActionTypes(player.id) ?? [];
     const playerBlockedFieldsForIds = this.gameModifiersService.getPlayerBlockedFieldsForIds(player.id) ?? [];
 
-    const playerCombatIntrigues = playerIntrigues.filter((x) => x.type === 'combat');
+    const playerCombatIntrigues = playerIntrigues.filter((x) => x.type === 'combat' || x.type === 'combined');
     const playerIntrigueCount = playerIntrigues.length;
     const playerCombatIntrigueCount = playerCombatIntrigues.length;
     const playerIntrigueStealAmount = this.intriguesService

@@ -78,6 +78,10 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       (gameState.imperiumDeckCards.some((x) => x.name.en === 'Water of Life') ? 6 : 0) +
       1 * gameState.playerFactionFriendships.filter((x) => x === 'bene' || x === 'fremen').length,
     customAgentFunction: (player, gameState, game) => {
+      if (!gameState.playerFactionFriendships.some((x) => x === 'bene' || x === 'fremen')) {
+        return;
+      }
+
       const waterOfLifeCard = gameState.imperiumDeckCards.find((x) => x.name.en === 'Water of Life') as ImperiumDeckCard;
       if (waterOfLifeCard) {
         game.acquireImperiumCard(player.id, waterOfLifeCard, 'deck', {

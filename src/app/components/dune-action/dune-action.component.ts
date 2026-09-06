@@ -195,8 +195,15 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.actionCosts = this.actionField.costs ?? [];
-    this.actionRewards = this.actionField.rewards ?? [];
+    const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
+    this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
+
+    const fieldRewardModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldReward');
+    this.actionRewards = getModifiedRewardsForField(this.actionField, fieldRewardModifiers);
+
+    const fieldBlockModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldBlock');
+    this.isBlocked = getFieldIsBlocked(this.actionField, fieldBlockModifiers);
+
     this.pathToActionType = ACTION_TYPE_PATHS[this.actionField.actionType] ?? '';
     this.transparentBackgroundColor = this.backgroundColor.replace(')', ' / 50%)');
     const gradientColor1 = this.adjustRGBColor(this.backgroundColor, -16);
@@ -257,7 +264,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
   private getPlayerAccessibility() {
     const factionInfluenceRequired = this.actionField.requiresInfluence?.type;
-    const costs = this.actionField.costs ?? [];
+    const costs = this.actionCosts;
     const playerHand = this.cardsService.getPlayerHand(this.activePlayerId);
     if (!playerHand) {
       return false;
