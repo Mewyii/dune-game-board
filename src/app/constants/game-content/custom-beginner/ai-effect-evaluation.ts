@@ -55,11 +55,10 @@ export function getRewardEffectEvaluation(
       );
     case 'tech':
       return (
-        1.9 +
-        0.01 * gameState.playerTechTilesConversionCosts.tech -
+        2 +
         0.025 * (gameState.currentRound - 1) -
-        0.01 * gameState.playerCardsRewards.tech -
-        0.01 * gameState.playerTechTilesRewards.tech
+        0.05 * gameState.playerCardsRewards.tech -
+        0.05 * gameState.playerTechTilesRewards.tech
       );
     case 'troop':
       return (
@@ -258,16 +257,24 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.solari
       );
     case 'tech':
-      if (gameState.playerResources.solari >= 10) {
-        return value * 0.1;
+      const affordableTechTiles = gameState.availableTechTiles.filter((x) => x.costs <= gameState.playerResources.solari);
+      if (affordableTechTiles) {
+        let highestTechTileEvaluation = 0;
+        for (const techTile of affordableTechTiles) {
+          const techTileEvaluation = game.getStructuredEffectsEvaluationForTurnState(
+            techTile.structuredEffects ?? [],
+            player,
+            gameState,
+            undefined,
+            true,
+            targetBoardSpace,
+          );
+          if (techTileEvaluation > highestTechTileEvaluation) {
+            highestTechTileEvaluation = techTileEvaluation;
+          }
+        }
       }
-
-      return (
-        value +
-        0.2 * gameState.playerResources.tech +
-        0.25 * gameState.playerIntriguesConversionCosts.tech +
-        0.25 * gameState.playerTechTilesConversionCosts.tech
-      );
+      return gameState.playerTurnInfos?.canBuyTech ? 0 : value;
     case 'troop':
       const combatBoardSpace = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
       return (

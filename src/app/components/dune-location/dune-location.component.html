@@ -2,14 +2,14 @@
   <app-dune-action
     [actionField]="location.actionField"
     [backgroundColor]="location.color"
-    [disabled]="readonly"
+    [disabled]="readonly && isActiveForPlayerCount"
   ></app-dune-action>
   @if (location.actionField.ownerReward) {
-    <div class="location-owning-area">
+    <div class="location-owning-area" [class.blocked]="!isActiveForPlayerCount">
       <div
         [class]="'location-owner-indicator' + (owner ? ' owned' : '')"
         [class.owned]="owner"
-        [class.active]="!readonly"
+        [class.active]="!readonly && isActiveForPlayerCount"
         [style.border-color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
       >

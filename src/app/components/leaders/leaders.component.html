@@ -222,18 +222,6 @@
                 </div>
               </div>
             </div>
-            <div [class]="'resource-container'">
-              <div
-                class="resource-display"
-                (click)="onAddRewardClicked(activePlayer, 'tech')"
-                (contextmenu)="onRemoveResourceClicked(activePlayer, 'tech')"
-              >
-                <img [class]="'resource tech'" [src]="'tech' | effectTypePath" />
-                <div class="resource-amount on-background">
-                  <span>{{ activePlayerResources.tech }}</span>
-                </div>
-              </div>
-            </div>
           </div>
           <div class="info-container right">
             <div class="resource-container">
@@ -304,7 +292,7 @@
               <div class="resource-display" (click)="onPlayerCanBuyTechClicked(activePlayer.id)">
                 <img
                   [class]="'resource ' + (turnInfos?.canBuyTech ? 'enabled' : 'disabled')"
-                  [src]="'tech-tile' | effectTypePath"
+                  [src]="'tech' | effectTypePath"
                 />
               </div>
             </div>

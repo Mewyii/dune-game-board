@@ -98,7 +98,7 @@ export class AIManager {
 
       if (usableCards.length > 0) {
         const evaluations = usableCards.map((cardEvaluation) => {
-          const evaluation = cardEvaluation.evaluationValue - fieldIndex - fieldIndex * (1 - preferredField.value) * 2.5;
+          const evaluation = preferredField.value - 2 * fieldIndex + 2.5 * cardEvaluation.evaluationValue;
           return { field: preferredField, evaluation, card: cardEvaluation.card };
         });
 
@@ -400,9 +400,9 @@ export class AIManager {
       return;
     }
     const buyableTechTiles = this.techTilesService.buyableTechTiles;
-    const availablePlayerTech = this.playersResourcesService.getPlayerResourceAmount(playerId, 'tech');
+    const availablePlayerSolari = this.playersResourcesService.getPlayerResourceAmount(playerId, 'solari');
     const affordableTechTiles = buyableTechTiles.filter(
-      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerTech,
+      (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerSolari,
     );
 
     if (affordableTechTiles.length > 0) {
@@ -414,7 +414,7 @@ export class AIManager {
       )[0];
 
       const desire = this.aiTechTilesService.getTechTileBuyEvaluation(desiredTechTile, player, gameState);
-      const effectiveCosts = desiredTechTile.costs - availablePlayerTech;
+      const effectiveCosts = desiredTechTile.costs - availablePlayerSolari;
 
       if (
         affordableTechTiles.some((x) => x.name.en === desiredTechTile.name.en) &&
@@ -802,9 +802,6 @@ export class AIManager {
       gameState,
       playerLeader,
       aiPlayer,
-      conflictEvaluation,
-      techEvaluation,
-      imperiumRowEvaluation,
       this.aiPlayersService.aiDifficulty,
     );
 

@@ -57,12 +57,14 @@ import { AudioPlayerComponent } from './components/audio-player/audio-player.com
 import { SoundcloudPlayerComponent } from './components/audio-player/soundcloud-player/soundcloud-player.component';
 import { BoardEvaluationComponent } from './components/board-evaluation/board-evaluation.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { ConflictboardComponent } from './components/conflictboard/conflictboard.component';
 import { ConflictsComponent } from './components/conflicts/conflicts.component';
 import { DialogSettingsComponent } from './components/dialog-settings/dialog-settings.component';
 import { DuneVersionUpdaterComponent } from './components/dune-version-updater/dune-version-updater.component';
 import { GameLogComponent } from './components/game-log/game-log.component';
 import { ImmediateEffectsComponent } from './components/immediate-effects/immediate-effects.component';
 import { ImperiumRowComponent } from './components/imperium-row/imperium-row.component';
+import { IntrigueboardComponent } from './components/intrigueboard/intrigueboard.component';
 import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { LeadersComponent } from './components/leaders/leaders.component';
 import { DialogGameManualComponent } from './components/manual/dialog-game-manual/dialog-game-manual.component';
@@ -119,6 +121,8 @@ import { SafeUrlPipe } from './pipes/safe-url';
     PlayerboardComponent,
     PlayerOverviewComponent,
     TechboardComponent,
+    IntrigueboardComponent,
+    ConflictboardComponent,
     EventsComponent,
     HomeworldTileComponent,
     AITileComponent,

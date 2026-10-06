@@ -543,19 +543,7 @@ export class AIEffectEvaluationService {
       return 0;
     }
 
-    const game: AIRewardEffectGameInterface = {
-      settings: {
-        maxPlayerIntrigueCount: this.settingsService.getMaxPlayerIntrigueCount(),
-        locationTakeoverTroopCosts: this.settingsService.getLocationTakeoverTroopCosts(),
-        maxPlayerDreadnoughtCount: this.settingsService.getMaxPlayerDreadnoughtCount(),
-        getBoardSpace: (id) => this.boardSpacesService.getBoardSpace(id),
-      },
-      getStructuredEffectsEvaluation: (effects, player, gameState, timing) =>
-        this.getStructuredEffectsEvaluation(effects, player, gameState, timing),
-      getStructuredEffectsEvaluationForTurnState: this.getStructuredEffectsEvaluationForTurnState,
-    };
-
-    return this.ai.rewardEffectEvaluation(rewardType, player, gameState, game);
+    return this.ai.rewardEffectEvaluation(rewardType, player, gameState, this.getRewardEffectGameInterface());
   }
 
   getRewardEffectEvaluationForTurnState(
@@ -569,7 +557,18 @@ export class AIEffectEvaluationService {
       return 0;
     }
 
-    const game: AIRewardEffectGameInterface = {
+    return this.ai.rewardEffectEvaluationForTurnState(
+      rewardType,
+      rewardAmount,
+      player,
+      gameState,
+      this.getRewardEffectGameInterface(),
+      targetBoardSpace,
+    );
+  }
+
+  getRewardEffectGameInterface(): AIRewardEffectGameInterface {
+    return {
       settings: {
         maxPlayerIntrigueCount: this.settingsService.getMaxPlayerIntrigueCount(),
         locationTakeoverTroopCosts: this.settingsService.getLocationTakeoverTroopCosts(),
@@ -594,8 +593,11 @@ export class AIEffectEvaluationService {
           ignoreConversionCosts,
           targetBoardSpace,
         ),
+      getRewardArrayEvaluation: (rewards, player, gameState) => this.getRewardArrayEvaluation(rewards, player, gameState),
+      getRewardEffectEvaluation: (rewardType, player, gameState) =>
+        this.getRewardEffectEvaluation(rewardType, player, gameState),
+      getRewardEffectEvaluationForTurnState: (rewardType, rewardAmount, player, gameState, targetBoardSpace) =>
+        this.getRewardEffectEvaluationForTurnState(rewardType, rewardAmount, player, gameState, targetBoardSpace),
     };
-
-    return this.ai.rewardEffectEvaluationForTurnState(rewardType, rewardAmount, player, gameState, game, targetBoardSpace);
   }
 }

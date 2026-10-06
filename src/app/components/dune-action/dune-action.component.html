@@ -1,9 +1,9 @@
 <div
-  [class]="
-    'action-field ' +
-    (!disabled && activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer ? 'highlighted ' : '') +
-    (isBlocked ? 'blocked ' : '')
+  class="action-field"
+  [class.highlighted]="
+    !disabled && isActiveForPlayerCount && activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer
   "
+  [class.blocked]="isBlocked || !isActiveForPlayerCount"
 >
   <div class="heading font-medieval" [style.background-color]="backgroundColor">
     <span class="title">{{ t.translateLS(actionField.title).toUpperCase() }}</span>
@@ -13,6 +13,7 @@
   <div class="action-area" [style.background-color]="backgroundColor">
     <div
       class="agent-area"
+      [class.active]="!disabled && isActiveForPlayerCount"
       [style.background-image]="'url(' + actionField.pathToImage + ')'"
       (click)="onActionFieldClicked()"
       (mouseenter)="mouseHover = true"
@@ -42,7 +43,7 @@
       </div>
     </div>
     <dune-highlighting
-      *ngIf="mouseHover === true"
+      *ngIf="!disabled && isActiveForPlayerCount && mouseHover === true"
       [width]="145"
       [height]="115"
       [left]="0"

@@ -55,6 +55,7 @@ export const effectRewards = [
   'spice-accumulation',
   'sword',
   'sword-master',
+  'tech',
   'tech-tile',
   'tech-tile-flip',
   'tech-tile-trash',

@@ -6,10 +6,11 @@
       <app-playerboard></app-playerboard>
       <div class="board">
         <div [class]="mode === 'game' ? 'overlay' : ''">
-          <app-dune-combat [useDreadnoughts]="!!ix"></app-dune-combat>
+          <app-dune-combat [useDreadnoughts]="useDreadnoughts"></app-dune-combat>
           <app-scoreboard [mode]="mode"></app-scoreboard>
-          <app-techboard [ix]="ix" [useTechTiles]="useTechTiles"></app-techboard>
-          <app-card-areas></app-card-areas>
+          <app-techboard [mode]="mode" [useTechTiles]="useTechTiles"></app-techboard>
+          <app-intrigueboard [mode]="mode"></app-intrigueboard>
+          <app-conflictboard [mode]="mode"></app-conflictboard>
           <dune-immediate-effects></dune-immediate-effects>
           @for (faction of factions; track $index) {
             <app-dune-faction [faction]="faction" [mode]="mode"></app-dune-faction>
@@ -25,12 +26,6 @@
           }
           @if (mode === 'game') {
             <dune-conflicts></dune-conflicts>
-            @if (roundPhase !== 'none') {
-              <dune-intrigues></dune-intrigues>
-            }
-            @if (useTechTiles) {
-              <dune-tech-tiles></dune-tech-tiles>
-            }
             @if (viewInitialized) {
               <ngx-particles [id]="'stars'" [options]="stars"></ngx-particles>
               <ngx-particles [id]="'ships'" [options]="ships"></ngx-particles>

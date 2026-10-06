@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
   z-index: 1;
   filter: drop-shadow(0px 0px 10px #5f3e1bab);
 }
@@ -65,12 +66,17 @@
 .location-owning-area {
   position: relative;
   user-select: none;
+  transition: 1s;
 }
 
 .location-owning-area:hover {
   cursor:
     url('/assets/images/cursors/pointer.png') 6 6,
     pointer;
+}
+
+.location-owning-area.blocked {
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.33)) brightness(0.66) opacity(0.5);
 }
 
 .location-owner-reward-area {

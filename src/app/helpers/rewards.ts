@@ -723,6 +723,10 @@ export function playerCanPayCosts(
       } else {
         canPayCosts = false;
       }
+    } else if (costType === 'leader-wound') {
+      if (gameState.playerResources['leader-heal'] < costAmount) {
+        canPayCosts = false;
+      }
     }
   }
 

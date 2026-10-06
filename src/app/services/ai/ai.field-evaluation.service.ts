@@ -58,14 +58,15 @@ export class AIFieldEvaluationService {
     gameState: GameState,
     playerLeader: LeaderDeckCard,
     aiPlayer: AIPlayer,
-    conflictEvaluation: number,
-    techEvaluation: number,
-    imperiumRowEvaluation: number,
     aiDifficulty: 'easy' | 'medium' | 'hard',
   ) {
     const boardFields = this.getFieldsWithAdjustedRewardsAndCosts(
       gameState,
-      this.getFieldsSplitByRewardChoices(this.boardSpacesService.boardSpaces),
+      this.getFieldsSplitByRewardChoices(
+        this.boardSpacesService.boardSpaces.filter((x) =>
+          x.activeForPlayerCount ? gameState.playersCount >= x.activeForPlayerCount : true,
+        ),
+      ),
     );
 
     let leaderGoalModifiers: RewardModifier[] = [];
@@ -73,16 +74,7 @@ export class AIFieldEvaluationService {
       leaderGoalModifiers = playerLeader.aiAdjustments.rewardEvaluationModifier(player, gameState);
     }
 
-    const fieldEvaluations = this.getEvaluatedFieldsByGoals(
-      player,
-      aiPlayer,
-      gameState,
-      leaderGoalModifiers,
-      boardFields,
-      conflictEvaluation,
-      techEvaluation,
-      imperiumRowEvaluation,
-    );
+    const fieldEvaluations = this.getEvaluatedFieldsByGoals(player, aiPlayer, gameState, leaderGoalModifiers, boardFields);
 
     const accessibleFields = this.getAccessibleFields(
       boardFields,
@@ -112,9 +104,6 @@ export class AIFieldEvaluationService {
     gameState: GameState,
     leaderGoalModifiers: RewardModifier[],
     boardSpaces: ActionField[],
-    conflictEvaluation: number,
-    techEvaluation: number,
-    imperiumRowEvaluation: number,
   ) {
     const fieldEvaluations: FieldEvaluation[] = [];
 
@@ -128,26 +117,34 @@ export class AIFieldEvaluationService {
       let boardSpaceEvaluation = 0;
       for (const reward of boardSpace.rewards) {
         if (isRewardEffect(reward)) {
-          const rewardEvaluation = this.aiEffectEvaluationService.getRewardEffectEvaluationForTurnState(
-            reward.type,
-            reward.amount ?? 1,
-            player,
-            gameState,
-            boardSpace,
-          );
+          const rewardAmount = reward.amount ?? 1;
+
+          const rewardEvaluation =
+            this.aiEffectEvaluationService.getRewardEffectEvaluationForTurnState(
+              reward.type,
+              rewardAmount,
+              player,
+              gameState,
+              boardSpace,
+            ) * rewardAmount;
+
           boardSpaceEvaluation += rewardEvaluation;
         }
       }
       if (boardSpace.costs) {
         if (playerCanPayCosts(boardSpace.costs, player, gameState)) {
           for (const cost of boardSpace.costs) {
-            const rewardEvaluation = this.aiEffectEvaluationService.getRewardEffectEvaluationForTurnState(
-              cost.type,
-              cost.amount ?? 1,
-              player,
-              gameState,
-              boardSpace,
-            );
+            const costAmount = cost.amount ?? 1;
+
+            const rewardEvaluation =
+              this.aiEffectEvaluationService.getRewardEffectEvaluationForTurnState(
+                cost.type,
+                costAmount,
+                player,
+                gameState,
+                boardSpace,
+              ) * costAmount;
+
             boardSpaceEvaluation -= rewardEvaluation;
           }
         } else {

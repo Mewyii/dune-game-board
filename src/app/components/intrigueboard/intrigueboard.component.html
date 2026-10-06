@@ -1,0 +1,14 @@
+<div class="faction-tile" [style.width]="showIntrigueDiscardPile ? '360px' : '165px'">
+  <div class="content">
+    <div class="card-area-container">
+      <div class="card-area"></div>
+      @if (showIntrigueDiscardPile) {
+        <div class="card-area"></div>
+      }
+    </div>
+    @if (mode === 'game') {
+      <dune-intrigues [showIntrigueDiscardPile]="showIntrigueDiscardPile"></dune-intrigues>
+    }
+  </div>
+  <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>
+</div>

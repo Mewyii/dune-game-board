@@ -49,9 +49,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Carthag',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'tech', amount: 2 }],
-      [{ type: 'tech' }],
+      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 4 }],
+      [{ type: 'solari', amount: 2 }],
     ],
   },
   {
@@ -72,7 +72,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'foldspace' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'solari', amount: 2 }],
       [{ type: 'water' }],
     ],
   },
@@ -114,7 +114,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'solari', amount: 2 }],
       [{ type: 'water' }],
     ],
   },
@@ -146,8 +146,8 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'victory-point' }, { type: 'location-control' }],
-      [{ type: 'victory-point' }, { type: 'tech' }],
-      [{ type: 'tech' }],
+      [{ type: 'victory-point' }, { type: 'solari', amount: 2 }],
+      [{ type: 'solari', amount: 2 }],
     ],
   },
   {
@@ -156,7 +156,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'focus' }],
-      [{ type: 'water' }, { type: 'tech' }, { type: 'focus' }],
+      [{ type: 'water' }, { type: 'solari', amount: 2 }, { type: 'focus' }],
       [{ type: 'focus' }],
     ],
   },
@@ -241,9 +241,9 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: "Tuek's Sietch",
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'tech' }],
-      [{ type: 'tech' }],
+      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'water' }, { type: 'solari', amount: 2 }],
+      [{ type: 'solari', amount: 2 }],
     ],
   },
   {
@@ -273,8 +273,8 @@ export const conflictsCustomExpert: Conflict[] = [
     boardSpaceId: 'Tsimpo',
     lvl: 1,
     rewards: [
-      [{ type: 'location-control' }, { type: 'tech' }],
-      [{ type: 'faction-influence-up-choice' }, { type: 'tech' }, { type: 'leader-heal' }],
+      [{ type: 'location-control' }, { type: 'solari', amount: 2 }],
+      [{ type: 'faction-influence-up-choice' }, { type: 'solari', amount: 2 }, { type: 'leader-heal' }],
       [{ type: 'leader-heal' }],
     ],
   },

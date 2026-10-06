@@ -38,6 +38,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   locations: DuneLocation[] = [];
   ix: ActionField | undefined;
   useTechTiles = false;
+  useDreadnoughts = false;
 
   constructor(
     private settingsService: SettingsService,
@@ -47,8 +48,9 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   ) {
     this.settingsService.gameContent$.subscribe((gameContent) => {
       this.factions = gameContent.factions;
-      this.ix = gameContent.ix;
+      this.ix = gameContent.useTech;
       this.useTechTiles = gameContent.useTechTiles;
+      this.useDreadnoughts = gameContent.useDreadnoughts;
     });
 
     this.settingsService.mode$.subscribe((mode) => {

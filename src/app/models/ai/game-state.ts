@@ -28,6 +28,7 @@ export type PlayerGameElementFactions = { [key in ActiveFactionType]: number };
 export type PlayerGameElementFieldAccess = { [key in ActionType]: number };
 
 export type GameState = Readonly<{
+  aiGameStateEvaluations?: { conflictEvaluation?: number; techEvaluation?: number; imperiumRowEvaluation?: number };
   playersCount: number;
   playerScore: PlayerScore;
   enemyScore: PlayerScore[];

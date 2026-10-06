@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ACTION_TYPE_PATHS } from 'src/app/helpers/action-types';
 
 import { getCardsFieldAccess } from 'src/app/helpers/cards';
@@ -70,6 +71,10 @@ export class DuneActionComponent implements OnInit, OnChanges {
 
   playerColors: { [key: number]: string } = {};
 
+  public isActiveForPlayerCount = true;
+
+  subscriptions: Subscription[] = [];
+
   constructor(
     public t: TranslateService,
     private gameManager: GameManager,
@@ -94,7 +99,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
     this.backgroundGradient =
       'linear-gradient(' + gradientColor1 + ', 5%, ' + gradientColor2 + ', 70%, ' + gradientColor3 + ')';
 
-    this.playerAgentsService.playersAgentsOnFields$.subscribe((agentsOnFields) => {
+    const agentsOnFieldsSub = this.playerAgentsService.playersAgentsOnFields$.subscribe((agentsOnFields) => {
       const playerIds = agentsOnFields.filter((x) => x.fieldId === this.actionField.title.en).map((x) => x.playerId);
       if (playerIds.length > 0) {
         const firstPlayerId = playerIds.shift()!;
@@ -114,7 +119,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
       }
     });
 
-    this.gameManager.activePlayerId$.subscribe((playerId) => {
+    const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((playerId) => {
       this.activePlayerId = playerId;
       const player = this.playersService.getPlayer(this.activePlayerId);
 
@@ -140,11 +145,11 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
 
-    this.cardsService.playerHands$.subscribe((playerHandCards) => {
+    const playerHandsSub = this.cardsService.playerHands$.subscribe((playerHandCards) => {
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
-    this.playersService.players$.subscribe((players) => {
+    const playersSub = this.playersService.players$.subscribe((players) => {
       const player = this.playersService.getPlayer(this.activePlayerId);
       this.activePlayerIsAI = player?.isAI ?? false;
 
@@ -152,18 +157,24 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
 
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
+
+      if (this.actionField.activeForPlayerCount) {
+        this.isActiveForPlayerCount = players.length >= this.actionField.activeForPlayerCount;
+      }
     });
 
-    this.boardSpaceService.accumulatedSpiceOnBoardSpaces$.subscribe((accumulatedSpice) => {
-      const spiceOnField = accumulatedSpice.find((x) => x.boardSpaceId === this.actionField.title.en);
-      this.accumulatedSpice = spiceOnField?.amount ?? 0;
-    });
+    const accumulatedSpiceOnBoardSpacesSub = this.boardSpaceService.accumulatedSpiceOnBoardSpaces$.subscribe(
+      (accumulatedSpice) => {
+        const spiceOnField = accumulatedSpice.find((x) => x.boardSpaceId === this.actionField.title.en);
+        this.accumulatedSpice = spiceOnField?.amount ?? 0;
+      },
+    );
 
-    this.playerScoreManager.playerScores$.subscribe((playerScores) => {
+    const playerScoresSub = this.playerScoreManager.playerScores$.subscribe((playerScores) => {
       this.isAccessibleByPlayer = this.activePlayerIsAI ? false : this.getPlayerAccessibility();
     });
 
-    this.gameModifierService.playerGameModifiers$.subscribe((x) => {
+    const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe((x) => {
       const fieldCostModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'fieldCost');
       this.actionCosts = getModifiedCostsForField(this.actionField, fieldCostModifiers);
 
@@ -180,7 +191,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
       this.playerFieldMarkers = this.gameModifierService.getPlayerFieldMarkers(this.actionField.title.en);
     });
 
-    this.playersService.playerColors$.subscribe((playerColors) => {
+    const playerColorsSub = this.playersService.playerColors$.subscribe((playerColors) => {
       this.playerColors = playerColors;
     });
 
@@ -192,6 +203,17 @@ export class DuneActionComponent implements OnInit, OnChanges {
         this.highCouncilSeats = players.filter((x) => x.hasCouncilSeat).map((x) => x.color);
       });
     }
+
+    this.subscriptions.push(
+      agentsOnFieldsSub,
+      activePlayerIdSub,
+      playerHandsSub,
+      playersSub,
+      accumulatedSpiceOnBoardSpacesSub,
+      playerScoresSub,
+      playerGameModifiersSub,
+      playerColorsSub,
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -213,8 +235,14 @@ export class DuneActionComponent implements OnInit, OnChanges {
       'linear-gradient(' + gradientColor1 + ', 5%, ' + gradientColor2 + ', 70%, ' + gradientColor3 + ')';
   }
 
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
   public onActionFieldClicked() {
-    if (this.disabled) {
+    if (this.disabled || !this.isActiveForPlayerCount) {
       return;
     }
 
@@ -224,12 +252,16 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   onPlayerMarkerRightClicked(playerId: number, field: ActionField) {
+    if (!this.isActiveForPlayerCount) {
+      return;
+    }
+
     this.gameManager.liftPlayerAgentFromField(playerId, field);
     return false;
   }
 
   onRewardClicked(fieldId: string, rewardType: EffectType) {
-    if (this.disabled) {
+    if (this.disabled || !this.isActiveForPlayerCount) {
       return;
     }
 
@@ -240,7 +272,7 @@ export class DuneActionComponent implements OnInit, OnChanges {
   }
 
   onRewardRightClicked(fieldId: string, rewardType: EffectType) {
-    if (this.disabled) {
+    if (this.disabled || !this.isActiveForPlayerCount) {
       return;
     }
 

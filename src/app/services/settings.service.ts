@@ -116,9 +116,9 @@ export class SettingsService {
   }
 
   getBoardSpaceColor(actionType: ActionType) {
-    const locationColor = this.settingsSubject.value.gameContent.locations
-      .flatMap((x) => x.locations)
-      .find((x) => x.actionField.actionType === actionType)?.color;
+    const locationColor = this.settingsSubject.value.gameContent.locations.find(
+      (x) => x.actionField.actionType === actionType,
+    )?.color;
 
     const factionColor = this.settingsSubject.value.gameContent.factions.find((x) => x.type === actionType)?.primaryColor;
 
@@ -241,13 +241,12 @@ export class SettingsService {
         result.push(field);
       }
     }
-    const locations = gameContent.locations.filter((x) => x.playerCount >= players).flatMap((x) => x.locations);
-    for (const location of locations) {
+    for (const location of gameContent.locations) {
       result.push(location.actionField);
     }
 
-    if (gameContent.ix) {
-      result.push(gameContent.ix);
+    if (gameContent.useTech) {
+      result.push(gameContent.useTech);
     }
 
     this.factionInfluenceRewards = gameContent.factions

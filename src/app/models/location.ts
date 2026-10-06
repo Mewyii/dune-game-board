@@ -19,8 +19,9 @@ export interface DuneLocation {
 export interface ActionField {
   title: LanguageString;
   actionType: ActionType;
-  costs?: EffectReward[];
   rewards: EffectChoiceConversionMultiplierOrReward[];
+  costs?: EffectReward[];
+  activeForPlayerCount?: number;
   conversionOptions?: EffectConversionMultiplierOrReward[][];
   ownerReward?: EffectReward;
   pathToImage: string;

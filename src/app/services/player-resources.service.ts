@@ -88,7 +88,6 @@ export class PlayerResourcesService {
       water: 0,
       spice: 0,
       solari: 0,
-      tech: 0,
       focus: 0,
       signet: 0,
       'leader-heal': 0,

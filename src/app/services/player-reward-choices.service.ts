@@ -34,7 +34,7 @@ export class PlayerRewardChoicesService {
   private playerRewardChoicesSubject = new BehaviorSubject<PlayerRewardChoices[]>([]);
   playerRewardChoices$ = this.playerRewardChoicesSubject.asObservable();
 
-  immediateEffectStackSubject = new BehaviorSubject<ImmediateEffect[]>([]);
+  private immediateEffectStackSubject = new BehaviorSubject<ImmediateEffect[]>([]);
   immediateEffectStack$ = this.immediateEffectStackSubject.asObservable();
 
   immediateEffects: EffectType[] = [

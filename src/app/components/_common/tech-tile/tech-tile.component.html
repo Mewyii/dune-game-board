@@ -1,12 +1,7 @@
 <div class="tech-tile">
   <div class="card-header font-medieval">
-    <div
-      *ngIf="card.faction"
-      class="faction-type-icon"
-      [style.background-image]="'url(' + (card.faction | factionTypePath) + ')'"
-    ></div>
-    <span>
-      {{ t.translateLS(card.name).toUpperCase() }}
+    <span class="card-title">
+      {{ t.translateLS(card.name).toLocaleUpperCase() }}
     </span>
   </div>
   <div

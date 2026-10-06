@@ -14,7 +14,7 @@
     </button>
   </div>
 </div>
-@if (intrigueDiscardPileTopCard) {
+@if (showIntrigueDiscardPile && intrigueDiscardPileTopCard) {
   <div [class]="'intrigue-discard-pile'">
     <dune-intrigue-card [card]="intrigueDiscardPileTopCard"></dune-intrigue-card>
   </div>

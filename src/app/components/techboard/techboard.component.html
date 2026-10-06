@@ -1,14 +1,13 @@
-@if (ix) {
+@if (useTechTiles) {
   <div class="faction-tile">
-    <div class="title-container">
-      <span class="title font-scifi">IX </span>
-    </div>
     <div class="content">
-      <app-dune-action [actionField]="ix" [backgroundColor]="'rgb(73, 82, 97)'"></app-dune-action>
-      @if (useTechTiles) {
-        <div class="card-area" [style]="'margin-top: 12px'"></div>
+      <div class="card-area-container">
         <div class="card-area"></div>
         <div class="card-area"></div>
+        <div class="card-area"></div>
+      </div>
+      @if (mode === 'game') {
+        <dune-tech-tiles></dune-tech-tiles>
       }
     </div>
     <div class="background-symbol" [style.background-image]="'url(assets/images/faction-symbols/Symbol_Ix.png)'"></div>

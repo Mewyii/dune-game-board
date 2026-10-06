@@ -23,17 +23,7 @@ export class TechTileConfiguratorComponent implements OnInit, OnDestroy {
 
   public totalTechTileAmount = 0;
 
-  public costs: { [type in number]: number } = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-  };
+  public costs = new Map<number, number>();
 
   constructor(
     public t: TranslateService,
@@ -45,24 +35,15 @@ export class TechTileConfiguratorComponent implements OnInit, OnDestroy {
     const techTilesSub = this.techTilesService.techTiles$.subscribe((techTiles) => {
       this.totalTechTileAmount = 0;
 
-      this.costs = {
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-      };
+      this.costs.clear();
 
       this.techTiles = techTiles;
 
       for (const techTile of techTiles) {
         this.totalTechTileAmount++;
 
-        this.costs[techTile.costs]++;
+        const currentAmount = this.costs.get(techTile.costs) ?? 0;
+        this.costs.set(techTile.costs, currentAmount + 1);
       }
     });
 

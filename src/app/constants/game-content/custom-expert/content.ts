@@ -2,19 +2,13 @@ import { GameContent } from '../../board-settings';
 import { conflictsCustomExpert } from './conflicts';
 import { customCardsCustomExpert } from './custom-cards';
 import { factionsCustomExpert } from './factions';
-import { ixCustomExpert } from './ix';
-import { fivePlayerLocations, threePlayerLocations, zeroPlayerLocations } from './locations';
+import { locations } from './locations';
 
 export const gameContentCustomExpert: GameContent = {
   name: 'Sands of Arrakis',
   factions: factionsCustomExpert,
-  locations: [
-    { playerCount: 0, locations: zeroPlayerLocations },
-    { playerCount: 3, locations: threePlayerLocations },
-    { playerCount: 5, locations: fivePlayerLocations },
-  ],
+  locations: locations,
   conflicts: conflictsCustomExpert,
-  ix: ixCustomExpert,
   useTechTiles: true,
   useDreadnoughts: true,
   finaleTrigger: [
@@ -29,7 +23,7 @@ export const gameContentCustomExpert: GameContent = {
   ],
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 5,
-  maxPlayerDreadnoughtCount: 2,
+  maxPlayerDreadnoughtCount: 1,
   maxPlayerIntrigueCount: 3,
   highCouncilPersuasion: 4,
   startingResources: [{ type: 'leader-heal', amount: 3 }],

@@ -77,19 +77,19 @@ export class BoardEvaluationComponent implements OnInit {
       const amount = reward.amount ?? 1;
       switch (reward.type) {
         case 'water':
-          value += 2.25 * amount;
+          value += 2.4 * amount;
           break;
         case 'spice':
-          value += 2 * amount;
+          value += 2.2 * amount;
           break;
         case 'solari':
           value += 1 * amount;
           break;
         case 'troop':
           if (rewards.some((x) => x.type === 'combat')) {
-            value += 2.25 * amount;
+            value += 1.9 * amount;
           } else {
-            value += 1.5 * amount;
+            value += 1.25 * amount;
           }
           break;
         case 'loose-troop':
@@ -97,9 +97,9 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'dreadnought':
           if (rewards.some((x) => x.type === 'combat')) {
-            value += 9 * amount;
+            value += 14 * amount;
           } else {
-            value += 7 * amount;
+            value += 10 * amount;
           }
           break;
         case 'card-draw':
@@ -119,10 +119,10 @@ export class BoardEvaluationComponent implements OnInit {
           value += 1.75 * amount;
           break;
         case 'persuasion':
-          value += 1.5 * amount;
+          value += 1.6 * amount;
           break;
         case 'foldspace':
-          value += 1.75 * amount;
+          value += 1.8 * amount;
           break;
         case 'council-seat-small':
         case 'council-seat-large':

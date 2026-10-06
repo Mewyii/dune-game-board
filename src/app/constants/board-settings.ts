@@ -12,6 +12,7 @@ import { GameState } from '../models/ai';
 import { Conflict } from '../models/conflict';
 import { CustomCard } from '../models/imperium-card';
 import { Player } from '../models/player';
+import { TechTileDeckCard } from '../services/tech-tiles.service';
 import { gameContentCustomExpert } from './game-content';
 
 export interface VictoryPointReward {
@@ -34,6 +35,12 @@ export interface AI {
     gameState: GameState,
     game: AIRewardEffectGameInterface,
     targetBoardSpace?: ActionField,
+  ) => number;
+  techTileBuyEvaluation?: (
+    techTile: TechTileDeckCard,
+    player: Player,
+    gameState: GameState,
+    game: AIRewardEffectGameInterface,
   ) => number;
 }
 
@@ -58,6 +65,15 @@ export interface AIRewardEffectGameInterface {
     ignoreConversionCosts?: boolean,
     targetBoardSpace?: ActionField,
   ) => number;
+  getRewardArrayEvaluation: (rewards: EffectReward[], player: Player, gameState: GameState) => number;
+  getRewardEffectEvaluation: (rewardType: EffectRewardType, player: Player, gameState: GameState) => number;
+  getRewardEffectEvaluationForTurnState: (
+    rewardType: EffectRewardType,
+    rewardAmount: number,
+    player: Player,
+    gameState: GameState,
+    targetBoardSpace?: ActionField,
+  ) => number;
 }
 
 export type CardAcquiringPlacementType = 'hand' | 'below-deck' | 'above-deck' | 'discard-pile';
@@ -72,10 +88,10 @@ export interface CardAcquiringRules {
 export interface GameContent {
   name: string;
   factions: Faction[];
-  locations: { playerCount: number; locations: DuneLocation[] }[];
+  locations: DuneLocation[];
   conflicts: Conflict[];
   conflictsMode: 'random' | 'pick';
-  ix?: ActionField;
+  useTech?: ActionField;
   useTechTiles: boolean;
   useDreadnoughts: boolean;
   victoryPointBoni?: VictoryPointReward[];

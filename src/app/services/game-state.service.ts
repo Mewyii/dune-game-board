@@ -11,6 +11,7 @@ import {
 import { ActionType, EffectReward } from '../models';
 import { GameState, PlayerGameElementFactions, PlayerGameElementFieldAccess, PlayerGameElementRewards } from '../models/ai';
 import { Player } from '../models/player';
+import { AIPlayersService } from './ai/ai-players.service';
 import { BoardSpacesService, SpiceAccumulation } from './board-spaces.service';
 import { CardsService } from './cards.service';
 import { CombatManager } from './combat-manager.service';
@@ -50,6 +51,7 @@ export class GameStateService {
     private conflictsService: ConflictsService,
     private duneEventsManager: DuneEventsManager,
     private playersResourcesService: PlayerResourcesService,
+    private aiPlayersService: AIPlayersService,
   ) {}
 
   getGameState(
@@ -305,6 +307,7 @@ export class GameStateService {
     const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(player.id);
 
     return {
+      aiGameStateEvaluations: this.aiPlayersService.getAIPlayer(player.id)?.gameStateEvaluations,
       playersCount: this.playersService.getPlayerCount(),
       currentRound: currentRound,
       currentRoundPhase: currentRoundPhase,

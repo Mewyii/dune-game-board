@@ -189,9 +189,6 @@ export class EffectsService {
         this.audioManager.playSound('spice', rewardAmount);
       } else if (rewardType === 'focus') {
         this.audioManager.playSound('focus');
-      } else if (rewardType === 'tech') {
-        this.audioManager.playSound('tech-agent', rewardAmount);
-        this.turnInfoService.updatePlayerTurnInfo(playerId, { canBuyTech: true });
       } else if (rewardType === 'leader-heal') {
       } else if (rewardType === 'signet') {
         this.audioManager.playSound('signet');
@@ -203,6 +200,9 @@ export class EffectsService {
         rewardAmount,
         additionalInfos?.valuesCanBeNegative,
       );
+    } else if (rewardType === 'tech') {
+      this.audioManager.playSound('tech-agent', rewardAmount);
+      this.turnInfoService.updatePlayerTurnInfo(playerId, { canBuyTech: true });
     } else if (rewardType === 'shipping') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { shippingAmount: 1 });
     } else if (isFactionScoreRewardType(rewardType)) {

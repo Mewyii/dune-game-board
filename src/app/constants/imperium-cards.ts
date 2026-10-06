@@ -1087,8 +1087,10 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     agentEffects: [
       {
+        type: 'card-draw',
+      },
+      {
         type: 'tech',
-        amount: 2,
       },
     ],
     revealEffects: [
@@ -3685,7 +3687,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'troop',
       },
       {
-        type: 'tech',
+        type: 'troop',
       },
     ],
     agentEffects: [
@@ -3714,6 +3716,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -6147,12 +6150,6 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'spice',
       },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'tech',
-      },
     ],
   },
   {
@@ -6309,36 +6306,38 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'large',
+    revealEffectSize: 'medium',
     customRevealEffect: {
       en: '',
       de: '',
       fontSize: 'medium',
     },
-    buyEffects: [
+    buyEffects: [],
+    agentEffects: [
       {
         type: 'solari',
         amount: 2,
       },
     ],
-    agentEffects: [
+    revealEffects: [
       {
-        type: 'spice',
+        type: 'persuasion',
+        amount: 2,
+      },
+      {
+        type: 'helper-separator',
+      },
+      {
+        type: 'solari',
       },
       {
         type: 'helper-trade',
       },
       {
         type: 'tech',
-        amount: 2,
       },
     ],
-    revealEffects: [
-      {
-        type: 'solari',
-        amount: 2,
-      },
-    ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -6473,20 +6472,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'helper-or',
-      },
-      {
-        type: 'tech',
-        amount: 2,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'trash-self',
-      },
-      {
-        type: 'dreadnought',
+        type: 'solari',
       },
     ],
   },
@@ -6556,13 +6542,6 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'spice',
       },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'tech',
-        amount: 2,
-      },
     ],
     revealEffects: [
       {
@@ -6570,7 +6549,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'spice',
+        type: 'tech',
       },
       {
         type: 'sword',
@@ -6839,8 +6818,13 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'tech',
-        amount: 2,
+        type: 'dreadnought-retreat',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'agent-lift',
       },
     ],
     revealEffects: [
@@ -7210,9 +7194,12 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'water',
       },
       {
+        type: 'troop',
+      },
+      {
         type: 'tech',
-        amount: 2,
       },
     ],
+    rarity: 'normal',
   },
 ];

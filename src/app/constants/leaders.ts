@@ -685,11 +685,12 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'tech',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'troop',
-        amount: 3,
+        amount: 2,
       },
     ],
     passiveEffects: [],
@@ -733,11 +734,12 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'tech',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'troop',
-        amount: 3,
+        amount: 2,
       },
     ],
     passiveEffects: [

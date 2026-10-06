@@ -40,6 +40,8 @@ export class DuneLocationComponent implements OnInit, OnDestroy {
   public owner: Player | undefined;
   public leaderInitials = '';
 
+  public isActiveForPlayerCount = true;
+
   constructor(
     private locationsService: LocationsService,
     private playersService: PlayersService,
@@ -66,7 +68,13 @@ export class DuneLocationComponent implements OnInit, OnDestroy {
       this.activePlayerId = activePlayerId;
     });
 
-    this.subscriptions.push(locationOwnerIdSub, activePlayerIdSub);
+    const playersSub = this.playersService.players$.subscribe((players) => {
+      if (this.location.actionField.activeForPlayerCount) {
+        this.isActiveForPlayerCount = players.length >= this.location.actionField.activeForPlayerCount;
+      }
+    });
+
+    this.subscriptions.push(locationOwnerIdSub, activePlayerIdSub, playersSub);
   }
 
   ngOnDestroy(): void {

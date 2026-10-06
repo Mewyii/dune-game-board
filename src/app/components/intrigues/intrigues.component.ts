@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
@@ -17,6 +17,7 @@ import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-pr
   standalone: false,
 })
 export class IntriguesComponent implements OnInit, OnDestroy {
+  @Input() showIntrigueDiscardPile = false;
   subscriptions: Subscription[] = [];
 
   activePlayerId = 0;

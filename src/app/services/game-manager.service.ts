@@ -251,7 +251,6 @@ export class GameManager {
 
     this.roundService.resetRound();
     this.roundService.setRoundPhase('select leaders');
-    this.startingPlayerIdSubject.next(1);
     this.activePlayerIdSubject.next(1);
 
     for (const player of newPlayers) {
@@ -295,17 +294,22 @@ export class GameManager {
     this.roundService.setFirstRound();
     this.roundService.setRoundPhase('agent-placement');
 
-    for (const player of this.playersService.getPlayers()) {
+    const players = this.playersService.getPlayers();
+
+    for (const player of players) {
       this.resolveLeaderEffects(player.id, 'timing-game-start');
       this.resolveLeaderEffects(player.id, 'timing-round-start', true);
     }
 
+    const firstActivePlayerId = Math.floor(Math.random() * players.length) + 1;
+
+    this.startingPlayerIdSubject.next(firstActivePlayerId);
     this.playersService.increaseTurnNumberForPlayer(1);
-    this.activePlayerIdSubject.next(1);
-    const player = this.playersService.getPlayer(1);
+    this.activePlayerIdSubject.next(firstActivePlayerId);
+    const player = this.playersService.getPlayer(firstActivePlayerId);
     if (player?.isAI) {
       this.setActiveAIPlayer(this.startingPlayerId);
-      this.aiManager.setPreferredFieldsForAIPlayer(player.id);
+      this.aiManager.setPreferredFieldsForAIPlayer(this.startingPlayerId);
     }
   }
 
@@ -774,7 +778,7 @@ export class GameManager {
 
     if (this.roundService.currentRoundPhase === 'agent-placement') {
       if (player.turnState === 'agent-placement') {
-        this.cardsService.discardPlayedPlayerCard(this.activePlayerId);
+        this.cardsService.discardPlayedPlayerCard(playerId);
       } else if (player.turnState === 'reveal') {
         const playerHand = this.cardsService.getPlayerHand(player.id);
         if (playerHand && playerHand.cards) {
@@ -958,7 +962,7 @@ export class GameManager {
       this.playerRewardChoicesService.removePlayerRewardChoice(playerId, intrigueTrashTodo.id);
     }
 
-    this.intriguesService.trashPlayerIntrigue(this.activePlayerId, intrigue.id);
+    this.intriguesService.trashPlayerIntrigue(playerId, intrigue.id);
     this.loggingService.logPlayerTrashedIntrigue(playerId, this.t.translateLS(intrigue.name));
   }
 
@@ -1712,7 +1716,7 @@ export class GameManager {
         this.buyTechTileForPlayer(
           player,
           desiredTechTile,
-          this.playersResourcesService.getPlayerResourceAmount(player.id, 'tech'),
+          this.playersResourcesService.getPlayerResourceAmount(player.id, 'solari'),
           costModifier,
         );
       }
@@ -1904,12 +1908,11 @@ export class GameManager {
     const costModifiers = this.gameModifiersService.getPlayerGameModifier(playerId, 'techTiles');
     const costModifier = getTechTileCostModifier(techTile, costModifiers);
 
-    const availablePlayerSpice = this.playersResourcesService.getPlayerResourceAmount(playerId, 'spice');
-    const availablePlayerTech = this.playersResourcesService.getPlayerResourceAmount(playerId, 'tech');
-    const playerCanAffordTechTile = techTile.costs + costModifier <= availablePlayerSpice + availablePlayerTech;
+    const availablePlayerSolari = this.playersResourcesService.getPlayerResourceAmount(playerId, 'solari');
+    const playerCanAffordTechTile = techTile.costs + costModifier <= availablePlayerSolari;
 
     if (playerCanAffordTechTile) {
-      this.buyTechTileForPlayer(player, techTile, availablePlayerTech, 0);
+      this.buyTechTileForPlayer(player, techTile, availablePlayerSolari, 0);
     } else {
       this.notificationService.showWarning(this.t.translate('buyTechTileWarningNotEnoughTech'));
     }
@@ -2055,16 +2058,16 @@ export class GameManager {
     };
   }
 
-  private buyTechTileForPlayer(player: Player, techTile: TechTileDeckCard, techAmount: number, discount: number) {
+  private buyTechTileForPlayer(player: Player, techTile: TechTileDeckCard, solariAmount: number, discount: number) {
     const effectiveCosts = techTile.costs - discount;
 
-    if (effectiveCosts > techAmount) {
+    if (effectiveCosts > solariAmount) {
       this.notificationService.showWarning(this.t.translate('playerboardWarningNotEnoughResources'));
     }
 
     if (effectiveCosts > 0) {
-      const techCosts = effectiveCosts > techAmount ? techAmount : effectiveCosts;
-      this.playersResourcesService.removeResourceFromPlayer(player.id, 'tech', techCosts);
+      const techCosts = effectiveCosts > solariAmount ? solariAmount : effectiveCosts;
+      this.playersResourcesService.removeResourceFromPlayer(player.id, 'solari', techCosts);
       this.loggingService.logPlayerResourcePaid(player.id, 'tech', techCosts);
     }
 

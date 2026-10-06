@@ -7,10 +7,12 @@ import {
   playerHasUncontestedAlliance,
 } from 'src/app/helpers/ai';
 import { getPlayerCombatStrength, getPlayerdreadnoughtCount } from 'src/app/helpers/combat';
-import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modifiers';
+import { getModifiedLocationTakeoverTroopCosts, getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
+import { getRewardArrayAIInfos } from 'src/app/helpers/rewards';
 import { ActionField, EffectRewardType } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
+import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
 import { AIRewardEffectGameInterface } from '../../board-settings';
 
 export function getRewardEffectEvaluation(
@@ -22,7 +24,7 @@ export function getRewardEffectEvaluation(
   switch (rewardType) {
     case 'water':
       return (
-        2.7 +
+        2.8 +
         0.02 * gameState.playerTechTilesConversionCosts.water -
         (player.hasSwordmaster ? 0.05 : 0) -
         (player.hasCouncilSeat ? 0.05 : 0) -
@@ -47,7 +49,6 @@ export function getRewardEffectEvaluation(
         1.3 +
         0.01 * gameState.playerTechTilesConversionCosts.solari -
         (player.hasSwordmaster ? 0.2 : 0) -
-        (player.hasCouncilSeat ? 0.2 : 0) -
         0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
         0.04 * (gameState.currentRound - 1) -
         0.01 * gameState.playerCardsRewards.solari -
@@ -55,11 +56,10 @@ export function getRewardEffectEvaluation(
       );
     case 'tech':
       return (
-        1.9 +
-        0.01 * gameState.playerTechTilesConversionCosts.tech -
+        2 +
         0.025 * (gameState.currentRound - 1) -
-        0.01 * gameState.playerCardsRewards.tech -
-        0.01 * gameState.playerTechTilesRewards.tech
+        0.05 * gameState.playerCardsRewards.tech -
+        0.05 * gameState.playerTechTilesRewards.tech
       );
     case 'troop':
       return (
@@ -68,11 +68,11 @@ export function getRewardEffectEvaluation(
     case 'dreadnought':
       const maxDreadnoughts = game.settings.maxPlayerDreadnoughtCount;
       return getPlayerdreadnoughtCount(gameState.playerCombatUnits) < maxDreadnoughts
-        ? 8 + 0.2 * (gameState.currentRound - 1)
+        ? 14 + 0.2 * (gameState.currentRound - 1)
         : 0;
     case 'card-draw':
       return (
-        1.6 +
+        1.8 +
         0.1 * gameState.playerAgentsAvailable -
         0.075 * gameState.playerCardsBought +
         0.05 * gameState.playerCardsTrashed +
@@ -80,15 +80,20 @@ export function getRewardEffectEvaluation(
         0.01 * gameState.playerCardsRewards['card-draw']
       );
     case 'card-discard':
-      return -1.5 - 0.05 * gameState.playerCardsBought - 0.075 * gameState.playerCardsTrashed;
+      return (
+        -1.6 -
+        0.05 * gameState.playerCardsBought -
+        0.075 * gameState.playerCardsTrashed +
+        0.01 * gameState.playerCardsRewards['card-draw']
+      );
     case 'card-trash':
     case 'card-trash-from-hand':
     case 'card-trash-in-play':
     case 'focus':
       return (
-        1.9 +
-        0.125 * gameState.playerCardsBought -
-        0.25 * gameState.playerCardsTrashed -
+        1.6 +
+        0.2 * gameState.playerCardsBought -
+        0.3 * gameState.playerCardsTrashed -
         0.02 * gameState.playerCardsRewards.focus
       );
     case 'card-draw-or-destroy':
@@ -106,18 +111,18 @@ export function getRewardEffectEvaluation(
       );
     case 'council-seat-small':
     case 'council-seat-large':
-      return !player.hasCouncilSeat ? 12 - 0.05 * (gameState.currentRound - 1) : 0;
+      return !player.hasCouncilSeat ? 5.75 - 0.0125 * (gameState.currentRound - 1) : 0;
     case 'sword-master':
     case 'agent':
-      return !player.hasSwordmaster ? 15 - 1 * (gameState.currentRound - 1) : 0;
+      return !player.hasSwordmaster ? 20 - 0.075 * (gameState.currentRound - 1) : 0;
     case 'spice-accumulation':
       return 0;
     case 'victory-point':
-      return 7.5 + 1.75 * (gameState.currentRound - 1);
+      return 8 + 1.5 * (gameState.currentRound - 1);
     case 'sword':
       return 1 + 0.05 * (gameState.currentRound - 1);
     case 'combat':
-      return 1.4 + 0.125 * (gameState.currentRound - 1);
+      return 1.5 + 0.125 * (gameState.currentRound - 1);
     case 'intrigue-trash':
       return -1.2;
     case 'intrigue-draw':
@@ -125,22 +130,22 @@ export function getRewardEffectEvaluation(
     case 'shipping':
       return 2.7 - 0.1 * gameState.playerResources.water - 0.1 * gameState.playerResources.spice;
     case 'faction-influence-up-choice':
-      return 4 + 0.1 * (gameState.currentRound - 1);
+      return 3.5 + 0.1 * (gameState.currentRound - 1);
     case 'faction-influence-up-emperor':
       return gameState.playerScore.emperor < gameState.gameSettings.factionInfluenceMaxScore
-        ? 3 - 0.1 * gameState.playerScore.emperor - (playerHasUncontestedAlliance(gameState, 'emperor') ? 1.5 : 0)
+        ? 2.75 - 0.1 * gameState.playerScore.emperor - (playerHasUncontestedAlliance(gameState, 'emperor') ? 1.5 : 0)
         : 0;
     case 'faction-influence-up-guild':
       return gameState.playerScore.guild < gameState.gameSettings.factionInfluenceMaxScore
-        ? 3 - 0.1 * gameState.playerScore.guild - (playerHasUncontestedAlliance(gameState, 'guild') ? 1.5 : 0)
+        ? 2.75 - 0.1 * gameState.playerScore.guild - (playerHasUncontestedAlliance(gameState, 'guild') ? 1.5 : 0)
         : 0;
     case 'faction-influence-up-bene':
       return gameState.playerScore.bene < gameState.gameSettings.factionInfluenceMaxScore
-        ? 3 - 0.1 * gameState.playerScore.bene - (playerHasUncontestedAlliance(gameState, 'bene') ? 1.5 : 0)
+        ? 2.75 - 0.1 * gameState.playerScore.bene - (playerHasUncontestedAlliance(gameState, 'bene') ? 1.5 : 0)
         : 0;
     case 'faction-influence-up-fremen':
       return gameState.playerScore.fremen < gameState.gameSettings.factionInfluenceMaxScore
-        ? 3 - 0.1 * gameState.playerScore.fremen - (playerHasUncontestedAlliance(gameState, 'fremen') ? 1.5 : 0)
+        ? 2.75 - 0.1 * gameState.playerScore.fremen - (playerHasUncontestedAlliance(gameState, 'fremen') ? 1.5 : 0)
         : 0;
     case 'faction-influence-up-twice-choice':
       return 7 + 0.2 * (gameState.currentRound - 1);
@@ -225,8 +230,9 @@ export function getRewardEffectEvaluationForTurnState(
 
   switch (rewardType) {
     case 'water':
-      if (gameState.playerResources.water >= 4) {
-        return value * 0.1;
+      const excessWater = gameState.playerResources.water - 3;
+      if (excessWater > 0) {
+        return value / (1 + excessWater);
       }
 
       return (
@@ -236,8 +242,9 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.water
       );
     case 'spice':
-      if (gameState.playerResources.spice >= 8) {
-        return value * 0.1;
+      const excessSpice = gameState.playerResources.spice - 7;
+      if (excessSpice > 0) {
+        return value / (1 + excessSpice);
       }
 
       return (
@@ -247,8 +254,9 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.spice
       );
     case 'solari':
-      if (gameState.playerResources.solari >= 12) {
-        return value * 0.1;
+      const excessSolari = gameState.playerResources.solari - 11;
+      if (excessSolari > 0) {
+        return value / (1 + excessSolari);
       }
 
       return (
@@ -258,16 +266,31 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.solari
       );
     case 'tech':
-      if (gameState.playerResources.solari >= 10) {
-        return value * 0.1;
+      if (gameState.playerTurnInfos?.canBuyTech) {
+        return 0;
       }
 
-      return (
-        value +
-        0.2 * gameState.playerResources.tech +
-        0.25 * gameState.playerIntriguesConversionCosts.tech +
-        0.25 * gameState.playerTechTilesConversionCosts.tech
+      const costModifiers = gameState.playerGameModifiers?.techTiles;
+
+      const buyableTechTiles = gameState.availableTechTiles;
+      const availablePlayerSolari = gameState.playerResources.solari;
+      const affordableTechTiles = buyableTechTiles.filter(
+        (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerSolari,
       );
+
+      if (affordableTechTiles.length > 0) {
+        let highestTechTileEvaluation = 0;
+        for (const techTile of affordableTechTiles) {
+          const evaluation = getTechTileBuyEvaluation(techTile, player, gameState, game);
+          if (evaluation > highestTechTileEvaluation) {
+            highestTechTileEvaluation = evaluation;
+          }
+        }
+
+        return value * 0.1 * highestTechTileEvaluation;
+      }
+
+      return 0;
     case 'troop':
       const combatBoardSpace = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
       return (
@@ -294,7 +317,7 @@ export function getRewardEffectEvaluationForTurnState(
         return value * efficiency;
       }
     case 'card-discard':
-      return value + 0.033 * gameState.playerHandCards.length;
+      return value + 0.025 * gameState.playerHandCards.length;
     case 'card-trash':
     case 'card-trash-from-hand':
     case 'card-trash-in-play':
@@ -310,9 +333,25 @@ export function getRewardEffectEvaluationForTurnState(
 
       return value - 0.33 * gameState.playerIntrigueCount;
     case 'persuasion':
-      return value;
+      return value * (gameState.aiGameStateEvaluations?.imperiumRowEvaluation ?? 1);
     case 'foldspace':
-      return (hasAgentsLeftToPlace ? value : 0.25 * value) + 0.1 * (7 - gameState.playerCardsFieldAccess.length);
+      let importantFieldAccessValue = 0;
+      if (!player.hasSwordmaster) {
+        if (gameState.playerResources.solari > 9 && !gameState.playerHandCardsFieldAccess.some((x) => x === 'landsraad')) {
+          importantFieldAccessValue += 5;
+        }
+      }
+      if (!player.hasCouncilSeat) {
+        if (gameState.playerResources.spice > 5 && !gameState.playerHandCardsFieldAccess.some((x) => x === 'landsraad')) {
+          importantFieldAccessValue += 5;
+        }
+      }
+
+      return (
+        (hasAgentsLeftToPlace ? value : 0.1 * value) +
+        0.1 * (7 - gameState.playerHandCardsFieldAccess.length) +
+        importantFieldAccessValue
+      );
     case 'council-seat-small':
     case 'council-seat-large':
       return value;
@@ -369,7 +408,11 @@ export function getRewardEffectEvaluationForTurnState(
 
       const participateDesire = getParticipateInCombatDesire(gameState);
       const winDesire = getWinCombatDesire(gameState);
-      return (winDesire > participateDesire ? winDesire : participateDesire) * 2.5;
+      return (
+        (winDesire > participateDesire ? winDesire : participateDesire) *
+        (gameState.aiGameStateEvaluations?.conflictEvaluation ?? 1) *
+        8
+      );
     case 'intrigue-trash':
       return value;
     case 'intrigue-draw':
@@ -563,4 +606,38 @@ export function getRewardEffectEvaluationForTurnState(
     default:
       return value;
   }
+}
+
+export function getTechTileBuyEvaluation(
+  techTile: TechTileDeckCard,
+  player: Player,
+  gameState: GameState,
+  game: AIRewardEffectGameInterface,
+) {
+  const techCostEvaluation = game.getRewardEffectEvaluation('solari', player, gameState) * techTile.costs;
+  const playerSolariAmount = gameState.playerResources.solari;
+
+  let evaluationValue = -techCostEvaluation + playerSolariAmount * 0.5;
+
+  if (techTile.buyEffects) {
+    const { hasRewardChoice: hasRewardOptions, hasRewardConversion } = getRewardArrayAIInfos(techTile.buyEffects);
+    if (!hasRewardOptions && !hasRewardConversion) {
+      evaluationValue += game.getRewardArrayEvaluation(techTile.buyEffects, player, gameState);
+    }
+  }
+  if (techTile.structuredEffects) {
+    const differentTechTileActivations = techTile.effects?.filter((x) => x.type === 'tech-tile-flip').length ?? 0;
+    const differentTechTileActivationsFactor = differentTechTileActivations > 0 ? differentTechTileActivations * 0.66 : 1;
+    const value = game.getStructuredEffectsEvaluation(techTile.structuredEffects, player, gameState);
+    evaluationValue += (value / differentTechTileActivationsFactor) * ((10 - gameState.currentRound) / 1.66);
+  }
+  if (techTile.customEffect?.en) {
+    if (techTile.aiEvaluation) {
+      evaluationValue += techTile.aiEvaluation(player, gameState);
+    } else {
+      evaluationValue += 0.25 * techTile.costs;
+    }
+  }
+
+  return evaluationValue;
 }

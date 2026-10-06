@@ -55,12 +55,9 @@ export class BoardSpacesService {
       const gameContent = this.settingsService.gameContent;
 
       this.boardSpacesSubject.next([
-        ...this.settingsService.gameContent.locations
-          .filter((x) => x.playerCount <= players.length)
-          .flatMap((x) => x.locations)
-          .map((x) => x.actionField),
+        ...this.settingsService.gameContent.locations.map((x) => x.actionField),
         ...gameContent.factions.flatMap((x) => x.actionFields),
-        ...(gameContent.ix ? [gameContent.ix] : []),
+        ...(gameContent.useTech ? [gameContent.useTech] : []),
       ]);
 
       this.unblockableBoardSpaces = this.boardSpaces.filter((x) => x.isNonBlockingField);
@@ -74,12 +71,9 @@ export class BoardSpacesService {
       const players = this.playersService.getPlayers();
 
       this.boardSpacesSubject.next([
-        ...gameContent.locations
-          .filter((x) => x.playerCount <= players.length)
-          .flatMap((x) => x.locations)
-          .map((x) => x.actionField),
+        ...gameContent.locations.map((x) => x.actionField),
         ...gameContent.factions.flatMap((x) => x.actionFields),
-        ...(gameContent.ix ? [gameContent.ix] : []),
+        ...(gameContent.useTech ? [gameContent.useTech] : []),
       ]);
 
       this.unblockableBoardSpaces = this.boardSpaces.filter((x) => x.isNonBlockingField);

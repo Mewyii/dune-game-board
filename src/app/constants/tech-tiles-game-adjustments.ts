@@ -71,8 +71,8 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           (gameState.playerDiscardPileCards?.filter((x) => x.faction === 'guild').length ?? 0);
 
         if (playerGuildCardAmount > 2) {
-          game.addRewardToPlayer(player.id, { type: 'tech', amount: 2 });
-          game.addRewardToPlayer(player.id, { type: 'solari' });
+          game.addRewardToPlayer(player.id, { type: 'tech' });
+          game.addRewardToPlayer(player.id, { type: 'solari', amount: 2 });
         } else if (playerGuildCardAmount > 1) {
           game.addRewardToPlayer(player.id, { type: 'tech' });
         } else if (playerGuildCardAmount > 0) {
@@ -519,14 +519,14 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     customTimedActivatedFunction: {
       timing: 'timing-turn-start',
       function: (player, gameState, game, gameElement) => {
-        if (gameState.playerResources.tech < 1) {
+        if (gameState.playerResources.solari < 2) {
           return;
         }
 
         for (const enemy of gameState.enemyPlayers) {
           game.removePlayerShipsFromCombat(enemy.id, 1);
         }
-        game.payCostForPlayer(player.id, { type: 'tech' });
+        game.payCostForPlayer(player.id, { type: 'solari', amount: 2 });
         game.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
       },
     },
@@ -536,7 +536,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
         const enemiesWithDreadnoughtsInCombat = gameState.enemyCombatUnits.filter((x) => x.shipsInCombat > 0).length;
         if (
           enemiesWithDreadnoughtsInCombat < 1 ||
-          gameState.playerResources.tech < 1 ||
+          gameState.playerResources.solari < 2 ||
           gameState.playerAgentsAvailable > 0
         ) {
           return;
@@ -546,7 +546,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           for (const enemy of gameState.enemyPlayers) {
             game.removePlayerShipsFromCombat(enemy.id, 1);
           }
-          game.payCostForPlayer(player.id, { type: 'tech' });
+          game.payCostForPlayer(player.id, { type: 'solari', amount: 2 });
           game.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
         }
       },

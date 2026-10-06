@@ -1,7 +1,7 @@
 .intrigue-card {
   position: absolute;
-  bottom: 635px;
-  right: 200px;
+  bottom: -2px;
+  right: -4px;
   border-radius: 10px;
   background-size: 1000px;
   height: 255px;
@@ -10,10 +10,10 @@
   border: 0px solid #2d0505;
   border-right: 2px solid #2d0505;
   border-top: 2px solid #2d0505;
+  z-index: 2;
 }
 
 .intrigue-card.background {
-  right: 15px;
   background-size: cover;
   background-position: center;
   background-image: url('/assets/images/intrigues/_backside.jpg');
@@ -48,8 +48,8 @@
 
 .intrigue-discard-pile {
   position: absolute;
-  bottom: 635px;
-  right: 200px;
+  bottom: -2px;
+  right: 188px;
   border-radius: 10px;
   background-size: 1000px;
   height: 255px;
@@ -59,6 +59,7 @@
   border-right: 2px solid #2d0505;
   border-top: 2px solid #2d0505;
   transition: 0.7s;
+  z-index: 2;
 }
 
 .intrigue-discard-pile:hover,

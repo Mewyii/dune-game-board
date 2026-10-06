@@ -35,19 +35,11 @@ export class LocationsService {
     });
 
     this.playersService.players$.subscribe((players) => {
-      this.locationsSubject.next(
-        this.settingsService.gameContent.locations
-          .filter((x) => x.playerCount <= players.length)
-          .flatMap((x) => x.locations),
-      );
+      this.locationsSubject.next(this.settingsService.gameContent.locations);
     });
 
     this.settingsService.gameContent$.subscribe((gameContent) => {
-      this.locationsSubject.next(
-        gameContent.locations
-          .filter((x) => x.playerCount <= this.playersService.getPlayerCount())
-          .flatMap((x) => x.locations),
-      );
+      this.locationsSubject.next(gameContent.locations);
     });
   }
 

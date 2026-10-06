@@ -90,7 +90,7 @@ export function getWinCombatDesire(gameState: GameState) {
       ) {
         desire = desire - 0.5;
       } else {
-        desire += 0.05 * (2 - enemyAgentsAvailable);
+        desire += 0.05 * (2.5 - enemyAgentsAvailable);
         desire -= 0.005 * getPlayerGarrisonStrength(enemyCombatScore, gameState);
       }
     }

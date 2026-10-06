@@ -8,9 +8,9 @@ import { locationsCustomBeginner } from './locations';
 export const gameContentCustomBeginner: GameContent = {
   name: 'New Beginnings',
   factions: factionsCustomBeginner,
-  locations: [{ playerCount: 0, locations: locationsCustomBeginner }],
+  locations: locationsCustomBeginner,
   conflicts: conflictsCustomBeginner,
-  ix: ixCustomBeginner,
+  useTech: ixCustomBeginner,
   useTechTiles: false,
   useDreadnoughts: true,
   customCards: customCardsCustomBeginner,

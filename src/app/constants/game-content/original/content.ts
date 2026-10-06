@@ -7,7 +7,7 @@ import { locationsOriginal } from './locations';
 export const gameContentOriginal: GameContent = {
   name: 'Original',
   factions: factionsOriginal,
-  locations: [{ playerCount: 0, locations: locationsOriginal }],
+  locations: locationsOriginal,
   conflicts: conflictsOriginal,
   useTechTiles: false,
   useDreadnoughts: false,
