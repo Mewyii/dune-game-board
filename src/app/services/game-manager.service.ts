@@ -1011,13 +1011,14 @@ export class GameManager {
     if (!player) {
       return;
     }
+
+    const deployedUnits = this.effectsService.addUnitsToCombatIfPossible(playerId, unitType, amount);
+
     const currentConflict = this.conflictsService.currentConflict;
-    if (!currentConflict) {
+    if (!currentConflict && deployedUnits > 0) {
       this.turnInfoService.setPlayerTurnInfo(playerId, { needsToPickConflict: true });
       this.resolveRewardChoices(player);
     }
-
-    this.effectsService.addUnitsToCombatIfPossible(playerId, unitType, amount);
   }
 
   pickCurrentConflict(playerId: number, conflictId: string) {

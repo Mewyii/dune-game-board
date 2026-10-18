@@ -16,15 +16,16 @@
 .card-header {
   padding-top: 4px;
   padding-bottom: 4px;
-  padding-left: 4px;
+  padding-left: 7px;
   padding-right: 40px;
   background-image: url(/assets/images/card-backgrounds/heading.png);
   background-size: cover;
   border-radius: 4px 4px 0px 0px;
-  font-size: 14px;
+  font-size: 15px;
   min-height: 19px;
   display: flex;
   align-items: center;
+  color: rgb(240, 223, 200);
 }
 
 .card-header.orange {
@@ -32,21 +33,22 @@
 }
 
 .rare .card-header {
-  color: rgb(255 199 142);
+  color: rgb(255 129 50);
 }
 
 .card-img {
   flex: 1 1;
   background-size: cover;
-  border-top: 2px solid rgba(192, 192, 192, 0.243);
+  border-top: 2px solid rgba(190, 190, 190, 0.25);
+  border-bottom: 1px solid rgb(100 100 100 / 66%);
   position: relative;
   background-position: center;
   box-shadow: inset 0px 0px 10px rgb(91 78 65 / 40%);
 }
 
 .rare .card-img {
-  border-top: 2px solid rgb(255 145 30);
-  box-shadow: inset 0px 5px 15px 0px rgb(255 131 0 / 66%);
+  border-top: 2px solid rgba(255 115 30 / 66%);
+  box-shadow: inset 0px 1px 8px 0px rgb(255 120 40 / 75%);
 }
 
 .card-reveal-effect-container {
@@ -126,17 +128,17 @@ dune-reward-array {
   top: 0;
   right: 0;
   background: url(/assets/images/reward-markers/marker_conviction.png);
-  width: 44px;
+  width: 40px;
   height: 48px;
-  background-size: 56px;
+  background-size: 52px;
   background-position-y: bottom;
 }
 
 .card-aquire-costs {
-  padding-top: 4px;
-  padding-left: 20px;
+  padding-top: 8px;
+  padding-left: 19px;
   filter: drop-shadow(0px 1px 1px rgb(0, 0, 0));
-  font-size: 26px;
+  font-size: 24px;
 }
 
 .field-access-container {
@@ -175,21 +177,23 @@ dune-reward-array {
 
 .faction-container {
   width: 150px;
-  padding: 2px 32px 2px 4px;
-  font-size: x-small;
+  padding: 2px 32px 2px 7px;
+  font-size: 10px;
   text-wrap: nowrap;
   clip-path: polygon(0% 0, 125px 0%, 110px 100%, 0% 100%);
   letter-spacing: 1px;
+  color: rgb(240, 223, 200);
 }
 
 .faction-secondary-container {
   width: 125px;
-  padding: 2px 32px 2px 4px;
-  font-size: x-small;
+  padding: 2px 32px 2px 7px;
+  font-size: 10px;
   text-wrap: nowrap;
   clip-path: polygon(0% 0, 110px 0%, 95px 100%, 0% 100%);
   letter-spacing: 1px;
   margin-top: 2px;
+  color: rgb(240, 223, 200);
 }
 
 .card-aquire-costs-container.highlighted {
@@ -207,10 +211,10 @@ dune-reward-array {
 .card-aquire-effect-container {
   position: absolute;
   top: 20px;
-  right: 2px;
+  right: 0px;
   width: 28px;
   padding-top: 32px;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
   font-family: 'Roboto', 'Verdana';
   font-weight: initial;
   font-size: small;

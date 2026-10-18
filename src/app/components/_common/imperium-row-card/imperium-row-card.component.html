@@ -1,6 +1,6 @@
 <div class="imperium-card" [class.rare]="card.rarity === 'rare'">
-  <div class="card-header font-scifi" [class.orange]="card.backgroundColor === 'orange'">
-    {{ t.translateLS(card.name) }}
+  <div class="card-header font-medieval" [class.orange]="card.backgroundColor === 'orange'">
+    {{ t.translateLS(card.name).toUpperCase() }}
   </div>
   <div class="card-img" [style.background-image]="'url(' + card.imageUrl + ')'">
     @if (card.faction) {
@@ -80,7 +80,7 @@
   @if (card.buyEffects && card.buyEffects.length > 0) {
     <div class="card-aquire-effect-container">
       @if (card.buyEffects) {
-        <dune-reward-array [rewards]="card.buyEffects" [size]="'24px'" [vertical]="true"></dune-reward-array>
+        <dune-reward-array [rewards]="card.buyEffects" [size]="'22px'" [vertical]="true"></dune-reward-array>
       }
     </div>
   }

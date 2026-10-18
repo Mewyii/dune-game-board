@@ -449,6 +449,8 @@ export class EffectsService {
         costAmount,
         this.roundService.currentRound,
       );
+    } else if (costType === 'leader-wound') {
+      this.playersResourcesService.removeResourceFromPlayer(playerId, 'leader-heal', costAmount);
     } else if (costType === 'tech-tile-trash') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { techTileTrashAmount: costAmount });
     } else if (costType === 'faction-influence-down-choice') {
@@ -533,7 +535,7 @@ export class EffectsService {
   addUnitsToCombatIfPossible(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {
     const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(playerId);
     if (!playerTurnInfos) {
-      return;
+      return 0;
     }
 
     let deployedAmount = 0;
@@ -570,6 +572,8 @@ export class EffectsService {
         this.turnInfoService.updatePlayerTurnInfo(playerId, { deployedUnits: unitsToDeploy });
       }
     }
+
+    return deployedAmount;
   }
 
   retreatUnitsIfPossible(playerId: number, unitType: 'troop' | 'dreadnought', amount: number) {

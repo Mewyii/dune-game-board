@@ -73,7 +73,7 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'tech',
+        type: 'solari',
       },
     ],
     rarity: 'normal',
@@ -164,7 +164,7 @@ export const startingCards: ImperiumCard[] = [
       en: 'Leadership',
       de: 'Führung',
     },
-    fieldAccess: ['landsraad', 'spice', 'town'],
+    fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/signet_ring_2.png',
     cardAmount: 1,
     buyEffects: [],

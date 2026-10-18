@@ -82,7 +82,7 @@ export const conflictsCustomExpert: Conflict[] = [
     lvl: 1,
     rewards: [
       [{ type: 'location-control' }, { type: 'water' }],
-      [{ type: 'water' }, { type: 'water' }, { type: 'water' }],
+      [{ type: 'water' }, { type: 'water' }, { type: 'solari' }],
       [{ type: 'water' }],
     ],
   },

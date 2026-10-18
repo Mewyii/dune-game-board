@@ -9,17 +9,21 @@ export const customCardsCustomExpert: CustomCard[] = [
     },
     faction: 'fremen',
     persuasionCosts: 2,
-    fieldAccess: ['spice', 'town'],
+    fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/stillsuits.png',
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'troop',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 2,
+        amount: 1,
       },
     ],
-    cardAmount: 3,
+    cardAmount: 4,
   },
   {
     type: 'limited',
@@ -29,17 +33,21 @@ export const customCardsCustomExpert: CustomCard[] = [
     },
     faction: 'bene',
     persuasionCosts: 2,
-    fieldAccess: ['landsraad', 'spice'],
+    fieldAccess: ['landsraad'],
     imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
     buyEffects: [],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'card-draw',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 2,
+        amount: 1,
       },
     ],
-    cardAmount: 3,
+    cardAmount: 4,
   },
   {
     type: 'unlimited',

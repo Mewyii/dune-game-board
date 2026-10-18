@@ -333,7 +333,7 @@ export function getRewardEffectEvaluationForTurnState(
 
       return value - 0.33 * gameState.playerIntrigueCount;
     case 'persuasion':
-      return value * (gameState.aiGameStateEvaluations?.imperiumRowEvaluation ?? 1);
+      return value * 2 * (gameState.aiGameStateEvaluations?.imperiumRowEvaluation ?? 1);
     case 'foldspace':
       let importantFieldAccessValue = 0;
       if (!player.hasSwordmaster) {
@@ -385,6 +385,9 @@ export function getRewardEffectEvaluationForTurnState(
         return playerIsInCombat ? (playerCanSurpassEnemy ? 1.25 * value : value) : 0;
       }
     case 'combat':
+      if (gameState.playerTurnInfos?.canEnterCombat) {
+        return -3;
+      }
       let canUseCombat = !!gameState.conflict?.boardSpaceId;
       if (!canUseCombat) {
         const agentsOnFields = gameState.playerAgentsOnFields;
@@ -408,10 +411,15 @@ export function getRewardEffectEvaluationForTurnState(
 
       const participateDesire = getParticipateInCombatDesire(gameState);
       const winDesire = getWinCombatDesire(gameState);
+      const pickConflictBonus = !gameState.conflict ? 1 : 0;
+      const burnTroopsBonus =
+        gameState.playerCombatUnits.troopsInGarrison > 8 ? gameState.playerCombatUnits.troopsInGarrison - 8 : 0;
       return (
-        (winDesire > participateDesire ? winDesire : participateDesire) *
-        (gameState.aiGameStateEvaluations?.conflictEvaluation ?? 1) *
-        8
+        2 *
+          (2 * (winDesire > participateDesire ? winDesire : participateDesire)) *
+          (2 * (gameState.aiGameStateEvaluations?.conflictEvaluation ?? 1)) +
+        pickConflictBonus +
+        burnTroopsBonus
       );
     case 'intrigue-trash':
       return value;

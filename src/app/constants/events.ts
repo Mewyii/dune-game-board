@@ -23,7 +23,7 @@ export const duneEvents: DuneEvent[] = [
       de: 'Kein Effekt.',
     },
     imagePath: 'assets/images/action-backgrounds/sky.png',
-    cardAmount: 3,
+    cardAmount: 2,
   },
   {
     title: {
@@ -50,35 +50,12 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'Spice gusts',
-      de: 'Spice-Winde',
-    },
-    description: {
-      en: 'When a player places an agent on a <br>{faction:spice} board space: {resource:card-draw}',
-      de: 'Wenn ein Spieler einen Agenten auf einem <br>{faction:spice} -Feld platziert: {resource:card-draw}',
-    },
-    imagePath: 'assets/images/action-backgrounds/spice_2.png',
-    cardAmount: 1,
-    gameModifiers: {
-      fieldReward: [
-        {
-          id: 'spice-gusts',
-          rewardType: 'card-draw',
-          amount: 1,
-          actionType: 'spice',
-          currentRoundOnly: true,
-        },
-      ],
-    },
-  },
-  {
-    title: {
       en: 'Solar Eclipse',
       de: 'Sonnenfinsternis',
     },
     description: {
-      en: 'Each player can deploy up to 2 troops.',
-      de: 'Jeder Spieler kann bis zu 2 Truppen einsetzen.',
+      en: '<b>Round start</b>: Each player can deploy up to 2 troops.',
+      de: '<b>Rundenbeginn</b>: Jeder Spieler kann bis zu 2 Truppen einsetzen.',
     },
     imagePath: '/assets/images/action-backgrounds/sun.png',
     cardAmount: 1,
@@ -100,11 +77,11 @@ export const duneEvents: DuneEvent[] = [
       de: 'Spice-Explosionen',
     },
     description: {
-      en: 'Put 1 bonus spice on all {faction:spice} board spaces.',
-      de: 'Setze 1 Bonus-Spice auf alle {faction:spice}-Felder.',
+      en: '<b>Round start</b>: Put 1 bonus spice on all {faction:spice} board spaces.',
+      de: '<b>Rundenbeginn</b>: Setze 1 Bonus-Spice auf alle {faction:spice}-Felder.',
     },
     imagePath: 'assets/images/action-backgrounds/spice_field.png',
-    cardAmount: 2,
+    cardAmount: 1,
     gameEffects: {
       spiceAccumulation: {
         id: 'spice-blows-bonus-spice',
@@ -122,7 +99,7 @@ export const duneEvents: DuneEvent[] = [
       de: '{faction:spice}-Felder bringen -1 Spice ein.',
     },
     imagePath: 'assets/images/action-backgrounds/sandworm.png',
-    cardAmount: 2,
+    cardAmount: 1,
     gameModifiers: {
       fieldReward: [
         {
@@ -141,47 +118,20 @@ export const duneEvents: DuneEvent[] = [
       de: 'Spice Visionen',
     },
     description: {
-      en: '<b>Round start</b>: Take a look at the top card of your deck, the conflict deck or the intrigue deck.',
-      de: '<b>Rundenbeginn</b>: Sieh dir die oberste Karte deines Decks, des Konflikt-Stapels oder des Intrigen-Stapels an.',
+      en: '<b>Round start</b>: Take a look at the top card of your deck or the intrigue deck.',
+      de: '<b>Rundenbeginn</b>: Sieh dir die oberste Karte deines Decks oder des Intrigen-Stapels an.',
     },
-    imagePath: '/assets/images/action-backgrounds/vision.png',
-    cardAmount: 2,
-  },
-  {
-    title: {
-      en: 'Ixian Merchants',
-      de: 'Ixianische Händler',
-    },
-    description: {
-      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}{resource:solari}',
-      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:tech}{resource:solari}',
-    },
-    imagePath: 'assets/images/action-backgrounds/port_4.png',
+    imagePath: 'assets/images/action-backgrounds/spice_2.png',
     cardAmount: 1,
-    immediatePlayerEffects: [
-      {
-        type: 'helper-trade',
-        effectCosts: {
-          type: 'reward',
-          effectRewards: [
-            {
-              type: 'card-discard',
-            },
-          ],
+    gameModifiers: {
+      customActions: [
+        {
+          id: 'spice-vision-deck-vision',
+          action: 'vision-deck',
+          currentRoundOnly: true,
         },
-        effectConversionRewards: {
-          type: 'reward',
-          effectRewards: [
-            {
-              type: 'tech',
-            },
-            {
-              type: 'solari',
-            },
-          ],
-        },
-      },
-    ],
+      ],
+    },
   },
   {
     title: {
@@ -203,37 +153,14 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: "Muad'Dib",
-      de: "Muad'Dib",
-    },
-    description: {
-      en: '{faction:spice} board spaces cost {resource:water} less.',
-      de: '{faction:spice}-Felder kosten {resource:water} weniger.',
-    },
-    imagePath: '/assets/images/action-backgrounds/muaddib.png',
-    cardAmount: 1,
-    gameModifiers: {
-      fieldCost: [
-        {
-          id: 'muaddib-field-water-decrease',
-          costType: 'water',
-          amount: -1,
-          actionType: 'spice',
-          currentRoundOnly: true,
-        },
-      ],
-    },
-  },
-  {
-    title: {
       en: 'Delegation of the major houses',
       de: 'Delegationen der großen Häuser',
     },
     description: {
-      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari;amount:2}',
-      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:troop}{resource:solari;amount:2}',
+      en: '<b>Round start</b>: <b>Each player</b>: {resource:card-discard}{resource:card-discard}{resource:helper-trade}{resource:faction-influence-up-choice}',
+      de: '<b>Rundenbeginn</b>: <b>Jeder Spieler</b>: {resource:card-discard}{resource:card-discard}{resource:helper-trade}{resource:faction-influence-up-choice}',
     },
-    imagePath: '/assets/images/action-backgrounds/emperor_camp.png',
+    imagePath: '/assets/images/action-backgrounds/troops_3.png',
     cardAmount: 1,
     immediatePlayerEffects: [
       {
@@ -244,17 +171,16 @@ export const duneEvents: DuneEvent[] = [
             {
               type: 'card-discard',
             },
+            {
+              type: 'card-discard',
+            },
           ],
         },
         effectConversionRewards: {
           type: 'reward',
           effectRewards: [
             {
-              type: 'troop',
-            },
-            {
-              type: 'solari',
-              amount: 2,
+              type: 'faction-influence-up-choice',
             },
           ],
         },
@@ -263,69 +189,69 @@ export const duneEvents: DuneEvent[] = [
   },
   {
     title: {
-      en: 'Delegations of the minor houses',
-      de: 'Delegationen der kleinen Häuser',
+      en: 'Intrigues of the Great Houses',
+      de: 'Intrigen der großen Häuser',
     },
     description: {
-      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:solari;amount:2}',
-      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:solari;amount:2}',
+      en: '<b>Round start</b>: <b>Each player</b>: {resource:faction-influence-down-choice}',
+      de: '<b>Rundenbeginn</b>: <b>Jeder Spieler</b>: {resource:faction-influence-down-choice}',
+    },
+    imagePath: '/assets/images/action-backgrounds/conspiracy.png',
+    cardAmount: 1,
+    immediatePlayerEffects: [
+      {
+        type: 'reward',
+        effectRewards: [
+          {
+            type: 'faction-influence-down-choice',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: {
+      en: 'Support from Allied Houses',
+      de: 'Unterstützung verbündeter Häuser',
+    },
+    description: {
+      en: '<b>Round start</b>: <b>Each player</b>: {resource:card-draw}',
+      de: '<b>Rundenbeginn</b>: <b>Jeder Spieler</b>: {resource:card-draw}',
     },
     imagePath: '/assets/images/action-backgrounds/freighter.png',
-    cardAmount: 1,
+    cardAmount: 2,
     immediatePlayerEffects: [
       {
-        type: 'helper-trade',
-        effectCosts: {
-          type: 'reward',
-          effectRewards: [
-            {
-              type: 'card-discard',
-            },
-          ],
-        },
-        effectConversionRewards: {
-          type: 'reward',
-          effectRewards: [
-            {
-              type: 'solari',
-              amount: 2,
-            },
-          ],
-        },
+        type: 'reward',
+        effectRewards: [
+          {
+            type: 'card-draw',
+          },
+        ],
       },
     ],
   },
   {
     title: {
-      en: 'CHOAM merchant fleet',
-      de: 'MAFEA-Handelsflotte',
+      en: 'Communication Failure',
+      de: 'Kommunikationsstörung',
     },
     description: {
-      en: '<b>Each player</b>: {resource:card-discard}{resource:helper-trade}{resource:water}',
-      de: '<b>Jeder Spieler</b>: {resource:card-discard}{resource:helper-trade}{resource:water}',
+      en: '{faction:landsraad} board spaces cost an additional {resource:solari}',
+      de: '{faction:landsraad}-Felder kosten zusätzlich {resource:solari}',
     },
-    imagePath: '/assets/images/action-backgrounds/troops.png',
+    imagePath: 'assets/images/action-backgrounds/dune.png',
     cardAmount: 1,
-    immediatePlayerEffects: [
-      {
-        type: 'helper-trade',
-        effectCosts: {
-          type: 'reward',
-          effectRewards: [
-            {
-              type: 'card-discard',
-            },
-          ],
+    gameModifiers: {
+      fieldCost: [
+        {
+          id: 'communication-failure-green-field-solari-increase',
+          costType: 'solari',
+          amount: 1,
+          actionType: 'landsraad',
+          currentRoundOnly: true,
         },
-        effectConversionRewards: {
-          type: 'reward',
-          effectRewards: [
-            {
-              type: 'water',
-            },
-          ],
-        },
-      },
-    ],
+      ],
+    },
   },
 ];

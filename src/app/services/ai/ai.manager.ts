@@ -4,9 +4,11 @@ import { getLeastDesiredFactionScoreType, getMostDesiredFactionScoreType } from 
 import { getPlayerCombatStrength } from 'src/app/helpers/combat';
 import { getNumberAverage, normalizeNumber } from 'src/app/helpers/common';
 import { getCardCostModifier, getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
+import { isResourceType } from 'src/app/helpers/resources';
 import {
   getMultipliedRewardEffects,
   isNegativeEffect,
+  isRewardEffect,
   isStructuredConversionEffect,
   playerCanPayCosts,
 } from 'src/app/helpers/rewards';
@@ -85,10 +87,32 @@ export class AIManager {
     for (const [fieldIndex, preferredField] of preferredFields.entries()) {
       const boardField = gameState.boardSpaces.find((x) => x.title.en === preferredField.fieldId);
 
-      const cardEvaluations = playerHandCards.map((card) => ({
-        card,
-        evaluationValue: this.aiCardsService.getImperiumCardPlayEvaluation(card, player, gameState, boardField),
-      }));
+      const cardEvaluations = playerHandCards.map((card) => {
+        const virtualGameState = { ...gameState };
+        if (boardField) {
+          for (const reward of boardField.rewards) {
+            if (isRewardEffect(reward) && isResourceType(reward.type)) {
+              const rewardAmount = reward.amount ?? 1;
+              virtualGameState.playerResources[reward.type] += rewardAmount;
+            }
+          }
+          if (boardField.costs) {
+            if (playerCanPayCosts(boardField.costs, player, gameState)) {
+              for (const cost of boardField.costs) {
+                if (isResourceType(cost.type)) {
+                  const costAmount = cost.amount ?? 1;
+                  virtualGameState.playerResources[cost.type] -= costAmount;
+                }
+              }
+            }
+          }
+        }
+
+        return {
+          card,
+          evaluationValue: this.aiCardsService.getImperiumCardPlayEvaluation(card, player, virtualGameState, boardField),
+        };
+      });
 
       const usableCards = cardEvaluations.filter(
         (cardEvaluation) =>

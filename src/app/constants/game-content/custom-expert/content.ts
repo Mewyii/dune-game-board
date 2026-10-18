@@ -12,9 +12,9 @@ export const gameContentCustomExpert: GameContent = {
   useTechTiles: true,
   useDreadnoughts: true,
   finaleTrigger: [
-    { playerCount: 0, trigger: 8 },
-    { playerCount: 3, trigger: 7 },
-    { playerCount: 5, trigger: 6 },
+    { playerCount: 0, trigger: 9 },
+    { playerCount: 3, trigger: 8 },
+    { playerCount: 5, trigger: 7 },
   ],
   victoryPointBoni: [
     { score: 2, reward: { type: 'persuasion', amount: 1 } },

@@ -319,140 +319,149 @@ export class AIFieldEvaluationService {
   getFieldsSplitByRewardChoices(fields: ActionField[]) {
     const result: ActionField[] = [];
     for (const field of fields) {
-      if (field.rewards.some((x) => x.type === 'card-draw-or-destroy')) {
-        const cardDrawOption = {
-          ...field,
-          title: { ...field.title, en: field.title.en + ' (card-draw)' },
-          rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-draw' : x.type })),
-        } as ActionField;
+      result.push(...this.getFieldSplitByRewardChoices(field));
+    }
+    return result;
+  }
 
-        const cardDestroyOption = {
-          ...field,
-          title: { ...field.title, en: field.title.en + ' (card-trash)' },
-          rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-trash' : x.type })),
-        } as ActionField;
+  getFieldSplitByRewardChoices(field: ActionField) {
+    const result: ActionField[] = [];
+    if (field.rewards.some((x) => x.type === 'card-draw-or-destroy')) {
+      const cardDrawOption = {
+        ...field,
+        title: { ...field.title, en: field.title.en + ' (card-draw)' },
+        rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-draw' : x.type })),
+      } as ActionField;
 
-        result.push(cardDrawOption);
-        result.push(cardDestroyOption);
-      } else if (field.rewards.some((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal')) {
-        const separatorIndex = field.rewards.findIndex((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal');
+      const cardDestroyOption = {
+        ...field,
+        title: { ...field.title, en: field.title.en + ' (card-trash)' },
+        rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'card-draw-or-destroy' ? 'card-trash' : x.type })),
+      } as ActionField;
 
-        const leftOptionRewardType = field.rewards[separatorIndex - 1].type.toLocaleLowerCase();
-        const leftOptionField = {
-          ...field,
-          title: { ...field.title, en: field.title.en + ' (' + leftOptionRewardType + ')' },
-          rewards: field.rewards.filter((x, index) => index !== separatorIndex && index !== separatorIndex + 1),
-        };
+      result.push(cardDrawOption);
+      result.push(cardDestroyOption);
+    } else if (field.rewards.some((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal')) {
+      const separatorIndex = field.rewards.findIndex((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal');
 
-        const rightOptionRewardType = field.rewards[separatorIndex + 1].type.toLocaleLowerCase();
-        const rightOptionField = {
-          ...field,
-          title: { ...field.title, en: field.title.en + ' (' + rightOptionRewardType + ')' },
-          rewards: field.rewards.filter((x, index) => index !== separatorIndex && index !== separatorIndex - 1),
-        };
+      const leftOptionRewardType = field.rewards[separatorIndex - 1].type.toLocaleLowerCase();
+      const leftOptionField = {
+        ...field,
+        title: { ...field.title, en: field.title.en + ' (' + leftOptionRewardType + ')' },
+        rewards: field.rewards.filter((x, index) => index !== separatorIndex && index !== separatorIndex + 1),
+      };
 
-        result.push(cloneDeep(leftOptionField));
-        result.push(cloneDeep(rightOptionField));
-      } else if (field.conversionOptions) {
-        for (const conversionOption of field.conversionOptions) {
-          const { hasRewardConversion, rewardConversionIndex } = getRewardArrayAIInfos(conversionOption);
-          if (hasRewardConversion) {
-            const costs = conversionOption.slice(0, rewardConversionIndex);
-            const rewards = conversionOption.slice(rewardConversionIndex + 1);
+      const rightOptionRewardType = field.rewards[separatorIndex + 1].type.toLocaleLowerCase();
+      const rightOptionField = {
+        ...field,
+        title: { ...field.title, en: field.title.en + ' (' + rightOptionRewardType + ')' },
+        rewards: field.rewards.filter((x, index) => index !== separatorIndex && index !== separatorIndex - 1),
+      };
 
-            const conversionField = {
-              ...field,
-              title: { ...field.title, en: field.title.en + ' (' + costs[0].amount + ')' },
-              costs: costs as EffectReward[],
-              rewards: rewards,
-            };
-            result.push(cloneDeep(conversionField));
-          }
+      result.push(cloneDeep(leftOptionField));
+      result.push(cloneDeep(rightOptionField));
+    } else if (field.conversionOptions) {
+      for (const conversionOption of field.conversionOptions) {
+        const { hasRewardConversion, rewardConversionIndex } = getRewardArrayAIInfos(conversionOption);
+        if (hasRewardConversion) {
+          const costs = conversionOption.slice(0, rewardConversionIndex);
+          const rewards = conversionOption.slice(rewardConversionIndex + 1);
+
+          const conversionField = {
+            ...field,
+            title: { ...field.title, en: field.title.en + ' (' + costs[0].amount + ')' },
+            costs: costs as EffectReward[],
+            rewards: rewards,
+          };
+          result.push(cloneDeep(conversionField));
         }
-      } else {
-        result.push(cloneDeep(field));
       }
+    } else {
+      result.push(cloneDeep(field));
     }
     return result;
   }
 
   getFieldsWithAdjustedRewardsAndCosts(gameState: GameState, fields: ActionField[]): ActionField[] {
     return fields.map((field) => {
-      // Game Modifier Reward Adjustments
-      const fieldRewards = getModifiedRewardsForField(field, gameState.playerGameModifiers?.fieldReward);
-
-      // Field Marker Adjustments
-      const playerFieldMarker = gameState.playerGameModifiers?.fieldMarkers?.find(
-        (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0,
-      );
-      if (playerFieldMarker) {
-        fieldRewards.push({ type: 'signet', amount: playerFieldMarker.amount });
-      }
-
-      // Faction Reward Adjustments
-      if (isFactionScoreType(field.actionType)) {
-        fieldRewards.push({ type: `faction-influence-up-${field.actionType}` });
-
-        const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
-          (x) => x.factionId === field.actionType,
-        )?.rewards;
-        if (factionInfluenceRewards) {
-          const nextFactionScore = gameState.playerScore[field.actionType] + 1;
-          const nextFactionInfluenceRewards = factionInfluenceRewards[nextFactionScore];
-          if (nextFactionInfluenceRewards) {
-            for (const reward of nextFactionInfluenceRewards) {
-              fieldRewards.push(reward);
-            }
-          }
-        }
-      }
-
-      // Spice Reward Adjustments
-      if (fieldRewards.some((x) => x.type === 'spice-accumulation')) {
-        const accumulatedSpice = getAccumulatedSpice(gameState, field.title.en);
-        if (accumulatedSpice > 0) {
-          const spiceIndex = fieldRewards.findIndex((x) => x.type === 'spice');
-          if (spiceIndex > -1) {
-            const spiceAmount = fieldRewards[spiceIndex].amount ?? 1;
-            fieldRewards[spiceIndex].amount = spiceAmount + accumulatedSpice;
-          } else {
-            fieldRewards.push({ type: 'spice', amount: accumulatedSpice });
-          }
-        }
-      }
-
-      // Combat Reward Adjustments
-      const combatRewardIndex = fieldRewards.findIndex((x) => x.type === 'combat');
-
-      if (combatRewardIndex > -1) {
-        let modifier = 0.3;
-
-        const playerGarrisonUnits =
-          gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison;
-
-        const troopRewards = fieldRewards.find((x) => x.type === 'troop')?.amount ?? 0;
-        const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought')?.amount ?? 0;
-
-        const deployableUnits = playerGarrisonUnits + troopRewards + dreadnoughtRewards;
-        const limitedDeployableUnits =
-          deployableUnits > gameState.gameSettings.combatMaxDeployableUnits
-            ? gameState.gameSettings.combatMaxDeployableUnits
-            : deployableUnits;
-
-        modifier = modifier + 0.1 * limitedDeployableUnits;
-
-        const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
-        if (intrigueRewards) {
-          modifier = modifier + 0.05 * (intrigueRewards.amount ?? 1);
-        }
-
-        fieldRewards[combatRewardIndex].amount = modifier;
-      }
-      // Game Modifier Cost Adjustments
-      const fieldCosts = getModifiedCostsForField(field, gameState.playerGameModifiers?.fieldCost);
-
-      return { ...field, rewards: fieldRewards, costs: fieldCosts };
+      return this.getFieldWithAdjustedRewardsAndCosts(gameState, field);
     });
+  }
+
+  getFieldWithAdjustedRewardsAndCosts(gameState: GameState, field: ActionField): ActionField {
+    // Game Modifier Reward Adjustments
+    const fieldRewards = getModifiedRewardsForField(field, gameState.playerGameModifiers?.fieldReward);
+
+    // Field Marker Adjustments
+    const playerFieldMarker = gameState.playerGameModifiers?.fieldMarkers?.find(
+      (marker) => field.title.en.includes(marker.fieldId) && marker.amount > 0,
+    );
+    if (playerFieldMarker) {
+      fieldRewards.push({ type: 'signet', amount: playerFieldMarker.amount });
+    }
+
+    // Faction Reward Adjustments
+    if (isFactionScoreType(field.actionType)) {
+      fieldRewards.push({ type: `faction-influence-up-${field.actionType}` });
+
+      const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
+        (x) => x.factionId === field.actionType,
+      )?.rewards;
+      if (factionInfluenceRewards) {
+        const nextFactionScore = gameState.playerScore[field.actionType] + 1;
+        const nextFactionInfluenceRewards = factionInfluenceRewards[nextFactionScore];
+        if (nextFactionInfluenceRewards) {
+          for (const reward of nextFactionInfluenceRewards) {
+            fieldRewards.push(reward);
+          }
+        }
+      }
+    }
+
+    // Spice Reward Adjustments
+    if (fieldRewards.some((x) => x.type === 'spice-accumulation')) {
+      const accumulatedSpice = getAccumulatedSpice(gameState, field.title.en);
+      if (accumulatedSpice > 0) {
+        const spiceIndex = fieldRewards.findIndex((x) => x.type === 'spice');
+        if (spiceIndex > -1) {
+          const spiceAmount = fieldRewards[spiceIndex].amount ?? 1;
+          fieldRewards[spiceIndex].amount = spiceAmount + accumulatedSpice;
+        } else {
+          fieldRewards.push({ type: 'spice', amount: accumulatedSpice });
+        }
+      }
+    }
+
+    // Combat Reward Adjustments
+    const combatRewardIndex = fieldRewards.findIndex((x) => x.type === 'combat');
+
+    if (combatRewardIndex > -1) {
+      let modifier = 0.3;
+
+      const playerGarrisonUnits = gameState.playerCombatUnits.troopsInGarrison + gameState.playerCombatUnits.shipsInGarrison;
+
+      const troopRewards = fieldRewards.find((x) => x.type === 'troop')?.amount ?? 0;
+      const dreadnoughtRewards = fieldRewards.find((x) => x.type === 'dreadnought')?.amount ?? 0;
+
+      const deployableUnits = playerGarrisonUnits + troopRewards + dreadnoughtRewards;
+      const limitedDeployableUnits =
+        deployableUnits > gameState.gameSettings.combatMaxDeployableUnits
+          ? gameState.gameSettings.combatMaxDeployableUnits
+          : deployableUnits;
+
+      modifier = modifier + 0.1 * limitedDeployableUnits;
+
+      const intrigueRewards = fieldRewards.find((x) => x.type === 'intrigue');
+      if (intrigueRewards) {
+        modifier = modifier + 0.05 * (intrigueRewards.amount ?? 1);
+      }
+
+      fieldRewards[combatRewardIndex].amount = modifier;
+    }
+    // Game Modifier Cost Adjustments
+    const fieldCosts = getModifiedCostsForField(field, gameState.playerGameModifiers?.fieldCost);
+
+    return { ...field, rewards: fieldRewards, costs: fieldCosts };
   }
 
   // private getLeaderGoalModifier(goalId: string, goalModifiers: GoalModifier[]) {
