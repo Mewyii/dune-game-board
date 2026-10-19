@@ -12,8 +12,8 @@
 }
 
 .card-header {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding-left: 4px;
   padding-right: 4px;
   border-radius: 8px 8px 0px 0px;
@@ -63,7 +63,6 @@
 }
 
 .card-content.combat.combined {
-  border-top: 1px solid #101010;
   background-image: url(/assets/images/intrigues/combat_background.png);
   background-position: top;
   background-size: 125%;
