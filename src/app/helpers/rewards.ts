@@ -444,20 +444,20 @@ export function isEffectConditionFullfilled(
 ) {
   let conditionFullfilled = false;
   if (conditionEffect.type === 'condition-connection') {
-    const isImperiumCardFromFaction =
-      gameElement?.type === 'imperium-card' && gameElement.object.faction === conditionEffect.faction;
-
     if (timing === 'agent-placement') {
       if (gameState.playerCardsFactionsInPlay[conditionEffect.faction] > 0) {
         conditionFullfilled = true;
       }
     } else {
+      const isImperiumCardFromConnectionFaction =
+        gameElement?.type === 'imperium-card' && gameElement.object.faction === conditionEffect.faction;
+
       // Card itself will be in hand or in play, this will handle it
-      const playerFactionCardsRequired = isImperiumCardFromFaction ? 1 : 0;
+      const playerFactionCardsRequired = isImperiumCardFromConnectionFaction ? 2 : 1;
 
       if (
         gameState.playerCardsFactionsInPlay[conditionEffect.faction] +
-          gameState.playerHandCardsFactions[conditionEffect.faction] >
+          gameState.playerHandCardsFactions[conditionEffect.faction] >=
         playerFactionCardsRequired
       ) {
         conditionFullfilled = true;

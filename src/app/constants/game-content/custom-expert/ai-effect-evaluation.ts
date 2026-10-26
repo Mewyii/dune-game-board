@@ -94,24 +94,29 @@ export function getRewardEffectEvaluation(
         1.6 +
         0.2 * gameState.playerCardsBought -
         0.3 * gameState.playerCardsTrashed -
-        0.02 * gameState.playerCardsRewards.focus
+        0.02 * gameState.playerCardsRewards.focus -
+        (gameState.isFinale ? 0.5 : 0)
       );
     case 'card-draw-or-destroy':
       return 2 + 0.05 * gameState.playerCardsBought + 0.05 * gameState.playerCardsTrashed;
     case 'intrigue':
       return 2 + 0.05 * (gameState.currentRound - 1) - 0.01 * gameState.playerCardsRewards.intrigue;
     case 'persuasion':
-      return 2.5 - 0.1 * (gameState.currentRound - 1);
+      return 2.5 - 0.1 * (gameState.currentRound - 1) - (gameState.isFinale ? 0.5 : 0);
     case 'foldspace':
       return (
         2.1 +
         0.125 * (7 - gameState.playerCardsFieldAccess.length) -
-        0.075 * gameState.playerCardsBought -
-        0.05 * gameState.playerCardsTrashed
+        0.05 * gameState.playerCardsBought -
+        0.025 * gameState.playerCardsTrashed
       );
     case 'council-seat-small':
     case 'council-seat-large':
-      return !player.hasCouncilSeat ? 5.75 - 0.0125 * (gameState.currentRound - 1) : 0;
+      if (player.hasCouncilSeat) {
+        return 0;
+      }
+
+      return 5.75 - 0.0125 * (gameState.currentRound - 1) - (gameState.isFinale ? 1.0 : 0);
     case 'sword-master':
     case 'agent':
       return !player.hasSwordmaster ? 20 - 0.075 * (gameState.currentRound - 1) : 0;
@@ -205,7 +210,7 @@ export function getRewardEffectEvaluation(
         0.025 * (7 - gameState.playerCardsFieldAccess.length)
       );
     case 'tech-tile-trash':
-      return -5;
+      return -5 + (gameState.isFinale ? 1.0 : 0);
     case 'leader-heal':
       return 2 - 0.1 * (gameState.currentRound - 1);
     case 'leader-wound':

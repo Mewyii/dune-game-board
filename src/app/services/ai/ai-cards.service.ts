@@ -167,7 +167,7 @@ export class AICardsService {
     let evaluationValue = 0;
     if (card.faction) {
       evaluationValue +=
-        1 * gameState.playerHandCardsConnectionAgentEffects[card.faction] +
+        1.5 * gameState.playerHandCardsConnectionAgentEffects[card.faction] +
         0.1 * gameState.playerCardsConnectionEffects[card.faction] +
         0.33 * gameState.playerHandCardsFactions[card.faction] +
         0.1 * gameState.playerCardsFactions[card.faction];

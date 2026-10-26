@@ -27,7 +27,7 @@ export interface TechTileGameAdjustments {
 export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Upgraded Carryall Suspensors',
-    aiEvaluation: (player, gameState) => 16 - 1.25 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 14 - 1.25 * (gameState.currentRound - 1),
     gameModifiers: {
       fieldCost: [
         {
@@ -44,7 +44,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Enhanced Sandcrawler Engines',
-    aiEvaluation: (player, gameState) => 18 - 1 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 16 - 1 * (gameState.currentRound - 1),
     gameModifiers: {
       fieldReward: [
         {
@@ -62,7 +62,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Trade Port',
     aiEvaluation: (player, gameState) =>
-      0 + 1.5 * gameState.playerCardsFactions.guild + 0.5 * gameState.playerCardsRewards['card-draw'],
+      0 + (1.25 + 0.2 * gameState.playerCardsRewards['card-draw']) * gameState.playerCardsFactions.guild,
     customTimedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -84,7 +84,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Botanical Research Station',
     aiEvaluation: (player, gameState) =>
-      0 + 1.5 * gameState.playerCardsFactions.fremen + 0.5 * gameState.playerCardsRewards['card-draw'],
+      0 + (1.25 + 0.2 * gameState.playerCardsRewards['card-draw']) * gameState.playerCardsFactions.fremen,
     customTimedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -106,7 +106,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Sardaukar Commando Post',
     aiEvaluation: (player, gameState) =>
-      0 + 1.5 * gameState.playerCardsFactions.emperor + 0.5 * gameState.playerCardsRewards['card-draw'],
+      0 + (1.25 + 0.2 * gameState.playerCardsRewards['card-draw']) * gameState.playerCardsFactions.emperor,
     customTimedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -128,7 +128,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Missionaria Protectiva',
     aiEvaluation: (player, gameState) =>
-      0 + 1.5 * gameState.playerCardsFactions.bene + 0.5 * gameState.playerCardsRewards['card-draw'],
+      0 + (1.25 + 0.2 * gameState.playerCardsRewards['card-draw']) * gameState.playerCardsFactions.bene,
     customTimedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -151,7 +151,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Spice Refineries',
-    aiEvaluation: (player, gameState) => 15 - 0.33 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 18 - 0.33 * (gameState.currentRound - 1),
     gameModifiers: {
       fieldCost: [
         {
@@ -190,7 +190,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Deployment Ship',
-    aiEvaluation: (player, gameState) => 5 + 1.5 * (gameState.currentRound - 1),
+    aiEvaluation: (player, gameState) => 6 + 1.5 * (gameState.currentRound - 1),
     customTimedActivatedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -286,7 +286,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Recruitment Hub',
     aiEvaluation: (player, gameState) =>
-      15 - 1.5 * (gameState.currentRound - 1) + 1 * gameState.playerHandCardsRewards.solari,
+      18 - 1.33 * (gameState.currentRound - 1) + 0.5 * gameState.playerHandCardsRewards.solari,
     customTimedActivatedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -378,7 +378,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Controlled Spice Explosions',
-    aiEvaluation: (player, gameState) => 5 - 1 * gameState.playerHandCardsRewards.spice,
+    aiEvaluation: (player, gameState) => 6 - 1 * gameState.playerHandCardsRewards.spice,
     customTimedActivatedFunction: {
       timing: 'timing-reveal-turn',
       function: (player, gameState, game, gameElement) => {
@@ -514,7 +514,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
     id: 'Shieldbreakers',
     aiEvaluation: (player, gameState) =>
       0 +
-      0.25 * (gameState.currentRound - 1) +
+      0.2 * (gameState.currentRound - 1) +
       2 * gameState.enemyCombatUnits.filter((x) => getPlayerdreadnoughtCount(x) > 0).length,
     customTimedActivatedFunction: {
       timing: 'timing-turn-start',
@@ -554,7 +554,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   },
   {
     id: 'Heavy Lasguns',
-    aiEvaluation: (player, gameState) => 1 + 0.25 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 2 : 0),
+    aiEvaluation: (player, gameState) => 2 + 1.25 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 2 : 0),
     customTimedActivatedFunction: {
       timing: 'timing-turn-start',
       function: (player, gameState, game, gameElement) => {
@@ -608,7 +608,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
   {
     id: 'Stilltents',
     aiEvaluation: (player, gameState) =>
-      14 -
+      15 -
       0.5 * (gameState.currentRound - 1) +
       (player.hasSwordmaster ? 2 : 0) -
       0.1 * gameState.playerResources.spice -

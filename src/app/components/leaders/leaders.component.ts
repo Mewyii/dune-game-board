@@ -57,7 +57,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
 
   activePlayerAvailableAgents: PlayerAgent[] | undefined;
 
-  activePlayerIntrigueCount: number | undefined;
+  activePlayerIntrigueCount = 0;
 
   houses: House[] = [];
   playerHouses: PlayerHouse[] = [];
@@ -70,6 +70,8 @@ export class LeadersComponent implements OnInit, OnDestroy {
   turnInfos: TurnInfo | undefined;
 
   showAIDetails = false;
+
+  isAIDisabled = false;
 
   constructor(
     public t: TranslateService,
@@ -103,6 +105,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
         this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
       );
       this.activeLeader = this.playerLeader?.leader;
+      this.isAIDisabled = this.getIsAIDisabled();
     });
 
     const currentRoundPhaseSub = this.roundService.currentRoundPhase$.subscribe((roundPhase) => {
@@ -112,6 +115,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
         this.leadersService.playerLeaders.find((x) => x.playerId === this.activePlayerId),
       );
       this.activeLeader = this.playerLeader?.leader;
+      this.isAIDisabled = this.getIsAIDisabled();
     });
 
     const activePlayerSub = this.gameManager.activePlayer$.subscribe((activePlayer) => {
@@ -128,6 +132,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
       this.activePlayerAvailableAgents = this.playerAgentsService.getAvailablePlayerAgents(this.activePlayerId);
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
       this.activePlayerResources = this.playerResourcesService.getPlayerResources(this.activePlayerId);
+      this.isAIDisabled = this.getIsAIDisabled();
     });
 
     const playerCombatUnitsSub = this.combatManager.playerCombatUnits$.subscribe((playerCombatUnits) => {
@@ -158,6 +163,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
 
     const playersIntriguesSub = this.intriguesService.playersIntrigues$.subscribe(() => {
       this.activePlayerIntrigueCount = this.intriguesService.getPlayerIntrigueCount(this.activePlayerId);
+      this.isAIDisabled = this.getIsAIDisabled();
     });
 
     const turnInfosSub = this.turnInfoService.turnInfos$.subscribe(() => {
@@ -171,6 +177,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
       } else {
         this.turnInfos = newTurnInfos;
       }
+      this.isAIDisabled = this.getIsAIDisabled();
     });
 
     const playersResourcesSub = this.playerResourcesService.playersResources$.subscribe(() => {
@@ -460,6 +467,27 @@ export class LeadersComponent implements OnInit, OnDestroy {
   getTransparentColor(color: string, opacity: number) {
     var _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
     return color + _opacity.toString(16).toUpperCase();
+  }
+
+  private getIsAIDisabled(): boolean {
+    if (!this.activePlayer || !this.playerLeader) {
+      return true;
+    }
+
+    if (
+      !this.playerLeader.isLockedIn ||
+      this.currentRoundPhase === 'select leaders' ||
+      (this.currentRoundPhase === 'agent-placement' && this.activePlayer.turnState === 'revealed') ||
+      (this.currentRoundPhase === 'combat' &&
+        (this.activePlayer.turnState === 'done' || this.activePlayerIntrigueCount < 1)) ||
+      this.currentRoundPhase === 'combat-resolvement' ||
+      this.turnInfos?.aiStatus === 'working' ||
+      this.turnInfos?.aiStatus === 'done' ||
+      this.turnInfos?.needsToPassTurn
+    ) {
+      return true;
+    }
+    return false;
   }
 
   private getPlayerTechTilesWithMetadata() {

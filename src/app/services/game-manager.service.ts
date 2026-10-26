@@ -2170,16 +2170,18 @@ export class GameManager {
       const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id, 'complot') ?? [];
 
       let intriguesPlayed = false;
+      let playerIntrigueCount = playerIntrigues.length;
       for (const intrigue of playerIntrigues) {
         const player = this.playersService.getPlayer(playerId)!;
         const gameState = this.getGameState(player);
 
         const isPlayableAndUseful = this.aiCardsService.aiIsPlayableAndUsefulIntrigue(player, intrigue, gameState);
-        if (isPlayableAndUseful && Math.random() < 0.6 + 0.2 * playerIntrigues.length) {
+        if (isPlayableAndUseful && (Math.random() < 0.4 + 0.4 * playerIntrigueCount || gameState.isFinale)) {
           this.aiManager.aiPlayIntrigue(player, intrigue, gameState);
           this.aiResolveRewardChoices(player);
 
           intriguesPlayed = true;
+          playerIntrigueCount -= 1;
           await delay(2000);
 
           if (this.turnInfoService.getPlayerTurnInfo(playerId, 'needsToPassTurn')) {
