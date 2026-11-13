@@ -13,11 +13,11 @@ import { GameManager } from 'src/app/services/game-manager.service';
 import { FieldBlockModifier, GameModifiersService } from 'src/app/services/game-modifier.service';
 import { LocationsService } from 'src/app/services/location-manager.service';
 import { PlayerScore, PlayerScoreManager, PlayerScoreType } from 'src/app/services/player-score-manager.service';
+import { TurnInfoService } from 'src/app/services/player-turn-info.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
   selector: 'dune-additional-player-actions-dialog',

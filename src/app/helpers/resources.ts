@@ -15,3 +15,10 @@ export function isResourceType(rewardType: EffectRewardType): rewardType is Reso
   }
   return false;
 }
+
+export function isNonStackableResourceType(rewardType: EffectRewardType): rewardType is ResourceType {
+  if (rewardType === 'water') {
+    return true;
+  }
+  return false;
+}

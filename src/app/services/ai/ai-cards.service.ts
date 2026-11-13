@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { shuffle } from 'lodash';
 import { imperiumCardsGameAdjustments } from 'src/app/constants/imperium-cards-game-adjustments';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
-import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
+import { getImperiumCardModifier } from 'src/app/helpers/game-modifiers';
 import {
   getMultipliedRewardEffects,
   getRewardArrayAIInfos,
+  getStructuredEffectTargets,
   isStructuredChoiceEffect,
   isStructuredConversionEffect,
   isStructuredRewardEffect,
@@ -49,9 +50,14 @@ export class AICardsService {
     gameState: GameState,
     imperiumRowModifiers?: ImperiumRowModifier[],
   ): T | undefined {
-    const buyableCards = cards.filter(
-      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion,
-    );
+    const buyableCards = cards.filter((x) => {
+      const calculatedModifier = getImperiumCardModifier(x, imperiumRowModifiers);
+      if (calculatedModifier.isBlocked) {
+        return false;
+      } else {
+        return (x.persuasionCosts ?? 0) + calculatedModifier.costModifier <= availablePersuasion;
+      }
+    });
     if (buyableCards.length > 0) {
       const cardEvaluations = buyableCards.map((card) => {
         const evaluation = this.getImperiumCardBuyEvaluation(card, player, gameState);
@@ -69,9 +75,14 @@ export class AICardsService {
     player: Player,
     imperiumRowModifiers?: ImperiumRowModifier[],
   ) {
-    const buyableCards = cards.filter(
-      (x) => (x.persuasionCosts ?? 0) + getCardCostModifier(x, imperiumRowModifiers) <= availablePersuasion,
-    );
+    const buyableCards = cards.filter((x) => {
+      const calculatedModifier = getImperiumCardModifier(x, imperiumRowModifiers);
+      if (calculatedModifier.isBlocked) {
+        return false;
+      } else {
+        return (x.persuasionCosts ?? 0) + calculatedModifier.costModifier <= availablePersuasion;
+      }
+    });
     if (buyableCards.length > 0) {
       return shuffle(buyableCards)[0];
     }
@@ -208,8 +219,12 @@ export class AICardsService {
       for (const revealEffect of revealEffects) {
         const conditionMultiplier = revealEffect.condition ? 0.8 : 1;
         if (isStructuredRewardEffect(revealEffect)) {
+          const playerTargets = getStructuredEffectTargets(revealEffect, player, gameState);
+          const targetedEnemies = playerTargets.filter((x) => x.id !== player.id).length;
           const rewards = getMultipliedRewardEffects(revealEffect, gameState, 'reveal');
+
           evaluationValue -=
+            (targetedEnemies > 0 ? -0.75 - 0.25 * targetedEnemies : 1) *
             this.effectEvaluationService.getRewardArrayEvaluationForTurnState(rewards, player, gameState) *
             0.8 *
             conditionMultiplier;

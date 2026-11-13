@@ -138,13 +138,13 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
 
         if (playerBeneCardAmount > 2) {
           game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
-          game.resolveRewardChoices(player);
+          game.resolveRewardChoices();
         } else if (playerBeneCardAmount > 1) {
           game.addRewardToPlayer(player.id, { type: 'intrigue' });
         } else if (playerBeneCardAmount > 0) {
           game.addRewardToPlayer(player.id, { type: 'intrigue-trash' });
+          game.resolveRewardChoices();
           game.addRewardToPlayer(player.id, { type: 'intrigue' });
-          game.resolveRewardChoices(player);
         }
       },
     },

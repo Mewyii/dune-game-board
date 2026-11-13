@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { getCardCostModifier } from 'src/app/helpers/game-modifiers';
 
+import { getImperiumCardModifier } from 'src/app/helpers/game-modifiers';
 import { ActiveFactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { Player, PlayerTurnState } from 'src/app/models/player';
@@ -10,11 +10,11 @@ import { CardsService, ImperiumDeckCard, ImperiumRowCard, ImperiumRowPlot } from
 import { GameManager } from 'src/app/services/game-manager.service';
 import { GameModifiersService, ImperiumRowModifier } from 'src/app/services/game-modifier.service';
 import { PlayerResourcesService } from 'src/app/services/player-resources.service';
+import { TurnInfoService } from 'src/app/services/player-turn-info.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { TurnInfoService } from 'src/app/services/turn-info.service';
 import {
   ImperiumCardSelectorData,
   ImperiumCardsPreviewDialogComponent,
@@ -29,8 +29,8 @@ import {
 export class ImperiumRowComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
-  imperiumRowCardsLeft: (ImperiumRowCard | ImperiumRowPlot)[] = [];
-  imperiumRowCardsRight: (ImperiumRowCard | ImperiumRowPlot)[] = [];
+  imperiumRowCardsLeft: ((ImperiumRowCard | ImperiumRowPlot) & { costModifier: number; isBlocked: boolean })[] = [];
+  imperiumRowCardsRight: ((ImperiumRowCard | ImperiumRowPlot) & { costModifier: number; isBlocked: boolean })[] = [];
   activeCardId = '';
   hoveredCardId = '';
 
@@ -42,7 +42,7 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
   playerCanCharm = false;
   factionRecruitment: ActiveFactionType[] = [];
   unlimitedCustomCards: ImperiumCard[] = [];
-  limitedCustomCards: ImperiumDeckCard[] = [];
+  limitedCustomCards: (ImperiumDeckCard & { costModifier: number; isBlocked: boolean })[] = [];
 
   constructor(
     public t: TranslateService,
@@ -81,12 +81,14 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
 
         this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
         this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
+        this.setRowCards();
       }
     });
 
     const playerGameModifiersSub = this.gameModifierService.playerGameModifiers$.subscribe(() => {
       this.imperiumRowModifiers = this.gameModifierService.getPlayerGameModifier(this.activePlayerId, 'imperiumRow');
       this.playerCanCharm = this.gameModifierService.playerHasCustomActionAvailable(this.activePlayerId, 'charm');
+      this.setRowCards();
     });
 
     const turnInfosSub = this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
@@ -199,7 +201,10 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
         shownCards.push(limitedCard);
       }
     }
-    this.limitedCustomCards = shownCards;
+    this.limitedCustomCards = shownCards.map((card) => ({
+      ...card,
+      ...getImperiumCardModifier(card, this.imperiumRowModifiers),
+    }));
 
     const cardsWithPlotCostsAdjusted = this.cardsService.imperiumRow.map((x) => {
       if (x.type === 'plot') {
@@ -210,8 +215,12 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
     });
 
     const cutOff = 5 - this.unlimitedCustomCards.length - this.limitedCustomCards.length;
-    this.imperiumRowCardsLeft = cardsWithPlotCostsAdjusted.slice(0, cutOff);
-    this.imperiumRowCardsRight = cardsWithPlotCostsAdjusted.slice(cutOff);
+    this.imperiumRowCardsLeft = cardsWithPlotCostsAdjusted
+      .slice(0, cutOff)
+      .map((card) => ({ ...card, ...getImperiumCardModifier(card, this.imperiumRowModifiers) }));
+    this.imperiumRowCardsRight = cardsWithPlotCostsAdjusted
+      .slice(cutOff)
+      .map((card) => ({ ...card, ...getImperiumCardModifier(card, this.imperiumRowModifiers) }));
   }
 
   setCardActive(cardId: string) {
@@ -228,9 +237,5 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
     } else {
       this.hoveredCardId = '';
     }
-  }
-
-  getCardCostModifier(card: ImperiumDeckCard | ImperiumRowCard | ImperiumRowPlot) {
-    return getCardCostModifier(card, this.imperiumRowModifiers);
   }
 }

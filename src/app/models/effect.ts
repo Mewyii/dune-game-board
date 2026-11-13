@@ -20,10 +20,6 @@ export const effectRewards = [
   'dreadnought-insert',
   'dreadnought-insert-or-retreat',
   'dreadnought-retreat',
-  'enemies-card-discard',
-  'enemies-intrigue-trash',
-  'enemies-troop-destroy',
-  'enemies-leader-assassinate',
   'faction-influence-down-bene',
   'faction-influence-down-choice',
   'faction-influence-down-emperor',
@@ -80,20 +76,14 @@ export const effectTimings = [
   'timing-reveal-turn',
   'timing-round-start',
   'timing-turn-start',
-  'timing-agent-placement',
   'timing-combat',
+  'timing-agent-placed',
+  'timing-resource-gained',
 ] as const;
 
-export const effectConditions = [
-  'condition-high-council-seat',
-  'condition-no-high-council-seat',
-  'condition-enemies-on-this-field',
-  'condition-enemy-controlling-this-field',
-] as const;
+export const effectConditions = ['condition-high-council-seat', 'condition-no-high-council-seat'] as const;
 
 export const effectFactionConditions = ['condition-connection', 'condition-influence'] as const;
-
-export const effectActionConditions = ['condition-enemies-on-field-type'] as const;
 
 export const effectChoices = ['helper-or', 'helper-or-horizontal'] as const;
 
@@ -113,6 +103,13 @@ export const effectFactionMultipliers = ['multiplier-connections'] as const;
 
 export const effectActionMultipliers = ['multiplier-own-agents-on-field-type'] as const;
 
+export const effectTargets = [
+  'target-enemies',
+  'target-enemies-on-this-field',
+  'target-enemies-on-field-type',
+  'target-enemy-controlling-this-field',
+] as const;
+
 export type EffectRewardType = ResourceType | CombatUnitType | (typeof effectRewards)[number];
 
 export type EffectSeparatorType = (typeof effectSeparators)[number];
@@ -120,23 +117,23 @@ export type EffectTimingType = (typeof effectTimings)[number];
 export type EffectChoiceType = (typeof effectChoices)[number];
 export type EffectConditionType = (typeof effectConditions)[number];
 export type EffectFactionConditionType = (typeof effectFactionConditions)[number];
-export type EffectActionConditionType = (typeof effectActionConditions)[number];
 export type EffectConversionType = (typeof effectConversions)[number];
 export type EffectMultiplierType = (typeof effectMultipliers)[number];
 export type EffectFactionMultiplierType = (typeof effectFactionMultipliers)[number];
 export type EffectActionMultiplierType = (typeof effectActionMultipliers)[number];
+export type EffectTargetType = (typeof effectTargets)[number];
 
 export type EffectType =
   | EffectSeparatorType
   | EffectTimingType
   | EffectConditionType
   | EffectFactionConditionType
-  | EffectActionConditionType
   | EffectChoiceType
   | EffectConversionType
   | EffectMultiplierType
   | EffectFactionMultiplierType
   | EffectActionMultiplierType
+  | EffectTargetType
   | EffectRewardType;
 
 interface EffectBase {
@@ -154,8 +151,8 @@ export interface EffectTiming extends EffectBase {
   type: EffectTimingType;
 }
 
-export interface EffectCondition extends EffectBase {
-  type: EffectConditionType | EffectFactionConditionType | EffectActionConditionType;
+export interface EffectConditionAndTarget extends EffectBase {
+  type: EffectConditionType | EffectFactionConditionType;
   faction?: ActiveFactionType;
   action?: ActionType;
 }
@@ -174,6 +171,10 @@ export interface EffectMultiplier extends EffectBase {
   action?: ActionType;
 }
 
+export interface EffectTarget extends EffectBase {
+  type: EffectTargetType;
+  action?: ActionType;
+}
 export interface EffectReward extends EffectBase {
   type: EffectRewardType;
 }
@@ -181,27 +182,35 @@ export interface EffectReward extends EffectBase {
 export type Effect =
   | EffectSeparator
   | EffectTiming
-  | EffectCondition
+  | EffectConditionAndTarget
   | EffectChoice
   | EffectConversion
   | EffectMultiplier
+  | EffectTarget
   | EffectReward;
-export type EffectTimingConditionChoiceConversionMultiplierOrReward =
+export type EffectTimingConditionChoiceConversionMultiplierTargetOrReward =
   | EffectTiming
-  | EffectCondition
+  | EffectConditionAndTarget
   | EffectChoice
   | EffectConversion
   | EffectMultiplier
+  | EffectTarget
   | EffectReward;
-export type EffectConditionChoiceConversionMultiplierOrReward =
-  | EffectCondition
+export type EffectConditionChoiceConversionMultiplierTargetOrReward =
+  | EffectConditionAndTarget
   | EffectChoice
   | EffectConversion
   | EffectMultiplier
+  | EffectTarget
   | EffectReward;
-export type EffectChoiceConversionMultiplierOrReward = EffectChoice | EffectConversion | EffectMultiplier | EffectReward;
-export type EffectConversionMultiplierOrReward = EffectConversion | EffectMultiplier | EffectReward;
-export type EffectMultiplierOrReward = EffectMultiplier | EffectReward;
+export type EffectChoiceConversionMultiplierTargetOrReward =
+  | EffectChoice
+  | EffectConversion
+  | EffectMultiplier
+  | EffectTarget
+  | EffectReward;
+export type EffectConversionMultiplierOrReward = EffectConversion | EffectMultiplier | EffectTarget | EffectReward;
+export type EffectMultiplierTargetOrReward = EffectMultiplier | EffectTarget | EffectReward;
 
 export interface StructuredEffectBase {
   timing?: StructuredEffectTiming;
@@ -223,6 +232,7 @@ export interface StructuredConversionEffect extends StructuredEffectBase {
 export interface StructuredRewardEffect extends StructuredEffectBase {
   type: 'reward';
   multiplier?: EffectMultiplier;
+  target?: EffectTarget;
   effectRewards: EffectReward[];
 }
 
@@ -237,46 +247,50 @@ export type StructuredEffectCondition =
   | EffectConditionConnection
   | EffectConditionInfluence
   | EffectConditionHighCouncilSeat
-  | EffectConditionNoHighCouncilSeat
-  | EffectConditionEnemiesOnThisField
-  | EffectConditionEnemyControllingThisField
-  | EffectConditionEnemiesOnFieldType;
+  | EffectConditionNoHighCouncilSeat;
 
 export interface EffectConditionConnection {
   type: 'condition-connection';
   faction: ActiveFactionType;
-  affects: 'player';
 }
 
 export interface EffectConditionInfluence {
   type: 'condition-influence';
   amount: number;
   faction: ActiveFactionType;
-  affects: 'player';
-}
-
-export interface EffectConditionEnemiesOnFieldType {
-  type: 'condition-enemies-on-field-type';
-  action: ActionType;
-  affects: 'enemies';
 }
 
 export interface EffectConditionHighCouncilSeat {
   type: 'condition-high-council-seat';
-  affects: 'player';
 }
 
 export interface EffectConditionNoHighCouncilSeat {
   type: 'condition-no-high-council-seat';
-  affects: 'player';
 }
 
-export interface EffectConditionEnemiesOnThisField {
-  type: 'condition-enemies-on-this-field';
-  affects: 'enemies';
+export type StructuredEffectTarget =
+  | EffectTargetEnemies
+  | EffectTargetEnemiesOnFieldType
+  | EffectTargetEnemiesOnThisField
+  | EffectTargetEnemyControllingThisField;
+
+export interface EffectTargetEnemies {
+  type: 'target-enemies';
+  target: 'enemies';
 }
 
-export interface EffectConditionEnemyControllingThisField {
-  type: 'condition-enemy-controlling-this-field';
-  affects: 'enemies';
+export interface EffectTargetEnemiesOnFieldType {
+  type: 'target-enemies-on-field-type';
+  action: ActionType;
+  target: 'enemies';
+}
+
+export interface EffectTargetEnemiesOnThisField {
+  type: 'target-enemies-on-this-field';
+  target: 'enemies';
+}
+
+export interface EffectTargetEnemyControllingThisField {
+  type: 'target-enemy-controlling-this-field';
+  target: 'enemies';
 }

@@ -1,4 +1,4 @@
-import { EffectChoiceConversionMultiplierOrReward, StructuredEffect } from './effect';
+import { EffectChoiceConversionMultiplierTargetOrReward, StructuredEffect } from './effect';
 import { LanguageString } from './language';
 
 export const intriguesTypes = ['complot', 'combat', 'combined'] as const;
@@ -6,8 +6,8 @@ export type IntrigueType = (typeof intriguesTypes)[number];
 
 export interface IntrigueCardBase {
   name: LanguageString;
-  plotEffects: EffectChoiceConversionMultiplierOrReward[];
-  combatEffects: EffectChoiceConversionMultiplierOrReward[];
+  plotEffects: EffectChoiceConversionMultiplierTargetOrReward[];
+  combatEffects: EffectChoiceConversionMultiplierTargetOrReward[];
   type: IntrigueType;
   amount: number;
 }

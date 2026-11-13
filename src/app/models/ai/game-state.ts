@@ -45,7 +45,7 @@ export type GameState = Readonly<{
   isOpeningTurn: boolean;
   isFinale: boolean;
   enemyPlayers: Player[];
-  playerLeader: LeaderDeckCard | undefined;
+  playerLeader: (LeaderDeckCard & { isFlipped: boolean }) | undefined;
   conflict?: Conflict;
   availableTechTiles: TechTileDeckCard[];
   currentEvent: DuneEvent | undefined;

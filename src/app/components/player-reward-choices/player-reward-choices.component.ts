@@ -7,9 +7,13 @@ import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGa
 import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { PlayerActionLog } from 'src/app/services/log.service';
-import { PlayerRewardChoices, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
+import {
+  PlayerRewardChoice,
+  PlayerRewardChoices,
+  PlayerRewardChoicesService,
+} from 'src/app/services/player-reward-choices.service';
+import { TurnInfoService } from 'src/app/services/player-turn-info.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 @Component({
   selector: 'dune-player-reward-choices',
@@ -22,8 +26,6 @@ export class PlayerRewardChoicesComponent implements OnInit {
   activePlayer: Player | undefined;
   playerRewardChoices: PlayerRewardChoices | undefined;
   playerActionLog: PlayerActionLog[] = [];
-  playerEffectConversions: StructuredConversionEffectWithGameElement[] = [];
-  playerEffectOptions: StructuredChoiceEffectWithGameElement[] = [];
   deployableUnits = 0;
   deployableTroops = 0;
   deployableDreadnoughts = 0;
@@ -44,26 +46,22 @@ export class PlayerRewardChoicesComponent implements OnInit {
 
       this.activePlayerId = activePlayer?.id ?? 0;
       this.activePlayer = activePlayer;
-      this.playerRewardChoices = this.playerRewardChoicesService.playerRewardChoices.find(
+      this.playerRewardChoices = this.playerRewardChoicesService.playersRewardChoices.find(
         (x) => x.playerId === this.activePlayerId,
       );
     });
 
-    this.playerRewardChoicesService.playerRewardChoices$.subscribe((playerRewardChoices) => {
+    this.playerRewardChoicesService.playersRewardChoices$.subscribe((playerRewardChoices) => {
       this.playerRewardChoices = playerRewardChoices.find((x) => x.playerId === this.activePlayerId);
     });
 
     this.turnInfoService.turnInfos$.subscribe((turnInfos) => {
       const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(this.activePlayerId);
       if (playerTurnInfos) {
-        this.playerEffectOptions = playerTurnInfos.effectChoices;
-        this.playerEffectConversions = playerTurnInfos.effectConversions;
         this.deployableUnits = playerTurnInfos.deployableUnits - playerTurnInfos.deployedUnits;
         this.deployableTroops = playerTurnInfos.deployableTroops - playerTurnInfos.deployedTroops;
         this.deployableDreadnoughts = playerTurnInfos.deployableDreadnoughts - playerTurnInfos.deployedDreadnoughts;
       } else {
-        this.playerEffectOptions = [];
-        this.playerEffectConversions = [];
         this.deployableUnits = 0;
         this.deployableTroops = 0;
         this.deployableDreadnoughts = 0;
@@ -91,39 +89,41 @@ export class PlayerRewardChoicesComponent implements OnInit {
     }
   }
 
-  onOptionEffectRightClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
-    const optionSuccessFull = this.gameManager.resolveEffectChoice(this.activePlayerId, effect, 'right');
+  onOptionEffectRightClicked(effect: PlayerRewardChoice<StructuredChoiceEffectWithGameElement>) {
+    const optionSuccessFull = this.gameManager.resolveEffectChoice(this.activePlayerId, effect.choice, 'right');
     if (optionSuccessFull) {
-      this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-        effectChoices: this.playerEffectOptions.filter((x, idx) => idx !== index),
-      });
+      this.playerRewardChoicesService.removePlayerEitherOrChoice(
+        this.activePlayerId,
+        effect.id,
+        effect.choice.exlusiveChoiceOfMultipleEffectsId,
+      );
     }
   }
 
-  onOptionEffectLeftClicked(effect: StructuredChoiceEffectWithGameElement, index: number) {
-    const optionSuccessFull = this.gameManager.resolveEffectChoice(this.activePlayerId, effect, 'left');
+  onOptionEffectLeftClicked(effect: PlayerRewardChoice<StructuredChoiceEffectWithGameElement>) {
+    const optionSuccessFull = this.gameManager.resolveEffectChoice(this.activePlayerId, effect.choice, 'left');
     if (optionSuccessFull) {
-      this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-        effectChoices: this.playerEffectOptions.filter((x, idx) => idx !== index),
-      });
+      this.playerRewardChoicesService.removePlayerEitherOrChoice(
+        this.activePlayerId,
+        effect.id,
+        effect.choice.exlusiveChoiceOfMultipleEffectsId,
+      );
     }
   }
 
-  onConvertEffectClicked(effect: StructuredConversionEffectWithGameElement, index: number) {
-    const conversionSuccessFull = this.gameManager.resolveEffectConversionIfPossible(this.activePlayerId, effect);
+  onConvertEffectClicked(effect: PlayerRewardChoice<StructuredConversionEffectWithGameElement>) {
+    const conversionSuccessFull = this.gameManager.resolveEffectConversionIfPossible(this.activePlayerId, effect.choice);
     if (conversionSuccessFull) {
-      this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-        effectConversions: this.playerEffectConversions.filter(
-          (x, idx) => idx !== index && x.exlusiveChoiceOfMultipleEffectsId !== effect.exlusiveChoiceOfMultipleEffectsId,
-        ),
-      });
+      this.playerRewardChoicesService.removePlayerConversionChoice(
+        this.activePlayerId,
+        effect.id,
+        effect.choice.exlusiveChoiceOfMultipleEffectsId,
+      );
     }
   }
 
-  onDenyConversionClicked(index: number) {
-    this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
-      effectConversions: this.playerEffectConversions.filter((x, idx) => idx !== index),
-    });
+  onDenyConversionClicked(id: string) {
+    this.playerRewardChoicesService.removePlayerConversionChoice(this.activePlayerId, id);
   }
 
   onDeployTroopsClicked(amount: number) {

@@ -1,9 +1,17 @@
 <div class="conversion-container">
-  @if (effectConversion.effectCosts.multiplier) {
-    <dune-reward-array
-      [rewards]="[{ type: effectConversion.effectCosts.multiplier.type }]"
-      [textColor]="'white'"
-    ></dune-reward-array>
+  @if (effectConversion.effectCosts.multiplier || effectConversion.effectCosts.target) {
+    @if (effectConversion.effectCosts.multiplier) {
+      <dune-reward-array
+        [rewards]="[{ type: effectConversion.effectCosts.multiplier.type }]"
+        [textColor]="'white'"
+      ></dune-reward-array>
+    }
+    @if (effectConversion.effectCosts.target) {
+      <dune-reward-array
+        [rewards]="[{ type: effectConversion.effectCosts.target.type }]"
+        [textColor]="'white'"
+      ></dune-reward-array>
+    }
     <dune-reward-array [rewards]="effectConversion.effectCosts.effectRewards" [textColor]="'white'"></dune-reward-array>
   } @else {
     @for (effectCost of effectConversion.effectCosts.effectRewards; track $index) {
@@ -11,11 +19,19 @@
     }
   }
   <dune-reward-array [rewards]="[{ type: 'helper-trade' }]"></dune-reward-array>
-  @if (effectConversion.effectConversionRewards.multiplier) {
-    <dune-reward-array
-      [rewards]="[{ type: effectConversion.effectConversionRewards.multiplier.type }]"
-      [textColor]="'white'"
-    ></dune-reward-array>
+  @if (effectConversion.effectConversionRewards.multiplier || effectConversion.effectConversionRewards.target) {
+    @if (effectConversion.effectConversionRewards.multiplier) {
+      <dune-reward-array
+        [rewards]="[{ type: effectConversion.effectConversionRewards.multiplier.type }]"
+        [textColor]="'white'"
+      ></dune-reward-array>
+    }
+    @if (effectConversion.effectConversionRewards.target) {
+      <dune-reward-array
+        [rewards]="[{ type: effectConversion.effectConversionRewards.target.type }]"
+        [textColor]="'white'"
+      ></dune-reward-array>
+    }
     <dune-reward-array
       [rewards]="effectConversion.effectConversionRewards.effectRewards"
       [textColor]="'white'"

@@ -11,7 +11,7 @@ import { IntrigueDeckCard } from '../intrigue';
 import { ActionType } from '../location';
 import { Player } from '../player';
 import { EffectPlayerTurnTiming } from '../reward';
-import { TurnInfo } from '../turn-info';
+import { StructuredConversionEffectWithGameElement, TurnInfo } from '../turn-info';
 import { GameState } from './game-state';
 
 export interface CardGameAdjustmentsGameInterface {
@@ -29,13 +29,17 @@ export interface CardGameAdjustmentsGameInterface {
     allCards: ImperiumDeckCard[];
   };
   trashImperiumCard: (playerId: number, card: ImperiumDeckCard, source: 'hand' | 'discard-pile') => void;
+  discardPlayerHandCard: (playerId: number, card: ImperiumDeckCard) => void;
   returnDiscardedPlayerCardToHand: (playerId: number, card: ImperiumDeckCard) => void;
+  removeCardFromImperiumRow: (card: ImperiumRowCard | ImperiumRowPlot) => void;
 
   // Intrigues
   addPlayerIntrigue: (playerId: number, intrigue: IntrigueDeckCard) => void;
   trashPlayerIntrigue: (playerId: number, intrigueId: string, addToDiscardPile?: boolean) => void;
 
   // Tech Tiles
+  acquireTechTile: (playerId: number, techTile: TechTileDeckCard) => void;
+  getBuyableTechTiles: () => TechTileDeckCard[];
   trashPlayerTechTile: (playerId: number, techTile: TechTileDeckCard) => void;
 
   // Locations
@@ -55,7 +59,7 @@ export interface CardGameAdjustmentsGameInterface {
     cost: EffectReward,
     additionalInfos?: { gameElement?: GameElement; source?: string },
   ) => void;
-  resolveRewardChoices: (player: Player) => void;
+  resolveRewardChoices: () => void;
   resolveStructuredEffect: (
     structuredEffect: StructuredEffect,
     player: Player,
@@ -74,6 +78,7 @@ export interface CardGameAdjustmentsGameInterface {
   removePersuasionFromPlayer: (playerId: number, amount: number) => void;
   updatePlayerTurnInfo: (playerId: number, turnInfo: Partial<TurnInfo>) => void;
   addPlayerRewardChoice: (playerId: number, reward: Effect) => void;
+  addPlayerConversionChoice: (playerId: number, conversionChoice: StructuredConversionEffectWithGameElement) => void;
   removePlayerRewardChoice: (playerId: number, id: string) => void;
 
   // Game Modifiers

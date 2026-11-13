@@ -109,19 +109,22 @@
                 : '')
             "
             [card]="limitedCard"
-            [costModifier]="getCardCostModifier(limitedCard)"
+            [costModifier]="limitedCard.costModifier"
+            [disabled]="limitedCard.isBlocked"
           ></dune-imperium-row-card>
-          <div class="card-action-container" *ngIf="limitedCard.name.en === activeCardId">
-            <button
-              class="card-buy-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onBuyLimitedCustomCardClicked(limitedCard)"
-              [matTooltip]="t.translate('imperiumRowTooltipBuy')"
-            >
-              <mat-icon>check</mat-icon>
-            </button>
-          </div>
+          @if (limitedCard.name.en === activeCardId && !limitedCard.isBlocked) {
+            <div class="card-action-container">
+              <button
+                class="card-buy-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onBuyLimitedCustomCardClicked(limitedCard)"
+                [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
       @for (card of imperiumRowCardsLeft; track card.id) {
@@ -147,13 +150,14 @@
                 (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
                 (activePlayerTurnState === 'reveal' &&
                 card.persuasionCosts &&
-                activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+                activePlayerPersuasion >= card.persuasionCosts + card.costModifier
                   ? 'buyable '
                   : '') +
                 card.status
               "
               [card]="card"
-              [costModifier]="getCardCostModifier(card)"
+              [costModifier]="card.costModifier"
+              [disabled]="card.isBlocked"
             ></dune-imperium-row-card>
           }
           @if (card.type === 'plot') {
@@ -163,45 +167,47 @@
                 (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
                 (activePlayerTurnState === 'reveal' &&
                 card.persuasionCosts &&
-                activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+                activePlayerPersuasion >= card.persuasionCosts + card.costModifier
                   ? 'buyable '
                   : '') +
                 card.status
               "
               [plot]="card"
-              [costModifier]="getCardCostModifier(card)"
+              [costModifier]="card.costModifier"
             ></dune-plot-card>
           }
-          <div class="card-action-container" *ngIf="card.id === activeCardId">
-            <button
-              class="card-buy-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onBuyCardClicked(card)"
-              [matTooltip]="t.translate('imperiumRowTooltipBuy')"
-            >
-              <mat-icon>check</mat-icon>
-            </button>
-            <button
-              class="card-remove-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onRemoveCardClicked(card)"
-              [matTooltip]="t.translate('imperiumRowTooltipTrash')"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button
-              *ngIf="playerCanCharm"
-              class="card-remove-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onCharmCardClicked(card)"
-              [matTooltip]="t.translate('imperiumRowTooltipCharm')"
-            >
-              <mat-icon>face_retouching_natural</mat-icon>
-            </button>
-          </div>
+          @if (card.id === activeCardId && !card.isBlocked) {
+            <div class="card-action-container">
+              <button
+                class="card-buy-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onBuyCardClicked(card)"
+                [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+              <button
+                class="card-remove-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onRemoveCardClicked(card)"
+                [matTooltip]="t.translate('imperiumRowTooltipTrash')"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                *ngIf="playerCanCharm"
+                class="card-remove-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onCharmCardClicked(card)"
+                [matTooltip]="t.translate('imperiumRowTooltipCharm')"
+              >
+                <mat-icon>face_retouching_natural</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
     </div>
@@ -229,13 +235,14 @@
                 (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
                 (activePlayerTurnState === 'reveal' &&
                 card.persuasionCosts &&
-                activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+                activePlayerPersuasion >= card.persuasionCosts + card.costModifier
                   ? 'buyable '
                   : '') +
                 card.status
               "
               [card]="card"
-              [costModifier]="getCardCostModifier(card)"
+              [costModifier]="card.costModifier"
+              [disabled]="card.isBlocked"
             ></dune-imperium-row-card>
           }
           @if (card.type === 'plot') {
@@ -245,45 +252,47 @@
                 (activePlayerTurnState !== 'reveal' ? 'desaturated ' : '') +
                 (activePlayerTurnState === 'reveal' &&
                 card.persuasionCosts &&
-                activePlayerPersuasion >= card.persuasionCosts + getCardCostModifier(card)
+                activePlayerPersuasion >= card.persuasionCosts + card.costModifier
                   ? 'buyable '
                   : '') +
                 card.status
               "
               [plot]="card"
-              [costModifier]="getCardCostModifier(card)"
+              [costModifier]="card.costModifier"
             ></dune-plot-card>
           }
-          <div class="card-action-container" *ngIf="card.id === activeCardId">
-            <button
-              class="card-buy-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onBuyCardClicked(card)"
-              [matTooltip]="t.translate('imperiumRowTooltipBuy')"
-            >
-              <mat-icon>check</mat-icon>
-            </button>
-            <button
-              class="card-remove-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onRemoveCardClicked(card)"
-              [matTooltip]="t.translate('imperiumRowTooltipTrash')"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button
-              *ngIf="playerCanCharm"
-              class="card-remove-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onCharmCardClicked(card)"
-              [matTooltip]="t.translate('imperiumRowTooltipCharm')"
-            >
-              <mat-icon>face_retouching_natural</mat-icon>
-            </button>
-          </div>
+          @if (card.id === activeCardId && !card.isBlocked) {
+            <div class="card-action-container">
+              <button
+                class="card-buy-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onBuyCardClicked(card)"
+                [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+              <button
+                class="card-remove-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onRemoveCardClicked(card)"
+                [matTooltip]="t.translate('imperiumRowTooltipTrash')"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                *ngIf="playerCanCharm"
+                class="card-remove-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onCharmCardClicked(card)"
+                [matTooltip]="t.translate('imperiumRowTooltipCharm')"
+              >
+                <mat-icon>face_retouching_natural</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
     </div>

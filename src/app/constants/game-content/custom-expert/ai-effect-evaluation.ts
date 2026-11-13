@@ -24,18 +24,18 @@ export function getRewardEffectEvaluation(
   switch (rewardType) {
     case 'water':
       return (
-        2.8 +
+        3 +
         0.02 * gameState.playerTechTilesConversionCosts.water -
         (player.hasSwordmaster ? 0.05 : 0) -
         (player.hasCouncilSeat ? 0.05 : 0) -
         0.025 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-        0.015 * (gameState.currentRound - 1) -
+        0.02 * (gameState.currentRound - 1) -
         0.02 * gameState.playerCardsRewards.water -
         0.02 * gameState.playerTechTilesRewards.water
       );
     case 'spice':
       return (
-        2.3 +
+        2.4 +
         0.015 * gameState.playerTechTilesConversionCosts.spice -
         (player.hasSwordmaster ? 0.1 : 0) -
         (player.hasCouncilSeat ? 0.1 : 0) -
@@ -46,11 +46,11 @@ export function getRewardEffectEvaluation(
       );
     case 'solari':
       return (
-        1.3 +
+        1.2 +
         0.01 * gameState.playerTechTilesConversionCosts.solari -
-        (player.hasSwordmaster ? 0.2 : 0) -
+        (player.hasSwordmaster ? 0.15 : 0) -
         0.1 * getPlayerdreadnoughtCount(gameState.playerCombatUnits) -
-        0.04 * (gameState.currentRound - 1) -
+        0.03 * (gameState.currentRound - 1) -
         0.01 * gameState.playerCardsRewards.solari -
         0.01 * gameState.playerTechTilesRewards.solari
       );
@@ -91,7 +91,7 @@ export function getRewardEffectEvaluation(
     case 'card-trash-in-play':
     case 'focus':
       return (
-        1.6 +
+        1.5 +
         0.2 * gameState.playerCardsBought -
         0.3 * gameState.playerCardsTrashed -
         0.02 * gameState.playerCardsRewards.focus -
@@ -102,7 +102,7 @@ export function getRewardEffectEvaluation(
     case 'intrigue':
       return 2 + 0.05 * (gameState.currentRound - 1) - 0.01 * gameState.playerCardsRewards.intrigue;
     case 'persuasion':
-      return 2.5 - 0.1 * (gameState.currentRound - 1) - (gameState.isFinale ? 0.5 : 0);
+      return 2.6 - 0.1 * (gameState.currentRound - 1) - (gameState.isFinale ? 0.5 : 0);
     case 'foldspace':
       return (
         2.1 +
@@ -194,14 +194,6 @@ export function getRewardEffectEvaluation(
       return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? 2 : 1;
     case 'dreadnought-retreat':
       return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? -1 : -3;
-    case 'enemies-card-discard':
-      return 2.25 + 0.2 * (gameState.currentRound - 1);
-    case 'enemies-troop-destroy':
-      return 2.75 - 0.1 * (gameState.currentRound - 1);
-    case 'enemies-intrigue-trash':
-      return 3;
-    case 'enemies-leader-assassinate':
-      return 3.5;
     case 'card-return-to-hand':
       return (
         2 +
@@ -227,6 +219,7 @@ export function getRewardEffectEvaluationForTurnState(
   gameState: GameState,
   game: AIRewardEffectGameInterface,
   targetBoardSpace?: ActionField,
+  type: 'cost' | 'reward' = 'reward',
 ) {
   const hasPlacedAgents = gameState.playerAgentsOnFields.length > 0;
   const hasAgentsLeftToPlace = gameState.playerAgentsAvailable > 0;
@@ -247,25 +240,62 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.water
       );
     case 'spice':
+      const currentSpice = gameState.playerResources.spice;
       const excessSpice = gameState.playerResources.spice - 7;
       if (excessSpice > 0) {
         return value / (1 + excessSpice);
       }
 
+      const highCouncilSeatCosts = 6;
+      let spiceRewardModifier = 1;
+      if (
+        type !== 'cost' &&
+        !player.hasCouncilSeat &&
+        currentSpice < highCouncilSeatCosts &&
+        currentSpice + rewardAmount >= highCouncilSeatCosts
+      ) {
+        const excessSolari = currentSpice + rewardAmount - highCouncilSeatCosts;
+        spiceRewardModifier += 0.5 / (1 + excessSolari * 0.1);
+      }
+
       return (
-        value -
+        value * spiceRewardModifier -
         0.1 * gameState.playerResources.spice +
         0.25 * gameState.playerIntriguesConversionCosts.spice +
         0.25 * gameState.playerTechTilesConversionCosts.spice
       );
     case 'solari':
+      const currentSolari = gameState.playerResources.solari;
       const excessSolari = gameState.playerResources.solari - 11;
       if (excessSolari > 0) {
         return value / (1 + excessSolari);
       }
 
+      const swordMasterCosts = 10;
+      let solariRewardModifier = 1;
+      if (
+        type !== 'cost' &&
+        !player.hasSwordmaster &&
+        currentSolari < swordMasterCosts &&
+        currentSolari + rewardAmount >= swordMasterCosts
+      ) {
+        const excessSolari = currentSolari + rewardAmount - swordMasterCosts;
+        solariRewardModifier += 1 / (0.75 + excessSolari * 0.1);
+      }
+
+      const dreadnoughtCosts = 8;
+      if (
+        type !== 'cost' &&
+        gameState.playerDreadnoughtCount < 1 &&
+        currentSolari < dreadnoughtCosts &&
+        currentSolari + rewardAmount >= dreadnoughtCosts
+      ) {
+        const excessSolari = currentSolari + rewardAmount - dreadnoughtCosts;
+        solariRewardModifier += 0.5 / (1 + excessSolari * 0.1);
+      }
+
       return (
-        value -
+        value * solariRewardModifier -
         0.05 * gameState.playerResources.solari +
         0.25 * gameState.playerIntriguesConversionCosts.solari +
         0.25 * gameState.playerTechTilesConversionCosts.solari
@@ -336,7 +366,7 @@ export function getRewardEffectEvaluationForTurnState(
         return 0.5;
       }
 
-      return value - 0.33 * gameState.playerIntrigueCount;
+      return value - 0.25 * gameState.playerIntrigueCount;
     case 'persuasion':
       return value * 2 * (gameState.aiGameStateEvaluations?.imperiumRowEvaluation ?? 1);
     case 'foldspace':
@@ -380,14 +410,14 @@ export function getRewardEffectEvaluationForTurnState(
       const playerIsInCombat =
         gameState.playerCombatUnits.troopsInCombat > 0 || gameState.playerCombatUnits.shipsInCombat > 0;
 
-      if (gameState.currentRoundPhase !== 'agent-placement') {
+      if (gameState.currentRoundPhase !== 'combat') {
         return playerIsInCombat
           ? playerCanSurpassEnemy
             ? 1.25 * value
             : value
           : gameState.playerAgentsAvailable * 0.33 * value;
       } else {
-        return playerIsInCombat ? (playerCanSurpassEnemy ? 1.25 * value : value) : 0;
+        return playerIsInCombat ? (playerCanSurpassEnemy ? 1.5 * value : 0.5 * value) : 0;
       }
     case 'combat':
       if (gameState.playerTurnInfos?.canEnterCombat) {
@@ -587,20 +617,6 @@ export function getRewardEffectEvaluationForTurnState(
     case 'dreadnought-retreat':
       const unitsInCombat = gameState.playerCombatUnits.shipsInCombat + gameState.playerCombatUnits.troopsInCombat;
       return value * (4 - gameState.playerAgentsAvailable / 2) - (unitsInCombat < 2 ? 2 : 0);
-    case 'enemies-card-discard':
-      return (value * 0.5 * gameState.enemyAgentsAvailable.length) / (gameState.playersCount - 1);
-    case 'enemies-troop-destroy':
-      return (
-        (value * gameState.enemyCombatUnits.filter((x) => x.troopsInCombat > 0 || x.troopsInGarrison > 0).length) /
-        (gameState.playersCount - 1)
-      );
-    case 'enemies-intrigue-trash':
-      return (
-        (value * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length) / (gameState.playersCount - 1)
-      );
-    case 'enemies-leader-assassinate':
-      const woundedEnemyLeaders = gameState.enemyLeaders.filter((leader) => leader.isFlipped);
-      return value - woundedEnemyLeaders.length - 0.1 * gameState.enemyAgentsOnFields.length;
     case 'card-return-to-hand':
       const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
       return playerDiscardPileCount > 0 ? value : -3;

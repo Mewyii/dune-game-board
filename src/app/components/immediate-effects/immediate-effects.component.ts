@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Subscription } from 'rxjs';
-import { ActiveFactionType, activeFactionTypes, DuneLocation } from 'src/app/models';
+import { cloneDeep } from 'lodash';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { ActiveFactionType, activeFactionTypes, DuneLocation, EffectType } from 'src/app/models';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
@@ -14,6 +15,7 @@ import { LocationsService } from 'src/app/services/location-manager.service';
 import { PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { ImmediateEffect, PlayerRewardChoicesService } from 'src/app/services/player-reward-choices.service';
 import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
 import {
@@ -44,9 +46,27 @@ import {
   standalone: false,
 })
 export class ImmediateEffectsComponent implements OnInit, OnDestroy {
+  private immediateEffectStackSubject = new BehaviorSubject<ImmediateEffect[]>([]);
+  immediateEffectStack$ = this.immediateEffectStackSubject.asObservable();
+
+  immediateEffects: EffectType[] = [
+    'card-discard',
+    'intrigue-trash',
+    'faction-influence-up-choice',
+    'faction-influence-up-twice-choice',
+    'faction-influence-down-choice',
+    'location-control-choice',
+    'card-return-to-hand',
+    'agent-lift',
+  ];
+
   immediateEffectDialogOpen = false;
 
   subscriptions: Subscription[] = [];
+
+  private get immediateEffectStack() {
+    return cloneDeep(this.immediateEffectStackSubject.value);
+  }
 
   constructor(
     public t: TranslateService,
@@ -62,12 +82,49 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     private playerScoreManager: PlayerScoreManager,
     private playerAgentsService: PlayerAgentsService,
     private conflictsService: ConflictsService,
+    private playersService: PlayersService,
   ) {}
 
   ngOnInit(): void {
-    const immediateEffectSub = this.playerRewardChoicesService.immediateEffectStack$.subscribe((stack) => {
-      if (stack.length > 0 && !this.immediateEffectDialogOpen) {
-        const currentEffect = stack[0];
+    this.playerRewardChoicesService.playersRewardChoices$.subscribe((playersRewardChoices) => {
+      const immediateEffectStack = this.immediateEffectStack;
+
+      const immediateEffectsToAdd: ImmediateEffect[] = [];
+      for (const playerRewardChoices of playersRewardChoices) {
+        const player = this.playersService.getPlayer(playerRewardChoices.playerId);
+        if (player && !player.isAI) {
+          for (const rewardChoice of playerRewardChoices.rewardChoices) {
+            if (
+              this.immediateEffects.includes(rewardChoice.choice.type) &&
+              !immediateEffectStack.some((x) => x.id === rewardChoice.id)
+            ) {
+              immediateEffectsToAdd.push({
+                id: rewardChoice.id,
+                playerId: playerRewardChoices.playerId,
+                choice: rewardChoice.choice.type,
+              });
+            }
+          }
+
+          const conflictRewardChoice = playerRewardChoices.conflictChoice;
+          if (conflictRewardChoice) {
+            immediateEffectsToAdd.push({
+              id: conflictRewardChoice.id,
+              playerId: playerRewardChoices.playerId,
+              choice: 'conflict-pick',
+            });
+          }
+        }
+      }
+
+      if (immediateEffectsToAdd.length > 0) {
+        this.immediateEffectStackSubject.next([...immediateEffectStack, ...immediateEffectsToAdd]);
+      }
+    });
+
+    this.immediateEffectStack$.subscribe((immediateEffectStack) => {
+      if (immediateEffectStack.length > 0 && !this.immediateEffectDialogOpen) {
+        const currentEffect = immediateEffectStack[0];
         switch (currentEffect.choice) {
           case 'card-discard':
             this.showCardDiscardDialog(currentEffect);
@@ -108,8 +165,6 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
         }
       }
     });
-
-    this.subscriptions.push(immediateEffectSub);
   }
 
   private showCardDiscardDialog(currentEffect: ImmediateEffect): void {
@@ -121,8 +176,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const discardableCards = playerHand?.cards.filter((x) => !playedCards.some((y) => x.id === y.cardId));
 
     if (!playerHand || !discardableCards || discardableCards.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -139,9 +193,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((cardToDiscard: ImperiumDeckCard) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.discardImperiumCardFromHand(currentEffect.playerId, cardToDiscard);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -151,8 +204,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const playerDiscardPile = this.cardsService.getPlayerDiscardPile(currentEffect.playerId);
 
     if (!playerDiscardPile || playerDiscardPile.cards.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -169,9 +221,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((cardToReturn: ImperiumDeckCard) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.returnDiscardedPlayerCardToHand(currentEffect.playerId, cardToReturn);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -181,8 +232,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const playerDiscardPile = this.cardsService.getPlayerDiscardPile(currentEffect.playerId);
 
     if (!playerDiscardPile || playerDiscardPile.cards.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -199,9 +249,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.trashImperiumCard(currentEffect.playerId, cardToTrash, 'discard-pile');
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -211,8 +260,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const playerHand = this.cardsService.getPlayerHand(currentEffect.playerId);
 
     if (!playerHand || playerHand.cards.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -229,9 +277,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.trashImperiumCard(currentEffect.playerId, cardToTrash, 'hand');
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -241,8 +288,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const playerHandCards = this.cardsService.getPlayerHand(currentEffect.playerId)?.cards ?? [];
     const playerDiscardPileCards = this.cardsService.getPlayerDiscardPile(currentEffect.playerId)?.cards ?? [];
     if (playerHandCards.length < 1 && playerDiscardPileCards.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -259,10 +305,9 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
-      this.immediateEffectDialogOpen = false;
       const source = playerHandCards.some((x) => x.id === cardToTrash.id) ? 'hand' : 'discard-pile';
       this.gameManager.trashImperiumCard(currentEffect.playerId, cardToTrash, source);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -272,8 +317,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const playerIntrigues = this.intriguesService.getPlayerIntrigues(currentEffect.playerId);
 
     if (!playerIntrigues || playerIntrigues.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -289,9 +333,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((cardToDiscard: IntrigueDeckCard) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.trashPlayerIntrigue(currentEffect.playerId, cardToDiscard);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -300,8 +343,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
 
     const playerScores = this.playerScoreManager.getPlayerScore(currentEffect.playerId);
     if (!playerScores) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -314,8 +356,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     }
 
     if (factionTypes.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -331,9 +372,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((factionType: ActiveFactionType) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.increasePlayerFactionScore(currentEffect.playerId, factionType);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -342,8 +382,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
 
     const playerScores = this.playerScoreManager.getPlayerScore(currentEffect.playerId);
     if (!playerScores) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -356,8 +395,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     }
 
     if (factionTypes.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -373,10 +411,9 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((factionType: ActiveFactionType) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.increasePlayerFactionScore(currentEffect.playerId, factionType);
       this.gameManager.increasePlayerFactionScore(currentEffect.playerId, factionType);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -385,8 +422,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
 
     const playerScores = this.playerScoreManager.getPlayerScore(currentEffect.playerId);
     if (!playerScores) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -398,8 +434,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     }
 
     if (factionTypes.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -415,9 +450,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((factionType: ActiveFactionType) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.decreasePlayerFactionScore(currentEffect.playerId, factionType);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -427,8 +461,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(currentEffect.playerId);
 
     if (playerAgentsOnFields.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -437,8 +470,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     );
 
     if (conflicts.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -454,9 +486,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((conflict: ConflictDeckCard) => {
-      this.immediateEffectDialogOpen = false;
-      this.gameManager.pickCurrentConflict(currentEffect.playerId, conflict.id);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.gameManager.pickCurrentConflict(currentEffect.playerId, conflict);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -470,8 +501,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     );
 
     if (playerLocations.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -487,9 +517,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((location: DuneLocation) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.changeLocationOwner(location.actionField.title.en, currentEffect.playerId);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }
 
@@ -502,8 +531,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     );
 
     if (playerBoardSpaces.length < 1) {
-      this.immediateEffectDialogOpen = false;
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
       return;
     }
 
@@ -522,10 +550,14 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe((location: DuneLocation) => {
-      this.immediateEffectDialogOpen = false;
       this.gameManager.liftPlayerAgentFromField(currentEffect.playerId, location.actionField);
-      this.playerRewardChoicesService.removeImmediateEffect(currentEffect.id);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
+  }
+
+  private closeDialogAndRemoveImmediateEffect(id: string) {
+    this.immediateEffectDialogOpen = false;
+    this.immediateEffectStackSubject.next(this.immediateEffectStackSubject.value.filter((x) => x.id !== id));
   }
 
   ngOnDestroy(): void {

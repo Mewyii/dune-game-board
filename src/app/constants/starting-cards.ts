@@ -6,7 +6,7 @@ export const startingCards: ImperiumCard[] = [
       en: 'Warmaster',
       de: 'Kriegsmeister',
     },
-    fieldAccess: ['emperor', 'town'],
+    fieldAccess: ['emperor', 'fremen'],
     imageUrl: '/assets/images/action-backgrounds/warmaster.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -33,27 +33,10 @@ export const startingCards: ImperiumCard[] = [
   },
   {
     name: {
-      en: 'Spice Harvester',
-      de: 'Spice-Ernter',
-    },
-    fieldAccess: ['spice'],
-    imageUrl: '/assets/images/action-backgrounds/sandcrawler_2.png',
-    cardAmount: 1,
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-    ],
-  },
-  {
-    name: {
       en: 'Negotiator',
       de: 'Unterhändler',
     },
-    fieldAccess: ['guild', 'landsraad'],
+    fieldAccess: ['landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/meeting_2.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -73,7 +56,8 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'solari',
+        type: 'persuasion',
+        amount: 1,
       },
     ],
     rarity: 'normal',
@@ -84,7 +68,7 @@ export const startingCards: ImperiumCard[] = [
       de: 'Überzeugung',
     },
     fieldAccess: [],
-    imageUrl: '/assets/images/action-backgrounds/irulan_2.png',
+    imageUrl: '/assets/images/action-backgrounds/meeting_4.png',
     cardAmount: 1,
     buyEffects: [],
     agentEffects: [],
@@ -94,13 +78,26 @@ export const startingCards: ImperiumCard[] = [
         amount: 2,
       },
     ],
+    agentEffectSize: 'large',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
   },
   {
     name: {
       en: 'Spy Master',
       de: 'Spionagemeister',
     },
-    fieldAccess: ['bene', 'town'],
+    fieldAccess: ['bene', 'guild'],
     imageUrl: '/assets/images/action-backgrounds/mentat_4.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -120,27 +117,11 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'focus',
-      },
-    ],
-    rarity: 'normal',
-  },
-  {
-    name: {
-      en: 'Ornithoper',
-      de: 'Ornithopter',
-    },
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/ornithopter_3.png',
-    cardAmount: 1,
-    buyEffects: [],
-    agentEffects: [],
-    revealEffects: [
-      {
         type: 'persuasion',
         amount: 1,
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -179,6 +160,19 @@ export const startingCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    agentEffectSize: 'large',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
   },
   {
     name: {
@@ -197,19 +191,32 @@ export const startingCards: ImperiumCard[] = [
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 2,
+        amount: 1,
       },
       {
         type: 'trash-self',
       },
     ],
+    agentEffectSize: 'large',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
   },
   {
     name: {
       en: 'Scouts',
       de: 'Kundschafter',
     },
-    fieldAccess: ['fremen', 'spice'],
+    fieldAccess: ['spice'],
     imageUrl: '/assets/images/action-backgrounds/smugglers_7.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -229,9 +236,75 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
         type: 'sword',
       },
     ],
     rarity: 'normal',
+  },
+  {
+    name: {
+      en: 'Discovering the Desert Planet',
+      de: 'Erfahren des Wüstenplaneten',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'focus',
+      },
+    ],
+    fieldAccess: ['spice', 'town'],
+    agentEffectSize: 'large',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/desert_6.png',
+  },
+  {
+    name: {
+      en: 'Weapon Master',
+      de: 'Waffenmeister',
+    },
+    buyEffects: [],
+    agentEffects: [],
+    revealEffects: [
+      {
+        type: 'persuasion',
+        amount: 1,
+      },
+      {
+        type: 'sword',
+      },
+    ],
+    fieldAccess: ['town'],
+    agentEffectSize: 'large',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
+    cardAmount: 1,
+    imageUrl: '/assets/images/action-backgrounds/ornithopter_3.png',
   },
 ];

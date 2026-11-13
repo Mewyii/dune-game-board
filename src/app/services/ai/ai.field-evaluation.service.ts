@@ -143,6 +143,7 @@ export class AIFieldEvaluationService {
                 player,
                 gameState,
                 boardSpace,
+                'cost',
               ) * costAmount;
 
             boardSpaceEvaluation -= rewardEvaluation;
@@ -166,47 +167,6 @@ export class AIFieldEvaluationService {
       }
     }
 
-    // for (let [goalId, goal] of Object.entries(this.aiGoals)) {
-    //   if (!goal.reachedGoal(player, gameState, this.aiGoals)) {
-    //     const aiGoalId = goalId as AIGoals;
-
-    //     const goalDesire =
-    //       getDesire(goal, player, gameState, this.aiGoals) *
-    //         (aiPlayer.personality[aiGoalId] ?? 1.0) *
-    //         this.getGameStateModifier(aiGoalId, conflictEvaluation, techEvaluation, imperiumRowEvaluation) +
-    //       this.getLeaderGoalModifier(goalId, leaderGoalModifiers);
-
-    //     let desireCanBeFullfilled = false;
-
-    //     if (goal.goalIsReachable(player, gameState, this.aiGoals) && goal.desiredFields) {
-    //       for (let [fieldId, getFieldValue] of Object.entries(goal.desiredFields(boardSpaces))) {
-    //         const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
-
-    //         const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
-    //         if (index > -1) {
-    //           fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
-    //         } else {
-    //           fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
-    //         }
-
-    //         desireCanBeFullfilled = true;
-    //       }
-    //     }
-
-    //     if (!desireCanBeFullfilled) {
-    //       for (let [fieldId, getFieldValue] of Object.entries(goal.viableFields(boardSpaces))) {
-    //         const fieldValue = getFieldValue(player, gameState, this.aiGoals) * goalDesire;
-
-    //         const index = fieldEvaluations.findIndex((x) => x.fieldId === fieldId);
-    //         if (index > -1) {
-    //           fieldEvaluations[index].value = Math.round((fieldEvaluations[index].value + fieldValue) * 100) / 100;
-    //         } else {
-    //           fieldEvaluations.push({ fieldId, value: Math.round(fieldValue * 100) / 100 });
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
     return fieldEvaluations;
   }
 
@@ -463,33 +423,4 @@ export class AIFieldEvaluationService {
 
     return { ...field, rewards: fieldRewards, costs: fieldCosts };
   }
-
-  // private getLeaderGoalModifier(goalId: string, goalModifiers: GoalModifier[]) {
-  //   return goalModifiers.find((x) => x.type === goalId)?.modifier ?? 0.0;
-  // }
-
-  // private getGameStateModifier(
-  //   goal: AIGoals,
-  //   conflictEvaluation: number,
-  //   techEvaluation: number,
-  //   imperiumRowEvaluation: number,
-  // ) {
-  //   let modifier = 1.0;
-
-  //   if (goal === 'enter-combat') {
-  //     modifier = 0.5 + conflictEvaluation;
-  //   } else if (goal === 'troops') {
-  //     modifier = (0.5 + conflictEvaluation + 2) / 3;
-  //   } else if (goal === 'dreadnought') {
-  //     modifier = (1.5 - conflictEvaluation + 1) / 2;
-  //   } else if (goal === 'tech') {
-  //     modifier = 0.5 + techEvaluation;
-  //   } else if (goal === 'draw-cards' || goal === 'get-board-persuasion') {
-  //     modifier = 0.5 + imperiumRowEvaluation;
-  //   } else if (goal === 'high-council') {
-  //     modifier = (0.5 + imperiumRowEvaluation + 1) / 2;
-  //   }
-
-  //   return modifier;
-  // }
 }

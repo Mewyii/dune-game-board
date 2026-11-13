@@ -30,6 +30,32 @@
       <div class="sortable-category" (click)="onSortByNameClicked()">name</div>
       <div class="sortable-category" (click)="onSortByTypeClicked()">type</div>
     </div>
+    <div class="action-bar center" [style.gap]="'32px'">
+      <div>rewards:</div>
+      @for (item of rewards; track $index) {
+        <div class="icon-and-string-container">
+          <dune-reward-array
+            [rewards]="[{ type: item.rewardType, amount: item.amount }]"
+            [size]="'16px'"
+            [textColor]="'white'"
+          ></dune-reward-array>
+          {{ item.count }}
+        </div>
+      }
+    </div>
+    <div class="action-bar center" [style.gap]="'32px'">
+      <div>costs:</div>
+      @for (item of costs; track $index) {
+        <div class="icon-and-string-container">
+          <dune-reward-array
+            [rewards]="[{ type: item.rewardType, amount: item.amount }]"
+            [size]="'16px'"
+            [textColor]="'white'"
+          ></dune-reward-array>
+          {{ item.count }}
+        </div>
+      }
+    </div>
     <div class="cards-preview-container">
       @for (card of intrigues; track $index) {
         <div class="card-container">

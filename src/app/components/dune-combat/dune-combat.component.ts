@@ -8,9 +8,9 @@ import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CombatManager, PlayerCombatUnits } from 'src/app/services/combat-manager.service';
 import { EffectsService } from 'src/app/services/game-effects.service';
 import { GameManager } from 'src/app/services/game-manager.service';
+import { TurnInfoService } from 'src/app/services/player-turn-info.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { TurnInfoService } from 'src/app/services/turn-info.service';
 
 export interface CombatScore {
   playerId: number;
@@ -45,8 +45,6 @@ export class DuneCombatComponent implements OnInit, OnDestroy {
   dreadnoughtCombatStrength = 4;
 
   troopCombatStrength = 2;
-
-  leaderHitPointCombatStrength: number | undefined;
 
   playerGarrisonLocations: { [key: number]: { x: string; y: string } } = {
     0: { x: '60px', y: '-50px' },
@@ -101,7 +99,6 @@ export class DuneCombatComponent implements OnInit, OnDestroy {
     const gameContentSub = this.settingsService.gameContent$.subscribe((x) => {
       this.dreadnoughtCombatStrength = x.dreadnoughtCombatStrength;
       this.troopCombatStrength = x.troopCombatStrength;
-      this.leaderHitPointCombatStrength = x.leaderCombatStrength;
     });
 
     this.subscriptions.push(playerCombatUnitsSub, playersSub, playerColorsSub, turnInfosSub, gameContentSub);

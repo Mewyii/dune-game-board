@@ -3,10 +3,11 @@ import { clamp, take } from 'lodash';
 import { getLeastDesiredFactionScoreType, getMostDesiredFactionScoreType } from 'src/app/helpers/ai';
 import { getPlayerCombatStrength } from 'src/app/helpers/combat';
 import { getNumberAverage, normalizeNumber } from 'src/app/helpers/common';
-import { getCardCostModifier, getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
+import { getImperiumCardModifier, getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
 import { isResourceType } from 'src/app/helpers/resources';
 import {
   getMultipliedRewardEffects,
+  getStructuredEffectTargets,
   isNegativeEffect,
   isRewardEffect,
   isStructuredConversionEffect,
@@ -31,12 +32,12 @@ import { LoggingService } from '../log.service';
 import { PlayerAgentsService } from '../player-agents.service';
 import { PlayerResourcesService } from '../player-resources.service';
 import { PlayerFactionScoreType, PlayerScoreManager } from '../player-score-manager.service';
+import { TurnInfoService } from '../player-turn-info.service';
 import { PlayersService } from '../players.service';
 import { RoundPhaseType, RoundService } from '../round.service';
 import { SettingsService } from '../settings.service';
 import { TechTilesService } from '../tech-tiles.service';
 import { TranslateService } from '../translate-service';
-import { TurnInfoService } from '../turn-info.service';
 import { AICardsService } from './ai-cards.service';
 import { AIConflictService } from './ai-conflict.service';
 import { AIPlayersService } from './ai-players.service';
@@ -204,12 +205,12 @@ export class AIManager {
       imperiumRowModifiers,
     );
     if (cardToBuy) {
-      const costModifier = getCardCostModifier(cardToBuy, imperiumRowModifiers);
+      const calculatedModifier = getImperiumCardModifier(cardToBuy, imperiumRowModifiers);
       if (cardToBuy.persuasionCosts) {
         this.playersResourcesService.removeResourceFromPlayer(
           playerId,
           'persuasion',
-          cardToBuy.persuasionCosts + costModifier,
+          cardToBuy.persuasionCosts + calculatedModifier.costModifier,
         );
       }
       if (cardToBuy.buyEffects) {
@@ -261,12 +262,12 @@ export class AIManager {
 
     const plotToBuy = this.aiCardsService.getPlotToBuy(availablePersuasion, imperiumRowPlots, player, imperiumRowModifiers);
     if (plotToBuy) {
-      const costModifier = getCardCostModifier(plotToBuy, imperiumRowModifiers);
+      const calculatedModifier = getImperiumCardModifier(plotToBuy, imperiumRowModifiers);
       if (plotToBuy.persuasionCosts) {
         this.playersResourcesService.removeResourceFromPlayer(
           playerId,
           'persuasion',
-          plotToBuy.persuasionCosts + costModifier,
+          plotToBuy.persuasionCosts + calculatedModifier.costModifier,
         );
       }
       this.cardsService.aquirePlayerPlotFromImperiumRow(playerId, plotToBuy);
@@ -661,16 +662,27 @@ export class AIManager {
   ) {
     const effectCosts = getMultipliedRewardEffects(effect.effectCosts, gameState);
     const effectRewards = getMultipliedRewardEffects(effect.effectConversionRewards, gameState);
+    const targetPlayers = getStructuredEffectTargets(effect.effectConversionRewards, player, gameState);
+
     const conversionIsUseful = overrideConversionIsUseful
       ? overrideConversionIsUseful
-      : this.effectEvaluationService.getEffectConversionDecision(player, gameState, effectCosts, effectRewards);
+      : this.effectEvaluationService.getEffectConversionDecision(
+          player,
+          gameState,
+          effectCosts,
+          effectRewards,
+          targetPlayers,
+        );
 
     if (conversionIsUseful && playerCanPayCosts(effectCosts, player, gameState)) {
       for (const cost of effectCosts) {
         this.effectsService.payCostForPlayer(player.id, cost, { gameElement: effect.element });
       }
-      for (const reward of effectRewards) {
-        this.effectsService.addRewardToPlayer(player.id, reward, { gameElement: effect.element });
+
+      for (const targetPlayer of targetPlayers) {
+        for (const reward of effectRewards) {
+          this.effectsService.addRewardToPlayer(targetPlayer.id, reward, { gameElement: effect.element });
+        }
       }
     }
   }
@@ -820,6 +832,8 @@ export class AIManager {
     evaluatedImperiumRowCards.sort((a, b) => b - a);
     const topThreeImperiumRowCardEvaluations = take(evaluatedImperiumRowCards, 3);
     const imperiumRowEvaluation = clamp(normalizeNumber(getNumberAverage(topThreeImperiumRowCardEvaluations), 20, 4), 0, 1);
+
+    (gameState as any).aiGameStateEvaluations = { conflictEvaluation, techEvaluation, imperiumRowEvaluation };
 
     const { preferredFields } = this.fieldEvaluationService.getPreferredFieldsForAIPlayer(
       player,

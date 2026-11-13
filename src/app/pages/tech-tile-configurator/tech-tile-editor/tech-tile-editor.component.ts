@@ -10,6 +10,7 @@ import {
   effectMultipliers,
   effectRewards,
   effectSeparators,
+  effectTargets,
   effectTimings,
   nonFactionActionTypes,
   passiveFactionTypes,
@@ -33,12 +34,14 @@ export class TechTileEditorComponent implements OnInit, OnChanges {
   factions = [...activeFactionTypes, ...passiveFactionTypes, ''].sort((a, b) => a.localeCompare(b));
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
+  targetTypes = [...effectTargets].sort((a, b) => a.localeCompare(b));
   effectTypes = [
     ...effectSeparators,
     ...effectTimings,
     ...effectConditions,
     ...effectChoices,
     ...effectConversions,
+    ...this.targetTypes,
     ...effectMultipliers,
     ...this.rewardTypes,
   ];

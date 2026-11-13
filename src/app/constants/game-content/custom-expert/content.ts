@@ -26,7 +26,7 @@ export const gameContentCustomExpert: GameContent = {
   maxPlayerDreadnoughtCount: 1,
   maxPlayerIntrigueCount: 3,
   highCouncilPersuasion: 4,
-  startingResources: [{ type: 'leader-heal', amount: 3 }],
+  startingResources: [],
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 6,
   locationTakeoverTroopCosts: 1,
@@ -43,7 +43,6 @@ export const gameContentCustomExpert: GameContent = {
     foldspace: 'hand',
   },
   churnRowCards: true,
-  leaderCombatStrength: 3,
   conflictsMode: 'pick',
   conflictCardsPerLevel: [24],
 };

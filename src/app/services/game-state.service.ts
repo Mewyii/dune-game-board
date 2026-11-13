@@ -4,6 +4,7 @@ import { getPlayerdreadnoughtCount } from '../helpers/combat';
 import { isFactionScoreType } from '../helpers/faction-score';
 import {
   getMultipliedRewardEffects,
+  getStructuredEffectTargets,
   isStructuredChoiceEffect,
   isStructuredConversionEffect,
   isStructuredRewardEffect,
@@ -24,11 +25,11 @@ import { LocationsService } from './location-manager.service';
 import { PlayerAgentsService } from './player-agents.service';
 import { PlayerResourcesService } from './player-resources.service';
 import { PlayerFactionScoreType, PlayerScore, PlayerScoreManager } from './player-score-manager.service';
+import { TurnInfoService } from './player-turn-info.service';
 import { PlayersService } from './players.service';
 import { RoundPhaseType } from './round.service';
 import { SettingsService } from './settings.service';
 import { TechTilesService } from './tech-tiles.service';
-import { TurnInfoService } from './turn-info.service';
 
 @Injectable({
   providedIn: 'root',
@@ -61,9 +62,20 @@ export class GameStateService {
     isFinale: boolean,
     accumulatedSpiceOnFields: SpiceAccumulation[],
   ): GameState {
+    const enemyPlayers = this.playersService.getEnemyPlayers(player.id);
     const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(player.id);
     const enemyAgentsOnFields = this.playerAgentsService.getEnemyAgentsOnFields(player.id);
     const playerAgentPlacedOnFieldThisTurn = this.turnInfoService.getPlayerTurnInfo(player.id, 'agentPlacedOnFieldId');
+
+    const boardSpaces = this.boardSpacesService.boardSpaces;
+    const locations = this.locationsService.locations;
+    const playerLocations = this.locationsService.ownedLocations
+      .filter((x) => x.playerId === player.id)
+      .map((x) => x.locationId);
+    const enemyLocations = this.locationsService.ownedLocations.filter((x) => x.playerId !== player.id);
+    const freeLocations = locations
+      .map((x) => x.actionField.title.en)
+      .filter((x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x));
 
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
     const playerDreadnoughtCount = getPlayerdreadnoughtCount(playerCombatUnits);
@@ -111,8 +123,18 @@ export class GameStateService {
             }
           }
           if (!agentEffect.condition && isStructuredRewardEffect(agentEffect)) {
-            for (const reward of agentEffect.effectRewards) {
-              playerCardsRewards[reward.type] += reward.amount ?? 1;
+            const targetPlayers: Player[] = getStructuredEffectTargets(agentEffect, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              for (const reward of agentEffect.effectRewards) {
+                playerCardsRewards[reward.type] += reward.amount ?? 1;
+              }
             }
           }
         }
@@ -125,8 +147,18 @@ export class GameStateService {
             }
           }
           if (!revealEffect.condition && isStructuredRewardEffect(revealEffect)) {
-            for (const reward of revealEffect.effectRewards) {
-              playerCardsRewards[reward.type] += reward.amount ?? 1;
+            const targetPlayers: Player[] = getStructuredEffectTargets(revealEffect, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              for (const reward of revealEffect.effectRewards) {
+                playerCardsRewards[reward.type] += reward.amount ?? 1;
+              }
             }
           }
         }
@@ -160,8 +192,18 @@ export class GameStateService {
             }
           }
           if (!agentEffect.condition && isStructuredRewardEffect(agentEffect)) {
-            for (const reward of agentEffect.effectRewards) {
-              playerHandCardsRewards[reward.type] += reward.amount ?? 1;
+            const targetPlayers: Player[] = getStructuredEffectTargets(agentEffect, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              for (const reward of agentEffect.effectRewards) {
+                playerHandCardsRewards[reward.type] += reward.amount ?? 1;
+              }
             }
           }
         }
@@ -174,8 +216,18 @@ export class GameStateService {
             }
           }
           if (!revealEffect.condition && isStructuredRewardEffect(revealEffect)) {
-            for (const reward of revealEffect.effectRewards) {
-              playerHandCardsRewards[reward.type] += reward.amount ?? 1;
+            const targetPlayers: Player[] = getStructuredEffectTargets(revealEffect, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              for (const reward of revealEffect.effectRewards) {
+                playerHandCardsRewards[reward.type] += reward.amount ?? 1;
+              }
             }
           }
         }
@@ -186,8 +238,6 @@ export class GameStateService {
     const playerTechTilesRewards = this.getInitialGameElementRewards();
     const playerTechTilesConversionCosts = this.getInitialGameElementRewards();
     const playerTechTiles = this.techTilesService.getPlayerTechTiles(player.id).map((x) => x.techTile);
-
-    const boardSpaces = this.boardSpacesService.boardSpaces;
 
     const partialGameStateForEffectMultipliers = {
       playerAgentsOnFields,
@@ -211,13 +261,33 @@ export class GameStateService {
 
         for (const effect of techTile.structuredEffects) {
           if (isStructuredRewardEffect(effect)) {
-            rewards.push(...getMultipliedRewardEffects(effect, partialGameStateForEffectMultipliers));
+            const targetPlayers: Player[] = getStructuredEffectTargets(effect, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              rewards.push(...getMultipliedRewardEffects(effect, partialGameStateForEffectMultipliers));
+            }
           } else if (isStructuredChoiceEffect(effect)) {
           } else if (isStructuredConversionEffect(effect)) {
             conversionCosts.push(...getMultipliedRewardEffects(effect.effectCosts, partialGameStateForEffectMultipliers));
-            rewards.push(
-              ...getMultipliedRewardEffects(effect.effectConversionRewards, partialGameStateForEffectMultipliers),
-            );
+            const targetPlayers: Player[] = getStructuredEffectTargets(effect.effectConversionRewards, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              rewards.push(
+                ...getMultipliedRewardEffects(effect.effectConversionRewards, partialGameStateForEffectMultipliers),
+              );
+            }
           }
         }
 
@@ -240,13 +310,33 @@ export class GameStateService {
 
         for (const effect of intrigue.structuredPlotEffects) {
           if (isStructuredRewardEffect(effect)) {
-            rewards.push(...getMultipliedRewardEffects(effect, partialGameStateForEffectMultipliers));
+            const targetPlayers: Player[] = getStructuredEffectTargets(effect, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              rewards.push(...getMultipliedRewardEffects(effect, partialGameStateForEffectMultipliers));
+            }
           } else if (isStructuredChoiceEffect(effect)) {
           } else if (isStructuredConversionEffect(effect)) {
             conversionCosts.push(...getMultipliedRewardEffects(effect.effectCosts, partialGameStateForEffectMultipliers));
-            rewards.push(
-              ...getMultipliedRewardEffects(effect.effectConversionRewards, partialGameStateForEffectMultipliers),
-            );
+            const targetPlayers: Player[] = getStructuredEffectTargets(effect.effectConversionRewards, player, {
+              enemyPlayers,
+              enemyAgentsOnFields,
+              enemyLocations,
+              playerAgentPlacedOnFieldThisTurn,
+              boardSpaces,
+            });
+            const targetPlayer = targetPlayers.find((x) => x.id === player.id);
+            if (targetPlayer) {
+              rewards.push(
+                ...getMultipliedRewardEffects(effect.effectConversionRewards, partialGameStateForEffectMultipliers),
+              );
+            }
           }
         }
 
@@ -289,21 +379,14 @@ export class GameStateService {
     const enemyIntrigues = this.intriguesService.getEnemyIntrigues(player.id);
     const enemyIntrigueCounts = enemyIntrigues.map((x) => ({ playerId: x.playerId, intrigueCount: x.intrigues.length }));
 
-    const playerLocations = this.locationsService.ownedLocations
-      .filter((x) => x.playerId === player.id)
-      .map((x) => x.locationId);
-    const enemyLocations = this.locationsService.ownedLocations.filter((x) => x.playerId !== player.id);
-    const locations = this.locationsService.locations;
-    const freeLocations = locations
-      .map((x) => x.actionField.title.en)
-      .filter((x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x));
-
     const enemyScore = this.playerScoreManager.getEnemyScore(player.id)!;
 
     const rivalId = enemyScore.sort((a, b) => b.victoryPoints - a.victoryPoints)[0];
     const rival = currentRound > 4 ? this.playersService.getPlayer(rivalId.playerId) : undefined;
 
-    const playerLeader = this.leadersService.getLeader(player.id);
+    const isLeaderFlipped = this.leadersService.getPlayerLeader(player.id)?.isFlipped ?? false;
+    const leader = this.leadersService.getLeader(player.id);
+    const playerLeader = leader ? { ...leader, isFlipped: isLeaderFlipped } : undefined;
     const playerTurnInfos = this.turnInfoService.getPlayerTurnInfos(player.id);
 
     return {
@@ -323,7 +406,7 @@ export class GameStateService {
       enemyAgentsOnFields,
       isOpeningTurn: this.isOpeningTurn(player.id, currentRound),
       isFinale: isFinale,
-      enemyPlayers: this.playersService.getEnemyPlayers(player.id),
+      enemyPlayers,
       enemyLeaders: this.leadersService.getEnemyPlayerLeaders(player.id),
       playerLeader: playerLeader,
       conflict: this.conflictsService.currentConflict,
@@ -497,14 +580,11 @@ export class GameStateService {
       'dreadnought-insert': 0,
       'dreadnought-insert-or-retreat': 0,
       'dreadnought-retreat': 0,
-      'enemies-card-discard': 0,
-      'enemies-troop-destroy': 0,
-      'enemies-intrigue-trash': 0,
-      'enemies-leader-assassinate': 0,
       'card-return-to-hand': 0,
       'turn-pass': 0,
       'leader-heal': 0,
       'leader-wound': 0,
+      leadermarker: 0,
       'maker-hook': 0,
       spy: 0,
       'wall-break': 0,

@@ -183,14 +183,6 @@ export function getRewardEffectEvaluation(
       return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? 2 : 1;
     case 'dreadnought-retreat':
       return getPlayerdreadnoughtCount(gameState.playerCombatUnits) > 0 ? -1 : -3;
-    case 'enemies-card-discard':
-      return 2.25 + 0.2 * (gameState.currentRound - 1);
-    case 'enemies-troop-destroy':
-      return 2.75 - 0.1 * (gameState.currentRound - 1);
-    case 'enemies-intrigue-trash':
-      return 3;
-    case 'enemies-leader-assassinate':
-      return 3.5;
     case 'card-return-to-hand':
       return (
         2 +
@@ -521,20 +513,6 @@ export function getRewardEffectEvaluationForTurnState(
     case 'dreadnought-retreat':
       const unitsInCombat = gameState.playerCombatUnits.shipsInCombat + gameState.playerCombatUnits.troopsInCombat;
       return value * (4 - gameState.playerAgentsAvailable / 2) - (unitsInCombat < 2 ? 2 : 0);
-    case 'enemies-card-discard':
-      return (value * 0.5 * gameState.enemyAgentsAvailable.length) / (gameState.playersCount - 1);
-    case 'enemies-troop-destroy':
-      return (
-        (value * gameState.enemyCombatUnits.filter((x) => x.troopsInCombat > 0 || x.troopsInGarrison > 0).length) /
-        (gameState.playersCount - 1)
-      );
-    case 'enemies-intrigue-trash':
-      return (
-        (value * gameState.enemyIntrigueCounts.filter((x) => x.intrigueCount > 0).length) / (gameState.playersCount - 1)
-      );
-    case 'enemies-leader-assassinate':
-      const woundedEnemyLeaders = gameState.enemyLeaders.filter((leader) => leader.isFlipped);
-      return value - woundedEnemyLeaders.length - 0.1 * gameState.enemyAgentsOnFields.length;
     case 'card-return-to-hand':
       const playerDiscardPileCount = gameState.playerDiscardPileCards?.length ?? 0;
       return playerDiscardPileCount > 0 ? value : -3;

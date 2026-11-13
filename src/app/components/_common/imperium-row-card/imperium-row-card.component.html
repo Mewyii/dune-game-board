@@ -1,4 +1,4 @@
-<div class="imperium-card" [class.rare]="card.rarity === 'rare'">
+<div class="imperium-card" [class.rare]="card.rarity === 'rare'" [class.dark]="disabled">
   <div class="card-header font-medieval" [class.orange]="card.backgroundColor === 'orange'">
     {{ t.translateLS(card.name).toUpperCase() }}
   </div>

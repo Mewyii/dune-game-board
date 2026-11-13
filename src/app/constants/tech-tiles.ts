@@ -277,7 +277,10 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     customEffect: {
@@ -307,7 +310,10 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     customEffect: {
@@ -665,7 +671,10 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-troop-destroy',
+        type: 'target-enemies',
+      },
+      {
+        type: 'loose-troop',
       },
     ],
     customEffect: {
@@ -1088,7 +1097,10 @@ export const techTiles: TechTileCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
       {
         type: 'helper-separator',

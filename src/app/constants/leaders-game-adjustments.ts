@@ -11,12 +11,18 @@ import {
   TechTileSelectorDialogComponent,
 } from '../components/_common/dialogs/tech-tile-selector-dialog/tech-tile-selector-dialog.component';
 import { getPlayerCombatStrength } from '../helpers/combat';
+import { isResourceType } from '../helpers/resources';
 import { playerCanPayCosts } from '../helpers/rewards';
-import { ActionField, DuneLocation, StructuredEffect } from '../models';
+import { ActionField, DuneLocation, StructuredConversionEffect, StructuredEffect } from '../models';
 import { AIAdjustments, CardGameAdjustmentsGameInterface, GameState, TimedFunction } from '../models/ai';
 import { Player } from '../models/player';
 import { ImperiumDeckCard, ImperiumRowCard } from '../services/cards.service';
-import { FieldMarkerModifier, GameModifiers } from '../services/game-modifier.service';
+import {
+  FieldCostsModifier,
+  FieldMarkerModifier,
+  FieldRewardsModifier,
+  GameModifiers,
+} from '../services/game-modifier.service';
 import { TechTileDeckCard } from '../services/tech-tiles.service';
 
 export interface LeaderGameAdjustments {
@@ -37,17 +43,20 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Paul Atreides',
     gameModifiers: {
-      fieldEnemyAgentAccess: [{ id: 'paul-fremen-access', actionTypes: ['fremen'] }],
+      fieldReward: [
+        { id: 'paul-fremen-signet-reward', rewardType: 'signet', amount: 1, actionType: 'fremen' },
+        { id: 'paul-fremen-signet-reward', rewardType: 'signet', amount: 1, actionType: 'spice' },
+      ],
     },
     customSignetFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-      const fremenInfluence = gameState.playerScore['fremen'];
-      if (fremenInfluence > 3) {
+      const signetCount = gameState.playerResources.signet;
+      if (signetCount > 3) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
         game.addRewardToPlayer(player.id, { type: 'agent-lift' });
-      } else if (fremenInfluence > 1) {
+        game.resolveRewardChoices();
+      } else if (signetCount > 1) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
         game.addRewardToPlayer(player.id, { type: 'troop' });
-        game.resolveRewardChoices(player);
       }
       game.addPlayerGameModifiers(player.id, {
         customActions: [
@@ -65,16 +74,26 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       });
     },
     signetRingValue: (player, gameState) => {
-      let value = 1;
-      const fremenInfluence = gameState.playerScore['fremen'];
-      if (fremenInfluence > 3) {
+      let value = 0;
+      const signetCount = gameState.playerResources.signet;
+      if (signetCount > 3) {
         if (gameState.playerAgentsOnFields.length > 0) {
           value += 5.0;
+        } else {
+          value -= 1.0;
         }
-      } else if (fremenInfluence > 1) {
-        value += 3.5;
+      } else if (signetCount > 1) {
+        value += 3.0;
       }
       return value;
+    },
+    signetTokenOrFieldMarkerValue: (player, gameState, targetBoardSpace) => {
+      const signetCount = gameState.playerResources.signet;
+      if (signetCount > 3) {
+        return 0;
+      } else {
+        return 1.25;
+      }
     },
   },
   {
@@ -85,7 +104,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         function: (player, gameState, game) => {
           if (gameState.playerHandCards.some((card) => card.agentEffects?.some((x) => x.type === 'signet-ring'))) {
             game.addRewardToPlayer(player.id, { type: 'faction-influence-down-choice' });
-            game.resolveRewardChoices(player);
+            game.resolveRewardChoices();
           }
         },
       },
@@ -105,12 +124,14 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     customSignetFunction: (player, gameState, game) => {
       if (player.isAI || !gameState.playerLeader) return;
 
-      const fieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
-      const locationChoices = gameState.locations.filter(
-        (location) =>
-          fieldMarkers?.some((marker) => marker.amount > 1 && location.actionField.title.en === marker.fieldId) ||
-          gameState.playerAgentsOnFields.some((agent) => location.actionField.title.en === agent.fieldId),
+      const locations = gameState.locations.filter((location) =>
+        gameState.playerAgentsOnFields.some((agent) => location.actionField.title.en === agent.fieldId),
       );
+      const greenBoardSpaces: DuneLocation[] = gameState.boardSpaces
+        .filter((x) => x.actionType === 'landsraad' && x.costs)
+        .map((x) => ({ actionField: x, color: 'rgb(72, 89, 71)', position: { marginLeft: 0, marginTop: 0 } }));
+
+      const locationChoices = [...locations, ...greenBoardSpaces];
 
       if (locationChoices.length < 1) {
         return;
@@ -118,7 +139,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
         data: {
-          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationChoice')}`,
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationOrBoardSpaceChoice')}`,
           playerId: player.id,
           locations: locationChoices,
           mode: 'select',
@@ -128,88 +149,149 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       });
 
       dialogRef.afterClosed().subscribe((location: DuneLocation) => {
-        const fieldMarker = fieldMarkers?.find((x) => x.fieldId === location.actionField.title.en);
-        if (fieldMarker && fieldMarker.amount > 1) {
-          game.playSound('location-control');
-          game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
-          game.setLocationOwner(fieldMarker.fieldId, player.id);
-          game.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
-        } else {
-          game.playSound('click-soft');
-          game.changeFieldMarkerModifier(player.id, location.actionField.title.en, 1);
+        game.playSound('click-soft');
+        game.changeFieldMarkerModifier(player.id, location.actionField.title.en, 1);
+        const fieldCosts = location.actionField.costs?.shift();
+        if (fieldCosts && isResourceType(fieldCosts.type)) {
+          game.addPlayerGameModifiers(player.id, {
+            fieldCost: [
+              {
+                id: 'leto-field-cost-modifier-' + location.actionField.title.en,
+                fieldId: location.actionField.title.en,
+                costType: fieldCosts.type,
+                amount: -1,
+              },
+            ],
+          });
         }
       });
     },
     customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-      const possibleNewMarkerLocations = gameState.locations.filter((x) =>
-        gameState.playerAgentsOnFields.some((agent) => agent.fieldId === x.actionField.title.en),
-      );
-      const playerOwnedLocations = gameState.playerLocations;
-      const fieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
+      const locations = gameState.locations
+        .filter((location) =>
+          gameState.playerAgentsOnFields.some((agent) => location.actionField.title.en === agent.fieldId),
+        )
+        .map((x) => ({
+          id: x.actionField.title.en,
+          boardSpace: x.actionField,
+          weight: x.actionField.costs?.some((c) => c.type === 'spice') ? 2.25 : 1.25,
+        }));
+      const greenBoardSpaces = gameState.boardSpaces
+        .filter((x) => x.actionType === 'landsraad' && x.costs)
+        .map((x) => ({ id: x.title.en, boardSpace: x, weight: x.costs ? 0.5 : 1.5 }));
 
-      if (fieldMarkers) {
-        fieldMarkers.sort((a, b) => a.amount - b.amount);
-        for (const fieldMarker of fieldMarkers) {
-          if (fieldMarker.amount > 1 && !playerOwnedLocations.some((locationId) => locationId === fieldMarker.fieldId)) {
-            game.playSound('location-control');
-            game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -2);
-            game.setLocationOwner(fieldMarker.fieldId, player.id);
-            game.logPlayerGainedLocationControl(player.id, gameState.currentRound, fieldMarker.fieldId);
-          } else {
-            if (possibleNewMarkerLocations.some((x) => x.actionField.title.en === fieldMarker.fieldId)) {
-              game.playSound('click-soft');
-              game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, 1);
-            }
-          }
-        }
-      } else if (possibleNewMarkerLocations.length > 0) {
-        game.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[0].actionField.title.en, 1);
+      const locationChoices = [...locations, ...greenBoardSpaces];
+
+      if (locationChoices.length < 1) {
+        return;
+      }
+
+      const totalWeight = locationChoices.reduce((sum, choice) => sum + choice.weight, 0);
+      let roll = Math.random() * totalWeight;
+      const chosen =
+        locationChoices.find((choice) => (roll -= choice.weight) < 0) ?? locationChoices[locationChoices.length - 1];
+
+      game.changeFieldMarkerModifier(player.id, chosen.id, 1);
+      const fieldCosts = chosen.boardSpace.costs?.shift();
+      if (fieldCosts && isResourceType(fieldCosts.type)) {
+        game.addPlayerGameModifiers(player.id, {
+          fieldCost: [
+            {
+              id: 'leto-field-cost-modifier-' + chosen.id,
+              fieldId: chosen.id,
+              costType: fieldCosts.type,
+              amount: -1,
+            },
+          ],
+        });
       }
     },
     signetRingValue: (player, gameState, targetBoardSpace) => {
-      const playerAgentsOnFields = gameState.playerAgentsOnFields;
-      if (targetBoardSpace) {
-        playerAgentsOnFields.push({ playerId: player.id, fieldId: targetBoardSpace.title.en, state: 'placed' });
-      }
-      let value = 0;
-      if (gameState.playerGameModifiers?.fieldMarkers?.some((x) => x.amount > 1)) {
-        value += 6;
-      } else if (playerAgentsOnFields.length > 0) {
-        value += 3;
-      }
-      return value;
+      return 1.75;
     },
-    signetTokenOrFieldMarkerValue: (player, gameState) => 3,
+    signetTokenOrFieldMarkerValue: (player, gameState, targetBoardSpace) => {
+      if (targetBoardSpace?.actionType === 'landsraad') {
+        return 0.25;
+      } else {
+        return 2.0;
+      }
+    },
+    customTimedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          const fieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
+          const locationsWithAgentsAndFieldMarkers = gameState.locations.filter((location) =>
+            fieldMarkers?.some((marker) => marker.amount > 0 && location.actionField.title.en === marker.fieldId),
+          );
+          if (locationsWithAgentsAndFieldMarkers.length > 0) {
+            game.addRewardToPlayer(player.id, { type: 'persuasion', amount: locationsWithAgentsAndFieldMarkers.length });
+          }
+        },
+      },
+    ],
   },
   {
     id: 'Feyd-Rautha Harkonnen',
-    customSignetEffects: [{ type: 'reward', effectRewards: [{ type: 'signet' }] }],
+    customSignetFunction: (player, gameState, game) => {
+      if (player.isAI) {
+        return;
+      }
+
+      const imperiumRowCards = gameState.imperiumRowCards.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[];
+      if (imperiumRowCards.length < 1 || !gameState.playerLeader) {
+        return;
+      }
+
+      const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardChoice')}`,
+          playerId: player.id,
+          imperiumCards: imperiumRowCards,
+          mode: 'select',
+          colorScheme: 'neutral',
+        } as ImperiumCardSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((chosenImperiumRowCard: ImperiumRowCard) => {
+        if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
+          game.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+          game.removeCardFromImperiumRow(chosenImperiumRowCard);
+        }
+      });
+    },
+    customSignetAIFunction: (player, gameState, game) => {
+      const imperiumRowCards = gameState.imperiumRowCards.filter((x) => x.type === 'imperium-card') as ImperiumRowCard[];
+      if (imperiumRowCards.length < 1) {
+        return;
+      }
+
+      let chosenImperiumRowCard: ImperiumRowCard | undefined;
+      let bestEffectValue = 0;
+      for (const card of imperiumRowCards) {
+        if (card.structuredAgentEffects) {
+          const effectEvaluation = game.ai.getStructuredEffectUsefulnesAndCosts(
+            card.structuredAgentEffects,
+            player,
+            gameState,
+          );
+          if (
+            effectEvaluation.usefullness > bestEffectValue &&
+            playerCanPayCosts(effectEvaluation.costs, player, gameState)
+          ) {
+            chosenImperiumRowCard = card;
+            bestEffectValue = effectEvaluation.usefullness;
+          }
+        }
+      }
+
+      if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
+        game.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+        game.removeCardFromImperiumRow(chosenImperiumRowCard);
+      }
+    },
     customTimedActivatedFunctions: [
-      {
-        timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          if (gameState.playerHandCards.length < 1 || !gameState.playerLeader) return;
-
-          const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
-            data: {
-              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardTrash')}`,
-              playerId: player.id,
-              imperiumCards: gameState.playerHandCards,
-              mode: 'select',
-              colorScheme: 'negative',
-            } as ImperiumCardSelectorData,
-            disableClose: true,
-          });
-
-          dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
-            game.trashImperiumCard(player.id, cardToTrash, 'hand');
-            game.addRewardToPlayer(player.id, { type: 'intrigue' });
-            game.addRewardToPlayer(player.id, { type: 'intrigue' });
-            game.payCostForPlayer(player.id, { type: 'intrigue-trash' });
-            game.resolveRewardChoices(player);
-          });
-        },
-      },
       {
         timing: 'timing-combat',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
@@ -219,52 +301,33 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
           const exclusiveID = crypto.randomUUID();
           for (let i = 1; i <= gameState.playerResources.signet; i++) {
-            game.updatePlayerTurnInfo(player.id, {
-              effectConversions: [
-                {
-                  type: 'helper-trade',
-                  effectCosts: {
-                    type: 'reward',
-                    effectRewards: [
-                      {
-                        type: 'signet',
-                        amount: i,
-                      },
-                    ],
+            game.addPlayerConversionChoice(player.id, {
+              type: 'helper-trade',
+              effectCosts: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'signet',
+                    amount: i,
                   },
-                  effectConversionRewards: {
-                    type: 'reward',
-                    effectRewards: [
-                      {
-                        type: 'sword',
-                        amount: i,
-                      },
-                    ],
+                ],
+              },
+              effectConversionRewards: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'sword',
+                    amount: i,
                   },
-                  exlusiveChoiceOfMultipleEffectsId: exclusiveID,
-                },
-              ],
+                ],
+              },
+              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
             });
           }
         },
       },
     ],
     customTimedAIFunctions: [
-      {
-        timing: 'timing-round-start',
-        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          if (
-            gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
-            gameState.playerIntrigueCount < 2 &&
-            Math.random() > 0.33
-          ) {
-            game.addRewardToPlayer(player.id, { type: 'card-trash' });
-            game.addRewardToPlayer(player.id, { type: 'intrigue' });
-            game.addRewardToPlayer(player.id, { type: 'intrigue' });
-            game.payCostForPlayer(player.id, { type: 'intrigue-trash' });
-          }
-        },
-      },
       {
         timing: 'timing-combat',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
@@ -306,17 +369,48 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       },
     ],
-    signetTokenOrFieldMarkerValue: (player, gameState) => 0.75,
   },
   {
     id: 'Count Glossu Rabban',
+    customSignetFunction: (player, gameState, game) => {
+      if (player.isAI || !gameState.playerLeader) return;
+
+      const playerLocations = gameState.locations.filter((location) =>
+        gameState.playerLocations.includes(location.actionField.title.en),
+      );
+      if (playerLocations.length < 1) {
+        return;
+      }
+
+      const dialogRef = game.dialog.open(BoardSpaceSelectorDialogComponent, {
+        data: {
+          title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectLocationChoice')}`,
+          playerId: player.id,
+          locations: playerLocations,
+          mode: 'select',
+          colorScheme: 'positive',
+          minSelected: 1,
+          maxSelected: 2,
+        } as BoardSpaceSelectorData,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((locations: DuneLocation[]) => {
+        game.playSound('click-soft');
+        for (const location of locations) {
+          if (location.actionField.ownerReward) {
+            game.addRewardToPlayer(player.id, location.actionField.ownerReward);
+          }
+        }
+      });
+    },
     customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const resourceOptions = gameState.boardSpaces
         .filter((bs) => gameState.playerLocations.includes(bs.title.en))
         .map((x) => x.ownerReward)
         .filter((x) => x !== undefined);
 
-      const resourceChoices = game.ai.getDesiredRewardEffects(player, resourceOptions, gameState);
+      const resourceChoices = game.ai.getDesiredRewardEffects(player, resourceOptions, gameState, 2);
       for (const choice of resourceChoices) {
         game.addRewardToPlayer(player.id, choice);
       }
@@ -333,8 +427,8 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-round-start',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          game.addRewardToPlayer(player.id, { type: 'card-discard' });
-          game.resolveRewardChoices(player);
+          const randomCard = gameState.playerHandCards[Math.floor(Math.random() * gameState.playerHandCards.length)];
+          game.discardPlayerHandCard(player.id, randomCard);
         },
       },
     ],
@@ -343,11 +437,92 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
   },
   {
+    id: 'Baron Vladimir Harkonnen',
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          if (gameState.playerHandCards.length < 1 || !gameState.playerLeader) return;
+
+          const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
+            data: {
+              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardTrash')}`,
+              playerId: player.id,
+              imperiumCards: gameState.playerHandCards,
+              mode: 'select',
+              colorScheme: 'negative',
+            } as ImperiumCardSelectorData,
+            disableClose: true,
+          });
+
+          dialogRef.afterClosed().subscribe((cardToTrash: ImperiumDeckCard) => {
+            game.trashImperiumCard(player.id, cardToTrash, 'hand');
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+            game.resolveRewardChoices();
+          });
+        },
+      },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-round-start',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          if (
+            gameState.playerDeckCards.length + gameState.playerHandCards.length > 8 &&
+            gameState.playerIntrigueCount < 2 &&
+            Math.random() > 0.5
+          ) {
+            game.addRewardToPlayer(player.id, { type: 'card-trash' });
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.addRewardToPlayer(player.id, { type: 'intrigue' });
+            game.payCostForPlayer(player.id, { type: 'intrigue-trash' });
+          }
+        },
+      },
+    ],
+  },
+  {
     id: 'Chani Kynes',
-    gameModifiers: {
-      fieldCost: [{ id: 'chani-spice-field-costs', actionType: 'spice', costType: 'water', amount: -1 }],
-      fieldReward: [{ id: 'chani-spice-field-rewards', actionType: 'spice', rewardType: 'spice', amount: -1 }],
-    },
+    customTimedFunctions: [
+      {
+        timing: 'timing-game-start',
+        function: (player, gameState, game) => {
+          const spiceBoardSpaces = gameState.boardSpaces.filter((x) => x.actionType === 'spice' && x.costs);
+          const townBoardSpaces = gameState.boardSpaces.filter((x) => x.actionType === 'town' && x.costs);
+
+          const chaniCostModifiers: FieldCostsModifier[] = [
+            { id: 'chani-spice-field-costs', actionType: 'spice', costType: 'water', amount: -1 },
+            { id: 'chani-town-field-costs', actionType: 'town', costType: 'water', amount: -1 },
+          ];
+
+          const chaniRewardModifiers: FieldRewardsModifier[] = [];
+
+          for (const spiceBoardSpace of spiceBoardSpaces) {
+            chaniRewardModifiers.push({
+              id: 'chani-spice-field-costs-' + spiceBoardSpace.title.en,
+              fieldId: spiceBoardSpace.title.en,
+              rewardType: 'spice',
+              amount: -1,
+            });
+          }
+          for (const townBoardSpace of townBoardSpaces) {
+            chaniRewardModifiers.push({
+              id: 'chani-town-field-costs-' + townBoardSpace.title.en,
+              fieldId: townBoardSpace.title.en,
+              rewardType: 'troop',
+              amount: -1,
+            });
+          }
+
+          game.addPlayerGameModifiers(player.id, {
+            fieldCost: chaniCostModifiers,
+            fieldReward: chaniRewardModifiers,
+          });
+        },
+      },
+    ],
     customTimedActivatedFunctions: [
       {
         timing: 'timing-reveal-turn',
@@ -477,31 +652,27 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
           const exclusiveID = crypto.randomUUID();
           for (let i = 1; i <= gameState.playerResources.signet; i++) {
-            game.updatePlayerTurnInfo(player.id, {
-              effectConversions: [
-                {
-                  type: 'helper-trade',
-                  effectCosts: {
-                    type: 'reward',
-                    effectRewards: [
-                      {
-                        type: 'signet',
-                        amount: i,
-                      },
-                    ],
+            game.addPlayerConversionChoice(player.id, {
+              type: 'helper-trade',
+              effectCosts: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'signet',
+                    amount: i,
                   },
-                  effectConversionRewards: {
-                    type: 'reward',
-                    effectRewards: [
-                      {
-                        type: 'sword',
-                        amount: i * 3,
-                      },
-                    ],
+                ],
+              },
+              effectConversionRewards: {
+                type: 'reward',
+                effectRewards: [
+                  {
+                    type: 'sword',
+                    amount: i * 3,
                   },
-                  exlusiveChoiceOfMultipleEffectsId: exclusiveID,
-                },
-              ],
+                ],
+              },
+              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
             });
           }
         },
@@ -595,83 +766,71 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       let hasOptions = false;
       if (gameState.playerResources.water > 1) {
         hasOptions = true;
-        game.updatePlayerTurnInfo(player.id, {
-          effectConversions: [
-            {
-              type: 'helper-trade',
-              effectCosts: {
-                type: 'reward',
-                effectRewards: [
-                  {
-                    type: 'water',
-                  },
-                  {
-                    type: 'water',
-                  },
-                ],
+        game.addPlayerConversionChoice(player.id, {
+          type: 'helper-trade',
+          effectCosts: {
+            type: 'reward',
+            effectRewards: [
+              {
+                type: 'water',
               },
-              effectConversionRewards: {
-                type: 'reward',
-                effectRewards: [
-                  {
-                    type: 'signet',
-                    amount: 3,
-                  },
-                ],
+              {
+                type: 'water',
               },
-              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
-            },
-          ],
+            ],
+          },
+          effectConversionRewards: {
+            type: 'reward',
+            effectRewards: [
+              {
+                type: 'signet',
+                amount: 3,
+              },
+            ],
+          },
+          exlusiveChoiceOfMultipleEffectsId: exclusiveID,
         });
       }
       if (gameState.playerResources.signet > 2) {
         hasOptions = true;
-        game.updatePlayerTurnInfo(player.id, {
-          effectConversions: [
-            {
-              type: 'helper-trade',
-              effectCosts: {
-                type: 'reward',
-                effectRewards: [
-                  {
-                    type: 'signet',
-                    amount: 3,
-                  },
-                ],
+        game.addPlayerConversionChoice(player.id, {
+          type: 'helper-trade',
+          effectCosts: {
+            type: 'reward',
+            effectRewards: [
+              {
+                type: 'signet',
+                amount: 3,
               },
-              effectConversionRewards: {
-                type: 'reward',
-                effectRewards: [
-                  {
-                    type: 'victory-point',
-                  },
-                ],
+            ],
+          },
+          effectConversionRewards: {
+            type: 'reward',
+            effectRewards: [
+              {
+                type: 'victory-point',
               },
-              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
-            },
-          ],
+            ],
+          },
+          exlusiveChoiceOfMultipleEffectsId: exclusiveID,
         });
       }
       if (hasOptions) {
-        game.updatePlayerTurnInfo(player.id, {
-          effectConversions: [
-            {
-              type: 'helper-trade',
-              effectCosts: {
-                type: 'reward',
-                effectRewards: [],
+        game.addPlayerConversionChoice(player.id, {
+          type: 'helper-trade',
+          effectCosts: {
+            type: 'reward',
+            effectRewards: [],
+          },
+          effectConversionRewards: {
+            type: 'reward',
+            effectRewards: [
+              {
+                type: 'signet',
               },
-              effectConversionRewards: {
-                type: 'reward',
-                effectRewards: [
-                  {
-                    type: 'signet',
-                  },
-                ],
-              },
-              exlusiveChoiceOfMultipleEffectsId: exclusiveID,
-            },
-          ],
+            ],
+          },
+          exlusiveChoiceOfMultipleEffectsId: exclusiveID,
         });
       } else {
         game.addRewardToPlayer(player.id, { type: 'signet' });
@@ -741,7 +900,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       });
 
       dialogRef.afterClosed().subscribe((location: DuneLocation) => {
-        game.changeFieldMarkerModifier(player.id, location.actionField.title.en, 1);
+        const boardSpaceID = location.actionField.title.en;
+        game.changeFieldMarkerModifier(player.id, boardSpaceID, 1);
+        game.updatePlayerTurnInfo(player.id, { boardSpaceMarkersPlacedThisTurn: [boardSpaceID] });
       });
     },
     customSignetAIFunction: (player, gameState, game) => {
@@ -749,23 +910,31 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       if (possibleNewMarkerLocations.length > 0) {
         const randomIndex = Math.floor(Math.random() * possibleNewMarkerLocations.length);
-        game.changeFieldMarkerModifier(player.id, possibleNewMarkerLocations[randomIndex], 1);
+        const boardSpaceID = possibleNewMarkerLocations[randomIndex];
+        game.changeFieldMarkerModifier(player.id, boardSpaceID, 1);
+        game.updatePlayerTurnInfo(player.id, { boardSpaceMarkersPlacedThisTurn: [boardSpaceID] });
       }
     },
     customTimedFunctions: [
       {
-        timing: 'timing-agent-placement',
+        timing: 'timing-agent-placed',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           const playerFieldMarkers = gameState.playerGameModifiers?.fieldMarkers;
-          if (!playerFieldMarkers || playerFieldMarkers.length < 1) {
+          const turnInfos = gameState.playerTurnInfos;
+          if (!playerFieldMarkers || playerFieldMarkers.length < 1 || !turnInfos) {
             return;
           }
 
-          const fieldWithMarker = gameState.playerAgentsOnFields.find((x) =>
-            playerFieldMarkers.some((marker) => marker.fieldId === x.fieldId && marker.amount > 0),
+          const agentPlacedOnFieldId = turnInfos.agentPlacedOnFieldId;
+          const boardSpaceMarkersPlacedThisTurn = turnInfos.boardSpaceMarkersPlacedThisTurn;
+
+          const viableMarker = playerFieldMarkers.find(
+            (x) =>
+              x.fieldId === agentPlacedOnFieldId && (x.amount > 1 || !boardSpaceMarkersPlacedThisTurn.includes(x.fieldId)),
           );
-          if (fieldWithMarker) {
-            game.changeFieldMarkerModifier(player.id, fieldWithMarker.fieldId, -1);
+
+          if (viableMarker) {
+            game.changeFieldMarkerModifier(player.id, viableMarker.fieldId, -1);
             game.addRewardToPlayer(player.id, { type: 'card-draw', amount: 2 });
           }
         },
@@ -778,7 +947,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       }
       return playerAgentsOnFields.length > 0 ? 2.75 : 0;
     },
-    signetTokenOrFieldMarkerValue: (player, gameState) => 4.5,
+    signetTokenOrFieldMarkerValue: (player, gameState) => 4.0,
   },
   {
     id: 'Lady Margot Fenring',
@@ -786,20 +955,16 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-round-start',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          game.updatePlayerTurnInfo(player.id, {
-            effectConversions: [
-              {
-                type: 'helper-trade',
-                effectCosts: {
-                  type: 'reward',
-                  effectRewards: [{ type: 'card-discard' }],
-                },
-                effectConversionRewards: {
-                  type: 'reward',
-                  effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
-                },
-              },
-            ],
+          game.addPlayerConversionChoice(player.id, {
+            type: 'helper-trade',
+            effectCosts: {
+              type: 'reward',
+              effectRewards: [{ type: 'card-discard' }],
+            },
+            effectConversionRewards: {
+              type: 'reward',
+              effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
+            },
           });
         },
       },
@@ -808,20 +973,16 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-round-start',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          game.updatePlayerTurnInfo(player.id, {
-            effectConversions: [
-              {
-                type: 'helper-trade',
-                effectCosts: {
-                  type: 'reward',
-                  effectRewards: [{ type: 'card-discard' }],
-                },
-                effectConversionRewards: {
-                  type: 'reward',
-                  effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
-                },
-              },
-            ],
+          game.addPlayerConversionChoice(player.id, {
+            type: 'helper-trade',
+            effectCosts: {
+              type: 'reward',
+              effectRewards: [{ type: 'card-discard' }],
+            },
+            effectConversionRewards: {
+              type: 'reward',
+              effectRewards: [{ type: 'card-draw' }, { type: 'turn-pass' }],
+            },
           });
         },
       },
@@ -903,26 +1064,28 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         }
       },
     },
-    customTimedActivatedFunctions: [
+    customTimedFunctions: [
       {
         timing: 'timing-reveal-turn',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
           }
-
           game.resolveStructuredEffect(
             {
               type: 'helper-or',
               effectLeft: {
                 type: 'helper-trade',
                 effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-                effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
+                effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'sword', amount: 3 }] },
               },
               effectRight: {
                 type: 'helper-trade',
                 effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-                effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
+                effectConversionRewards: {
+                  type: 'reward',
+                  effectRewards: [{ type: 'persuasion', amount: 1 }, { type: 'intrigue' }],
+                },
               },
             },
             player,
@@ -931,35 +1094,8 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
         },
       },
     ],
-    customTimedAIFunctions: [
-      {
-        timing: 'timing-reveal-turn',
-        function: (player, gameState, game) => {
-          for (let i = 0; i < gameState.playerResources.signet; i++) {
-            game.resolveStructuredEffects(
-              [
-                {
-                  type: 'helper-or',
-                  effectLeft: {
-                    type: 'helper-trade',
-                    effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-                    effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'sword', amount: 2 }] },
-                  },
-                  effectRight: {
-                    type: 'helper-trade',
-                    effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
-                    effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'intrigue' }] },
-                  },
-                },
-              ],
-              player,
-              gameState,
-            );
-          }
-        },
-      },
-    ],
-    signetTokenOrFieldMarkerValue: (player, gameState) => 2.5 - 1.0 * gameState.playerResources.signet,
+    signetTokenOrFieldMarkerValue: (player, gameState) =>
+      3.5 - 0.02 * gameState.playerCardsBought - 0.02 * gameState.playerCardsTrashed,
   },
   {
     id: 'Tessia Vernius',
@@ -985,7 +1121,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           dialogRef.afterClosed().subscribe((pickedCard: TechTileDeckCard) => {
             game.trashPlayerTechTile(player.id, pickedCard);
             game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
-            game.resolveRewardChoices(player);
+            game.resolveRewardChoices();
           });
         },
       },
@@ -1012,11 +1148,203 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     ],
   },
   {
+    id: 'Earl Rhombur Vernius',
+    customTimedFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          game.addRewardToPlayer(player.id, { type: 'tech' });
+        },
+      },
+    ],
+    customTimedActivatedFunctions: [
+      {
+        timing: 'timing-agent-placed',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          if (gameState.playerResources.signet < 1 || !gameState.playerTurnInfos?.canBuyTech || !gameState.playerLeader) {
+            return;
+          }
+
+          const buyableTechTiles = game.getBuyableTechTiles();
+
+          const reducedTechTiles = buyableTechTiles.map((x) => {
+            const costReduction = x.costs > gameState.playerResources.signet ? gameState.playerResources.signet : x.costs;
+
+            return {
+              ...x,
+              costs: x.costs - costReduction,
+            };
+          });
+
+          const availableSolari = gameState.playerResources.solari;
+
+          const affordableTechTiles = reducedTechTiles.filter((card) => card.costs <= availableSolari);
+
+          if (affordableTechTiles.length < 1) {
+            return;
+          }
+
+          const dialogRef = game.dialog.open(TechTileSelectorDialogComponent, {
+            data: {
+              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectTechTileAcquire')}`,
+              playerId: player.id,
+              techTiles: affordableTechTiles,
+              mode: 'select',
+              colorScheme: 'positive',
+            } as TechTileSelectorData,
+            disableClose: true,
+          });
+
+          dialogRef.afterClosed().subscribe((pickedCard: TechTileDeckCard) => {
+            const originalCardCosts = buyableTechTiles.find((x) => x.id === pickedCard.id)?.costs ?? 0;
+            const costReduction = originalCardCosts - pickedCard.costs;
+            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction });
+            game.acquireTechTile(player.id, pickedCard);
+          });
+        },
+      },
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          if (gameState.playerResources.signet < 1 || !gameState.playerTurnInfos?.canBuyTech || !gameState.playerLeader) {
+            return;
+          }
+
+          const buyableTechTiles = game.getBuyableTechTiles();
+
+          const reducedTechTiles = buyableTechTiles.map((x) => {
+            const costReduction = x.costs > gameState.playerResources.signet ? gameState.playerResources.signet : x.costs;
+
+            return {
+              ...x,
+              costs: x.costs - costReduction,
+            };
+          });
+
+          const availableSolari = gameState.playerResources.solari;
+
+          const affordableTechTiles = reducedTechTiles.filter((card) => card.costs <= availableSolari);
+
+          if (affordableTechTiles.length < 1) {
+            return;
+          }
+
+          const dialogRef = game.dialog.open(TechTileSelectorDialogComponent, {
+            data: {
+              title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectTechTileAcquire')}`,
+              playerId: player.id,
+              techTiles: affordableTechTiles,
+              mode: 'select',
+              colorScheme: 'positive',
+            } as TechTileSelectorData,
+            disableClose: true,
+          });
+
+          dialogRef.afterClosed().subscribe((pickedCard: TechTileDeckCard) => {
+            const originalCardCosts = buyableTechTiles.find((x) => x.id === pickedCard.id)?.costs ?? 0;
+            const costReduction = originalCardCosts - pickedCard.costs;
+            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction });
+            game.acquireTechTile(player.id, pickedCard);
+          });
+        },
+      },
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          if (gameState.playerResources.signet < 1 || !gameState.playerLeader) {
+            return;
+          }
+
+          game.resolveStructuredEffect(
+            {
+              type: 'helper-trade',
+              effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+              effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'sword' }, { type: 'sword' }] },
+            },
+            player,
+            gameState,
+          );
+        },
+      },
+    ],
+    customTimedAIFunctions: [
+      {
+        timing: 'timing-reveal-turn',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          const availableSignetTokens = gameState.playerResources.signet;
+          if (availableSignetTokens < 1) {
+            return;
+          }
+
+          const availablePersuasion = gameState.playerResources.persuasion;
+          const { allCards, imperiumRowCards, recruitableCards } = game.getAllBuyableCards(
+            gameState.playerTurnInfos?.factionRecruitment,
+          );
+
+          const reducedFremenCards: (ImperiumDeckCard & { originalPersuasionCosts?: number })[] = allCards.map((x) => {
+            if (x.faction !== 'fremen') {
+              return x;
+            } else {
+              return {
+                ...x,
+                persuasionCosts: x.persuasionCosts
+                  ? x.persuasionCosts >= availableSignetTokens
+                    ? x.persuasionCosts - availableSignetTokens
+                    : 0
+                  : 0,
+                originalPersuasionCosts: x.persuasionCosts ?? 0,
+              };
+            }
+          });
+
+          const cardToBuy = game.ai.getImperiumCardToBuy(availablePersuasion, reducedFremenCards, player, gameState, []);
+          if (cardToBuy?.faction === 'fremen' && cardToBuy.originalPersuasionCosts) {
+            let source: 'always-buyable' | 'deck' | 'row' = 'always-buyable';
+            if (imperiumRowCards.some((x) => x.id === cardToBuy.id)) {
+              source = 'row';
+            } else if (recruitableCards.some((x) => x.id === cardToBuy.id)) {
+              source = 'deck';
+            }
+
+            const usedSignetTokens =
+              cardToBuy.originalPersuasionCosts < availableSignetTokens
+                ? cardToBuy.originalPersuasionCosts
+                : availableSignetTokens;
+
+            game.acquireImperiumCard(player.id, cardToBuy, source);
+            game.payCostForPlayer(player.id, { type: 'signet', amount: usedSignetTokens });
+          }
+        },
+      },
+      {
+        timing: 'timing-reveal-turn',
+        function: (player, gameState, game) => {
+          if (gameState.playerResources.signet < 1 || !gameState.playerLeader) {
+            return;
+          }
+
+          game.resolveStructuredEffect(
+            {
+              type: 'helper-trade',
+              effectCosts: { type: 'reward', effectRewards: [{ type: 'signet' }] },
+              effectConversionRewards: { type: 'reward', effectRewards: [{ type: 'sword' }, { type: 'sword' }] },
+            },
+            player,
+            gameState,
+          );
+        },
+      },
+    ],
+  },
+  {
     id: 'Count August Metulli',
+    gameModifiers: {
+      imperiumRow: [{ id: 'august-metulli-imperium-row-block', isBlocked: true }],
+    },
     aiAdjustments: {
       rewardEvaluationModifier: () => [
-        { type: 'council-seat-small', modifier: -0.2 },
-        { type: 'council-seat-large', modifier: -0.2 },
+        { type: 'council-seat-small', modifier: -0.1 },
+        { type: 'council-seat-large', modifier: -0.1 },
       ],
       fieldEvaluationModifier: (player, gameState, field) =>
         field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
@@ -1034,24 +1362,20 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       },
     ],
     customSignetFunction: (player, gameState, game) => {
-      if (player.isAI || gameState.playerResources.signet < 1) {
+      if (player.isAI) {
         return;
       }
 
-      const imperiumRowCards = gameState.imperiumRowCards.filter(
-        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= gameState.playerResources.signet,
-      ) as ImperiumRowCard[];
+      const imperiumRowCards = gameState.imperiumRowCards as ImperiumRowCard[];
       if (imperiumRowCards.length < 1 || !gameState.playerLeader) {
         return;
       }
-
-      const discardPileCards = gameState.enemyDiscardPiles.flatMap((x) => x.cards);
 
       const dialogRef = game.dialog.open(ImperiumCardsPreviewDialogComponent, {
         data: {
           title: `${game.translation.translateLS(gameState.playerLeader.name)}: ${game.translation.translate('commonEffectCardChoice')}`,
           playerId: player.id,
-          imperiumCards: [...imperiumRowCards, ...discardPileCards],
+          imperiumCards: imperiumRowCards,
           mode: 'select',
           colorScheme: 'neutral',
         } as ImperiumCardSelectorData,
@@ -1060,34 +1384,46 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
       dialogRef.afterClosed().subscribe((chosenImperiumRowCard: ImperiumDeckCard) => {
         if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
-          if (chosenImperiumRowCard.persuasionCosts) {
-            game.payCostForPlayer(player.id, {
-              type: 'signet',
-              amount: chosenImperiumRowCard.persuasionCosts,
+          const structuredAgentEffectsWithConnectionActivation: StructuredEffect[] =
+            chosenImperiumRowCard.structuredAgentEffects.map((x) => {
+              if (x.condition?.type === 'condition-connection') {
+                x.condition = undefined;
+                return {
+                  type: 'helper-trade',
+                  effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+                  effectConversionRewards: x,
+                } as StructuredConversionEffect;
+              }
+              return x;
             });
-          }
-          game.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+          game.resolveStructuredEffects(structuredAgentEffectsWithConnectionActivation, player, gameState);
         }
       });
     },
     customSignetAIFunction: (player, gameState, game) => {
-      if (gameState.playerResources.signet < 1) {
-        return;
-      }
-
-      const imperiumRowCards = gameState.imperiumRowCards.filter(
-        (x) => x.type === 'imperium-card' && (x.persuasionCosts ?? 0) <= gameState.playerResources.signet,
-      ) as ImperiumRowCard[];
+      const imperiumRowCards = gameState.imperiumRowCards as ImperiumRowCard[];
       if (imperiumRowCards.length < 1) {
         return;
       }
 
       let chosenImperiumRowCard: ImperiumRowCard | undefined;
+      let cardEffect: StructuredEffect[] = [];
       let bestEffectValue = 0;
       for (const card of imperiumRowCards) {
         if (card.structuredAgentEffects) {
+          const structuredAgentEffectsWithConnectionActivation: StructuredEffect[] = card.structuredAgentEffects.map((x) => {
+            if (x.condition?.type === 'condition-connection') {
+              x.condition = undefined;
+              return {
+                type: 'helper-trade',
+                effectCosts: { type: 'reward', effectRewards: [{ type: 'card-discard' }] },
+                effectConversionRewards: x,
+              } as StructuredConversionEffect;
+            }
+            return x;
+          });
           const effectEvaluation = game.ai.getStructuredEffectUsefulnesAndCosts(
-            card.structuredAgentEffects,
+            structuredAgentEffectsWithConnectionActivation,
             player,
             gameState,
           );
@@ -1096,19 +1432,14 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             playerCanPayCosts(effectEvaluation.costs, player, gameState)
           ) {
             chosenImperiumRowCard = card;
+            cardEffect = structuredAgentEffectsWithConnectionActivation;
             bestEffectValue = effectEvaluation.usefullness;
           }
         }
       }
 
       if (chosenImperiumRowCard && chosenImperiumRowCard.structuredAgentEffects) {
-        if (chosenImperiumRowCard.persuasionCosts) {
-          game.payCostForPlayer(player.id, {
-            type: 'signet',
-            amount: chosenImperiumRowCard.persuasionCosts,
-          });
-        }
-        game.resolveStructuredEffects(chosenImperiumRowCard.structuredAgentEffects, player, gameState);
+        game.resolveStructuredEffects(cardEffect, player, gameState);
       }
     },
     signetRingValue: (player, gameState) => {
@@ -1136,13 +1467,27 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       {
         timing: 'timing-game-start',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          game.addRewardToPlayer(player.id, { type: 'solari', amount: -2 }, { valuesCanBeNegative: true });
+          game.addRewardToPlayer(player.id, { type: 'leadermarker' });
+        },
+      },
+      {
+        timing: 'timing-resource-gained',
+        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
+          if (gameState.playerResources['leadermarker'] < 1) {
+            return;
+          }
+
+          if (gameState.playerResources.solari > 3) {
+            game.payCostForPlayer(player.id, { type: 'solari', amount: 4 });
+            game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
+            game.resolveRewardChoices();
+          }
         },
       },
     ],
     customTimedActivatedFunctions: [
       {
-        timing: 'timing-agent-placement',
+        timing: 'timing-agent-placed',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
@@ -1169,7 +1514,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     ],
     customTimedAIFunctions: [
       {
-        timing: 'timing-agent-placement',
+        timing: 'timing-agent-placed',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.signet < 1) {
             return;
@@ -1255,7 +1600,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
                   game.changeFieldMarkerModifier(player.id, location.actionField.title.en, -1);
                 }
                 game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
-                game.resolveRewardChoices(player);
+                game.resolveRewardChoices();
               }
             });
           }
@@ -1289,7 +1634,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
               game.changeFieldMarkerModifier(player.id, fieldMarker.fieldId, -1);
             }
             game.addRewardToPlayer(player.id, { type: 'faction-influence-up-choice' });
-            game.resolveRewardChoices(player);
+            game.resolveRewardChoices();
           }
         },
       },
@@ -1403,7 +1748,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
     customTimedFunctions: [
       {
-        timing: 'timing-agent-placement',
+        timing: 'timing-agent-placed',
         function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
           if (gameState.playerResources.solari < 1) {
             return;

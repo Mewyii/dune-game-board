@@ -20,6 +20,10 @@ export class PlayersService {
     }),
     distinctUntilChanged(),
   );
+  playerIds$ = this.players$.pipe(
+    map((players) => players.map((x) => x.id)),
+    distinctUntilChanged(),
+  );
 
   constructor(private settingsService: SettingsService) {
     const playersString = localStorage.getItem('players');

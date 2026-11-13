@@ -12,6 +12,11 @@
           [leader]="activeLeader"
           (click)="isLeaderActive = !isLeaderActive"
         ></dune-leader-card>
+        <div class="leader-marker-container">
+          @for (leaderMarker of activePlayerResources.leadermarker | numberToArray; track $index) {
+            <div class="leader-marker" [style.background-color]="activePlayer?.color"></div>
+          }
+        </div>
         @if (!playerLeader.isLockedIn || isLeaderActive) {
           <div class="leader-action-container">
             @if (!playerLeader.isLockedIn) {
@@ -35,30 +40,32 @@
               </button>
             } @else {
               @if (!playerLeader.isFlipped) {
-                <button
-                  *ngIf="playerLeader.hasActiveEffect"
-                  class="tech-flip-button"
-                  mat-fab
-                  [color]="'accent'"
-                  (click)="onActivateLeaderClicked(playerLeader, 'effect')"
-                >
-                  <mat-icon>flash_on</mat-icon>
-                  @if (playerLeader.hasActiveFunction) {
-                    <mat-icon style="position: absolute; top: 10px; right: 4px">arrow_drop_up</mat-icon>
-                  }
-                </button>
-                <button
-                  *ngIf="playerLeader.hasActiveFunction"
-                  class="tech-flip-button"
-                  mat-fab
-                  [color]="'accent'"
-                  (click)="onActivateLeaderClicked(playerLeader, 'function')"
-                >
-                  <mat-icon>flash_on</mat-icon>
-                  @if (playerLeader.hasActiveEffect) {
-                    <mat-icon style="position: absolute; top: 14px; right: 4px">arrow_drop_down</mat-icon>
-                  }
-                </button>
+                @if (playerLeader.hasActiveEffect) {
+                  <button
+                    class="tech-flip-button"
+                    mat-fab
+                    [color]="'accent'"
+                    (click)="onActivateLeaderClicked(playerLeader, 'effect')"
+                  >
+                    <mat-icon>flash_on</mat-icon>
+                    @if (playerLeader.hasActiveFunction) {
+                      <mat-icon style="position: absolute; top: 10px; right: 4px">arrow_drop_up</mat-icon>
+                    }
+                  </button>
+                }
+                @if (playerLeader.hasActiveFunction) {
+                  <button
+                    class="tech-flip-button"
+                    mat-fab
+                    [color]="'accent'"
+                    (click)="onActivateLeaderClicked(playerLeader, 'function')"
+                  >
+                    <mat-icon>flash_on</mat-icon>
+                    @if (playerLeader.hasActiveEffect) {
+                      <mat-icon style="position: absolute; top: 14px; right: 4px">arrow_drop_down</mat-icon>
+                    }
+                  </button>
+                }
               } @else {
                 <button
                   class="buy-button"

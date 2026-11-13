@@ -53,7 +53,7 @@
     <div
       class="reward-area font-text"
       [style.width]="actionField.customWidth"
-      [style.max-width]="actionField.customWidth"
+      [style.max-width]="actionField.customWidth ?? (actionRewards.length > 4 ? '130px' : undefined)"
       [style.row-gap]="actionField.noRowGap ? '0px' : ''"
       [style.column-gap]="actionField.noColumnGap ? '0px' : ''"
       [style.backgroundImage]="backgroundGradient"

@@ -5,7 +5,7 @@ import { mergeObjects } from '../helpers/common';
 import {
   ActionType,
   ActiveFactionType,
-  EffectChoiceConversionMultiplierOrReward,
+  EffectChoiceConversionMultiplierTargetOrReward,
   EffectReward,
   EffectRewardType,
   FactionType,
@@ -27,7 +27,8 @@ export interface FactionInfluenceModifier extends GameModifier {
 export interface ImperiumRowModifier extends GameModifier {
   cardId?: string;
   factionType?: FactionType;
-  persuasionAmount: number;
+  persuasionAmount?: number;
+  isBlocked?: boolean;
   minCosts?: number;
 }
 
@@ -116,7 +117,7 @@ export type RewardWithModifier = EffectReward & {
   modifier?: 'positive' | 'negative';
 };
 
-export type EffectWithModifier = EffectChoiceConversionMultiplierOrReward & {
+export type EffectWithModifier = EffectChoiceConversionMultiplierTargetOrReward & {
   modifier?: 'positive' | 'negative';
 };
 

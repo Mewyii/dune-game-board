@@ -72,7 +72,6 @@ import { ManualComponent } from './components/manual/manual.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { PlayerHandComponent } from './components/player-hand/player-hand.component';
-import { PlayerEffectChoiceComponent } from './components/player-reward-choices/player-effect-choice/player-effect-choice.component';
 import { PlayerEffectConversionComponent } from './components/player-reward-choices/player-effect-conversion/player-effect-conversion.component';
 import { PlayerRewardChoicesComponent } from './components/player-reward-choices/player-reward-choices.component';
 import { PlayerOverviewComponent } from './components/playerboard/player-overview/player-overview.component';
@@ -193,7 +192,6 @@ import { SafeUrlPipe } from './pipes/safe-url';
     GameLogComponent,
     AdditionalPlayerActionsDialogComponent,
     DuneVersionUpdaterComponent,
-    PlayerEffectChoiceComponent,
     PlayerEffectConversionComponent,
     ManualComponent,
     DialogGameManualComponent,

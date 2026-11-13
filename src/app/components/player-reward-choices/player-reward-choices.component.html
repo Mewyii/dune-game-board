@@ -1,13 +1,13 @@
 <div class="reward-choices-container">
   @if (playerRewardChoices) {
-    @for (rewardsChoice of playerRewardChoices.rewardsChoices; track $index) {
+    @for (rewardsChoice of playerRewardChoices.rewardsChoices; track rewardsChoice.id) {
       <div class="rewards-choice" (click)="onRewardsChoiceClicked(rewardsChoice.id)">
         @for (reward of rewardsChoice.choice; track $index) {
           <dune-reward-array [rewards]="rewardsChoice.choice" [textColor]="'white'"></dune-reward-array>
         }
       </div>
     }
-    @for (rewardChoice of playerRewardChoices.rewardChoices; track $index) {
+    @for (rewardChoice of playerRewardChoices.rewardChoices; track rewardChoice.id) {
       <div class="reward-choice" (click)="onRewardChoiceClicked(rewardChoice.id)">
         <dune-reward-array [rewards]="[rewardChoice.choice]" [textColor]="'white'"></dune-reward-array>
       </div>
@@ -19,64 +19,72 @@
         (click)="onCustomChoiceClicked(rewardChoice.id)"
       ></div>
     }
-  }
-  @for (effectOption of playerEffectOptions; track $index; let idx = $index) {
-    <div
-      [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
-      (click)="setEffectActive('option' + idx)"
-    >
-      @if (isStructuredConversionEffect(effectOption.effectLeft)) {
-        <dune-player-effect-conversion [effectConversion]="effectOption.effectLeft"></dune-player-effect-conversion>
-      } @else if (effectOption.effectLeft.multiplier) {
-        <dune-reward-array
-          [rewards]="[{ type: effectOption.effectLeft.multiplier.type }]"
-          [textColor]="'white'"
-        ></dune-reward-array>
-        <dune-reward-array [rewards]="effectOption.effectLeft.effectRewards" [textColor]="'white'"></dune-reward-array>
-      } @else {
-        @for (leftEffect of effectOption.effectLeft.effectRewards; track $index) {
-          <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
+    @for (effectOption of playerRewardChoices.eitherOrEffectChoices; track effectOption.id; let idx = $index) {
+      <div
+        [class]="'rewards-choice ' + (activeEffectId === 'option' + idx ? 'active' : '')"
+        (click)="setEffectActive('option' + idx)"
+      >
+        @if (isStructuredConversionEffect(effectOption.choice.effectLeft)) {
+          <dune-player-effect-conversion [effectConversion]="effectOption.choice.effectLeft"></dune-player-effect-conversion>
+        } @else if (effectOption.choice.effectLeft.multiplier) {
+          <dune-reward-array
+            [rewards]="[{ type: effectOption.choice.effectLeft.multiplier.type }]"
+            [textColor]="'white'"
+          ></dune-reward-array>
+          <dune-reward-array
+            [rewards]="effectOption.choice.effectLeft.effectRewards"
+            [textColor]="'white'"
+          ></dune-reward-array>
+        } @else {
+          @for (leftEffect of effectOption.choice.effectLeft.effectRewards; track $index) {
+            <dune-reward-array [rewards]="[leftEffect]" [textColor]="'white'"></dune-reward-array>
+          }
         }
-      }
-      <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
-      @if (isStructuredConversionEffect(effectOption.effectRight)) {
-        <dune-player-effect-conversion [effectConversion]="effectOption.effectRight"></dune-player-effect-conversion>
-      } @else if (effectOption.effectRight.multiplier) {
-        <dune-reward-array
-          [rewards]="[{ type: effectOption.effectRight.multiplier.type }]"
-          [textColor]="'white'"
-        ></dune-reward-array>
-        <dune-reward-array [rewards]="effectOption.effectRight.effectRewards" [textColor]="'white'"></dune-reward-array>
-      } @else {
-        @for (rightEffect of effectOption.effectRight.effectRewards; track $index) {
-          <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
+        <dune-reward-array [rewards]="[{ type: 'helper-or' }]"></dune-reward-array>
+        @if (isStructuredConversionEffect(effectOption.choice.effectRight)) {
+          <dune-player-effect-conversion
+            [effectConversion]="effectOption.choice.effectRight"
+          ></dune-player-effect-conversion>
+        } @else if (effectOption.choice.effectRight.multiplier) {
+          <dune-reward-array
+            [rewards]="[{ type: effectOption.choice.effectRight.multiplier.type }]"
+            [textColor]="'white'"
+          ></dune-reward-array>
+          <dune-reward-array
+            [rewards]="effectOption.choice.effectRight.effectRewards"
+            [textColor]="'white'"
+          ></dune-reward-array>
+        } @else {
+          @for (rightEffect of effectOption.choice.effectRight.effectRewards; track $index) {
+            <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
+          }
         }
-      }
-      <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
-        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption, idx)">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption, idx)">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
+        <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
+          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption)">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
       </div>
-    </div>
-  }
-  @for (effectConversion of playerEffectConversions; track $index; let idx = $index) {
-    <div
-      [class]="'rewards-choice ' + (activeEffectId === 'conversion' + idx ? 'active' : '')"
-      (click)="setEffectActive('conversion' + idx)"
-    >
-      <dune-player-effect-conversion [effectConversion]="effectConversion"></dune-player-effect-conversion>
-      <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
-        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion, idx)">
-          <mat-icon>check</mat-icon>
-        </button>
-        <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(idx)">
-          <mat-icon>clear</mat-icon>
-        </button>
+    }
+    @for (effectConversion of playerRewardChoices.conversionEffectChoices; track effectConversion.id; let idx = $index) {
+      <div
+        [class]="'rewards-choice ' + (activeEffectId === 'conversion' + idx ? 'active' : '')"
+        (click)="setEffectActive('conversion' + idx)"
+      >
+        <dune-player-effect-conversion [effectConversion]="effectConversion.choice"></dune-player-effect-conversion>
+        <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
+          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion)">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(effectConversion.id)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
       </div>
-    </div>
+    }
   }
   @if (deployableUnits && !activePlayer?.isAI) {
     <div

@@ -19,6 +19,7 @@
 
 .action-bar {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   width: 100%;
   justify-content: center;
@@ -58,7 +59,15 @@
 }
 
 .sortable-category {
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   color: orange;
   font-weight: bold;
+}
+
+.icon-and-string-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

@@ -8,6 +8,7 @@ import {
   effectConversions,
   effectMultipliers,
   effectRewards,
+  effectTargets,
   resourceTypes,
 } from 'src/app/models';
 import { IntrigueCard, intriguesTypes, IntrigueType } from 'src/app/models/intrigue';
@@ -26,7 +27,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
   editMode = false;
   intrigueTypes = intriguesTypes;
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
-  effectTypes = [...effectChoices, ...effectConversions, ...effectMultipliers, ...this.rewardTypes];
+  effectTypes = [...effectChoices, ...effectConversions, ...effectTargets, ...effectMultipliers, ...this.rewardTypes];
 
   constructor(private fb: FormBuilder) {
     this.initForm();

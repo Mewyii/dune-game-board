@@ -20,12 +20,12 @@ import { LeaderDeckCard, LeadersService, PlayerLeader } from 'src/app/services/l
 import { MinorHousesService, PlayerHouse } from 'src/app/services/minor-houses.service';
 import { PlayerAgent, PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayerResourcesService, Resources } from 'src/app/services/player-resources.service';
+import { TurnInfoService } from 'src/app/services/player-turn-info.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundPhaseType, RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { PlayerTechTile, TechTileDeckCard, TechTilesService } from 'src/app/services/tech-tiles.service';
 import { TranslateService } from 'src/app/services/translate-service';
-import { TurnInfoService } from 'src/app/services/turn-info.service';
 import { AdditionalPlayerActionsDialogComponent } from '../_common/dialogs/additional-player-actions-dialog/additional-player-actions-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
@@ -398,7 +398,7 @@ export class LeadersComponent implements OnInit, OnDestroy {
 
   onAIIncreaseInfluenceChoiceClicked(playerId: number) {
     if (this.activePlayer) {
-      this.effectsService.payCostForPlayer(playerId, { type: 'faction-influence-up-choice' });
+      this.effectsService.addRewardToPlayer(playerId, { type: 'faction-influence-up-choice' });
       this.gameManager.aiResolveRewardChoices(this.activePlayer);
     }
   }

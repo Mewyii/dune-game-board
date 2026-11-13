@@ -4,8 +4,8 @@ import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
-import { getFlattenedEffectRewardArray, isRewardEffect } from 'src/app/helpers/rewards';
-import { ActionType, ActiveFactionType, Effect, EffectReward, EffectRewardType } from 'src/app/models';
+import { getEffectRewardsAndCosts, getFlattenedEffectRewardArray, isRewardEffect } from 'src/app/helpers/rewards';
+import { ActionType, ActiveFactionType, EffectRewardType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { CardConfiguratorService } from 'src/app/services/configurators/card-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -150,7 +150,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
           }
         }
         if (card.agentEffects) {
-          let rewards = this.getEffectRewardsOnly(card.agentEffects);
+          let { rewards } = getEffectRewardsAndCosts(card.agentEffects);
 
           for (const reward of rewards) {
             const amount = reward.amount ?? 1;
@@ -164,7 +164,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
           }
         }
         if (card.revealEffects) {
-          let rewards = this.getEffectRewardsOnly(card.revealEffects);
+          let { rewards } = getEffectRewardsAndCosts(card.revealEffects);
           for (const reward of rewards) {
             const amount = reward.amount ?? 1;
 
@@ -226,7 +226,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
           }
         }
         if (card.agentEffects) {
-          let rewards = this.getEffectRewardsOnly(card.agentEffects);
+          let { rewards } = getEffectRewardsAndCosts(card.agentEffects);
 
           for (const reward of rewards) {
             const amount = reward.amount ?? 1;
@@ -236,7 +236,7 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
           }
         }
         if (card.revealEffects) {
-          let rewards = this.getEffectRewardsOnly(card.revealEffects);
+          let { rewards } = getEffectRewardsAndCosts(card.revealEffects);
 
           let hasPersuasion = false;
           for (const reward of rewards) {
@@ -402,63 +402,6 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
     return {
       name: { en: '', de: '' },
     };
-  }
-
-  private getEffectRewardsOnly(cardEffects: Effect[]): EffectReward[] {
-    let rewards: EffectReward[] = [];
-
-    const tradeIndex = cardEffects.findIndex((x) => x.type === 'helper-trade');
-    const choiceIndex = cardEffects.findIndex((x) => x.type === 'helper-or');
-    const seperatorIndex = cardEffects.findIndex((x) => x.type === 'helper-separator');
-    if (tradeIndex < 0 && seperatorIndex < 0) {
-      rewards = getFlattenedEffectRewardArray(cardEffects.filter((x) => isRewardEffect(x)));
-    } else if (seperatorIndex > -1) {
-      const firstPart = cardEffects.slice(0, seperatorIndex);
-      const secondPart = cardEffects.slice(seperatorIndex + 1);
-
-      const firstPartTradeIndex = firstPart.findIndex((x) => x.type === 'helper-trade');
-      if (firstPartTradeIndex < 0) {
-        rewards.push(...getFlattenedEffectRewardArray(firstPart.filter((x) => isRewardEffect(x))));
-      } else {
-        rewards.push(
-          ...getFlattenedEffectRewardArray(firstPart.slice(0, firstPartTradeIndex).filter((x) => isRewardEffect(x))),
-        );
-      }
-
-      const secondPartTradeIndex = secondPart.findIndex((x) => x.type === 'helper-trade');
-      if (secondPartTradeIndex < 0) {
-        rewards.push(...getFlattenedEffectRewardArray(secondPart.filter((x) => isRewardEffect(x))));
-      } else {
-        rewards.push(
-          ...getFlattenedEffectRewardArray(secondPart.slice(0, secondPartTradeIndex).filter((x) => isRewardEffect(x))),
-        );
-      }
-    } else if (choiceIndex > -1) {
-      const firstPart = cardEffects.slice(0, choiceIndex);
-      const secondPart = cardEffects.slice(choiceIndex + 1);
-
-      const firstPartTradeIndex = firstPart.findIndex((x) => x.type === 'helper-trade');
-      if (firstPartTradeIndex < 0) {
-        rewards.push(...getFlattenedEffectRewardArray(firstPart.filter((x) => isRewardEffect(x))));
-      } else {
-        rewards.push(
-          ...getFlattenedEffectRewardArray(firstPart.slice(0, firstPartTradeIndex).filter((x) => isRewardEffect(x))),
-        );
-      }
-
-      const secondPartTradeIndex = secondPart.findIndex((x) => x.type === 'helper-trade');
-      if (secondPartTradeIndex < 0) {
-        rewards.push(...getFlattenedEffectRewardArray(secondPart.filter((x) => isRewardEffect(x))));
-      } else {
-        rewards.push(
-          ...getFlattenedEffectRewardArray(secondPart.slice(0, secondPartTradeIndex).filter((x) => isRewardEffect(x))),
-        );
-      }
-    } else if (tradeIndex > -1) {
-      rewards = getFlattenedEffectRewardArray(cardEffects.slice(tradeIndex + 1).filter((x) => isRewardEffect(x)));
-    }
-
-    return rewards;
   }
 
   asActionType(key: string) {

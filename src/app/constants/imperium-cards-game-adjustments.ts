@@ -67,7 +67,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
         const enemyPlayer = gameState.enemyPlayers.find((x) => x.id === enemyOnGreenField.playerId);
         if (enemyPlayer) {
           game.payCostForPlayer(enemyOnGreenField.playerId, { type: 'card-trash-from-hand' });
-          game.resolveRewardChoices(enemyPlayer);
+          game.resolveRewardChoices();
         }
       }
     },
@@ -102,7 +102,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
         const enemyDiscardPile = gameState.enemyDiscardPiles.find((x) => x.playerId === enemyOnTownField.playerId);
         if (enemyPlayer && enemyDiscardPile && enemyDiscardPile.cards.length > 1) {
           game.payCostForPlayer(enemyOnTownField.playerId, { type: 'card-trash-in-play' });
-          game.resolveRewardChoices(enemyPlayer);
+          game.resolveRewardChoices();
         }
       }
     },
@@ -313,13 +313,13 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       const beneInfluence = gameState.playerScore.bene;
       if (beneInfluence < 2) {
         game.payCostForPlayer(player.id, { type: 'card-discard' });
-        game.resolveRewardChoices(player);
+        game.resolveRewardChoices();
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else if (beneInfluence < 4) {
         game.addRewardToPlayer(player.id, { type: 'card-draw' });
       } else {
         game.addRewardToPlayer(player.id, { type: 'agent-lift' });
-        game.resolveRewardChoices(player);
+        game.resolveRewardChoices();
       }
     },
   },

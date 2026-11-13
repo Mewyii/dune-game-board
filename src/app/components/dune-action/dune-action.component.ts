@@ -241,13 +241,13 @@ export class DuneActionComponent implements OnInit, OnChanges {
     }
   }
 
-  public onActionFieldClicked() {
+  public async onActionFieldClicked() {
     if (this.disabled || !this.isActiveForPlayerCount) {
       return;
     }
 
     if (this.gameManager.activePlayerId) {
-      this.gameManager.addAgentToField(this.actionField);
+      await this.gameManager.addAgentToField(this.actionField);
     }
   }
 

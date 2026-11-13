@@ -15,6 +15,7 @@ import {
   TechTileModifier,
 } from '../services/game-modifier.service';
 import { isImperiumDeckCard } from './cards';
+import { isNonStackableResourceType } from './resources';
 import { getFlattenedEffectRewardArray } from './rewards';
 
 export function hasFactionInfluenceModifier(
@@ -39,8 +40,11 @@ export function getFactionInfluenceModifier(
   }
 }
 
-export function getCardCostModifier(card: ImperiumCard | ImperiumDeckCard, modifiers?: ImperiumRowModifier[]) {
-  let result = 0;
+export function getImperiumCardModifier(
+  card: ImperiumCard | ImperiumDeckCard,
+  modifiers?: ImperiumRowModifier[],
+): { costModifier: number; isBlocked: boolean } {
+  let result = { costModifier: 0, isBlocked: false };
   let minCostAmount: number | undefined;
 
   if (!modifiers || !card.persuasionCosts) {
@@ -48,17 +52,25 @@ export function getCardCostModifier(card: ImperiumCard | ImperiumDeckCard, modif
   }
 
   for (const modifier of modifiers) {
-    if (card.faction && modifier.factionType === card.faction) {
-      result += modifier.persuasionAmount;
-    } else if (isImperiumDeckCard(card) && modifier.cardId === card.id) {
-      result += modifier.persuasionAmount;
+    if (
+      (!modifier.factionType && !modifier.cardId) ||
+      (card.faction && modifier.factionType === card.faction) ||
+      (isImperiumDeckCard(card) && modifier.cardId === card.id)
+    ) {
+      result.costModifier += modifier.persuasionAmount ?? 0;
+      if (!result.isBlocked) {
+        result.isBlocked = modifier.isBlocked ?? false;
+      }
     }
     if (modifier.minCosts && (minCostAmount === undefined || modifier.minCosts < minCostAmount)) {
       minCostAmount = modifier.minCosts;
     }
   }
 
-  return minCostAmount && card.persuasionCosts + result < minCostAmount ? 0 : result;
+  return {
+    costModifier: minCostAmount && card.persuasionCosts + result.costModifier < minCostAmount ? 0 : result.costModifier,
+    isBlocked: result.isBlocked,
+  };
 }
 
 export function getTechTileCostModifier(card: TechTileCard, modifiers?: TechTileModifier[]) {
@@ -88,14 +100,12 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
     return actionField.costs ?? [];
   }
 
-  const flattenedModifiers = getFlattenedCostModifiers(modifiers);
-
   const actionCosts: RewardWithModifier[] = (cloneDeep(actionField.costs) as RewardWithModifier[]) ?? [];
-  const filteredModifiers = flattenedModifiers.filter(
-    (x) => (!x.actionType || x.actionType === actionField.actionType) && (!x.fieldId || x.fieldId === actionField.title.en),
-  );
+
+  const flattenedModifiers = getFlattenedCostModifiersForBoardSpace(modifiers, actionField);
+
   if (actionCosts.length < 1) {
-    for (const modifier of filteredModifiers) {
+    for (const modifier of flattenedModifiers) {
       if (modifier.amount > 0) {
         actionCosts.push({
           type: modifier.costType,
@@ -108,7 +118,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
   }
 
   const flattenedCostsArray = getFlattenedEffectRewardArray(actionCosts);
-  const existingCostModifiers = filteredModifiers.filter((x) => actionCosts.some((y) => y.type === x.costType));
+  const existingCostModifiers = flattenedModifiers.filter((x) => actionCosts.some((y) => y.type === x.costType));
 
   if (existingCostModifiers.length > 0) {
     for (const costs of flattenedCostsArray) {
@@ -125,7 +135,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
 
           if (newFieldCostsAmount >= 1) {
             costs.amount = newFieldCostsAmount > 1 ? newFieldCostsAmount : undefined;
-            costs.modifier = 'positive';
+            costs.modifier = newFieldCostsAmount < fieldCostsAmount ? 'positive' : undefined;
           } else {
             flattenedCostsArray.shift();
           }
@@ -134,7 +144,7 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
     }
   }
 
-  const newCostModifiers = filteredModifiers.filter((x) => !actionCosts.some((y) => y.type === x.costType));
+  const newCostModifiers = flattenedModifiers.filter((x) => !actionCosts.some((y) => y.type === x.costType));
   for (const modifier of newCostModifiers) {
     if (modifier.amount > 0) {
       flattenedCostsArray.push({
@@ -145,7 +155,20 @@ export function getModifiedCostsForField(actionField: ActionField, modifiers?: F
     }
   }
 
-  return flattenedCostsArray;
+  const result: RewardWithModifier[] = [];
+  for (const flattenedCosts of flattenedCostsArray) {
+    if (isNonStackableResourceType(flattenedCosts.type)) {
+      result.push(...splitNonStackableResource(flattenedCosts));
+    } else {
+      result.push(flattenedCosts);
+    }
+  }
+  return result;
+}
+
+function splitNonStackableResource(reward: RewardWithModifier): RewardWithModifier[] {
+  const amount = reward.amount ?? 1;
+  return Array.from({ length: amount }, () => ({ ...reward, amount: undefined }));
 }
 
 export function getModifiedRewardsForField(
@@ -230,25 +253,33 @@ export function getFieldIsBlocked(actionField: ActionField, modifiers?: FieldBlo
   return filteredModifiers.length > 0;
 }
 
-function getFlattenedCostModifiers<T extends FieldCostsModifier>(array: T[]) {
+function getFlattenedCostModifiersForBoardSpace<T extends FieldCostsModifier>(array: T[], targetBoardSpace: ActionField) {
   const clonedArray = cloneDeep(array);
+
   const result: T[] = [];
   for (const item of clonedArray) {
-    const index = result.findIndex((x) => x.costType === item.costType);
-    const resultItem = result[index];
-    if (resultItem) {
-      if (resultItem.amount) {
-        resultItem.amount += item.amount ?? 1;
-      } else {
-        resultItem.amount = 1 + (item.amount ?? 1);
-      }
-      if (item.minCosts) {
-        if (!resultItem.minCosts || item.minCosts < resultItem.minCosts) {
-          resultItem.minCosts = item.minCosts;
+    const affectsBoardSpace =
+      (!item.actionType && !item.fieldId) ||
+      (item.actionType && item.actionType === targetBoardSpace.actionType) ||
+      (item.fieldId && item.fieldId === targetBoardSpace.title.en);
+
+    if (affectsBoardSpace) {
+      const index = result.findIndex((x) => x.costType === item.costType);
+      const resultItem = result[index];
+      if (resultItem) {
+        if (resultItem.amount) {
+          resultItem.amount += item.amount ?? 1;
+        } else {
+          resultItem.amount = 1 + (item.amount ?? 1);
         }
+        if (item.minCosts) {
+          if (!resultItem.minCosts || item.minCosts < resultItem.minCosts) {
+            resultItem.minCosts = item.minCosts;
+          }
+        }
+      } else {
+        result.push(item);
       }
-    } else {
-      result.push(item);
     }
   }
   return result;

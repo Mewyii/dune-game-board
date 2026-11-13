@@ -34,16 +34,16 @@ export const leaders: Leader[] = [
       de: 'Atreides-Ausbildung',
     },
     passiveDescription: {
-      en: "Enemy agents don't block {faction:fremen} board spaces for you.",
-      de: 'Gegnerische Agenten blockieren {faction:fremen}-Felder für dich nicht. ',
+      en: 'Whenever you send an agent to a {faction:fremen} or {faction:spice} board space: {resource:signet}',
+      de: 'Immer wenn du einen Agenten zu einem {faction:fremen}- oder {faction:spice}-Feld entsendest: {resource:signet}',
     },
     signetName: {
       en: 'Kwisatz Haderach',
       de: 'Kwisatz Haderach',
     },
     signetDescription: {
-      en: 'You may look at the top card of your deck or the intrigue deck.<br>{faction:fremen} 2 Influence: {resource:card-draw}{resource:troop}{resource:helper-or}4 Influence:  {resource:card-draw}{resource:agent-lift}',
-      de: 'Du kannst dir die oberste Karte deines Decks oder des Intrigenstapels ansehen.<br>{faction:fremen} 2 Einfluss: {resource:card-draw}{resource:troop}{resource:helper-or}4 Einfluss:  {resource:card-draw}{resource:agent-lift}',
+      en: 'You may look at the top card of your deck or the intrigue deck.<br>2 {resource:signet}: {resource:card-draw}{resource:troop}{resource:helper-or}4 {resource:signet}:  {resource:card-draw}{resource:agent-lift}',
+      de: 'Du kannst dir die oberste Karte deines Decks oder des Intrigenstapels ansehen.<br>2 {resource:signet}: {resource:card-draw}{resource:troop}{resource:helper-or}4 {resource:signet}:  {resource:card-draw}{resource:agent-lift}',
     },
     imageUrl: '/assets/images/leaders/paul_atreides.png',
     type: 'new',
@@ -53,10 +53,14 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
+      },
+      {
+        type: 'solari',
       },
     ],
     passiveEffects: [
@@ -108,11 +112,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'spice',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
         amount: 3,
+      },
+      {
+        type: 'spice',
       },
     ],
     passiveEffects: [
@@ -156,41 +164,37 @@ export const leaders: Leader[] = [
       de: 'Gerechter Anführer',
     },
     passiveDescription: {
-      en: '',
-      de: '',
+      en: '<b>Reveal Phase</b>: For each location with one of your agents and {resource:signet}: {resource:persuasion;amount:1}<br><br>{faction:landsraad} board space costs are reduced by {resource:signet}.',
+      de: '<b>Aufdeckzug</b>: Für jeden Ort mit einem deiner Agenten und {resource:signet}: {resource:persuasion;amount:1}<br><br> Kosten für {faction:landsraad}-Felder sind um {resource:signet} reduziert.',
     },
     signetName: {
       en: 'Inspiring loyalty',
       de: 'Loyalität Inspirierend',
     },
     signetDescription: {
-      en: 'Place {resource:signet} on a location that has one of your agents on it OR remove <b>2</b> or your {resource:signet} from a location to take control of it.',
-      de: 'Lege {resource:signet} auf einen Ort mit einem deiner Agenten ODER entferne <b>2</b> deiner {resource:signet} von einem Ort, um die Kontrolle über ihn zu übernehmen.',
+      en: 'Place {resource:signet} on a location with one of your agents or on any {faction:landsraad} board space.',
+      de: 'Lege {resource:signet} auf einen Ort mit einem deiner Agenten oder auf ein beliebiges {faction:landsraad}-Feld.',
     },
     imageUrl: '/assets/images/leaders/leto.png',
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'medium',
-    passiveDescriptionSize: 'medium',
+    passiveDescriptionSize: 'small',
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
-        amount: 3,
-      },
-    ],
-    passiveEffects: [
-      {
-        type: 'timing-reveal-turn',
+        amount: 2,
       },
       {
-        type: 'persuasion',
-        amount: 1,
+        type: 'solari',
       },
     ],
+    passiveEffects: [],
     signetEffects: [],
   },
   {
@@ -203,42 +207,55 @@ export const leaders: Leader[] = [
       de: 'Haus Harkonnen',
     },
     passiveName: {
-      en: 'Ruthless ambition',
-      de: 'Rücksichtsloser Ehrgeiz',
-    },
-    passiveDescription: {
-      en: '<b>Round start</b>: You may trash one of the cards in your hand to get {resource:intrigue}{resource:intrigue}. Keep one of them, discard the other.',
-      de: '<b>Rundenbeginn</b>: Du kannst eine der Karten auf deiner Hand entsorgen, um {resource:intrigue}{resource:intrigue} zu erhalten. Behalte eine davon, entsorge die andere.',
-    },
-    signetName: {
       en: 'Hidden poison',
       de: 'Verstecktes Gift',
     },
+    passiveDescription: {
+      en: 'During the combat phase, you can do as many times as you like: {resource:signet} {resource:helper-trade} {resource:sword}',
+      de: 'Du kannst während der Kampfphase beliebig oft: {resource:signet} {resource:helper-trade} {resource:sword}',
+    },
+    signetName: {
+      en: 'Ruthless ambition',
+      de: 'Rücksichtsloser Ehrgeiz',
+    },
     signetDescription: {
-      en: 'You may trash {resource:signet} during combat to get {resource:sword}.',
-      de: 'Du kannst {resource:signet} während des Kampfes entsorgen, um {resource:sword} zu erhalten.',
+      en: 'Select a card from the imperium row. Activate its agent effect. Then trash it.',
+      de: 'Wähle eine Karte aus der Imperium-Reihe. Aktiviere ihren Agenten-Effekt. Entsorge sie anschließend.',
     },
     imageUrl: '/assets/images/leaders/feyd.png',
     type: 'new',
-    passiveEffectSize: 'medium',
+    passiveEffectSize: 'small',
     signetEffectSize: 'small',
     passiveDescriptionSize: 'small',
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
-        amount: 3,
+        amount: 2,
+      },
+      {
+        type: 'solari',
       },
     ],
-    passiveEffects: [],
-    signetEffects: [
+    passiveEffects: [
+      {
+        type: 'timing-game-start',
+      },
+      {
+        type: 'signet',
+      },
+      {
+        type: 'signet',
+      },
       {
         type: 'signet',
       },
     ],
+    signetEffects: [],
   },
   {
     name: {
@@ -254,8 +271,8 @@ export const leaders: Leader[] = [
       de: 'Unkontrollierte Aggression',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: {resource:location-control} for Carthag.<br><br><b>Round start</b>: Discard one of your handcards.',
-      de: '<b>Spielbeginn</b>: {resource:location-control} für Carthag.<br><br><b>Rundenbeginn</b>: Wirf eine der Karten auf deiner Hand ab.',
+      en: '<b>Game start</b>: {resource:location-control} over Carthag<br><br><b>Round start:</b>: Discard a random card from your hand.',
+      de: '<b>Spielbeginn</b>: {resource:location-control} über <b>Carthag</b><br><br><b>Rundenbeginn</b>: Wirf eine zufällige Karte aus deiner Hand ab.',
     },
     signetName: {
       en: 'Oppression',
@@ -273,11 +290,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
-        amount: 3,
+        amount: 4,
+      },
+      {
+        type: 'solari',
       },
     ],
     passiveEffects: [],
@@ -297,8 +318,8 @@ export const leaders: Leader[] = [
       de: 'Verschwörer',
     },
     passiveDescription: {
-      en: '',
-      de: '',
+      en: '<b>Round start</b>: You may trash one of the cards in your hand to get {resource:intrigue}{resource:intrigue}. Keep one of them, discard the other.',
+      de: '<b>Rundenbeginn</b>: Du kannst eine der Karten auf deiner Hand entsorgen, um {resource:intrigue}{resource:intrigue} zu erhalten. Behalte eine davon, entsorge die andere.',
     },
     signetName: {
       en: 'Boundless greed',
@@ -312,34 +333,22 @@ export const leaders: Leader[] = [
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'large',
-    passiveDescriptionSize: 'medium',
+    passiveDescriptionSize: 'small',
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
-        amount: 4,
+        amount: 3,
+      },
+      {
+        type: 'solari',
       },
     ],
-    passiveEffects: [
-      {
-        type: 'timing-game-start',
-      },
-      {
-        type: 'intrigue',
-      },
-      {
-        type: 'intrigue',
-      },
-      {
-        type: 'intrigue',
-      },
-      {
-        type: 'intrigue-trash',
-      },
-    ],
+    passiveEffects: [],
     signetEffects: [
       {
         type: 'loose-troop',
@@ -366,30 +375,34 @@ export const leaders: Leader[] = [
       de: 'Kind der Wüste',
     },
     passiveDescription: {
-      en: '{faction:spice} board spaces cost you {resource:water} less. You receive {resource:spice} less from them.',
-      de: '{faction:spice}-Felder kosten dich {resource:water} weniger. Du erhältst von ihnen {resource:spice} weniger.',
+      en: 'The cost of {faction:spice} and {faction:town} board spaces that require {resource:water} are reduced by <b>1</b> for you. You receive {resource:spice} (for {faction:spice} board spaces) or {resource:troop} (for {faction:town} board spaces) less from them.',
+      de: '{faction:spice}-Felder und {faction:town}-Felder mit {resource:water}-Kosten sind für dich um <b>1</b> reduziert. Du erhältst von ihnen {resource:spice} ({faction:spice}-Felder) oder {resource:troop} ({faction:town}-Felder) weniger.',
     },
     signetName: {
       en: 'Fremen Bonds',
       de: 'Fremenbande',
     },
     signetDescription: {
-      en: 'You may use {resource:signet} as {resource:persuasion} to acquire Fremen cards.',
-      de: 'Du kannst {resource:signet} als {resource:persuasion} verwenden, um Fremen-Karten zu erwerben.',
+      en: 'You may use {resource:signet} as {resource:persuasion;amount:1} to acquire Fremen cards.',
+      de: 'Du kannst {resource:signet} als {resource:persuasion;amount:1} verwenden, um Fremen-Karten zu erwerben.',
     },
     imageUrl: '/assets/images/leaders/chani.png',
     type: 'new',
     passiveEffectSize: 'medium',
     signetEffectSize: 'small',
-    passiveDescriptionSize: 'medium',
+    passiveDescriptionSize: 'small',
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'water',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
         amount: 2,
+      },
+      {
+        type: 'water',
       },
     ],
     passiveEffects: [],
@@ -422,7 +435,7 @@ export const leaders: Leader[] = [
     },
     signetDescription: {
       en: 'You may trash {resource:signet} during combat to get {resource:sword}{resource:sword}{resource:sword}.',
-      de: 'Du kannst {resource:signet} während des Kampfes entsorgen, um {resource:sword}{resource:sword}{resource:sword} zu erhalten.',
+      de: 'Du kannst während der Kampfphase beliebig oft: {resource:signet} {resource:helper-trade} {resource:sword}{resource:sword}{resource:sword}',
     },
     imageUrl: '/assets/images/leaders/stilgar.png',
     type: 'new',
@@ -432,11 +445,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'water',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
         amount: 2,
+      },
+      {
+        type: 'water',
       },
     ],
     passiveEffects: [
@@ -492,10 +509,14 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'large',
     startingResources: [
       {
-        type: 'water',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
+      },
+      {
+        type: 'water',
       },
     ],
     passiveEffects: [],
@@ -534,11 +555,16 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'solari',
-        amount: 2,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
+        amount: 2,
+      },
+      {
+        type: 'solari',
+        amount: 2,
       },
     ],
     passiveEffects: [],
@@ -577,11 +603,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
-        amount: 2,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
+        amount: 2,
+      },
+      {
+        type: 'solari',
         amount: 2,
       },
     ],
@@ -610,8 +640,8 @@ export const leaders: Leader[] = [
       de: 'Inszenierte Schwächlichkeit',
     },
     signetDescription: {
-      en: 'You may trash {resource:signet} at your reveal turn to get {resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue}.',
-      de: 'Du kannst {resource:signet} an deinem Aufdeckzug entsorgen, um {resource:sword}{resource:sword}{resource:helper-or}{resource:intrigue} zu erhalten.',
+      en: 'You may trash {resource:signet} at your reveal turn to get {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:persuasion;amount:1}{resource:intrigue}.',
+      de: 'Entsorge {resource:signet} an deinem Aufdeckzug, um {resource:sword}{resource:sword}{resource:sword}{resource:helper-or}{resource:persuasion;amount:1}{resource:intrigue} zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/hasimir.png',
     type: 'new',
@@ -621,20 +651,21 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'solari',
-        amount: 2,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
+        amount: 2,
+      },
+      {
+        type: 'solari',
         amount: 2,
       },
     ],
     passiveEffects: [
       {
         type: 'timing-game-start',
-      },
-      {
-        type: 'foldspace',
       },
       {
         type: 'faction-influence-up-emperor',
@@ -662,8 +693,8 @@ export const leaders: Leader[] = [
       de: 'haus vernius',
     },
     passiveName: {
-      en: 'Ixian Gifts',
-      de: 'Ixianische Geschenke',
+      en: 'Ixian Diplomacy',
+      de: 'Ixianische Diplomatie',
     },
     passiveDescription: {
       en: '<b>Reveal turn</b>: You may trash a tech tile to get {resource:faction-influence-up-choice}.',
@@ -685,11 +716,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
-        amount: 2,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
+        amount: 2,
+      },
+      {
+        type: 'solari',
         amount: 2,
       },
     ],
@@ -711,83 +746,45 @@ export const leaders: Leader[] = [
       de: 'Haus Vernius',
     },
     passiveName: {
-      en: 'Cybernetic Implants',
-      de: 'Kybernetische Implantate',
-    },
-    passiveDescription: {
-      en: '',
-      de: '',
-    },
-    signetName: {
       en: 'Earl of Ix',
       de: 'Graf von Ix',
     },
+    passiveDescription: {
+      en: '<b>Reveal turn</b>: {resource:tech} and {resource:signet}{resource:helper-trade}{resource:sword}{resource:sword}',
+      de: '<b>Aufdeckzug</b>: {resource:tech} und {resource:signet}{resource:helper-trade}{resource:sword}{resource:sword}',
+    },
+    signetName: {
+      en: 'Technology Research',
+      de: 'Technologieforschung',
+    },
     signetDescription: {
-      en: '',
-      de: '',
+      en: 'You may use {resource:signet} as {resource:solari;amount:2} to acquire Tech Tiles.',
+      de: 'Du kannst {resource:signet} als {resource:solari;amount:2} verwenden, um Tech-Plättchen zu erwerben.',
     },
     imageUrl: '/assets/images/leaders/rhombur.png',
     type: 'new',
-    passiveEffectSize: 'small',
-    signetEffectSize: 'large',
-    passiveDescriptionSize: 'medium',
-    signetDescriptionSize: 'medium',
+    passiveEffectSize: 'medium',
+    signetEffectSize: 'small',
+    passiveDescriptionSize: 'large',
+    signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'solari',
-        amount: 2,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
         amount: 2,
       },
-    ],
-    passiveEffects: [
       {
-        type: 'timing-round-start',
-      },
-      {
-        type: 'signet',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'timing-turn-start',
-      },
-      {
-        type: 'signet',
-        amount: 3,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'helper-or',
-      },
-      {
-        type: 'signet',
-        amount: 4,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'agent-lift',
+        type: 'solari',
+        amount: 2,
       },
     ],
+    passiveEffects: [],
     signetEffects: [
       {
-        type: 'tech',
+        type: 'signet',
       },
     ],
   },
@@ -805,16 +802,16 @@ export const leaders: Leader[] = [
       de: 'Isolationist',
     },
     passiveDescription: {
-      en: 'You cannot acquire cards.<br><br><b>Reveal turn</b>: Receive a {resource:signet} for each of your {resource:victory-point} and each of your {resource:persuasion}.',
-      de: '<b>Aufdeckzug</b>: Du kannst keine Karten erwerben. Erhalte für jeden deiner {resource:victory-point} und für jeden deiner {resource:persuasion} ein {resource:signet}.',
+      en: 'You cannot acquire any imperium cards other than “The Spice Must Flow.”',
+      de: 'Du kannst keine Imperium-Karten außer "Das Spice muss fließen" erwerben.',
     },
     signetName: {
       en: 'Manipulator',
       de: 'Manipulator',
     },
     signetDescription: {
-      en: 'You may choose any card in play or in the imperium row and pay {resource:signet} equal to its {resource:persuasion} cost. Activate its agent effect.',
-      de: 'Wähle eine beliebige Karte im Spiel oder in der Imperium-Reihe. Zahle {resource:signet} entsprechend ihrer {resource:persuasion}-Kosten, um ihren Agenten-Effekt zu aktivieren.',
+      en: 'Choose a card from the imperium row. Activate its agent effect. You can activate connection effects for {resource:card-discard} each.',
+      de: 'Wähle eine Karte aus der Imperium-Reihe. Aktiviere ihren Agenten-Effekt. Du kannst Verbindungs-Effekte für jeweils {resource:card-discard} aktivieren. ',
     },
     imageUrl: '/assets/images/leaders/august.png',
     type: 'new',
@@ -824,8 +821,8 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'signet',
-        amount: 5,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
@@ -849,26 +846,27 @@ export const leaders: Leader[] = [
       de: 'Bedrängtes Haus',
     },
     passiveDescription: {
-      en: '<b>Game start</b>: Place a debt marker ({resource:troop}) on this area. Whenever you have {resource:solari;amount:2}, remove them and the marker.',
-      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker ({resource:troop}) auf diesen Bereich. Sobald du {resource:solari;amount:2} besitzt, entferne sie und den Marker.',
+      en: '<b>Game start</b>: Place a debt token {resource:troop} on this card. As soon as you have {resource:solari;amount:4}, remove them and the token, and receive {resource:faction-influence-up-choice}.',
+      de: '<b>Spielbeginn</b>: Lege einen Schuldenmarker {resource:troop} auf diese Karte. Sobald du {resource:solari;amount:4} besitzt, entferne sie und den Marker und erhalte {resource:faction-influence-up-choice}.',
     },
     signetName: {
       en: 'Thorough Approach',
       de: 'Sorgfältiges Vorgehen',
     },
     signetDescription: {
-      en: 'You may trash {resource:signet} when you receive <br>{resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} to get <b>1</b> more of it.',
-      de: 'Du kannst {resource:signet} entsorgen, wenn du <br>{resource:solari}{resource:helper-or}{resource:spice}{resource:helper-or}{resource:water} erhältst, um 1 mehr zu erhalten.',
+      en: 'You may trash {resource:signet} when you receive <br>{resource:spice}{resource:helper-or}{resource:water} to gain <b>1</b> more of it.',
+      de: 'Du kannst {resource:signet} entsorgen, wenn du <br>{resource:spice}{resource:helper-or}{resource:water} erhältst, um 1 mehr zu erhalten.',
     },
     imageUrl: '/assets/images/leaders/lunara.png',
     type: 'new',
     passiveEffectSize: 'small',
     signetEffectSize: 'small',
-    passiveDescriptionSize: 'medium',
+    passiveDescriptionSize: 'small',
     signetDescriptionSize: 'small',
     startingResources: [
       {
-        type: 'signet',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
@@ -915,11 +913,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
         amount: 3,
       },
       {
         type: 'troop',
+        amount: 3,
+      },
+      {
+        type: 'solari',
         amount: 3,
       },
     ],
@@ -971,6 +973,10 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
+        type: 'leader-heal',
+        amount: 3,
+      },
+      {
         type: 'solari',
       },
     ],
@@ -1009,6 +1015,10 @@ export const leaders: Leader[] = [
     passiveDescriptionSize: 'medium',
     signetDescriptionSize: 'small',
     startingResources: [
+      {
+        type: 'leader-heal',
+        amount: 3,
+      },
       {
         type: 'troop',
       },
@@ -1049,16 +1059,20 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
         amount: 3,
       },
+      {
+        type: 'solari',
+      },
     ],
     passiveEffects: [
       {
-        type: 'timing-round-start',
+        type: 'timing-reveal-turn',
       },
       {
         type: 'spice',
@@ -1109,11 +1123,15 @@ export const leaders: Leader[] = [
     signetDescriptionSize: 'medium',
     startingResources: [
       {
-        type: 'solari',
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'troop',
         amount: 3,
+      },
+      {
+        type: 'solari',
       },
     ],
     passiveEffects: [],
@@ -1156,6 +1174,10 @@ export const leaders: Leader[] = [
     passiveDescriptionSize: 'small',
     signetDescriptionSize: 'medium',
     startingResources: [
+      {
+        type: 'leader-heal',
+        amount: 3,
+      },
       {
         type: 'water',
       },

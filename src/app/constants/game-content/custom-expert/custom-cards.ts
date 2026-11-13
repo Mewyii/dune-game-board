@@ -14,7 +14,7 @@ export const customCardsCustomExpert: CustomCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'troop',
+        type: 'focus',
       },
     ],
     revealEffects: [

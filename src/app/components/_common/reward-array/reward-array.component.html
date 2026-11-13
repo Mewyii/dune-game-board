@@ -19,6 +19,22 @@
             >
               <span>{{ t.translate('commonEffectTimingRoundStart') }}:</span>
             </div>
+          } @else if (reward.type === 'timing-agent-placed') {
+            <div
+              [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
+              [style.fontSize]="fontSize"
+              [style.marginBottom]="wrap ? marginBottom : ''"
+            >
+              <span>{{ t.translate('commonEffectTimingAgentPlaced') }}:</span>
+            </div>
+          } @else if (reward.type === 'timing-resource-gained') {
+            <div
+              [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
+              [style.fontSize]="fontSize"
+              [style.marginBottom]="wrap ? marginBottom : ''"
+            >
+              <span>{{ t.translate('commonEffectTimingResourceGained') }}:</span>
+            </div>
           } @else if (reward.type === 'timing-turn-start') {
             <div
               [class]="'text heading ' + textColor + (wrap ? ' wrap ' : ' nowrap ')"
@@ -67,30 +83,38 @@
                 <span>{{ t.translate('commonEffectConditionNoHighCouncilSeat') }}:</span>
               </div>
             </div>
-          } @else if (reward.type === 'condition-enemies-on-this-field') {
-            <div class="condition-container" [style.marginRight]="effectGapLarge">
-              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
-                <span>{{ t.translate('commonEffectConditionEnemiesOnThisField') }}:</span>
-              </div>
-            </div>
-          } @else if (reward.type === 'condition-enemy-controlling-this-field') {
-            <div class="condition-container" [style.marginRight]="effectGapLarge">
-              <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
-                <span>{{ t.translate('commonEffectConditionEnemiesControllingThisField') }}:</span>
-              </div>
-            </div>
-          } @else if (reward.type === 'condition-enemies-on-field-type') {
-            <div class="condition-container" [style.marginRight]="effectGapLarge">
-              <div
-                [class]="rewardTextClass('text inline')"
-                [style.fontSize]="fontSize"
-                [innerHTML]="
-                  t.translate('commonEffectConditionEnemiesFieldType', false, '{faction:' + reward?.action + '}') + ':'
-                    | duneSymbols: size
-                "
-              ></div>
-            </div>
           }
+        } @else if (reward.type === 'target-enemies') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
+            <div
+              [class]="rewardTextClass('text inline')"
+              [style.fontSize]="fontSize"
+              [innerHTML]="t.translate('commonEffectEachOpponent') | duneSymbols: size"
+            ></div>
+          </div>
+        } @else if (reward.type === 'target-enemies-on-this-field') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
+            <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+              <span>{{ t.translate('commonEffectConditionEnemiesOnThisField') }}:</span>
+            </div>
+          </div>
+        } @else if (reward.type === 'target-enemies-on-field-type') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
+            <div
+              [class]="rewardTextClass('text inline')"
+              [style.fontSize]="fontSize"
+              [innerHTML]="
+                t.translate('commonEffectConditionEnemiesFieldType', false, '{faction:' + reward?.action + '}') + ':'
+                  | duneSymbols: size
+              "
+            ></div>
+          </div>
+        } @else if (reward.type === 'target-enemy-controlling-this-field') {
+          <div class="condition-container" [style.marginRight]="effectGapLarge">
+            <div [class]="rewardTextClass('text inline')" [style.fontSize]="fontSize">
+              <span>{{ t.translate('commonEffectConditionEnemiesControllingThisField') }}:</span>
+            </div>
+          </div>
         } @else if (reward.type === 'multiplier-agents-on-board-spaces') {
           <div class="condition-container" [style.marginRight]="effectGapLarge">
             <div
@@ -235,98 +259,6 @@
             [style.fontSize]="fontSize"
             [innerHTML]="t.translate('commonEffectRewardCardTrashInPlay', true, reward.amount)"
           ></div>
-        } @else if (reward.type === 'enemies-card-discard') {
-          <div
-            [class]="rewardTextClass('text custom-with-reward')"
-            [style.fontSize]="fontSize"
-            [style.marginRight]="effectGapLarge"
-          >
-            <div [class]="rewardTextClass('text inline')">
-              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
-            </div>
-            <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
-              <img
-                class="reward"
-                [src]="'card-discard' | effectTypePath"
-                [style.height]="size"
-                [style.minWidth]="iconMinWidth"
-              />
-              <div class="reward-amount" *ngIf="reward.amount">
-                <div [style.fontSize]="rewardAmountFontSize">
-                  {{ reward.amount }}
-                </div>
-              </div>
-            </div>
-          </div>
-        } @else if (reward.type === 'enemies-troop-destroy') {
-          <div
-            [class]="rewardTextClass('text custom-with-reward')"
-            [style.fontSize]="fontSize"
-            [style.marginRight]="effectGapLarge"
-          >
-            <div [class]="rewardTextClass('text inline')">
-              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
-            </div>
-            <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
-              <img
-                class="reward"
-                [src]="'loose-troop' | effectTypePath"
-                [style.height]="size"
-                [style.minWidth]="iconMinWidth"
-              />
-              <div class="reward-amount" *ngIf="reward.amount">
-                <div [style.fontSize]="rewardAmountFontSize">
-                  {{ reward.amount }}
-                </div>
-              </div>
-            </div>
-          </div>
-        } @else if (reward.type === 'enemies-intrigue-trash') {
-          <div
-            [class]="rewardTextClass('text custom-with-reward')"
-            [style.fontSize]="fontSize"
-            [style.marginRight]="effectGapLarge"
-          >
-            <div [class]="rewardTextClass('text inline')">
-              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
-            </div>
-            <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
-              <img
-                class="reward"
-                [src]="'intrigue-trash' | effectTypePath"
-                [style.height]="size"
-                [style.minWidth]="iconMinWidth"
-              />
-              <div class="reward-amount" *ngIf="reward.amount">
-                <div [style.fontSize]="rewardAmountFontSize">
-                  {{ reward.amount }}
-                </div>
-              </div>
-            </div>
-          </div>
-        } @else if (reward.type === 'enemies-leader-assassinate') {
-          <div
-            [class]="rewardTextClass('text custom-with-reward')"
-            [style.fontSize]="fontSize"
-            [style.marginRight]="effectGapLarge"
-          >
-            <div [class]="rewardTextClass('text inline')">
-              <span>{{ t.translate('commonEffectEachOpponent', true, reward.amount) }}</span>
-            </div>
-            <div class="reward-container" [style.height]="size" [style.marginLeft]="marginBottom">
-              <img
-                class="reward"
-                [src]="'leader-wound' | effectTypePath"
-                [style.height]="size"
-                [style.minWidth]="iconMinWidth"
-              />
-              <div class="reward-amount" *ngIf="reward.amount">
-                <div [style.fontSize]="rewardAmountFontSize">
-                  {{ reward.amount }}
-                </div>
-              </div>
-            </div>
-          </div>
         } @else if (reward.type === 'turn-pass') {
           <div
             [class]="rewardTextClass('text inline custom-with-reward')"
@@ -338,11 +270,13 @@
         } @else {
           <div class="reward-container" [style.height]="size" [style.margin]="rewardEffectMargin">
             <img class="reward" [src]="reward.type | effectTypePath" [style.height]="size" [style.minWidth]="iconMinWidth" />
-            <div class="reward-amount" *ngIf="reward.amount">
-              <div [style.fontSize]="rewardAmountFontSize">
-                {{ reward.amount }}
+            @if (reward.amount) {
+              <div class="reward-amount">
+                <div [style.fontSize]="rewardAmountFontSize">
+                  {{ reward.amount }}
+                </div>
               </div>
-            </div>
+            }
           </div>
         }
       }

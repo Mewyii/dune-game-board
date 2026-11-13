@@ -1350,7 +1350,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         action: 'town',
       },
       {
@@ -1589,7 +1589,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'condition-enemies-on-this-field',
+        type: 'target-enemies-on-this-field',
       },
       {
         type: 'solari',
@@ -1613,6 +1613,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -2090,7 +2091,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         action: 'landsraad',
       },
       {
@@ -2480,7 +2481,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'condition-enemies-on-this-field',
+        type: 'target-enemies-on-this-field',
       },
       {
         type: 'card-discard',
@@ -2495,6 +2496,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -3576,8 +3578,8 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-field-type',
-        action: 'choam',
+        type: 'target-enemies-on-field-type',
+        action: 'spice',
       },
       {
         type: 'loose-troop',
@@ -3636,7 +3638,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         amount: 2,
         action: 'town',
       },
@@ -3751,7 +3753,10 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     revealEffects: [
@@ -4172,7 +4177,7 @@ export const imperiumCards: ImperiumCard[] = [
     ],
     agentEffects: [
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         action: 'town',
       },
       {
@@ -4536,7 +4541,10 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     revealEffects: [
@@ -4581,7 +4589,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'condition-enemies-on-this-field',
+        type: 'target-enemies-on-this-field',
       },
       {
         type: 'solari',
@@ -4600,6 +4608,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -4689,7 +4698,10 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'enemies-intrigue-trash',
+        type: 'target-enemies',
+      },
+      {
+        type: 'intrigue-trash',
       },
     ],
     revealEffects: [
@@ -4817,7 +4829,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         action: 'choam',
       },
       {
@@ -5342,7 +5354,7 @@ export const imperiumCards: ImperiumCard[] = [
         faction: 'fremen',
       },
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         action: 'spice',
       },
       {
@@ -5978,7 +5990,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'condition-enemies-on-field-type',
+        type: 'target-enemies-on-field-type',
         action: 'spice',
       },
       {
@@ -6365,7 +6377,7 @@ export const imperiumCards: ImperiumCard[] = [
     buyEffects: [],
     agentEffects: [
       {
-        type: 'condition-enemies-on-this-field',
+        type: 'target-enemies-on-this-field',
       },
       {
         type: 'card-discard',
@@ -6380,6 +6392,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {

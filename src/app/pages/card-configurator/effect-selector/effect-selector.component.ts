@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import {
   ActionType,
-  effectActionConditions,
   effectActionMultipliers,
   effectFactionConditions,
   effectFactionMultipliers,
@@ -34,7 +33,7 @@ export class EffectSelectorComponent {
   }
 
   effectRequiresAction(type: EffectType) {
-    return effectActionConditions.some((x) => x === type) || effectActionMultipliers.some((x) => x === type);
+    return type === 'target-enemies-on-field-type' || effectActionMultipliers.some((x) => x === type);
   }
 
   onTypeChanged(effect: SimpleEffect) {

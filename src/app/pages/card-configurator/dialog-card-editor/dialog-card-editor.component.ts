@@ -4,7 +4,6 @@ import { cloneDeep } from 'lodash';
 import {
   activeFactionTypes,
   combatUnitTypes,
-  effectActionConditions,
   effectActionMultipliers,
   effectChoices,
   effectConditions,
@@ -14,6 +13,7 @@ import {
   effectMultipliers,
   effectRewards,
   effectSeparators,
+  effectTargets,
   FactionType,
   nonFactionActionTypes,
   passiveFactionTypes,
@@ -35,17 +35,17 @@ export class DialogCardEditorComponent {
   factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b)) as FactionType[];
   actionTypes = [...activeFactionTypes, ...passiveFactionTypes, ...nonFactionActionTypes].sort((a, b) => a.localeCompare(b));
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
-  conditionTypes = [...effectConditions, ...effectFactionConditions, ...effectActionConditions].sort((a, b) =>
-    a.localeCompare(b),
-  );
+  conditionTypes = [...effectConditions, ...effectFactionConditions].sort((a, b) => a.localeCompare(b));
   multiplierTypes = [...effectMultipliers, ...effectFactionMultipliers, ...effectActionMultipliers].sort((a, b) =>
     a.localeCompare(b),
   );
+  targetTypes = [...effectTargets].sort((a, b) => a.localeCompare(b));
   effectTypes = [
     ...effectSeparators,
     ...this.conditionTypes,
     ...effectChoices,
     ...effectConversions,
+    ...this.targetTypes,
     ...this.multiplierTypes,
     ...this.rewardTypes,
   ];

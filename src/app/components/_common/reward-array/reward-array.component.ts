@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
 
 import { getSeparatedEffectArrays, isConditionalEffect, isTimingEffect } from 'src/app/helpers/rewards';
-import { Effect, EffectTimingConditionChoiceConversionMultiplierOrReward } from 'src/app/models';
+import { Effect, EffectTimingConditionChoiceConversionMultiplierTargetOrReward } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
 
 @Component({
@@ -12,7 +12,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
-  public effectArrays: EffectTimingConditionChoiceConversionMultiplierOrReward[][] = [];
+  public effectArrays: EffectTimingConditionChoiceConversionMultiplierTargetOrReward[][] = [];
   @Input() rewards: Effect[] = [];
   @Input() size: string = '30px';
   @Input() textColor: 'black' | 'white' | 'white-clear' = 'black';
@@ -38,9 +38,9 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     this.setEffectArraysAndSizes();
   }
 
-  public trackArray = (_index: number, effects: EffectTimingConditionChoiceConversionMultiplierOrReward[]) => effects;
+  public trackArray = (_index: number, effects: EffectTimingConditionChoiceConversionMultiplierTargetOrReward[]) => effects;
 
-  public trackReward = (_index: number, reward: EffectTimingConditionChoiceConversionMultiplierOrReward) => reward;
+  public trackReward = (_index: number, reward: EffectTimingConditionChoiceConversionMultiplierTargetOrReward) => reward;
 
   public rewardTextClass(baseClass: string): string {
     return `${baseClass} ${this.textColor}`;
@@ -58,7 +58,7 @@ export class RewardArrayComponent implements OnInit, OnChanges {
     this.rewardEffectMargin = this.vertical ? `${this.effectGap} 0px` : `0px ${this.effectGap}`;
   }
 
-  public isTimingEffect(effect: EffectTimingConditionChoiceConversionMultiplierOrReward) {
+  public isTimingEffect(effect: EffectTimingConditionChoiceConversionMultiplierTargetOrReward) {
     return isTimingEffect(effect);
   }
 

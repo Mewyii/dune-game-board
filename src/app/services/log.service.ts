@@ -137,6 +137,7 @@ export interface PlayerDreadnoughtsRetreatedFromCombatLog extends LogBase {
 export interface PlayerPickedFactionInfluenceUpChoice extends LogBase {
   type: 'player-pick-faction-influence-up';
   faction: string;
+  amount: number;
 }
 
 export interface PlayerPickedFactionInfluenceDownChoice extends LogBase {
@@ -152,6 +153,12 @@ export interface PlayerGainedFactionAlliance extends LogBase {
 export interface PlayerlostFactionAlliance extends LogBase {
   type: 'player-loss-faction-alliance';
   faction: string;
+}
+
+export interface PlayerPickedConflict extends LogBase {
+  type: 'player-pick-conflict';
+  conflictTitle: string;
+  boardSpaceTitle?: string;
 }
 
 export type PlayerActionLog =
@@ -182,7 +189,8 @@ export type PlayerActionLog =
   | PlayerPickedFactionInfluenceUpChoice
   | PlayerPickedFactionInfluenceDownChoice
   | PlayerGainedFactionAlliance
-  | PlayerlostFactionAlliance;
+  | PlayerlostFactionAlliance
+  | PlayerPickedConflict;
 
 @Injectable({
   providedIn: 'root',
@@ -363,10 +371,10 @@ export class LoggingService {
     this.playerActionLogSubject.next([...this.playerActionLogs, { playerId, type: 'dreadnoughts-added-to-combat', amount }]);
   }
 
-  logPlayerPickedFactionInfluenceUpChoice(playerId: number, faction: string) {
+  logPlayerPickedFactionInfluenceUpChoice(playerId: number, faction: string, amount: number) {
     this.playerActionLogSubject.next([
       ...this.playerActionLogs,
-      { playerId, type: 'player-pick-faction-influence-up', faction },
+      { playerId, type: 'player-pick-faction-influence-up', faction, amount },
     ]);
   }
 
@@ -394,6 +402,13 @@ export class LoggingService {
     this.playerActionLogSubject.next([
       ...this.playerActionLogs,
       { playerId, type: 'player-loss-faction-alliance', faction },
+    ]);
+  }
+
+  logPlayerPickedConflict(playerId: number, conflictTitle: string, roundNumber: number, boardSpaceTitle?: string) {
+    this.playerActionLogSubject.next([
+      ...this.playerActionLogs,
+      { playerId, type: 'player-pick-conflict', conflictTitle, boardSpaceTitle, roundNumber },
     ]);
   }
 

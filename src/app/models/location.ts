@@ -1,5 +1,5 @@
 import {
-  EffectChoiceConversionMultiplierOrReward,
+  EffectChoiceConversionMultiplierTargetOrReward,
   EffectConversionMultiplierOrReward,
   EffectReward,
   FactionInfluence,
@@ -19,7 +19,7 @@ export interface DuneLocation {
 export interface ActionField {
   title: LanguageString;
   actionType: ActionType;
-  rewards: EffectChoiceConversionMultiplierOrReward[];
+  rewards: EffectChoiceConversionMultiplierTargetOrReward[];
   costs?: EffectReward[];
   activeForPlayerCount?: number;
   conversionOptions?: EffectConversionMultiplierOrReward[][];

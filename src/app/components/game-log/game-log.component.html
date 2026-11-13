@@ -60,6 +60,9 @@
           Player {{ logEntry.playerId }} gained alliance with {{ logEntry.faction }}.
         } @else if (logEntry.type === 'player-loss-faction-alliance') {
           Player {{ logEntry.playerId }} lost alliance with {{ logEntry.faction }}.
+        } @else if (logEntry.type === 'player-pick-conflict') {
+          Player {{ logEntry.playerId }} picked conflict {{ logEntry.conflictTitle }}
+          {{ logEntry.boardSpaceTitle ? ' at ' + logEntry.boardSpaceTitle : '' }}.
         }
       </div>
     }

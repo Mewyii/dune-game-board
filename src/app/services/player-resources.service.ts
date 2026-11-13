@@ -92,6 +92,7 @@ export class PlayerResourcesService {
       signet: 0,
       'leader-heal': 0,
       persuasion: 0,
+      leadermarker: 0,
     };
     return initialResources;
   }

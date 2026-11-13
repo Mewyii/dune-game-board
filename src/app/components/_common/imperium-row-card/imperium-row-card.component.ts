@@ -14,6 +14,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 export class ImperiumRowCardComponent implements OnInit, OnChanges {
   @Input() card!: ImperiumCard;
   @Input() costModifier = 0;
+  @Input() disabled = false;
 
   public factionName = '';
   public factionColor = '';

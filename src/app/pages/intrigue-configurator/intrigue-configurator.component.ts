@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { getEffectRewardsAndCosts } from 'src/app/helpers/rewards';
+import { EffectRewardType } from 'src/app/models';
 import { IntrigueCard } from 'src/app/models/intrigue';
 import { IntrigueConfiguratorService } from 'src/app/services/configurators/intrigue-configurator.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -23,6 +25,9 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
 
   public totalIntrigueAmount = 0;
 
+  public rewards: { id: string; rewardType: EffectRewardType; amount: number; count: number }[] = [];
+  public costs: { id: string; rewardType: EffectRewardType; amount: number; count: number }[] = [];
+
   constructor(
     public t: TranslateService,
     public intrigueConfigService: IntrigueConfiguratorService,
@@ -34,10 +39,67 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
       this.totalIntrigueAmount = 0;
 
       this.intrigues = intrigues;
+      this.rewards = this.rewards.map((x) => ({ ...x, count: 0 }));
+      this.costs = this.costs.map((x) => ({ ...x, count: 0 }));
 
       for (const intrigue of intrigues) {
         this.totalIntrigueAmount += intrigue.amount ?? 1;
+
+        if (intrigue.plotEffects) {
+          const { rewards, costs } = getEffectRewardsAndCosts(intrigue.plotEffects);
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+
+            const index = this.rewards.findIndex((x) => x.rewardType === reward.type && x.amount === amount);
+            if (index > -1) {
+              this.rewards[index].count += intrigue.amount;
+            } else {
+              this.rewards.push({ id: crypto.randomUUID(), rewardType: reward.type, amount, count: intrigue.amount });
+            }
+          }
+          for (const cost of costs) {
+            const amount = cost.amount ?? 1;
+
+            const index = this.costs.findIndex((x) => x.rewardType === cost.type && x.amount === amount);
+            if (index > -1) {
+              this.costs[index].count += intrigue.amount;
+            } else {
+              this.costs.push({ id: crypto.randomUUID(), rewardType: cost.type, amount, count: intrigue.amount });
+            }
+          }
+        }
+        if (intrigue.combatEffects) {
+          const { rewards, costs } = getEffectRewardsAndCosts(intrigue.combatEffects);
+          for (const reward of rewards) {
+            const amount = reward.amount ?? 1;
+
+            const index = this.rewards.findIndex((x) => x.rewardType === reward.type && x.amount === amount);
+            if (index > -1) {
+              this.rewards[index].count += intrigue.amount;
+            } else {
+              this.rewards.push({ id: crypto.randomUUID(), rewardType: reward.type, amount, count: intrigue.amount });
+            }
+          }
+          for (const cost of costs) {
+            const amount = cost.amount ?? 1;
+
+            const index = this.costs.findIndex((x) => x.rewardType === cost.type && x.amount === amount);
+            if (index > -1) {
+              this.costs[index].count += intrigue.amount;
+            } else {
+              this.costs.push({ id: crypto.randomUUID(), rewardType: cost.type, amount, count: intrigue.amount });
+            }
+          }
+        }
       }
+
+      this.rewards = this.rewards.filter((x) => x.count > 0);
+      this.rewards.sort((a, b) => a.amount - b.amount);
+      this.rewards.sort((a, b) => a.rewardType.localeCompare(b.rewardType));
+
+      this.costs = this.costs.filter((x) => x.count > 0);
+      this.costs.sort((a, b) => a.amount - b.amount);
+      this.costs.sort((a, b) => a.rewardType.localeCompare(b.rewardType));
     });
 
     this.subscriptions.push(intriguesSub);

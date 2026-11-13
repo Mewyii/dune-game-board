@@ -35,6 +35,7 @@ export interface AI {
     gameState: GameState,
     game: AIRewardEffectGameInterface,
     targetBoardSpace?: ActionField,
+    type?: 'cost' | 'reward',
   ) => number;
   techTileBuyEvaluation?: (
     techTile: TechTileDeckCard,
@@ -73,6 +74,7 @@ export interface AIRewardEffectGameInterface {
     player: Player,
     gameState: GameState,
     targetBoardSpace?: ActionField,
+    type?: 'cost' | 'reward',
   ) => number;
 }
 
@@ -114,7 +116,6 @@ export interface GameContent {
   maxPlayers: number;
   cardAcquiringRules: CardAcquiringRules;
   churnRowCards: boolean;
-  leaderCombatStrength?: number;
   conflictCardsPerLevel: number[];
 }
 

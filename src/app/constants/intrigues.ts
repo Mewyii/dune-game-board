@@ -10,10 +10,13 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'intrigue-trash',
+        type: 'card-discard',
       },
       {
-        type: 'intrigue-trash',
+        type: 'loose-troop',
+      },
+      {
+        type: 'loose-troop',
       },
       {
         type: 'helper-trade',
@@ -27,7 +30,13 @@ export const intrigues: IntrigueCard[] = [
         type: 'loose-troop',
       },
       {
+        type: 'loose-troop',
+      },
+      {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -59,7 +68,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'dreadnought',
+        type: 'location-control-choice',
       },
     ],
     combatEffects: [
@@ -67,14 +76,19 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
       {
-        type: 'spice',
-        amount: 2,
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'dreadnought',
+        type: 'location-control-choice',
       },
     ],
   },
@@ -88,13 +102,16 @@ export const intrigues: IntrigueCard[] = [
     plotEffects: [
       {
         type: 'solari',
-        amount: 3,
+        amount: 2,
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     combatEffects: [
@@ -127,7 +144,13 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     combatEffects: [
@@ -139,9 +162,6 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -196,9 +216,6 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
-      {
-        type: 'sword',
-      },
     ],
   },
   {
@@ -216,22 +233,19 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
+        type: 'solari',
+        amount: 2,
+      },
+      {
         type: 'tech',
       },
     ],
     combatEffects: [
       {
         type: 'spice',
-        amount: 2,
       },
       {
         type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -250,7 +264,7 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'focus',
+        type: 'intrigue-trash',
       },
       {
         type: 'helper-trade',
@@ -280,8 +294,8 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'leader-wound',
-        amount: 5,
+        type: 'leader-heal',
+        amount: 3,
       },
       {
         type: 'helper-trade',
@@ -295,19 +309,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'leader-wound',
       },
       {
-        type: 'leader-wound',
-      },
-      {
         type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -348,9 +350,6 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
-      {
-        type: 'sword',
-      },
     ],
   },
   {
@@ -363,7 +362,6 @@ export const intrigues: IntrigueCard[] = [
     plotEffects: [
       {
         type: 'spice',
-        amount: 2,
       },
       {
         type: 'helper-trade',
@@ -377,19 +375,14 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'loose-troop',
+        type: 'dreadnought-retreat',
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
+        type: 'troop-retreat',
+        amount: 2,
       },
     ],
   },
@@ -405,8 +398,7 @@ export const intrigues: IntrigueCard[] = [
         type: 'water',
       },
       {
-        type: 'solari',
-        amount: 2,
+        type: 'water',
       },
       {
         type: 'helper-trade',
@@ -423,16 +415,48 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'sword',
+        type: 'troop-retreat',
+        amount: 3,
       },
+    ],
+  },
+  {
+    name: {
+      en: 'Defamation',
+      de: 'Rufmord',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
       {
-        type: 'sword',
+        type: 'solari',
+        amount: 3,
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'faction-influence-down-choice',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'faction-influence-down-choice',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -445,16 +469,8 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'water',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'card-draw',
-      },
-      {
-        type: 'combat',
+        type: 'troop-insert',
+        amount: 3,
       },
     ],
     combatEffects: [
@@ -466,12 +482,6 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -524,9 +534,6 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
-      {
-        type: 'sword',
-      },
     ],
   },
   {
@@ -538,24 +545,71 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'spice',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
       },
       {
         type: 'signet-ring',
       },
       {
-        type: 'card-draw',
+        type: 'leader-heal',
       },
     ],
     combatEffects: [
       {
-        type: 'spice',
+        type: 'solari',
+        amount: 2,
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Espionage',
+      de: 'Spionage',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
+      {
+        type: 'card-discard',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'intrigue',
+      },
+      {
+        type: 'intrigue',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -590,13 +644,55 @@ export const intrigues: IntrigueCard[] = [
     combatEffects: [
       {
         type: 'solari',
-        amount: 3,
+        amount: 4,
       },
       {
         type: 'helper-trade',
       },
       {
         type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'False-Flag',
+      de: 'False-Flag',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
+      {
+        type: 'leader-wound',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'target-enemies',
+      },
+      {
+        type: 'faction-influence-down-choice',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'leader-wound',
+      },
+      {
+        type: 'helper-trade',
       },
       {
         type: 'sword',
@@ -618,7 +714,7 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'spice',
+        type: 'solari',
       },
       {
         type: 'helper-trade',
@@ -629,7 +725,16 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'intrigue',
+        type: 'loose-troop',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -648,19 +753,16 @@ export const intrigues: IntrigueCard[] = [
         type: 'card-discard',
       },
       {
-        type: 'card-discard',
-      },
-      {
         type: 'helper-trade',
-      },
-      {
-        type: 'card-draw',
       },
       {
         type: 'card-draw',
       },
     ],
     combatEffects: [
+      {
+        type: 'sword',
+      },
       {
         type: 'sword',
       },
@@ -693,13 +795,14 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'water',
-      },
-      {
         type: 'spice',
+        amount: 2,
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -724,7 +827,10 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'loose-troop',
+        type: 'card-discard',
+      },
+      {
+        type: 'card-discard',
       },
       {
         type: 'loose-troop',
@@ -747,7 +853,93 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Kanly',
+      de: 'Kanly',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
+      {
+        type: 'leader-heal',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'location-control-choice',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'leader-heal',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Leadership',
+      de: 'Führung',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
+      {
+        type: 'leader-heal',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'leader-wound',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
     ],
   },
@@ -768,21 +960,19 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'troop',
-      },
-      {
-        type: 'troop',
-      },
-      {
-        type: 'troop',
+        amount: 4,
       },
     ],
     combatEffects: [
       {
         type: 'solari',
-        amount: 2,
+        amount: 3,
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -804,10 +994,10 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'card-discard',
+        type: 'water',
       },
       {
-        type: 'card-discard',
+        type: 'water',
       },
       {
         type: 'helper-trade',
@@ -824,9 +1014,6 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
-      },
-      {
-        type: 'sword',
       },
       {
         type: 'sword',
@@ -857,10 +1044,7 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
+        type: 'dreadnought-retreat',
       },
       {
         type: 'helper-trade',
@@ -880,13 +1064,16 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'card-discard',
+        type: 'water',
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     combatEffects: [
@@ -913,7 +1100,10 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'enemies-leader-assassinate',
+        type: 'target-enemies',
+      },
+      {
+        type: 'leader-wound',
       },
     ],
     combatEffects: [
@@ -929,83 +1119,6 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
-      {
-        type: 'sword',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Production',
-      de: 'Produktion',
-    },
-    type: 'combined',
-    amount: 2,
-    plotEffects: [
-      {
-        type: 'solari',
-        amount: 5,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'dreadnought',
-      },
-    ],
-    combatEffects: [
-      {
-        type: 'sword',
-      },
-      {
-        type: 'sword',
-      },
-      {
-        type: 'solari',
-        amount: 3,
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'dreadnought',
-      },
-    ],
-  },
-  {
-    name: {
-      en: 'Exploitation',
-      de: 'Ausbeutung',
-    },
-    type: 'combined',
-    amount: 2,
-    plotEffects: [
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'card-discard',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'dreadnought',
-      },
-    ],
-    combatEffects: [
-      {
-        type: 'card-trash',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'sword',
-      },
     ],
   },
   {
@@ -1017,7 +1130,7 @@ export const intrigues: IntrigueCard[] = [
     amount: 2,
     plotEffects: [
       {
-        type: 'loose-troop',
+        type: 'card-discard',
       },
       {
         type: 'loose-troop',
@@ -1026,10 +1139,8 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'water',
-      },
-      {
-        type: 'water',
+        type: 'spice',
+        amount: 3,
       },
     ],
     combatEffects: [
@@ -1040,36 +1151,35 @@ export const intrigues: IntrigueCard[] = [
         type: 'sword',
       },
       {
-        type: 'sword',
-      },
-      {
         type: 'helper-trade',
       },
       {
-        type: 'location-control-choice',
+        type: 'spice',
       },
     ],
   },
   {
     name: {
-      en: 'Shading',
-      de: 'Beschattung',
+      en: 'Sabotage',
+      de: 'Sabotage',
     },
     type: 'combined',
     amount: 2,
     plotEffects: [
       {
-        type: 'solari',
-        amount: 2,
+        type: 'loose-troop',
       },
       {
         type: 'helper-trade',
       },
       {
-        type: 'card-draw',
+        type: 'target-enemies',
       },
       {
-        type: 'card-draw-or-destroy',
+        type: 'card-discard',
+      },
+      {
+        type: 'loose-troop',
       },
     ],
     combatEffects: [
@@ -1078,6 +1188,18 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'target-enemies',
+      },
+      {
+        type: 'dreadnought-retreat',
       },
     ],
   },
@@ -1096,11 +1218,8 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'water',
-      },
-      {
         type: 'solari',
-        amount: 2,
+        amount: 3,
       },
       {
         type: 'tech',
@@ -1114,10 +1233,8 @@ export const intrigues: IntrigueCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'water',
-      },
-      {
-        type: 'tech',
+        type: 'solari',
+        amount: 3,
       },
     ],
   },
@@ -1144,7 +1261,7 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'dreadnought-retreat',
+        type: 'faction-influence-down-choice',
       },
       {
         type: 'dreadnought-retreat',
@@ -1154,6 +1271,98 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'victory-point',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Plans in Plans',
+      de: 'Pläne in Plänen',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'faction-influence-up-twice-choice',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'intrigue-trash',
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
+  },
+  {
+    name: {
+      en: 'Compromise',
+      de: 'Kompromitierung',
+    },
+    type: 'combined',
+    amount: 2,
+    plotEffects: [
+      {
+        type: 'solari',
+        amount: 2,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'card-draw',
+      },
+      {
+        type: 'card-draw-or-destroy',
+      },
+    ],
+    combatEffects: [
+      {
+        type: 'solari',
+        amount: 3,
+      },
+      {
+        type: 'helper-trade',
+      },
+      {
+        type: 'target-enemies',
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'loose-troop',
       },
     ],
   },
