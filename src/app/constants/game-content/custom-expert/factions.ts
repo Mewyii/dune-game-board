@@ -5,7 +5,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Fremen', en: 'Fremen' },
     type: 'fremen',
     position: {
-      marginTop: 1665,
+      marginTop: 1685,
       marginLeft: 15,
     },
     actionFields: [
@@ -45,7 +45,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Bene Gesserit', en: 'Bene Gesserit' },
     type: 'bene',
     position: {
-      marginTop: 1155,
+      marginTop: 1170,
       marginLeft: 15,
     },
     actionFields: [
@@ -84,7 +84,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Raumgilde', en: 'Spacing Guild' },
     type: 'guild',
     position: {
-      marginTop: 645,
+      marginTop: 655,
       marginLeft: 15,
     },
     actionFields: [
@@ -166,7 +166,7 @@ export const factionsCustomExpert: Faction[] = [
     type: 'landsraad',
     position: {
       marginTop: 130,
-      marginLeft: 590,
+      marginLeft: 600,
       width: 330,
     },
     actionFields: [
@@ -200,8 +200,8 @@ export const factionsCustomExpert: Faction[] = [
     type: 'choam',
     position: {
       marginTop: 130,
-      marginLeft: 1035,
-      width: 1030,
+      marginLeft: 1055,
+      width: 1010,
     },
     actionFields: [
       {
@@ -210,7 +210,7 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'solari', amount: 10 }],
         rewards: [{ type: 'sword-master', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/mentat_3.png',
-        customWidth: '160px',
+        customWidth: '140px',
       },
       {
         title: { de: 'Leichter', en: 'Lighter' },
@@ -218,7 +218,7 @@ export const factionsCustomExpert: Faction[] = [
         costs: [{ type: 'solari', amount: 8 }],
         rewards: [{ type: 'dreadnought', iconHeight: 60 }],
         pathToImage: 'assets/images/action-backgrounds/industry_2.png',
-        customWidth: '160px',
+        customWidth: '140px',
       },
       {
         title: { de: 'Söldner', en: 'Mercenaries' },

@@ -37,7 +37,7 @@
 }
 
 .title {
-  color: hsl(from var(--faction-primary-color) h calc(s * 0.5) calc(l + 15));
+  color: hsl(from var(--faction-primary-color) h calc(s * 0.33) calc(l + 15));
   filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
 }
 
