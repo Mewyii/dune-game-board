@@ -20,7 +20,7 @@ $dust-cloud-pattern: url('/assets/images/patterns/dust-clouds.svg');
 .heading {
   position: relative;
   background: #afafaf;
-  border-radius: 6px 6px 0px 0px;
+  border-radius: 14px 8px 0px 0px;
   padding: 5px 8px 0px 34px;
   width: max-content;
   border: 1px solid #9f9f9f70;
@@ -49,7 +49,7 @@ $dust-cloud-pattern: url('/assets/images/patterns/dust-clouds.svg');
   display: flex;
   position: relative;
   background: #afafaf;
-  border-radius: 0px 6px 14px 6px;
+  border-radius: 0px 4px 20px 4px;
   padding: 6px;
   border: 1px solid #9f9f9f70;
 }
@@ -60,7 +60,7 @@ $dust-cloud-pattern: url('/assets/images/patterns/dust-clouds.svg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 4px 0px 0px 4px;
+  border-radius: 20px 0px 0px 4px;
   box-shadow: inset 0px 0px 15px -3px black;
   box-sizing: border-box;
   position: relative;
@@ -76,7 +76,7 @@ $dust-cloud-pattern: url('/assets/images/patterns/dust-clouds.svg');
 }
 
 .reward-area {
-  border-radius: 0px 4px 10px 0px;
+  border-radius: 0px 4px 16px 0px;
   box-shadow: inset 8px 0px 10px -10px #ffffff75;
   display: flex;
   flex-wrap: wrap;
@@ -211,7 +211,7 @@ $dust-cloud-pattern: url('/assets/images/patterns/dust-clouds.svg');
 .actionTypeIcon {
   position: absolute;
   top: 3px;
-  left: 4px;
+  left: 5px;
   width: 26px;
   height: 22px;
   background-position: center;

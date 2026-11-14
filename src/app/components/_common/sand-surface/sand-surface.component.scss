@@ -12,15 +12,15 @@
 // Intensities can be overridden per usage via these custom properties.
 :host(.shape-banner) {
   --sand-surface-grain-opacity: 0.05;
-  --sand-surface-dust-opacity: 0.1;
+  --sand-surface-dust-opacity: 0.05;
   width: 100%;
   height: 100%;
 }
 
 // Overlay that fills the positioned parent and follows its border radius.
 :host(.shape-overlay) {
-  --sand-surface-grain-opacity: 0.1;
-  --sand-surface-dust-opacity: 0.1;
+  --sand-surface-grain-opacity: 0.075;
+  --sand-surface-dust-opacity: 0.075;
   position: absolute;
   inset: 0;
   z-index: -1;
