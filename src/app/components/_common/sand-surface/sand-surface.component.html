@@ -1,0 +1,72 @@
+<svg
+  class="sand-surface"
+  [attr.viewBox]="shape === 'banner' ? '0 0 60 65' : null"
+  [attr.preserveAspectRatio]="shape === 'banner' ? null : 'none'"
+  aria-hidden="true"
+>
+  <defs>
+    <filter [attr.id]="idPrefix + '-grain-light'" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="3" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.98  0 0 0 0 0.88  0 0 0 0 0.68  2.4 0 0 0 -1.25" />
+    </filter>
+    <filter [attr.id]="idPrefix + '-grain-dark'" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="11" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.22  0 0 0 0 0.13  0 0 0 0 0.05  2.2 0 0 0 -1.3" />
+    </filter>
+    <!-- Patchy, wind-streaked dust veil that partially covers the grain -->
+    <filter [attr.id]="idPrefix + '-dust'" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035 0.09" numOctaves="3" [attr.seed]="dustSeed" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.86  0 0 0 0 0.76  0 0 0 0 0.6  1.9 0 0 0 -0.78" />
+      <feGaussianBlur stdDeviation="0.6" />
+    </filter>
+    <radialGradient [attr.id]="idPrefix + '-grain-fade'" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="white" />
+      <stop offset="55%" stop-color="white" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="white" stop-opacity="0" />
+    </radialGradient>
+    <mask [attr.id]="idPrefix + '-grain-mask'">
+      <rect width="100%" height="100%" [attr.fill]="'url(#' + idPrefix + '-grain-fade)'" />
+    </mask>
+    <!-- Concentrates the dust in the center and lets it fade out well before the edges -->
+    <radialGradient [attr.id]="idPrefix + '-dust-fade'" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="white" />
+      <stop offset="35%" stop-color="white" stop-opacity="0.85" />
+      <stop offset="75%" stop-color="white" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="white" stop-opacity="0" />
+    </radialGradient>
+    <mask [attr.id]="idPrefix + '-dust-mask'">
+      <rect width="100%" height="100%" [attr.fill]="'url(#' + idPrefix + '-dust-fade)'" />
+    </mask>
+    @if (shape === 'banner') {
+      <clipPath [attr.id]="idPrefix + '-inner'">
+        <path [attr.d]="bannerInnerPath" />
+      </clipPath>
+    }
+  </defs>
+
+  @if (shape === 'banner') {
+    <path class="surface-body" [attr.d]="bannerOuterPath" />
+    <path [attr.d]="bannerOuterPath" [attr.fill]="'url(#' + idPrefix + '-shade)'" />
+  }
+
+  <g
+    class="surface-grain"
+    [attr.clip-path]="shape === 'banner' ? 'url(#' + idPrefix + '-inner)' : null"
+    [attr.mask]="'url(#' + idPrefix + '-grain-mask)'"
+  >
+    <rect width="100%" height="100%" [attr.filter]="'url(#' + idPrefix + '-grain-dark)'" />
+    <rect width="100%" height="100%" [attr.filter]="'url(#' + idPrefix + '-grain-light)'" />
+  </g>
+
+  <g
+    class="surface-dust"
+    [attr.clip-path]="shape === 'banner' ? 'url(#' + idPrefix + '-inner)' : null"
+    [attr.mask]="'url(#' + idPrefix + '-dust-mask)'"
+  >
+    <rect width="100%" height="100%" [attr.filter]="'url(#' + idPrefix + '-dust)'" />
+  </g>
+
+  @if (shape === 'banner') {
+    <path class="surface-inner-frame" [attr.d]="bannerInnerPath" />
+  }
+</svg>

@@ -22,6 +22,7 @@ import { DuneActionComponent } from './components/dune-action/dune-action.compon
 import { DuneCombatComponent } from './components/dune-combat/dune-combat.component';
 import { DuneFactionComponent } from './components/dune-faction/dune-faction.component';
 import { DuneLocationComponent } from './components/dune-location/dune-location.component';
+import { SandSurfaceComponent } from './components/_common/sand-surface/sand-surface.component';
 import { EventsComponent } from './components/events/events.component';
 import { HomeworldTileComponent } from './components/homeworld-tile/homeworld-tile.component';
 import { ParticleEffectsComponent } from './components/particle-effects/particle-effects.component';
@@ -116,6 +117,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     DuneCombatComponent,
     DuneActionComponent,
     DuneLocationComponent,
+    SandSurfaceComponent,
     CardAreasComponent,
     PlayerboardComponent,
     PlayerOverviewComponent,

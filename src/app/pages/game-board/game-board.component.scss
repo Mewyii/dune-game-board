@@ -32,24 +32,27 @@ dune-turn-infos {
 
 @keyframes day-and-night-cycle-anim {
   0% {
-    backdrop-filter: brightness(1);
+    backdrop-filter: brightness(1) saturate(1) hue-rotate(0deg);
   }
   35% {
-    backdrop-filter: brightness(1);
+    backdrop-filter: brightness(1) saturate(1) hue-rotate(0deg);
   }
   40% {
-    backdrop-filter: brightness(1.05);
+    backdrop-filter: brightness(1.1) saturate(0.9);
   }
   45% {
-    backdrop-filter: brightness(1);
+    backdrop-filter: brightness(1) saturate(1) hue-rotate(0deg);
   }
   60% {
-    backdrop-filter: brightness(1);
+    backdrop-filter: brightness(1) saturate(1) hue-rotate(0deg);
+  }
+  75% {
+    backdrop-filter: brightness(0.9) saturate(1.25) hue-rotate(-10deg);
   }
   80% {
-    backdrop-filter: brightness(0.66);
+    backdrop-filter: brightness(0.66) saturate(1) hue-rotate(0deg);
   }
   100% {
-    backdrop-filter: brightness(1);
+    backdrop-filter: brightness(1) saturate(1) hue-rotate(0deg);
   }
 }

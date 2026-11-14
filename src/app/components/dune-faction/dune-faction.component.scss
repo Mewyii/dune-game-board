@@ -1,7 +1,7 @@
 .faction-tile {
   background: #0000006e;
   position: absolute;
-  padding: 20px;
+  padding: 1px;
   border: 1px solid #9f9f9f4a;
   box-shadow: inset 0px 0px 15px -3px #0000007a;
   border-radius: 30px 4px;
@@ -26,21 +26,26 @@
   width: 100%;
   text-align: center;
   color: lightgray;
-  background: #0000007e;
-  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.25);
   z-index: 1;
   position: relative;
-  font-size: x-large;
-  border-radius: 4px;
+  font-size: 22px;
+  border-radius: 30px 0px 0px 0px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid hsl(from var(--faction-primary-color) h calc(s * 1) calc(l + 10) / 0.9);
 }
 
 .title {
+  color: hsl(from var(--faction-primary-color) h calc(s * 0.5) calc(l + 15));
   filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
 }
 
 .content {
   display: flex;
   justify-content: center;
+  padding: 17px;
+  box-shadow: inset 0px 10px 15px -5px hsl(from var(--faction-primary-color) h calc(s * 1) calc(l + 5) / 0.6);
 }
 
 .background-symbol {
@@ -60,11 +65,11 @@
   display: flex;
   flex-direction: column-reverse;
   width: 170px;
-  background: #0000006e;
-  padding: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px;
   z-index: 1;
   position: relative;
-  margin-right: 16px;
+  margin-right: 18px;
   border-radius: 4px;
   filter: drop-shadow(0px 0px 5px rgb(0, 0, 0, 0.25));
 }
@@ -102,11 +107,11 @@
   width: 0;
   background: none;
   box-shadow: none;
-  border-bottom: 8px solid #ffffff35;
+  border-bottom: 12px solid #ffffff30;
   border-left: 85px solid transparent;
   border-right: 85px solid transparent;
   position: absolute;
-  top: 82.25%;
+  top: 82%;
 }
 
 .divider.finale {
@@ -114,11 +119,11 @@
   width: 0;
   background: none;
   box-shadow: none;
-  border-bottom: 8px solid #ffffff35;
+  border-bottom: 12px solid #ffffff30;
   border-left: 85px solid transparent;
   border-right: 85px solid transparent;
   position: absolute;
-  top: 41%;
+  top: 40%;
 }
 
 .reward-area {
@@ -175,14 +180,14 @@
   z-index: 1;
   position: relative;
   flex-wrap: wrap;
-  gap: 50px;
+  gap: 44px;
   max-width: min-content;
 }
 
 .alliance-token-container {
   position: absolute;
   top: 14px;
-  left: 28px;
+  left: 24px;
 }
 
 .score-marker {

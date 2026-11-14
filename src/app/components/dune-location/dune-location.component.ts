@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DuneLocation } from 'src/app/models';
 
@@ -14,8 +14,9 @@ import { PlayersService } from 'src/app/services/players.service';
   styleUrls: ['./dune-location.component.scss'],
   standalone: false,
 })
-export class DuneLocationComponent implements OnInit, OnDestroy {
+export class DuneLocationComponent implements OnInit, OnChanges, OnDestroy {
   subscriptions: Subscription[] = [];
+  private headingResizeObserver: ResizeObserver | undefined;
 
   @Input() location: DuneLocation = {
     color: '#6b5233',
@@ -47,7 +48,24 @@ export class DuneLocationComponent implements OnInit, OnDestroy {
     private playersService: PlayersService,
     private leaderService: LeadersService,
     private gameManager: GameManager,
+    private elementRef: ElementRef<HTMLElement>,
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    const host = this.elementRef.nativeElement;
+    const tile = host.querySelector<HTMLElement>('.location-tile');
+    const heading = host.querySelector<HTMLElement>('.location-tile .heading');
+    if (!tile || !heading || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    // Feeds the real title width into the ::after clip-path so the frame follows the heading.
+    const updateHeadingWidth = () => {
+      tile.style.setProperty('--heading-width', `${heading.offsetWidth}px`);
+    };
+    updateHeadingWidth();
+    this.headingResizeObserver = new ResizeObserver(updateHeadingWidth);
+    this.headingResizeObserver.observe(heading);
+  }
 
   ngOnInit(): void {
     const locationOwnerIdSub = this.locationsService
@@ -78,6 +96,7 @@ export class DuneLocationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.headingResizeObserver?.disconnect();
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }

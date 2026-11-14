@@ -3,8 +3,10 @@
   [style.top]="faction.position.marginTop + 'px'"
   [style.left]="faction.position.marginLeft + 'px'"
   [style.backgroundColor]="faction.secondaryColor"
+  [style.--faction-primary-color]="faction.primaryColor"
+  [style.--faction-secondary-color]="faction.secondaryColor"
 >
-  <div class="title-container font-scifi" [style.color]="titleColor">
+  <div class="title-container font-scifi">
     <span class="title">{{ t.translateLS(faction.title).toLocaleUpperCase() }} </span>
   </div>
   <div class="content">

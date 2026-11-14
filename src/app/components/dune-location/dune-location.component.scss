@@ -4,10 +4,12 @@
   align-items: center;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0px 0px 10px #5f3e1bab);
+  filter: drop-shadow(0px 0px 10px rgba(95, 62, 27, 0.8));
 }
 
 .location-tile::after {
+  // --heading-width is set from the component and reflects the rendered title width
+  --frame-heading-edge: max(calc(var(--heading-width, 126px) - 15px), 72px);
   content: '';
   border: 1px solid #efd5b6;
   box-shadow: inset 0px 0px 15px -3px #efd5b6b5;
@@ -19,29 +21,24 @@
   height: calc(100% + 3px);
   clip-path: polygon(
     24px 0%,
-    128px 0%,
-    128px 48px,
+    var(--frame-heading-edge) 0%,
+    var(--frame-heading-edge) 48px,
     100% 48px,
     100% 140px,
     260px 140px,
     260px 170px,
     24px 170px,
     0% 140px,
-    0% 32px,
+    0% 22px,
     24px 32px
   );
   z-index: -1;
 }
 
 .location-owner-indicator {
-  border-bottom-width: 15px;
-  border-left-width: 30px;
-  border-right-width: 30px;
-  border-top-width: 50px;
-  border-radius: 3px;
-  border-style: solid;
-  border-color: #e49944be;
-  border-bottom-color: transparent !important;
+  width: 60px;
+  height: 65px;
+  color: #e49944be;
   position: relative;
   z-index: 1;
   filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.25));
@@ -112,9 +109,9 @@
   position: absolute;
   font-size: xx-small;
   text-align: center;
-  bottom: 10px;
-  left: -30px;
-  width: 60px;
+  bottom: 25px;
+  left: 0px;
+  width: 100%;
   color: white;
   overflow: hidden;
   backdrop-filter: brightness(0.75);
@@ -198,10 +195,8 @@
 }
 
 .location-owner-indicator.small {
-  border-bottom-width: 15px;
-  border-left-width: 25px;
-  border-right-width: 25px;
-  border-top-width: 40px;
+  width: 50px;
+  height: 55px;
 }
 
 .location-change-button {

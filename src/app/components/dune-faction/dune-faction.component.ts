@@ -60,8 +60,6 @@ export class DuneFactionComponent implements OnInit, OnDestroy {
 
   excludedPlayers: number[] = [];
 
-  titleColor = '';
-
   playerColors: { [key: number]: string } = {};
 
   constructor(
@@ -115,8 +113,6 @@ export class DuneFactionComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.push(playerScoresSub, playerAlliancesSub, playerGameModifiersSub, playerColorsSub);
-
-    this.titleColor = this.getTitleColor(this.faction.primaryColor);
   }
 
   ngOnDestroy(): void {
@@ -133,20 +129,6 @@ export class DuneFactionComponent implements OnInit, OnDestroy {
     this.gameManager.decreasePlayerFactionScore(playerId, this.faction.type);
 
     return false;
-  }
-
-  getTitleColor(rgbColor: string) {
-    const parts = rgbColor
-      .substring(4, rgbColor.length - 1)
-      .split(' ')
-      .map((x) => parseInt(x));
-    let result = 'rgb(';
-    for (let part of parts) {
-      part = part + 10;
-      result = result + ' ' + part;
-    }
-    result = result + ')';
-    return result;
   }
 
   isExcluded(playerId: number) {

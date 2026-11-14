@@ -4,6 +4,7 @@
     !disabled && isActiveForPlayerCount && activePlayerTurnState === 'agent-placement' && isAccessibleByPlayer
   "
   [class.blocked]="isBlocked || !isActiveForPlayerCount"
+  [style.--action-primary-color]="backgroundColor"
 >
   <div class="heading font-medieval" [style.background-color]="backgroundColor">
     <span class="title">{{ t.translateLS(actionField.title).toUpperCase() }}</span>
@@ -58,6 +59,7 @@
       [style.column-gap]="actionField.noColumnGap ? '0px' : ''"
       [style.backgroundImage]="backgroundGradient"
     >
+      <dune-sand-surface shape="none"></dune-sand-surface>
       @for (rewardType of actionRewards; track $index) {
         <div
           [class]="'reward-container ' + rewardType.type"
