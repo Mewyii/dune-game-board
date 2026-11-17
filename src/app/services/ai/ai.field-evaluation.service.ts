@@ -14,7 +14,7 @@ import {
   playerCanPayCosts,
 } from 'src/app/helpers/rewards';
 import { ActionField, ActionType, EffectReward, FactionInfluence } from 'src/app/models';
-import { GameState, RewardModifier } from 'src/app/models/ai';
+import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { BoardSpacesService } from '../board-spaces.service';
 import { LeaderDeckCard } from '../leaders.service';
@@ -69,12 +69,9 @@ export class AIFieldEvaluationService {
       ),
     );
 
-    let leaderGoalModifiers: RewardModifier[] = [];
-    if (playerLeader.aiAdjustments && playerLeader.aiAdjustments.rewardEvaluationModifier) {
-      leaderGoalModifiers = playerLeader.aiAdjustments.rewardEvaluationModifier(player, gameState);
-    }
+    const getLeaderModifiedBoardSpaceValue = playerLeader?.aiAdjustments?.fieldEvaluationModifier;
 
-    const fieldEvaluations = this.getEvaluatedFieldsByGoals(player, aiPlayer, gameState, leaderGoalModifiers, boardFields);
+    const fieldEvaluations = this.getEvaluatedBoardSpaces(player, gameState, boardFields, getLeaderModifiedBoardSpaceValue);
 
     const accessibleFields = this.getAccessibleFields(
       boardFields,
@@ -98,12 +95,11 @@ export class AIFieldEvaluationService {
     return { preferredFields: slightlyRandomizedFields };
   }
 
-  private getEvaluatedFieldsByGoals(
+  private getEvaluatedBoardSpaces(
     player: Player,
-    aiPlayer: AIPlayer,
     gameState: GameState,
-    leaderGoalModifiers: RewardModifier[],
     boardSpaces: ActionField[],
+    getLeaderModifiedBoardSpaceValue?: (player: Player, gameState: GameState, field: ActionField) => number,
   ) {
     const fieldEvaluations: FieldEvaluation[] = [];
 
@@ -131,6 +127,27 @@ export class AIFieldEvaluationService {
           boardSpaceEvaluation += rewardEvaluation;
         }
       }
+      const isLocation = gameState.locations.some((x) => x.actionField.title.en === boardSpaceId);
+      if (isLocation) {
+        const playerOwnsLocation = gameState.playerLocations.some((x) => x === boardSpaceId);
+        if (!gameState.conflict) {
+          if (playerOwnsLocation) {
+            boardSpaceEvaluation *= 0.9;
+          } else {
+            boardSpaceEvaluation *= 1.0 + 0.04 * gameState.currentRound;
+          }
+        } else {
+          if (!playerOwnsLocation) {
+            const intrigueLocationRewards = gameState.playerIntriguesRewards['location-control-choice'];
+            const handCardLocationRewards = gameState.playerHandCardsRewards['location-control-choice'];
+
+            boardSpaceEvaluation *=
+              1.0 + 0.04 * gameState.currentRound * (intrigueLocationRewards + handCardLocationRewards);
+          } else {
+            boardSpaceEvaluation *= 1.0 + 0.01 * gameState.currentRound;
+          }
+        }
+      }
       if (boardSpace.costs) {
         if (playerCanPayCosts(boardSpace.costs, player, gameState)) {
           for (const cost of boardSpace.costs) {
@@ -154,6 +171,10 @@ export class AIFieldEvaluationService {
       }
 
       boardSpaceEvaluation = Math.round(boardSpaceEvaluation * 100) / 100;
+
+      if (getLeaderModifiedBoardSpaceValue) {
+        boardSpaceEvaluation *= getLeaderModifiedBoardSpaceValue(player, gameState, boardSpace);
+      }
 
       if (boardSpaceEvaluation > 0) {
         const fieldEvaluation = fieldEvaluations.find((x) => x.fieldId === boardSpaceId);

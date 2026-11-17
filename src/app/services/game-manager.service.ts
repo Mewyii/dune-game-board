@@ -1983,7 +1983,7 @@ export class GameManager {
     if (effectiveCosts > 0) {
       const techCosts = effectiveCosts > solariAmount ? solariAmount : effectiveCosts;
       this.playersResourcesService.removeResourceFromPlayer(player.id, 'solari', techCosts);
-      this.loggingService.logPlayerResourcePaid(player.id, 'tech', techCosts);
+      this.loggingService.logPlayerResourcePaid(player.id, 'solari', techCosts);
     }
 
     this.techTilesService.setPlayerTechTile(player.id, techTile.name.en);

@@ -34,7 +34,7 @@ export interface ImmediateEffect {
 })
 export class PlayerRewardChoicesService {
   private playersRewardChoicesSubject = new BehaviorSubject<PlayerRewardChoices[]>([]);
-  playersRewardChoices$ = this.playersRewardChoicesSubject.asObservable();
+  playersRewardChoices$ = this.playersRewardChoicesSubject.asObservable().pipe(distinctUntilChanged());
 
   private playersRewardChoicesNeedingProcessingSubject = new BehaviorSubject<Map<number, string[]>>(
     new Map<number, string[]>(),

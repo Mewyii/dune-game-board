@@ -628,26 +628,4 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
       },
     },
   },
-  {
-    id: 'Armored Spice Harvesters',
-    aiEvaluation: (player, gameState) => 8 + 0.75 * (gameState.currentRound - 1) + (player.hasSwordmaster ? 2 : 0),
-    customTimedFunction: {
-      timing: 'timing-reveal-turn',
-      function: (player, gameState, game, gameElement) => {
-        const spiceSpaces = gameState.boardSpaces.filter((x) => x.actionType === 'spice');
-
-        const playerAgentsOnSpiceSpaces = gameState.agentsOnFields.filter((agent) =>
-          spiceSpaces.some((boardSpace) => agent.fieldId === boardSpace.title.en),
-        );
-
-        if (playerAgentsOnSpiceSpaces.length > 0) {
-          game.addRewardToPlayer(
-            player.id,
-            { type: 'sword', amount: 2 * playerAgentsOnSpiceSpaces.length },
-            { gameElement },
-          );
-        }
-      },
-    },
-  },
 ];

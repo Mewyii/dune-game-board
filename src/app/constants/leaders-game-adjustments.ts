@@ -723,9 +723,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => {
         if (gameState.playerResources.signet < 1 || gameState.playerCombatUnits.troopsInGarrison < 1) {
-          return 0;
+          return 1;
         } else {
-          return field.rewards.some((x) => x.type === 'combat') ? 0.05 : 0;
+          return field.rewards.some((x) => x.type === 'combat') ? 1.05 : 1;
         }
       },
     },
@@ -1058,9 +1058,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => {
         if (gameState.playerResources.signet < 1 || gameState.playerCombatUnits.troopsInGarrison < 1) {
-          return 0;
+          return 1;
         } else {
-          return field.rewards.some((x) => x.type === 'combat') ? 0.05 : 0;
+          return field.rewards.some((x) => x.type === 'combat') ? 1.05 : 1;
         }
       },
     },
@@ -1167,8 +1167,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
           const buyableTechTiles = game.getBuyableTechTiles();
 
+          const costReductionPerSignet = 2;
+          const maxCostReduction = gameState.playerResources.signet * costReductionPerSignet;
+
           const reducedTechTiles = buyableTechTiles.map((x) => {
-            const costReduction = x.costs > gameState.playerResources.signet ? gameState.playerResources.signet : x.costs;
+            const costReduction =
+              x.costs >= maxCostReduction ? maxCostReduction : x.costs - (x.costs % costReductionPerSignet);
 
             return {
               ...x,
@@ -1198,7 +1202,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           dialogRef.afterClosed().subscribe((pickedCard: TechTileDeckCard) => {
             const originalCardCosts = buyableTechTiles.find((x) => x.id === pickedCard.id)?.costs ?? 0;
             const costReduction = originalCardCosts - pickedCard.costs;
-            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction });
+            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction / 2 });
             game.acquireTechTile(player.id, pickedCard);
           });
         },
@@ -1212,8 +1216,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
 
           const buyableTechTiles = game.getBuyableTechTiles();
 
+          const costReductionPerSignet = 2;
+          const maxCostReduction = gameState.playerResources.signet * costReductionPerSignet;
+
           const reducedTechTiles = buyableTechTiles.map((x) => {
-            const costReduction = x.costs > gameState.playerResources.signet ? gameState.playerResources.signet : x.costs;
+            const costReduction =
+              x.costs > maxCostReduction ? maxCostReduction : x.costs - (x.costs % costReductionPerSignet);
 
             return {
               ...x,
@@ -1243,7 +1251,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           dialogRef.afterClosed().subscribe((pickedCard: TechTileDeckCard) => {
             const originalCardCosts = buyableTechTiles.find((x) => x.id === pickedCard.id)?.costs ?? 0;
             const costReduction = originalCardCosts - pickedCard.costs;
-            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction });
+            game.payCostForPlayer(player.id, { type: 'signet', amount: costReduction / 2 });
             game.acquireTechTile(player.id, pickedCard);
           });
         },
@@ -1342,12 +1350,12 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       imperiumRow: [{ id: 'august-metulli-imperium-row-block', isBlocked: true }],
     },
     aiAdjustments: {
-      rewardEvaluationModifier: () => [
-        { type: 'council-seat-small', modifier: -0.1 },
-        { type: 'council-seat-large', modifier: -0.1 },
-      ],
       fieldEvaluationModifier: (player, gameState, field) =>
-        field.rewards.some((x) => x.type === 'persuasion') ? -0.05 : 0.0,
+        field.rewards.some(
+          (x) => x.type === 'persuasion' || x.type === 'council-seat-small' || x.type === 'council-seat-large',
+        )
+          ? 0.95
+          : 1,
     },
     customTimedFunctions: [
       {
@@ -1457,9 +1465,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => {
         if (gameState.playerResources.signet < 1) {
-          return 0;
+          return 1;
         } else {
-          return field.rewards.some((x) => x.type === 'water' || x.type === 'spice') ? 0.05 : 0;
+          return field.rewards.some((x) => x.type === 'water' || x.type === 'spice') ? 1.05 : 1;
         }
       },
     },
@@ -1703,7 +1711,8 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
   {
     id: 'Dara Moritani',
     aiAdjustments: {
-      rewardEvaluationModifier: () => [{ type: 'sword-master', modifier: 0.2 }],
+      fieldEvaluationModifier: (player, gameState, field) =>
+        field.rewards.some((x) => x.type === 'sword-master') ? 1.1 : 1,
     },
     gameModifiers: {
       fieldEnemyAgentAccess: [
@@ -1740,9 +1749,9 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     aiAdjustments: {
       fieldEvaluationModifier: (player, gameState, field) => {
         if (gameState.playerResources.solari < 1) {
-          return 0;
+          return 1;
         } else {
-          return field.actionType === 'landsraad' ? 0.05 : 0;
+          return field.actionType === 'landsraad' ? 1.05 : 1;
         }
       },
     },

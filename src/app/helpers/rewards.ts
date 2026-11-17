@@ -566,7 +566,7 @@ export function getStructuredEffectTargets(
   } else if (target.type === 'target-enemies-on-field-type') {
     const actionType = target.action;
     targetPlayers = gameState.enemyPlayers.filter((enemy) => {
-      gameState.enemyAgentsOnFields
+      return gameState.enemyAgentsOnFields
         .filter((x) => enemy.id === x.playerId)
         .some((enemyAgent) => {
           const boardSpaceType = gameState.boardSpaces.find((x) => enemyAgent.fieldId === x.title.en)?.actionType;

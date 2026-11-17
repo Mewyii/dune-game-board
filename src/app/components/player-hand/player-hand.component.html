@@ -288,6 +288,7 @@
         (click)="onShowHandClicked()"
         [matTooltip]="t.translate('playerHandTooltipHand')"
       >
+        <div class="card-amount-container"><span class="card-amount"></span>{{ playerHandCards?.cards?.length ?? 0 }}</div>
         <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_hand.png'" />
       </div>
       <div
@@ -295,6 +296,9 @@
         (click)="onShowDiscardPileClicked()"
         [matTooltip]="t.translate('playerHandTooltipDiscardPile')"
       >
+        <div class="card-amount-container">
+          <span class="card-amount"></span>{{ playerDiscardPiles?.cards?.length ?? 0 }}
+        </div>
         <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_discard.png'" />
       </div>
       <div
@@ -303,6 +307,7 @@
         [matTooltip]="t.translate('playerHandTooltipDeck')"
       >
         <img class="card-stack-icon" [src]="'assets/images/reward-markers/marker_card_pile_deck.png'" />
+        <div class="card-amount-container"><span class="card-amount"></span>{{ playerDeckCardsCount }}</div>
       </div>
       <div>
         <button mat-fab [color]="'accent'" (click)="onToggleShowCardsClicked()">

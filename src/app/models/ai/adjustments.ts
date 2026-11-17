@@ -12,7 +12,6 @@ export interface RewardModifier {
 export interface AIAdjustments {
   fieldAccessModifier?: Resource[];
   fieldEvaluationModifier?: (player: Player, gameState: GameState, field: ActionField) => number;
-  rewardEvaluationModifier?: (player: Player, gameState: GameState) => RewardModifier[];
 }
 
 export type CustomEffectFunction = (

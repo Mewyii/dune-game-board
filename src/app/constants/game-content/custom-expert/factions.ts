@@ -92,7 +92,7 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Heighliner', en: 'Heighliner' },
         actionType: 'guild',
         costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'tech' }, { type: 'troop', amount: 7 }],
+        rewards: [{ type: 'card-draw' }, { type: 'card-draw' }, { type: 'troop', amount: 6 }],
         pathToImage: 'assets/images/action-backgrounds/highliner.png',
         activeForPlayerCount: 3,
       },

@@ -1,6 +1,93 @@
 <h1 mat-dialog-title>{{ dialogTitle }}</h1>
 <div mat-dialog-content>
-  <dune-tech-tile-editor [techTile]="techTile"></dune-tech-tile-editor>
+  <mat-form-field class="medium-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-label>Name (English)</mat-label>
+    <input matInput [readonly]="editMode" [(ngModel)]="techTile.name.en" />
+  </mat-form-field>
+  <mat-form-field class="medium-text-field flex">
+    <mat-label>Name (German)</mat-label>
+    <input matInput [(ngModel)]="techTile.name.de" />
+  </mat-form-field>
+
+  <!-- Faction -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Faction</mat-label>
+    <mat-select [(ngModel)]="techTile.faction">
+      <mat-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Persuasion Costs -->
+  <mat-form-field class="small-text-field">
+    <mat-label>Costs</mat-label>
+    <input matInput type="number" [(ngModel)]="techTile.costs" />
+  </mat-form-field>
+
+  <!-- Image -->
+  <mat-form-field class="big-text-field flex">
+    <mat-label>Image URL</mat-label>
+    <input matInput [(ngModel)]="techTile.imageUrl" />
+  </mat-form-field>
+  <mat-form-field class="small-text-field">
+    <mat-label>Image Position</mat-label>
+    <mat-select [(ngModel)]="techTile.imagePosition">
+      <mat-option *ngFor="let imagePosition of imagePositions" [value]="imagePosition">{{ imagePosition }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Buy Effects -->
+  <dune-effect-selector
+    [effects]="techTile.buyEffects ?? []"
+    [effectTypes]="rewardTypes"
+    [factions]="factions"
+    [actions]="actionTypes"
+    title="Buy Effects"
+  >
+  </dune-effect-selector>
+
+  <!-- Tech Tile Effects -->
+  <div class="card-effect-container">
+    <div>
+      <dune-effect-selector
+        [effects]="techTile.effects ?? []"
+        [effectTypes]="effectTypes"
+        [factions]="factions"
+        [actions]="actionTypes"
+        title="Effects"
+      >
+      </dune-effect-selector>
+    </div>
+    <mat-form-field class="margin-top">
+      <mat-label>Effect Size</mat-label>
+      <mat-select [(ngModel)]="techTile.effectSize">
+        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      </mat-select> </mat-form-field
+    ><br /><br />
+    <div>
+      Custom Effect Text
+      <mat-icon
+        [style]="'margin-left: 4px'"
+        matTooltip="Custom text where you can use icons with the syntax {resource:troops} or {faction:bene} f.e.."
+        >info</mat-icon
+      >
+    </div>
+    <div class="form-group wrap">
+      <mat-form-field class="large-text-field flex">
+        <mat-label>English</mat-label>
+        <input matInput [(ngModel)]="techTile.customEffect!.en" />
+      </mat-form-field>
+      <mat-form-field class="large-text-field flex">
+        <mat-label>German</mat-label>
+        <input matInput [(ngModel)]="techTile.customEffect!.de" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Font Size</mat-label>
+        <mat-select [(ngModel)]="techTile.customEffect!.fontSize">
+          <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">{{ t.translate('commonCancel') }}</button>

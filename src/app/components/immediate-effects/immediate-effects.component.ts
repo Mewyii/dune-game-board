@@ -86,7 +86,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.playerRewardChoicesService.playersRewardChoices$.subscribe((playersRewardChoices) => {
+    const rewardChoicesSub = this.playerRewardChoicesService.playersRewardChoices$.subscribe((playersRewardChoices) => {
       const immediateEffectStack = this.immediateEffectStack;
 
       const immediateEffectsToAdd: ImmediateEffect[] = [];
@@ -122,7 +122,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.immediateEffectStack$.subscribe((immediateEffectStack) => {
+    const immediateEffectsSub = this.immediateEffectStack$.subscribe((immediateEffectStack) => {
       if (immediateEffectStack.length > 0 && !this.immediateEffectDialogOpen) {
         const currentEffect = immediateEffectStack[0];
         switch (currentEffect.choice) {
@@ -165,6 +165,8 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.subscriptions.push(rewardChoicesSub, immediateEffectsSub);
   }
 
   private showCardDiscardDialog(currentEffect: ImmediateEffect): void {

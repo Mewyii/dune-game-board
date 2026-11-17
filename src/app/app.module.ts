@@ -16,13 +16,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SandSurfaceComponent } from './components/_common/sand-surface/sand-surface.component';
 import { AITileComponent } from './components/ai-tile/ai-tile.component';
 import { CardAreasComponent } from './components/card-areas/card-areas.component';
 import { DuneActionComponent } from './components/dune-action/dune-action.component';
 import { DuneCombatComponent } from './components/dune-combat/dune-combat.component';
 import { DuneFactionComponent } from './components/dune-faction/dune-faction.component';
 import { DuneLocationComponent } from './components/dune-location/dune-location.component';
-import { SandSurfaceComponent } from './components/_common/sand-surface/sand-surface.component';
 import { EventsComponent } from './components/events/events.component';
 import { HomeworldTileComponent } from './components/homeworld-tile/homeworld-tile.component';
 import { ParticleEffectsComponent } from './components/particle-effects/particle-effects.component';
@@ -101,7 +101,6 @@ import { PlotEditorComponent } from './pages/plot-configurator/plot-editor/plot-
 import { StartingCardConfiguratorComponent } from './pages/starting-card-configurator/starting-card-configurator.component';
 import { DialogTechTileEditorComponent } from './pages/tech-tile-configurator/dialog-tech-tile-editor/dialog-tech-tile-editor.component';
 import { TechTileConfiguratorComponent } from './pages/tech-tile-configurator/tech-tile-configurator.component';
-import { TechTileEditorComponent } from './pages/tech-tile-configurator/tech-tile-editor/tech-tile-editor.component';
 import { ActionTypePathPipe } from './pipes/action-type-path';
 import { DuneSymbolsPipe } from './pipes/dune-symbols';
 import { EffectTypePathPipe } from './pipes/effect-type-path';
@@ -165,7 +164,6 @@ import { SafeUrlPipe } from './pipes/safe-url';
     StopPropagationClickDirective,
     TechTileConfiguratorComponent,
     DialogTechTileEditorComponent,
-    TechTileEditorComponent,
     ImperiumCardsPreviewDialogComponent,
     BoardSpaceSelectorDialogComponent,
     TechTileSelectorDialogComponent,

@@ -644,7 +644,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
       );
     },
     customRevealFunction: (player, gameState, game, gameElement) => {
-      if (gameState.playerCombatUnits.shipsInGarrison > 1 && gameState.playerScore.guild > 3) {
+      if (gameState.playerCombatUnits.shipsInGarrison > 0 && gameState.playerScore.guild > 3) {
         game.addRewardToPlayer(player.id, { type: 'trash-self' }, { gameElement });
         game.addRewardToPlayer(player.id, { type: 'victory-point' });
       }

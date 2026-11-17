@@ -45,6 +45,8 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
 
   revealPlots = false;
 
+  playerDeckCardsCount = 0;
+
   constructor(
     public t: TranslateService,
     private gameManager: GameManager,
@@ -67,6 +69,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
 
         this.playerHandCards = this.cardsService.playerHands.find((x) => x.playerId === this.activePlayerId);
         this.playerDiscardPiles = this.cardsService.playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
+        this.playerDeckCardsCount = this.cardsService.getPlayerDeck(this.activePlayerId)?.cards.length ?? 0;
 
         this.playerPlots = this.cardsService.playerPlots.find((x) => x.playerId === this.activePlayerId);
 
@@ -89,6 +92,10 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
       this.playerDiscardPiles = playerDiscardPiles.find((x) => x.playerId === this.activePlayerId);
     });
 
+    const playerDecksSub = this.cardsService.playerDecks$.subscribe((playerDecks) => {
+      this.playerDeckCardsCount = playerDecks.find((x) => x.playerId === this.activePlayerId)?.cards.length ?? 0;
+    });
+
     const playerPlotsSub = this.cardsService.playerPlots$.subscribe((playerPlots) => {
       this.playerPlots = playerPlots.find((x) => x.playerId === this.activePlayerId);
     });
@@ -109,6 +116,7 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
       playerPlotsSub,
       playedPlayerCardsSub,
       playersIntriguesSub,
+      playerDecksSub,
     );
   }
 

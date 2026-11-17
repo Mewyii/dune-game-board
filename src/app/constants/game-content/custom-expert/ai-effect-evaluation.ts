@@ -553,6 +553,7 @@ export function getRewardEffectEvaluationForTurnState(
       return value;
     case 'location-control':
       let canTakeOverLocation = true;
+      let needDefendlocation = false;
 
       const conflictBoardSpaceId = gameState.conflict?.boardSpaceId;
       if (conflictBoardSpaceId) {
@@ -566,9 +567,12 @@ export function getRewardEffectEvaluationForTurnState(
         if (enemyLocation && gameState.playerCombatUnits.troopsInGarrison < effectiveTakeOverTroopCosts) {
           canTakeOverLocation = false;
         }
+        if (gameState.playerLocations.some((x) => x === conflictBoardSpaceId)) {
+          needDefendlocation = true;
+        }
       }
 
-      return canTakeOverLocation ? value : value * 0.5;
+      return canTakeOverLocation || needDefendlocation ? value : value * 0.5;
     case 'location-control-choice':
       const playerAgentsOnFields = gameState.playerAgentsOnFields;
       if (targetBoardSpace?.ownerReward) {
