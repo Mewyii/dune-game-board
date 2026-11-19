@@ -1,25 +1,27 @@
 <h1 mat-dialog-title [class]="data.colorScheme">{{ data.title }}</h1>
 <div mat-dialog-content class="dialog-content">
   <div class="cards-container">
-    <div
-      class="card-container"
-      *ngFor="let techTile of techTiles"
-      [class.selectable]="isSelectMode"
-      [class.selected]="isSelected(techTile)"
-      (click)="onCardClick(techTile)"
-      (mouseenter)="hoveredBoardSpaceId = techTile.id"
-      (mouseleave)="hoveredBoardSpaceId = ''"
-    >
-      <dune-highlighting
-        *ngIf="techTile.id === selectedCard?.id"
-        [id]="techTile.id"
-        [width]="220"
-        [height]="300"
-        [bottom]="-20"
-        [left]="-25"
-      ></dune-highlighting>
-      <dune-tech-tile [card]="techTile"></dune-tech-tile>
-    </div>
+    @for (techTile of techTiles; track techTile) {
+      <div
+        class="card-container"
+        [class.selectable]="isSelectMode"
+        [class.selected]="isSelected(techTile)"
+        (click)="onCardClick(techTile)"
+        (mouseenter)="hoveredBoardSpaceId = techTile.id"
+        (mouseleave)="hoveredBoardSpaceId = ''"
+      >
+        @if (techTile.id === selectedCard?.id) {
+          <dune-highlighting
+            [id]="techTile.id"
+            [width]="220"
+            [height]="300"
+            [bottom]="-20"
+            [left]="-25"
+          ></dune-highlighting>
+        }
+        <dune-tech-tile [card]="techTile"></dune-tech-tile>
+      </div>
+    }
   </div>
 </div>
 <div mat-dialog-actions>
@@ -34,7 +36,12 @@
       <mat-icon>check</mat-icon>
     </button>
   } @else {
-    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onClose()"
+      [matTooltip]="t.translate('commonCancel')"
+    >
       <mat-icon>close</mat-icon>
     </button>
   }

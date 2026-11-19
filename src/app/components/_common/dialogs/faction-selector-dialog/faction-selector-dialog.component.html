@@ -1,26 +1,30 @@
 <h1 mat-dialog-title [class]="data.colorScheme">{{ data.title }}</h1>
 <div mat-dialog-content class="cards-container">
-  <div
-    class="card-container"
-    *ngFor="let factionType of data.factionTypes"
-    [class.selectable]="isSelectMode"
-    [class.selected]="isSelected(factionType)"
-    (click)="onCardClick(factionType)"
-    (mouseenter)="hoveredFactionId = factionType"
-    (mouseleave)="hoveredFactionId = ''"
-  >
-    <dune-highlighting
-      *ngIf="factionType === selectedFaction || factionType === hoveredFactionId"
-      [id]="factionType"
-      [width]="75"
-      [height]="75"
-      [bottom]="-5"
-      [left]="-10"
-    ></dune-highlighting>
-    <div class="resource-container">
-      <img class="resource" [src]="factionType | factionTypePath" />
+  @for (factionType of data.factionTypes; track factionType) {
+    <div
+      class="card-container"
+      [class.selectable]="isSelectMode"
+      [class.selected]="isSelected(factionType)"
+      (click)="onCardClick(factionType)"
+      (mouseenter)="hoveredFactionId = factionType"
+      (mouseleave)="hoveredFactionId = ''"
+    >
+      @if (
+        factionType === selectedFaction || factionType === hoveredFactionId
+      ) {
+        <dune-highlighting
+          [id]="factionType"
+          [width]="75"
+          [height]="75"
+          [bottom]="-5"
+          [left]="-10"
+        ></dune-highlighting>
+      }
+      <div class="resource-container">
+        <img class="resource" [src]="factionType | factionTypePath" />
+      </div>
     </div>
-  </div>
+  }
 </div>
 <div mat-dialog-actions>
   @if (isSelectMode) {
@@ -34,7 +38,12 @@
       <mat-icon>check</mat-icon>
     </button>
   } @else {
-    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onClose()"
+      [matTooltip]="t.translate('commonCancel')"
+    >
       <mat-icon>close</mat-icon>
     </button>
   }

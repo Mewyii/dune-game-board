@@ -6,8 +6,12 @@
       (click)="showAudioSelection = !showAudioSelection"
       [matTooltip]="t.translate('commonMenuAudio')"
     >
-      <mat-icon *ngIf="!showAudioSelection">music_note</mat-icon>
-      <mat-icon *ngIf="showAudioSelection">chevron_left</mat-icon>
+      @if (!showAudioSelection) {
+        <mat-icon>music_note</mat-icon>
+      }
+      @if (showAudioSelection) {
+        <mat-icon>chevron_left</mat-icon>
+      }
     </button>
   </div>
   <div [class]="'player-container ' + (showAudioSelection ? 'shown' : 'hidden')">

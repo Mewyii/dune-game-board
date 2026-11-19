@@ -1,6 +1,9 @@
 <h1 mat-dialog-title>{{ dialogTitle }}</h1>
 <div mat-dialog-content>
-  <mat-form-field class="medium-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
+  <mat-form-field
+    class="medium-text-field flex"
+    [appearance]="editMode ? 'outline' : 'fill'"
+  >
     <mat-label>Name (English)</mat-label>
     <input matInput [readonly]="editMode" [(ngModel)]="techTile.name.en" />
   </mat-form-field>
@@ -13,7 +16,9 @@
   <mat-form-field class="small-text-field">
     <mat-label>Faction</mat-label>
     <mat-select [(ngModel)]="techTile.faction">
-      <mat-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</mat-option>
+      @for (faction of factions; track faction) {
+        <mat-option [value]="faction">{{ faction }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 
@@ -31,7 +36,9 @@
   <mat-form-field class="small-text-field">
     <mat-label>Image Position</mat-label>
     <mat-select [(ngModel)]="techTile.imagePosition">
-      <mat-option *ngFor="let imagePosition of imagePositions" [value]="imagePosition">{{ imagePosition }}</mat-option>
+      @for (imagePosition of imagePositions; track imagePosition) {
+        <mat-option [value]="imagePosition">{{ imagePosition }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 
@@ -60,7 +67,9 @@
     <mat-form-field class="margin-top">
       <mat-label>Effect Size</mat-label>
       <mat-select [(ngModel)]="techTile.effectSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select> </mat-form-field
     ><br /><br />
     <div>
@@ -83,13 +92,17 @@
       <mat-form-field>
         <mat-label>Font Size</mat-label>
         <mat-select [(ngModel)]="techTile.customEffect!.fontSize">
-          <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+          @for (fontSize of fontSizes; track fontSize) {
+            <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">{{ t.translate('commonCancel') }}</button>
+  <button mat-button (click)="onCancel()">
+    {{ t.translate("commonCancel") }}
+  </button>
   <button mat-button (click)="onSave()">Save</button>
 </div>

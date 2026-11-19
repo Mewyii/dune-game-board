@@ -7,10 +7,14 @@
       </div>
     } @else {
       <div class="turn-area">
-        <div class="font-scifi" *ngIf="currentRound">
-          {{ t.translate('playerboardRound') }} <span class="turn">{{ currentRound }}</span>
-        </div>
-        <div *ngIf="isFinale" class="endgame font-medieval">{{ t.translate('commonEndgame').toUpperCase() }}</div>
+        @if (currentRound) {
+          <div class="font-scifi">
+            {{ t.translate('playerboardRound') }} <span class="turn">{{ currentRound }}</span>
+          </div>
+        }
+        @if (isFinale) {
+          <div class="endgame font-medieval">{{ t.translate('commonEndgame').toUpperCase() }}</div>
+        }
         <div class="turn-state font-medieval">{{ currentRoundPhase.toUpperCase() }}</div>
       </div>
     }
@@ -20,16 +24,17 @@
       <button mat-fab color="accent" (click)="showSettingsDialog()" [matTooltip]="t.translate('playerboardSettingsTooltip')">
         <mat-icon>settings</mat-icon>
       </button>
-      <button
-        *ngIf="currentRoundPhase === 'none'"
-        mat-fab
-        color="accent"
-        (click)="onStartGameClicked()"
-        [disabled]="players.length < 2"
-        [matTooltip]="t.translate('playerboardBeginGameTooltip')"
-      >
-        <mat-icon>play_arrow</mat-icon>
-      </button>
+      @if (currentRoundPhase === 'none') {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onStartGameClicked()"
+          [disabled]="players.length < 2"
+          [matTooltip]="t.translate('playerboardBeginGameTooltip')"
+        >
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      }
       @if (currentRound === 0 && currentRoundPhase === 'select leaders') {
         <button
           mat-fab
@@ -42,53 +47,58 @@
         </button>
       }
     } @else {
-      <button
-        mat-fab
-        *ngIf="currentRoundPhase === 'agent-placement'"
-        color="accent"
-        (click)="onBeginCombatClicked()"
-        [matTooltip]="t.translate('playerboardCombatTooltip')"
-        [disabled]="!canSwitchToCombatPhase"
-      >
-        <mat-icon>flash_on</mat-icon>
-      </button>
-      <button
-        *ngIf="currentRoundPhase === 'combat'"
-        mat-fab
-        color="accent"
-        (click)="onResolveCombatClicked()"
-        [matTooltip]="t.translate('playerboardResolveCombatTooltip')"
-      >
-        <mat-icon>groups</mat-icon>
-      </button>
-      <button
-        *ngIf="currentRoundPhase === 'combat-resolvement' && !isFinale"
-        mat-fab
-        color="accent"
-        (click)="onNextRoundClicked()"
-        [matTooltip]="t.translate('playerboardNextRoundTooltip')"
-      >
-        <mat-icon>start</mat-icon>
-      </button>
+      @if (currentRoundPhase === 'agent-placement') {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onBeginCombatClicked()"
+          [matTooltip]="t.translate('playerboardCombatTooltip')"
+          [disabled]="!canSwitchToCombatPhase"
+        >
+          <mat-icon>flash_on</mat-icon>
+        </button>
+      }
+      @if (currentRoundPhase === 'combat') {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onResolveCombatClicked()"
+          [matTooltip]="t.translate('playerboardResolveCombatTooltip')"
+        >
+          <mat-icon>groups</mat-icon>
+        </button>
+      }
+      @if (currentRoundPhase === 'combat-resolvement' && !isFinale) {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onNextRoundClicked()"
+          [matTooltip]="t.translate('playerboardNextRoundTooltip')"
+        >
+          <mat-icon>start</mat-icon>
+        </button>
+      }
 
-      <button
-        *ngIf="currentRoundPhase !== 'combat-resolvement' || !isFinale"
-        mat-fab
-        color="accent"
-        (click)="onFinishGameClicked()"
-        [matTooltip]="t.translate('playerboardFinishGameTooltip')"
-      >
-        <mat-icon>power_settings_new</mat-icon>
-      </button>
-      <button
-        *ngIf="currentRoundPhase === 'combat-resolvement' && isFinale"
-        mat-fab
-        color="accent"
-        (click)="onShowGameSummaryClicked()"
-        [matTooltip]="t.translate('playerboardFinishGameTooltip')"
-      >
-        <mat-icon>emoji_events</mat-icon>
-      </button>
+      @if (currentRoundPhase !== 'combat-resolvement' || !isFinale) {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onFinishGameClicked()"
+          [matTooltip]="t.translate('playerboardFinishGameTooltip')"
+        >
+          <mat-icon>power_settings_new</mat-icon>
+        </button>
+      }
+      @if (currentRoundPhase === 'combat-resolvement' && isFinale) {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onShowGameSummaryClicked()"
+          [matTooltip]="t.translate('playerboardFinishGameTooltip')"
+        >
+          <mat-icon>emoji_events</mat-icon>
+        </button>
+      }
     }
   </div>
   @if (currentRound === 0) {

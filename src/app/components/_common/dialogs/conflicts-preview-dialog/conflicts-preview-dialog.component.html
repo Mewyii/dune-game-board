@@ -1,24 +1,29 @@
 <h1 mat-dialog-title [class]="data.colorScheme">{{ data.title }}</h1>
 <div mat-dialog-content class="cards-container">
-  <div
-    class="card-container"
-    *ngFor="let conflict of data.conflicts"
-    [class.selectable]="isSelectMode"
-    [class.selected]="isSelected(conflict)"
-    (click)="onConflictClick(conflict)"
-    (mouseenter)="hoveredCardId = conflict.id"
-    (mouseleave)="hoveredCardId = ''"
-  >
-    <dune-highlighting
-      *ngIf="conflict.id === selectedConflict?.name?.en || conflict.id === hoveredCardId"
-      [id]="conflict.id"
-      [width]="220"
-      [height]="300"
-      [bottom]="-20"
-      [left]="-25"
-    ></dune-highlighting>
-    <dune-conflict-card [conflict]="conflict"> </dune-conflict-card>
-  </div>
+  @for (conflict of data.conflicts; track conflict) {
+    <div
+      class="card-container"
+      [class.selectable]="isSelectMode"
+      [class.selected]="isSelected(conflict)"
+      (click)="onConflictClick(conflict)"
+      (mouseenter)="hoveredCardId = conflict.id"
+      (mouseleave)="hoveredCardId = ''"
+    >
+      @if (
+        conflict.id === selectedConflict?.name?.en ||
+        conflict.id === hoveredCardId
+      ) {
+        <dune-highlighting
+          [id]="conflict.id"
+          [width]="220"
+          [height]="300"
+          [bottom]="-20"
+          [left]="-25"
+        ></dune-highlighting>
+      }
+      <dune-conflict-card [conflict]="conflict"> </dune-conflict-card>
+    </div>
+  }
 </div>
 <div mat-dialog-actions>
   @if (isSelectMode) {
@@ -32,7 +37,12 @@
       <mat-icon>check</mat-icon>
     </button>
   } @else {
-    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onClose()"
+      [matTooltip]="t.translate('commonCancel')"
+    >
       <mat-icon>close</mat-icon>
     </button>
   }

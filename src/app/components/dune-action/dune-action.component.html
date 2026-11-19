@@ -24,9 +24,11 @@
         @if (actionField.requiresInfluence) {
           <div class="costs-container">
             <img class="costs faction" [src]="actionField.requiresInfluence.type | factionTypePath" />
-            <div *ngIf="actionField.requiresInfluence.amount" class="costs-amount faction">
-              <span>{{ actionField.requiresInfluence.amount }}</span>
-            </div>
+            @if (actionField.requiresInfluence.amount) {
+              <div class="costs-amount faction">
+                <span>{{ actionField.requiresInfluence.amount }}</span>
+              </div>
+            }
           </div>
         }
         @for (costs of actionCosts; track $index) {
@@ -43,14 +45,15 @@
         }
       </div>
     </div>
-    <dune-highlighting
-      *ngIf="!disabled && isActiveForPlayerCount && mouseHover === true"
-      [width]="145"
-      [height]="115"
-      [left]="0"
-      [bottom]="6"
-      [direction]="'inwards'"
-    ></dune-highlighting>
+    @if (!disabled && isActiveForPlayerCount && mouseHover === true) {
+      <dune-highlighting
+        [width]="145"
+        [height]="115"
+        [left]="0"
+        [bottom]="6"
+        [direction]="'inwards'"
+      ></dune-highlighting>
+    }
     <div
       class="reward-area font-text"
       [style.width]="actionField.customWidth"
@@ -79,45 +82,52 @@
             (click)="onRewardClicked(actionField.title.en, rewardType.type)"
             (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
           />
-          <div *ngIf="rewardType.amount" class="reward-amount">
-            <span>{{ rewardType.amount }}</span>
-          </div>
+          @if (rewardType.amount) {
+            <div class="reward-amount">
+              <span>{{ rewardType.amount }}</span>
+            </div>
+          }
         </div>
       }
-      <div class="conversions-container" *ngIf="actionField.conversionOptions">
-        @for (conversion of actionField.conversionOptions; track $index) {
-          <div class="conversion-container">
-            @for (rewardType of conversion; track $index) {
-              <div
-                [class]="'reward-container ' + rewardType.type"
-                [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
-              >
-                <img
-                  [class]="'reward '"
-                  [src]="rewardType.type | effectTypePath"
-                  [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
-                  [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
-                  (click)="onRewardClicked(actionField.title.en, rewardType.type)"
-                  (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
-                />
-                <div *ngIf="rewardType.amount" class="reward-amount">
-                  <span>{{ rewardType.amount }}</span>
+      @if (actionField.conversionOptions) {
+        <div class="conversions-container">
+          @for (conversion of actionField.conversionOptions; track $index) {
+            <div class="conversion-container">
+              @for (rewardType of conversion; track $index) {
+                <div
+                  [class]="'reward-container ' + rewardType.type"
+                  [style.max-height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+                >
+                  <img
+                    [class]="'reward '"
+                    [src]="rewardType.type | effectTypePath"
+                    [style.height]="rewardType.iconHeight ? rewardType.iconHeight + 'px' : ''"
+                    [style.min-width]="rewardType.width ? rewardType.width + 'px' : ''"
+                    (click)="onRewardClicked(actionField.title.en, rewardType.type)"
+                    (contextmenu)="onRewardRightClicked(actionField.title.en, rewardType.type)"
+                  />
+                  @if (rewardType.amount) {
+                    <div class="reward-amount">
+                      <span>{{ rewardType.amount }}</span>
+                    </div>
+                  }
                 </div>
-              </div>
-            }
-          </div>
-        }
-      </div>
+              }
+            </div>
+          }
+        </div>
+      }
     </div>
   </div>
-  <div
-    *ngIf="!disabled && playerOnField"
-    [style.color]="playerOnField.color"
-    class="player-marker"
-    (contextmenu)="onPlayerMarkerRightClicked(playerOnField.id, actionField)"
-  >
-    <dune-marker [type]="'ornithopter'"></dune-marker>
-  </div>
+  @if (!disabled && playerOnField) {
+    <div
+      [style.color]="playerOnField.color"
+      class="player-marker"
+      (contextmenu)="onPlayerMarkerRightClicked(playerOnField.id, actionField)"
+    >
+      <dune-marker [type]="'ornithopter'"></dune-marker>
+    </div>
+  }
   @for (player of additionalPlayersOnField; track $index; let i = $index) {
     <div
       class="player-marker small"
@@ -128,16 +138,20 @@
       <dune-marker [type]="'ornithopter'"></dune-marker>
     </div>
   }
-  <div class="spice-accumulation-area" *ngIf="accumulatedSpice">
-    @for (spice of accumulatedSpice | numberToArray; track trackSpiceOnField($index, spice)) {
-      <div class="spice-accumulation-marker"></div>
-    }
-  </div>
-  <div class="high-council-indicator-area" *ngIf="isHighCouncilField">
-    @for (seatColor of highCouncilSeats; track $index) {
-      <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
-    }
-  </div>
+  @if (accumulatedSpice) {
+    <div class="spice-accumulation-area">
+      @for (spice of accumulatedSpice | numberToArray; track trackSpiceOnField($index, spice)) {
+        <div class="spice-accumulation-marker"></div>
+      }
+    </div>
+  }
+  @if (isHighCouncilField) {
+    <div class="high-council-indicator-area">
+      @for (seatColor of highCouncilSeats; track $index) {
+        <div class="high-council-marker" [style.backgroundColor]="seatColor"></div>
+      }
+    </div>
+  }
   @if (!disabled && canPlaceFieldMarkers) {
     <button
       class="field-history-button"

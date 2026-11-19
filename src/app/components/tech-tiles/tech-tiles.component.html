@@ -6,39 +6,42 @@
     (mouseenter)="setCardHover(techTile.id)"
     (mouseleave)="hoveredTechTileId = ''"
   >
-    <dune-highlighting
-      *ngIf="techTile.id === activeTechTileId || techTile.id === hoveredTechTileId"
-      [id]="techTile.id"
-      [width]="480"
-      [height]="340"
-      [bottom]="-85"
-      [left]="-115"
-    ></dune-highlighting>
+    @if (techTile.id === activeTechTileId || techTile.id === hoveredTechTileId) {
+      <dune-highlighting
+        [id]="techTile.id"
+        [width]="480"
+        [height]="340"
+        [bottom]="-85"
+        [left]="-115"
+      ></dune-highlighting>
+    }
     <dune-tech-tile
       [class]="techTile.id === activeTechTileId ? ' active' : ''"
       [card]="techTile"
       [costModifier]="getTechTileCostModifier(techTile)"
     ></dune-tech-tile>
-    <div class="tech-tile-action-container" *ngIf="techTile.id === activeTechTileId">
-      <button
-        class="tech-buy-button"
-        mat-fab
-        [color]="'accent'"
-        (click)="onTakeCardClicked(techTile)"
-        [matTooltip]="t.translate('techTilesTooltipBuy')"
-      >
-        <mat-icon>check</mat-icon>
-      </button>
-      <button
-        class="tech-buy-button"
-        mat-fab
-        [color]="'accent'"
-        (click)="onTrashCardClicked(techTile.name.en)"
-        [matTooltip]="t.translate('techTilesTooltipTrash')"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
+    @if (techTile.id === activeTechTileId) {
+      <div class="tech-tile-action-container">
+        <button
+          class="tech-buy-button"
+          mat-fab
+          [color]="'accent'"
+          (click)="onTakeCardClicked(techTile)"
+          [matTooltip]="t.translate('techTilesTooltipBuy')"
+        >
+          <mat-icon>check</mat-icon>
+        </button>
+        <button
+          class="tech-buy-button"
+          mat-fab
+          [color]="'accent'"
+          (click)="onTrashCardClicked(techTile.name.en)"
+          [matTooltip]="t.translate('techTilesTooltipTrash')"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
   </div>
   } @if (!activePlayerId && availableTechTiles.length < 1) { @for (techBackside of ["", "", ""]; track $index) {
   <div class="tech-tile-backside"></div>

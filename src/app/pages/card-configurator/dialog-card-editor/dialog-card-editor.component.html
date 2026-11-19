@@ -51,12 +51,14 @@
           <span class="reward-label">{{ card.faction }}</span>
         </div>
       </mat-select-trigger>
-      <mat-option *ngFor="let faction of factions" [value]="faction"
-        ><div class="reward-container">
-          <img class="reward" [src]="faction | factionTypePath" />
-          <span class="reward-label">{{ faction }}</span>
-        </div></mat-option
-      >
+      @for (faction of factions; track faction) {
+        <mat-option [value]="faction"
+          ><div class="reward-container">
+            <img class="reward" [src]="faction | factionTypePath" />
+            <span class="reward-label">{{ faction }}</span>
+          </div></mat-option
+        >
+      }
     </mat-select>
   </mat-form-field>
 
@@ -67,17 +69,22 @@
       <mat-select-trigger>
         <div class="reward-container">
           @if (card.factionSecondary) {
-            <img class="reward" [src]="card.factionSecondary | factionTypePath" />
+            <img
+              class="reward"
+              [src]="card.factionSecondary | factionTypePath"
+            />
           }
           <span class="reward-label">{{ card.factionSecondary }}</span>
         </div>
       </mat-select-trigger>
-      <mat-option *ngFor="let faction of factions" [value]="faction"
-        ><div class="reward-container">
-          <img class="reward" [src]="faction | factionTypePath" />
-          <span class="reward-label">{{ faction }}</span>
-        </div></mat-option
-      >
+      @for (faction of factions; track faction) {
+        <mat-option [value]="faction"
+          ><div class="reward-container">
+            <img class="reward" [src]="faction | factionTypePath" />
+            <span class="reward-label">{{ faction }}</span>
+          </div></mat-option
+        >
+      }
     </mat-select>
   </mat-form-field>
 
@@ -91,9 +98,11 @@
   <mat-form-field class="small-text-field flex">
     <mat-label>Board Space Access</mat-label>
     <mat-select [(ngModel)]="card.fieldAccess" multiple>
-      <mat-option *ngFor="let actionType of actionTypes; let i = index" [value]="actionType">
-        {{ actionType }}
-      </mat-option>
+      @for (actionType of actionTypes; track actionType; let i = $index) {
+        <mat-option [value]="actionType">
+          {{ actionType }}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
 
@@ -101,8 +110,8 @@
   <mat-form-field class="small-text-field">
     <mat-label>Can Infiltrate</mat-label>
     <mat-select [(ngModel)]="card.canInfiltrate">
-      <mat-option [value]="false"> {{ t.translate('commonNo') }} </mat-option>
-      <mat-option [value]="true"> {{ t.translate('commonYes') }} </mat-option>
+      <mat-option [value]="false"> {{ t.translate("commonNo") }} </mat-option>
+      <mat-option [value]="true"> {{ t.translate("commonYes") }} </mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -129,7 +138,9 @@
   <mat-form-field class="margin-top">
     <mat-label>Agent Effect Size</mat-label>
     <mat-select [(ngModel)]="card.agentEffectSize">
-      <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      @for (fontSize of fontSizes; track fontSize) {
+        <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <div class="text-container">
@@ -152,7 +163,9 @@
     <mat-form-field>
       <mat-label>Font Size</mat-label>
       <mat-select [(ngModel)]="card.customAgentEffect!.fontSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
@@ -170,7 +183,9 @@
   <mat-form-field class="margin-top">
     <mat-label>Reveal Effect Size</mat-label>
     <mat-select [(ngModel)]="card.revealEffectSize">
-      <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+      @for (fontSize of fontSizes; track fontSize) {
+        <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <div class="text-container">
@@ -193,12 +208,16 @@
     <mat-form-field>
       <mat-label>Font Size</mat-label>
       <mat-select [(ngModel)]="card.customRevealEffect!.fontSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">{{ t.translate('commonCancel') }}</button>
+  <button mat-button (click)="onCancel()">
+    {{ t.translate("commonCancel") }}
+  </button>
   <button mat-button (click)="onSave()">Save</button>
 </div>

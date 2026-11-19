@@ -1,8 +1,11 @@
 <div class="evaluation-board">
   <h3>Board Evaluation</h3>
   <div class="field-evaluation-container">
-    <div *ngFor="let fieldValue of fieldValues" class="field-value">
-      {{ fieldValue.fieldId.toUpperCase() }} {{ fieldValue.value | number : '1.1-1' }}
-    </div>
+    @for (fieldValue of fieldValues; track fieldValue) {
+      <div class="field-value">
+        {{ fieldValue.fieldId.toUpperCase() }}
+        {{ fieldValue.value | number: "1.1-1" }}
+      </div>
+    }
   </div>
 </div>

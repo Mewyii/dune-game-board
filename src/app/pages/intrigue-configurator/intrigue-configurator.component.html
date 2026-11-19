@@ -62,17 +62,19 @@
           <div #cardimg [style]="'padding:' + imagePadding + 'px'">
             <dune-intrigue-card [card]="card"></dune-intrigue-card>
           </div>
-          <div class="card-action-bar" *ngIf="showControls">
-            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)" matTooltip="Edit">
-              <mat-icon>settings</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)" matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)" matTooltip="Save">
-              <mat-icon>download</mat-icon>
-            </button>
-          </div>
+          @if (showControls) {
+            <div class="card-action-bar">
+              <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)" matTooltip="Edit">
+                <mat-icon>settings</mat-icon>
+              </button>
+              <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)" matTooltip="Save">
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
     </div>

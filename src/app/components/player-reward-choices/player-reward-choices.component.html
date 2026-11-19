@@ -59,14 +59,16 @@
             <dune-reward-array [rewards]="[rightEffect]" [textColor]="'white'"></dune-reward-array>
           }
         }
-        <div class="control-bar" *ngIf="activeEffectId === 'option' + idx">
-          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption)">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption)">
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        </div>
+        @if (activeEffectId === 'option' + idx) {
+          <div class="control-bar">
+            <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectLeftClicked(effectOption)">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onOptionEffectRightClicked(effectOption)">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        }
       </div>
     }
     @for (effectConversion of playerRewardChoices.conversionEffectChoices; track effectConversion.id; let idx = $index) {
@@ -75,14 +77,16 @@
         (click)="setEffectActive('conversion' + idx)"
       >
         <dune-player-effect-conversion [effectConversion]="effectConversion.choice"></dune-player-effect-conversion>
-        <div class="control-bar" *ngIf="activeEffectId === 'conversion' + idx">
-          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion)">
-            <mat-icon>check</mat-icon>
-          </button>
-          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(effectConversion.id)">
-            <mat-icon>clear</mat-icon>
-          </button>
-        </div>
+        @if (activeEffectId === 'conversion' + idx) {
+          <div class="control-bar">
+            <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onConvertEffectClicked(effectConversion)">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDenyConversionClicked(effectConversion.id)">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+        }
       </div>
     }
   }
@@ -100,13 +104,15 @@
       (click)="setEffectActive('deployableTroops')"
     >
       <div [innerHTML]="t.translate('commonEffectRewardTroopInsert', true, deployableTroops)"></div>
-      <div class="control-bar" *ngIf="activeEffectId === 'deployableTroops'">
-        @for (deployAmount of deployableTroops | numberToArray; track $index) {
-          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployTroopsClicked(deployAmount)">
-            {{ deployAmount }}
-          </button>
-        }
-      </div>
+      @if (activeEffectId === 'deployableTroops') {
+        <div class="control-bar">
+          @for (deployAmount of deployableTroops | numberToArray; track $index) {
+            <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployTroopsClicked(deployAmount)">
+              {{ deployAmount }}
+            </button>
+          }
+        </div>
+      }
     </div>
   }
   @if (deployableDreadnoughts && !activePlayer?.isAI) {
@@ -115,13 +121,15 @@
       (click)="setEffectActive('deployableDreadnoughts')"
     >
       <div [innerHTML]="t.translate('commonEffectRewardDreadnoughtInsert', true, deployableDreadnoughts)"></div>
-      <div class="control-bar" *ngIf="activeEffectId === 'deployableDreadnoughts'">
-        @for (deployAmount of deployableDreadnoughts | numberToArray; track $index) {
-          <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployDreadnoughtsClicked(deployAmount)">
-            {{ deployAmount }}
-          </button>
-        }
-      </div>
+      @if (activeEffectId === 'deployableDreadnoughts') {
+        <div class="control-bar">
+          @for (deployAmount of deployableDreadnoughts | numberToArray; track $index) {
+            <button class="tech-buy-button" mat-fab [color]="'accent'" (click)="onDeployDreadnoughtsClicked(deployAmount)">
+              {{ deployAmount }}
+            </button>
+          }
+        </div>
+      }
     </div>
   }
 </div>

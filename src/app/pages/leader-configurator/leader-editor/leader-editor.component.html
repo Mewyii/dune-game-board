@@ -1,10 +1,19 @@
 <form [formGroup]="leaderForm">
-  <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="medium-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
+  <div
+    [class]="'form-group' + (editMode ? ' padding-top' : '')"
+    formGroupName="name"
+  >
+    <mat-form-field
+      class="medium-text-field flex"
+      [appearance]="editMode ? 'outline' : 'fill'"
+    >
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
-    <mat-form-field class="medium-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
+    <mat-form-field
+      class="medium-text-field flex"
+      [appearance]="editMode ? 'outline' : 'fill'"
+    >
       <mat-label>Name (German)</mat-label>
       <input matInput formControlName="de" [readonly]="editMode" />
     </mat-form-field>
@@ -31,33 +40,60 @@
       <span class="card-effect-title"> Custom Starting Resources </span>
     </div>
     <div formArrayName="startingResources">
-      <div class="form-group" *ngFor="let startingResource of startingResources.controls; let i = index">
-        <mat-form-field class="big-text-field flex">
-          <mat-label>Effect Type</mat-label>
-          <mat-select [formControl]="getStartingResourcesTypeControl(i)">
-            <mat-select-trigger>
-              <div class="reward-container">
-                <img class="reward" [src]="getStartingResourcesTypeControl(i).value | effectTypePath" />
-                <span class="reward-label">{{ getStartingResourcesTypeControl(i).value }}</span>
-              </div>
-            </mat-select-trigger>
-            <mat-option *ngFor="let rewardType of rewardTypes" [value]="rewardType">
-              <div class="reward-container">
-                <img class="reward" [src]="rewardType | effectTypePath" />
-                <span class="reward-label">{{ rewardType }}</span>
-              </div>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Amount</mat-label>
-          <input matInput [formControl]="getStartingResourcesAmountControl(i)" type="number" />
-        </mat-form-field>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveStartingResourcesClicked(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddStartingResourcesClicked()">
+      @for (
+        startingResource of startingResources.controls;
+        track startingResource;
+        let i = $index
+      ) {
+        <div class="form-group">
+          <mat-form-field class="big-text-field flex">
+            <mat-label>Effect Type</mat-label>
+            <mat-select [formControl]="getStartingResourcesTypeControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="
+                      getStartingResourcesTypeControl(i).value | effectTypePath
+                    "
+                  />
+                  <span class="reward-label">{{
+                    getStartingResourcesTypeControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (rewardType of rewardTypes; track rewardType) {
+                <mat-option [value]="rewardType">
+                  <div class="reward-container">
+                    <img class="reward" [src]="rewardType | effectTypePath" />
+                    <span class="reward-label">{{ rewardType }}</span>
+                  </div>
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              [formControl]="getStartingResourcesAmountControl(i)"
+              type="number"
+            />
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onRemoveStartingResourcesClicked(i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddStartingResourcesClicked()"
+      >
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -84,57 +120,95 @@
       <span class="card-effect-title"> Effects </span>
     </div>
     <div formArrayName="passiveEffects">
-      <div class="form-group wrap" *ngFor="let passiveEffect of passiveEffects.controls; let i = index">
-        <mat-form-field class="big-text-field">
-          <mat-label>Effect Type</mat-label>
-          <mat-select [formControl]="getPassiveEffectTypeControl(i)">
-            <mat-select-trigger>
-              <div class="reward-container">
-                <img class="reward" [src]="getPassiveEffectTypeControl(i).value | effectTypePath" />
-                <span class="reward-label">{{ getPassiveEffectTypeControl(i).value }}</span>
-              </div>
-            </mat-select-trigger>
-            <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
-              ><div class="reward-container">
-                <img class="reward" [src]="effectType | effectTypePath" />
-                <span class="reward-label">{{ effectType }}</span>
-              </div></mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="small-text-field">
-          <mat-label>Amount</mat-label>
-          <input matInput [formControl]="getPassiveEffectAmountControl(i)" type="number" />
-        </mat-form-field>
-        <mat-form-field class="small-text-field">
-          <mat-label>Faction</mat-label>
-          <mat-select [formControl]="getPassiveEffectFactionControl(i)">
-            <mat-select-trigger>
-              <div class="reward-container">
-                <img class="reward" [src]="getPassiveEffectFactionControl(i).value | factionTypePath" />
-                <span class="reward-label">{{ getPassiveEffectFactionControl(i).value }}</span>
-              </div>
-            </mat-select-trigger>
-            <mat-option *ngFor="let faction of factions" [value]="faction"
-              ><div class="reward-container">
-                <img class="reward" [src]="faction | factionTypePath" />
-                <span class="reward-label">{{ faction }}</span>
-              </div></mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemovePassiveEffectClicked(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddPassiveEffectClicked()">
+      @for (
+        passiveEffect of passiveEffects.controls;
+        track passiveEffect;
+        let i = $index
+      ) {
+        <div class="form-group wrap">
+          <mat-form-field class="big-text-field">
+            <mat-label>Effect Type</mat-label>
+            <mat-select [formControl]="getPassiveEffectTypeControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="
+                      getPassiveEffectTypeControl(i).value | effectTypePath
+                    "
+                  />
+                  <span class="reward-label">{{
+                    getPassiveEffectTypeControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (effectType of effectTypes; track effectType) {
+                <mat-option [value]="effectType"
+                  ><div class="reward-container">
+                    <img class="reward" [src]="effectType | effectTypePath" />
+                    <span class="reward-label">{{ effectType }}</span>
+                  </div></mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="small-text-field">
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              [formControl]="getPassiveEffectAmountControl(i)"
+              type="number"
+            />
+          </mat-form-field>
+          <mat-form-field class="small-text-field">
+            <mat-label>Faction</mat-label>
+            <mat-select [formControl]="getPassiveEffectFactionControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="
+                      getPassiveEffectFactionControl(i).value | factionTypePath
+                    "
+                  />
+                  <span class="reward-label">{{
+                    getPassiveEffectFactionControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (faction of factions; track faction) {
+                <mat-option [value]="faction"
+                  ><div class="reward-container">
+                    <img class="reward" [src]="faction | factionTypePath" />
+                    <span class="reward-label">{{ faction }}</span>
+                  </div></mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onRemovePassiveEffectClicked(i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddPassiveEffectClicked()"
+      >
         <mat-icon>add</mat-icon>
       </button>
     </div>
     <mat-form-field class="margin-top">
       <mat-label>Passive Effect Size</mat-label>
       <mat-select formControlName="passiveEffectSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select> </mat-form-field
     ><br /><br />
     <div class="text-container">
@@ -159,7 +233,9 @@
     <mat-form-field class="margin-top">
       <mat-label>Passive Description Size</mat-label>
       <mat-select formControlName="passiveDescriptionSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
@@ -183,57 +259,93 @@
       <span class="card-effect-title"> Effects </span>
     </div>
     <div formArrayName="signetEffects">
-      <div class="form-group wrap" *ngFor="let signetEffect of signetEffects.controls; let i = index">
-        <mat-form-field class="big-text-field">
-          <mat-label>Effect Type</mat-label>
-          <mat-select [formControl]="getSignetEffectTypeControl(i)">
-            <mat-select-trigger>
-              <div class="reward-container">
-                <img class="reward" [src]="getSignetEffectTypeControl(i).value | effectTypePath" />
-                <span class="reward-label">{{ getSignetEffectTypeControl(i).value }}</span>
-              </div>
-            </mat-select-trigger>
-            <mat-option *ngFor="let effectType of effectTypes" [value]="effectType"
-              ><div class="reward-container">
-                <img class="reward" [src]="effectType | effectTypePath" />
-                <span class="reward-label">{{ effectType }}</span>
-              </div></mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="small-text-field">
-          <mat-label>Amount</mat-label>
-          <input matInput [formControl]="getSignetEffectAmountControl(i)" type="number" />
-        </mat-form-field>
-        <mat-form-field class="small-text-field">
-          <mat-label>Faction</mat-label>
-          <mat-select [formControl]="getSignetEffectFactionControl(i)">
-            <mat-select-trigger>
-              <div class="reward-container">
-                <img class="reward" [src]="getSignetEffectFactionControl(i).value | factionTypePath" />
-                <span class="reward-label">{{ getSignetEffectFactionControl(i).value }}</span>
-              </div>
-            </mat-select-trigger>
-            <mat-option *ngFor="let faction of factions" [value]="faction"
-              ><div class="reward-container">
-                <img class="reward" [src]="faction | factionTypePath" />
-                <span class="reward-label">{{ faction }}</span>
-              </div></mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-        <button mat-mini-fab [color]="'accent'" (click)="onRemoveSignetEffectClicked(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddSignetEffectClicked()">
+      @for (
+        signetEffect of signetEffects.controls;
+        track signetEffect;
+        let i = $index
+      ) {
+        <div class="form-group wrap">
+          <mat-form-field class="big-text-field">
+            <mat-label>Effect Type</mat-label>
+            <mat-select [formControl]="getSignetEffectTypeControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="getSignetEffectTypeControl(i).value | effectTypePath"
+                  />
+                  <span class="reward-label">{{
+                    getSignetEffectTypeControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (effectType of effectTypes; track effectType) {
+                <mat-option [value]="effectType"
+                  ><div class="reward-container">
+                    <img class="reward" [src]="effectType | effectTypePath" />
+                    <span class="reward-label">{{ effectType }}</span>
+                  </div></mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="small-text-field">
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              [formControl]="getSignetEffectAmountControl(i)"
+              type="number"
+            />
+          </mat-form-field>
+          <mat-form-field class="small-text-field">
+            <mat-label>Faction</mat-label>
+            <mat-select [formControl]="getSignetEffectFactionControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="
+                      getSignetEffectFactionControl(i).value | factionTypePath
+                    "
+                  />
+                  <span class="reward-label">{{
+                    getSignetEffectFactionControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (faction of factions; track faction) {
+                <mat-option [value]="faction"
+                  ><div class="reward-container">
+                    <img class="reward" [src]="faction | factionTypePath" />
+                    <span class="reward-label">{{ faction }}</span>
+                  </div></mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onRemoveSignetEffectClicked(i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddSignetEffectClicked()"
+      >
         <mat-icon>add</mat-icon>
       </button>
     </div>
     <mat-form-field class="margin-top">
       <mat-label>Signet Effect Size</mat-label>
       <mat-select formControlName="signetEffectSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select> </mat-form-field
     ><br /><br />
     <div class="text-container">
@@ -258,7 +370,9 @@
     <mat-form-field class="margin-top">
       <mat-label>Signet Description Size</mat-label>
       <mat-select formControlName="signetDescriptionSize">
-        <mat-option *ngFor="let fontSize of fontSizes" [value]="fontSize">{{ fontSize }}</mat-option>
+        @for (fontSize of fontSizes; track fontSize) {
+          <mat-option [value]="fontSize">{{ fontSize }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>

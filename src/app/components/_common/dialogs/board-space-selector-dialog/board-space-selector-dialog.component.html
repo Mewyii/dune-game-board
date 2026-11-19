@@ -1,25 +1,27 @@
 <h1 mat-dialog-title [class]="data.colorScheme">{{ data.title }}</h1>
 <div mat-dialog-content class="dialog-content">
   <div class="cards-container">
-    <div
-      class="card-container"
-      *ngFor="let location of locations"
-      [class.selectable]="isSelectMode"
-      [class.selected]="isSelected(location)"
-      (click)="onCardClick(location)"
-      (mouseenter)="hoveredBoardSpaceId = location.actionField.title.en"
-      (mouseleave)="hoveredBoardSpaceId = ''"
-    >
-      <dune-highlighting
-        *ngIf="isSelected(location)"
-        [id]="location.actionField.title.en"
-        [width]="220"
-        [height]="300"
-        [bottom]="-20"
-        [left]="-25"
-      ></dune-highlighting>
-      <dune-location [location]="location" [readonly]="true"></dune-location>
-    </div>
+    @for (location of locations; track location) {
+      <div
+        class="card-container"
+        [class.selectable]="isSelectMode"
+        [class.selected]="isSelected(location)"
+        (click)="onCardClick(location)"
+        (mouseenter)="hoveredBoardSpaceId = location.actionField.title.en"
+        (mouseleave)="hoveredBoardSpaceId = ''"
+      >
+        @if (isSelected(location)) {
+          <dune-highlighting
+            [id]="location.actionField.title.en"
+            [width]="220"
+            [height]="300"
+            [bottom]="-20"
+            [left]="-25"
+          ></dune-highlighting>
+        }
+        <dune-location [location]="location" [readonly]="true"></dune-location>
+      </div>
+    }
   </div>
 </div>
 <div mat-dialog-actions>
@@ -27,14 +29,21 @@
     <button
       mat-mini-fab
       [color]="'accent'"
-      [disabled]="selectedCards.length < minSelected || selectedCards.length > maxSelected"
+      [disabled]="
+        selectedCards.length < minSelected || selectedCards.length > maxSelected
+      "
       (click)="onConfirm()"
       [matTooltip]="t.translate('commonConfirm')"
     >
       <mat-icon>check</mat-icon>
     </button>
   } @else {
-    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onClose()"
+      [matTooltip]="t.translate('commonCancel')"
+    >
       <mat-icon>close</mat-icon>
     </button>
   }

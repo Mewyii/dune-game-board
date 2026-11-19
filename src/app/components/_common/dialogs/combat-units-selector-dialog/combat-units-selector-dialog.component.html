@@ -4,14 +4,15 @@
     <div class="units-display-area">
       @for (troop of data.troops | numberToArray; track $index; let it = $index) {
         <div class="troop-marker-container" (mouseenter)="hoveredUnitId = 'troop-' + it" (mouseleave)="hoveredUnitId = ''">
-          <dune-highlighting
-            *ngIf="isSelected(it, 'troop')"
-            [id]="'troop-' + it"
-            [width]="60"
-            [height]="45"
-            [bottom]="-5"
-            [left]="-5"
-          ></dune-highlighting>
+          @if (isSelected(it, 'troop')) {
+            <dune-highlighting
+              [id]="'troop-' + it"
+              [width]="60"
+              [height]="45"
+              [bottom]="-5"
+              [left]="-5"
+            ></dune-highlighting>
+          }
           <div
             class="troop-marker"
             [style.background-color]="data.playerColor"
@@ -29,14 +30,15 @@
           (mouseenter)="hoveredUnitId = 'dreadnought-' + id"
           (mouseleave)="hoveredUnitId = ''"
         >
-          <dune-highlighting
-            *ngIf="isSelected(id, 'dreadnought')"
-            [id]="'dreadnought-' + id"
-            [width]="80"
-            [height]="55"
-            [bottom]="-5"
-            [left]="-5"
-          ></dune-highlighting>
+          @if (isSelected(id, 'dreadnought')) {
+            <dune-highlighting
+              [id]="'dreadnought-' + id"
+              [width]="80"
+              [height]="55"
+              [bottom]="-5"
+              [left]="-5"
+            ></dune-highlighting>
+          }
           <div
             class="ship-marker"
             [style.background-color]="data.playerColor"

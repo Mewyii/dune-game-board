@@ -2,20 +2,50 @@
   <div class="cards-manager">
     <div class="action-bar">
       <div class="settings-container"></div>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddCardClicked()" matTooltip="Add Card">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddCardClicked()"
+        matTooltip="Add Card"
+      >
         <mat-icon>add</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveCardsClicked()" matTooltip="Remove All Cards">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onRemoveCardsClicked()"
+        matTooltip="Remove All Cards"
+      >
         <mat-icon>block</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Cards">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="filePicker.click()"
+        matTooltip="Import Cards"
+      >
         <mat-icon>folder_open</mat-icon>
       </button>
-      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportCardsClicked(filePicker)" />
-      <button mat-mini-fab [color]="'accent'" (click)="onExportCardsClicked()" matTooltip="Export Cards">
+      <input
+        #filePicker
+        [hidden]="true"
+        [type]="'file'"
+        [accept]="'.json'"
+        (change)="onImportCardsClicked(filePicker)"
+      />
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onExportCardsClicked()"
+        matTooltip="Export Cards"
+      >
         <mat-icon>download</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onToggleControlsClicked()"
+      >
         <mat-icon>hide_source</mat-icon>
       </button>
       <div class="settings-container">
@@ -30,53 +60,87 @@
       <div>Unique cards: {{ uniqueCardAmount }}</div>
     </div>
     <div class="action-bar" [style.gap]="'32px'">
-      <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
-      <div *ngFor="let item of costs | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number: '1.1-1' }}%)
+      <div class="sortable-category" (click)="onSortByCostsClicked()">
+        costs:
       </div>
+      @for (item of costs | keyvalue; track item) {
+        <div>
+          {{ item.key }} {{ item.value }} ({{
+            (item.value * 100) / totalCardAmount | number: "1.1-1"
+          }}%)
+        </div>
+      }
     </div>
     <div class="action-bar" [style.gap]="'32px'">
-      <div class="sortable-category" (click)="onSortByFactionsClicked()">card-factions:</div>
-      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalCardAmount | number: '1.1-1' }}%)</div>
-      <div *ngFor="let item of factions | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalCardAmount | number: '1.1-1' }}%)
+      <div class="sortable-category" (click)="onSortByFactionsClicked()">
+        card-factions:
       </div>
+      <div>
+        no faction {{ noFactions }} ({{
+          (noFactions * 100) / totalCardAmount | number: "1.1-1"
+        }}%)
+      </div>
+      @for (item of factions | keyvalue; track item) {
+        <div>
+          {{ item.key }} {{ item.value }} ({{
+            (item.value * 100) / totalCardAmount | number: "1.1-1"
+          }}%)
+        </div>
+      }
     </div>
     <div class="action-bar center" [style.gap]="'32px'">
       <div>card-access:</div>
-      <div class="icon-and-string-container" *ngFor="let item of fieldAccessess | keyvalue">
-        <img class="field-access-image" [src]="asActionType(item.key) | actionTypePath" /> {{ item.value }} ({{
-          (item.value * 100) / totalCardAmount | number: '1.1-1'
-        }}%)
-      </div>
+      @for (item of fieldAccessess | keyvalue; track item) {
+        <div class="icon-and-string-container">
+          <img
+            class="field-access-image"
+            [src]="asActionType(item.key) | actionTypePath"
+          />
+          {{ item.value }} ({{
+            (item.value * 100) / totalCardAmount | number: "1.1-1"
+          }}%)
+        </div>
+      }
       <div class="icon-and-string-container">
-        <img class="field-access-image" [src]="'assets/images/action-types/action_type_infiltration.png'" />
-        {{ infiltrationAmount }} ({{ (infiltrationAmount * 100) / totalCardAmount | number: '1.1-1' }}%)
+        <img
+          class="field-access-image"
+          [src]="'assets/images/action-types/action_type_infiltration.png'"
+        />
+        {{ infiltrationAmount }} ({{
+          (infiltrationAmount * 100) / totalCardAmount | number: "1.1-1"
+        }}%)
       </div>
     </div>
     <div class="action-bar center" [style.gap]="'32px'">
       <div>
         card resource reward filters
         @if (activeFilters.length > 0) {
-          <span> ({{ shownCardAmount }} cards ({{ (shownCardAmount * 100) / totalCardAmount | number: '1.1-1' }}%))</span>
+          <span>
+            ({{ shownCardAmount }} cards ({{
+              (shownCardAmount * 100) / totalCardAmount | number: "1.1-1"
+            }}%))</span
+          >
         } @else {
           <span> ({{ totalCardAmount }} cards (100%))</span>
         }
         :
       </div>
-      <div
-        class="icon-and-string-container"
-        [class.inactive]="!isFilterActive(item.id)"
-        *ngFor="let item of resources"
-        (click)="toggleActiveFilter(item)"
-      >
-        <dune-reward-array
-          [rewards]="[{ type: item.resourceType, amount: item.amount }]"
-          [size]="'16px'"
-          [textColor]="'white'"
-        ></dune-reward-array>
-        {{ item.count }} ({{ (item.count * 100) / totalCardAmount | number: '1.1-1' }}%)
-      </div>
+      @for (item of resources; track item) {
+        <div
+          class="icon-and-string-container"
+          [class.inactive]="!isFilterActive(item.id)"
+          (click)="toggleActiveFilter(item)"
+        >
+          <dune-reward-array
+            [rewards]="[{ type: item.resourceType, amount: item.amount }]"
+            [size]="'16px'"
+            [textColor]="'white'"
+          ></dune-reward-array>
+          {{ item.count }} ({{
+            (item.count * 100) / totalCardAmount | number: "1.1-1"
+          }}%)
+        </div>
+      }
     </div>
     <div class="cards-preview-container">
       @for (card of shownCards; track $index) {
@@ -84,17 +148,34 @@
           <div #cardimg [style]="'padding:' + imagePadding + 'px'">
             <dune-imperium-row-card [card]="card"></dune-imperium-row-card>
           </div>
-          <div class="card-action-bar" *ngIf="showControls">
-            <button mat-mini-fab [color]="'accent'" (click)="onEditCardClicked(card)" matTooltip="Edit">
-              <mat-icon>settings</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onDeleteCardClicked(card.name.en)" matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onSaveCardClicked(cardimg, card.name.en)" matTooltip="Save">
-              <mat-icon>download</mat-icon>
-            </button>
-          </div>
+          @if (showControls) {
+            <div class="card-action-bar">
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onEditCardClicked(card)"
+                matTooltip="Edit"
+              >
+                <mat-icon>settings</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onDeleteCardClicked(card.name.en)"
+                matTooltip="Delete"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onSaveCardClicked(cardimg, card.name.en)"
+                matTooltip="Save"
+              >
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
     </div>

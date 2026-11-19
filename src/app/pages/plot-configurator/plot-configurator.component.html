@@ -2,20 +2,50 @@
   <div class="cards-manager">
     <div class="action-bar">
       <div class="settings-container"></div>
-      <button mat-mini-fab [color]="'accent'" (click)="onAddPlotClicked()" matTooltip="Add Plot">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddPlotClicked()"
+        matTooltip="Add Plot"
+      >
         <mat-icon>add</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemovePlotsClicked()" matTooltip="Remove All Plots">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onRemovePlotsClicked()"
+        matTooltip="Remove All Plots"
+      >
         <mat-icon>block</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Plots">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="filePicker.click()"
+        matTooltip="Import Plots"
+      >
         <mat-icon>folder_open</mat-icon>
       </button>
-      <input #filePicker [hidden]="true" [type]="'file'" [accept]="'.json'" (change)="onImportPlotsClicked(filePicker)" />
-      <button mat-mini-fab [color]="'accent'" (click)="onExportPlotsClicked()" matTooltip="Export Plots">
+      <input
+        #filePicker
+        [hidden]="true"
+        [type]="'file'"
+        [accept]="'.json'"
+        (change)="onImportPlotsClicked(filePicker)"
+      />
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onExportPlotsClicked()"
+        matTooltip="Export Plots"
+      >
         <mat-icon>download</mat-icon>
       </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()">
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onToggleControlsClicked()"
+      >
         <mat-icon>hide_source</mat-icon>
       </button>
       <div class="settings-container">
@@ -29,17 +59,33 @@
       <div>Total {{ totalPlotAmount }} plots</div>
     </div>
     <div class="action-bar" [style.gap]="'32px'">
-      <div class="sortable-category" (click)="onSortByCostsClicked()">costs:</div>
-      <div *ngFor="let item of costs | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalPlotAmount | number: '1.1-1' }}%)
+      <div class="sortable-category" (click)="onSortByCostsClicked()">
+        costs:
       </div>
+      @for (item of costs | keyvalue; track item) {
+        <div>
+          {{ item.key }} {{ item.value }} ({{
+            (item.value * 100) / totalPlotAmount | number: "1.1-1"
+          }}%)
+        </div>
+      }
     </div>
     <div class="action-bar" [style.gap]="'32px'">
-      <div class="sortable-category" (click)="onSortByFactionsClicked()">plot-factions:</div>
-      <div>no faction {{ noFactions }} ({{ (noFactions * 100) / totalPlotAmount | number: '1.1-1' }}%)</div>
-      <div *ngFor="let item of factions | keyvalue">
-        {{ item.key }} {{ item.value }} ({{ (item.value * 100) / totalPlotAmount | number: '1.1-1' }}%)
+      <div class="sortable-category" (click)="onSortByFactionsClicked()">
+        plot-factions:
       </div>
+      <div>
+        no faction {{ noFactions }} ({{
+          (noFactions * 100) / totalPlotAmount | number: "1.1-1"
+        }}%)
+      </div>
+      @for (item of factions | keyvalue; track item) {
+        <div>
+          {{ item.key }} {{ item.value }} ({{
+            (item.value * 100) / totalPlotAmount | number: "1.1-1"
+          }}%)
+        </div>
+      }
     </div>
     <div class="cards-preview-container">
       @for (plot of imperiumPlots; track $index) {
@@ -47,17 +93,34 @@
           <div #cardimg [style]="'padding:' + imagePadding + 'px'">
             <dune-plot-card [plot]="plot"></dune-plot-card>
           </div>
-          <div class="card-action-bar" *ngIf="showControls">
-            <button mat-mini-fab [color]="'accent'" (click)="onEditPlotClicked(plot)" matTooltip="Edit">
-              <mat-icon>settings</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onDeletePlotClicked(plot.name.en)" matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-mini-fab [color]="'accent'" (click)="onSavePlotClicked(cardimg, plot.name.en)" matTooltip="Save">
-              <mat-icon>download</mat-icon>
-            </button>
-          </div>
+          @if (showControls) {
+            <div class="card-action-bar">
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onEditPlotClicked(plot)"
+                matTooltip="Edit"
+              >
+                <mat-icon>settings</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onDeletePlotClicked(plot.name.en)"
+                matTooltip="Delete"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onSavePlotClicked(cardimg, plot.name.en)"
+                matTooltip="Save"
+              >
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
     </div>

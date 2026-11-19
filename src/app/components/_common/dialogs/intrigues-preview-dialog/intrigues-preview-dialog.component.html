@@ -1,29 +1,38 @@
 <h1 mat-dialog-title [class]="data.colorScheme">{{ data.title }}</h1>
 <div mat-dialog-content class="intrigues-container">
-  <div
-    class="card-container"
-    *ngFor="let card of data.intrigues"
-    [class.selectable]="isSelectMode"
-    [class.selected]="isSelected(card)"
-    (click)="onIntrigueClick(card)"
-    (mouseenter)="hoveredCardId = card.id"
-    (mouseleave)="hoveredCardId = ''"
-  >
-    <dune-highlighting
-      *ngIf="card.id === selectedIntrigue?.id || card.id === hoveredCardId"
-      [id]="card.id"
-      [width]="220"
-      [height]="300"
-      [bottom]="-20"
-      [left]="-25"
-    ></dune-highlighting>
-    <dune-intrigue-card [card]="card"></dune-intrigue-card>
-    <div class="card-action-container" *ngIf="data.canAquireCards">
-      <button class="card-buy-button" mat-fab [color]="'accent'" (click)="onBuyCardClicked(card)">
-        <mat-icon>check</mat-icon>
-      </button>
+  @for (card of data.intrigues; track card) {
+    <div
+      class="card-container"
+      [class.selectable]="isSelectMode"
+      [class.selected]="isSelected(card)"
+      (click)="onIntrigueClick(card)"
+      (mouseenter)="hoveredCardId = card.id"
+      (mouseleave)="hoveredCardId = ''"
+    >
+      @if (card.id === selectedIntrigue?.id || card.id === hoveredCardId) {
+        <dune-highlighting
+          [id]="card.id"
+          [width]="220"
+          [height]="300"
+          [bottom]="-20"
+          [left]="-25"
+        ></dune-highlighting>
+      }
+      <dune-intrigue-card [card]="card"></dune-intrigue-card>
+      @if (data.canAquireCards) {
+        <div class="card-action-container">
+          <button
+            class="card-buy-button"
+            mat-fab
+            [color]="'accent'"
+            (click)="onBuyCardClicked(card)"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>
 <div mat-dialog-actions>
   @if (isSelectMode) {
@@ -37,7 +46,12 @@
       <mat-icon>check</mat-icon>
     </button>
   } @else {
-    <button mat-mini-fab [color]="'accent'" (click)="onClose()" [matTooltip]="t.translate('commonCancel')">
+    <button
+      mat-mini-fab
+      [color]="'accent'"
+      (click)="onClose()"
+      [matTooltip]="t.translate('commonCancel')"
+    >
       <mat-icon>close</mat-icon>
     </button>
   }

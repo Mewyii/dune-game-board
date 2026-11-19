@@ -54,12 +54,15 @@
       </div>
     </div>
   </div>
-  <div class="card-aquire-effect-container" *ngIf="leader.startingResources && leader.startingResources.length > 0">
-    <dune-reward-array
-      *ngIf="leader.startingResources"
-      [rewards]="leader.startingResources"
-      [size]="'24px'"
-      [vertical]="true"
-    ></dune-reward-array>
-  </div>
+  @if (leader.startingResources && leader.startingResources.length > 0) {
+    <div class="card-aquire-effect-container">
+      @if (leader.startingResources) {
+        <dune-reward-array
+            [rewards]="leader.startingResources"
+          [size]="'24px'"
+          [vertical]="true"
+        ></dune-reward-array>
+      }
+    </div>
+  }
 </div>

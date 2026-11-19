@@ -1,27 +1,33 @@
-<div class="homeworld-tiles-container" *ngIf="showTiles">
-  <ng-container *ngFor="let planetColor of planetColors">
-    <div class="homeworld-tile">
-      <div class="title-container">homeworld</div>
-      <div class="rewards-container">
-        <ng-container *ngFor="let upgrade of upgrades">
-          <div class="reward-container">
-            <img class="reward" [src]="upgrade.rewardType | effectTypePath" />
-            <div>:</div>
-            <div>{{ upgrade.initialAmount }}</div>
-            <ng-container *ngFor="let upgradeCount of upgrade.upgradeCount | numberToArray; let i = index">
-              <div>+</div>
-              <div class="upgrade-marker"></div>
-            </ng-container>
-          </div>
-        </ng-container>
+@if (showTiles) {
+  <div class="homeworld-tiles-container">
+    @for (planetColor of planetColors; track planetColor) {
+      <div class="homeworld-tile">
+        <div class="title-container">homeworld</div>
+        <div class="rewards-container">
+          @for (upgrade of upgrades; track upgrade) {
+            <div class="reward-container">
+              <img class="reward" [src]="upgrade.rewardType | effectTypePath" />
+              <div>:</div>
+              <div>{{ upgrade.initialAmount }}</div>
+              @for (
+                upgradeCount of upgrade.upgradeCount | numberToArray;
+                track upgradeCount;
+                let i = $index
+              ) {
+                <div>+</div>
+                <div class="upgrade-marker"></div>
+              }
+            </div>
+          }
+        </div>
+        <div class="planet-container">
+          <img
+            class="planet"
+            [src]="'/assets/images/homeworld-planet.png'"
+            [style.filter]="'hue-rotate(' + planetColor + 'deg)'"
+          />
+        </div>
       </div>
-      <div class="planet-container">
-        <img
-          class="planet"
-          [src]="'/assets/images/homeworld-planet.png'"
-          [style.filter]="'hue-rotate(' + planetColor + 'deg)'"
-        />
-      </div>
-    </div>
-  </ng-container>
-</div>
+    }
+  </div>
+}

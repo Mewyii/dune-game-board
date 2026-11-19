@@ -10,44 +10,54 @@
     [style.background-position]="card.imagePosition ?? 'center'"
   >
     <div class="card-agent-effect-container font-text">
-      <div class="card-agent-effect" *ngIf="card.effects && card.effects.length > 0">
-        <dune-reward-array
-          [rewards]="card.effects"
-          [textColor]="'white-clear'"
-          [size]="effectSize"
-          [arraySeparationGap]="'16px'"
-        ></dune-reward-array>
-      </div>
-      <div class="card-agent-effect-custom" *ngIf="card.customEffect && card.customEffect.en">
-        <div
-          *ngIf="!card.customEffect.fontSize || card.customEffect.fontSize == 'small'"
-          class="card-reveal-effect-custom-text"
-          [innerHTML]="t.translateLS(card.customEffect) | duneSymbols"
-        ></div>
-        <div
-          *ngIf="card.customEffect.fontSize === 'medium'"
-          class="card-reveal-effect-custom-text medium"
-          [innerHTML]="t.translateLS(card.customEffect) | duneSymbols: '22px'"
-        ></div>
-      </div>
+      @if (card.effects && card.effects.length > 0) {
+        <div class="card-agent-effect">
+          <dune-reward-array
+            [rewards]="card.effects"
+            [textColor]="'white-clear'"
+            [size]="effectSize"
+            [arraySeparationGap]="'16px'"
+          ></dune-reward-array>
+        </div>
+      }
+      @if (card.customEffect && card.customEffect.en) {
+        <div class="card-agent-effect-custom">
+          @if (!card.customEffect.fontSize || card.customEffect.fontSize == 'small') {
+            <div
+                class="card-reveal-effect-custom-text"
+              [innerHTML]="t.translateLS(card.customEffect) | duneSymbols"
+            ></div>
+          }
+          @if (card.customEffect.fontSize === 'medium') {
+            <div
+                class="card-reveal-effect-custom-text medium"
+              [innerHTML]="t.translateLS(card.customEffect) | duneSymbols: '22px'"
+            ></div>
+          }
+        </div>
+      }
     </div>
   </div>
-  <div class="card-aquire-effect-container" *ngIf="card.buyEffects && card.buyEffects.length">
-    <dune-reward-array
-      *ngIf="card.buyEffects"
-      [rewards]="card.buyEffects"
-      [size]="'24px'"
-      [vertical]="true"
-    ></dune-reward-array>
-  </div>
-  <div
-    [class]="
-      'card-aquire-costs-container font-text ' +
-      (card.buyEffects && card.buyEffects.length > 0 ? 'highlighted ' : '') +
-      (costModifier ? (costModifier > 0 ? ' negative ' : ' positive ') : '')
-    "
-    *ngIf="card.costs"
-  >
-    <div class="card-aquire-costs">{{ card.costs + costModifier }}</div>
-  </div>
+  @if (card.buyEffects && card.buyEffects.length) {
+    <div class="card-aquire-effect-container">
+      @if (card.buyEffects) {
+        <dune-reward-array
+            [rewards]="card.buyEffects"
+          [size]="'24px'"
+          [vertical]="true"
+        ></dune-reward-array>
+      }
+    </div>
+  }
+  @if (card.costs) {
+    <div
+      [class]="
+        'card-aquire-costs-container font-text ' +
+        (card.buyEffects && card.buyEffects.length > 0 ? 'highlighted ' : '') +
+        (costModifier ? (costModifier > 0 ? ' negative ' : ' positive ') : '')
+      "
+    >
+      <div class="card-aquire-costs">{{ card.costs + costModifier }}</div>
+    </div>
+  }
 </div>

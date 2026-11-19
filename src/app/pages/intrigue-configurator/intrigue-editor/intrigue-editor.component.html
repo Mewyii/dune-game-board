@@ -1,6 +1,12 @@
 <form [formGroup]="intrigueForm">
-  <div [class]="'form-group' + (editMode ? ' padding-top' : '')" formGroupName="name">
-    <mat-form-field class="big-text-field flex" [appearance]="editMode ? 'outline' : 'fill'">
+  <div
+    [class]="'form-group' + (editMode ? ' padding-top' : '')"
+    formGroupName="name"
+  >
+    <mat-form-field
+      class="big-text-field flex"
+      [appearance]="editMode ? 'outline' : 'fill'"
+    >
       <mat-label>Name (English)</mat-label>
       <input matInput formControlName="en" [readonly]="editMode" />
     </mat-form-field>
@@ -13,8 +19,13 @@
   <!-- Type -->
   <mat-form-field>
     <mat-label>Type</mat-label>
-    <mat-select formControlName="type" (selectionChange)="onTypeSelectionChanged($event)">
-      <mat-option *ngFor="let type of intrigueTypes" [value]="type">{{ type }}</mat-option>
+    <mat-select
+      formControlName="type"
+      (selectionChange)="onTypeSelectionChanged($event)"
+    >
+      @for (type of intrigueTypes; track type) {
+        <mat-option [value]="type">{{ type }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-form-field class="small-text-field">
@@ -23,74 +34,120 @@
   </mat-form-field>
 
   <!-- Plot Effects -->
-  <div class="card-effect-container" *ngIf="type === 'complot' || type === 'combined'">
-    <div class="title-container">
-      <span class="card-effect-title"> Plot Effects </span>
-    </div>
-    <div class="form-group" *ngFor="let effect of plotEffects.controls; let i = index">
-      <mat-form-field class="big-text-field flex">
-        <mat-label>Effect Type</mat-label>
-        <mat-select [formControl]="getPlotEffectTypeControl(i)">
-          <mat-select-trigger>
-            <div class="reward-container">
-              <img class="reward" [src]="getPlotEffectTypeControl(i).value | effectTypePath" />
-              <span class="reward-label">{{ getPlotEffectTypeControl(i).value }}</span>
-            </div>
-          </mat-select-trigger>
-          <mat-option *ngFor="let rewardType of effectTypes" [value]="rewardType"
-            ><div class="reward-container">
-              <img class="reward" [src]="rewardType | effectTypePath" />
-              <span class="reward-label">{{ rewardType }}</span>
-            </div></mat-option
+  @if (type === "complot" || type === "combined") {
+    <div class="card-effect-container">
+      <div class="title-container">
+        <span class="card-effect-title"> Plot Effects </span>
+      </div>
+      @for (effect of plotEffects.controls; track effect; let i = $index) {
+        <div class="form-group">
+          <mat-form-field class="big-text-field flex">
+            <mat-label>Effect Type</mat-label>
+            <mat-select [formControl]="getPlotEffectTypeControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="getPlotEffectTypeControl(i).value | effectTypePath"
+                  />
+                  <span class="reward-label">{{
+                    getPlotEffectTypeControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (rewardType of effectTypes; track rewardType) {
+                <mat-option [value]="rewardType"
+                  ><div class="reward-container">
+                    <img class="reward" [src]="rewardType | effectTypePath" />
+                    <span class="reward-label">{{ rewardType }}</span>
+                  </div></mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              [formControl]="getPlotEffectAmountControl(i)"
+              type="number"
+            />
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onRemovePlotEffectClicked(i)"
           >
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Amount</mat-label>
-        <input matInput [formControl]="getPlotEffectAmountControl(i)" type="number" />
-      </mat-form-field>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemovePlotEffectClicked(i)">
-        <mat-icon>delete</mat-icon>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddPlotEffectClicked()"
+      >
+        <mat-icon>add</mat-icon>
       </button>
     </div>
-    <button mat-mini-fab [color]="'accent'" (click)="onAddPlotEffectClicked()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
+  }
 
   <!-- Combat Effects -->
-  <div class="card-effect-container" *ngIf="type === 'combat' || type === 'combined'">
-    <div class="title-container">
-      <span class="card-effect-title"> Combat Effects </span>
-    </div>
-    <div class="form-group" *ngFor="let effect of combatEffects.controls; let i = index">
-      <mat-form-field class="big-text-field flex">
-        <mat-label>Effect Type</mat-label>
-        <mat-select [formControl]="getCombatEffectTypeControl(i)">
-          <mat-select-trigger>
-            <div class="reward-container">
-              <img class="reward" [src]="getCombatEffectTypeControl(i).value | effectTypePath" />
-              <span class="reward-label">{{ getCombatEffectTypeControl(i).value }}</span>
-            </div>
-          </mat-select-trigger>
-          <mat-option *ngFor="let rewardType of effectTypes" [value]="rewardType"
-            ><div class="reward-container">
-              <img class="reward" [src]="rewardType | effectTypePath" />
-              <span class="reward-label">{{ rewardType }}</span>
-            </div></mat-option
+  @if (type === "combat" || type === "combined") {
+    <div class="card-effect-container">
+      <div class="title-container">
+        <span class="card-effect-title"> Combat Effects </span>
+      </div>
+      @for (effect of combatEffects.controls; track effect; let i = $index) {
+        <div class="form-group">
+          <mat-form-field class="big-text-field flex">
+            <mat-label>Effect Type</mat-label>
+            <mat-select [formControl]="getCombatEffectTypeControl(i)">
+              <mat-select-trigger>
+                <div class="reward-container">
+                  <img
+                    class="reward"
+                    [src]="getCombatEffectTypeControl(i).value | effectTypePath"
+                  />
+                  <span class="reward-label">{{
+                    getCombatEffectTypeControl(i).value
+                  }}</span>
+                </div>
+              </mat-select-trigger>
+              @for (rewardType of effectTypes; track rewardType) {
+                <mat-option [value]="rewardType"
+                  ><div class="reward-container">
+                    <img class="reward" [src]="rewardType | effectTypePath" />
+                    <span class="reward-label">{{ rewardType }}</span>
+                  </div></mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              [formControl]="getCombatEffectAmountControl(i)"
+              type="number"
+            />
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onRemoveCombatEffectClicked(i)"
           >
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Amount</mat-label>
-        <input matInput [formControl]="getCombatEffectAmountControl(i)" type="number" />
-      </mat-form-field>
-      <button mat-mini-fab [color]="'accent'" (click)="onRemoveCombatEffectClicked(i)">
-        <mat-icon>delete</mat-icon>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+      <button
+        mat-mini-fab
+        [color]="'accent'"
+        (click)="onAddCombatEffectClicked()"
+      >
+        <mat-icon>add</mat-icon>
       </button>
     </div>
-    <button mat-mini-fab [color]="'accent'" (click)="onAddCombatEffectClicked()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
+  }
 </form>

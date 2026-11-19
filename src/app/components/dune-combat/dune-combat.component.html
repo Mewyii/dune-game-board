@@ -111,11 +111,13 @@
       <span>=</span>
       <div class="legend-description">{{ troopCombatStrength }}</div>
     </div>
-    <div class="legend-container" *ngIf="useDreadnoughts">
-      <img class="legend-icon" [src]="'dreadnought' | effectTypePath" />
-      <span>=</span>
-      <div class="legend-description">{{ dreadnoughtCombatStrength }}</div>
-    </div>
+    @if (useDreadnoughts) {
+      <div class="legend-container">
+        <img class="legend-icon" [src]="'dreadnought' | effectTypePath" />
+        <span>=</span>
+        <div class="legend-description">{{ dreadnoughtCombatStrength }}</div>
+      </div>
+    }
   </div>
   <div class="absolute-scores">
     @for (combatScore of combatScores; track $index) {

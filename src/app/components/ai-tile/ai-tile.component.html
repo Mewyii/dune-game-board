@@ -1,39 +1,78 @@
 @if (activePlayer && activeAIPlayer) {
-<div class="ai-container">
-  <div class="heading-container" *ngIf="activeAIPlayer && showDetails">
-    <div class="info-container">
-      <div>personality</div>
-      <div class="ai-name">{{ activeAIPlayer.name }}</div>
-      <button mat-mini-fab [color]="'accent'" (click)="onSetPreviousAIPersonalityClicked()">
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button mat-mini-fab [color]="'accent'" (click)="onSetNextAIPersonalityClicked()">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    <div class="info-container">
-      <mat-slide-toggle
-        [color]="'accent'"
-        [checked]="activeAIPlayer.canAccessBlockedFields"
-        (change)="onChangeFieldAccessClicked(!activeAIPlayer.canAccessBlockedFields)"
-        >can access blocked fields</mat-slide-toggle
-      >
-    </div>
-  </div>
-  <div class="decision-container" *ngIf="activePlayer.isAI && activeAIPlayer && showDetails">
-    <div class="preferred-fields-container" *ngIf="showDetails">
-      <div
-        *ngFor="let field of activeAIPlayer.preferredFields; let i = index; let isFirst = first"
-        [class]="'field ' + (i < 3 ? 'good ' : i < 6 ? 'medium ' : 'bad ') + (isFirst ? 'first' : '')"
-      >
-        {{ field.fieldId }} <span *ngIf="showDetails"> {{ field.value }}</span>
+  <div class="ai-container">
+    @if (activeAIPlayer && showDetails) {
+      <div class="heading-container">
+        <div class="info-container">
+          <div>personality</div>
+          <div class="ai-name">{{ activeAIPlayer.name }}</div>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onSetPreviousAIPersonalityClicked()"
+          >
+            <mat-icon>remove</mat-icon>
+          </button>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onSetNextAIPersonalityClicked()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <div class="info-container">
+          <mat-slide-toggle
+            [color]="'accent'"
+            [checked]="activeAIPlayer.canAccessBlockedFields"
+            (change)="
+              onChangeFieldAccessClicked(!activeAIPlayer.canAccessBlockedFields)
+            "
+            >can access blocked fields</mat-slide-toggle
+          >
+        </div>
       </div>
-    </div>
-    <div>
-      Conflict: {{ activeAIPlayer.gameStateEvaluations.conflictEvaluation | number : '1.2-2' }}, Tech:
-      {{ activeAIPlayer.gameStateEvaluations.techEvaluation | number : '1.2-2' }}, Imperium-Row:
-      {{ activeAIPlayer.gameStateEvaluations.imperiumRowEvaluation | number : '1.2-2' }}
-    </div>
+    }
+    @if (activePlayer.isAI && activeAIPlayer && showDetails) {
+      <div class="decision-container">
+        @if (showDetails) {
+          <div class="preferred-fields-container">
+            @for (
+              field of activeAIPlayer.preferredFields;
+              track field;
+              let i = $index;
+              let isFirst = $first
+            ) {
+              <div
+                [class]="
+                  'field ' +
+                  (i < 3 ? 'good ' : i < 6 ? 'medium ' : 'bad ') +
+                  (isFirst ? 'first' : '')
+                "
+              >
+                {{ field.fieldId }}
+                @if (showDetails) {
+                  <span> {{ field.value }}</span>
+                }
+              </div>
+            }
+          </div>
+        }
+        <div>
+          Conflict:
+          {{
+            activeAIPlayer.gameStateEvaluations.conflictEvaluation
+              | number: "1.2-2"
+          }}, Tech:
+          {{
+            activeAIPlayer.gameStateEvaluations.techEvaluation
+              | number: "1.2-2"
+          }}, Imperium-Row:
+          {{
+            activeAIPlayer.gameStateEvaluations.imperiumRowEvaluation
+              | number: "1.2-2"
+          }}
+        </div>
+      </div>
+    }
   </div>
-</div>
 }

@@ -1,14 +1,18 @@
 <div class="imperium-row-container">
   <div class="heading font-scifi">
     <div>{{ t.translate('imperiumrowHeading') }}</div>
-    <div class="persuasion-area font-text" *ngIf="activePlayer">
-      <div class="resource-display" [style]="'filter: saturate(1.25) brightness(1.25);'">
-        <img class="resource" [src]="'persuasion' | effectTypePath" />
-        <div class="resource-amount" *ngIf="activePlayerPersuasion > 0">
-          <span>{{ activePlayerPersuasion }}</span>
+    @if (activePlayer) {
+      <div class="persuasion-area font-text">
+        <div class="resource-display" [style]="'filter: saturate(1.25) brightness(1.25);'">
+          <img class="resource" [src]="'persuasion' | effectTypePath" />
+          @if (activePlayerPersuasion > 0) {
+            <div class="resource-amount">
+              <span>{{ activePlayerPersuasion }}</span>
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </div>
   <div class="imperium-rows-container">
     <div class="cards-container">
@@ -17,27 +21,30 @@
           [class]="'imperium-deck ' + (activeCardId === 'imperium-deck' ? 'active' : '')"
           (click)="setCardActive('imperium-deck')"
         >
-          <div class="imperium-deck-action-container" *ngIf="activeCardId === 'imperium-deck'">
-            <button
-              class="card-buy-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onSearchImperiumDeckClicked()"
-              [matTooltip]="t.translate('imperiumRowTooltipSearch')"
-            >
-              <mat-icon>search</mat-icon>
-            </button>
-            <button
-              *ngIf="activePlayer?.turnState === 'reveal' && factionRecruitment.length > 0"
-              class="card-buy-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onRecruitFromImperiumRowClicked()"
-              [matTooltip]="t.translate('imperiumRowTooltipRecruit')"
-            >
-              <mat-icon>how_to_reg</mat-icon>
-            </button>
-          </div>
+          @if (activeCardId === 'imperium-deck') {
+            <div class="imperium-deck-action-container">
+              <button
+                class="card-buy-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onSearchImperiumDeckClicked()"
+                [matTooltip]="t.translate('imperiumRowTooltipSearch')"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+              @if (activePlayer?.turnState === 'reveal' && factionRecruitment.length > 0) {
+                <button
+                    class="card-buy-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onRecruitFromImperiumRowClicked()"
+                  [matTooltip]="t.translate('imperiumRowTooltipRecruit')"
+                >
+                  <mat-icon>how_to_reg</mat-icon>
+                </button>
+              }
+            </div>
+          }
         </div>
       </div>
       @for (unlimitedCard of unlimitedCustomCards; track $index) {
@@ -47,15 +54,16 @@
           (mouseenter)="setCardHover(unlimitedCard.name.en)"
           (mouseleave)="hoveredCardId = ''"
         >
-          <dune-highlighting
-            *ngIf="unlimitedCard.name.en === activeCardId || unlimitedCard.name.en === hoveredCardId"
-            [id]="unlimitedCard.name.en"
-            [width]="420"
-            [height]="570"
-            [bottom]="-100"
-            [left]="-80"
-          >
-          </dune-highlighting>
+          @if (unlimitedCard.name.en === activeCardId || unlimitedCard.name.en === hoveredCardId) {
+            <dune-highlighting
+              [id]="unlimitedCard.name.en"
+              [width]="420"
+              [height]="570"
+              [bottom]="-100"
+              [left]="-80"
+            >
+            </dune-highlighting>
+          }
           <dune-imperium-row-card
             [class]="
               (unlimitedCard.name.en === activeCardId ? 'active' : '') +
@@ -69,17 +77,19 @@
             [card]="unlimitedCard"
           ></dune-imperium-row-card>
 
-          <div class="card-action-container" *ngIf="unlimitedCard.name.en === activeCardId">
-            <button
-              class="card-buy-button"
-              mat-fab
-              [color]="'accent'"
-              (click)="onBuyAlwaysAvailableCardClicked(unlimitedCard)"
-              [matTooltip]="t.translate('imperiumRowTooltipBuy')"
-            >
-              <mat-icon>check</mat-icon>
-            </button>
-          </div>
+          @if (unlimitedCard.name.en === activeCardId) {
+            <div class="card-action-container">
+              <button
+                class="card-buy-button"
+                mat-fab
+                [color]="'accent'"
+                (click)="onBuyAlwaysAvailableCardClicked(unlimitedCard)"
+                [matTooltip]="t.translate('imperiumRowTooltipBuy')"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
       @for (limitedCard of limitedCustomCards; track $index) {
@@ -89,15 +99,16 @@
           (mouseenter)="setCardHover(limitedCard.name.en)"
           (mouseleave)="hoveredCardId = ''"
         >
-          <dune-highlighting
-            *ngIf="limitedCard.name.en === activeCardId || limitedCard.name.en === hoveredCardId"
-            [id]="limitedCard.name.en"
-            [width]="420"
-            [height]="570"
-            [bottom]="-100"
-            [left]="-80"
-          >
-          </dune-highlighting>
+          @if (limitedCard.name.en === activeCardId || limitedCard.name.en === hoveredCardId) {
+            <dune-highlighting
+              [id]="limitedCard.name.en"
+              [width]="420"
+              [height]="570"
+              [bottom]="-100"
+              [left]="-80"
+            >
+            </dune-highlighting>
+          }
           <dune-imperium-row-card
             [class]="
               (limitedCard.name.en === activeCardId ? 'active' : '') +
@@ -134,15 +145,16 @@
           (mouseenter)="setCardHover(card.id)"
           (mouseleave)="hoveredCardId = ''"
         >
-          <dune-highlighting
-            *ngIf="card.id === activeCardId || card.id === hoveredCardId"
-            [id]="card.id"
-            [width]="420"
-            [height]="570"
-            [bottom]="-100"
-            [left]="-80"
-          >
-          </dune-highlighting>
+          @if (card.id === activeCardId || card.id === hoveredCardId) {
+            <dune-highlighting
+              [id]="card.id"
+              [width]="420"
+              [height]="570"
+              [bottom]="-100"
+              [left]="-80"
+            >
+            </dune-highlighting>
+          }
           @if (card.type === 'imperium-card') {
             <dune-imperium-row-card
               [class]="
@@ -196,16 +208,17 @@
               >
                 <mat-icon>delete</mat-icon>
               </button>
-              <button
-                *ngIf="playerCanCharm"
-                class="card-remove-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onCharmCardClicked(card)"
-                [matTooltip]="t.translate('imperiumRowTooltipCharm')"
-              >
-                <mat-icon>face_retouching_natural</mat-icon>
-              </button>
+              @if (playerCanCharm) {
+                <button
+                  class="card-remove-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onCharmCardClicked(card)"
+                  [matTooltip]="t.translate('imperiumRowTooltipCharm')"
+                >
+                  <mat-icon>face_retouching_natural</mat-icon>
+                </button>
+              }
             </div>
           }
         </div>
@@ -219,15 +232,16 @@
           (mouseenter)="setCardHover(card.id)"
           (mouseleave)="hoveredCardId = ''"
         >
-          <dune-highlighting
-            *ngIf="card.id === activeCardId || card.id === hoveredCardId"
-            [id]="card.id"
-            [width]="420"
-            [height]="570"
-            [bottom]="-100"
-            [left]="-80"
-          >
-          </dune-highlighting>
+          @if (card.id === activeCardId || card.id === hoveredCardId) {
+            <dune-highlighting
+              [id]="card.id"
+              [width]="420"
+              [height]="570"
+              [bottom]="-100"
+              [left]="-80"
+            >
+            </dune-highlighting>
+          }
           @if (card.type === 'imperium-card') {
             <dune-imperium-row-card
               [class]="
@@ -281,16 +295,17 @@
               >
                 <mat-icon>delete</mat-icon>
               </button>
-              <button
-                *ngIf="playerCanCharm"
-                class="card-remove-button"
-                mat-fab
-                [color]="'accent'"
-                (click)="onCharmCardClicked(card)"
-                [matTooltip]="t.translate('imperiumRowTooltipCharm')"
-              >
-                <mat-icon>face_retouching_natural</mat-icon>
-              </button>
+              @if (playerCanCharm) {
+                <button
+                  class="card-remove-button"
+                  mat-fab
+                  [color]="'accent'"
+                  (click)="onCharmCardClicked(card)"
+                  [matTooltip]="t.translate('imperiumRowTooltipCharm')"
+                >
+                  <mat-icon>face_retouching_natural</mat-icon>
+                </button>
+              }
             </div>
           }
         </div>
