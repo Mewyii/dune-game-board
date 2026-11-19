@@ -4252,7 +4252,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Eingriff des Imperators',
     },
     faction: 'emperor',
-    persuasionCosts: 9,
+    persuasionCosts: 8,
     fieldAccess: ['town'],
     imageUrl: '/assets/images/action-backgrounds/ship_2.png',
     cardAmount: 1,
@@ -4271,9 +4271,6 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [
-      {
-        type: 'dreadnought',
-      },
       {
         type: 'location-control-choice',
       },
@@ -6274,7 +6271,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    revealEffectSize: 'small',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -6291,13 +6288,14 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
       {
-        type: 'helper-separator',
+        type: 'helper-or',
       },
       {
-        type: 'multiplier-dreadnought-in-garrison-amount',
+        type: 'trash-self',
       },
       {
-        type: 'water',
+        type: 'solari',
+        amount: 2,
       },
     ],
   },
@@ -6512,7 +6510,7 @@ export const imperiumCards: ImperiumCard[] = [
     },
     customRevealEffect: {
       en: 'If you have <b>2</b> {resource:dreadnought} in your garrison and <b>4</b> {faction:guild}-influence: {resource:trash-self} {resource:victory-point}',
-      de: 'Wenn du <b>2</b> {resource:dreadnought} in deiner Garnison und <b>4</b> {faction:guild}-Einfluss hast: {resource:trash-self} {resource:victory-point}',
+      de: 'Wenn du {resource:dreadnought} in deiner Garnison und <b>4</b> {faction:guild}-Einfluss hast: {resource:trash-self} {resource:victory-point}',
       fontSize: 'small',
     },
     rarity: 'normal',
@@ -6612,7 +6610,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/guild_officer.png',
     cardAmount: 2,
     canInfiltrate: false,
-    agentEffectSize: 'small',
+    agentEffectSize: 'large',
     rarity: 'normal',
     customAgentEffect: {
       en: '',
@@ -6625,17 +6623,20 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'small',
     },
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+    ],
     agentEffects: [
       {
-        type: 'card-draw',
+        type: 'dreadnought-retreat',
       },
       {
-        type: 'helper-separator',
+        type: 'helper-trade',
       },
       {
-        type: 'dreadnought-insert-or-retreat',
-        amount: 1,
+        type: 'intrigue',
       },
     ],
     revealEffects: [
@@ -6650,10 +6651,10 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-separator',
       },
       {
-        type: 'multiplier-dreadnought-in-garrison-amount',
+        type: 'multiplier-dreadnought-in-conflict-amount',
       },
       {
-        type: 'troop',
+        type: 'sword',
       },
     ],
   },
@@ -6822,7 +6823,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    revealEffectSize: 'medium',
+    revealEffectSize: 'large',
     customRevealEffect: {
       en: '',
       de: '',
@@ -6846,13 +6847,7 @@ export const imperiumCards: ImperiumCard[] = [
         amount: 1,
       },
       {
-        type: 'helper-separator',
-      },
-      {
-        type: 'multiplier-dreadnought-amount',
-      },
-      {
-        type: 'sword',
+        type: 'water',
       },
     ],
   },
@@ -6909,7 +6904,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Gilden Kapitän',
     },
     faction: 'guild',
-    persuasionCosts: 5,
+    persuasionCosts: 6,
     fieldAccess: ['guild', 'town'],
     imageUrl: '/assets/images/action-backgrounds/guild_captain.png',
     cardAmount: 1,
@@ -6931,19 +6926,31 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'troop',
       },
+      {
+        type: 'troop',
+      },
     ],
     agentEffects: [
       {
-        type: 'multiplier-dreadnought-amount',
+        type: 'dreadnought-retreat',
       },
       {
-        type: 'card-draw',
+        type: 'helper-trade',
+      },
+      {
+        type: 'target-enemies',
+      },
+      {
+        type: 'loose-troop',
+      },
+      {
+        type: 'loose-troop',
       },
     ],
     revealEffects: [
       {
         type: 'persuasion',
-        amount: 1,
+        amount: 2,
       },
       {
         type: 'helper-separator',
@@ -7084,7 +7091,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'faction-influence-up-guild',
       },
       {
-        type: 'tech',
+        type: 'spice',
       },
     ],
     agentEffects: [
@@ -7118,8 +7125,8 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Gilden Admiral',
     },
     faction: 'guild',
-    persuasionCosts: 7,
-    fieldAccess: ['emperor', 'guild', 'landsraad', 'town'],
+    persuasionCosts: 8,
+    fieldAccess: ['emperor', 'guild', 'landsraad'],
     imageUrl: '/assets/images/action-backgrounds/guild_admiral.png',
     cardAmount: 1,
     canInfiltrate: false,
@@ -7138,22 +7145,15 @@ export const imperiumCards: ImperiumCard[] = [
     },
     buyEffects: [
       {
-        type: 'faction-influence-up-choice',
+        type: 'dreadnought',
       },
     ],
     agentEffects: [
       {
         type: 'solari',
-        amount: 2,
       },
       {
-        type: 'loose-troop',
-      },
-      {
-        type: 'helper-trade',
-      },
-      {
-        type: 'dreadnought',
+        type: 'troop',
       },
     ],
     revealEffects: [
@@ -7166,7 +7166,7 @@ export const imperiumCards: ImperiumCard[] = [
       },
       {
         type: 'dreadnought-insert-or-retreat',
-        amount: 2,
+        amount: 1,
       },
     ],
   },
@@ -7176,7 +7176,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: 'Geheime Transporte',
     },
     faction: 'guild',
-    persuasionCosts: 8,
+    persuasionCosts: 9,
     fieldAccess: ['bene', 'emperor', 'guild', 'landsraad', 'town'],
     imageUrl: '/assets/images/action-backgrounds/highliner.png',
     cardAmount: 1,
@@ -7193,7 +7193,14 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    buyEffects: [],
+    buyEffects: [
+      {
+        type: 'troop',
+      },
+      {
+        type: 'troop',
+      },
+    ],
     agentEffects: [
       {
         type: 'foldspace',
