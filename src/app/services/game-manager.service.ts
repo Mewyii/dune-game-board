@@ -299,7 +299,7 @@ export class GameManager {
   }
 
   beginPlay() {
-    this.audioManager.playSound('fog');
+    this.audioManager.playSound('game-start');
     this.roundService.setFirstRound();
     this.roundService.setRoundPhase('agent-placement');
 
@@ -390,24 +390,6 @@ export class GameManager {
             this.resolveRewardChoices();
 
             if (isFirstCycle) {
-              const dreadnoughtCount = this.combatManager.getPlayerCombatUnits(player.id)?.shipsInCombat;
-              if (dreadnoughtCount && dreadnoughtCount > 0) {
-                if (!player.isAI) {
-                  this.playerRewardChoicesService.addPlayerRewardChoice(player.id, {
-                    type: 'location-control-choice',
-                    amount: dreadnoughtCount,
-                  });
-                } else {
-                  for (let i = 0; i < dreadnoughtCount; i++) {
-                    const updatedGameState = this.getGameState(player);
-                    const desiredLocation = this.aiBoardSpacesService.getLocationToControl(player, updatedGameState);
-                    if (desiredLocation) {
-                      this.changeLocationOwner(desiredLocation.actionField.title.en, player.id);
-                    }
-                  }
-                }
-              }
-
               const otherPlayersScoresCombined = playerCombatScores.slice(1).reduce((sum, x) => sum + x.score, 0);
 
               if (firstPlayer.score > otherPlayersScoresCombined) {
@@ -442,6 +424,7 @@ export class GameManager {
     this.audioManager.playSound('ping');
     this.gameModifiersService.removeTemporaryGameModifiers();
 
+    this.conflictsService.putCurrentConflictToDiscardPile();
     this.boardSpacesService.accumulateSpiceOnBoardSpaces();
     this.playerAgentsService.resetPlayerAgents();
     this.combatManager.setAllPlayerShipsFromTimeoutToGarrison();
@@ -474,7 +457,6 @@ export class GameManager {
     if (this.settingsService.getChurnRowCards()) {
       this.cardsService.churnAndClearImperiumRow();
     }
-    this.cardsService.discardAllPlayerHandCards();
     this.cardsService.shufflePlayerDiscardPilesUnderDecks();
 
     this.techTilesService.unFlipTechTiles();
@@ -553,6 +535,7 @@ export class GameManager {
       return;
     }
 
+    this.audioManager.playSound('card-reveal');
     this.playersService.setTurnStateForPlayer(playerId, 'reveal');
 
     this.playersResourcesService.addResourceToPlayer(player.id, 'persuasion', player.permanentPersuasion);
@@ -849,7 +832,10 @@ export class GameManager {
     const players = this.playersService.getPlayers();
     for (const player of players) {
       const playerIntrigues = this.intriguesService.getPlayerIntrigues(player.id);
-      if (!playerIntrigues || playerIntrigues.length < 1) {
+      if (
+        (!playerIntrigues || playerIntrigues.length) < 1 &&
+        this.playersResourcesService.getPlayerResources(player.id).signet < 1
+      ) {
         this.playersService.setTurnStateForPlayer(player.id, 'done');
       }
     }
@@ -1522,11 +1508,22 @@ export class GameManager {
     }
     if (playerRewardChoices.conflictChoice) {
       const playerAgentsOnFields = this.playerAgentsService.getPlayerAgentsOnFields(player.id);
-      const pickableConflicts = this.conflictsService.conflictStack.filter((x) =>
+      let pickableConflicts = this.conflictsService.conflictStack.filter((x) =>
         playerAgentsOnFields.some((y) => y.fieldId === x.boardSpaceId),
       );
+      if (pickableConflicts.length < 1) {
+        pickableConflicts = this.conflictsService.conflictDiscardPile.filter((x) =>
+          playerAgentsOnFields.some((y) => y.fieldId === x.boardSpaceId),
+        );
+
+        if (pickableConflicts.length > 0) {
+          this.conflictsService.removeConflictsFromDiscardPile(pickableConflicts.map((x) => x.id));
+          this.conflictsService.addConflictsToConflictStack(pickableConflicts);
+        }
+      }
+
       let pickedConflict: ConflictDeckCard | undefined = undefined;
-      if (pickableConflicts.length > 1) {
+      if (pickableConflicts.length > 0) {
         pickableConflicts.sort(
           (a, b) =>
             this.effectEvaluationService.getRewardArrayEvaluationForTurnState(b.rewards[0], player, gameState) -
@@ -1716,6 +1713,7 @@ export class GameManager {
     const playerCanAffordCard = availablePersuasion >= totalPersuasionCosts;
 
     if (playerCanAffordCard) {
+      this.audioManager.playSound('card-buy');
       if (card.persuasionCosts) {
         this.playersResourcesService.removeResourceFromPlayer(playerId, 'persuasion', totalPersuasionCosts);
       }
@@ -1782,7 +1780,7 @@ export class GameManager {
     }
 
     if (canTrashCard) {
-      this.audioManager.playSound('card-discard');
+      this.audioManager.playSound('trash-card');
       if (source === 'hand') {
         this.cardsService.trashPlayerHandCard(playerId, card);
       } else {
@@ -2027,6 +2025,7 @@ export class GameManager {
     if (!player) {
       return;
     }
+    this.audioManager.playSound('leader-lock-in');
     this.leadersService.lockInLeader(playerId);
 
     for (const startingResource of this.settingsService.getStartingResources()) {

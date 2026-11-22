@@ -19,6 +19,9 @@ export class ConflictsService {
   private currentConflictSubject = new BehaviorSubject<ConflictDeckCard | undefined>(undefined);
   currentConflict$ = this.currentConflictSubject.asObservable();
 
+  private conflictDiscardPileSubject = new BehaviorSubject<ConflictDeckCard[]>([]);
+  conflictDiscardPile$ = this.conflictDiscardPileSubject.asObservable();
+
   constructor(private settingsService: SettingsService) {
     const conflictStackString = localStorage.getItem('conflictStack');
     if (conflictStackString) {
@@ -54,6 +57,9 @@ export class ConflictsService {
   get conflictStack() {
     return cloneDeep(this.conflictStackSubject.value);
   }
+  get conflictDiscardPile() {
+    return cloneDeep(this.conflictDiscardPileSubject.value);
+  }
 
   createConflictDeck() {
     const allConflicts = this.settingsService.getConflicts();
@@ -72,6 +78,11 @@ export class ConflictsService {
 
     this.conflictStackSubject.next(conflictStack);
     this.currentConflictSubject.next(undefined);
+  }
+
+  addConflictsToConflictStack(conflicts: ConflictDeckCard[]) {
+    const conflictStack = this.conflictStack;
+    this.conflictStackSubject.next([...conflictStack, ...conflicts]);
   }
 
   setNextConflict() {
@@ -94,12 +105,28 @@ export class ConflictsService {
     }
   }
 
+  putCurrentConflictToDiscardPile() {
+    const currentConflict = this.currentConflict;
+    if (currentConflict) {
+      const conflictDiscardPile = this.conflictDiscardPile;
+      conflictDiscardPile.push(currentConflict);
+      this.conflictDiscardPileSubject.next(conflictDiscardPile);
+    }
+  }
+
+  removeConflictsFromDiscardPile(conflictIds: string[]) {
+    const conflictDiscardPile = this.conflictDiscardPile;
+    const newConflictDiscardPile = conflictDiscardPile.filter((x) => !conflictIds.includes(x.id));
+    this.conflictDiscardPileSubject.next(newConflictDiscardPile);
+  }
+
   resetCurrentConflict() {
     this.currentConflictSubject.next(undefined);
   }
 
   resetConflicts() {
     this.conflictStackSubject.next([]);
+    this.conflictDiscardPileSubject.next([]);
     this.currentConflictSubject.next(undefined);
   }
 

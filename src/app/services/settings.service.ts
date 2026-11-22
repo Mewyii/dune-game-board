@@ -7,6 +7,7 @@ import { aiCustomBeginner } from '../constants/game-content/custom-beginner/ai';
 import { aiCustomExpert } from '../constants/game-content/custom-expert/ai';
 import { aiOriginal } from '../constants/game-content/original/ai';
 import { ActionField, ActionType, FactionInfluenceReward, FactionType, LanguageType } from '../models';
+import { Conflict } from '../models/conflict';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class SettingsService {
   private settings$ = this.settingsSubject.asObservable();
   gameContent$ = this.settings$.pipe(
     map((x) => x.gameContent),
-    distinctUntilChanged((prev, next) => prev.name === next.name),
+    distinctUntilChanged(),
   );
   mode$ = this.settings$.pipe(
     map((x) => x.mode),
@@ -131,6 +132,19 @@ export class SettingsService {
 
   getConflicts() {
     return cloneDeep(this.settingsSubject.value.gameContent.conflicts);
+  }
+
+  setConflicts(conflicts: Conflict[]) {
+    const updatedGameContent = { ...this.settings.gameContent, conflicts: cloneDeep(conflicts) };
+    const gameContents = [...this.gameContentsSubject.value];
+    const gameContentIndex = gameContents.findIndex((x) => x.name === updatedGameContent.name);
+
+    if (gameContentIndex > -1) {
+      gameContents[gameContentIndex] = updatedGameContent;
+      this.gameContentsSubject.next(gameContents);
+    }
+
+    this.settingsSubject.next({ ...this.settings, gameContent: updatedGameContent });
   }
 
   getConflictCardsPerLevel() {

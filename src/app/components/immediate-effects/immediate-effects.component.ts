@@ -467,9 +467,20 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const conflicts = this.conflictsService.conflictStack.filter((x) =>
+    let conflicts = this.conflictsService.conflictStack.filter((x) =>
       playerAgentsOnFields.some((y) => y.fieldId === x.boardSpaceId),
     );
+
+    if (conflicts.length < 1) {
+      conflicts = this.conflictsService.conflictDiscardPile.filter((x) =>
+        playerAgentsOnFields.some((y) => y.fieldId === x.boardSpaceId),
+      );
+
+      if (conflicts.length > 0) {
+        this.conflictsService.removeConflictsFromDiscardPile(conflicts.map((x) => x.id));
+        this.conflictsService.addConflictsToConflictStack(conflicts);
+      }
+    }
 
     if (conflicts.length < 1) {
       this.closeDialogAndRemoveImmediateEffect(currentEffect.id);

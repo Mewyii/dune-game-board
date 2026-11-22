@@ -162,6 +162,7 @@ export class EffectsService {
       } else if (rewardType === 'focus') {
         this.audioManager.playSound('focus');
       } else if (rewardType === 'leader-heal') {
+        this.audioManager.playSound('leader-heal');
       } else if (rewardType === 'signet') {
         this.audioManager.playSound('signet');
       }
@@ -433,6 +434,7 @@ export class EffectsService {
         amount: rewardAmount,
       });
     } else if (rewardType === 'leader-wound') {
+      this.audioManager.playSound('leader-wound');
       this.leadersService.flipLeader(playerId);
     } else if (rewardType === 'turn-pass') {
       this.turnInfoService.setPlayerTurnInfo(playerId, { needsToPassTurn: true });

@@ -650,6 +650,11 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             return;
           }
 
+          const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
+          if (playerCombatScore < 1) {
+            return;
+          }
+
           const exclusiveID = crypto.randomUUID();
           for (let i = 1; i <= gameState.playerResources.signet; i++) {
             game.addPlayerConversionChoice(player.id, {
@@ -668,7 +673,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
                 effectRewards: [
                   {
                     type: 'sword',
-                    amount: i * 3,
+                    amount: i * 4,
                   },
                 ],
               },
@@ -686,20 +691,20 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             return;
           }
 
-          const playerCombatIntrigues = gameState.playerCombatIntrigues;
           const playerCombatScore = getPlayerCombatStrength(gameState.playerCombatUnits, gameState);
-          const maxAdditionalScoreTroughSignets = gameState.playerResources.signet * 3;
+          if (playerCombatScore < 1) {
+            return;
+          }
+
+          const playerCombatIntrigues = gameState.playerCombatIntrigues;
+          const maxAdditionalScoreTroughSignets = gameState.playerResources.signet * 4;
 
           const sortedEnemyCombatScores = gameState.enemyCombatUnits
             .map((x) => getPlayerCombatStrength(x, gameState))
             .sort((a, b) => b - a);
           const currentCombatRank = sortedEnemyCombatScores.filter((x) => x >= playerCombatScore).length + 1;
 
-          const { playableIntriguesWithSwords, playableIntriguesWithoutSwords } = game.getPlayableCombatIntrigues(
-            player,
-            gameState,
-            playerCombatIntrigues,
-          );
+          const { playableIntriguesWithSwords } = game.getPlayableCombatIntrigues(player, gameState, playerCombatIntrigues);
 
           const maxAdditionalScoreThroughIntrigues = playableIntriguesWithSwords.reduce((sum, x) => sum + x.addedScore, 0);
           const maxAdditionalCombatScore = maxAdditionalScoreTroughSignets + maxAdditionalScoreThroughIntrigues;
@@ -715,7 +720,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
             const signetsToBePlayed = Math.min(targetEnemyCombatScore - playerCombatScore, maxAdditionalScoreTroughSignets);
 
             game.payCostForPlayer(player.id, { type: 'signet', amount: signetsToBePlayed });
-            game.addRewardToPlayer(player.id, { type: 'sword', amount: signetsToBePlayed * 3 });
+            game.addRewardToPlayer(player.id, { type: 'sword', amount: signetsToBePlayed * 4 });
           }
         },
       },
@@ -1357,18 +1362,6 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
           ? 0.95
           : 1,
     },
-    customTimedFunctions: [
-      {
-        timing: 'timing-reveal-turn',
-        function: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
-          const playerVictoryPoints = gameState.playerScore.victoryPoints;
-          const playerPersuasion = gameState.playerResources.persuasion;
-
-          game.addRewardToPlayer(player.id, { type: 'signet', amount: playerVictoryPoints + playerPersuasion });
-          game.removePersuasionFromPlayer(player.id, playerPersuasion);
-        },
-      },
-    ],
     customSignetFunction: (player, gameState, game) => {
       if (player.isAI) {
         return;

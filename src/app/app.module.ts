@@ -97,6 +97,8 @@ import { LeaderConfiguratorComponent } from './pages/leader-configurator/leader-
 import { LeaderEditorComponent } from './pages/leader-configurator/leader-editor/leader-editor.component';
 import { DialogPlotEditorComponent } from './pages/plot-configurator/dialog-plot-editor/dialog-plot-editor.component';
 import { PlotConfiguratorComponent } from './pages/plot-configurator/plot-configurator.component';
+import { ConflictConfiguratorComponent } from './pages/conflict-configurator/conflict-configurator.component';
+import { DialogConflictEditorComponent } from './pages/conflict-configurator/dialog-conflict-editor/dialog-conflict-editor.component';
 import { PlotEditorComponent } from './pages/plot-configurator/plot-editor/plot-editor.component';
 import { StartingCardConfiguratorComponent } from './pages/starting-card-configurator/starting-card-configurator.component';
 import { DialogTechTileEditorComponent } from './pages/tech-tile-configurator/dialog-tech-tile-editor/dialog-tech-tile-editor.component';
@@ -197,6 +199,8 @@ import { SafeUrlPipe } from './pipes/safe-url';
     DialogGameManualComponent,
     HighlightingComponent,
     ImmediateEffectsComponent,
+    ConflictConfiguratorComponent,
+    DialogConflictEditorComponent,
   ],
   imports: [
     BrowserModule,

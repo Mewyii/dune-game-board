@@ -27,7 +27,8 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'troop',
+        type: 'persuasion',
+        amount: 1,
       },
     ],
   },
@@ -56,8 +57,7 @@ export const startingCards: ImperiumCard[] = [
     agentEffects: [],
     revealEffects: [
       {
-        type: 'persuasion',
-        amount: 1,
+        type: 'troop',
       },
     ],
     rarity: 'normal',
@@ -138,7 +138,23 @@ export const startingCards: ImperiumCard[] = [
         type: 'persuasion',
         amount: 1,
       },
+      {
+        type: 'solari',
+      },
     ],
+    agentEffectSize: 'large',
+    revealEffectSize: 'large',
+    customAgentEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    customRevealEffect: {
+      en: '',
+      de: '',
+      fontSize: 'medium',
+    },
+    rarity: 'normal',
   },
   {
     name: {

@@ -1,13 +1,12 @@
 {
     "github.copilot.enable": {
-        "*": false,
+        "*": true,
         "plaintext": false,
         "markdown": false,
         "scminput": false,
         "csv": false,
         "csv (semicolon)": true,
         "json": true,
-        "typescriptreact": false,
-        "typescript": false
+        "typescriptreact": false
     }
 }

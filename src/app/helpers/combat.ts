@@ -2,7 +2,7 @@ import { GameState } from '../models/ai';
 import { PlayerCombatUnits } from '../services/combat-manager.service';
 
 export function getPlayerCombatStrength(player: PlayerCombatUnits, gamestate: Pick<GameState, 'gameSettings'>) {
-  if (player.troopsInCombat < 1 || player.shipsInCombat < 1) {
+  if (player.troopsInCombat < 1 && player.shipsInCombat < 1) {
     return 0;
   }
   return (

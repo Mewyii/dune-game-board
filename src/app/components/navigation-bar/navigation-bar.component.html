@@ -30,6 +30,12 @@
       {{ t.translate('commonNavigationImperiumCards') }}
     </div>
     <div
+      [class]="'navigation-item ' + (url.includes('conflict-configurator') ? 'highlighted' : '')"
+      [routerLink]="'conflict-configurator'"
+    >
+      {{ t.translate('commonNavigationConflicts') }}
+    </div>
+    <div
       [class]="'navigation-item ' + (url.includes('plot-configurator') ? 'highlighted' : '')"
       [routerLink]="'plot-configurator'"
     >

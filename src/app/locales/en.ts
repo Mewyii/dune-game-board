@@ -64,6 +64,7 @@ export const enLocale = {
   commonNavigationGameBoard: 'Game Board',
   commonNavigationStartingCards: 'Starting Cards',
   commonNavigationImperiumCards: 'Imperium Cards',
+  commonNavigationConflicts: 'Conflicts',
   commonNavigationPlots: 'Plots',
   commonNavigationTechTiles: 'Tech Tiles',
   commonNavigationLeaders: 'Leaders',

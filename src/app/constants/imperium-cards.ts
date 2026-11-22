@@ -523,7 +523,7 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/action-backgrounds/mentat.png',
     cardAmount: 1,
     canInfiltrate: false,
-    agentEffectSize: 'large',
+    agentEffectSize: 'small',
     customAgentEffect: {
       en: '',
       de: '',
@@ -535,11 +535,7 @@ export const imperiumCards: ImperiumCard[] = [
       de: '',
       fontSize: 'medium',
     },
-    buyEffects: [
-      {
-        type: 'faction-influence-up-choice',
-      },
-    ],
+    buyEffects: [],
     agentEffects: [
       {
         type: 'card-discard',
@@ -548,10 +544,10 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'helper-trade',
       },
       {
-        type: 'card-draw',
+        type: 'multiplier-troops-in-conflict',
       },
       {
-        type: 'troop',
+        type: 'sword',
       },
     ],
     revealEffects: [
@@ -566,6 +562,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'sword',
       },
     ],
+    rarity: 'normal',
   },
   {
     name: {
@@ -580,8 +577,8 @@ export const imperiumCards: ImperiumCard[] = [
     agentEffectSize: 'small',
     rarity: 'rare',
     customAgentEffect: {
-      en: 'Remove enemy agents from this board space. They are no longer available for this round.',
-      de: 'Entferne gegnerische {resource:agent} von diesem Feld. Sie sind für diese Runde nicht mehr verfügbar.',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
     revealEffectSize: 'medium',
@@ -595,7 +592,14 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'focus',
       },
     ],
-    agentEffects: [],
+    agentEffects: [
+      {
+        type: 'multiplier-troops-in-conflict',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     revealEffects: [
       {
         type: 'persuasion',
@@ -908,23 +912,13 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'troop',
       },
-      {
-        type: 'focus',
-      },
     ],
     agentEffects: [
       {
-        type: 'card-draw',
+        type: 'multiplier-troops-in-conflict',
       },
       {
-        type: 'focus',
-      },
-      {
-        type: 'helper-separator',
-      },
-      {
-        type: 'troop-insert',
-        amount: 2,
+        type: 'sword',
       },
     ],
     revealEffects: [
@@ -1333,13 +1327,13 @@ export const imperiumCards: ImperiumCard[] = [
     fieldAccess: ['landsraad', 'spice', 'town'],
     imageUrl: '/assets/images/action-backgrounds/thufir_2.png',
     cardAmount: 1,
-    canInfiltrate: false,
+    canInfiltrate: true,
     agentEffectSize: 'medium',
     rarity: 'rare',
     customAgentEffect: {
-      en: '',
-      de: '',
-      fontSize: 'medium',
+      en: 'Remove enemy agents from this board space. They are no longer available for this round.',
+      de: 'Entferne gegnerische {resource:agent} von diesem Feld. Sie sind für diese Runde nicht mehr verfügbar.',
+      fontSize: 'small',
     },
     revealEffectSize: 'large',
     customRevealEffect: {
@@ -1348,15 +1342,7 @@ export const imperiumCards: ImperiumCard[] = [
       fontSize: 'medium',
     },
     buyEffects: [],
-    agentEffects: [
-      {
-        type: 'target-enemies-on-field-type',
-        action: 'town',
-      },
-      {
-        type: 'intrigue-trash',
-      },
-    ],
+    agentEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
@@ -2601,11 +2587,11 @@ export const imperiumCards: ImperiumCard[] = [
     imageUrl: '/assets/images/leaders/mohiam.png',
     cardAmount: 1,
     canInfiltrate: true,
-    agentEffectSize: 'large',
+    agentEffectSize: 'medium',
     rarity: 'rare',
     customAgentEffect: {
-      en: 'You may look at the top card of your deck aswell as the intrigue deck.',
-      de: 'Du kannst dir die oberste Karte deines Decks sowie des Intrigenstapels  ansehen.',
+      en: 'You may look at the top card of your deck.',
+      de: 'Du kannst dir die oberste Karte deines Decks ansehen.',
       fontSize: 'small',
     },
     revealEffectSize: 'large',
@@ -2618,11 +2604,12 @@ export const imperiumCards: ImperiumCard[] = [
       {
         type: 'faction-influence-up-bene',
       },
+    ],
+    agentEffects: [
       {
-        type: 'spice',
+        type: 'intrigue',
       },
     ],
-    agentEffects: [],
     revealEffects: [
       {
         type: 'persuasion',
@@ -2632,7 +2619,7 @@ export const imperiumCards: ImperiumCard[] = [
         type: 'recruitment-bene',
       },
       {
-        type: 'intrigue',
+        type: 'spice',
       },
     ],
   },

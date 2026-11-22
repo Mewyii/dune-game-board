@@ -434,8 +434,8 @@ export const leaders: Leader[] = [
       de: 'Die Wege der Fremen',
     },
     signetDescription: {
-      en: 'You may trash {resource:signet} during combat to get {resource:sword}{resource:sword}{resource:sword}.',
-      de: 'Du kannst während der Kampfphase beliebig oft: {resource:signet} {resource:helper-trade} {resource:sword}{resource:sword}{resource:sword}',
+      en: 'You may trash {resource:signet} during combat to get {resource:sword}{resource:sword}{resource:sword}{resource:sword}.',
+      de: 'Du kannst während der Kampfphase beliebig oft: {resource:signet} {resource:helper-trade} {resource:sword}{resource:sword}{resource:sword}{resource:sword}',
     },
     imageUrl: '/assets/images/leaders/stilgar.png',
     type: 'new',

@@ -87,9 +87,9 @@ export class BoardEvaluationComponent implements OnInit {
           break;
         case 'troop':
           if (rewards.some((x) => x.type === 'combat')) {
-            value += 1.9 * amount;
+            value += 1.8 * amount;
           } else {
-            value += 1.25 * amount;
+            value += 1.2 * amount;
           }
           break;
         case 'loose-troop':

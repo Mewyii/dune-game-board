@@ -456,24 +456,6 @@ export class CardsService {
     }
   }
 
-  discardAllPlayerHandCards() {
-    const playerHands = this.playerHands;
-    const playerDiscardPiles = this.playerDiscardPiles;
-    for (const playerHand of playerHands) {
-      const playerDiscardPileIndex = playerDiscardPiles.findIndex((x) => x.playerId === playerHand.playerId);
-      if (playerDiscardPileIndex > -1) {
-        playerDiscardPiles[playerDiscardPileIndex].cards = [
-          ...playerDiscardPiles[playerDiscardPileIndex].cards,
-          ...playerHand.cards,
-        ];
-      } else {
-        playerDiscardPiles.push({ playerId: playerHand.playerId, cards: playerHand.cards });
-      }
-    }
-    this.playerHandsSubject.next([]);
-    this.playerDiscardPilesSubject.next(playerDiscardPiles);
-  }
-
   discardPlayerHandCard(playerId: number, card: ImperiumDeckCard) {
     const playerHands = this.playerHands;
     const playerHandIndex = this.playerHands.findIndex((x) => x.playerId === playerId);

@@ -9,6 +9,7 @@ import { StartingCardConfiguratorComponent } from './pages/starting-card-configu
 import { TechTileConfiguratorComponent } from './pages/tech-tile-configurator/tech-tile-configurator.component';
 import { IntrigueConfiguratorComponent } from './pages/intrigue-configurator/intrigue-configurator.component';
 import { PlotConfiguratorComponent } from './pages/plot-configurator/plot-configurator.component';
+import { ConflictConfiguratorComponent } from './pages/conflict-configurator/conflict-configurator.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,12 @@ const routes: Routes = [
     title: 'Dune Imperium Card-Configurator',
     path: 'imperium-card-configurator',
     component: ImperiumCardConfiguratorComponent,
+    pathMatch: 'full',
+  },
+  {
+    title: 'Dune Conflict-Configurator',
+    path: 'conflict-configurator',
+    component: ConflictConfiguratorComponent,
     pathMatch: 'full',
   },
   {

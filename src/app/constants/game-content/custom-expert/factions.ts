@@ -12,8 +12,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Die Wüste Verstehen', en: 'Desert Knowledge' },
         actionType: 'fremen',
-        costs: [{ type: 'spice', amount: 2 }],
-        rewards: [{ type: 'card-draw', amount: 2 }, { type: 'card-draw-or-destroy' }],
+        costs: [{ type: 'spice' }],
+        rewards: [{ type: 'card-draw' }, { type: 'card-draw-or-destroy' }],
         pathToImage: 'assets/images/action-backgrounds/spice_2.png',
       },
       {
@@ -25,15 +25,9 @@ export const factionsCustomExpert: Faction[] = [
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Fremen.png',
     primaryColor: 'rgb(42, 72, 133)',
-    secondaryColor: '#191f2eb8',
+    secondaryColor: 'rgba(25, 31, 46, 0.7)',
     hasScoreBoard: true,
     influenceRewards: {
-      2: [
-        {
-          type: 'troop',
-          amount: 2,
-        },
-      ],
       4: [
         {
           type: 'victory-point',
@@ -59,20 +53,49 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Geistesausbildung', en: 'Mind Training' },
         actionType: 'bene',
-        rewards: [{ type: 'card-draw' }, { type: 'focus' }],
+        rewards: [{ type: 'card-discard' }, { type: 'card-draw' }, { type: 'focus' }],
         pathToImage: 'assets/images/action-backgrounds/book.png',
       },
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Bene_Gesserit.png',
     primaryColor: 'rgb(84, 78, 97)',
-    secondaryColor: '#1f192eb8',
+    secondaryColor: 'rgba(31, 25, 46, 0.7)',
     hasScoreBoard: true,
     influenceRewards: {
-      2: [
+      4: [
         {
-          type: 'intrigue',
+          type: 'victory-point',
         },
       ],
+    },
+  },
+  {
+    title: { de: 'Imperator', en: 'Emperor' },
+    type: 'emperor',
+    position: {
+      marginTop: 655,
+      marginLeft: 15,
+    },
+    actionFields: [
+      {
+        title: { de: 'Verschwörung', en: 'Conspiracy' },
+        actionType: 'emperor',
+        costs: [{ type: 'spice', amount: 3 }],
+        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 4 }],
+        pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
+      },
+      {
+        title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
+        actionType: 'emperor',
+        rewards: [{ type: 'solari' }, { type: 'intrigue' }],
+        pathToImage: 'assets/images/action-backgrounds/wealth.png',
+      },
+    ],
+    pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
+    primaryColor: 'rgb(103, 80, 38)',
+    secondaryColor: 'rgba(46, 38, 25, 0.7)',
+    hasScoreBoard: true,
+    influenceRewards: {
       4: [
         {
           type: 'victory-point',
@@ -84,7 +107,7 @@ export const factionsCustomExpert: Faction[] = [
     title: { de: 'Raumgilde', en: 'Spacing Guild' },
     type: 'guild',
     position: {
-      marginTop: 655,
+      marginTop: 130,
       marginLeft: 15,
     },
     actionFields: [
@@ -106,54 +129,9 @@ export const factionsCustomExpert: Faction[] = [
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Spacing_Guild.png',
     primaryColor: 'rgb(128, 34, 34)',
-    secondaryColor: '#2e1919b8',
+    secondaryColor: 'rgba(46, 25, 25, 0.7)',
     hasScoreBoard: true,
     influenceRewards: {
-      2: [
-        {
-          type: 'foldspace',
-        },
-      ],
-      4: [
-        {
-          type: 'victory-point',
-        },
-      ],
-    },
-  },
-  {
-    title: { de: 'Imperator', en: 'Emperor' },
-    type: 'emperor',
-    position: {
-      marginTop: 130,
-      marginLeft: 15,
-    },
-    actionFields: [
-      {
-        title: { de: 'Verschwörung', en: 'Conspiracy' },
-        actionType: 'emperor',
-        costs: [{ type: 'spice', amount: 4 }],
-        rewards: [{ type: 'intrigue' }, { type: 'intrigue' }, { type: 'troop', amount: 4 }, { type: 'combat' }],
-        pathToImage: 'assets/images/action-backgrounds/conspiracy.png',
-      },
-      {
-        title: { de: 'Imperiale Gunst', en: 'Imperial Favor' },
-        actionType: 'emperor',
-        rewards: [{ type: 'solari' }, { type: 'intrigue' }],
-        pathToImage: 'assets/images/action-backgrounds/wealth.png',
-      },
-    ],
-    pathToSymbol: 'assets/images/faction-symbols/Symbol_Empire.png',
-    primaryColor: 'rgb(103, 80, 38)',
-    secondaryColor: '#2e2619b8',
-    hasScoreBoard: true,
-    influenceRewards: {
-      2: [
-        {
-          type: 'solari',
-          amount: 2,
-        },
-      ],
       4: [
         {
           type: 'victory-point',
@@ -173,8 +151,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Sitz im hohen Rat', en: 'High Council Seat' },
         actionType: 'landsraad',
-        costs: [{ type: 'spice', amount: 6 }],
-        rewards: [{ type: 'council-seat-small', amount: 4, iconHeight: 110 }],
+        costs: [{ type: 'spice', amount: 5 }],
+        rewards: [{ type: 'council-seat-small', amount: 3, iconHeight: 110 }],
         customWidth: 'fit-content',
         pathToImage: 'assets/images/action-backgrounds/empire_ambassador_2.png',
       },
@@ -193,7 +171,7 @@ export const factionsCustomExpert: Faction[] = [
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Landsraad.png',
     primaryColor: 'rgb(72, 89, 71)',
-    secondaryColor: '#192e19b8',
+    secondaryColor: 'rgba(25, 46, 25, 0.7)',
   },
   {
     title: { de: 'Imperium', en: 'Empire' },
@@ -223,7 +201,7 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Söldner', en: 'Mercenaries' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 4 }],
+        costs: [{ type: 'solari', amount: 3 }],
         rewards: [{ type: 'troop', amount: 4 }],
         activeForPlayerCount: 5,
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
@@ -274,6 +252,6 @@ export const factionsCustomExpert: Faction[] = [
     ],
     pathToSymbol: 'assets/images/faction-symbols/Symbol_Choam.png',
     primaryColor: 'rgb(69, 69, 69)',
-    secondaryColor: '#1e1e1eb8',
+    secondaryColor: 'rgba(30, 30, 30, 0.7)',
   },
 ];

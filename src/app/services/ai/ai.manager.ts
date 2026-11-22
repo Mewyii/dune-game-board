@@ -205,6 +205,7 @@ export class AIManager {
       imperiumRowModifiers,
     );
     if (cardToBuy) {
+      this.audioManager.playSound('card-buy');
       const calculatedModifier = getImperiumCardModifier(cardToBuy, imperiumRowModifiers);
       if (cardToBuy.persuasionCosts) {
         this.playersResourcesService.removeResourceFromPlayer(
@@ -301,6 +302,7 @@ export class AIManager {
 
     const cardToTrash = this.aiCardsService.getCardToTrash(cards, player, gameState);
     if (cardToTrash) {
+      this.audioManager.playSound('trash-card');
       this.cardsService.trashDiscardedPlayerCard(playerId, cardToTrash);
       this.cardsService.trashPlayerHandCard(playerId, cardToTrash);
 

@@ -1,0 +1,94 @@
+<main class="conflicts-configurator">
+  <div class="conflicts-manager">
+    <div class="action-bar">
+      <div class="settings-container"></div>
+      <button mat-mini-fab [color]="'accent'" (click)="onAddConflictClicked()" matTooltip="Add Conflict">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onRemoveConflictsClicked()" matTooltip="Remove All Conflicts">
+        <mat-icon>block</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="filePicker.click()" matTooltip="Import Conflicts (replaces list)">
+        <mat-icon>folder_open</mat-icon>
+      </button>
+      <input #filePicker [hidden]="true" type="file" accept=".json" (change)="onImportConflictsClicked(filePicker)" />
+      <button mat-mini-fab [color]="'accent'" (click)="onExportConflictsClicked()" matTooltip="Export Conflicts">
+        <mat-icon>download</mat-icon>
+      </button>
+      <button mat-mini-fab [color]="'accent'" (click)="onToggleControlsClicked()" matTooltip="Toggle Controls">
+        <mat-icon>hide_source</mat-icon>
+      </button>
+      <div class="settings-container">
+        <mat-form-field>
+          <mat-label>Card Export Border Size</mat-label>
+          <input matInput type="number" [(ngModel)]="imagePadding" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="action-bar">
+      <div>Total conflicts: {{ totalConflictAmount }}</div>
+    </div>
+    <div class="action-bar">
+      <div>Sort by:</div>
+      <div class="sortable-category" (click)="onSortByNameClicked()">name</div>
+      <div class="sortable-category" (click)="onSortByLevelClicked()">level</div>
+      <div class="sortable-category" (click)="onSortByBoardSpaceClicked()">board space</div>
+    </div>
+    <div class="action-bar">
+      <div>levels:</div>
+      @for (level of levels; track level) {
+        <div
+          class="filter-item"
+          [class.inactive]="activeLevelFilter !== undefined && activeLevelFilter !== level"
+          (click)="toggleLevelFilter(level)"
+        >
+          {{ level }}: {{ levelCounts[level] }}
+        </div>
+      }
+    </div>
+    <div class="action-bar center">
+      <div>conflict rewards:</div>
+      @for (item of rewards; track item.id) {
+        <div
+          class="icon-and-string-container filter-item"
+          [class.inactive]="!isRewardFilterActive(item.id)"
+          (click)="toggleRewardFilter(item)"
+        >
+          <dune-reward-array
+            [rewards]="[{ type: item.rewardType, amount: item.amount }]"
+            [size]="'16px'"
+            [textColor]="'white'"
+          ></dune-reward-array>
+          {{ item.count }}
+        </div>
+      }
+    </div>
+    <div class="cards-preview-container">
+      @for (entry of shownConflicts; track entry.id) {
+        <div class="card-container">
+          <div #cardimg [style]="'padding:' + imagePadding + 'px'">
+            <dune-conflict-card [conflict]="entry.conflict"></dune-conflict-card>
+          </div>
+          @if (showControls) {
+            <div class="card-action-bar">
+              <button mat-mini-fab [color]="'accent'" (click)="onEditConflictClicked(entry)" matTooltip="Edit">
+                <mat-icon>settings</mat-icon>
+              </button>
+              <button mat-mini-fab [color]="'accent'" (click)="onDeleteConflictClicked(entry.id)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                [color]="'accent'"
+                (click)="onSaveConflictClicked(cardimg, entry.conflict.name.en)"
+                matTooltip="Save"
+              >
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</main>

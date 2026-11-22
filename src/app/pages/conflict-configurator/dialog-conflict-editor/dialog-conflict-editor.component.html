@@ -1,0 +1,62 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+  <div class="form-row">
+    <mat-form-field class="flex">
+      <mat-label>Name (English)</mat-label>
+      <input matInput [(ngModel)]="conflict.name.en" />
+    </mat-form-field>
+    <mat-form-field class="flex">
+      <mat-label>Name (German)</mat-label>
+      <input matInput [(ngModel)]="conflict.name.de" />
+    </mat-form-field>
+  </div>
+  <div class="form-row">
+    <mat-form-field class="flex">
+      <mat-label>Board space</mat-label>
+      <mat-select [(ngModel)]="conflict.boardSpaceId">
+        <mat-option [value]="''">None</mat-option>
+        @for (boardSpaceId of boardSpaceIds; track boardSpaceId) {
+          <mat-option [value]="boardSpaceId">{{ boardSpaceId }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Conflict level</mat-label>
+      <mat-select [(ngModel)]="conflict.lvl">
+        <mat-option [value]="1">1</mat-option>
+        <mat-option [value]="2">2</mat-option>
+        <mat-option [value]="3">3</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="rank-list">
+    @for (rewards of conflict.rewards; track $index; let rankIndex = $index) {
+      <div class="rank">
+        <div class="rank-heading">
+          <strong>Rank {{ rankIndex + 1 }}</strong>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            type="button"
+            (click)="onRemoveRankClicked(rankIndex)"
+            matTooltip="Remove rank"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <dune-effect-selector
+          [effects]="rewards"
+          [effectTypes]="rewardTypes"
+          [factions]="factions"
+          [actions]="actions"
+          [title]="'Rank ' + (rankIndex + 1) + ' Rewards'"
+        ></dune-effect-selector>
+      </div>
+    }
+  </div>
+  <button mat-stroked-button type="button" (click)="onAddRankClicked()">Add rank</button>
+</div>
+<div mat-dialog-actions>
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-button type="button" (click)="onSave()">Save</button>
+</div>

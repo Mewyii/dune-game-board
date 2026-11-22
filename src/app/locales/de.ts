@@ -51,6 +51,7 @@ export const deLocale: Locale = {
   commonNavigationGameBoard: 'Spielbrett',
   commonNavigationStartingCards: 'Startkarten',
   commonNavigationImperiumCards: 'Imperium-Karten',
+  commonNavigationConflicts: 'Konflikte',
   commonNavigationPlots: 'Pläne',
   commonNavigationTechTiles: 'Tech-Plättchen',
   commonNavigationLeaders: 'Anführer',

@@ -27,7 +27,14 @@ export type SoundType =
   | 'tech-agent'
   | 'click-reverse'
   | 'influence'
-  | 'focus';
+  | 'focus'
+  | 'game-start'
+  | 'leader-heal'
+  | 'leader-wound'
+  | 'leader-lock-in'
+  | 'trash-card'
+  | 'card-reveal'
+  | 'card-buy';
 
 export interface Sound {
   url: string;
@@ -42,7 +49,7 @@ export class AudioManager {
     click: { url: 'assets/audio/sounds/click.mp3', volume: 0.66 },
     'click-soft': { url: 'assets/audio/sounds/click-minor.mp3', volume: 0.33 },
     'tech-tile': { url: 'assets/audio/sounds/flip.mp3', volume: 0.25 },
-    atmospheric: { url: 'assets/audio/sounds/intro.mp3', volume: 1.0 }, // Handle multiple sounds separately if needed
+    atmospheric: { url: 'assets/audio/sounds/intro.mp3', volume: 1.0 },
     conflict: { url: 'assets/audio/sounds/conflict.mp3', volume: 0.33 },
     ping: { url: 'assets/audio/sounds/next-round.mp3', volume: 0.66 },
     solari: { url: 'assets/audio/sounds/solari.mp3', volume: 1.0 },
@@ -66,6 +73,13 @@ export class AudioManager {
     'click-reverse': { url: 'assets/audio/sounds/click-reverse.mp3', volume: 1.0 },
     influence: { url: 'assets/audio/sounds/influence.mp3', volume: 0.3 },
     focus: { url: 'assets/audio/sounds/focus.mp3', volume: 0.33 },
+    'game-start': { url: 'assets/audio/sounds/game-start.mp3', volume: 0.5 },
+    'leader-heal': { url: 'assets/audio/sounds/leader-heal.mp3', volume: 0.5 },
+    'leader-wound': { url: 'assets/audio/sounds/leader-wound.mp3', volume: 0.5 },
+    'leader-lock-in': { url: 'assets/audio/sounds/leader-lock-in.mp3', volume: 0.3 },
+    'trash-card': { url: 'assets/audio/sounds/trash-card.mp3', volume: 0.1 },
+    'card-reveal': { url: 'assets/audio/sounds/card-reveal.mp3', volume: 0.25 },
+    'card-buy': { url: 'assets/audio/sounds/card-buy.mp3', volume: 0.4 },
   };
 
   constructor() {}

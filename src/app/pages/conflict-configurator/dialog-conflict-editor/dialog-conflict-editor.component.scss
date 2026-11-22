@@ -1,0 +1,35 @@
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flex {
+  flex: 1;
+}
+
+.rank-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+
+.rank {
+  padding: 12px;
+  border-radius: 5px;
+  background: rgba(64, 50, 40, 0.12);
+}
+
+.rank-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-wrap: wrap;
+  }
+}

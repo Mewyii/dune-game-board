@@ -265,7 +265,7 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
   },
   {
-    id: 'Duncan Idaho, Swordmaster',
+    id: 'Thufir Hawat, Mentat',
     aiAgentEvaluation: (player, gameState) => 0.5 + 1 * gameState.playerAgentsOnFields.length,
     customAgentFunction: (player, gameState, game) => {
       const currentField = gameState.playerAgentPlacedOnFieldThisTurn;
@@ -366,11 +366,6 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     customAgentFunction: (player, gameState, game) => {
       game.addPlayerGameModifiers(player.id, {
         customActions: [
-          {
-            id: 'mohiam-vision-intrigues',
-            action: 'vision-intrigues',
-            currentRoundOnly: true,
-          },
           {
             id: 'mohiam-vision-deck',
             action: 'vision-deck',

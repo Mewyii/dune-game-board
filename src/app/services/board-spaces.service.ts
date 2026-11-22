@@ -63,7 +63,11 @@ export class BoardSpacesService {
       this.unblockableBoardSpaces = this.boardSpaces.filter((x) => x.isNonBlockingField);
 
       this.spiceAccumulationBoardSpaces = this.boardSpaces
-        .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
+        .filter(
+          (x) =>
+            (x.activeForPlayerCount ? players.length >= x.activeForPlayerCount : true) &&
+            x.rewards.some((x) => x.type === 'spice-accumulation'),
+        )
         .map((x) => x.title.en);
     });
 
@@ -78,7 +82,11 @@ export class BoardSpacesService {
 
       this.unblockableBoardSpaces = this.boardSpaces.filter((x) => x.isNonBlockingField);
       this.spiceAccumulationBoardSpaces = this.boardSpaces
-        .filter((x) => x.rewards.some((x) => x.type === 'spice-accumulation'))
+        .filter(
+          (x) =>
+            (x.activeForPlayerCount ? players.length >= x.activeForPlayerCount : true) &&
+            x.rewards.some((x) => x.type === 'spice-accumulation'),
+        )
         .map((x) => x.title.en);
     });
   }

@@ -84,12 +84,12 @@ export class AIFieldEvaluationService {
     accessibleFields.sort((a, b) => b.value - a.value);
 
     const randomFactor = gameState.isOpeningTurn
-      ? 0.3
+      ? 0.2
       : aiDifficulty === 'hard'
-        ? 0.025
+        ? 0.02
         : aiDifficulty === 'medium'
-          ? 0.075
-          : 0.15;
+          ? 0.05
+          : 0.1;
     const slightlyRandomizedFields = randomizeArray(accessibleFields, randomFactor);
 
     return { preferredFields: slightlyRandomizedFields };

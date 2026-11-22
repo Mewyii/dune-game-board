@@ -50,6 +50,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -73,7 +76,7 @@ export const intrigues: IntrigueCard[] = [
     ],
     combatEffects: [
       {
-        type: 'sword',
+        type: 'loose-troop',
       },
       {
         type: 'sword',
@@ -115,6 +118,9 @@ export const intrigues: IntrigueCard[] = [
       },
     ],
     combatEffects: [
+      {
+        type: 'sword',
+      },
       {
         type: 'sword',
       },
@@ -172,6 +178,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -200,6 +209,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -246,6 +258,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -317,6 +332,12 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -343,6 +364,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -458,6 +482,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -482,6 +509,12 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -524,6 +557,12 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -620,6 +659,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -648,6 +690,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -739,6 +784,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -816,6 +864,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -843,6 +894,9 @@ export const intrigues: IntrigueCard[] = [
       },
     ],
     combatEffects: [
+      {
+        type: 'sword',
+      },
       {
         type: 'sword',
       },
@@ -899,6 +953,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -928,6 +985,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -983,6 +1043,9 @@ export const intrigues: IntrigueCard[] = [
       {
         type: 'sword',
       },
+      {
+        type: 'sword',
+      },
     ],
   },
   {
@@ -1014,6 +1077,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -1112,6 +1178,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',
@@ -1304,6 +1373,9 @@ export const intrigues: IntrigueCard[] = [
       },
       {
         type: 'helper-trade',
+      },
+      {
+        type: 'sword',
       },
       {
         type: 'sword',

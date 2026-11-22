@@ -479,7 +479,8 @@ export class LeadersComponent implements OnInit, OnDestroy {
       this.currentRoundPhase === 'select leaders' ||
       (this.currentRoundPhase === 'agent-placement' && this.activePlayer.turnState === 'revealed') ||
       (this.currentRoundPhase === 'combat' &&
-        (this.activePlayer.turnState === 'done' || this.activePlayerIntrigueCount < 1)) ||
+        (this.activePlayer.turnState === 'done' ||
+          (this.activePlayerIntrigueCount < 1 && this.activePlayerResources.signet < 1))) ||
       this.currentRoundPhase === 'combat-resolvement' ||
       this.turnInfos?.aiStatus === 'working' ||
       this.turnInfos?.aiStatus === 'done' ||

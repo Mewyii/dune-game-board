@@ -102,7 +102,7 @@ export function getRewardEffectEvaluation(
     case 'intrigue':
       return 2 + 0.05 * (gameState.currentRound - 1) - 0.01 * gameState.playerCardsRewards.intrigue;
     case 'persuasion':
-      return 2.6 - 0.1 * (gameState.currentRound - 1) - (gameState.isFinale ? 0.5 : 0);
+      return 2.5 - 0.075 * (gameState.currentRound - 1) - (gameState.isFinale ? 0.5 : 0);
     case 'foldspace':
       return (
         2.1 +
@@ -228,7 +228,10 @@ export function getRewardEffectEvaluationForTurnState(
 
   switch (rewardType) {
     case 'water':
-      const excessWater = gameState.playerResources.water - 3;
+      const defaultWaterCosts = [3];
+
+      const maxDefaultWaterCosts = Math.max(...defaultWaterCosts);
+      const excessWater = gameState.playerResources.water - maxDefaultWaterCosts;
       if (excessWater > 0) {
         return value / (1 + excessWater);
       }
@@ -240,21 +243,31 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.water
       );
     case 'spice':
+      const highCouncilSeatCosts = 5;
+
+      const defaultSpiceCosts = [4];
+      const targetSpiceCosts: number[] = [];
+
+      if (!player.hasCouncilSeat) {
+        targetSpiceCosts.push(highCouncilSeatCosts);
+      }
+
+      const maxSpiceCosts = Math.max(...defaultSpiceCosts, ...targetSpiceCosts);
       const currentSpice = gameState.playerResources.spice;
-      const excessSpice = gameState.playerResources.spice - 7;
+      const excessSpice = gameState.playerResources.spice - maxSpiceCosts;
       if (excessSpice > 0) {
         return value / (1 + excessSpice);
       }
 
-      const highCouncilSeatCosts = 6;
       let spiceRewardModifier = 1;
+      const maxTargetSpiceCosts = Math.max(...targetSpiceCosts);
       if (
         type !== 'cost' &&
-        !player.hasCouncilSeat &&
-        currentSpice < highCouncilSeatCosts &&
-        currentSpice + rewardAmount >= highCouncilSeatCosts
+        maxTargetSpiceCosts > 0 &&
+        currentSpice < maxTargetSpiceCosts &&
+        currentSpice + rewardAmount >= maxTargetSpiceCosts
       ) {
-        const excessSolari = currentSpice + rewardAmount - highCouncilSeatCosts;
+        const excessSolari = currentSpice + rewardAmount - maxTargetSpiceCosts;
         spiceRewardModifier += 0.5 / (1 + excessSolari * 0.1);
       }
 
@@ -265,33 +278,45 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.spice
       );
     case 'solari':
+      const swordMasterCosts = 10;
+      const dreadnoughtCosts = 8;
+
+      const defaultSolariCosts = [6];
+      const targetSolariCosts: number[] = [];
+
+      if (gameState.availableTechTiles.length > 0) {
+        const techTileEvaluationTreshold = 10;
+
+        for (const techTile of gameState.availableTechTiles) {
+          const evaluation = getTechTileBuyEvaluation(techTile, player, gameState, game);
+          if (evaluation > techTileEvaluationTreshold) {
+            targetSolariCosts.push(techTile.costs);
+          }
+        }
+      }
+      if (!player.hasSwordmaster) {
+        targetSolariCosts.push(swordMasterCosts);
+      } else if (gameState.playerDreadnoughtCount < 1) {
+        targetSolariCosts.push(dreadnoughtCosts);
+      }
+
+      const maxSolariCosts = Math.max(...defaultSolariCosts, ...targetSolariCosts);
       const currentSolari = gameState.playerResources.solari;
-      const excessSolari = gameState.playerResources.solari - 11;
+      const excessSolari = gameState.playerResources.solari - maxSolariCosts;
       if (excessSolari > 0) {
         return value / (1 + excessSolari);
       }
 
-      const swordMasterCosts = 10;
       let solariRewardModifier = 1;
+      const maxTargetSolariCosts = Math.max(...targetSolariCosts);
       if (
         type !== 'cost' &&
-        !player.hasSwordmaster &&
-        currentSolari < swordMasterCosts &&
-        currentSolari + rewardAmount >= swordMasterCosts
+        maxTargetSolariCosts > 0 &&
+        currentSolari < maxTargetSolariCosts &&
+        currentSolari + rewardAmount >= maxTargetSolariCosts
       ) {
-        const excessSolari = currentSolari + rewardAmount - swordMasterCosts;
-        solariRewardModifier += 1 / (0.75 + excessSolari * 0.1);
-      }
-
-      const dreadnoughtCosts = 8;
-      if (
-        type !== 'cost' &&
-        gameState.playerDreadnoughtCount < 1 &&
-        currentSolari < dreadnoughtCosts &&
-        currentSolari + rewardAmount >= dreadnoughtCosts
-      ) {
-        const excessSolari = currentSolari + rewardAmount - dreadnoughtCosts;
-        solariRewardModifier += 0.5 / (1 + excessSolari * 0.1);
+        const excessSolari = currentSolari + rewardAmount - maxTargetSolariCosts;
+        solariRewardModifier += 0.75 / (0.75 + excessSolari * 0.1);
       }
 
       return (
@@ -520,16 +545,12 @@ export function getRewardEffectEvaluationForTurnState(
         const possibleLocationControlViaConflict = gameState.conflict?.rewards[0].some(
           (x) => x.type === 'location-control-choice',
         );
-        const possibleLocationControlViaDreadnought = gameState.playerCombatUnits.shipsInCombat > 0;
         const allPlayerAgentsAreOnControllableLocations = gameState.playerAgentsOnFields.every(
           (x) =>
             gameState.freeLocations.includes(x.fieldId) || gameState.enemyLocations.some((y) => x.fieldId === y.locationId),
         );
 
-        return (possibleLocationControlViaConflict || possibleLocationControlViaDreadnought) &&
-          allPlayerAgentsAreOnControllableLocations
-          ? -3
-          : value;
+        return possibleLocationControlViaConflict && allPlayerAgentsAreOnControllableLocations ? -3 : value;
       }
     case 'signet':
       return gameState.playerLeader && gameState.playerLeader.signetTokenOrFieldMarkerValue
