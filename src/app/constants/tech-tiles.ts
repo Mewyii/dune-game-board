@@ -8,7 +8,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 1,
     imageUrl: '/assets/images/action-backgrounds/personal_shield.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'bottom',
     buyEffects: [],
     effects: [
@@ -35,7 +35,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 1,
     imageUrl: ' /assets/images/action-backgrounds/poison_snooper.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'center',
     buyEffects: [],
     effects: [
@@ -79,7 +79,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/leighter_spice_module.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'center',
     buyEffects: [],
     effects: [
@@ -112,7 +112,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/leighter_spy_module.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'top',
     buyEffects: [],
     effects: [
@@ -178,7 +178,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'fremen',
     costs: 2,
     imageUrl: '/assets/images/action-backgrounds/windtraps.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'center',
     buyEffects: [],
     effects: [
@@ -329,7 +329,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/landing_ships.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'center',
     buyEffects: [
       {
@@ -367,7 +367,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 3,
     imageUrl: '/assets/images/action-backgrounds/axolotl_tanks.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'bottom',
     buyEffects: [],
     effects: [
@@ -422,7 +422,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/infrastructure.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'top',
     buyEffects: [
       {
@@ -465,7 +465,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/arrakeen_6.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'top',
     buyEffects: [],
     effects: [
@@ -502,7 +502,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'emperor',
     costs: 4,
     imageUrl: '/assets/images/action-backgrounds/troops_3.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'bottom',
     buyEffects: [],
     effects: [
@@ -623,10 +623,24 @@ export const techTiles: TechTileCard[] = [
     effectSize: 'medium',
     imagePosition: 'bottom',
     buyEffects: [],
-    effects: [],
+    effects: [
+      {
+        type: 'timing-reveal-turn',
+      },
+      {
+        type: 'multiplier-own-agents-on-field-type',
+        action: 'spice',
+      },
+      {
+        type: 'sword',
+      },
+      {
+        type: 'sword',
+      },
+    ],
     customEffect: {
-      en: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf {faction:spice}-Feldern: {resource:sword}',
-      de: '<b>Aufdeckzug:</b> <br>Für jeden deiner Agenten auf <br>{faction:spice}-Feldern: {resource:sword}{resource:sword}',
+      en: '',
+      de: '',
       fontSize: 'small',
     },
   },
@@ -1476,7 +1490,7 @@ export const techTiles: TechTileCard[] = [
     faction: 'emperor',
     costs: 12,
     imageUrl: '/assets/images/action-backgrounds/imperial_camp_2.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'bottom',
     buyEffects: [],
     effects: [
@@ -1513,7 +1527,7 @@ export const techTiles: TechTileCard[] = [
     },
     costs: 14,
     imageUrl: '/assets/images/action-backgrounds/lighter.png',
-    effectSize: 'medium',
+    effectSize: 'large',
     imagePosition: 'center',
     buyEffects: [
       {

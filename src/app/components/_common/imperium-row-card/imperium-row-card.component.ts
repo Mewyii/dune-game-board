@@ -22,8 +22,8 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
   public factionNameSecondary = '';
   public factionColorSecondary = '';
   public factionColorSecondaryDark = '';
-  public agentEffectSize = '30px';
-  public revealEffectSize = '30px';
+  public agentEffectSize = '26px';
+  public revealEffectSize = '26px';
 
   constructor(
     public t: TranslateService,
@@ -44,11 +44,11 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     }
     if (this.card.agentEffectSize) {
       this.agentEffectSize =
-        this.card.agentEffectSize === 'large' ? '30px' : this.card.agentEffectSize === 'medium' ? '21px' : '18px';
+        this.card.agentEffectSize === 'large' ? '28px' : this.card.agentEffectSize === 'medium' ? '20px' : '18px';
     }
     if (this.card.revealEffectSize) {
       this.revealEffectSize =
-        this.card.revealEffectSize === 'large' ? '30px' : this.card.revealEffectSize === 'medium' ? '21px' : '18px';
+        this.card.revealEffectSize === 'large' ? '28px' : this.card.revealEffectSize === 'medium' ? '20px' : '18px';
     }
   }
 
@@ -66,11 +66,11 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
     }
     if (this.card.agentEffectSize) {
       this.agentEffectSize =
-        this.card.agentEffectSize === 'large' ? '30px' : this.card.agentEffectSize === 'medium' ? '21px' : '18px';
+        this.card.agentEffectSize === 'large' ? '28px' : this.card.agentEffectSize === 'medium' ? '20px' : '18px';
     }
     if (this.card.revealEffectSize) {
       this.revealEffectSize =
-        this.card.revealEffectSize === 'large' ? '30px' : this.card.revealEffectSize === 'medium' ? '21px' : '18px';
+        this.card.revealEffectSize === 'large' ? '28px' : this.card.revealEffectSize === 'medium' ? '20px' : '18px';
     }
   }
 

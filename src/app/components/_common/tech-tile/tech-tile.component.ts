@@ -14,7 +14,7 @@ export class TechTileComponent implements OnInit, OnChanges {
   @Input() card!: TechTileCard;
   @Input() costModifier = 0;
 
-  public effectSize = '26px';
+  public effectSize = '24px';
 
   constructor(
     public t: TranslateService,
@@ -23,13 +23,13 @@ export class TechTileComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.card.effectSize) {
-      this.effectSize = this.card.effectSize === 'large' ? '26px' : this.card.effectSize === 'medium' ? '22px' : '18px';
+      this.effectSize = this.card.effectSize === 'large' ? '24px' : this.card.effectSize === 'medium' ? '21px' : '18px';
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.card.effectSize) {
-      this.effectSize = this.card.effectSize === 'large' ? '26px' : this.card.effectSize === 'medium' ? '22px' : '18px';
+      this.effectSize = this.card.effectSize === 'large' ? '24px' : this.card.effectSize === 'medium' ? '21px' : '18px';
     }
   }
 }
