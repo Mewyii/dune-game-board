@@ -103,7 +103,6 @@ export interface GameContent {
   dreadnoughtCombatStrength: number;
   maxPlayerDreadnoughtCount: number;
   maxPlayerIntrigueCount?: number;
-  highCouncilPersuasion: number;
   startingResources: EffectReward[];
   customCards?: CustomCard[];
   recruitmentCardAmount: number;

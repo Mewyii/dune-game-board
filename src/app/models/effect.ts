@@ -52,6 +52,7 @@ export const effectRewards = [
   'sword',
   'sword-master',
   'tech',
+  'tech-or-solari',
   'tech-tile',
   'tech-tile-flip',
   'tech-tile-trash',

@@ -25,7 +25,6 @@ export const gameContentCustomExpert: GameContent = {
   dreadnoughtCombatStrength: 6,
   maxPlayerDreadnoughtCount: 1,
   maxPlayerIntrigueCount: 3,
-  highCouncilPersuasion: 4,
   startingResources: [],
   customCards: customCardsCustomExpert,
   recruitmentCardAmount: 6,
@@ -33,7 +32,7 @@ export const gameContentCustomExpert: GameContent = {
   combatMaxDeployableUnits: 4,
   factionInfluenceMaxScore: 6,
   factionInfluenceAllianceTreshold: 4,
-  imperiumRowCards: 6,
+  imperiumRowCards: 8,
   aiName: 'custom-expert',
   maxPlayers: 6,
   cardAcquiringRules: {

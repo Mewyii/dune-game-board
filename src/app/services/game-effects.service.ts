@@ -176,6 +176,19 @@ export class EffectsService {
     } else if (rewardType === 'tech') {
       this.audioManager.playSound('tech-agent', rewardAmount);
       this.turnInfoService.updatePlayerTurnInfo(playerId, { canBuyTech: true });
+    } else if (rewardType == 'tech-or-solari') {
+      const choiceEffect: StructuredChoiceEffect = {
+        type: 'helper-or',
+        effectLeft: {
+          type: 'reward',
+          effectRewards: [{ type: 'tech' }],
+        },
+        effectRight: {
+          type: 'reward',
+          effectRewards: [{ type: 'solari' }],
+        },
+      };
+      this.playerRewardChoicesService.addPlayerEitherOrChoice(playerId, choiceEffect);
     } else if (rewardType === 'shipping') {
       this.playerRewardChoicesService.addPlayerRewardChoice(playerId, {
         type: 'shipping',
@@ -556,8 +569,20 @@ export class EffectsService {
   private addHighCouncilSeatIfPossible(playerId: number) {
     const player = this.playersService.getPlayer(playerId);
     if (player && !player.hasCouncilSeat) {
+      let highCouncilPersuasionAmount = 1;
+
+      for (const boardSpace of this.boardSpacesService.boardSpaces) {
+        const highCouncilReward = boardSpace.rewards.find(
+          (reward) => reward.type === 'council-seat-large' || reward.type === 'council-seat-small',
+        );
+        if (highCouncilReward) {
+          highCouncilPersuasionAmount = highCouncilReward.amount ?? 1;
+          break;
+        }
+      }
+
       this.audioManager.playSound('high-council');
-      this.playersService.addCouncilSeatToPlayer(playerId);
+      this.playersService.addCouncilSeatToPlayer(playerId, highCouncilPersuasionAmount);
       this.playerRewardChoicesService.addPlayerRewardChoice(playerId, {
         type: 'faction-influence-up-choice',
       });

@@ -160,7 +160,7 @@ export class PlayersService {
     this.playersSubject.next(players);
   }
 
-  addCouncilSeatToPlayer(playerId: number) {
+  addCouncilSeatToPlayer(playerId: number, highCouncilPersuasionAmount: number) {
     const players = this.getPlayers();
 
     const playerIndex = players.findIndex((x) => x.id === playerId);
@@ -168,7 +168,7 @@ export class PlayersService {
     players[playerIndex] = {
       ...player,
       hasCouncilSeat: true,
-      permanentPersuasion: player.permanentPersuasion + this.settingsService.getHighCouncilPersuasionAmount(),
+      permanentPersuasion: player.permanentPersuasion + highCouncilPersuasionAmount,
     };
 
     this.playersSubject.next(players);

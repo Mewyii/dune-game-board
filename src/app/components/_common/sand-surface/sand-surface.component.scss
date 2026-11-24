@@ -1,12 +1,12 @@
 :host {
+  display: block;
+  pointer-events: none;
   // Slightly lighter tint of the surface color, so the frame blends in with the banner.
   // Fallback for browsers without relative color syntax.
   --sand-surface-frame-color: color-mix(in srgb, currentColor 90%, rgb(255, 255, 255));
   @supports (color: hsl(from red h s l)) {
     --sand-surface-frame-color: hsl(from currentColor h calc(s * 1.05) calc(l + 5));
   }
-  display: block;
-  pointer-events: none;
 }
 
 // Intensities can be overridden per usage via these custom properties.

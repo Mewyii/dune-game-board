@@ -55,6 +55,7 @@ export function getRewardEffectEvaluation(
         0.01 * gameState.playerTechTilesRewards.solari
       );
     case 'tech':
+    case 'tech-or-solari':
       return (
         2 +
         0.025 * (gameState.currentRound - 1) -
@@ -278,79 +279,13 @@ export function getRewardEffectEvaluationForTurnState(
         0.25 * gameState.playerTechTilesConversionCosts.spice
       );
     case 'solari':
-      const swordMasterCosts = 10;
-      const dreadnoughtCosts = 8;
-
-      const defaultSolariCosts = [6];
-      const targetSolariCosts: number[] = [];
-
-      if (gameState.availableTechTiles.length > 0) {
-        const techTileEvaluationTreshold = 10;
-
-        for (const techTile of gameState.availableTechTiles) {
-          const evaluation = getTechTileBuyEvaluation(techTile, player, gameState, game);
-          if (evaluation > techTileEvaluationTreshold) {
-            targetSolariCosts.push(techTile.costs);
-          }
-        }
-      }
-      if (!player.hasSwordmaster) {
-        targetSolariCosts.push(swordMasterCosts);
-      } else if (gameState.playerDreadnoughtCount < 1) {
-        targetSolariCosts.push(dreadnoughtCosts);
-      }
-
-      const maxSolariCosts = Math.max(...defaultSolariCosts, ...targetSolariCosts);
-      const currentSolari = gameState.playerResources.solari;
-      const excessSolari = gameState.playerResources.solari - maxSolariCosts;
-      if (excessSolari > 0) {
-        return value / (1 + excessSolari);
-      }
-
-      let solariRewardModifier = 1;
-      const maxTargetSolariCosts = Math.max(...targetSolariCosts);
-      if (
-        type !== 'cost' &&
-        maxTargetSolariCosts > 0 &&
-        currentSolari < maxTargetSolariCosts &&
-        currentSolari + rewardAmount >= maxTargetSolariCosts
-      ) {
-        const excessSolari = currentSolari + rewardAmount - maxTargetSolariCosts;
-        solariRewardModifier += 0.75 / (0.75 + excessSolari * 0.1);
-      }
-
-      return (
-        value * solariRewardModifier -
-        0.05 * gameState.playerResources.solari +
-        0.25 * gameState.playerIntriguesConversionCosts.solari +
-        0.25 * gameState.playerTechTilesConversionCosts.solari
-      );
+      return getSolariEvaluationForTurnState(player, gameState, game, value, rewardAmount, type);
     case 'tech':
-      if (gameState.playerTurnInfos?.canBuyTech) {
-        return 0;
-      }
-
-      const costModifiers = gameState.playerGameModifiers?.techTiles;
-
-      const buyableTechTiles = gameState.availableTechTiles;
-      const availablePlayerSolari = gameState.playerResources.solari;
-      const affordableTechTiles = buyableTechTiles.filter(
-        (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerSolari,
-      );
-
-      if (affordableTechTiles.length > 0) {
-        let highestTechTileEvaluation = 0;
-        for (const techTile of affordableTechTiles) {
-          const evaluation = getTechTileBuyEvaluation(techTile, player, gameState, game);
-          if (evaluation > highestTechTileEvaluation) {
-            highestTechTileEvaluation = evaluation;
-          }
-        }
-
-        return value * 0.1 * highestTechTileEvaluation;
-      }
-
-      return 0;
+      return getTechTileEvaluationForTurnState(player, gameState, game, value);
+    case 'tech-or-solari':
+      const techEvaluation = getTechTileEvaluationForTurnState(player, gameState, game, value);
+      const solariEvaluation = getSolariEvaluationForTurnState(player, gameState, game, value, rewardAmount, type);
+      return techEvaluation > 0 ? techEvaluation : solariEvaluation;
     case 'troop':
       const combatBoardSpace = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
       return (
@@ -654,6 +589,14 @@ export function getRewardEffectEvaluationForTurnState(
         return 0;
       }
     case 'leader-heal':
+      const defaultHealthCosts = [3];
+
+      const maxDefaultHealthCosts = Math.max(...defaultHealthCosts);
+      const excessHealth = gameState.playerResources['leader-heal'] - maxDefaultHealthCosts;
+      if (excessHealth > 0) {
+        return value / (1 + excessHealth);
+      }
+
       return value * 0.35 * (4 - gameState.playerResources['leader-heal']);
     case 'leader-wound':
       return value;
@@ -694,4 +637,94 @@ export function getTechTileBuyEvaluation(
   }
 
   return evaluationValue;
+}
+
+function getTechTileEvaluationForTurnState(
+  player: Player,
+  gameState: GameState,
+  game: AIRewardEffectGameInterface,
+  value: number,
+) {
+  if (gameState.playerTurnInfos?.canBuyTech) {
+    return 0;
+  }
+
+  const costModifiers = gameState.playerGameModifiers?.techTiles;
+
+  const buyableTechTiles = gameState.availableTechTiles;
+  const availablePlayerSolari = gameState.playerResources.solari;
+  const affordableTechTiles = buyableTechTiles.filter(
+    (x) => x.costs + getTechTileCostModifier(x, costModifiers) <= availablePlayerSolari,
+  );
+
+  if (affordableTechTiles.length > 0) {
+    let highestTechTileEvaluation = 0;
+    for (const techTile of affordableTechTiles) {
+      const evaluation = getTechTileBuyEvaluation(techTile, player, gameState, game);
+      if (evaluation > highestTechTileEvaluation) {
+        highestTechTileEvaluation = evaluation;
+      }
+    }
+
+    return value * 0.1 * highestTechTileEvaluation;
+  }
+
+  return 0;
+}
+
+function getSolariEvaluationForTurnState(
+  player: Player,
+  gameState: GameState,
+  game: AIRewardEffectGameInterface,
+  value: number,
+  rewardAmount: number,
+  type: 'cost' | 'reward',
+) {
+  const swordMasterCosts = 10;
+  const dreadnoughtCosts = 8;
+
+  const defaultSolariCosts = [6];
+  const targetSolariCosts: number[] = [];
+
+  if (gameState.availableTechTiles.length > 0) {
+    const techTileEvaluationTreshold = 10;
+
+    for (const techTile of gameState.availableTechTiles) {
+      const evaluation = getTechTileBuyEvaluation(techTile, player, gameState, game);
+      if (evaluation > techTileEvaluationTreshold) {
+        targetSolariCosts.push(techTile.costs);
+      }
+    }
+  }
+  if (!player.hasSwordmaster) {
+    targetSolariCosts.push(swordMasterCosts);
+  } else if (gameState.playerDreadnoughtCount < 1) {
+    targetSolariCosts.push(dreadnoughtCosts);
+  }
+
+  const maxSolariCosts = Math.max(...defaultSolariCosts, ...targetSolariCosts);
+  const currentSolari = gameState.playerResources.solari;
+  const excessSolari = gameState.playerResources.solari - maxSolariCosts;
+  if (excessSolari > 0) {
+    return value / (1 + excessSolari);
+  }
+
+  let solariRewardModifier = 1;
+  const maxTargetSolariCosts = Math.max(...targetSolariCosts);
+  if (
+    type !== 'cost' &&
+    maxTargetSolariCosts > 0 &&
+    currentSolari < maxTargetSolariCosts &&
+    currentSolari + rewardAmount >= maxTargetSolariCosts
+  ) {
+    const excessSolari = currentSolari + rewardAmount - maxTargetSolariCosts;
+    solariRewardModifier += 0.75 / (0.75 + excessSolari * 0.1);
+  }
+
+  return (
+    value * solariRewardModifier -
+    0.05 * gameState.playerResources.solari +
+    0.25 * gameState.playerIntriguesConversionCosts.solari +
+    0.25 * gameState.playerTechTilesConversionCosts.solari
+  );
 }

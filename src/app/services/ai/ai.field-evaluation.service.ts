@@ -322,7 +322,24 @@ export class AIFieldEvaluationService {
 
       result.push(cardDrawOption);
       result.push(cardDestroyOption);
-    } else if (field.rewards.some((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal')) {
+    }
+    if (field.rewards.some((x) => x.type === 'tech-or-solari')) {
+      const techOption = {
+        ...field,
+        title: { ...field.title, en: field.title.en + ' (tech)' },
+        rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'tech-or-solari' ? 'tech' : x.type })),
+      } as ActionField;
+
+      const solariOption = {
+        ...field,
+        title: { ...field.title, en: field.title.en + ' (solari)' },
+        rewards: field.rewards.map((x) => ({ ...x, type: x.type === 'tech-or-solari' ? 'solari' : x.type })),
+      } as ActionField;
+
+      result.push(techOption);
+      result.push(solariOption);
+    }
+    if (field.rewards.some((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal')) {
       const separatorIndex = field.rewards.findIndex((x) => x.type === 'helper-or' || x.type === 'helper-or-horizontal');
 
       const leftOptionRewardType = field.rewards[separatorIndex - 1].type.toLocaleLowerCase();

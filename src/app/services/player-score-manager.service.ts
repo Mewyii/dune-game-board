@@ -183,7 +183,8 @@ export class PlayerScoreManager {
     const playerScores = this.playerScores;
     const playerScoreIndex = playerScores.findIndex((x) => x.playerId === playerId);
     const playerScore = playerScores[playerScoreIndex];
-    const newPlayerScore = playerScore[scoreType] - amount >= 0 ? playerScore[scoreType] - amount : 0;
+    const currentPlayerScore = playerScore[scoreType];
+    const newPlayerScore = currentPlayerScore - amount >= 0 ? currentPlayerScore - amount : 0;
 
     if (playerScore) {
       playerScores[playerScoreIndex] = {
@@ -194,6 +195,20 @@ export class PlayerScoreManager {
       this.playerScoresSubject.next(playerScores);
 
       if (scoreType === 'fremen' || scoreType === 'bene' || scoreType === 'guild' || scoreType === 'emperor') {
+        const factionInfluenceRewards = this.settingsService.factionInfluenceRewards.find(
+          (x) => x.factionId === scoreType,
+        )?.rewards;
+        if (factionInfluenceRewards) {
+          for (let i = newPlayerScore + 1; i <= currentPlayerScore; i++) {
+            const factionScoreRewards = factionInfluenceRewards[i];
+            for (const reward of factionScoreRewards ?? []) {
+              if (reward.type === 'victory-point') {
+                this.removePlayerScore(playerId, 'victoryPoints', reward.amount ?? 1, roundNumber);
+              }
+            }
+          }
+        }
+
         if (newPlayerScore >= this.settingsService.getFactionInfluenceAllianceTreshold()) {
           this.adjustAlliancesBasedOnFactionScore(playerId, scoreType, newPlayerScore, roundNumber);
         }

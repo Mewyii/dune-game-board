@@ -136,6 +136,7 @@ export class BoardEvaluationComponent implements OnInit {
           value += 0.1 * amount;
           break;
         case 'tech':
+        case 'tech-or-solari':
           value += 1.65 * amount;
           break;
         case 'combat':

@@ -2,54 +2,6 @@ import { CustomCard } from 'src/app/models/imperium-card';
 
 export const customCardsCustomExpert: CustomCard[] = [
   {
-    type: 'limited',
-    name: {
-      en: 'Arrakis Liason',
-      de: 'Arrakis Kontakt',
-    },
-    faction: 'fremen',
-    persuasionCosts: 2,
-    fieldAccess: ['town'],
-    imageUrl: '/assets/images/action-backgrounds/stillsuits.png',
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'focus',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-    ],
-    cardAmount: 4,
-  },
-  {
-    type: 'limited',
-    name: {
-      en: 'Bene Gesserit Contact',
-      de: 'Bene Gesserit Kontakt',
-    },
-    faction: 'bene',
-    persuasionCosts: 2,
-    fieldAccess: ['landsraad'],
-    imageUrl: '/assets/images/action-backgrounds/bene_gesserit.png',
-    buyEffects: [],
-    agentEffects: [
-      {
-        type: 'card-draw',
-      },
-    ],
-    revealEffects: [
-      {
-        type: 'persuasion',
-        amount: 1,
-      },
-    ],
-    cardAmount: 4,
-  },
-  {
     type: 'unlimited',
     name: {
       en: 'The Spice Must Flow',

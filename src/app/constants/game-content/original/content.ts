@@ -14,7 +14,6 @@ export const gameContentOriginal: GameContent = {
   troopCombatStrength: 2,
   dreadnoughtCombatStrength: 3,
   maxPlayerDreadnoughtCount: 0,
-  highCouncilPersuasion: 2,
   startingResources: [
     { type: 'water', amount: 1 },
     { type: 'troop', amount: 3 },

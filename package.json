@@ -22,7 +22,7 @@
     "@angular/router": "^20.3.21",
     "@angular/service-worker": "^20.3.21",
     "@tsparticles/angular": "^3.0.0",
-    "html-to-image": "^1.11.11",
+    "html-to-image": "^1.11.13",
     "lodash": "^4.17.21",
     "rxjs": "~7.5.0",
     "tslib": "^2.6.1",

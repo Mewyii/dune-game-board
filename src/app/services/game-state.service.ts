@@ -562,6 +562,7 @@ export class GameStateService {
       sword: 0,
       'sword-master': 0,
       tech: 0,
+      'tech-or-solari': 0,
       'tech-tile': 0,
       'tech-tile-flip': 0,
       'tech-tile-trash': 0,

@@ -26,6 +26,7 @@ export const EFFECT_TYPE_PATHS: Record<EffectType, string> = {
   'sword-master': 'assets/images/reward-markers/marker_agent.png',
   'intrigue-draw': 'assets/images/reward-markers/marker_intrigue_draw.png',
   tech: 'assets/images/reward-markers/marker_tech.png',
+  'tech-or-solari': 'assets/images/reward-markers/marker_tech_or_solari.png',
   'tech-tile': 'assets/images/reward-markers/marker_tech_tile.png',
   dreadnought: 'assets/images/reward-markers/marker_ship.png',
   'helper-trade-horizontal': 'assets/images/reward-markers/marker_helper_arrow_down.png',

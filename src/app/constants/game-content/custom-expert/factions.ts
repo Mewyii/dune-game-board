@@ -160,8 +160,8 @@ export const factionsCustomExpert: Faction[] = [
         title: { de: 'Verbindungen', en: 'Connections' },
         actionType: 'landsraad',
         rewards: [
-          { type: 'troop', amount: 2 },
-          { type: 'helper-or' },
+          { type: 'tech' },
+          { type: 'helper-or', width: 30 },
           { type: 'persuasion', amount: 1 },
           { type: 'persuasion', amount: 1 },
         ],
@@ -201,8 +201,8 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Söldner', en: 'Mercenaries' },
         actionType: 'landsraad',
-        costs: [{ type: 'solari', amount: 3 }],
-        rewards: [{ type: 'troop', amount: 4 }],
+        costs: [{ type: 'solari', amount: 4 }],
+        rewards: [{ type: 'card-draw' }, { type: 'troop', amount: 4 }],
         activeForPlayerCount: 5,
         pathToImage: 'assets/images/action-backgrounds/meeting_3.png',
       },
@@ -234,7 +234,12 @@ export const factionsCustomExpert: Faction[] = [
       {
         title: { de: 'Versorgungslieferung', en: 'Supply Shipment' },
         actionType: 'landsraad',
-        rewards: [{ type: 'tech' }, { type: 'helper-or' }, { type: 'leader-heal' }, { type: 'water' }],
+        rewards: [
+          { type: 'water' },
+          { type: 'helper-or', width: 30 },
+          { type: 'troop', amount: 2 },
+          { type: 'leader-heal' },
+        ],
         pathToImage: 'assets/images/action-backgrounds/freighter.png',
         customWidth: '115px',
         noColumnGap: true,

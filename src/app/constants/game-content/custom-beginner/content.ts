@@ -28,7 +28,6 @@ export const gameContentCustomBeginner: GameContent = {
   dreadnoughtCombatStrength: 5,
   maxPlayerDreadnoughtCount: 2,
   maxPlayerIntrigueCount: 3,
-  highCouncilPersuasion: 4,
   startingResources: [],
   recruitmentCardAmount: 6,
   combatMaxDeployableUnits: 2,

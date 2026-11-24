@@ -39,7 +39,7 @@ export const locations: DuneLocation[] = [
     actionField: {
       title: { de: 'Carthag', en: 'Carthag' },
       actionType: 'town',
-      rewards: [{ type: 'tech' }, { type: 'troop' }, { type: 'combat' }],
+      rewards: [{ type: 'tech-or-solari' }, { type: 'troop' }, { type: 'combat' }],
       pathToImage: 'assets/images/action-backgrounds/arrakeen_11.png',
       ownerReward: { type: 'persuasion', amount: 1 },
     },

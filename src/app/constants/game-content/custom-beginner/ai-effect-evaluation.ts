@@ -54,6 +54,7 @@ export function getRewardEffectEvaluation(
         0.01 * gameState.playerTechTilesRewards.solari
       );
     case 'tech':
+    case 'tech-or-solari':
       return (
         2 +
         0.025 * (gameState.currentRound - 1) -
@@ -267,6 +268,37 @@ export function getRewardEffectEvaluationForTurnState(
         }
       }
       return gameState.playerTurnInfos?.canBuyTech ? 0 : value;
+    case 'tech-or-solari':
+      const buyableTechTiles = gameState.availableTechTiles.filter((x) => x.costs <= gameState.playerResources.solari);
+      if (buyableTechTiles && !gameState.playerTurnInfos?.canBuyTech) {
+        let highestTechTileEvaluation = 0;
+        for (const techTile of buyableTechTiles) {
+          const techTileEvaluation = game.getStructuredEffectsEvaluationForTurnState(
+            techTile.structuredEffects ?? [],
+            player,
+            gameState,
+            undefined,
+            true,
+            targetBoardSpace,
+          );
+          if (techTileEvaluation > highestTechTileEvaluation) {
+            highestTechTileEvaluation = techTileEvaluation;
+          }
+        }
+        return value;
+      } else {
+        const solariValue = getRewardEffectEvaluation('solari', player, gameState, game);
+        if (gameState.playerResources.solari >= 12) {
+          return solariValue * 0.1;
+        }
+
+        return (
+          solariValue -
+          0.05 * gameState.playerResources.solari +
+          0.25 * gameState.playerIntriguesConversionCosts.solari +
+          0.25 * gameState.playerTechTilesConversionCosts.solari
+        );
+      }
     case 'troop':
       const combatBoardSpace = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
       return (

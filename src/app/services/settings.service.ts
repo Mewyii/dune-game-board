@@ -159,10 +159,6 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.startingResources);
   }
 
-  getHighCouncilPersuasionAmount() {
-    return cloneDeep(this.settingsSubject.value.gameContent.highCouncilPersuasion);
-  }
-
   getTroopStrength() {
     return cloneDeep(this.settingsSubject.value.gameContent.troopCombatStrength);
   }
