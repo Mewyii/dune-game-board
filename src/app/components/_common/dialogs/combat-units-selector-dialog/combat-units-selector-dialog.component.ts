@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -26,6 +26,7 @@ export interface CombatUnitsSelectorResult {
   selector: 'dune-board-space-selector-dialog',
   templateUrl: './combat-units-selector-dialog.component.html',
   styleUrl: './combat-units-selector-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CombatUnitsSelectorDialogComponent implements OnInit {

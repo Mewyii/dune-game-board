@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
@@ -14,6 +14,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-tech-tiles',
   templateUrl: './tech-tiles.component.html',
   styleUrls: ['./tech-tiles.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TechTilesComponent implements OnInit, OnDestroy {

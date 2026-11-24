@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AnimationService, Effect } from 'src/app/services/effects/animation.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -6,6 +6,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-particle-effects',
   templateUrl: './particle-effects.component.html',
   styleUrls: ['./particle-effects.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ParticleEffectsComponent implements OnInit {

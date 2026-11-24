@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Conflict } from 'src/app/models/conflict';
@@ -11,6 +11,7 @@ import { ConflictsPreviewDialogComponent } from '../_common/dialogs/conflicts-pr
   selector: 'dune-conflicts',
   templateUrl: './conflicts.component.html',
   styleUrls: ['./conflicts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConflictsComponent implements OnInit, OnDestroy {

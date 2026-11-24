@@ -1,9 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-conflictboard',
   templateUrl: './conflictboard.component.html',
   styleUrls: ['./conflictboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConflictboardComponent implements OnInit, OnDestroy {

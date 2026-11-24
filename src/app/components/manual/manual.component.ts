@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -8,10 +8,15 @@ import { DialogGameManualComponent } from './dialog-game-manual/dialog-game-manu
   selector: 'dune-manual',
   templateUrl: './manual.component.html',
   styleUrl: './manual.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ManualComponent {
-  constructor(public settingsService: SettingsService, private dialog: MatDialog, public t: TranslateService) {}
+  constructor(
+    public settingsService: SettingsService,
+    private dialog: MatDialog,
+    public t: TranslateService,
+  ) {}
 
   onShowManualClicked() {
     this.dialog.open(DialogGameManualComponent, { width: '900px' });

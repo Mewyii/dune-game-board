@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Leader } from 'src/app/constants/leaders';
 import { LanguageString } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -7,6 +7,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-leader-card',
   templateUrl: './leader-card.component.html',
   styleUrls: ['./leader-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LeaderCardComponent implements OnInit, OnChanges {

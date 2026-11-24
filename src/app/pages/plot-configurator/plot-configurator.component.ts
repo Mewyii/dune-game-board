@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
@@ -9,10 +9,11 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { DialogPlotEditorComponent } from './dialog-plot-editor/dialog-plot-editor.component';
 
 @Component({
-    selector: 'dune-plot-configurator',
-    templateUrl: './plot-configurator.component.html',
-    styleUrl: './plot-configurator.component.scss',
-    standalone: false
+  selector: 'dune-plot-configurator',
+  templateUrl: './plot-configurator.component.html',
+  styleUrl: './plot-configurator.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class PlotConfiguratorComponent {
   public imperiumPlots: ImperiumPlot[] = [];
@@ -43,7 +44,7 @@ export class PlotConfiguratorComponent {
   constructor(
     public t: TranslateService,
     public plotConfiguratorService: PlotConfiguratorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {

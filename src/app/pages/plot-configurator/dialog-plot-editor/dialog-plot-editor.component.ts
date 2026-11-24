@@ -1,14 +1,15 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PlotEditorComponent } from '../plot-editor/plot-editor.component';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { TranslateService } from 'src/app/services/translate-service';
+import { PlotEditorComponent } from '../plot-editor/plot-editor.component';
 
 @Component({
-    selector: 'dune-dialog-plot-editor',
-    templateUrl: './dialog-plot-editor.component.html',
-    styleUrls: ['./dialog-plot-editor.component.scss'],
-    standalone: false
+  selector: 'dune-dialog-plot-editor',
+  templateUrl: './dialog-plot-editor.component.html',
+  styleUrls: ['./dialog-plot-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class DialogPlotEditorComponent {
   @ViewChild(PlotEditorComponent) plotEditorComponent!: PlotEditorComponent;
@@ -16,7 +17,8 @@ export class DialogPlotEditorComponent {
   constructor(
     public t: TranslateService,
     public dialogRef: MatDialogRef<DialogPlotEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; imperiumPlot: ImperiumPlot }
+    @Inject(MAT_DIALOG_DATA)
+    public data: { title: string; imperiumPlot: ImperiumPlot },
   ) {}
 
   get dialogTitle(): string {

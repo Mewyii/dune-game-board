@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -14,6 +14,7 @@ import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-i
   selector: 'dune-intrigue-configurator',
   templateUrl: './intrigue-configurator.component.html',
   styleUrl: './intrigue-configurator.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
@@ -25,8 +26,18 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
 
   public totalIntrigueAmount = 0;
 
-  public rewards: { id: string; rewardType: EffectRewardType; amount: number; count: number }[] = [];
-  public costs: { id: string; rewardType: EffectRewardType; amount: number; count: number }[] = [];
+  public rewards: {
+    id: string;
+    rewardType: EffectRewardType;
+    amount: number;
+    count: number;
+  }[] = [];
+  public costs: {
+    id: string;
+    rewardType: EffectRewardType;
+    amount: number;
+    count: number;
+  }[] = [];
 
   constructor(
     public t: TranslateService,
@@ -54,7 +65,12 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.rewards[index].count += intrigue.amount;
             } else {
-              this.rewards.push({ id: crypto.randomUUID(), rewardType: reward.type, amount, count: intrigue.amount });
+              this.rewards.push({
+                id: crypto.randomUUID(),
+                rewardType: reward.type,
+                amount,
+                count: intrigue.amount,
+              });
             }
           }
           for (const cost of costs) {
@@ -64,7 +80,12 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.costs[index].count += intrigue.amount;
             } else {
-              this.costs.push({ id: crypto.randomUUID(), rewardType: cost.type, amount, count: intrigue.amount });
+              this.costs.push({
+                id: crypto.randomUUID(),
+                rewardType: cost.type,
+                amount,
+                count: intrigue.amount,
+              });
             }
           }
         }
@@ -77,7 +98,12 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.rewards[index].count += intrigue.amount;
             } else {
-              this.rewards.push({ id: crypto.randomUUID(), rewardType: reward.type, amount, count: intrigue.amount });
+              this.rewards.push({
+                id: crypto.randomUUID(),
+                rewardType: reward.type,
+                amount,
+                count: intrigue.amount,
+              });
             }
           }
           for (const cost of costs) {
@@ -87,7 +113,12 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.costs[index].count += intrigue.amount;
             } else {
-              this.costs.push({ id: crypto.randomUUID(), rewardType: cost.type, amount, count: intrigue.amount });
+              this.costs.push({
+                id: crypto.randomUUID(),
+                rewardType: cost.type,
+                amount,
+                count: intrigue.amount,
+              });
             }
           }
         }

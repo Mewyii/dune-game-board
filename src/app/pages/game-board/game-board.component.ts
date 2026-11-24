@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgParticlesService } from '@tsparticles/angular';
 import { AppMode } from 'src/app/constants/board-settings';
 import { ActionField, DuneLocation, Faction } from 'src/app/models';
@@ -13,6 +13,7 @@ import { loadFull } from 'tsparticles';
   selector: 'dune-game-board',
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GameBoardComponent implements OnInit, AfterViewInit {

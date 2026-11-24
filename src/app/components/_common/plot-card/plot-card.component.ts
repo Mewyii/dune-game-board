@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angular/core';
 
 import { FactionType } from 'src/app/models';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
@@ -9,6 +9,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-plot-card',
   templateUrl: './plot-card.component.html',
   styleUrl: './plot-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlotCardComponent {

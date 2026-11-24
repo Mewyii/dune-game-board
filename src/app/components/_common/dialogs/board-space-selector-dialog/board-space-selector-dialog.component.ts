@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DuneLocation } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -20,6 +20,7 @@ export interface BoardSpaceSelectorData {
   selector: 'dune-board-space-selector-dialog',
   templateUrl: './board-space-selector-dialog.component.html',
   styleUrl: './board-space-selector-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BoardSpaceSelectorDialogComponent implements OnInit {

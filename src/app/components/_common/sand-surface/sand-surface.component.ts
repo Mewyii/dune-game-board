@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 export type SandSurfaceShape = 'none' | 'banner' | 'panel';
 
@@ -13,7 +13,11 @@ export type SandSurfaceShape = 'none' | 'banner' | 'panel';
   styleUrl: './sand-surface.component.scss',
   standalone: false,
   // Every non-banner shape is an absolutely positioned overlay, so it never takes up space in the host's layout.
-  host: { '[class.shape-banner]': "shape === 'banner'", '[class.shape-overlay]': "shape !== 'banner'" },
+  changeDetection: ChangeDetectionStrategy.Eager,
+  host: {
+    '[class.shape-banner]': "shape === 'banner'",
+    '[class.shape-overlay]': "shape !== 'banner'",
+  },
 })
 export class SandSurfaceComponent {
   private static instanceCounter = 0;

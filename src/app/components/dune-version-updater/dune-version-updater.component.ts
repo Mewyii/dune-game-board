@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppVersionService } from 'src/app/services/app-version.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -8,11 +8,16 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   selector: 'dune-version-updater',
   templateUrl: './dune-version-updater.component.html',
   styleUrl: './dune-version-updater.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DuneVersionUpdaterComponent {
   public appVersionChanged = false;
-  constructor(public t: TranslateService, private appVersionService: AppVersionService, private dialog: MatDialog) {
+  constructor(
+    public t: TranslateService,
+    private appVersionService: AppVersionService,
+    private dialog: MatDialog,
+  ) {
     this.appVersionService.appVersionChanged$.subscribe((appVersionChanged) => {
       this.appVersionChanged = appVersionChanged;
     });
@@ -25,7 +30,7 @@ export class DuneVersionUpdaterComponent {
           'commonUpdateWarningText',
           true,
           this.appVersionService.currentAppVersion,
-          this.appVersionService.newAppVersion
+          this.appVersionService.newAppVersion,
         ),
       },
       width: '750px',

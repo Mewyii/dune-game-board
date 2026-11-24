@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { IntriguesService } from 'src/app/services/intrigues.service';
@@ -19,6 +19,7 @@ export interface IntrigueSelectorData {
   selector: 'dune-intrigues-preview-dialog',
   templateUrl: './intrigues-preview-dialog.component.html',
   styleUrl: './intrigues-preview-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IntriguesPreviewDialogComponent {

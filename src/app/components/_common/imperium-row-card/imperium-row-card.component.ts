@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 import { FactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
@@ -9,6 +9,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-imperium-row-card',
   templateUrl: './imperium-row-card.component.html',
   styleUrls: ['./imperium-row-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImperiumRowCardComponent implements OnInit, OnChanges {

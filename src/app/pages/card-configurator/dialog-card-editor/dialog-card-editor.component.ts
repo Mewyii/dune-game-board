@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import {
@@ -26,6 +26,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-dialog-card-editor',
   templateUrl: './dialog-card-editor.component.html',
   styleUrls: ['./dialog-card-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DialogCardEditorComponent {
@@ -54,7 +55,8 @@ export class DialogCardEditorComponent {
   constructor(
     public t: TranslateService,
     public dialogRef: MatDialogRef<DialogCardEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; imperiumCard: ImperiumCard },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { title: string; imperiumCard: ImperiumCard },
   ) {
     const cardClone = cloneDeep(this.data.imperiumCard);
     this.card = {
@@ -66,8 +68,16 @@ export class DialogCardEditorComponent {
       fieldAccess: cardClone.fieldAccess || [],
       agentEffectSize: cardClone.agentEffectSize || 'large',
       revealEffectSize: cardClone.revealEffectSize || 'large',
-      customAgentEffect: cardClone.customAgentEffect || { en: '', de: '', fontSize: 'medium' },
-      customRevealEffect: cardClone.customRevealEffect || { en: '', de: '', fontSize: 'medium' },
+      customAgentEffect: cardClone.customAgentEffect || {
+        en: '',
+        de: '',
+        fontSize: 'medium',
+      },
+      customRevealEffect: cardClone.customRevealEffect || {
+        en: '',
+        de: '',
+        fontSize: 'medium',
+      },
       rarity: cardClone.rarity || 'normal',
       cardAmount: cardClone.cardAmount || 1,
     };

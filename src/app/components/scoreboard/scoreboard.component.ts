@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
 import { EffectReward } from 'src/app/models';
@@ -18,6 +18,7 @@ interface VictoryPointScore {
   selector: 'app-scoreboard',
   templateUrl: './scoreboard.component.html',
   styleUrls: ['./scoreboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ScoreboardComponent implements OnInit, OnDestroy {

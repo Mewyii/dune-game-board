@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -24,13 +24,20 @@ import {
   selector: 'dune-imperium-row',
   templateUrl: './imperium-row.component.html',
   styleUrls: ['./imperium-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImperiumRowComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
-  imperiumRowCardsLeft: ((ImperiumRowCard | ImperiumRowPlot) & { costModifier: number; isBlocked: boolean })[] = [];
-  imperiumRowCardsRight: ((ImperiumRowCard | ImperiumRowPlot) & { costModifier: number; isBlocked: boolean })[] = [];
+  imperiumRowCardsLeft: ((ImperiumRowCard | ImperiumRowPlot) & {
+    costModifier: number;
+    isBlocked: boolean;
+  })[] = [];
+  imperiumRowCardsRight: ((ImperiumRowCard | ImperiumRowPlot) & {
+    costModifier: number;
+    isBlocked: boolean;
+  })[] = [];
   activeCardId = '';
   hoveredCardId = '';
 
@@ -42,7 +49,10 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
   playerCanCharm = false;
   factionRecruitment: ActiveFactionType[] = [];
   unlimitedCustomCards: ImperiumCard[] = [];
-  limitedCustomCards: (ImperiumDeckCard & { costModifier: number; isBlocked: boolean })[] = [];
+  limitedCustomCards: (ImperiumDeckCard & {
+    costModifier: number;
+    isBlocked: boolean;
+  })[] = [];
 
   constructor(
     public t: TranslateService,
@@ -145,10 +155,16 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
   }
 
   onCharmCardClicked(card: ImperiumRowCard | ImperiumRowPlot) {
-    this.gameModifierService.addPlayerImperiumRowModifier(this.activePlayerId, { cardId: card.id, persuasionAmount: -1 });
+    this.gameModifierService.addPlayerImperiumRowModifier(this.activePlayerId, {
+      cardId: card.id,
+      persuasionAmount: -1,
+    });
     const enemyPlayers = this.playersService.getEnemyPlayers(this.activePlayerId);
     for (const player of enemyPlayers) {
-      this.gameModifierService.addPlayerImperiumRowModifier(player.id, { cardId: card.id, persuasionAmount: 1 });
+      this.gameModifierService.addPlayerImperiumRowModifier(player.id, {
+        cardId: card.id,
+        persuasionAmount: 1,
+      });
     }
   }
 
@@ -187,7 +203,9 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe(() => {
         this.cardsService.shuffleImperiumDeck();
-        this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, { factionRecruitment: [] });
+        this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
+          factionRecruitment: [],
+        });
       });
     }
   }
@@ -215,12 +233,14 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
     });
 
     const cutOff = 5 - this.unlimitedCustomCards.length - this.limitedCustomCards.length;
-    this.imperiumRowCardsLeft = cardsWithPlotCostsAdjusted
-      .slice(0, cutOff)
-      .map((card) => ({ ...card, ...getImperiumCardModifier(card, this.imperiumRowModifiers) }));
-    this.imperiumRowCardsRight = cardsWithPlotCostsAdjusted
-      .slice(cutOff)
-      .map((card) => ({ ...card, ...getImperiumCardModifier(card, this.imperiumRowModifiers) }));
+    this.imperiumRowCardsLeft = cardsWithPlotCostsAdjusted.slice(0, cutOff).map((card) => ({
+      ...card,
+      ...getImperiumCardModifier(card, this.imperiumRowModifiers),
+    }));
+    this.imperiumRowCardsRight = cardsWithPlotCostsAdjusted.slice(cutOff).map((card) => ({
+      ...card,
+      ...getImperiumCardModifier(card, this.imperiumRowModifiers),
+    }));
   }
 
   setCardActive(cardId: string) {

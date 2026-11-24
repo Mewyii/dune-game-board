@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { DialogCardEditorComponent } from '../card-configurator/dialog-card-edit
   selector: 'dune-starting-card-configurator',
   templateUrl: './starting-card-configurator.component.html',
   styleUrls: ['./starting-card-configurator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class StartingCardConfiguratorComponent implements OnInit, OnDestroy {

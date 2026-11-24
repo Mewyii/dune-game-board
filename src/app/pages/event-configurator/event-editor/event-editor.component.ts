@@ -1,12 +1,13 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DuneEvent } from 'src/app/constants/events';
 
 @Component({
-    selector: 'dune-event-editor',
-    templateUrl: './event-editor.component.html',
-    styleUrls: ['./event-editor.component.scss'],
-    standalone: false
+  selector: 'dune-event-editor',
+  templateUrl: './event-editor.component.html',
+  styleUrls: ['./event-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EventEditorComponent implements OnChanges {
   @Input() event: DuneEvent | null = null;

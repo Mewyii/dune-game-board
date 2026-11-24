@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { activeFactionTypes } from 'src/app/models';
@@ -8,6 +8,7 @@ import { ImperiumPlot } from 'src/app/models/imperium-plot';
   selector: 'dune-plot-editor',
   templateUrl: './plot-editor.component.html',
   styleUrls: ['./plot-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlotEditorComponent implements OnInit, OnChanges {

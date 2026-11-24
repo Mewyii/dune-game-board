@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import {
   ActionType,
   effectActionMultipliers,
@@ -19,6 +19,7 @@ export interface SimpleEffect {
   selector: 'dune-effect-selector',
   templateUrl: './effect-selector.component.html',
   styleUrls: ['./effect-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class EffectSelectorComponent {

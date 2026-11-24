@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Faction } from 'src/app/models';
 
 @Component({
-    selector: 'dune-alliance-token',
-    templateUrl: './alliance-token.component.html',
-    styleUrls: ['./alliance-token.component.scss'],
-    standalone: false
+  selector: 'dune-alliance-token',
+  templateUrl: './alliance-token.component.html',
+  styleUrls: ['./alliance-token.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AllianceTokenComponent {
   @Input() faction: Faction = {

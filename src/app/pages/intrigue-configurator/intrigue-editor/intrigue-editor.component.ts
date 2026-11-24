@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -17,6 +17,7 @@ import { IntrigueCard, intriguesTypes, IntrigueType } from 'src/app/models/intri
   selector: 'dune-intrigue-editor',
   templateUrl: './intrigue-editor.component.html',
   styleUrls: ['./intrigue-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IntrigueEditorComponent implements OnInit, OnChanges {

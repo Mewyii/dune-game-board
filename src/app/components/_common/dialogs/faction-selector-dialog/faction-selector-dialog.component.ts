@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActiveFactionType } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -17,6 +17,7 @@ export interface FactionSelectorData {
   selector: 'dune-faction-selector-dialog',
   templateUrl: './faction-selector-dialog.component.html',
   styleUrl: './faction-selector-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class FactionSelectorDialogComponent implements OnInit {

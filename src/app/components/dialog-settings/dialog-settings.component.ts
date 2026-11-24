@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppMode, GameContent } from 'src/app/constants/board-settings';
@@ -10,7 +10,13 @@ import { SettingsService } from 'src/app/services/settings.service';
   templateUrl: './dialog-settings.component.html',
   styleUrls: ['./dialog-settings.component.scss'],
   standalone: false,
-  providers: [{ provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: { clickAction: 'noop' } as MatCheckboxDefaultOptions }],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: MAT_CHECKBOX_DEFAULT_OPTIONS,
+      useValue: { clickAction: 'noop' } as MatCheckboxDefaultOptions,
+    },
+  ],
 })
 export class DialogSettingsComponent {
   public aiDifficulty: AIDIfficultyTypes | undefined;

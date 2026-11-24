@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { ActionField } from 'src/app/models';
@@ -12,6 +12,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-turn-infos',
   templateUrl: './turn-infos.component.html',
   styleUrl: './turn-infos.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TurnInfosComponent implements OnInit, OnDestroy {

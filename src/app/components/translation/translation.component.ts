@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LanguageType } from 'src/app/models';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -9,12 +9,17 @@ import { NotificationComponent } from '../notification/notification.component';
   selector: 'dune-translation',
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TranslationComponent {
   showLanguageSelection = false;
 
-  constructor(public settingsService: SettingsService, private dialog: MatDialog, public t: TranslateService) {}
+  constructor(
+    public settingsService: SettingsService,
+    private dialog: MatDialog,
+    public t: TranslateService,
+  ) {}
 
   onSelectLanguageClicked(language: LanguageType) {
     if (this.settingsService.language !== language) {
@@ -22,11 +27,17 @@ export class TranslationComponent {
 
       if (language === 'de') {
         let dialogRef = this.dialog.open(NotificationComponent, {
-          data: { title: 'Sprache geändert', text: 'Bitte laden Sie diese Seite neu, um die Änderungen zu übernehmen...' },
+          data: {
+            title: 'Sprache geändert',
+            text: 'Bitte laden Sie diese Seite neu, um die Änderungen zu übernehmen...',
+          },
         });
       } else if (language === 'en') {
         let dialogRef = this.dialog.open(NotificationComponent, {
-          data: { title: 'Language changed', text: 'Please reload this page to apply changes...' },
+          data: {
+            title: 'Language changed',
+            text: 'Please reload this page to apply changes...',
+          },
         });
       }
     }

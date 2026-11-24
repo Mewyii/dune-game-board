@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { isActiveFactionType } from 'src/app/helpers/faction-types';
 import { Effect } from 'src/app/models';
 import { BoardSpacesService } from 'src/app/services/board-spaces.service';
@@ -12,6 +12,7 @@ interface FieldValue {
   selector: 'dune-board-evaluation',
   templateUrl: './board-evaluation.component.html',
   styleUrls: ['./board-evaluation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BoardEvaluationComponent implements OnInit {
@@ -39,7 +40,10 @@ export class BoardEvaluationComponent implements OnInit {
             fieldValue += 1.5;
           }
 
-          this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
+          this.fieldValues.push({
+            fieldId: actionField.title.en,
+            value: fieldValue,
+          });
         } else if (fieldHasRewardOptions) {
           const optionalRewards = actionField.rewards.filter(
             (item, index) => index === rewardOptionIndex - 1 || index === rewardOptionIndex + 1,
@@ -62,7 +66,10 @@ export class BoardEvaluationComponent implements OnInit {
             fieldValue += 1.5;
           }
 
-          this.fieldValues.push({ fieldId: actionField.title.en, value: fieldValue });
+          this.fieldValues.push({
+            fieldId: actionField.title.en,
+            value: fieldValue,
+          });
         } else if (actionField.conversionOptions) {
         }
       }

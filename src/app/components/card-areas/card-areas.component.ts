@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-card-areas',
-    templateUrl: './card-areas.component.html',
-    styleUrls: ['./card-areas.component.scss'],
-    standalone: false
+  selector: 'app-card-areas',
+  templateUrl: './card-areas.component.html',
+  styleUrls: ['./card-areas.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class CardAreasComponent implements OnInit {
   constructor() {}

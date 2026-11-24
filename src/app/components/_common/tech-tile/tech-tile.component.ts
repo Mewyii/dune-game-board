@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 import { TechTileCard } from 'src/app/models/tech-tile';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -8,6 +8,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-tech-tile',
   templateUrl: './tech-tile.component.html',
   styleUrl: './tech-tile.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TechTileComponent implements OnInit, OnChanges {

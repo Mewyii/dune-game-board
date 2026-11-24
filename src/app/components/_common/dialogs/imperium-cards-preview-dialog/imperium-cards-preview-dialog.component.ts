@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -21,6 +21,7 @@ export interface ImperiumCardSelectorData {
   selector: 'dune-imperium-cards-preview-dialog',
   templateUrl: './imperium-cards-preview-dialog.component.html',
   styleUrl: './imperium-cards-preview-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImperiumCardsPreviewDialogComponent implements OnInit {

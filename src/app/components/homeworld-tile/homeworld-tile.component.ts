@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { EffectRewardType } from 'src/app/models';
 
@@ -12,6 +12,7 @@ interface HomeworldUpgrade {
   selector: 'dune-homeworld-tile',
   templateUrl: './homeworld-tile.component.html',
   styleUrls: ['./homeworld-tile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HomeworldTileComponent implements OnInit {

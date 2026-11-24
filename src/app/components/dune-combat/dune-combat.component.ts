@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { boardSettings } from 'src/app/constants/board-settings';
 
@@ -21,6 +21,7 @@ export interface CombatScore {
   selector: 'app-dune-combat',
   templateUrl: './dune-combat.component.html',
   styleUrls: ['./dune-combat.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DuneCombatComponent implements OnInit, OnDestroy {

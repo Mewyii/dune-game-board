@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
@@ -14,6 +14,7 @@ import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-pr
   selector: 'dune-intrigues',
   templateUrl: './intrigues.component.html',
   styleUrl: './intrigues.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IntriguesComponent implements OnInit, OnDestroy {

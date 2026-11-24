@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Conflict } from 'src/app/models/conflict';
 import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -7,6 +7,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-conflict-card',
   templateUrl: './conflict-card.component.html',
   styleUrl: './conflict-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConflictCardComponent implements OnInit, OnChanges {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -21,6 +21,7 @@ import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium
   selector: 'dune-player-hand',
   templateUrl: './player-hand.component.html',
   styleUrls: ['./player-hand.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlayerHandComponent implements OnInit, OnDestroy {
@@ -149,7 +150,9 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
 
     const foldspaceCard = this.settingsService.getCustomCards()?.find((x) => x.type === 'foldspace');
     if (foldspaceCard) {
-      this.effectsService.addRewardToPlayer(this.activePlayerId, { type: 'foldspace' });
+      this.effectsService.addRewardToPlayer(this.activePlayerId, {
+        type: 'foldspace',
+      });
     }
 
     this.aiManager.setPreferredFieldsForAIPlayer(this.activePlayerId);

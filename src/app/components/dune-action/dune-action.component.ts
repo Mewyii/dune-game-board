@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ACTION_TYPE_PATHS } from 'src/app/helpers/action-types';
 
@@ -26,6 +26,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'app-dune-action',
   templateUrl: './dune-action.component.html',
   styleUrls: ['./dune-action.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DuneActionComponent implements OnInit, OnChanges {

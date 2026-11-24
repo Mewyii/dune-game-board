@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
@@ -18,6 +18,7 @@ export interface TechTileSelectorData {
   selector: 'dune-tech-tile-selector-dialog',
   templateUrl: './tech-tile-selector-dialog.component.html',
   styleUrl: './tech-tile-selector-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TechTileSelectorDialogComponent implements OnInit {

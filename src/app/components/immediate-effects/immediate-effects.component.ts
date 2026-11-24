@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { cloneDeep } from 'lodash';
@@ -43,6 +43,7 @@ import {
   selector: 'dune-immediate-effects',
   templateUrl: './immediate-effects.component.html',
   styleUrl: './immediate-effects.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImmediateEffectsComponent implements OnInit, OnDestroy {

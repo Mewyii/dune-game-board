@@ -1,22 +1,24 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
-import { LeaderEditorComponent } from '../leader-editor/leader-editor.component';
 import { TranslateService } from 'src/app/services/translate-service';
+import { LeaderEditorComponent } from '../leader-editor/leader-editor.component';
 
 @Component({
-    selector: 'dune-dialog-leader-editor',
-    templateUrl: './dialog-leader-editor.component.html',
-    styleUrls: ['./dialog-leader-editor.component.scss'],
-    standalone: false
+  selector: 'dune-dialog-leader-editor',
+  templateUrl: './dialog-leader-editor.component.html',
+  styleUrls: ['./dialog-leader-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class DialogLeaderEditorComponent {
-  @ViewChild(LeaderEditorComponent) leaderEditorComponent!: LeaderEditorComponent;
+  @ViewChild(LeaderEditorComponent)
+  leaderEditorComponent!: LeaderEditorComponent;
 
   constructor(
     public t: TranslateService,
     public dialogRef: MatDialogRef<DialogLeaderEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; leader: Leader }
+    @Inject(MAT_DIALOG_DATA) public data: { title: string; leader: Leader },
   ) {}
 
   get dialogTitle(): string {

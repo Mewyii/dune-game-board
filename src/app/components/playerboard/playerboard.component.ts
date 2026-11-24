@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -22,6 +22,7 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
   selector: 'app-playerboard',
   templateUrl: './playerboard.component.html',
   styleUrls: ['./playerboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlayerboardComponent implements OnInit, OnDestroy {

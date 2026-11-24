@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Leader } from 'src/app/constants/leaders';
 
@@ -21,6 +21,7 @@ import {
   selector: 'dune-leader-editor',
   templateUrl: './leader-editor.component.html',
   styleUrls: ['./leader-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LeaderEditorComponent implements OnChanges {

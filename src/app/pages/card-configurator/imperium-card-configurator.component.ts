@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,7 @@ import { DialogCardEditorComponent } from './dialog-card-editor/dialog-card-edit
   selector: 'dune-card-configurator',
   templateUrl: './imperium-card-configurator.component.html',
   styleUrls: ['./imperium-card-configurator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
@@ -59,8 +60,18 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
   public totalCardAmount = 0;
   public uniqueCardAmount = 0;
 
-  public resources: { id: string; resourceType: EffectRewardType; amount: number; count: number }[] = [];
-  public activeFilters: { id: string; resourceType: EffectRewardType; amount: number; count: number }[] = [];
+  public resources: {
+    id: string;
+    resourceType: EffectRewardType;
+    amount: number;
+    count: number;
+  }[] = [];
+  public activeFilters: {
+    id: string;
+    resourceType: EffectRewardType;
+    amount: number;
+    count: number;
+  }[] = [];
 
   public shownCardAmount = 0;
   public shownCards: ImperiumCard[] = [];
@@ -145,7 +156,12 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.resources[index].count += cardAmount;
             } else {
-              this.resources.push({ id: crypto.randomUUID(), resourceType: effect.type, amount, count: cardAmount });
+              this.resources.push({
+                id: crypto.randomUUID(),
+                resourceType: effect.type,
+                amount,
+                count: cardAmount,
+              });
             }
           }
         }
@@ -159,7 +175,12 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.resources[index].count += cardAmount;
             } else {
-              this.resources.push({ id: crypto.randomUUID(), resourceType: reward.type, amount, count: cardAmount });
+              this.resources.push({
+                id: crypto.randomUUID(),
+                resourceType: reward.type,
+                amount,
+                count: cardAmount,
+              });
             }
           }
         }
@@ -172,7 +193,12 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
             if (index > -1) {
               this.resources[index].count += cardAmount;
             } else {
-              this.resources.push({ id: crypto.randomUUID(), resourceType: reward.type, amount, count: cardAmount });
+              this.resources.push({
+                id: crypto.randomUUID(),
+                resourceType: reward.type,
+                amount,
+                count: cardAmount,
+              });
             }
 
             if (reward.type === 'persuasion') {
@@ -185,7 +211,12 @@ export class ImperiumCardConfiguratorComponent implements OnInit, OnDestroy {
           if (index > -1) {
             this.resources[index].count += cardAmount;
           } else {
-            this.resources.push({ id: crypto.randomUUID(), resourceType: 'persuasion', amount: 0, count: cardAmount });
+            this.resources.push({
+              id: crypto.randomUUID(),
+              resourceType: 'persuasion',
+              amount: 0,
+              count: cardAmount,
+            });
           }
         }
       }

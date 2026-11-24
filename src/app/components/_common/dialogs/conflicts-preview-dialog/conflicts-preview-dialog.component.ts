@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConflictDeckCard } from 'src/app/services/conflicts.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -16,6 +16,7 @@ export interface ConflictSelectorData {
   selector: 'dune-conflicts-preview-dialog',
   templateUrl: './conflicts-preview-dialog.component.html',
   styleUrl: './conflicts-preview-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConflictsPreviewDialogComponent {

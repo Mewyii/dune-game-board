@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppMode } from 'src/app/constants/board-settings';
 
@@ -14,6 +14,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'app-dune-faction',
   templateUrl: './dune-faction.component.html',
   styleUrls: ['./dune-faction.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DuneFactionComponent implements OnInit, OnDestroy {

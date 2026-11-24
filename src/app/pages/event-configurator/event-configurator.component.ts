@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { DialogEventEditorComponent } from './dialog-event-editor/dialog-event-e
   selector: 'dune-event-configurator',
   templateUrl: './event-configurator.component.html',
   styleUrls: ['./event-configurator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class EventConfiguratorComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-
   selector: 'dune-tech-tile-configurator',
   templateUrl: './tech-tile-configurator.component.html',
   styleUrl: './tech-tile-configurator.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TechTileConfiguratorComponent implements OnInit, OnDestroy {

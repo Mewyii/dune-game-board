@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { aiPersonalities } from 'src/app/constants/ai';
 import { Player } from 'src/app/models/player';
 import { AIPlayer, AIPlayersService } from 'src/app/services/ai/ai-players.service';
@@ -10,6 +10,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-ai-tile',
   templateUrl: './ai-tile.component.html',
   styleUrls: ['./ai-tile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AITileComponent implements OnInit {

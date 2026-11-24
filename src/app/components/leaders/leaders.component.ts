@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { shuffle } from 'lodash';
 import { Subscription } from 'rxjs';
@@ -33,6 +33,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   selector: 'dune-leaders',
   templateUrl: './leaders.component.html',
   styleUrls: ['./leaders.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LeadersComponent implements OnInit, OnDestroy {
@@ -63,7 +64,10 @@ export class LeadersComponent implements OnInit, OnDestroy {
   playerHouses: PlayerHouse[] = [];
   houseTitle: LanguageString = { de: 'haus', en: 'house' };
 
-  playerTechTiles: (PlayerTechTile & { hasActiveEffect: boolean; hasActiveFunction: boolean })[] = [];
+  playerTechTiles: (PlayerTechTile & {
+    hasActiveEffect: boolean;
+    hasActiveFunction: boolean;
+  })[] = [];
   activeTechTileId = '';
   hoveredTechTileId = '';
 
@@ -386,26 +390,38 @@ export class LeadersComponent implements OnInit, OnDestroy {
   onPlayerCanEnterCombatClicked(playerId: number) {
     if (!this.turnInfos?.canEnterCombat) {
       let deployableUnits = this.settingsService.getCombatMaxDeployableUnits();
-      this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: true, deployableUnits });
+      this.turnInfoService.setPlayerTurnInfo(playerId, {
+        canEnterCombat: true,
+        deployableUnits,
+      });
     } else {
-      this.turnInfoService.setPlayerTurnInfo(playerId, { canEnterCombat: false, deployableUnits: 0 });
+      this.turnInfoService.setPlayerTurnInfo(playerId, {
+        canEnterCombat: false,
+        deployableUnits: 0,
+      });
     }
   }
 
   onPlayerCanBuyTechClicked(playerId: number) {
-    this.turnInfoService.setPlayerTurnInfo(playerId, { canBuyTech: !this.turnInfos?.canBuyTech });
+    this.turnInfoService.setPlayerTurnInfo(playerId, {
+      canBuyTech: !this.turnInfos?.canBuyTech,
+    });
   }
 
   onAIIncreaseInfluenceChoiceClicked(playerId: number) {
     if (this.activePlayer) {
-      this.effectsService.addRewardToPlayer(playerId, { type: 'faction-influence-up-choice' });
+      this.effectsService.addRewardToPlayer(playerId, {
+        type: 'faction-influence-up-choice',
+      });
       this.gameManager.aiResolveRewardChoices(this.activePlayer);
     }
   }
 
   onAIDecreaseInfluenceChoiceClicked(playerId: number) {
     if (this.activePlayer) {
-      this.effectsService.payCostForPlayer(playerId, { type: 'faction-influence-down-choice' });
+      this.effectsService.payCostForPlayer(playerId, {
+        type: 'faction-influence-down-choice',
+      });
       this.gameManager.aiResolveRewardChoices(this.activePlayer);
     }
   }

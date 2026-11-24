@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { compact } from 'lodash';
 import { isFactionType } from 'src/app/helpers/faction-types';
@@ -23,6 +23,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-additional-player-actions-dialog',
   templateUrl: './additional-player-actions-dialog.component.html',
   styleUrl: './additional-player-actions-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AdditionalPlayerActionsDialogComponent implements OnInit {
@@ -108,7 +109,11 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
       for (const player of players) {
         this.gameModifiersService.addPlayerGameModifiers(player.id, {
           fieldBlock: [
-            { id: 'manual-block-' + actionField.title.en, fieldId: actionField.title.en, currentRoundOnly: true },
+            {
+              id: 'manual-block-' + actionField.title.en,
+              fieldId: actionField.title.en,
+              currentRoundOnly: true,
+            },
           ],
         });
       }
@@ -153,7 +158,9 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
   }
 
   onSetPlayerCanRetreatUnitsClicked() {
-    this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, { canRetreatUnits: !this.playerCanRetreatUnits });
+    this.turnInfoService.setPlayerTurnInfo(this.activePlayerId, {
+      canRetreatUnits: !this.playerCanRetreatUnits,
+    });
   }
 
   fieldIsBlocked(actionField: ActionField) {

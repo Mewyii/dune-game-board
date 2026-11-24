@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -23,6 +23,7 @@ interface ConflictRewardSummary {
   selector: 'dune-conflict-configurator',
   templateUrl: './conflict-configurator.component.html',
   styleUrls: ['./conflict-configurator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConflictConfiguratorComponent implements OnInit, OnDestroy {
@@ -215,7 +216,12 @@ export class ConflictConfiguratorComponent implements OnInit, OnDestroy {
           if (existing) {
             existing.count += 1;
           } else {
-            rewardCounts.set(id, { id, rewardType: reward.type, amount, count: 1 });
+            rewardCounts.set(id, {
+              id,
+              rewardType: reward.type,
+              amount,
+              count: 1,
+            });
           }
         }
       }

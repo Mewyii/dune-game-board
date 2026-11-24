@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import {
@@ -25,6 +25,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-dialog-tech-tile-editor',
   templateUrl: './dialog-tech-tile-editor.component.html',
   styleUrls: ['./dialog-tech-tile-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DialogTechTileEditorComponent {
@@ -52,7 +53,8 @@ export class DialogTechTileEditorComponent {
   constructor(
     public t: TranslateService,
     public dialogRef: MatDialogRef<DialogTechTileEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; techTile: TechTileCard },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { title: string; techTile: TechTileCard },
   ) {
     this.techTile = cloneDeep(this.data.techTile);
     this.editMode = this.techTile.name.en !== '';

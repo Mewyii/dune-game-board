@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
 
@@ -15,6 +15,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-player-overview',
   templateUrl: './player-overview.component.html',
   styleUrl: './player-overview.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlayerOverviewComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -6,6 +6,7 @@ import { SettingsService } from 'src/app/services/settings.service';
   selector: 'dune-soundcloud-player',
   templateUrl: './soundcloud-player.component.html',
   styleUrl: './soundcloud-player.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SoundcloudPlayerComponent implements OnInit, AfterViewInit, OnDestroy {

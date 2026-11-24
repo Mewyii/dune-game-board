@@ -1,4 +1,13 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DuneLocation } from 'src/app/models';
 
@@ -12,6 +21,7 @@ import { PlayersService } from 'src/app/services/players.service';
   selector: 'dune-location',
   templateUrl: './dune-location.component.html',
   styleUrls: ['./dune-location.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DuneLocationComponent implements OnInit, OnChanges, OnDestroy {

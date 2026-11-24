@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogGameManualComponent } from 'src/app/components/manual/dialog-game-manual/dialog-game-manual.component';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -7,12 +7,16 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-game-manual',
   templateUrl: './game-manual.component.html',
   styleUrls: ['./game-manual.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GameManualComponent {
   public isFullScreen = false;
 
-  constructor(public t: TranslateService, private dialog: MatDialog) {
+  constructor(
+    public t: TranslateService,
+    private dialog: MatDialog,
+  ) {
     addEventListener('fullscreenchange', (event) => {
       this.isFullScreen = !!document.fullscreenElement;
     });

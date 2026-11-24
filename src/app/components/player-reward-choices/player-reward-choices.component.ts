@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
 import { StructuredConversionEffect, StructuredRewardEffect } from 'src/app/models';
@@ -19,6 +19,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   selector: 'dune-player-reward-choices',
   templateUrl: './player-reward-choices.component.html',
   styleUrl: './player-reward-choices.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlayerRewardChoicesComponent implements OnInit {

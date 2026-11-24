@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leade
   selector: 'dune-leader-configurator',
   templateUrl: './leader-configurator.component.html',
   styleUrls: ['./leader-configurator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LeaderConfiguratorComponent implements OnInit, OnDestroy {

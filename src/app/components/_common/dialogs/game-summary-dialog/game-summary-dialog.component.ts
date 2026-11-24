@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { Player } from 'src/app/models/player';
@@ -30,6 +30,7 @@ interface PlayerSummary {
   selector: 'dune-game-summary-dialog',
   templateUrl: './game-summary-dialog.component.html',
   styleUrl: './game-summary-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GameSummaryDialogComponent implements OnInit {

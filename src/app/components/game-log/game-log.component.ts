@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 
 import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
 
@@ -6,6 +14,7 @@ import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
   selector: 'dune-game-log',
   templateUrl: './game-log.component.html',
   styleUrl: './game-log.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GameLogComponent implements OnInit, AfterViewInit {
