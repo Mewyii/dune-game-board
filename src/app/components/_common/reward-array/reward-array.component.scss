@@ -1,13 +1,14 @@
 .effect-arrays-container {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 4px;
-  flex-wrap: wrap;
 }
 
 .effects-container {
+  min-width: 100%;
   text-align: center;
 }
 
