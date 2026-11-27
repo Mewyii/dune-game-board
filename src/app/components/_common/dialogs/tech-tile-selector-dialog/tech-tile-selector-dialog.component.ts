@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TechTileDeckCard } from 'src/app/services/tech-tiles.service';
@@ -22,17 +22,14 @@ export interface TechTileSelectorData {
   standalone: false,
 })
 export class TechTileSelectorDialogComponent implements OnInit {
+  gameManager = inject(GameManager);
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<TechTileSelectorDialogComponent>>(MatDialogRef);
+  data = inject<TechTileSelectorData>(MAT_DIALOG_DATA);
+
   public techTiles: TechTileDeckCard[] = [];
   selectedCard: TechTileDeckCard | null = null;
   hoveredBoardSpaceId = '';
-
-  constructor(
-    public gameManager: GameManager,
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<TechTileSelectorDialogComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: TechTileSelectorData,
-  ) {}
 
   ngOnInit(): void {
     this.techTiles = this.data.techTiles;

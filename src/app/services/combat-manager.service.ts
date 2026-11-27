@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { getPlayerdreadnoughtCount } from '../helpers/combat';
 import { Player } from '../models/player';
 import { LoggingService } from './log.service';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface PlayerCombatUnits {
   playerId: number;
@@ -25,21 +26,16 @@ export interface PlayerCombatScore {
   providedIn: 'root',
 })
 export class CombatManager {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private settingsService = inject(SettingsService);
+  private loggingService = inject(LoggingService);
+
   private playerCombatUnitsSubject = new BehaviorSubject<PlayerCombatUnits[]>([]);
   playerCombatUnits$ = this.playerCombatUnitsSubject.asObservable();
 
-  constructor(
-    private settingsService: SettingsService,
-    private loggingService: LoggingService,
-  ) {
-    const playerCombatUnitsString = localStorage.getItem('playerCombatUnits');
-    if (playerCombatUnitsString) {
-      const playerCombatUnits = JSON.parse(playerCombatUnitsString) as PlayerCombatUnits[];
-      this.playerCombatUnitsSubject.next(playerCombatUnits);
-    }
-
-    this.playerCombatUnits$.subscribe((playerCombatUnits) => {
-      localStorage.setItem('playerCombatUnits', JSON.stringify(playerCombatUnits));
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('playerCombatUnits', this.playerCombatUnitsSubject, {
+      scope: 'game',
     });
   }
 

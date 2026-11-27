@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
@@ -18,6 +18,14 @@ import { IntriguesPreviewDialogComponent } from '../_common/dialogs/intrigues-pr
   standalone: false,
 })
 export class IntriguesComponent implements OnInit, OnDestroy {
+  private intriguesService = inject(IntriguesService);
+  private gameManager = inject(GameManager);
+  private gameModifierService = inject(GameModifiersService);
+  private audioManager = inject(AudioManager);
+  private dialog = inject(MatDialog);
+  private aiManager = inject(AIManager);
+  private playersService = inject(PlayersService);
+
   @Input() showIntrigueDiscardPile = false;
   subscriptions: Subscription[] = [];
 
@@ -25,16 +33,6 @@ export class IntriguesComponent implements OnInit, OnDestroy {
   hasIntrigueVision = false;
   intrigueStackIsActive = false;
   intrigueDiscardPileTopCard: IntrigueDeckCard | undefined;
-
-  constructor(
-    private intriguesService: IntriguesService,
-    private gameManager: GameManager,
-    private gameModifierService: GameModifiersService,
-    private audioManager: AudioManager,
-    private dialog: MatDialog,
-    private aiManager: AIManager,
-    private playersService: PlayersService,
-  ) {}
 
   ngOnInit(): void {
     const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {

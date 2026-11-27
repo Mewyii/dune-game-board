@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { shuffle } from 'lodash';
 import { imperiumCardsGameAdjustments } from 'src/app/constants/imperium-cards-game-adjustments';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from 'src/app/helpers/cards';
@@ -24,7 +24,7 @@ import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
   providedIn: 'root',
 })
 export class AICardsService {
-  constructor(private effectEvaluationService: AIEffectEvaluationService) {}
+  private effectEvaluationService = inject(AIEffectEvaluationService);
 
   getCardToPlay(playerHandCards: ImperiumDeckCard[], player: Player, gameState: GameState, preferredField?: ActionField) {
     let usableCards = playerHandCards;

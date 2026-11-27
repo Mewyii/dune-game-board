@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppMode, VictoryPointReward } from 'src/app/constants/board-settings';
 import { EffectReward } from 'src/app/models';
@@ -22,6 +22,12 @@ interface VictoryPointScore {
   standalone: false,
 })
 export class ScoreboardComponent implements OnInit, OnDestroy {
+  private playersService = inject(PlayersService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private settingsService = inject(SettingsService);
+  private effectsService = inject(EffectsService);
+  private aiManager = inject(AIManager);
+
   @Input() mode: AppMode = 'board';
 
   subscriptions: Subscription[] = [];
@@ -36,14 +42,6 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
   finaleTriggerHigh: number | undefined;
 
   playerColors: { [key: number]: string } = {};
-
-  constructor(
-    private playersService: PlayersService,
-    private playerScoreManager: PlayerScoreManager,
-    private settingsService: SettingsService,
-    private effectsService: EffectsService,
-    private aiManager: AIManager,
-  ) {}
 
   ngOnInit(): void {
     const playerScoresSub = this.playerScoreManager.playerScores$.subscribe((playerScores) => {

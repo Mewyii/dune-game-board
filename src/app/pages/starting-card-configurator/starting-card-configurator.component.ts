@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -17,6 +17,10 @@ import { DialogCardEditorComponent } from '../card-configurator/dialog-card-edit
   standalone: false,
 })
 export class StartingCardConfiguratorComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  cardConfiguratorService = inject(CardConfiguratorService);
+  private dialog = inject(MatDialog);
+
   subscriptions: Subscription[] = [];
 
   public startingCards: ImperiumCard[] = [];
@@ -41,12 +45,6 @@ export class StartingCardConfiguratorComponent implements OnInit, OnDestroy {
   };
 
   public totalCardAmount = 0;
-
-  constructor(
-    public t: TranslateService,
-    public cardConfiguratorService: CardConfiguratorService,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     const startingCardsSub = this.cardConfiguratorService.startingCards$.subscribe((startingCards) => {

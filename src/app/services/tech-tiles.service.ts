@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
 import { GameState } from 'src/app/models/ai';
@@ -10,6 +10,7 @@ import { Player } from '../models/player';
 import { TechTileCard } from '../models/tech-tile';
 import { TechTileConfiguratorService } from './configurators/tech-tile-configurator.service';
 import { GameModifiers } from './game-modifier.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface TechTileDeckCard extends TechTileCard {
   id: string;
@@ -28,6 +29,9 @@ export interface PlayerTechTile {
   providedIn: 'root',
 })
 export class TechTilesService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private techTilesConfigService = inject(TechTileConfiguratorService);
+
   private techTileDeckSubject = new BehaviorSubject<TechTileDeckCard[]>([]);
   techTileDeck$ = this.techTileDeckSubject.asObservable();
   availableTechTiles$ = this.techTileDeckSubject.pipe(map((x) => x.slice(0, 3)));
@@ -35,26 +39,10 @@ export class TechTilesService {
   private playerTechTilesSubject = new BehaviorSubject<PlayerTechTile[]>([]);
   playerTechTiles$ = this.playerTechTilesSubject.asObservable();
 
-  constructor(private techTilesConfigService: TechTileConfiguratorService) {
-    const techTileDeckString = localStorage.getItem('techTileDeck');
-    if (techTileDeckString) {
-      const techTileDeck = JSON.parse(techTileDeckString) as TechTileDeckCard[];
-      this.techTileDeckSubject.next(techTileDeck);
-    }
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('techTileDeck', this.techTileDeckSubject, { scope: 'game' });
 
-    this.techTileDeck$.subscribe((techTileDeck) => {
-      localStorage.setItem('techTileDeck', JSON.stringify(techTileDeck));
-    });
-
-    const playerTechTilesString = localStorage.getItem('playerTechTiles');
-    if (playerTechTilesString) {
-      const playerTechTiles = JSON.parse(playerTechTilesString) as PlayerTechTile[];
-      this.playerTechTilesSubject.next(playerTechTiles);
-    }
-
-    this.playerTechTiles$.subscribe((playerTechTiles) => {
-      localStorage.setItem('playerTechTiles', JSON.stringify(playerTechTiles));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('playerTechTiles', this.playerTechTilesSubject, { scope: 'game' });
   }
 
   get techTileDeck() {

@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { Effect, EffectRewardType, EffectType } from '../models';
 import { StructuredChoiceEffectWithGameElement, StructuredConversionEffectWithGameElement } from '../models/turn-info';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface PlayerRewardChoice<T> {
   id: string;
@@ -33,6 +34,8 @@ export interface ImmediateEffect {
   providedIn: 'root',
 })
 export class PlayerRewardChoicesService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private playersRewardChoicesSubject = new BehaviorSubject<PlayerRewardChoices[]>([]);
   playersRewardChoices$ = this.playersRewardChoicesSubject.asObservable().pipe(distinctUntilChanged());
 
@@ -50,32 +53,19 @@ export class PlayerRewardChoicesService {
   playersRewardChoicesBeingProcessed$ = this.playersRewardChoicesBeingProcessedSubject.asObservable();
 
   constructor() {
-    const playerRewardChoicesString = localStorage.getItem('playerRewardChoices');
-    if (playerRewardChoicesString) {
-      const playerRewardChoices = JSON.parse(playerRewardChoicesString) as PlayerRewardChoices[];
-      this.playersRewardChoicesSubject.next(playerRewardChoices);
-    }
-
-    this.playersRewardChoices$.subscribe((playerRewardChoices) => {
-      localStorage.setItem('playerRewardChoices', JSON.stringify(playerRewardChoices));
+    this.gameStatePersistenceService.bindSubjectToStorage('playerRewardChoices', this.playersRewardChoicesSubject, {
+      scope: 'game',
     });
 
-    const playerRewardChoicesNeedingProcessingString = localStorage.getItem('playerRewardChoicesNeedingProcessing');
-    if (playerRewardChoicesNeedingProcessingString) {
-      const playerRewardChoicesNeedingProcessing: [number, string[]][] = JSON.parse(
-        playerRewardChoicesNeedingProcessingString,
-      );
-      this.playersRewardChoicesNeedingProcessingSubject.next(
-        new Map<number, string[]>(playerRewardChoicesNeedingProcessing),
-      );
-    }
-
-    this.playersRewardChoicesNeedingProcessing$.subscribe((playerRewardChoicesNeedingProcessing) => {
-      localStorage.setItem(
-        'playerRewardChoicesNeedingProcessing',
-        JSON.stringify(Array.from(playerRewardChoicesNeedingProcessing.entries())),
-      );
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage(
+      'playerRewardChoicesNeedingProcessing',
+      this.playersRewardChoicesNeedingProcessingSubject,
+      {
+        scope: 'game',
+        toStorable: (choicesNeedingProcessing) => Array.from(choicesNeedingProcessing.entries()),
+        fromStorable: (storedEntries: [number, string[]][]) => new Map<number, string[]>(storedEntries),
+      },
+    );
   }
 
   get playersRewardChoices() {

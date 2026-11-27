@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges, inject } from '@angular/core';
 
 import { FactionType } from 'src/app/models';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
@@ -13,16 +13,14 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class PlotCardComponent {
+  t = inject(TranslateService);
+  settingsService = inject(SettingsService);
+
   @Input() plot!: ImperiumPlot;
   @Input() costModifier = 0;
 
   public factionName = '';
   public factionColor = '';
-
-  constructor(
-    public t: TranslateService,
-    public settingsService: SettingsService,
-  ) {}
 
   ngOnInit(): void {
     if (this.plot.faction) {

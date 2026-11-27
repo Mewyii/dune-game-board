@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import {
@@ -29,6 +29,13 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class DialogTechTileEditorComponent {
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogTechTileEditorComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    techTile: TechTileCard;
+  }>(MAT_DIALOG_DATA);
+
   techTile!: TechTileCard;
   editMode = false;
 
@@ -50,12 +57,7 @@ export class DialogTechTileEditorComponent {
   fontSizes = ['large', 'medium', 'small'];
   imagePositions = ['top', 'center', 'bottom'];
 
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogTechTileEditorComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: { title: string; techTile: TechTileCard },
-  ) {
+  constructor() {
     this.techTile = cloneDeep(this.data.techTile);
     this.editMode = this.techTile.name.en !== '';
   }

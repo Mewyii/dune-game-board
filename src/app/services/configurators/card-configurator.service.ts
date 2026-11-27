@@ -1,40 +1,31 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { imperiumCards } from 'src/app/constants/imperium-cards';
 import { startingCards } from 'src/app/constants/starting-cards';
 import { ImperiumCard } from 'src/app/models/imperium-card';
 import { TranslateService } from '../translate-service';
+import { GameStatePersistenceService } from '../persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CardConfiguratorService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private imperiumCardsSubject = new BehaviorSubject<ImperiumCard[]>(imperiumCards);
   imperiumCards$ = this.imperiumCardsSubject.asObservable();
 
   private startingCardsSubject = new BehaviorSubject<ImperiumCard[]>(startingCards);
   startingCards$ = this.startingCardsSubject.asObservable();
 
-  constructor(t: TranslateService) {
-    const imperiumCardsString = localStorage.getItem('imperiumCards');
-    if (imperiumCardsString) {
-      const imperiumCards = JSON.parse(imperiumCardsString) as ImperiumCard[];
-      this.imperiumCardsSubject.next(imperiumCards);
-    }
-
-    this.imperiumCards$.subscribe((imperiumCards) => {
-      localStorage.setItem('imperiumCards', JSON.stringify(imperiumCards));
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('imperiumCards', this.imperiumCardsSubject, {
+      scope: 'host-setup',
     });
 
-    const startingCardsString = localStorage.getItem('startingCards');
-    if (startingCardsString) {
-      const startingCards = JSON.parse(startingCardsString) as ImperiumCard[];
-      this.startingCardsSubject.next(startingCards);
-    }
-
-    this.startingCards$.subscribe((startingCards) => {
-      localStorage.setItem('startingCards', JSON.stringify(startingCards));
+    this.gameStatePersistenceService.bindSubjectToStorage('startingCards', this.startingCardsSubject, {
+      scope: 'host-setup',
     });
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
@@ -16,6 +16,10 @@ import { DialogPlotEditorComponent } from './dialog-plot-editor/dialog-plot-edit
   standalone: false,
 })
 export class PlotConfiguratorComponent {
+  t = inject(TranslateService);
+  plotConfiguratorService = inject(PlotConfiguratorService);
+  private dialog = inject(MatDialog);
+
   public imperiumPlots: ImperiumPlot[] = [];
   public showControls = true;
   public imagePadding = 0;
@@ -40,12 +44,6 @@ export class PlotConfiguratorComponent {
   };
 
   public totalPlotAmount = 0;
-
-  constructor(
-    public t: TranslateService,
-    public plotConfiguratorService: PlotConfiguratorService,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     this.plotConfiguratorService.imperiumPlots$.subscribe((imperiumPlots) => {

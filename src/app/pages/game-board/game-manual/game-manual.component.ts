@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogGameManualComponent } from 'src/app/components/manual/dialog-game-manual/dialog-game-manual.component';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -11,12 +11,12 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class GameManualComponent {
+  t = inject(TranslateService);
+  private dialog = inject(MatDialog);
+
   public isFullScreen = false;
 
-  constructor(
-    public t: TranslateService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
     addEventListener('fullscreenchange', (event) => {
       this.isFullScreen = !!document.fullscreenElement;
     });

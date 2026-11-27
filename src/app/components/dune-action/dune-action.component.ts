@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ACTION_TYPE_PATHS } from 'src/app/helpers/action-types';
 
@@ -30,6 +30,17 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class DuneActionComponent implements OnInit, OnChanges {
+  t = inject(TranslateService);
+  private gameManager = inject(GameManager);
+  private playersService = inject(PlayersService);
+  private audioManager = inject(AudioManager);
+  private cardsService = inject(CardsService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private gameModifierService = inject(GameModifiersService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playerResourcesService = inject(PlayerResourcesService);
+  private boardSpaceService = inject(BoardSpacesService);
+
   @Input() actionField: ActionField = {
     title: { de: 'fremenkrieger', en: 'fremen warriors' },
     actionType: 'fremen',
@@ -75,19 +86,6 @@ export class DuneActionComponent implements OnInit, OnChanges {
   public isActiveForPlayerCount = true;
 
   subscriptions: Subscription[] = [];
-
-  constructor(
-    public t: TranslateService,
-    private gameManager: GameManager,
-    private playersService: PlayersService,
-    private audioManager: AudioManager,
-    private cardsService: CardsService,
-    private playerScoreManager: PlayerScoreManager,
-    private gameModifierService: GameModifiersService,
-    private playerAgentsService: PlayerAgentsService,
-    private playerResourcesService: PlayerResourcesService,
-    private boardSpaceService: BoardSpacesService,
-  ) {}
 
   ngOnInit(): void {
     this.actionCosts = this.actionField.costs ?? [];

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DuneEvent } from 'src/app/constants/events';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -12,13 +12,14 @@ import { EventEditorComponent } from '../event-editor/event-editor.component';
   standalone: false,
 })
 export class DialogEventEditorComponent {
-  @ViewChild(EventEditorComponent) eventEditorComponent!: EventEditorComponent;
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogEventEditorComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    event: DuneEvent;
+  }>(MAT_DIALOG_DATA);
 
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogEventEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; event: DuneEvent },
-  ) {}
+  @ViewChild(EventEditorComponent) eventEditorComponent!: EventEditorComponent;
 
   get dialogTitle(): string {
     return this.data.title;

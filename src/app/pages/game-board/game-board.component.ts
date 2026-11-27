@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { NgParticlesService } from '@tsparticles/angular';
 import { AppMode } from 'src/app/constants/board-settings';
 import { ActionField, DuneLocation, Faction } from 'src/app/models';
@@ -17,6 +17,11 @@ import { loadFull } from 'tsparticles';
   standalone: false,
 })
 export class GameBoardComponent implements OnInit, AfterViewInit {
+  private settingsService = inject(SettingsService);
+  private locationsService = inject(LocationsService);
+  private roundService = inject(RoundService);
+  private readonly ngParticlesService = inject(NgParticlesService);
+
   @ViewChild('gameBoardContainer', { static: true }) gameBoardRef!: ElementRef;
 
   currentRound = 0;
@@ -41,12 +46,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   useTechTiles = false;
   useDreadnoughts = false;
 
-  constructor(
-    private settingsService: SettingsService,
-    private locationsService: LocationsService,
-    private roundService: RoundService,
-    private readonly ngParticlesService: NgParticlesService,
-  ) {
+  constructor() {
     this.settingsService.gameContent$.subscribe((gameContent) => {
       this.factions = gameContent.factions;
       this.ix = gameContent.useTech;

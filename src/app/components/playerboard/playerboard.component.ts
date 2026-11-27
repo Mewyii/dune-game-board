@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -26,6 +26,18 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
   standalone: false,
 })
 export class PlayerboardComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  private gameManager = inject(GameManager);
+  private playersService = inject(PlayersService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private combatManager = inject(CombatManager);
+  private leadersService = inject(LeadersService);
+  private cardsService = inject(CardsService);
+  private audioManager = inject(AudioManager);
+  private settingsService = inject(SettingsService);
+  private dialog = inject(MatDialog);
+  private roundService = inject(RoundService);
+
   subscriptions: Subscription[] = [];
 
   players: Player[] = [];
@@ -40,20 +52,6 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
   maxPlayers = 0;
 
   allLeadersLockedIn = false;
-
-  constructor(
-    public t: TranslateService,
-    private gameManager: GameManager,
-    private playersService: PlayersService,
-    private playerScoreManager: PlayerScoreManager,
-    private combatManager: CombatManager,
-    private leadersService: LeadersService,
-    private cardsService: CardsService,
-    private audioManager: AudioManager,
-    private settingsService: SettingsService,
-    private dialog: MatDialog,
-    private roundService: RoundService,
-  ) {}
 
   ngOnInit(): void {
     const playersSub = this.playersService.players$.subscribe((players) => {

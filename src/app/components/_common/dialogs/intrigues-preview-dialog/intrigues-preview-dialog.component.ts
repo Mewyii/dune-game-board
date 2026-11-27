@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
 import { IntriguesService } from 'src/app/services/intrigues.service';
@@ -23,16 +23,13 @@ export interface IntrigueSelectorData {
   standalone: false,
 })
 export class IntriguesPreviewDialogComponent {
+  private intriguesService = inject(IntriguesService);
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<IntriguesPreviewDialogComponent>>(MatDialogRef);
+  data = inject<IntrigueSelectorData>(MAT_DIALOG_DATA);
+
   selectedIntrigue: IntrigueDeckCard | null = null;
   hoveredCardId = '';
-
-  constructor(
-    private intriguesService: IntriguesService,
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<IntriguesPreviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: IntrigueSelectorData,
-  ) {}
 
   get isSelectMode(): boolean {
     return this.data.mode === 'select';

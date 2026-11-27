@@ -1,30 +1,29 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { mergeObjects } from '../helpers/common';
 import { TurnInfo } from '../models/turn-info';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TurnInfoService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private turnInfosSubject = new BehaviorSubject<TurnInfo[]>([]);
   turnInfos$ = this.turnInfosSubject.asObservable();
 
   constructor() {
-    const turnInfosString = localStorage.getItem('turnInfos');
-    if (turnInfosString) {
-      const turnInfos = JSON.parse(turnInfosString) as TurnInfo[];
-      this.turnInfosSubject.next(turnInfos);
+    const hasRestoredTurnInfos = this.gameStatePersistenceService.bindSubjectToStorage('turnInfos', this.turnInfosSubject, {
+      scope: 'game',
+    });
 
-      for (const turnInfo of turnInfos) {
+    if (hasRestoredTurnInfos) {
+      for (const turnInfo of this.turnInfosSubject.value) {
         this.setPlayerTurnInfo(turnInfo.playerId, { aiStatus: 'ready' });
       }
     }
-
-    this.turnInfos$.subscribe((turnInfos) => {
-      localStorage.setItem('turnInfos', JSON.stringify(turnInfos));
-    });
   }
 
   get turnInfos() {

@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { ResourceType } from '../models';
 import { Player } from '../models/player';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export type Resources = {
   [key in ResourceType]: number;
@@ -18,6 +19,9 @@ export interface PlayerResources {
   providedIn: 'root',
 })
 export class PlayerResourcesService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private settingsService = inject(SettingsService);
+
   private playersResourcesSubject = new BehaviorSubject<PlayerResources[]>([]);
   playersResources$ = this.playersResourcesSubject.asObservable();
   playerResources$ = (playerId: number) =>
@@ -26,15 +30,9 @@ export class PlayerResourcesService {
       distinctUntilChanged(),
     );
 
-  constructor(private settingsService: SettingsService) {
-    const playersResourcesString = localStorage.getItem('playerResources');
-    if (playersResourcesString) {
-      const playersResources = JSON.parse(playersResourcesString) as PlayerResources[];
-      this.playersResourcesSubject.next(playersResources);
-    }
-
-    this.playersResources$.subscribe((playersResources) => {
-      localStorage.setItem('playerResources', JSON.stringify(playersResources));
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('playerResources', this.playersResourcesSubject, {
+      scope: 'game',
     });
   }
 

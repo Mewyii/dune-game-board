@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -21,6 +21,8 @@ import { IntrigueCard, intriguesTypes, IntrigueType } from 'src/app/models/intri
   standalone: false,
 })
 export class IntrigueEditorComponent implements OnInit, OnChanges {
+  private fb = inject(FormBuilder);
+
   @Input() intrigue: IntrigueCard | null = null;
 
   intrigueForm!: FormGroup;
@@ -30,7 +32,7 @@ export class IntrigueEditorComponent implements OnInit, OnChanges {
   rewardTypes = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) => a.localeCompare(b));
   effectTypes = [...effectChoices, ...effectConversions, ...effectTargets, ...effectMultipliers, ...this.rewardTypes];
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.initForm();
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { sum } from 'lodash';
 import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modifiers';
 import { DuneLocation } from 'src/app/models';
@@ -17,14 +17,12 @@ export type AIVariableValues = 'good' | 'okay' | 'bad';
   providedIn: 'root',
 })
 export class AIBoardSpacesService {
-  constructor(
-    private settingsService: SettingsService,
-    private boardSpacesService: BoardSpacesService,
-    private locationsService: LocationsService,
-    private effectEvaluationService: AIEffectEvaluationService,
-    private playerResourcesService: PlayerResourcesService,
-    private aiPlayersService: AIPlayersService,
-  ) {}
+  private settingsService = inject(SettingsService);
+  private boardSpacesService = inject(BoardSpacesService);
+  private locationsService = inject(LocationsService);
+  private effectEvaluationService = inject(AIEffectEvaluationService);
+  private playerResourcesService = inject(PlayerResourcesService);
+  private aiPlayersService = inject(AIPlayersService);
 
   getLocationToControl(player: Player, gameState: GameState) {
     const locationsWithPlayerAgents = this.locationsService.locations.filter((x) =>

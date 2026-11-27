@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { isActiveFactionType } from 'src/app/helpers/faction-types';
 import { Effect } from 'src/app/models';
 import { BoardSpacesService } from 'src/app/services/board-spaces.service';
@@ -16,9 +16,9 @@ interface FieldValue {
   standalone: false,
 })
 export class BoardEvaluationComponent implements OnInit {
-  public fieldValues: FieldValue[] = [];
+  boardSpacesService = inject(BoardSpacesService);
 
-  constructor(public boardSpacesService: BoardSpacesService) {}
+  public fieldValues: FieldValue[] = [];
 
   ngOnInit(): void {
     this.boardSpacesService.boardSpaces$.subscribe((boardSpaces) => {

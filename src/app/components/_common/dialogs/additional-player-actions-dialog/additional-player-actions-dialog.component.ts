@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { compact } from 'lodash';
 import { isFactionType } from 'src/app/helpers/faction-types';
@@ -27,6 +27,21 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class AdditionalPlayerActionsDialogComponent implements OnInit {
+  t = inject(TranslateService);
+  private dialogRef = inject<MatDialogRef<AdditionalPlayerActionsDialogComponent>>(MatDialogRef);
+  private audioManager = inject(AudioManager);
+  private gameManager = inject(GameManager);
+  private playersService = inject(PlayersService);
+  private boardSpacesService = inject(BoardSpacesService);
+  private locationsService = inject(LocationsService);
+  private settingsService = inject(SettingsService);
+  private gameModifiersService = inject(GameModifiersService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private turnInfoService = inject(TurnInfoService);
+  private roundService = inject(RoundService);
+  private effectsService = inject(EffectsService);
+  private aiManager = inject(AIManager);
+
   activePlayer: Player | undefined;
   activePlayerId: number = 0;
 
@@ -35,23 +50,6 @@ export class AdditionalPlayerActionsDialogComponent implements OnInit {
 
   activePlayerScore: PlayerScore | undefined;
   playerCanRetreatUnits: boolean | undefined;
-
-  constructor(
-    public t: TranslateService,
-    private dialogRef: MatDialogRef<AdditionalPlayerActionsDialogComponent>,
-    private audioManager: AudioManager,
-    private gameManager: GameManager,
-    private playersService: PlayersService,
-    private boardSpacesService: BoardSpacesService,
-    private locationsService: LocationsService,
-    private settingsService: SettingsService,
-    private gameModifiersService: GameModifiersService,
-    private playerScoreManager: PlayerScoreManager,
-    private turnInfoService: TurnInfoService,
-    private roundService: RoundService,
-    private effectsService: EffectsService,
-    private aiManager: AIManager,
-  ) {}
 
   ngOnInit(): void {
     this.gameManager.activePlayer$.subscribe((activePlayer) => {

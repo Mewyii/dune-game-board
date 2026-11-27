@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { Player } from 'src/app/models/player';
@@ -34,18 +34,16 @@ interface PlayerSummary {
   standalone: false,
 })
 export class GameSummaryDialogComponent implements OnInit {
+  private dialogRef = inject<MatDialogRef<GameSummaryDialogComponent>>(MatDialogRef);
+  t = inject(TranslateService);
+  private playersService = inject(PlayersService);
+  private leadersService = inject(LeadersService);
+  private loggingService = inject(LoggingService);
+  private playerScoreManager = inject(PlayerScoreManager);
+
   public players: Player[] = [];
 
   public playerSummaries: PlayerSummary[] = [];
-
-  constructor(
-    private dialogRef: MatDialogRef<GameSummaryDialogComponent>,
-    public t: TranslateService,
-    private playersService: PlayersService,
-    private leadersService: LeadersService,
-    private loggingService: LoggingService,
-    private playerScoreManager: PlayerScoreManager,
-  ) {}
 
   ngOnInit(): void {
     this.players = this.playersService.getPlayers();

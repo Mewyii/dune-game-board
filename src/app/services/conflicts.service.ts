@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { Conflict } from '../models/conflict';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface ConflictDeckCard extends Conflict {
   id: string;
@@ -13,6 +14,9 @@ export interface ConflictDeckCard extends Conflict {
   providedIn: 'root',
 })
 export class ConflictsService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private settingsService = inject(SettingsService);
+
   private conflictStackSubject = new BehaviorSubject<ConflictDeckCard[]>([]);
   conflictStack$ = this.conflictStackSubject.asObservable();
 
@@ -22,31 +26,12 @@ export class ConflictsService {
   private conflictDiscardPileSubject = new BehaviorSubject<ConflictDeckCard[]>([]);
   conflictDiscardPile$ = this.conflictDiscardPileSubject.asObservable();
 
-  constructor(private settingsService: SettingsService) {
-    const conflictStackString = localStorage.getItem('conflictStack');
-    if (conflictStackString) {
-      const conflictStack = JSON.parse(conflictStackString) as ConflictDeckCard[];
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('conflictStack', this.conflictStackSubject, { scope: 'game' });
 
-      this.conflictStackSubject.next(conflictStack);
-    }
-
-    this.conflictStack$.subscribe((conflictStack) => {
-      localStorage.setItem('conflictStack', JSON.stringify(conflictStack));
-    });
-
-    const currentConflictString = localStorage.getItem('currentConflict');
-    if (currentConflictString) {
-      const currentConflict = JSON.parse(currentConflictString) as ConflictDeckCard | undefined;
-
-      this.currentConflictSubject.next(currentConflict);
-    }
-
-    this.currentConflict$.subscribe((currentConflict) => {
-      if (currentConflict) {
-        localStorage.setItem('currentConflict', JSON.stringify(currentConflict));
-      } else {
-        localStorage.removeItem('currentConflict');
-      }
+    this.gameStatePersistenceService.bindSubjectToStorage('currentConflict', this.currentConflictSubject, {
+      scope: 'game',
+      fromStorable: (storedConflict) => storedConflict ?? undefined,
     });
   }
 

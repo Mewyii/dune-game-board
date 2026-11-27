@@ -1,25 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Leader, leaders } from 'src/app/constants/leaders';
+import { GameStatePersistenceService } from '../persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LeaderConfiguratorService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private leadersSubject = new BehaviorSubject<Leader[]>(leaders);
   leaders$ = this.leadersSubject.asObservable();
 
   constructor() {
-    const leadersString = localStorage.getItem('leaders');
-    if (leadersString) {
-      const leaders = JSON.parse(leadersString) as Leader[];
-      this.leadersSubject.next(leaders);
-    }
-
-    this.leaders$.subscribe((leaders) => {
-      localStorage.setItem('leaders', JSON.stringify(leaders));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('leaders', this.leadersSubject, { scope: 'host-setup' });
   }
 
   get leaders() {

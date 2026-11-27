@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppVersionService } from 'src/app/services/app-version.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -12,12 +12,12 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   standalone: false,
 })
 export class DuneVersionUpdaterComponent {
+  t = inject(TranslateService);
+  private appVersionService = inject(AppVersionService);
+  private dialog = inject(MatDialog);
+
   public appVersionChanged = false;
-  constructor(
-    public t: TranslateService,
-    private appVersionService: AppVersionService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
     this.appVersionService.appVersionChanged$.subscribe((appVersionChanged) => {
       this.appVersionChanged = appVersionChanged;
     });

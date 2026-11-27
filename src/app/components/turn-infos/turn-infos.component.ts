@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { ActionField } from 'src/app/models';
@@ -16,6 +16,11 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class TurnInfosComponent implements OnInit, OnDestroy {
+  private gameManager = inject(GameManager);
+  private turnInfoService = inject(TurnInfoService);
+  t = inject(TranslateService);
+  private settingsService = inject(SettingsService);
+
   subscriptions: Subscription[] = [];
 
   activePlayerId = 0;
@@ -26,13 +31,6 @@ export class TurnInfosComponent implements OnInit, OnDestroy {
   showTechTilesFlippedThisTurn = false;
   showTechTilesBoughtThisTurn = false;
   showIntriguesPlayedThisTurn = false;
-
-  constructor(
-    private gameManager: GameManager,
-    private turnInfoService: TurnInfoService,
-    public t: TranslateService,
-    private settingsService: SettingsService,
-  ) {}
 
   ngOnInit(): void {
     const activePlayerIdSub = this.gameManager.activePlayerId$.subscribe((activePlayerId) => {

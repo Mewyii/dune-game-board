@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -10,6 +10,8 @@ import { SettingsService } from 'src/app/services/settings.service';
   standalone: false,
 })
 export class SoundcloudPlayerComponent implements OnInit, AfterViewInit, OnDestroy {
+  private settingsService = inject(SettingsService);
+
   @Input() musicId = 0;
   @Input() type: 'tracks' | 'playlists' = 'tracks';
   @Input() volume = 50;
@@ -23,8 +25,6 @@ export class SoundcloudPlayerComponent implements OnInit, AfterViewInit, OnDestr
   public widget: Widget | undefined;
 
   subscriptions: Subscription[] = [];
-
-  constructor(private settingsService: SettingsService) {}
 
   ngOnInit(): void {
     const autoPlaySub = this.settingsService.autoplayMusic$.subscribe((value) => {

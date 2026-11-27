@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Conflict } from 'src/app/models/conflict';
@@ -13,11 +13,15 @@ export interface ConflictConfiguratorEntry {
   providedIn: 'root',
 })
 export class ConflictConfiguratorService {
+  private settingsService = inject(SettingsService);
+
   private conflictsSubject = new BehaviorSubject<ConflictConfiguratorEntry[]>([]);
   conflicts$ = this.conflictsSubject.asObservable();
 
-  constructor(private settingsService: SettingsService) {
-    this.conflictsSubject.next(this.settingsService.getConflicts().map((conflict) => ({ id: crypto.randomUUID(), conflict })));
+  constructor() {
+    this.conflictsSubject.next(
+      this.settingsService.getConflicts().map((conflict) => ({ id: crypto.randomUUID(), conflict })),
+    );
     this.conflicts$.subscribe((conflicts) => {
       this.settingsService.setConflicts(conflicts.map((entry) => entry.conflict));
     });
@@ -32,9 +36,7 @@ export class ConflictConfiguratorService {
   }
 
   editConflict(id: string, conflict: Conflict) {
-    this.conflictsSubject.next(
-      this.conflicts.map((entry) => (entry.id === id ? { ...entry, conflict } : entry)),
-    );
+    this.conflictsSubject.next(this.conflicts.map((entry) => (entry.id === id ? { ...entry, conflict } : entry)));
   }
 
   deleteConflict(id: string) {

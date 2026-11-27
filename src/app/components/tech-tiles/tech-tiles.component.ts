@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { getTechTileCostModifier } from 'src/app/helpers/game-modifiers';
@@ -18,6 +18,11 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class TechTilesComponent implements OnInit, OnDestroy {
+  gameManager = inject(GameManager);
+  techTilesService = inject(TechTilesService);
+  t = inject(TranslateService);
+  private gameModifierService = inject(GameModifiersService);
+
   subscriptions: Subscription[] = [];
 
   public availableTechTiles: TechTileDeckCard[] = [];
@@ -27,12 +32,6 @@ export class TechTilesComponent implements OnInit, OnDestroy {
 
   public activePlayerId: number = 0;
   public techTileModifiers: TechTileModifier[] | undefined;
-  constructor(
-    public gameManager: GameManager,
-    public techTilesService: TechTilesService,
-    public t: TranslateService,
-    private gameModifierService: GameModifiersService,
-  ) {}
 
   ngOnInit(): void {
     const availableTechTilesSub = this.techTilesService.availableTechTiles$.subscribe((techTiles) => {

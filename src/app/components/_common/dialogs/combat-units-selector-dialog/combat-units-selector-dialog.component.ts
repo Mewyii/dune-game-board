@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -30,20 +30,17 @@ export interface CombatUnitsSelectorResult {
   standalone: false,
 })
 export class CombatUnitsSelectorDialogComponent implements OnInit {
+  gameManager = inject(GameManager);
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<CombatUnitsSelectorDialogComponent, CombatUnitsSelectorResult>>(MatDialogRef);
+  data = inject<CombatUnitsSelectorData>(MAT_DIALOG_DATA);
+
   selectedTroops: number[] = [];
   selectedDreadnoughts: number[] = [];
   selectedTotal: number = 0;
   hoveredUnitId = '';
   minSelected = 1;
   maxSelected = 1;
-
-  constructor(
-    public gameManager: GameManager,
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<CombatUnitsSelectorDialogComponent, CombatUnitsSelectorResult>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: CombatUnitsSelectorData,
-  ) {}
 
   ngOnInit(): void {
     if (this.data.minSelected) {

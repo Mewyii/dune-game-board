@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 
 import { getSeparatedEffectArrays, isConditionalEffect, isTargetEffect, isTimingEffect } from 'src/app/helpers/rewards';
 import { LocaleType } from 'src/app/locales';
@@ -90,6 +90,8 @@ function isTextRewardType(type: EffectType): type is TextRewardType {
   standalone: false,
 })
 export class RewardArrayComponent implements OnInit, OnChanges {
+  t = inject(TranslateService);
+
   public effectArrays: EffectTimingConditionChoiceConversionMultiplierTargetOrReward[][] = [];
   @Input() rewards: Effect[] = [];
   @Input() size: string = '30px';
@@ -105,8 +107,6 @@ export class RewardArrayComponent implements OnInit, OnChanges {
   public effectGap = '4px';
   public effectGapLarge = '6px';
   public rewardEffectMargin = '0px 0px';
-
-  constructor(public t: TranslateService) {}
 
   ngOnChanges(): void {
     this.setEffectArraysAndSizes();

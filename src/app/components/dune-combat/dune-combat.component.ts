@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { boardSettings } from 'src/app/constants/board-settings';
 
@@ -25,6 +25,14 @@ export interface CombatScore {
   standalone: false,
 })
 export class DuneCombatComponent implements OnInit, OnDestroy {
+  settingsService = inject(SettingsService);
+  private combatManager = inject(CombatManager);
+  private playersService = inject(PlayersService);
+  private audioManager = inject(AudioManager);
+  private turnInfoService = inject(TurnInfoService);
+  private effectsService = inject(EffectsService);
+  private gameManager = inject(GameManager);
+
   @Input() useDreadnoughts = false;
 
   subscriptions: Subscription[] = [];
@@ -66,16 +74,6 @@ export class DuneCombatComponent implements OnInit, OnDestroy {
   };
 
   playerColors: { [key: number]: string } = {};
-
-  constructor(
-    public settingsService: SettingsService,
-    private combatManager: CombatManager,
-    private playersService: PlayersService,
-    private audioManager: AudioManager,
-    private turnInfoService: TurnInfoService,
-    private effectsService: EffectsService,
-    private gameManager: GameManager,
-  ) {}
 
   ngOnInit(): void {
     this.combatScoreArray = new Array(this.maxCombatScore);

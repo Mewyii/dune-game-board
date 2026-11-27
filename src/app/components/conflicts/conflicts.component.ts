@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Conflict } from 'src/app/models/conflict';
@@ -15,14 +15,12 @@ import { ConflictsPreviewDialogComponent } from '../_common/dialogs/conflicts-pr
   standalone: false,
 })
 export class ConflictsComponent implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
+  conflictsService = inject(ConflictsService);
+  private gameManager = inject(GameManager);
+  private gameModifierService = inject(GameModifiersService);
+  private dialog = inject(MatDialog);
 
-  constructor(
-    public conflictsService: ConflictsService,
-    private gameManager: GameManager,
-    private gameModifierService: GameModifiersService,
-    private dialog: MatDialog,
-  ) {}
+  subscriptions: Subscription[] = [];
 
   public currentConflict: Conflict | undefined;
   public activePlayerId = 0;

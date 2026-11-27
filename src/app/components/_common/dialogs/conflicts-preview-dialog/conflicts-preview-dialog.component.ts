@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConflictDeckCard } from 'src/app/services/conflicts.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -20,14 +20,12 @@ export interface ConflictSelectorData {
   standalone: false,
 })
 export class ConflictsPreviewDialogComponent {
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<ConflictsPreviewDialogComponent>>(MatDialogRef);
+  data = inject<ConflictSelectorData>(MAT_DIALOG_DATA);
+
   selectedConflict: ConflictDeckCard | null = null;
   hoveredCardId = '';
-
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<ConflictsPreviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConflictSelectorData,
-  ) {}
 
   get isSelectMode(): boolean {
     return this.data.mode === 'select';

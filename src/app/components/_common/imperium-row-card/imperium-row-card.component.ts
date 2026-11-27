@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 
 import { FactionType } from 'src/app/models';
 import { ImperiumCard } from 'src/app/models/imperium-card';
@@ -13,6 +13,9 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class ImperiumRowCardComponent implements OnInit, OnChanges {
+  t = inject(TranslateService);
+  settingsService = inject(SettingsService);
+
   @Input() card!: ImperiumCard;
   @Input() costModifier = 0;
   @Input() disabled = false;
@@ -25,11 +28,6 @@ export class ImperiumRowCardComponent implements OnInit, OnChanges {
   public factionColorSecondaryDark = '';
   public agentEffectSize = '26px';
   public revealEffectSize = '26px';
-
-  constructor(
-    public t: TranslateService,
-    public settingsService: SettingsService,
-  ) {}
 
   ngOnInit(): void {
     if (this.card.faction) {

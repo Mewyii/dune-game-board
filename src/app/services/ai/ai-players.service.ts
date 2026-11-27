@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { AIPersonality } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { aiPersonalities } from '../../constants/ai';
 import { ViableField } from './ai.field-evaluation.service';
+import { GameStatePersistenceService } from '../persistence/game-state-persistence.service';
 
 export interface AIPlayer {
   playerId: number;
@@ -23,6 +24,8 @@ export type AIDIfficultyTypes = 'easy' | 'medium' | 'hard';
   providedIn: 'root',
 })
 export class AIPlayersService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private aiPlayersSubject = new BehaviorSubject<AIPlayer[]>([]);
   aiPlayers$ = this.aiPlayersSubject.asObservable();
 
@@ -33,35 +36,13 @@ export class AIPlayersService {
   aiDifficulty$ = this.aiDifficultySubject.asObservable();
 
   constructor() {
-    const aiPlayersString = localStorage.getItem('aiPlayers');
-    if (aiPlayersString) {
-      const aiPlayers = JSON.parse(aiPlayersString) as AIPlayer[];
-      this.aiPlayersSubject.next(aiPlayers);
-    }
+    this.gameStatePersistenceService.bindSubjectToStorage('aiPlayers', this.aiPlayersSubject, { scope: 'game' });
 
-    this.aiPlayers$.subscribe((aiPlayers) => {
-      localStorage.setItem('aiPlayers', JSON.stringify(aiPlayers));
+    this.gameStatePersistenceService.bindSubjectToStorage('activeAIPlayerId', this.activeAIPlayerIdSubject, {
+      scope: 'game',
     });
 
-    const activeAIPlayerIdString = localStorage.getItem('activeAIPlayerId');
-    if (activeAIPlayerIdString) {
-      const activeAIPlayerId = JSON.parse(activeAIPlayerIdString) as number;
-      this.activeAIPlayerIdSubject.next(activeAIPlayerId);
-    }
-
-    this.activeAIPlayerId$.subscribe((activeAIPlayerId) => {
-      localStorage.setItem('activeAIPlayerId', JSON.stringify(activeAIPlayerId));
-    });
-
-    const aiDifficultyString = localStorage.getItem('aiDifficulty');
-    if (aiDifficultyString) {
-      const aiDifficulty = JSON.parse(aiDifficultyString) as AIDIfficultyTypes;
-      this.aiDifficultySubject.next(aiDifficulty);
-    }
-
-    this.aiDifficulty$.subscribe((aiDifficulty) => {
-      localStorage.setItem('aiDifficulty', JSON.stringify(aiDifficulty));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('aiDifficulty', this.aiDifficultySubject, { scope: 'game' });
   }
 
   get aiPlayers() {

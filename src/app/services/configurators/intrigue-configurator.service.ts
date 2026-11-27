@@ -1,26 +1,21 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { intrigues } from 'src/app/constants/intrigues';
 import { IntrigueCard } from 'src/app/models/intrigue';
+import { GameStatePersistenceService } from '../persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IntrigueConfiguratorService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private intriguesSubject = new BehaviorSubject<IntrigueCard[]>(intrigues);
   intrigues$ = this.intriguesSubject.asObservable();
 
   constructor() {
-    const intriguesString = localStorage.getItem('intrigues');
-    if (intriguesString) {
-      const intrigues = JSON.parse(intriguesString) as IntrigueCard[];
-      this.intriguesSubject.next(intrigues);
-    }
-
-    this.intrigues$.subscribe((intrigues) => {
-      localStorage.setItem('intrigues', JSON.stringify(intrigues));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('intrigues', this.intriguesSubject, { scope: 'host-setup' });
   }
 
   get intrigues() {

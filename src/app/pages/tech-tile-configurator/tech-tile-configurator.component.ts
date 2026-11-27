@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -16,6 +16,10 @@ import { DialogTechTileEditorComponent } from './dialog-tech-tile-editor/dialog-
   standalone: false,
 })
 export class TechTileConfiguratorComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  techTilesService = inject(TechTileConfiguratorService);
+  private dialog = inject(MatDialog);
+
   subscriptions: Subscription[] = [];
 
   public techTiles: TechTileCard[] = [];
@@ -25,12 +29,6 @@ export class TechTileConfiguratorComponent implements OnInit, OnDestroy {
   public totalTechTileAmount = 0;
 
   public costs = new Map<number, number>();
-
-  constructor(
-    public t: TranslateService,
-    public techTilesService: TechTileConfiguratorService,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     const techTilesSub = this.techTilesService.techTiles$.subscribe((techTiles) => {

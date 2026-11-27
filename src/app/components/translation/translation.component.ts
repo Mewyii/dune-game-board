@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LanguageType } from 'src/app/models';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -13,13 +13,11 @@ import { NotificationComponent } from '../notification/notification.component';
   standalone: false,
 })
 export class TranslationComponent {
-  showLanguageSelection = false;
+  settingsService = inject(SettingsService);
+  private dialog = inject(MatDialog);
+  t = inject(TranslateService);
 
-  constructor(
-    public settingsService: SettingsService,
-    private dialog: MatDialog,
-    public t: TranslateService,
-  ) {}
+  showLanguageSelection = false;
 
   onSelectLanguageClicked(language: LanguageType) {
     if (this.settingsService.language !== language) {

@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ACTION_TYPE_PATHS } from '../helpers/action-types';
 import { EFFECT_TYPE_PATHS } from '../helpers/reward-types';
@@ -9,7 +9,7 @@ import { ActionType, EffectRewardType } from '../models';
   standalone: false,
 })
 export class DuneSymbolsPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  private sanitizer = inject(DomSanitizer);
 
   transform(value: string, iconSize: string = '18px'): SafeHtml {
     const iconSizeNumber = parseInt(iconSize);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
 
@@ -19,6 +19,14 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class PlayerOverviewComponent implements OnInit, OnDestroy {
+  gameManager = inject(GameManager);
+  private cardsService = inject(CardsService);
+  private intriguesService = inject(IntriguesService);
+  t = inject(TranslateService);
+  private leadersService = inject(LeadersService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playerResourcesService = inject(PlayerResourcesService);
+
   @Input() player!: Player;
 
   public playerLeaderName: string | undefined;
@@ -30,16 +38,6 @@ export class PlayerOverviewComponent implements OnInit, OnDestroy {
   public availablePlayerAgents: number = 0;
 
   private subscriptions: Subscription[] = [];
-
-  constructor(
-    public gameManager: GameManager,
-    private cardsService: CardsService,
-    private intriguesService: IntriguesService,
-    public t: TranslateService,
-    private leadersService: LeadersService,
-    private playerAgentsService: PlayerAgentsService,
-    private playerResourcesService: PlayerResourcesService,
-  ) {}
 
   ngOnInit(): void {
     const deckSub = this.cardsService.playerDeck$(this.player.id).subscribe((cards) => {

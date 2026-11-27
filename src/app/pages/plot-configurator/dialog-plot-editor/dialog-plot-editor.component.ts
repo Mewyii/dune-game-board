@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -12,14 +12,14 @@ import { PlotEditorComponent } from '../plot-editor/plot-editor.component';
   standalone: false,
 })
 export class DialogPlotEditorComponent {
-  @ViewChild(PlotEditorComponent) plotEditorComponent!: PlotEditorComponent;
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogPlotEditorComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    imperiumPlot: ImperiumPlot;
+  }>(MAT_DIALOG_DATA);
 
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogPlotEditorComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: { title: string; imperiumPlot: ImperiumPlot },
-  ) {}
+  @ViewChild(PlotEditorComponent) plotEditorComponent!: PlotEditorComponent;
 
   get dialogTitle(): string {
     return this.data.title;

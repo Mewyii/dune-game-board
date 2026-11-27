@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export type RoundPhaseType = 'none' | 'select leaders' | 'agent-placement' | 'combat' | 'combat-resolvement' | 'done';
 
@@ -8,6 +9,8 @@ export type RoundPhaseType = 'none' | 'select leaders' | 'agent-placement' | 'co
   providedIn: 'root',
 })
 export class RoundService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private currentRoundSubject = new BehaviorSubject<number>(0);
   currentRound$ = this.currentRoundSubject.asObservable();
 
@@ -18,35 +21,11 @@ export class RoundService {
   isFinale$ = this.isFinaleSubject.asObservable();
 
   constructor() {
-    const currentRoundString = localStorage.getItem('currentRound');
-    if (currentRoundString) {
-      const currentRound = JSON.parse(currentRoundString) as number;
-      this.currentRoundSubject.next(currentRound);
-    }
-
-    this.currentRound$.subscribe((currentRound) => {
-      localStorage.setItem('currentRound', JSON.stringify(currentRound));
+    this.gameStatePersistenceService.bindSubjectToStorage('currentRound', this.currentRoundSubject, { scope: 'game' });
+    this.gameStatePersistenceService.bindSubjectToStorage('currentRoundPhase', this.currentRoundPhaseSubject, {
+      scope: 'game',
     });
-
-    const currentRoundPhaseString = localStorage.getItem('currentRoundPhase');
-    if (currentRoundPhaseString) {
-      const currentRoundPhase = JSON.parse(currentRoundPhaseString) as RoundPhaseType;
-      this.currentRoundPhaseSubject.next(currentRoundPhase);
-    }
-
-    this.currentRoundPhase$.subscribe((currentRoundPhase) => {
-      localStorage.setItem('currentRoundPhase', JSON.stringify(currentRoundPhase));
-    });
-
-    const isFinaleString = localStorage.getItem('isFinale');
-    if (isFinaleString) {
-      const isFinale = JSON.parse(isFinaleString) as boolean;
-      this.isFinaleSubject.next(isFinale);
-    }
-
-    this.isFinale$.subscribe((isFinale) => {
-      localStorage.setItem('isFinale', JSON.stringify(isFinale));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('isFinale', this.isFinaleSubject, { scope: 'game' });
   }
 
   get currentRound() {

@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { ActionField, EffectRewardType } from '../models';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface FieldLog {
   fieldId: string;
@@ -196,6 +197,8 @@ export type PlayerActionLog =
   providedIn: 'root',
 })
 export class LoggingService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private logSubject = new BehaviorSubject<FieldLog[]>([]);
   log$ = this.logSubject.asObservable();
 
@@ -203,25 +206,9 @@ export class LoggingService {
   playerActionLog$ = this.playerActionLogSubject.asObservable();
 
   constructor() {
-    const logString = localStorage.getItem('log');
-    if (logString) {
-      const log = JSON.parse(logString) as FieldLog[];
-      this.logSubject.next(log);
-    }
+    this.gameStatePersistenceService.bindSubjectToStorage('log', this.logSubject, { scope: 'game' });
 
-    this.log$.subscribe((log) => {
-      localStorage.setItem('log', JSON.stringify(log));
-    });
-
-    const playerActionLogString = localStorage.getItem('playerActionLog');
-    if (playerActionLogString) {
-      const log = JSON.parse(playerActionLogString) as PlayerActionLog[];
-      this.playerActionLogSubject.next(log);
-    }
-
-    this.playerActionLog$.subscribe((log) => {
-      localStorage.setItem('playerActionLog', JSON.stringify(log));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('playerActionLog', this.playerActionLogSubject, { scope: 'game' });
   }
 
   get log() {

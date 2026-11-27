@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DuneEvent } from 'src/app/constants/events';
 
@@ -10,13 +10,15 @@ import { DuneEvent } from 'src/app/constants/events';
   standalone: false,
 })
 export class EventEditorComponent implements OnChanges {
+  private fb = inject(FormBuilder);
+
   @Input() event: DuneEvent | null = null;
 
   eventForm!: FormGroup;
 
   editMode = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.initForm();
   }
 

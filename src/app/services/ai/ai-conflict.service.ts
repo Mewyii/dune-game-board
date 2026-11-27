@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   getEnemyCombatStrengthPotentialAgainstPlayer,
   getPlayerCombatStrengthPotentialAgainstEnemy,
@@ -16,7 +16,7 @@ import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
   providedIn: 'root',
 })
 export class AIConflictService {
-  constructor(private aiEffectEvaluationService: AIEffectEvaluationService) {}
+  private aiEffectEvaluationService = inject(AIEffectEvaluationService);
 
   getAddAdditionalUnitsToCombatDecision(
     playerCombatUnits: PlayerCombatUnits,

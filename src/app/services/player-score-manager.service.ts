@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { ActionType, EffectReward, FactionType } from '../models';
@@ -8,6 +8,7 @@ import { LoggingService } from './log.service';
 import { PlayerResourcesService } from './player-resources.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface PlayerScore {
   playerId: number;
@@ -31,38 +32,23 @@ export type PlayerFactionScoreType = keyof Omit<PlayerScore, 'playerId' | 'victo
   providedIn: 'root',
 })
 export class PlayerScoreManager {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private playersService = inject(PlayersService);
+  private combatManager = inject(CombatManager);
+  private settingsService = inject(SettingsService);
+  private loggingService = inject(LoggingService);
+  private playersResourcesService = inject(PlayerResourcesService);
+
   private playerScoresSubject = new BehaviorSubject<PlayerScore[]>([]);
   playerScores$ = this.playerScoresSubject.asObservable();
 
   private playerAlliancesSubject = new BehaviorSubject<PlayerAlliances[]>([]);
   playerAlliances$ = this.playerAlliancesSubject.asObservable();
 
-  constructor(
-    private playersService: PlayersService,
-    private combatManager: CombatManager,
-    private settingsService: SettingsService,
-    private loggingService: LoggingService,
-    private playersResourcesService: PlayerResourcesService,
-  ) {
-    const playersScoresString = localStorage.getItem('playersScores');
-    if (playersScoresString) {
-      const playersScores = JSON.parse(playersScoresString) as PlayerScore[];
-      this.playerScoresSubject.next(playersScores);
-    }
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('playersScores', this.playerScoresSubject, { scope: 'game' });
 
-    this.playerScores$.subscribe((playersScores) => {
-      localStorage.setItem('playersScores', JSON.stringify(playersScores));
-    });
-
-    const playerAlliancesString = localStorage.getItem('playerAlliances');
-    if (playerAlliancesString) {
-      const playerAlliances = JSON.parse(playerAlliancesString) as PlayerAlliances[];
-      this.playerAlliancesSubject.next(playerAlliances);
-    }
-
-    this.playerAlliances$.subscribe((playerAlliances) => {
-      localStorage.setItem('playerAlliances', JSON.stringify(playerAlliances));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('playerAlliances', this.playerAlliancesSubject, { scope: 'game' });
   }
 
   get playerScores() {

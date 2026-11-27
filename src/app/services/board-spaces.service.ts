@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { ActionField } from '../models';
 import { PlayerAgentsService } from './player-agents.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface SpiceAccumulation {
   boardSpaceId: string;
@@ -15,6 +16,11 @@ export interface SpiceAccumulation {
   providedIn: 'root',
 })
 export class BoardSpacesService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private settingsService = inject(SettingsService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playersService = inject(PlayersService);
+
   private boardSpacesSubject = new BehaviorSubject<ActionField[]>([]);
   boardSpaces$ = this.boardSpacesSubject.asObservable();
 
@@ -36,20 +42,12 @@ export class BoardSpacesService {
     return this.boardSpaces.find((x) => x.title.en === id);
   }
 
-  constructor(
-    private settingsService: SettingsService,
-    private playerAgentsService: PlayerAgentsService,
-    private playersService: PlayersService,
-  ) {
-    const accumulatedSpiceOnBoardSpacesString = localStorage.getItem('accumulatedSpiceOnBoardSpaces');
-    if (accumulatedSpiceOnBoardSpacesString) {
-      const accumulatedSpiceOnBoardSpaces = JSON.parse(accumulatedSpiceOnBoardSpacesString) as SpiceAccumulation[];
-      this.accumulatedSpiceOnBoardSpacesSubject.next(accumulatedSpiceOnBoardSpaces);
-    }
-
-    this.accumulatedSpiceOnBoardSpaces$.subscribe((accumulatedSpiceOnBoardSpaces) => {
-      localStorage.setItem('accumulatedSpiceOnBoardSpaces', JSON.stringify(accumulatedSpiceOnBoardSpaces));
-    });
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage(
+      'accumulatedSpiceOnBoardSpaces',
+      this.accumulatedSpiceOnBoardSpacesSubject,
+      { scope: 'game' },
+    );
 
     this.playersService.players$.subscribe((players) => {
       const gameContent = this.settingsService.gameContent;

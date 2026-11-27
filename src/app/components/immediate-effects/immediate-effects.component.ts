@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { cloneDeep } from 'lodash';
@@ -48,6 +48,22 @@ import {
   standalone: false,
 })
 export class ImmediateEffectsComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  private gameManager = inject(GameManager);
+  private playerRewardChoicesService = inject(PlayerRewardChoicesService);
+  private dialog = inject(MatDialog);
+  private cardsService = inject(CardsService);
+  private leadersService = inject(LeadersService);
+  private intriguesService = inject(IntriguesService);
+  private settingsService = inject(SettingsService);
+  private locationsService = inject(LocationsService);
+  private boardSpacesService = inject(BoardSpacesService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private conflictsService = inject(ConflictsService);
+  private playersService = inject(PlayersService);
+  private audioManager = inject(AudioManager);
+
   private immediateEffectStackSubject = new BehaviorSubject<ImmediateEffect[]>([]);
   immediateEffectStack$ = this.immediateEffectStackSubject.asObservable();
 
@@ -70,24 +86,6 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
   private get immediateEffectStack() {
     return cloneDeep(this.immediateEffectStackSubject.value);
   }
-
-  constructor(
-    public t: TranslateService,
-    private gameManager: GameManager,
-    private playerRewardChoicesService: PlayerRewardChoicesService,
-    private dialog: MatDialog,
-    private cardsService: CardsService,
-    private leadersService: LeadersService,
-    private intriguesService: IntriguesService,
-    private settingsService: SettingsService,
-    private locationsService: LocationsService,
-    private boardSpacesService: BoardSpacesService,
-    private playerScoreManager: PlayerScoreManager,
-    private playerAgentsService: PlayerAgentsService,
-    private conflictsService: ConflictsService,
-    private playersService: PlayersService,
-    private audioManager: AudioManager,
-  ) {}
 
   ngOnInit(): void {
     const rewardChoicesSub = this.playerRewardChoicesService.playersRewardChoices$.subscribe((playersRewardChoices) => {

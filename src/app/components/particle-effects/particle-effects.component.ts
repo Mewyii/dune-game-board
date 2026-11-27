@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { AnimationService, Effect } from 'src/app/services/effects/animation.service';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -10,14 +10,12 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class ParticleEffectsComponent implements OnInit {
+  t = inject(TranslateService);
+  private effectsService = inject(AnimationService);
+
   combatAnimation: Effect | undefined;
   spiceAnimation: Effect | undefined;
   welcomeAnimation: Effect | undefined;
-
-  constructor(
-    public t: TranslateService,
-    private effectsService: AnimationService,
-  ) {}
 
   ngOnInit(): void {
     this.effectsService.combatAnimation$.subscribe((combatAnimation) => {

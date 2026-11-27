@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -10,11 +10,11 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class DialogGameManualComponent {
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogGameManualComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string },
-  ) {}
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogGameManualComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+  }>(MAT_DIALOG_DATA);
 
   onClose() {
     this.dialogRef.close();

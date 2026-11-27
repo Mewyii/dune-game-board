@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -12,11 +12,9 @@ import { DialogGameManualComponent } from './dialog-game-manual/dialog-game-manu
   standalone: false,
 })
 export class ManualComponent {
-  constructor(
-    public settingsService: SettingsService,
-    private dialog: MatDialog,
-    public t: TranslateService,
-  ) {}
+  settingsService = inject(SettingsService);
+  private dialog = inject(MatDialog);
+  t = inject(TranslateService);
 
   onShowManualClicked() {
     this.dialog.open(DialogGameManualComponent, { width: '900px' });

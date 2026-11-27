@@ -1,11 +1,11 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 
 @Directive({
-    selector: '[stopPropagationClick]',
-    standalone: false
+  selector: '[stopPropagationClick]',
+  standalone: false,
 })
 export class StopPropagationClickDirective {
-  constructor(private el: ElementRef) {}
+  private el = inject(ElementRef);
 
   @HostListener('click', ['$event']) onClick(event: any): void {
     event.stopPropagation();

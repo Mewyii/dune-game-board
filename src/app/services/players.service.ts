@@ -1,13 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { Player, PlayerTurnState } from '../models/player';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayersService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private settingsService = inject(SettingsService);
+
   private playersSubject = new BehaviorSubject<Player[]>([]);
   players$ = this.playersSubject.asObservable();
   playerColors$ = this.players$.pipe(
@@ -25,16 +29,8 @@ export class PlayersService {
     distinctUntilChanged(),
   );
 
-  constructor(private settingsService: SettingsService) {
-    const playersString = localStorage.getItem('players');
-    if (playersString) {
-      const players = JSON.parse(playersString) as Player[];
-      this.playersSubject.next(players);
-    }
-
-    this.players$.subscribe((players) => {
-      localStorage.setItem('players', JSON.stringify(players));
-    });
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('players', this.playersSubject, { scope: 'game' });
   }
 
   getPlayers() {

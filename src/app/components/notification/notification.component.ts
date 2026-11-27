@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -9,5 +9,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   standalone: false,
 })
 export class NotificationComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string; text: string }) {}
+  data = inject<{
+    title: string;
+    text: string;
+  }>(MAT_DIALOG_DATA);
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { GameState } from 'src/app/models/ai';
 import { Player } from 'src/app/models/player';
 import { PlayerTechTile, TechTileDeckCard } from '../tech-tiles.service';
@@ -8,7 +8,7 @@ import { AIEffectEvaluationService } from './ai.effect-evaluation.service';
   providedIn: 'root',
 })
 export class AITechTilesService {
-  constructor(private effectEvaluationService: AIEffectEvaluationService) {}
+  private effectEvaluationService = inject(AIEffectEvaluationService);
 
   getTechTilePlayEvaluation(techTile: TechTileDeckCard, player: Player, gameState: GameState) {
     let evaluationValue = 0;

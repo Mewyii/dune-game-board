@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { clamp, take } from 'lodash';
 import { getLeastDesiredFactionScoreType, getMostDesiredFactionScoreType } from 'src/app/helpers/ai';
 import { getPlayerCombatStrength } from 'src/app/helpers/combat';
@@ -48,33 +48,31 @@ import { AIFieldEvaluationService, ViableField } from './ai.field-evaluation.ser
   providedIn: 'root',
 })
 export class AIManager {
-  constructor(
-    private playerScoreManager: PlayerScoreManager,
-    private playersService: PlayersService,
-    private combatManager: CombatManager,
-    private loggingService: LoggingService,
-    private leadersService: LeadersService,
-    private techTilesService: TechTilesService,
-    private audioManager: AudioManager,
-    private settingsService: SettingsService,
-    private cardsService: CardsService,
-    private gameModifiersService: GameModifiersService,
-    private t: TranslateService,
-    private intriguesService: IntriguesService,
-    private turnInfoService: TurnInfoService,
-    private playerAgentsService: PlayerAgentsService,
-    private playersResourcesService: PlayerResourcesService,
-    private gameStateService: GameStateService,
-    private boardSpaceService: BoardSpacesService,
-    private roundService: RoundService,
-    private effectsService: EffectsService,
-    private aiCardsService: AICardsService,
-    private aiConflictService: AIConflictService,
-    private aiTechTilesService: AITechTilesService,
-    private aiPlayersService: AIPlayersService,
-    private effectEvaluationService: AIEffectEvaluationService,
-    private fieldEvaluationService: AIFieldEvaluationService,
-  ) {}
+  private playerScoreManager = inject(PlayerScoreManager);
+  private playersService = inject(PlayersService);
+  private combatManager = inject(CombatManager);
+  private loggingService = inject(LoggingService);
+  private leadersService = inject(LeadersService);
+  private techTilesService = inject(TechTilesService);
+  private audioManager = inject(AudioManager);
+  private settingsService = inject(SettingsService);
+  private cardsService = inject(CardsService);
+  private gameModifiersService = inject(GameModifiersService);
+  private t = inject(TranslateService);
+  private intriguesService = inject(IntriguesService);
+  private turnInfoService = inject(TurnInfoService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playersResourcesService = inject(PlayerResourcesService);
+  private gameStateService = inject(GameStateService);
+  private boardSpaceService = inject(BoardSpacesService);
+  private roundService = inject(RoundService);
+  private effectsService = inject(EffectsService);
+  private aiCardsService = inject(AICardsService);
+  private aiConflictService = inject(AIConflictService);
+  private aiTechTilesService = inject(AITechTilesService);
+  private aiPlayersService = inject(AIPlayersService);
+  private effectEvaluationService = inject(AIEffectEvaluationService);
+  private fieldEvaluationService = inject(AIFieldEvaluationService);
 
   getCardAndFieldToPlay(playerHandCards: ImperiumDeckCard[], player: Player, gameState: GameState) {
     const aiPlayer = this.aiPlayersService.aiPlayers.find((x) => x.playerId === player.id);

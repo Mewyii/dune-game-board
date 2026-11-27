@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { CardAcquiringPlacementType } from '../constants/board-settings';
@@ -11,6 +11,7 @@ import { ImperiumPlot } from '../models/imperium-plot';
 import { CardConfiguratorService } from './configurators/card-configurator.service';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface ImperiumDeckCard extends ImperiumCard {
   id: string;
@@ -56,6 +57,11 @@ export interface PlayerPlotStack {
   providedIn: 'root',
 })
 export class CardsService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private playersService = inject(PlayersService);
+  private cardConfiguratorService = inject(CardConfiguratorService);
+  private settingsService = inject(SettingsService);
+
   private imperiumDeckSubject = new BehaviorSubject<(ImperiumDeckCard | ImperiumDeckPlot)[]>([]);
   imperiumDeck$ = this.imperiumDeckSubject.asObservable();
 
@@ -101,123 +107,37 @@ export class CardsService {
   private unlimitedCustomCardsSubject = new BehaviorSubject<ImperiumCard[]>([]);
   unlimitedCustomCards$ = this.unlimitedCustomCardsSubject.asObservable();
 
-  constructor(
-    private playersService: PlayersService,
-    private cardConfiguratorService: CardConfiguratorService,
-    private settingsService: SettingsService,
-  ) {
-    const imperiumDeckString = localStorage.getItem('imperiumDeck');
-    if (imperiumDeckString) {
-      const imperiumDeck = JSON.parse(imperiumDeckString) as ImperiumDeckCard[];
-      this.imperiumDeckSubject.next(imperiumDeck);
-    }
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('imperiumDeck', this.imperiumDeckSubject, { scope: 'game' });
 
-    this.imperiumDeck$.subscribe((imperiumDeck) => {
-      localStorage.setItem('imperiumDeck', JSON.stringify(imperiumDeck));
+    this.gameStatePersistenceService.bindSubjectToStorage('imperiumRow', this.imperiumRowSubject, { scope: 'game' });
+
+    this.gameStatePersistenceService.bindSubjectToStorage('playerDecks', this.playerDecksSubject, { scope: 'game' });
+
+    this.gameStatePersistenceService.bindSubjectToStorage('playerHandCards', this.playerHandsSubject, { scope: 'game' });
+
+    this.gameStatePersistenceService.bindSubjectToStorage('playerDiscardPiles', this.playerDiscardPilesSubject, {
+      scope: 'game',
     });
 
-    const imperiumRowString = localStorage.getItem('imperiumRow');
-    if (imperiumRowString) {
-      const imperiumRow = JSON.parse(imperiumRowString) as ImperiumRowCard[];
-      this.imperiumRowSubject.next(imperiumRow);
-    }
-
-    this.imperiumRow$.subscribe((imperiumRow) => {
-      localStorage.setItem('imperiumRow', JSON.stringify(imperiumRow));
+    this.gameStatePersistenceService.bindSubjectToStorage('playerTrashPiles', this.playerTrashPilesSubject, {
+      scope: 'game',
     });
 
-    const playerDecksString = localStorage.getItem('playerDecks');
-    if (playerDecksString) {
-      const playerDecks = JSON.parse(playerDecksString) as PlayerCardStack[];
-      this.playerDecksSubject.next(playerDecks);
-    }
+    this.gameStatePersistenceService.bindSubjectToStorage('playerPlots', this.playerPlotsSubject, { scope: 'game' });
 
-    this.playerDecks$.subscribe((playerDecks) => {
-      localStorage.setItem('playerDecks', JSON.stringify(playerDecks));
+    this.gameStatePersistenceService.bindSubjectToStorage('playedPlayerCards', this.playedPlayerCardsSubject, {
+      scope: 'game',
     });
 
-    const playerHandCardsString = localStorage.getItem('playerHandCards');
-    if (playerHandCardsString) {
-      const playerHandCards = JSON.parse(playerHandCardsString) as PlayerCardStack[];
-      this.playerHandsSubject.next(playerHandCards);
-    }
-
-    this.playerHands$.subscribe((playerHandCards) => {
-      localStorage.setItem('playerHandCards', JSON.stringify(playerHandCards));
+    this.gameStatePersistenceService.bindSubjectToStorage('limitedCustomCards', this.limitedCustomCardsSubject, {
+      scope: 'game',
+      fromStorable: (storedCards: ImperiumDeckCard[]) => restoreImperiumCardGameAdjustments(storedCards),
     });
 
-    const playerDiscardPilesString = localStorage.getItem('playerDiscardPiles');
-    if (playerDiscardPilesString) {
-      const playerDiscardPiles = JSON.parse(playerDiscardPilesString) as PlayerCardStack[];
-      this.playerDiscardPilesSubject.next(playerDiscardPiles);
-    }
-
-    this.playerDiscardPiles$.subscribe((playerDiscardPiles) => {
-      localStorage.setItem('playerDiscardPiles', JSON.stringify(playerDiscardPiles));
-    });
-
-    const playerTrashPilesString = localStorage.getItem('playerTrashPiles');
-    if (playerTrashPilesString) {
-      const playerTrashPiles = JSON.parse(playerTrashPilesString) as PlayerCardStack[];
-      this.playerTrashPilesSubject.next(playerTrashPiles);
-    }
-
-    this.playerTrashPiles$.subscribe((playerTrashPiles) => {
-      localStorage.setItem('playerTrashPiles', JSON.stringify(playerTrashPiles));
-    });
-
-    const playerPlotsString = localStorage.getItem('playerPlots');
-    if (playerPlotsString) {
-      const playerPlots = JSON.parse(playerPlotsString) as PlayerPlotStack[];
-      this.playerPlotsSubject.next(playerPlots);
-    }
-
-    this.playerPlots$.subscribe((playerPlots) => {
-      localStorage.setItem('playerPlots', JSON.stringify(playerPlots));
-    });
-
-    const playedPlayerCardsString = localStorage.getItem('playedPlayerCards');
-    if (playedPlayerCardsString) {
-      const playedPlayerCards = JSON.parse(playedPlayerCardsString) as PlayerCard[];
-      this.playedPlayerCardsSubject.next(playedPlayerCards);
-    }
-
-    this.playedPlayerCards$.subscribe((playedPlayerCards) => {
-      localStorage.setItem('playedPlayerCards', JSON.stringify(playedPlayerCards));
-    });
-
-    const limitedCustomCardsString = localStorage.getItem('limitedCustomCards');
-    if (limitedCustomCardsString) {
-      const limitedCustomCards = JSON.parse(limitedCustomCardsString) as ImperiumDeckCard[];
-      const realLimitedCustomCards = limitedCustomCards.map((x) => {
-        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
-        return {
-          ...imperiumCardGameAdjustments,
-          ...x,
-        };
-      });
-      this.limitedCustomCardsSubject.next(realLimitedCustomCards);
-    }
-
-    this.limitedCustomCards$.subscribe((limitedCustomCards) => {
-      localStorage.setItem('limitedCustomCards', JSON.stringify(limitedCustomCards));
-    });
-
-    const unlimitedCustomCardsString = localStorage.getItem('unlimitedCustomCards');
-    if (unlimitedCustomCardsString) {
-      const unlimitedCustomCards = JSON.parse(unlimitedCustomCardsString) as ImperiumDeckCard[];
-      const realUnlimitedCustomCards = unlimitedCustomCards.map((x) => {
-        const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find((y) => y.id === x.name.en);
-        return {
-          ...imperiumCardGameAdjustments,
-          ...x,
-        };
-      });
-      this.unlimitedCustomCardsSubject.next(realUnlimitedCustomCards);
-    }
-
-    this.unlimitedCustomCards$.subscribe((unlimitedCustomCards) => {
-      localStorage.setItem('unlimitedCustomCards', JSON.stringify(unlimitedCustomCards));
+    this.gameStatePersistenceService.bindSubjectToStorage('unlimitedCustomCards', this.unlimitedCustomCardsSubject, {
+      scope: 'game',
+      fromStorable: (storedCards: ImperiumCard[]) => restoreImperiumCardGameAdjustments(storedCards),
     });
   }
 
@@ -808,4 +728,17 @@ export class CardsService {
   instantiateImperiumPlot(card: ImperiumPlot): ImperiumDeckPlot {
     return { ...card, type: 'plot', id: crypto.randomUUID(), cardAmount: 1 };
   }
+}
+
+// Game adjustments contain functions, which cannot be serialized and have to be re-attached after loading.
+function restoreImperiumCardGameAdjustments<T extends ImperiumCard>(storedCards: T[]): T[] {
+  return storedCards.map((storedCard) => {
+    const imperiumCardGameAdjustments = imperiumCardsGameAdjustments.find(
+      (adjustment) => adjustment.id === storedCard.name.en,
+    );
+    return {
+      ...imperiumCardGameAdjustments,
+      ...storedCard,
+    };
+  });
 }

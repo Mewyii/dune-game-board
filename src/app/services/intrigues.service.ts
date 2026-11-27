@@ -1,15 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { shuffleMultipleTimes } from '../helpers/common';
 import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { IntrigueCard, IntrigueDeckCard, IntrigueType, PlayerIntrigueStack } from '../models/intrigue';
 import { IntrigueConfiguratorService } from './configurators/intrigue-configurator.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IntriguesService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private intrigueConfigService = inject(IntrigueConfiguratorService);
+
   private intrigueDeckSubject = new BehaviorSubject<IntrigueDeckCard[]>([]);
   intrigueDeck$ = this.intrigueDeckSubject.asObservable();
 
@@ -24,38 +28,14 @@ export class IntriguesService {
       distinctUntilChanged(),
     );
 
-  constructor(private intrigueConfigService: IntrigueConfiguratorService) {
-    const intrigueDeckString = localStorage.getItem('intrigueDeck');
-    if (intrigueDeckString) {
-      const intrigueDeck = JSON.parse(intrigueDeckString) as IntrigueDeckCard[];
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('intrigueDeck', this.intrigueDeckSubject, { scope: 'game' });
 
-      this.intrigueDeckSubject.next(intrigueDeck);
-    }
-
-    this.intrigueDeck$.subscribe((intrigueDeck) => {
-      localStorage.setItem('intrigueDeck', JSON.stringify(intrigueDeck));
+    this.gameStatePersistenceService.bindSubjectToStorage('intrigueDiscardPile', this.intrigueDiscardPileSubject, {
+      scope: 'game',
     });
 
-    const intrigueDiscardPileString = localStorage.getItem('intrigueDiscardPile');
-    if (intrigueDiscardPileString) {
-      const intrigueDiscardPile = JSON.parse(intrigueDiscardPileString) as IntrigueDeckCard[];
-
-      this.intrigueDiscardPileSubject.next(intrigueDiscardPile);
-    }
-
-    this.intrigueDiscardPile$.subscribe((intrigueDiscardPile) => {
-      localStorage.setItem('intrigueDiscardPile', JSON.stringify(intrigueDiscardPile));
-    });
-
-    const playerIntriguesString = localStorage.getItem('playerIntrigues');
-    if (playerIntriguesString) {
-      const playerIntrigues = JSON.parse(playerIntriguesString) as PlayerIntrigueStack[];
-      this.playerIntriguesSubject.next(playerIntrigues);
-    }
-
-    this.playersIntrigues$.subscribe((playerIntrigues) => {
-      localStorage.setItem('playerIntrigues', JSON.stringify(playerIntrigues));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('playerIntrigues', this.playerIntriguesSubject, { scope: 'game' });
   }
 
   get intrigueDeck() {

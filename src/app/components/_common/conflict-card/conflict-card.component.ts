@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { Conflict } from 'src/app/models/conflict';
 import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -11,14 +11,12 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class ConflictCardComponent implements OnInit, OnChanges {
+  t = inject(TranslateService);
+  private boardSpacesService = inject(BoardSpacesService);
+
   @Input() conflict!: Conflict;
 
   public boardSpaceName = '';
-
-  constructor(
-    public t: TranslateService,
-    private boardSpacesService: BoardSpacesService,
-  ) {}
 
   ngOnInit(): void {
     this.boardSpaceName = this.getBoardSpaceName();

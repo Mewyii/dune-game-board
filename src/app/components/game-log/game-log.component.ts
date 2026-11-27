@@ -6,6 +6,7 @@ import {
   OnInit,
   QueryList,
   ViewChildren,
+  inject,
 } from '@angular/core';
 
 import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
@@ -18,11 +19,11 @@ import { LoggingService, PlayerActionLog } from 'src/app/services/log.service';
   standalone: false,
 })
 export class GameLogComponent implements OnInit, AfterViewInit {
+  private logService = inject(LoggingService);
+
   @ViewChildren('rewardLogs') rewardLogElements!: QueryList<ElementRef>;
 
   public playerActionLog: PlayerActionLog[] = [];
-
-  constructor(private logService: LoggingService) {}
 
   ngOnInit(): void {
     this.logService.playerActionLog$.subscribe((playerActionLog) => {

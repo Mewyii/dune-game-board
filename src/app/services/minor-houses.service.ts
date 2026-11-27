@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { House, minorHouses } from '../constants/minor-houses';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface PlayerHouse {
   playerId: number;
@@ -13,6 +14,8 @@ export interface PlayerHouse {
   providedIn: 'root',
 })
 export class MinorHousesService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   houses = minorHouses;
 
   private currentAvailableHousesSubject = new BehaviorSubject<House[]>([]);
@@ -24,25 +27,11 @@ export class MinorHousesService {
   maxHouseLevel = 2;
 
   constructor() {
-    const currentAvailableHousesString = localStorage.getItem('currentAvailableHouses');
-    if (currentAvailableHousesString) {
-      const currentAvailableHouses = JSON.parse(currentAvailableHousesString) as House[];
-      this.currentAvailableHousesSubject.next(currentAvailableHouses);
-    }
-
-    this.currentAvailableHouses$.subscribe((currentAvailableHouses) => {
-      localStorage.setItem('currentAvailableHouses', JSON.stringify(currentAvailableHouses));
+    this.gameStatePersistenceService.bindSubjectToStorage('currentAvailableHouses', this.currentAvailableHousesSubject, {
+      scope: 'game',
     });
 
-    const playerHousesString = localStorage.getItem('playerHouses');
-    if (playerHousesString) {
-      const playerHouses = JSON.parse(playerHousesString) as PlayerHouse[];
-      this.playerHousesSubject.next(playerHouses);
-    }
-
-    this.playerHouses$.subscribe((playerHouses) => {
-      localStorage.setItem('playerHouses', JSON.stringify(playerHouses));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('playerHouses', this.playerHousesSubject, { scope: 'game' });
   }
 
   get currentAvailableHouses() {

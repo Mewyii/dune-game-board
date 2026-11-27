@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import {
@@ -30,6 +30,13 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class DialogCardEditorComponent {
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogCardEditorComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    imperiumCard: ImperiumCard;
+  }>(MAT_DIALOG_DATA);
+
   card!: ImperiumCard;
   editMode = false;
 
@@ -52,12 +59,7 @@ export class DialogCardEditorComponent {
   ];
   fontSizes = ['large', 'medium', 'small'];
 
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogCardEditorComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: { title: string; imperiumCard: ImperiumCard },
-  ) {
+  constructor() {
     const cardClone = cloneDeep(this.data.imperiumCard);
     this.card = {
       ...cardClone,

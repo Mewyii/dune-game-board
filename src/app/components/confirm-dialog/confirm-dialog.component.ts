@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -10,9 +10,10 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class ConfirmDialogComponent {
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data?: { title?: string; text?: string },
-  ) {}
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<ConfirmDialogComponent>>(MatDialogRef);
+  data? = inject<{
+    title?: string;
+    text?: string;
+  }>(MAT_DIALOG_DATA);
 }

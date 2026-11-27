@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppMode, GameContent } from 'src/app/constants/board-settings';
@@ -19,18 +19,21 @@ import { SettingsService } from 'src/app/services/settings.service';
   ],
 })
 export class DialogSettingsComponent {
+  private dialogRef = inject<MatDialogRef<DialogSettingsComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    content: any;
+  }>(MAT_DIALOG_DATA);
+  private aIPlayersService = inject(AIPlayersService);
+  private settingsService = inject(SettingsService);
+
   public aiDifficulty: AIDIfficultyTypes | undefined;
   public eventsEnabled: boolean = false;
   public gameContentName: string = '';
   public appMode: AppMode | undefined;
   public hasCustomGameContent = false;
 
-  constructor(
-    private dialogRef: MatDialogRef<DialogSettingsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; content: any },
-    private aIPlayersService: AIPlayersService,
-    private settingsService: SettingsService,
-  ) {
+  constructor() {
     this.aIPlayersService.aiDifficulty$.subscribe((aiDifficulty) => {
       this.aiDifficulty = aiDifficulty;
     });

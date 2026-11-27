@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
@@ -14,6 +14,13 @@ import { BoardSpacesService } from 'src/app/services/board-spaces.service';
   standalone: false,
 })
 export class DialogConflictEditorComponent implements OnInit, OnDestroy {
+  dialogRef = inject<MatDialogRef<DialogConflictEditorComponent>>(MatDialogRef);
+  private boardSpacesService = inject(BoardSpacesService);
+  data = inject<{
+    title: string;
+    conflict: Conflict;
+  }>(MAT_DIALOG_DATA);
+
   conflict: Conflict;
   boardSpaceIds: string[] = [];
   rewardTypes: EffectRewardType[] = [...resourceTypes, ...combatUnitTypes, ...effectRewards].sort((a, b) =>
@@ -23,11 +30,9 @@ export class DialogConflictEditorComponent implements OnInit, OnDestroy {
   actions: ActionType[] = [];
   private boardSpacesSubscription?: Subscription;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogConflictEditorComponent>,
-    private boardSpacesService: BoardSpacesService,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; conflict: Conflict },
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.conflict = cloneDeep(data.conflict);
   }
 

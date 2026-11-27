@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { getRandomElementFromArray } from '../helpers/common';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward } from '../helpers/faction-score';
 import { getFactionInfluenceModifier } from '../helpers/game-modifiers';
@@ -52,28 +52,26 @@ import { TranslateService } from './translate-service';
   providedIn: 'root',
 })
 export class EffectsService {
-  constructor(
-    private playerScoreManager: PlayerScoreManager,
-    private playersService: PlayersService,
-    private combatManager: CombatManager,
-    private boardSpacesService: BoardSpacesService,
-    private locationsService: LocationsService,
-    private loggingService: LoggingService,
-    private leadersService: LeadersService,
-    private conflictsService: ConflictsService,
-    private techTilesService: TechTilesService,
-    private audioManager: AudioManager,
-    private settingsService: SettingsService,
-    private cardsService: CardsService,
-    private gameModifiersService: GameModifiersService,
-    private t: TranslateService,
-    private intriguesService: IntriguesService,
-    private turnInfoService: TurnInfoService,
-    private playerAgentsService: PlayerAgentsService,
-    private playersResourcesService: PlayerResourcesService,
-    private roundService: RoundService,
-    private playerRewardChoicesService: PlayerRewardChoicesService,
-  ) {}
+  private playerScoreManager = inject(PlayerScoreManager);
+  private playersService = inject(PlayersService);
+  private combatManager = inject(CombatManager);
+  private boardSpacesService = inject(BoardSpacesService);
+  private locationsService = inject(LocationsService);
+  private loggingService = inject(LoggingService);
+  private leadersService = inject(LeadersService);
+  private conflictsService = inject(ConflictsService);
+  private techTilesService = inject(TechTilesService);
+  private audioManager = inject(AudioManager);
+  private settingsService = inject(SettingsService);
+  private cardsService = inject(CardsService);
+  private gameModifiersService = inject(GameModifiersService);
+  private t = inject(TranslateService);
+  private intriguesService = inject(IntriguesService);
+  private turnInfoService = inject(TurnInfoService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playersResourcesService = inject(PlayerResourcesService);
+  private roundService = inject(RoundService);
+  private playerRewardChoicesService = inject(PlayerRewardChoicesService);
 
   resolveStructuredEffects(
     structuredEffects: StructuredEffect[],

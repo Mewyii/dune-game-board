@@ -1,26 +1,23 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { imperiumPlots } from 'src/app/constants/imperium-plots';
 import { ImperiumPlot } from 'src/app/models/imperium-plot';
 import { TranslateService } from '../translate-service';
+import { GameStatePersistenceService } from '../persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlotConfiguratorService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private imperiumPlotsSubject = new BehaviorSubject<ImperiumPlot[]>(imperiumPlots);
   imperiumPlots$ = this.imperiumPlotsSubject.asObservable();
 
-  constructor(t: TranslateService) {
-    const imperiumPlotsString = localStorage.getItem('imperiumPlots');
-    if (imperiumPlotsString) {
-      const imperiumPlots = JSON.parse(imperiumPlotsString) as ImperiumPlot[];
-      this.imperiumPlotsSubject.next(imperiumPlots);
-    }
-
-    this.imperiumPlots$.subscribe((imperiumPlots) => {
-      localStorage.setItem('imperiumPlots', JSON.stringify(imperiumPlots));
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('imperiumPlots', this.imperiumPlotsSubject, {
+      scope: 'host-setup',
     });
   }
 

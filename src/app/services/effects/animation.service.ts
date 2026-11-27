@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { ISourceOptions } from '@tsparticles/engine';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
@@ -19,6 +19,8 @@ export interface Effect {
   providedIn: 'root',
 })
 export class AnimationService {
+  private roundService = inject(RoundService);
+
   private welcomeAnimationSubject = new BehaviorSubject<Effect>({
     id: 'welcomeEffect',
     title: { en: 'Dune: Imperium', de: 'Dune: Imperium' },
@@ -48,7 +50,7 @@ export class AnimationService {
 
   currentTurn = 0;
 
-  constructor(private roundService: RoundService) {
+  constructor() {
     this.roundService.currentRound$.subscribe((currentTurn) => {
       this.currentTurn = currentTurn;
     });

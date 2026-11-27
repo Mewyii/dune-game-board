@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { shuffle } from 'lodash';
 import { Subscription } from 'rxjs';
@@ -37,6 +37,24 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   standalone: false,
 })
 export class LeadersComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  private leadersService = inject(LeadersService);
+  private gameManager = inject(GameManager);
+  private playersService = inject(PlayersService);
+  private combatManager = inject(CombatManager);
+  private minorHouseService = inject(MinorHousesService);
+  private techTilesService = inject(TechTilesService);
+  private intriguesService = inject(IntriguesService);
+  private audioManager = inject(AudioManager);
+  private dialog = inject(MatDialog);
+  private turnInfoService = inject(TurnInfoService);
+  private settingsService = inject(SettingsService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playerResourcesService = inject(PlayerResourcesService);
+  private effectsService = inject(EffectsService);
+  private roundService = inject(RoundService);
+  private aiManager = inject(AIManager);
+
   subscriptions: Subscription[] = [];
 
   leaders: LeaderDeckCard[] = [];
@@ -76,26 +94,6 @@ export class LeadersComponent implements OnInit, OnDestroy {
   showAIDetails = false;
 
   isAIDisabled = false;
-
-  constructor(
-    public t: TranslateService,
-    private leadersService: LeadersService,
-    private gameManager: GameManager,
-    private playersService: PlayersService,
-    private combatManager: CombatManager,
-    private minorHouseService: MinorHousesService,
-    private techTilesService: TechTilesService,
-    private intriguesService: IntriguesService,
-    private audioManager: AudioManager,
-    private dialog: MatDialog,
-    private turnInfoService: TurnInfoService,
-    private settingsService: SettingsService,
-    private playerAgentsService: PlayerAgentsService,
-    private playerResourcesService: PlayerResourcesService,
-    private effectsService: EffectsService,
-    private roundService: RoundService,
-    private aiManager: AIManager,
-  ) {}
 
   ngOnInit(): void {
     const leaderDeckSub = this.leadersService.leaderDeck$.subscribe((leaderDeck) => {

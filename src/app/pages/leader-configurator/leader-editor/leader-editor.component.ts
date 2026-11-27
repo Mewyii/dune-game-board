@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Leader } from 'src/app/constants/leaders';
 
@@ -25,6 +25,8 @@ import {
   standalone: false,
 })
 export class LeaderEditorComponent implements OnChanges {
+  private fb = inject(FormBuilder);
+
   @Input() leader: Leader | null = null;
 
   leaderForm!: FormGroup;
@@ -44,7 +46,7 @@ export class LeaderEditorComponent implements OnChanges {
   ];
   fontSizes = ['large', 'medium', 'small'];
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.initForm();
   }
 

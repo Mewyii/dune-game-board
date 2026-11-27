@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -25,6 +25,19 @@ import { ImperiumCardsPreviewDialogComponent } from '../_common/dialogs/imperium
   standalone: false,
 })
 export class PlayerHandComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  private gameManager = inject(GameManager);
+  private cardsService = inject(CardsService);
+  private intriguesService = inject(IntriguesService);
+  private audioManager = inject(AudioManager);
+  private settingsService = inject(SettingsService);
+  private dialog = inject(MatDialog);
+  private logService = inject(LoggingService);
+  private playerresourcesService = inject(PlayerResourcesService);
+  private roundService = inject(RoundService);
+  private effectsService = inject(EffectsService);
+  private aiManager = inject(AIManager);
+
   subscriptions: Subscription[] = [];
 
   activePlayer: Player | undefined;
@@ -47,21 +60,6 @@ export class PlayerHandComponent implements OnInit, OnDestroy {
   revealPlots = false;
 
   playerDeckCardsCount = 0;
-
-  constructor(
-    public t: TranslateService,
-    private gameManager: GameManager,
-    private cardsService: CardsService,
-    private intriguesService: IntriguesService,
-    private audioManager: AudioManager,
-    private settingsService: SettingsService,
-    private dialog: MatDialog,
-    private logService: LoggingService,
-    private playerresourcesService: PlayerResourcesService,
-    private roundService: RoundService,
-    private effectsService: EffectsService,
-    private aiManager: AIManager,
-  ) {}
 
   ngOnInit(): void {
     const activePlayerSub = this.gameManager.activePlayer$.subscribe((activePlayer) => {

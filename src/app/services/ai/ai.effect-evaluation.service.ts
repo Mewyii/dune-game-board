@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { min } from 'lodash';
 import { AI, AIRewardEffectGameInterface } from 'src/app/constants/board-settings';
 import { getPlayerdreadnoughtCount } from 'src/app/helpers/combat';
@@ -36,12 +36,12 @@ import { SettingsService } from '../settings.service';
   providedIn: 'root',
 })
 export class AIEffectEvaluationService {
+  private settingsService = inject(SettingsService);
+  private boardSpacesService = inject(BoardSpacesService);
+
   ai: AI | undefined;
 
-  constructor(
-    private settingsService: SettingsService,
-    private boardSpacesService: BoardSpacesService,
-  ) {
+  constructor() {
     this.settingsService.AI$.subscribe((x) => {
       this.ai = x;
     });

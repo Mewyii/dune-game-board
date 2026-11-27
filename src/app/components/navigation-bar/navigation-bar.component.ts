@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -10,13 +10,15 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class NavigationBarComponent {
+  private router = inject(Router);
+  t = inject(TranslateService);
+
   showNavigationSelection = false;
   url = '';
 
-  constructor(
-    private router: Router,
-    public t: TranslateService,
-  ) {
+  constructor() {
+    const router = this.router;
+
     this.router.events.subscribe((val) => {
       this.url = router.url;
     });

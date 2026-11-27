@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
 import { aiPersonalities } from 'src/app/constants/ai';
 import { Player } from 'src/app/models/player';
 import { AIPlayer, AIPlayersService } from 'src/app/services/ai/ai-players.service';
@@ -14,18 +14,16 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class AITileComponent implements OnInit {
+  t = inject(TranslateService);
+  private gameManager = inject(GameManager);
+  private aiManager = inject(AIManager);
+  private aIPlayersService = inject(AIPlayersService);
+
   @Input() showDetails = false;
 
   activeAIPlayerId: number = 0;
   activePlayer: Player | undefined;
   activeAIPlayer: AIPlayer | undefined;
-
-  constructor(
-    public t: TranslateService,
-    private gameManager: GameManager,
-    private aiManager: AIManager,
-    private aIPlayersService: AIPlayersService,
-  ) {}
 
   ngOnInit(): void {
     this.aIPlayersService.activeAIPlayerId$.subscribe((playerId) => {

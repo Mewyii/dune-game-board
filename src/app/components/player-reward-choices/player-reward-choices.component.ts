@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 
 import { isStructuredConversionEffect } from 'src/app/helpers/rewards';
 import { StructuredConversionEffect, StructuredRewardEffect } from 'src/app/models';
@@ -23,6 +23,12 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class PlayerRewardChoicesComponent implements OnInit {
+  t = inject(TranslateService);
+  private gameManager = inject(GameManager);
+  private playerRewardChoicesService = inject(PlayerRewardChoicesService);
+  private turnInfoService = inject(TurnInfoService);
+  private effectsService = inject(EffectsService);
+
   activePlayerId: number = 0;
   activePlayer: Player | undefined;
   playerRewardChoices: PlayerRewardChoices | undefined;
@@ -32,14 +38,6 @@ export class PlayerRewardChoicesComponent implements OnInit {
   deployableDreadnoughts = 0;
 
   activeEffectId = '';
-
-  constructor(
-    public t: TranslateService,
-    private gameManager: GameManager,
-    private playerRewardChoicesService: PlayerRewardChoicesService,
-    private turnInfoService: TurnInfoService,
-    private effectsService: EffectsService,
-  ) {}
 
   ngOnInit(): void {
     this.gameManager.activePlayer$.subscribe((activePlayer) => {

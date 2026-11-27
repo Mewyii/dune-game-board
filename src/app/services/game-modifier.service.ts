@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep, compact, flatten, isArray, sum } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { mergeObjects } from '../helpers/common';
@@ -12,6 +12,7 @@ import {
   ResourceType,
 } from '../models';
 import { Player } from '../models/player';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface GameModifier {
   id: string;
@@ -125,17 +126,13 @@ export type EffectWithModifier = EffectChoiceConversionMultiplierTargetOrReward 
   providedIn: 'root',
 })
 export class GameModifiersService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private playerGameModifiersSubject = new BehaviorSubject<PlayerGameModifiers[]>([]);
   playerGameModifiers$ = this.playerGameModifiersSubject.asObservable();
   constructor() {
-    const playerGameModifiersString = localStorage.getItem('playerGameModifiers');
-    if (playerGameModifiersString) {
-      const playerGameModifiers = JSON.parse(playerGameModifiersString) as PlayerGameModifiers[];
-      this.playerGameModifiersSubject.next(playerGameModifiers);
-    }
-
-    this.playerGameModifiers$.subscribe((playerGameModifiers) => {
-      localStorage.setItem('playerGameModifiers', JSON.stringify(playerGameModifiers));
+    this.gameStatePersistenceService.bindSubjectToStorage('playerGameModifiers', this.playerGameModifiersSubject, {
+      scope: 'game',
     });
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,10 @@ import { DialogIntrigueEditorComponent } from './dialog-intrigue-editor/dialog-i
   standalone: false,
 })
 export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  intrigueConfigService = inject(IntrigueConfiguratorService);
+  private dialog = inject(MatDialog);
+
   subscriptions: Subscription[] = [];
 
   public intrigues: IntrigueCard[] = [];
@@ -38,12 +42,6 @@ export class IntrigueConfiguratorComponent implements OnInit, OnDestroy {
     amount: number;
     count: number;
   }[] = [];
-
-  constructor(
-    public t: TranslateService,
-    public intrigueConfigService: IntrigueConfiguratorService,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     const intriguesSub = this.intrigueConfigService.intrigues$.subscribe((intrigues) => {

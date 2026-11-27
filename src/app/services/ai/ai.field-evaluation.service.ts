@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { AI } from 'src/app/constants/board-settings';
 import { getAccumulatedSpice } from 'src/app/helpers/ai';
@@ -41,13 +41,13 @@ export interface ViableField {
   providedIn: 'root',
 })
 export class AIFieldEvaluationService {
+  private settingsService = inject(SettingsService);
+  private boardSpacesService = inject(BoardSpacesService);
+  private aiEffectEvaluationService = inject(AIEffectEvaluationService);
+
   ai: AI | undefined;
 
-  constructor(
-    private settingsService: SettingsService,
-    private boardSpacesService: BoardSpacesService,
-    private aiEffectEvaluationService: AIEffectEvaluationService,
-  ) {
+  constructor() {
     this.settingsService.AI$.subscribe((x) => {
       this.ai = x;
     });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DuneLocation } from 'src/app/models';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -24,19 +24,16 @@ export interface BoardSpaceSelectorData {
   standalone: false,
 })
 export class BoardSpaceSelectorDialogComponent implements OnInit {
+  gameManager = inject(GameManager);
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<BoardSpaceSelectorDialogComponent>>(MatDialogRef);
+  data = inject<BoardSpaceSelectorData>(MAT_DIALOG_DATA);
+
   public locations: DuneLocation[] = [];
   selectedCards: DuneLocation[] = [];
   hoveredBoardSpaceId = '';
   minSelected = 1;
   maxSelected = 1;
-
-  constructor(
-    public gameManager: GameManager,
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<BoardSpaceSelectorDialogComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: BoardSpaceSelectorData,
-  ) {}
 
   ngOnInit(): void {
     this.locations = this.data.locations;

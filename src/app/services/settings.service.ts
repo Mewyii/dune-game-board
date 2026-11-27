@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { AI, AppMode, GameContent, Settings, boardSettings } from '../constants/board-settings';
@@ -8,11 +8,14 @@ import { aiCustomExpert } from '../constants/game-content/custom-expert/ai';
 import { aiOriginal } from '../constants/game-content/original/ai';
 import { ActionField, ActionType, FactionInfluenceReward, FactionType, LanguageType } from '../models';
 import { Conflict } from '../models/conflict';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private AIs = [aiOriginal, aiCustomBeginner, aiCustomExpert];
   private AISubject = new BehaviorSubject<AI>(aiOriginal);
   AI$ = this.AISubject.asObservable();
@@ -50,29 +53,14 @@ export class SettingsService {
   );
 
   constructor() {
-    const gameContentsString = localStorage.getItem('gameContents');
-    if (gameContentsString) {
-      let gameContents = JSON.parse(gameContentsString) as GameContent[];
-
-      this.gameContentsSubject.next(gameContents);
-    }
-
-    const settingsString = localStorage.getItem('settings');
-    if (settingsString) {
-      let settings = JSON.parse(settingsString) as Settings;
-
-      this.settingsSubject.next(settings);
-
-      const ai = this.AIs.find((x) => x.name === settings.gameContent.aiName);
-      this.AISubject.next(ai ?? aiOriginal);
-    }
+    this.gameStatePersistenceService.bindSubjectToStorage('gameContents', this.gameContentsSubject, {
+      scope: 'host-setup',
+    });
+    this.gameStatePersistenceService.bindSubjectToStorage('settings', this.settingsSubject, { scope: 'host-setup' });
 
     this.settings$.subscribe((settings) => {
       this.setFields();
-      localStorage.setItem('settings', JSON.stringify(settings));
-    });
-    this.gameContents$.subscribe((gameContents) => {
-      localStorage.setItem('gameContents', JSON.stringify(gameContents));
+      this.selectAIForGameContent(settings.gameContent);
     });
   }
 
@@ -280,8 +268,6 @@ export class SettingsService {
     const gameContent = this.gameContentsSubject.value.find((x) => x.name === name);
     if (gameContent) {
       this.settingsSubject.next({ ...this.settings, gameContent });
-      const ai = this.AIs.find((x) => x.name === gameContent.aiName);
-      this.AISubject.next(ai ?? aiOriginal);
     }
   }
 
@@ -305,5 +291,12 @@ export class SettingsService {
 
   setMode(mode: AppMode) {
     this.settingsSubject.next({ ...this.settings, mode });
+  }
+
+  private selectAIForGameContent(gameContent: GameContent) {
+    const ai = this.AIs.find((x) => x.name === gameContent.aiName) ?? aiOriginal;
+    if (ai !== this.AISubject.value) {
+      this.AISubject.next(ai);
+    }
   }
 }

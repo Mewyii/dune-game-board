@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -11,15 +11,13 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
+  private settingsService = inject(SettingsService);
+  t = inject(TranslateService);
+
   public showAudioSelection = false;
   public autoplayMusic = false;
 
   subscriptions: Subscription[] = [];
-
-  constructor(
-    private settingsService: SettingsService,
-    public t: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     const autoPlaySub = this.settingsService.autoplayMusic$.subscribe((value) => {

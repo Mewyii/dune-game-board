@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -27,6 +27,10 @@ interface ConflictRewardSummary {
   standalone: false,
 })
 export class ConflictConfiguratorComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  conflictConfiguratorService = inject(ConflictConfiguratorService);
+  private dialog = inject(MatDialog);
+
   private subscription?: Subscription;
   public conflicts: ConflictConfiguratorEntry[] = [];
   public shownConflicts: ConflictConfiguratorEntry[] = [];
@@ -38,12 +42,6 @@ export class ConflictConfiguratorComponent implements OnInit, OnDestroy {
   public levelCounts: Record<1 | 2 | 3, number> = { 1: 0, 2: 0, 3: 0 };
   public readonly levels: (1 | 2 | 3)[] = [1, 2, 3];
   public sortOrder: 'asc' | 'desc' = 'asc';
-
-  constructor(
-    public t: TranslateService,
-    public conflictConfiguratorService: ConflictConfiguratorService,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     this.subscription = this.conflictConfiguratorService.conflicts$.subscribe((conflicts) => {

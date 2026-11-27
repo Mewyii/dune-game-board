@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { flatten } from 'lodash';
 import { getPlayerdreadnoughtCount } from '../helpers/combat';
 import { isFactionScoreType } from '../helpers/faction-score';
@@ -35,25 +35,23 @@ import { TechTilesService } from './tech-tiles.service';
   providedIn: 'root',
 })
 export class GameStateService {
-  constructor(
-    private settingsService: SettingsService,
-    private boardSpacesService: BoardSpacesService,
-    private cardsService: CardsService,
-    private playerAgentsService: PlayerAgentsService,
-    private turnInfoService: TurnInfoService,
-    private combatManager: CombatManager,
-    private gameModifiersService: GameModifiersService,
-    private techTilesService: TechTilesService,
-    private intriguesService: IntriguesService,
-    private locationsService: LocationsService,
-    private playerScoreManager: PlayerScoreManager,
-    private playersService: PlayersService,
-    private leadersService: LeadersService,
-    private conflictsService: ConflictsService,
-    private duneEventsManager: DuneEventsManager,
-    private playersResourcesService: PlayerResourcesService,
-    private aiPlayersService: AIPlayersService,
-  ) {}
+  private settingsService = inject(SettingsService);
+  private boardSpacesService = inject(BoardSpacesService);
+  private cardsService = inject(CardsService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private turnInfoService = inject(TurnInfoService);
+  private combatManager = inject(CombatManager);
+  private gameModifiersService = inject(GameModifiersService);
+  private techTilesService = inject(TechTilesService);
+  private intriguesService = inject(IntriguesService);
+  private locationsService = inject(LocationsService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private playersService = inject(PlayersService);
+  private leadersService = inject(LeadersService);
+  private conflictsService = inject(ConflictsService);
+  private duneEventsManager = inject(DuneEventsManager);
+  private playersResourcesService = inject(PlayerResourcesService);
+  private aiPlayersService = inject(AIPlayersService);
 
   getGameState(
     player: Player,

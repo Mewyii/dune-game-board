@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { DuneLocation } from '../models';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface OwnedLocation {
   locationId: string;
@@ -15,25 +16,18 @@ export interface OwnedLocation {
   providedIn: 'root',
 })
 export class LocationsService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private playersService = inject(PlayersService);
+  private settingsService = inject(SettingsService);
+
   private locationsSubject = new BehaviorSubject<DuneLocation[]>([]);
   locations$ = this.locationsSubject.asObservable();
 
   private ownedLocationsSubject = new BehaviorSubject<OwnedLocation[]>([]);
   ownedLocations$ = this.ownedLocationsSubject.asObservable();
 
-  constructor(
-    private playersService: PlayersService,
-    private settingsService: SettingsService,
-  ) {
-    const ownedLocationsString = localStorage.getItem('ownedLocations');
-    if (ownedLocationsString) {
-      const ownedLocations = JSON.parse(ownedLocationsString) as OwnedLocation[];
-      this.ownedLocationsSubject.next(ownedLocations);
-    }
-
-    this.ownedLocations$.subscribe((ownedLocations) => {
-      localStorage.setItem('ownedLocations', JSON.stringify(ownedLocations));
-    });
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('ownedLocations', this.ownedLocationsSubject, { scope: 'game' });
 
     this.playersService.players$.subscribe((players) => {
       this.locationsSubject.next(this.settingsService.gameContent.locations);

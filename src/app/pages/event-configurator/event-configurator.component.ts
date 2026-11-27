@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -16,17 +16,15 @@ import { DialogEventEditorComponent } from './dialog-event-editor/dialog-event-e
   standalone: false,
 })
 export class EventConfiguratorComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  eventsService = inject(DuneEventsManager);
+  private dialog = inject(MatDialog);
+
   subscriptions: Subscription[] = [];
 
   public events: DuneEvent[] = [];
   public showControls = true;
   public imagePadding = 0;
-
-  constructor(
-    public t: TranslateService,
-    public eventsService: DuneEventsManager,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     const eventsSub = this.eventsService.events$.subscribe((events) => {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { deLocale, enLocale, LocaleType } from '../locales';
 import { LanguageString, LanguageType } from '../models';
 import { SettingsService } from './settings.service';
@@ -9,11 +9,13 @@ export type Locale = { [key: string]: string };
   providedIn: 'root',
 })
 export class TranslateService {
+  private settingsService = inject(SettingsService);
+
   private en = enLocale;
   private de = deLocale;
   language: LanguageType = 'de';
 
-  constructor(private settingsService: SettingsService) {
+  constructor() {
     this.language = this.settingsService.language;
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IntrigueCard } from 'src/app/models/intrigue';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -12,15 +12,15 @@ import { IntrigueEditorComponent } from '../intrigue-editor/intrigue-editor.comp
   standalone: false,
 })
 export class DialogIntrigueEditorComponent {
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogIntrigueEditorComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    intrigue: IntrigueCard;
+  }>(MAT_DIALOG_DATA);
+
   @ViewChild(IntrigueEditorComponent)
   intrigueEditorComponent!: IntrigueEditorComponent;
-
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogIntrigueEditorComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: { title: string; intrigue: IntrigueCard },
-  ) {}
 
   get dialogTitle(): string {
     return this.data.title;

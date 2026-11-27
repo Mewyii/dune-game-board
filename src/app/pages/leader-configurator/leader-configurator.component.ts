@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as htmlToImage from 'html-to-image';
 import { Subscription } from 'rxjs';
@@ -16,17 +16,15 @@ import { DialogLeaderEditorComponent } from './dialog-leader-editor/dialog-leade
   standalone: false,
 })
 export class LeaderConfiguratorComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  leadersService = inject(LeaderConfiguratorService);
+  private dialog = inject(MatDialog);
+
   subscriptions: Subscription[] = [];
 
   public leaders: Leader[] = [];
   public showControls = true;
   public imagePadding = 0;
-
-  constructor(
-    public t: TranslateService,
-    public leadersService: LeaderConfiguratorService,
-    private dialog: MatDialog,
-  ) {}
 
   ngOnInit(): void {
     const leadersSub = this.leadersService.leaders$.subscribe((leaders) => {

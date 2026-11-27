@@ -7,6 +7,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DuneLocation } from 'src/app/models';
@@ -25,6 +26,12 @@ import { PlayersService } from 'src/app/services/players.service';
   standalone: false,
 })
 export class DuneLocationComponent implements OnInit, OnChanges, OnDestroy {
+  private locationsService = inject(LocationsService);
+  private playersService = inject(PlayersService);
+  private leaderService = inject(LeadersService);
+  private gameManager = inject(GameManager);
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   subscriptions: Subscription[] = [];
   private headingResizeObserver: ResizeObserver | undefined;
 
@@ -53,14 +60,6 @@ export class DuneLocationComponent implements OnInit, OnChanges, OnDestroy {
   public isShielded = false;
 
   public isActiveForPlayerCount = true;
-
-  constructor(
-    private locationsService: LocationsService,
-    private playersService: PlayersService,
-    private leaderService: LeadersService,
-    private gameManager: GameManager,
-    private elementRef: ElementRef<HTMLElement>,
-  ) {}
   ngOnChanges(changes: SimpleChanges): void {
     const host = this.elementRef.nativeElement;
     const tile = host.querySelector<HTMLElement>('.location-tile');

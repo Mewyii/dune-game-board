@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { IntrigueCard, IntrigueDeckCard } from 'src/app/models/intrigue';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -10,7 +10,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class IntrigueCardComponent {
-  @Input() card!: IntrigueCard | IntrigueDeckCard;
+  t = inject(TranslateService);
 
-  constructor(public t: TranslateService) {}
+  @Input() card!: IntrigueCard | IntrigueDeckCard;
 }

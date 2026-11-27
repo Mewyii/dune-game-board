@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppMode } from 'src/app/constants/board-settings';
 
@@ -18,6 +18,13 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class DuneFactionComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  private playersService = inject(PlayersService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private gameModifiersService = inject(GameModifiersService);
+  private settingsService = inject(SettingsService);
+  private gameManager = inject(GameManager);
+
   subscriptions: Subscription[] = [];
 
   @Input() faction: Faction = {
@@ -62,15 +69,6 @@ export class DuneFactionComponent implements OnInit, OnDestroy {
   excludedPlayers: number[] = [];
 
   playerColors: { [key: number]: string } = {};
-
-  constructor(
-    public t: TranslateService,
-    private playersService: PlayersService,
-    private playerScoreManager: PlayerScoreManager,
-    private gameModifiersService: GameModifiersService,
-    private settingsService: SettingsService,
-    private gameManager: GameManager,
-  ) {}
 
   ngOnInit(): void {
     this.influenceScoreArray = new Array(this.settingsService.getFactionInfluenceMaxScore() + 1);

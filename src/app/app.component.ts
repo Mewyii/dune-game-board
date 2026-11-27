@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
   standalone: false,
 })
 export class AppComponent {
-  constructor(private title: Title) {}
+  private title = inject(Title);
 
   ngOnInit(): void {
     this.title.setTitle('Dune Imperium: Sands of Arrakis');

@@ -1,26 +1,21 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { techTiles } from 'src/app/constants/tech-tiles';
 import { TechTileCard } from 'src/app/models/tech-tile';
+import { GameStatePersistenceService } from '../persistence/game-state-persistence.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TechTileConfiguratorService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private techTilesSubject = new BehaviorSubject<TechTileCard[]>(techTiles);
   techTiles$ = this.techTilesSubject.asObservable();
 
   constructor() {
-    const techTilesString = localStorage.getItem('techTiles');
-    if (techTilesString) {
-      const techTiles = JSON.parse(techTilesString) as TechTileCard[];
-      this.techTilesSubject.next(techTiles);
-    }
-
-    this.techTiles$.subscribe((techTiles) => {
-      localStorage.setItem('techTiles', JSON.stringify(techTiles));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('techTiles', this.techTilesSubject, { scope: 'host-setup' });
   }
 
   get techTiles() {

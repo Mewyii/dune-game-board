@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ImperiumDeckCard } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
@@ -25,17 +25,15 @@ export interface ImperiumCardSelectorData {
   standalone: false,
 })
 export class ImperiumCardsPreviewDialogComponent implements OnInit {
+  gameManager = inject(GameManager);
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<ImperiumCardsPreviewDialogComponent>>(MatDialogRef);
+  data = inject<ImperiumCardSelectorData>(MAT_DIALOG_DATA);
+
   public searchString = '';
   public imperiumCards: ImperiumDeckCard[] = [];
   selectedCard: ImperiumDeckCard | null = null;
   hoveredCardId = '';
-  constructor(
-    public gameManager: GameManager,
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<ImperiumCardsPreviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: ImperiumCardSelectorData,
-  ) {}
 
   ngOnInit(): void {
     this.imperiumCards = this.data.imperiumCards;

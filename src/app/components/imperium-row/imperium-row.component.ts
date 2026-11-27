@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -28,6 +28,17 @@ import {
   standalone: false,
 })
 export class ImperiumRowComponent implements OnInit, OnDestroy {
+  t = inject(TranslateService);
+  private playersService = inject(PlayersService);
+  private gameManager = inject(GameManager);
+  private cardsService = inject(CardsService);
+  private gameModifierService = inject(GameModifiersService);
+  private dialog = inject(MatDialog);
+  private turnInfoService = inject(TurnInfoService);
+  private settingsService = inject(SettingsService);
+  private roundService = inject(RoundService);
+  private playerResourcesService = inject(PlayerResourcesService);
+
   subscriptions: Subscription[] = [];
 
   imperiumRowCardsLeft: ((ImperiumRowCard | ImperiumRowPlot) & {
@@ -53,19 +64,6 @@ export class ImperiumRowComponent implements OnInit, OnDestroy {
     costModifier: number;
     isBlocked: boolean;
   })[] = [];
-
-  constructor(
-    public t: TranslateService,
-    private playersService: PlayersService,
-    private gameManager: GameManager,
-    private cardsService: CardsService,
-    private gameModifierService: GameModifiersService,
-    private dialog: MatDialog,
-    private turnInfoService: TurnInfoService,
-    private settingsService: SettingsService,
-    private roundService: RoundService,
-    private playerResourcesService: PlayerResourcesService,
-  ) {}
 
   ngOnInit(): void {
     const imperiumRowSub = this.cardsService.imperiumRow$.subscribe((imperiumCards) => {

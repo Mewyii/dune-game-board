@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { Leader } from 'src/app/constants/leaders';
 import { LanguageString } from 'src/app/models';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -11,6 +11,8 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class LeaderCardComponent implements OnInit, OnChanges {
+  t = inject(TranslateService);
+
   @Input() leader!: Leader;
 
   public deckName: LanguageString = { de: 'deck', en: 'deck' };
@@ -21,8 +23,6 @@ export class LeaderCardComponent implements OnInit, OnChanges {
   public signetEffectSize = '22px';
   public signetDescriptionSize = '13px';
   public signetDescriptionSymbolSize = '17px';
-
-  constructor(public t: TranslateService) {}
   ngOnInit(): void {
     this.setTextAndSymbolSizes();
   }

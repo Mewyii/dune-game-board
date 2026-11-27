@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 interface PlayerAgentBase {
   playerId: number;
@@ -30,6 +31,8 @@ export type PlayerAgent = PlayerAgentAvailable | PlayerAgentOnField | PlayerAgen
   providedIn: 'root',
 })
 export class PlayerAgentsService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private playersAgentsSubject = new BehaviorSubject<PlayerAgent[]>([]);
   playersAgents$ = this.playersAgentsSubject.asObservable();
   availablePlayersAgents$ = this.playersAgents$.pipe(
@@ -48,15 +51,7 @@ export class PlayerAgentsService {
   );
 
   constructor() {
-    const playersAgentsString = localStorage.getItem('playerAgents');
-    if (playersAgentsString) {
-      const playerAgents = JSON.parse(playersAgentsString) as PlayerAgent[];
-      this.playersAgentsSubject.next(playerAgents);
-    }
-
-    this.playersAgents$.subscribe((playerAgents) => {
-      localStorage.setItem('playerAgents', JSON.stringify(playerAgents));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('playerAgents', this.playersAgentsSubject, { scope: 'game' });
   }
 
   getPlayersAgents() {

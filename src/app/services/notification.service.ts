@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from './translate-service';
 
@@ -6,7 +6,8 @@ import { TranslateService } from './translate-service';
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private snackBar: MatSnackBar, private t: TranslateService) {}
+  private snackBar = inject(MatSnackBar);
+  private t = inject(TranslateService);
 
   showWarning(message: string) {
     this.snackBar.open(message, this.t.translate('commonClose'), {

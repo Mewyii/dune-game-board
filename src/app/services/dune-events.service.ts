@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BehaviorSubject, map } from 'rxjs';
 import { DuneEvent, duneEvents } from '../constants/events';
 import { shuffleMultipleTimes } from '../helpers/common';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface DuneEventCard extends DuneEvent {
   id: string;
@@ -12,6 +13,8 @@ export interface DuneEventCard extends DuneEvent {
   providedIn: 'root',
 })
 export class DuneEventsManager {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+
   private eventsSubject = new BehaviorSubject<DuneEvent[]>(duneEvents);
   events$ = this.eventsSubject.asObservable();
 
@@ -20,29 +23,9 @@ export class DuneEventsManager {
   currentEvent$ = this.eventDeck$.pipe(map((x) => x[0]));
 
   constructor() {
-    const eventsString = localStorage.getItem('events');
-    if (eventsString) {
-      const events = JSON.parse(eventsString) as DuneEvent[];
+    this.gameStatePersistenceService.bindSubjectToStorage('events', this.eventsSubject, { scope: 'game' });
 
-      this.eventsSubject.next(events);
-    } else {
-    }
-
-    this.events$.subscribe((events) => {
-      localStorage.setItem('events', JSON.stringify(events));
-    });
-
-    const eventDeckString = localStorage.getItem('eventDeck');
-    if (eventDeckString) {
-      const eventDeck = JSON.parse(eventDeckString) as DuneEventCard[];
-
-      this.eventDeckSubject.next(eventDeck);
-    } else {
-    }
-
-    this.eventDeck$.subscribe((eventDeck) => {
-      localStorage.setItem('eventDeck', JSON.stringify(eventDeck));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('eventDeck', this.eventDeckSubject, { scope: 'game' });
   }
 
   get events() {

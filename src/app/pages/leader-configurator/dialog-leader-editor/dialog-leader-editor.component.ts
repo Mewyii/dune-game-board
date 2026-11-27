@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Leader } from 'src/app/constants/leaders';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -12,14 +12,15 @@ import { LeaderEditorComponent } from '../leader-editor/leader-editor.component'
   standalone: false,
 })
 export class DialogLeaderEditorComponent {
+  t = inject(TranslateService);
+  dialogRef = inject<MatDialogRef<DialogLeaderEditorComponent>>(MatDialogRef);
+  data = inject<{
+    title: string;
+    leader: Leader;
+  }>(MAT_DIALOG_DATA);
+
   @ViewChild(LeaderEditorComponent)
   leaderEditorComponent!: LeaderEditorComponent;
-
-  constructor(
-    public t: TranslateService,
-    public dialogRef: MatDialogRef<DialogLeaderEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; leader: Leader },
-  ) {}
 
   get dialogTitle(): string {
     return this.data.title;

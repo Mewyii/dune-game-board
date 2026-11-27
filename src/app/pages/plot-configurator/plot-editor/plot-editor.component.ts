@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { activeFactionTypes } from 'src/app/models';
@@ -12,6 +12,8 @@ import { ImperiumPlot } from 'src/app/models/imperium-plot';
   standalone: false,
 })
 export class PlotEditorComponent implements OnInit, OnChanges {
+  private fb = inject(FormBuilder);
+
   @Input() imperiumPlot: ImperiumPlot | null = null;
 
   imperiumPlotForm!: FormGroup;
@@ -21,7 +23,7 @@ export class PlotEditorComponent implements OnInit, OnChanges {
   factions = [...activeFactionTypes, ''].sort((a, b) => a.localeCompare(b));
   fontSizes = ['medium', 'small'];
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.initForm();
   }
 

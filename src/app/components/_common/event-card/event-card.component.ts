@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { DuneEvent } from 'src/app/constants/events';
 import { TranslateService } from 'src/app/services/translate-service';
 
@@ -10,7 +10,7 @@ import { TranslateService } from 'src/app/services/translate-service';
   standalone: false,
 })
 export class EventCardComponent {
-  @Input() event!: DuneEvent;
+  t = inject(TranslateService);
 
-  constructor(public t: TranslateService) {}
+  @Input() event!: DuneEvent;
 }

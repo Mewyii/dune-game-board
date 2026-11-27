@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep, min, shuffle } from 'lodash';
 import { BehaviorSubject, combineLatest, map, Subscription } from 'rxjs';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from '../helpers/cards';
@@ -77,6 +77,7 @@ import { RoundPhaseType, RoundService } from './round.service';
 import { SettingsService } from './settings.service';
 import { TechTileDeckCard, TechTilesService } from './tech-tiles.service';
 import { TranslateService } from './translate-service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface BaseGameEffect {
   id: string;
@@ -97,6 +98,39 @@ export type GameElement =
   providedIn: 'root',
 })
 export class GameManager {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private playerScoreManager = inject(PlayerScoreManager);
+  private playersService = inject(PlayersService);
+  private combatManager = inject(CombatManager);
+  private locationsService = inject(LocationsService);
+  private loggingService = inject(LoggingService);
+  private leadersService = inject(LeadersService);
+  private conflictsService = inject(ConflictsService);
+  private techTilesService = inject(TechTilesService);
+  private audioManager = inject(AudioManager);
+  private settingsService = inject(SettingsService);
+  private cardsService = inject(CardsService);
+  private gameModifiersService = inject(GameModifiersService);
+  private playerRewardChoicesService = inject(PlayerRewardChoicesService);
+  private t = inject(TranslateService);
+  private intriguesService = inject(IntriguesService);
+  private turnInfoService = inject(TurnInfoService);
+  private notificationService = inject(NotificationService);
+  private playerAgentsService = inject(PlayerAgentsService);
+  private playersResourcesService = inject(PlayerResourcesService);
+  private gameStateService = inject(GameStateService);
+  private boardSpacesService = inject(BoardSpacesService);
+  private roundService = inject(RoundService);
+  private effectsService = inject(EffectsService);
+  private duneEventsManager = inject(DuneEventsManager);
+  private aiManager = inject(AIManager);
+  private aiPlayersService = inject(AIPlayersService);
+  private aiBoardSpacesService = inject(AIBoardSpacesService);
+  private aiCardsService = inject(AICardsService);
+  private aIConflictService = inject(AIConflictService);
+  private effectEvaluationService = inject(AIEffectEvaluationService);
+  private dialog = inject(MatDialog);
+
   private startingPlayerIdSubject = new BehaviorSubject<number>(0);
   startingPlayerId$ = this.startingPlayerIdSubject.asObservable();
 
@@ -108,58 +142,11 @@ export class GameManager {
 
   playerEffectChoiceSubscriptions: Subscription[] = [];
 
-  constructor(
-    private playerScoreManager: PlayerScoreManager,
-    private playersService: PlayersService,
-    private combatManager: CombatManager,
-    private locationsService: LocationsService,
-    private loggingService: LoggingService,
-    private leadersService: LeadersService,
-    private conflictsService: ConflictsService,
-    private techTilesService: TechTilesService,
-    private audioManager: AudioManager,
-    private settingsService: SettingsService,
-    private cardsService: CardsService,
-    private gameModifiersService: GameModifiersService,
-    private playerRewardChoicesService: PlayerRewardChoicesService,
-    private t: TranslateService,
-    private intriguesService: IntriguesService,
-    private turnInfoService: TurnInfoService,
-    private notificationService: NotificationService,
-    private playerAgentsService: PlayerAgentsService,
-    private playersResourcesService: PlayerResourcesService,
-    private gameStateService: GameStateService,
-    private boardSpacesService: BoardSpacesService,
-    private roundService: RoundService,
-    private effectsService: EffectsService,
-    private duneEventsManager: DuneEventsManager,
-    private aiManager: AIManager,
-    private aiPlayersService: AIPlayersService,
-    private aiBoardSpacesService: AIBoardSpacesService,
-    private aiCardsService: AICardsService,
-    private aIConflictService: AIConflictService,
-    private effectEvaluationService: AIEffectEvaluationService,
-    private dialog: MatDialog,
-  ) {
-    const startingPlayerIdString = localStorage.getItem('startingPlayerId');
-    if (startingPlayerIdString) {
-      const startingPlayerId = JSON.parse(startingPlayerIdString) as number;
-      this.startingPlayerIdSubject.next(startingPlayerId);
-    }
-
-    const activePlayerIdString = localStorage.getItem('activePlayerId');
-    if (activePlayerIdString) {
-      const activePlayerId = JSON.parse(activePlayerIdString) as number;
-      this.activePlayerIdSubject.next(activePlayerId);
-    }
-
-    this.startingPlayerId$.subscribe((startingPlayerId) => {
-      localStorage.setItem('startingPlayerId', JSON.stringify(startingPlayerId));
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('startingPlayerId', this.startingPlayerIdSubject, {
+      scope: 'game',
     });
-
-    this.activePlayerId$.subscribe((activePlayerId) => {
-      localStorage.setItem('activePlayerId', JSON.stringify(activePlayerId));
-    });
+    this.gameStatePersistenceService.bindSubjectToStorage('activePlayerId', this.activePlayerIdSubject, { scope: 'game' });
 
     this.playersService.playerIds$.subscribe((playerIds) => {
       for (const subscription of this.playerEffectChoiceSubscriptions) {

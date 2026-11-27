@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { cloneDeep, shuffle } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { Leader } from '../constants/leaders';
@@ -7,6 +7,7 @@ import { getStructuredEffectArrayInfos } from '../helpers/rewards';
 import { StructuredEffect } from '../models';
 import { Player } from '../models/player';
 import { LeaderConfiguratorService } from './configurators/leader.service';
+import { GameStatePersistenceService } from './persistence/game-state-persistence.service';
 
 export interface LeaderDeckCard extends Leader, LeaderGameAdjustments {
   id: string;
@@ -25,6 +26,9 @@ export interface PlayerLeader {
   providedIn: 'root',
 })
 export class LeadersService {
+  private gameStatePersistenceService = inject(GameStatePersistenceService);
+  private leaderConfiguratorService = inject(LeaderConfiguratorService);
+
   private leaderDeckSubject = new BehaviorSubject<LeaderDeckCard[]>([]);
   leaderDeck$ = this.leaderDeckSubject.asObservable();
 
@@ -32,48 +36,23 @@ export class LeadersService {
   playerLeaders$ = this.playerLeadersSubject.asObservable();
   playerLeaders: PlayerLeader[] = [];
 
-  constructor(private leaderConfiguratorService: LeaderConfiguratorService) {
-    const leaderDeckString = localStorage.getItem('leaderDeck');
-    if (leaderDeckString) {
-      const storedLeaders = JSON.parse(leaderDeckString) as LeaderDeckCard[];
-
-      // Workaround for local storage not being able to store functions
-      const realLeaders = storedLeaders.map((x) => {
-        const leaderGameAdjustments = leadersGameAdjustments.find((y) => y.id === x.name.en);
-        return {
-          ...x,
-          ...leaderGameAdjustments,
-        };
-      });
-
-      this.leaderDeckSubject.next(realLeaders);
-    }
-
-    this.leaderDeck$.subscribe((leaderDeck) => {
-      localStorage.setItem('leaderDeck', JSON.stringify(leaderDeck));
+  constructor() {
+    this.gameStatePersistenceService.bindSubjectToStorage('leaderDeck', this.leaderDeckSubject, {
+      scope: 'game',
+      fromStorable: (storedLeaders: LeaderDeckCard[]) => storedLeaders.map((leader) => restoreLeaderGameAdjustments(leader)),
     });
 
-    const playersLeadersString = localStorage.getItem('playerLeaders');
-    if (playersLeadersString) {
-      const playerLeaders = JSON.parse(playersLeadersString) as PlayerLeader[];
-
-      // Workaround for local storage not being able to store functions
-      const realPlayerLeaders = playerLeaders.map((x) => {
-        const leaderGameAdjustments = leadersGameAdjustments.find((y) => y.id === x.leader.name.en);
-        return {
-          ...x,
-          leader: {
-            ...x.leader,
-            ...leaderGameAdjustments,
-          },
-        };
-      });
-      this.playerLeadersSubject.next(realPlayerLeaders);
-    }
+    this.gameStatePersistenceService.bindSubjectToStorage('playerLeaders', this.playerLeadersSubject, {
+      scope: 'game',
+      fromStorable: (storedPlayerLeaders: PlayerLeader[]) =>
+        storedPlayerLeaders.map((playerLeader) => ({
+          ...playerLeader,
+          leader: restoreLeaderGameAdjustments(playerLeader.leader),
+        })),
+    });
 
     this.playerLeaders$.subscribe((playerLeaders) => {
       this.playerLeaders = cloneDeep(playerLeaders);
-      localStorage.setItem('playerLeaders', JSON.stringify(playerLeaders));
     });
   }
 
@@ -192,4 +171,13 @@ export class LeadersService {
       ...leaderGameAdjustments,
     };
   }
+}
+
+// Game adjustments contain functions, which cannot be serialized and have to be re-attached after loading.
+function restoreLeaderGameAdjustments(storedLeader: LeaderDeckCard): LeaderDeckCard {
+  const leaderGameAdjustments = leadersGameAdjustments.find((adjustment) => adjustment.id === storedLeader.name.en);
+  return {
+    ...storedLeader,
+    ...leaderGameAdjustments,
+  };
 }
