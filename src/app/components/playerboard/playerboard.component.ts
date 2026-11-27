@@ -6,10 +6,10 @@ import { LanguageString } from 'src/app/models';
 import { Player } from 'src/app/models/player';
 import { AudioManager } from 'src/app/services/audio-manager.service';
 import { CardsService } from 'src/app/services/cards.service';
-import { CombatManager } from 'src/app/services/combat-manager.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { LeadersService } from 'src/app/services/leaders.service';
-import { PlayerScoreManager } from 'src/app/services/player-score-manager.service';
+import { MultiplayerLobbyService } from 'src/app/services/multiplayer/multiplayer-lobby.service';
+import { GameSessionService } from 'src/app/services/persistence/game-session.service';
 import { PlayersService } from 'src/app/services/players.service';
 import { RoundService } from 'src/app/services/round.service';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -17,6 +17,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 import { GameSummaryDialogComponent } from '../_common/dialogs/game-summary-dialog/game-summary-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
+import { MultiplayerDialogComponent } from '../multiplayer-dialog/multiplayer-dialog.component';
 
 @Component({
   selector: 'app-playerboard',
@@ -29,8 +30,8 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
   t = inject(TranslateService);
   private gameManager = inject(GameManager);
   private playersService = inject(PlayersService);
-  private playerScoreManager = inject(PlayerScoreManager);
-  private combatManager = inject(CombatManager);
+  private lobbyService = inject(MultiplayerLobbyService);
+  private gameSessionService = inject(GameSessionService);
   private leadersService = inject(LeadersService);
   private cardsService = inject(CardsService);
   private audioManager = inject(AudioManager);
@@ -52,6 +53,9 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
   maxPlayers = 0;
 
   allLeadersLockedIn = false;
+
+  isSessionActive = false;
+  isHost = true;
 
   ngOnInit(): void {
     const playersSub = this.playersService.players$.subscribe((players) => {
@@ -81,7 +85,24 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
       this.allLeadersLockedIn = playerLeaders.filter((x) => x.isLockedIn).length === this.players.length;
     });
 
-    this.subscriptions.push(playersSub, currentRoundSub, currentRoundPhaseSub, isFinaleS, gameContentSub, playerLeadersSub);
+    const activeSessionSub = this.gameSessionService.activeSession$.subscribe((session) => {
+      this.isSessionActive = !!session;
+    });
+
+    const isHostSub = this.gameSessionService.isHost$.subscribe((isHost) => {
+      this.isHost = isHost;
+    });
+
+    this.subscriptions.push(
+      playersSub,
+      currentRoundSub,
+      currentRoundPhaseSub,
+      isFinaleS,
+      gameContentSub,
+      playerLeadersSub,
+      activeSessionSub,
+      isHostSub,
+    );
   }
 
   ngOnDestroy(): void {
@@ -92,22 +113,20 @@ export class PlayerboardComponent implements OnInit, OnDestroy {
 
   onAddPlayerClicked() {
     this.audioManager.playSound('click-soft');
-    this.playersService.addPlayer();
-    const players = this.playersService.getPlayers();
-    this.playerScoreManager.resetPlayersScores(players);
-    this.combatManager.setInitialPlayerCombatUnits(players);
+    this.lobbyService.addPlayerSlot(true);
   }
 
   onRemovePlayerClicked() {
     this.audioManager.playSound('click-soft');
-    this.playersService.removePlayer();
-    const players = this.playersService.getPlayers();
-    this.playerScoreManager.resetPlayersScores(players);
-    this.combatManager.setInitialPlayerCombatUnits(players);
+    void this.lobbyService.removeLastPlayerSlot();
   }
 
-  onStartGameClicked() {
-    this.gameManager.startGame();
+  onStartLocalGameClicked() {
+    this.lobbyService.startGame();
+  }
+
+  onMultiplayerClicked() {
+    this.dialog.open(MultiplayerDialogComponent, { width: '720px' });
   }
 
   onBeginPlayClicked() {

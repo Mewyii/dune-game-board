@@ -29,8 +29,9 @@ jobs:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
+          # api/config.php only exists on the server (database credentials) and must survive every deployment.
           script: |
-            find /kunden/homepages/35/d992320858/htdocs/dune_imperium/ -type f ! -name '.htaccess' -exec rm -f {} \;
+            find /kunden/homepages/35/d992320858/htdocs/dune_imperium/ -type f ! -name '.htaccess' ! -path '/kunden/homepages/35/d992320858/htdocs/dune_imperium/api/config.php' -exec rm -f {} \;
 
       - name: 📤 Deploy via SFTP
         uses: appleboy/scp-action@master
@@ -40,6 +41,18 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
           source: 'dist/dune-game-board/*'
+          target: '/kunden/homepages/35/d992320858/htdocs/dune_imperium'
+
+      # config.php is not part of the repository, so the server copy is never overwritten.
+      - name: 📤 Deploy multiplayer API via SFTP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
+          source: 'backend/api'
+          strip_components: 1
           target: '/kunden/homepages/35/d992320858/htdocs/dune_imperium'
 
       - name: Move files from browser folder to dune_imperium

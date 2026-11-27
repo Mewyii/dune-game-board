@@ -24,15 +24,25 @@
       <button mat-fab color="accent" (click)="showSettingsDialog()" [matTooltip]="t.translate('playerboardSettingsTooltip')">
         <mat-icon>settings</mat-icon>
       </button>
-      @if (currentRoundPhase === 'none') {
+      @if (currentRoundPhase === 'none' && !isSessionActive) {
         <button
           mat-fab
           color="accent"
-          (click)="onStartGameClicked()"
+          (click)="onStartLocalGameClicked()"
           [disabled]="players.length < 2"
-          [matTooltip]="t.translate('playerboardBeginGameTooltip')"
+          [matTooltip]="t.translate('playerboardBeginLocalGameTooltip')"
         >
           <mat-icon>play_arrow</mat-icon>
+        </button>
+      }
+      @if (currentRoundPhase === 'none' || isSessionActive) {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onMultiplayerClicked()"
+          [matTooltip]="t.translate('playerboardMultiplayerTooltip')"
+        >
+          <mat-icon>{{ isSessionActive ? 'wifi' : 'groups' }}</mat-icon>
         </button>
       }
       @if (currentRound === 0 && currentRoundPhase === 'select leaders') {
@@ -89,6 +99,16 @@
           <mat-icon>power_settings_new</mat-icon>
         </button>
       }
+      @if (isSessionActive) {
+        <button
+          mat-fab
+          color="accent"
+          (click)="onMultiplayerClicked()"
+          [matTooltip]="t.translate('playerboardMultiplayerTooltip')"
+        >
+          <mat-icon>wifi</mat-icon>
+        </button>
+      }
       @if (currentRoundPhase === 'combat-resolvement' && isFinale) {
         <button
           mat-fab
@@ -106,20 +126,22 @@
       <div class="font-scifi">
         {{ t.translate('playerboardHeading') }}
       </div>
-      <div>
-        <button
-          mat-mini-fab
-          [color]="'accent'"
-          (click)="onRemovePlayerClicked()"
-          [disabled]="players.length === 0"
-          [style]="'margin-right: 6px'"
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerClicked()" [disabled]="players.length === maxPlayers">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
+      @if (isHost) {
+        <div>
+          <button
+            mat-mini-fab
+            [color]="'accent'"
+            (click)="onRemovePlayerClicked()"
+            [disabled]="players.length === 0"
+            [style]="'margin-right: 6px'"
+          >
+            <mat-icon>remove</mat-icon>
+          </button>
+          <button mat-mini-fab [color]="'accent'" (click)="onAddPlayerClicked()" [disabled]="players.length === maxPlayers">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      }
     </div>
   }
   <div class="players-container">

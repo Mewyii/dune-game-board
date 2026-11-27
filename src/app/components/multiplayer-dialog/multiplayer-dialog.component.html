@@ -1,0 +1,156 @@
+<h1 mat-dialog-title>{{ t.translate('multiplayerDialogTitle') }}</h1>
+<div mat-dialog-content>
+  @if (!activeSession) {
+    <div class="section">
+      <div class="section-heading font-medieval">{{ t.translate('multiplayerCreateSessionHeading') }}</div>
+      <p>{{ t.translate('multiplayerCreateSessionText') }}</p>
+      <button mat-flat-button color="accent" (click)="onCreateSessionClicked()" [disabled]="isRequestRunning">
+        {{ t.translate('multiplayerCreateSessionButton') }}
+      </button>
+    </div>
+    <div class="section">
+      <div class="section-heading font-medieval">{{ t.translate('multiplayerJoinSessionHeading') }}</div>
+      <div class="join-row">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>{{ t.translate('multiplayerSessionCodeLabel') }}</mat-label>
+          <input
+            matInput
+            class="session-code-input"
+            maxlength="6"
+            autocomplete="off"
+            [(ngModel)]="sessionCodeInput"
+            (keyup.enter)="onJoinSessionClicked()"
+          />
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="accent"
+          (click)="onJoinSessionClicked()"
+          [disabled]="isRequestRunning || sessionCodeInput.trim().length !== 6"
+        >
+          {{ t.translate('multiplayerJoinSessionButton') }}
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="session-header">
+      <div>
+        <div class="session-code-label">{{ t.translate('multiplayerSessionCodeLabel') }}</div>
+        <div class="session-code font-scifi">{{ activeSession.sessionCode }}</div>
+      </div>
+      <button
+        mat-mini-fab
+        color="accent"
+        (click)="onCopyInviteLinkClicked()"
+        [matTooltip]="t.translate(isInviteLinkCopied ? 'multiplayerInviteLinkCopied' : 'multiplayerCopyInviteLink')"
+      >
+        <mat-icon>{{ isInviteLinkCopied ? 'done' : 'link' }}</mat-icon>
+      </button>
+      <div class="sync-status" [class.has-problem]="syncStatus === 'connection-error' || syncStatus === 'session-not-found'">
+        {{ syncStatusText }}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-heading font-medieval">{{ t.translate('multiplayerSlotsHeading') }}</div>
+      @for (slot of lobbySlots; track slot.playerId) {
+        <div class="slot">
+          <div class="slot-color" [style.background-color]="slot.color"></div>
+          <div class="slot-name">{{ t.translate('multiplayerSlotPlayer', false, slot.playerId) }}</div>
+          <div class="slot-occupant">{{ getSlotOccupantText(slot) }}</div>
+
+          <div class="slot-actions">
+            @if (canToggleAI(slot)) {
+              <mat-slide-toggle
+                color="accent"
+                [checked]="slot.occupant === 'ai'"
+                (change)="onSlotAIChanged(slot.playerId, $event)"
+              >
+                {{ t.translate('multiplayerSlotAI') }}
+              </mat-slide-toggle>
+            }
+            @if (slot.occupant === 'free') {
+              <button mat-stroked-button (click)="onClaimSeatClicked(slot.playerId)" [disabled]="isRequestRunning">
+                {{ t.translate('multiplayerTakeSeat') }}
+              </button>
+            }
+            @if (canChangeReadyState(slot)) {
+              <mat-checkbox
+                [checked]="slot.isReady"
+                [disabled]="isRequestRunning"
+                (change)="onReadyChanged(slot.playerId, $event.checked)"
+              >
+                {{ t.translate('multiplayerReady') }}
+              </mat-checkbox>
+            } @else if (isLobbyOpen && slot.occupant !== 'ai') {
+              <mat-icon
+                class="ready-icon"
+                [class.is-ready]="slot.isReady"
+                [matTooltip]="t.translate(slot.isReady ? 'multiplayerReady' : 'multiplayerNotReady')"
+                >{{ slot.isReady ? 'check_circle' : 'hourglass_empty' }}</mat-icon
+              >
+            }
+            @if (canReleaseSeat(slot)) {
+              <button
+                mat-icon-button
+                (click)="onReleaseSeatClicked(slot.playerId)"
+                [disabled]="isRequestRunning"
+                [matTooltip]="t.translate('multiplayerLeaveSeat')"
+              >
+                <mat-icon>person_remove</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      @if (isHost && isLobbyOpen) {
+        <div class="slot-management">
+          <button mat-stroked-button (click)="onAddPlayerSlotClicked(false)" [disabled]="lobbySlots.length >= maxPlayers">
+            <mat-icon>person_add</mat-icon> {{ t.translate('multiplayerAddOpenSlot') }}
+          </button>
+          <button mat-stroked-button (click)="onAddPlayerSlotClicked(true)" [disabled]="lobbySlots.length >= maxPlayers">
+            <mat-icon>smart_toy</mat-icon> {{ t.translate('multiplayerAddAISlot') }}
+          </button>
+          <button
+            mat-stroked-button
+            (click)="onRemoveLastPlayerSlotClicked()"
+            [disabled]="lobbySlots.length === 0 || isRequestRunning"
+          >
+            <mat-icon>remove</mat-icon> {{ t.translate('multiplayerRemoveLastSlot') }}
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="lobby-footer">
+      @if (!isLobbyOpen) {
+        <span>{{ t.translate('multiplayerGameRunning') }}</span>
+      } @else if (isHost) {
+        <button mat-flat-button color="accent" (click)="onStartGameClicked()" [disabled]="!canStartGame">
+          {{ t.translate('multiplayerStartGame') }}
+        </button>
+        @if (!canStartGame) {
+          <span>{{ t.translate('multiplayerWaitingForPlayers') }}</span>
+        }
+      } @else {
+        <span>{{ t.translate('multiplayerWaitingForHost') }}</span>
+      }
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+</div>
+<div mat-dialog-actions>
+  @if (activeSession) {
+    <button mat-stroked-button (click)="onLeaveSessionClicked()" [disabled]="isRequestRunning">
+      {{ t.translate('multiplayerLeaveSession') }}
+    </button>
+  }
+  <span class="spacer"></span>
+  <button mat-mini-fab color="accent" (click)="onCloseClicked()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

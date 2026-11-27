@@ -7,6 +7,7 @@ import { CardsService } from 'src/app/services/cards.service';
 import { GameManager } from 'src/app/services/game-manager.service';
 import { IntriguesService } from 'src/app/services/intrigues.service';
 import { LeadersService } from 'src/app/services/leaders.service';
+import { GameSessionService } from 'src/app/services/persistence/game-session.service';
 import { PlayerAgentsService } from 'src/app/services/player-agents.service';
 import { PlayerResourcesService, Resources } from 'src/app/services/player-resources.service';
 import { TranslateService } from 'src/app/services/translate-service';
@@ -20,6 +21,7 @@ import { TranslateService } from 'src/app/services/translate-service';
 })
 export class PlayerOverviewComponent implements OnInit, OnDestroy {
   gameManager = inject(GameManager);
+  gameSessionService = inject(GameSessionService);
   private cardsService = inject(CardsService);
   private intriguesService = inject(IntriguesService);
   t = inject(TranslateService);

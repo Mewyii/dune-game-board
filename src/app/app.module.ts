@@ -70,6 +70,7 @@ import { IntriguesComponent } from './components/intrigues/intrigues.component';
 import { LeadersComponent } from './components/leaders/leaders.component';
 import { DialogGameManualComponent } from './components/manual/dialog-game-manual/dialog-game-manual.component';
 import { ManualComponent } from './components/manual/manual.component';
+import { MultiplayerDialogComponent } from './components/multiplayer-dialog/multiplayer-dialog.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { PlayerHandComponent } from './components/player-hand/player-hand.component';
@@ -122,6 +123,7 @@ import { SafeUrlPipe } from './pipes/safe-url';
     CardAreasComponent,
     PlayerboardComponent,
     PlayerOverviewComponent,
+    MultiplayerDialogComponent,
     TechboardComponent,
     IntrigueboardComponent,
     ConflictboardComponent,

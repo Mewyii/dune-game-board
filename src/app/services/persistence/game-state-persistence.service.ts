@@ -27,8 +27,9 @@ interface PersistenceBinding {
   key: string;
   scope: PersistenceScope;
   readStorableValue: () => unknown;
-  applyStoredValue: (storedValue: unknown) => void;
-  subscribeToChanges: (onChange: () => void) => void;
+  convertFromStorable: (storedValue: unknown) => unknown;
+  emitValue: (value: unknown) => void;
+  subscribeToChanges: (onChange: (value: unknown) => void) => void;
 }
 
 @Injectable({
@@ -37,10 +38,13 @@ interface PersistenceBinding {
 export class GameStatePersistenceService {
   private readonly storage = inject(GAME_STATE_STORAGE);
   private readonly bindings = new Map<string, PersistenceBinding>();
-  private isApplyingSnapshot = false;
+  private readonly valuesBeingApplied = new Map<string, unknown>();
 
   private localChangesSubject = new Subject<PersistedValueChange>();
-  /** Emits whenever a persisted value is changed by the local game logic (not by applying a snapshot). */
+  /**
+   * Emits whenever a persisted value is changed by the local game logic.
+   * Applying a snapshot is not reported, but changes the game logic makes in reaction to it are.
+   */
   localChanges$ = this.localChangesSubject.asObservable();
 
   /**
@@ -64,7 +68,8 @@ export class GameStatePersistenceService {
       scope: options.scope,
       readStorableValue: () => toStorable(subject.value),
       // Stored values come from JSON (local storage or a session snapshot) and are trusted to match TStored.
-      applyStoredValue: (storedValue) => subject.next(fromStorable(storedValue as TStored)),
+      convertFromStorable: (storedValue) => fromStorable(storedValue as TStored),
+      emitValue: (value) => subject.next(value as T),
       subscribeToChanges: (onChange) => subject.subscribe(onChange),
     };
     this.bindings.set(key, binding);
@@ -85,15 +90,37 @@ export class GameStatePersistenceService {
     return snapshot;
   }
 
-  /** Pushes the values of a snapshot (e.g. received from a game session) into the bound subjects. */
-  applySnapshot(snapshot: GameStateSnapshot) {
-    this.isApplyingSnapshot = true;
-    try {
-      for (const [key, storedValue] of Object.entries(snapshot)) {
-        this.bindings.get(key)?.applyStoredValue(storedValue);
+  /** Returns the storable values of the given keys. Unknown keys are skipped. */
+  exportValues(keys: Iterable<string>): GameStateSnapshot {
+    const values: GameStateSnapshot = {};
+    for (const key of keys) {
+      const binding = this.bindings.get(key);
+      if (binding) {
+        values[key] = binding.readStorableValue();
       }
-    } finally {
-      this.isApplyingSnapshot = false;
+    }
+    return values;
+  }
+
+  /**
+   * Pushes the values of a snapshot (e.g. received from a game session) into the bound subjects.
+   * Values of keys that aren't bound yet are written to the storage, so the service restores them once it is created.
+   */
+  applySnapshot(snapshot: GameStateSnapshot) {
+    for (const [key, storedValue] of Object.entries(snapshot)) {
+      const binding = this.bindings.get(key);
+      if (!binding) {
+        this.writeStorableValueToStorage(key, storedValue);
+        continue;
+      }
+
+      const value = binding.convertFromStorable(storedValue);
+      this.valuesBeingApplied.set(key, value);
+      try {
+        binding.emitValue(value);
+      } finally {
+        this.valuesBeingApplied.delete(key);
+      }
     }
   }
 
@@ -104,17 +131,17 @@ export class GameStatePersistenceService {
     }
 
     const storedValue: unknown = JSON.parse(serializedValue);
-    binding.applyStoredValue(storedValue);
+    binding.emitValue(binding.convertFromStorable(storedValue));
     return true;
   }
 
   private persistFutureChanges(binding: PersistenceBinding) {
     let isInitialEmission = true;
 
-    binding.subscribeToChanges(() => {
+    binding.subscribeToChanges((value) => {
       this.writeToStorage(binding);
 
-      if (!isInitialEmission && !this.isApplyingSnapshot) {
+      if (!isInitialEmission && !this.isValueBeingApplied(binding.key, value)) {
         this.localChangesSubject.next({ key: binding.key, scope: binding.scope });
       }
     });
@@ -122,13 +149,21 @@ export class GameStatePersistenceService {
     isInitialEmission = false;
   }
 
+  /** Compares by reference, so a new value set by the game logic while a snapshot is applied still counts as a local change. */
+  private isValueBeingApplied(key: string, value: unknown) {
+    return this.valuesBeingApplied.has(key) && this.valuesBeingApplied.get(key) === value;
+  }
+
   private writeToStorage(binding: PersistenceBinding) {
-    const storableValue = binding.readStorableValue();
+    this.writeStorableValueToStorage(binding.key, binding.readStorableValue());
+  }
+
+  private writeStorableValueToStorage(key: string, storableValue: unknown) {
     if (storableValue === undefined) {
-      this.storage.removeItem(binding.key);
+      this.storage.removeItem(key);
       return;
     }
 
-    this.storage.writeItem(binding.key, JSON.stringify(storableValue));
+    this.storage.writeItem(key, JSON.stringify(storableValue));
   }
 }

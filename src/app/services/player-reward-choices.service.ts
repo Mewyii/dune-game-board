@@ -82,6 +82,8 @@ export class PlayerRewardChoicesService {
 
   resetPlayerRewardChoices() {
     this.playersRewardChoicesSubject.next([]);
+    this.playersRewardChoicesNeedingProcessingSubject.next(new Map<number, string[]>());
+    this.playersRewardChoicesBeingProcessedSubject.next(new Map<number, boolean>());
   }
 
   getPlayerRewardChoices(playerId: number) {

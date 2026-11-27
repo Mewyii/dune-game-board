@@ -37,6 +37,9 @@ yarn-error.log
 testem.log
 /typings
 
+# Backend credentials
+/backend/api/config.php
+
 # System files
 .DS_Store
 Thumbs.db

@@ -1,5 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgParticlesService } from '@tsparticles/angular';
+import {
+  MultiplayerDialogComponent,
+  MultiplayerDialogData,
+} from 'src/app/components/multiplayer-dialog/multiplayer-dialog.component';
+import { GameSessionService } from 'src/app/services/persistence/game-session.service';
 import { AppMode } from 'src/app/constants/board-settings';
 import { ActionField, DuneLocation, Faction } from 'src/app/models';
 import { dust, sand, ships, stars } from 'src/app/services/effects/constants';
@@ -21,6 +28,10 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   private locationsService = inject(LocationsService);
   private roundService = inject(RoundService);
   private readonly ngParticlesService = inject(NgParticlesService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private gameSessionService = inject(GameSessionService);
 
   @ViewChild('gameBoardContainer', { static: true }) gameBoardRef!: ElementRef;
 
@@ -75,6 +86,8 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.openMultiplayerDialogForInviteLink();
+
     this.isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     this.isFirefox = /Firefox\/\d+/.test(navigator.userAgent);
 
@@ -90,6 +103,24 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
 
     this.setZoom();
     window.addEventListener('resize', () => this.setZoom());
+  }
+
+  /** Invite links look like `game-board?session=CODE`. The parameter is removed, so a reload doesn't open the dialog again. */
+  private openMultiplayerDialogForInviteLink() {
+    const sessionCode = this.activatedRoute.snapshot.queryParamMap.get('session');
+    if (!sessionCode) {
+      return;
+    }
+
+    void this.router.navigate([], { queryParams: { session: null }, queryParamsHandling: 'merge', replaceUrl: true });
+
+    const isAlreadyInSession = this.gameSessionService.activeSession?.sessionCode === sessionCode.toUpperCase();
+    if (isAlreadyInSession) {
+      return;
+    }
+
+    const dialogData: MultiplayerDialogData = { sessionCodeFromInviteLink: sessionCode };
+    this.dialog.open(MultiplayerDialogComponent, { width: '720px', data: dialogData });
   }
 
   private setZoom(): void {

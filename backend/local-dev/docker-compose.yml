@@ -1,0 +1,33 @@
+name: dune-multiplayer-backend
+
+services:
+  database:
+    image: mariadb:11.8
+    environment:
+      MARIADB_ROOT_PASSWORD: dune-local-root
+      MARIADB_DATABASE: dune
+      MARIADB_USER: dune
+      MARIADB_PASSWORD: dune-local
+    volumes:
+      - database-data:/var/lib/mysql
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+      interval: 5s
+      retries: 20
+
+  api:
+    build: .
+    ports:
+      - '8080:80'
+    volumes:
+      - ../api:/var/www/html/api:ro
+      - ./config.php:/etc/dune-api/config.php:ro
+    environment:
+      DUNE_API_CONFIG_PATH: /etc/dune-api/config.php
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  database-data:

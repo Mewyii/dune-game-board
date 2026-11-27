@@ -73,6 +73,29 @@ describe('GameStatePersistenceService', () => {
     expect(reportedChanges).toEqual([{ key: 'currentRound', scope: 'game' }]);
     expect(storedItems.get('currentRound')).toBe('6');
   });
+
+  it('reports changes the game logic makes in reaction to an applied snapshot', () => {
+    const currentRoundSubject = new BehaviorSubject<number>(1);
+    const isFinaleSubject = new BehaviorSubject<boolean>(false);
+    persistenceService.bindSubjectToStorage('currentRound', currentRoundSubject, { scope: 'game' });
+    persistenceService.bindSubjectToStorage('isFinale', isFinaleSubject, { scope: 'game' });
+    currentRoundSubject.subscribe((currentRound) => isFinaleSubject.next(currentRound >= 10));
+    const reportedChanges: PersistedValueChange[] = [];
+    persistenceService.localChanges$.subscribe((change) => reportedChanges.push(change));
+
+    persistenceService.applySnapshot({ currentRound: 10 });
+
+    expect(reportedChanges).toEqual([{ key: 'isFinale', scope: 'game' }]);
+  });
+
+  it('stores snapshot values of keys that are not bound yet, so they are restored later', () => {
+    persistenceService.applySnapshot({ currentRound: 7 });
+    const currentRoundSubject = new BehaviorSubject<number>(0);
+
+    persistenceService.bindSubjectToStorage('currentRound', currentRoundSubject, { scope: 'game' });
+
+    expect(currentRoundSubject.value).toBe(7);
+  });
 });
 
 function createInMemoryStorage(storedItems: Map<string, string>): GameStateStorage {
