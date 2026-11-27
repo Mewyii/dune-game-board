@@ -1,5 +1,5 @@
 .navigation-container {
-  color: #fffcfa;
+  color: rgb(240, 223, 200);
   box-sizing: border-box;
   transition: 0.9;
   display: flex;
@@ -41,7 +41,9 @@
   padding: 8px 16px;
   border-radius: 5px;
   transition: 0.7s;
-  cursor: url('/assets/images/cursors/pointer.png') 6 6, pointer;
+  cursor:
+    url('/assets/images/cursors/pointer.png') 6 6,
+    pointer;
   width: max-content;
 }
 

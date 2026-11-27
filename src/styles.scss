@@ -120,6 +120,11 @@ h5 {
   }
 }
 
+.mat-internal-form-field > label,
+.mat-internal-form-field > .mat-internal-form-field-label {
+  color: #101010 !important;
+}
+
 // Animations
 
 @keyframes marker-anim {
@@ -295,3 +300,4 @@ h5 {
     filter: drop-shadow(0px 0px 20px rgb(255, 170, 73)) brightness(1.15);
   }
 }
+

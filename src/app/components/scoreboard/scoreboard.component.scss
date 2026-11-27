@@ -61,7 +61,8 @@
 
 .scoreboard-tile.top {
   top: 0;
-  color: #e5e5e5;
+  color: rgb(240, 223, 200);
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .score-marker {
