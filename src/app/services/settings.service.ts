@@ -175,8 +175,12 @@ export class SettingsService {
     return cloneDeep(this.settingsSubject.value.gameContent.maxPlayerIntrigueCount);
   }
 
-  getLocationTakeoverTroopCosts() {
-    return cloneDeep(this.settingsSubject.value.gameContent.locationTakeoverTroopCosts ?? 0);
+  getOwnedLocationDefendingTroops() {
+    return cloneDeep(this.settingsSubject.value.gameContent.ownedLocationDefendingTroops ?? 0);
+  }
+
+  getShieldedLocationDefendingTroops() {
+    return cloneDeep(this.settingsSubject.value.gameContent.shieldedLocationDefendingTroops ?? 0);
   }
 
   getCombatMaxDeployableUnits() {

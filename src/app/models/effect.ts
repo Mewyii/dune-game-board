@@ -20,6 +20,7 @@ export const effectRewards = [
   'dreadnought-insert',
   'dreadnought-insert-or-retreat',
   'dreadnought-retreat',
+  'dreadnought-trash',
   'faction-influence-down-bene',
   'faction-influence-down-choice',
   'faction-influence-down-emperor',
@@ -68,6 +69,7 @@ export const effectRewards = [
   'spy',
   'wall-break',
   'sandworm',
+  'shield-choice',
 ] as const;
 
 export const effectSeparators = ['helper-separator'] as const;

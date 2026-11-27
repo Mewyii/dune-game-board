@@ -77,7 +77,7 @@ export type GameState = Readonly<{
   enemyIntrigueCounts: { playerId: number; intrigueCount: number }[];
   locations: DuneLocation[];
   freeLocations: string[];
-  playerLocations: string[];
+  playerLocations: OwnedLocation[];
   enemyLocations: OwnedLocation[];
   enemyLeaders: PlayerLeader[];
   enemyDiscardPiles: PlayerCardStack[];

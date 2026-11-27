@@ -69,13 +69,15 @@ export class GameStateService {
 
     const boardSpaces = this.boardSpacesService.boardSpaces;
     const locations = this.locationsService.locations;
-    const playerLocations = this.locationsService.ownedLocations
-      .filter((x) => x.playerId === player.id)
-      .map((x) => x.locationId);
+    const playerLocations = this.locationsService.ownedLocations.filter((x) => x.playerId === player.id);
     const enemyLocations = this.locationsService.ownedLocations.filter((x) => x.playerId !== player.id);
     const freeLocations = locations
       .map((x) => x.actionField.title.en)
-      .filter((x) => !playerLocations.includes(x) && !enemyLocations.some((y) => y.locationId === x));
+      .filter(
+        (locationId) =>
+          !playerLocations.some((pl) => pl.locationId == locationId) &&
+          !enemyLocations.some((y) => y.locationId === locationId),
+      );
 
     const playerCombatUnits = this.combatManager.getPlayerCombatUnits(player.id)!;
     const playerDreadnoughtCount = getPlayerdreadnoughtCount(playerCombatUnits);
@@ -591,6 +593,8 @@ export class GameStateService {
       'wall-break': 0,
       sandworm: 0,
       contract: 0,
+      'shield-choice': 0,
+      'dreadnought-trash': 0,
     };
   }
 }

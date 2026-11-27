@@ -376,7 +376,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
       if (player.isAI || !gameState.playerLeader) return;
 
       const playerLocations = gameState.locations.filter((location) =>
-        gameState.playerLocations.includes(location.actionField.title.en),
+        gameState.playerLocations.some((pl) => pl.locationId === location.actionField.title.en),
       );
       if (playerLocations.length < 1) {
         return;
@@ -406,7 +406,7 @@ export const leadersGameAdjustments: LeaderGameAdjustments[] = [
     },
     customSignetAIFunction: (player: Player, gameState: GameState, game: CardGameAdjustmentsGameInterface) => {
       const resourceOptions = gameState.boardSpaces
-        .filter((bs) => gameState.playerLocations.includes(bs.title.en))
+        .filter((bs) => gameState.playerLocations.some((pl) => pl.locationId === bs.title.en))
         .map((x) => x.ownerReward)
         .filter((x) => x !== undefined);
 

@@ -462,16 +462,16 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Spice-Supremacy',
     aiRevealEvaluation(player, gameState) {
       const spiceLocations = gameState.boardSpaces.filter((x) => x.actionType === 'spice');
-      const playerSpiceLocations = gameState.playerLocations.filter((x) =>
-        spiceLocations.some((location) => location.title.en === x),
+      const playerSpiceLocations = gameState.playerLocations.filter((pl) =>
+        spiceLocations.some((location) => location.title.en === pl.locationId),
       );
 
       return 0.5 + 1.5 * playerSpiceLocations.length + 0.75 * gameState.playerCardsRewards.spice;
     },
     customRevealFunction: (player, gameState, game, gameElement) => {
       const spiceLocations = gameState.boardSpaces.filter((x) => x.actionType === 'spice');
-      const playerSpiceLocations = gameState.playerLocations.filter((x) =>
-        spiceLocations.some((location) => location.title.en === x),
+      const playerSpiceLocations = gameState.playerLocations.filter((pl) =>
+        spiceLocations.some((location) => location.title.en === pl.locationId),
       );
       if (playerSpiceLocations.length > 1 && gameState.playerResources.spice > 3) {
         game.addRewardToPlayer(player.id, { type: 'trash-self' }, { gameElement });
@@ -576,8 +576,8 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     id: 'Control over the religion',
     aiRevealEvaluation(player, gameState) {
       const townLocations = gameState.boardSpaces.filter((x) => x.actionType === 'town');
-      const playerTownLocations = gameState.playerLocations.filter((x) =>
-        townLocations.some((location) => location.title.en === x),
+      const playerTownLocations = gameState.playerLocations.filter((pl) =>
+        townLocations.some((location) => location.title.en === pl.locationId),
       );
       if (playerTownLocations.length > 1 && gameState.playerScore.bene > 3) {
         return 10;
@@ -586,8 +586,8 @@ export const imperiumCardsGameAdjustments: ImperiumCardsGameAdjustments[] = [
     },
     customRevealFunction: (player, gameState, game, gameElement) => {
       const townLocations = gameState.boardSpaces.filter((x) => x.actionType === 'town');
-      const playerTownLocations = gameState.playerLocations.filter((x) =>
-        townLocations.some((location) => location.title.en === x),
+      const playerTownLocations = gameState.playerLocations.filter((pl) =>
+        townLocations.some((location) => location.title.en === pl.locationId),
       );
       if (playerTownLocations.length > 1 && gameState.playerScore.bene > 3) {
         game.addRewardToPlayer(player.id, { type: 'trash-self' }, { gameElement });

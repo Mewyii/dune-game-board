@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { DuneLocation } from '../models';
 import { PlayersService } from './players.service';
 import { SettingsService } from './settings.service';
@@ -8,6 +8,7 @@ import { SettingsService } from './settings.service';
 export interface OwnedLocation {
   locationId: string;
   playerId: number;
+  isShielded: boolean;
 }
 
 @Injectable({
@@ -67,8 +68,11 @@ export class LocationsService {
     return this.ownedLocations.filter((x) => x.playerId !== playerId);
   }
 
-  locationOwnerId$(locationId: string) {
-    return this.ownedLocations$.pipe(map((data) => data.find((x) => x.locationId === locationId)?.playerId));
+  locationOwner$(locationId: string) {
+    return this.ownedLocations$.pipe(
+      map((data) => data.find((x) => x.locationId === locationId)),
+      distinctUntilChanged(),
+    );
   }
 
   setLocationOwner(locationId: string, playerId: number) {
@@ -78,10 +82,20 @@ export class LocationsService {
       const ownedLocation = ownedLocations[ownedLocationIndex];
       ownedLocations[ownedLocationIndex] = { ...ownedLocation, playerId };
     } else {
-      ownedLocations.push({ locationId, playerId });
+      ownedLocations.push({ locationId, playerId, isShielded: false });
     }
 
     this.ownedLocationsSubject.next(ownedLocations);
+  }
+
+  setLocationIsShielded(locationId: string) {
+    const ownedLocations = this.ownedLocations;
+    const ownedLocationIndex = ownedLocations.findIndex((x) => x.locationId === locationId);
+    if (ownedLocationIndex > -1) {
+      const ownedLocation = ownedLocations[ownedLocationIndex];
+      ownedLocations[ownedLocationIndex] = { ...ownedLocation, isShielded: true };
+      this.ownedLocationsSubject.next(ownedLocations);
+    }
   }
 
   resetLocationOwner(locationId: string) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getRandomElementFromArray } from '../helpers/common';
 import { getFactionScoreTypeFromCost, getFactionScoreTypeFromReward } from '../helpers/faction-score';
-import { getFactionInfluenceModifier, getModifiedLocationTakeoverTroopCosts } from '../helpers/game-modifiers';
+import { getFactionInfluenceModifier } from '../helpers/game-modifiers';
 import { isResourceType } from '../helpers/resources';
 import {
   getMultipliedRewardEffects,
@@ -353,33 +353,25 @@ export class EffectsService {
             currentConflict.boardSpaceId,
           );
         } else if (playerLocation.playerId !== playerId) {
-          const garrisonedTroops = this.combatManager.getPlayerTroopsInGarrison(playerId);
-          const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
-            this.settingsService.getLocationTakeoverTroopCosts(),
-            this.boardSpacesService.getBoardSpace(currentConflict.boardSpaceId),
-            this.gameModifiersService.getPlayerGameModifier(playerId, 'locationTakeoverTroopCosts'),
+          this.audioManager.playSound('location-control');
+          this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, { source: 'Location-Loss' });
+          this.locationsService.setLocationOwner(currentConflict.boardSpaceId, playerId);
+          this.addRewardToPlayer(playerId, { type: 'victory-point' }, { source: 'Location' });
+          this.loggingService.logPlayerGainedLocationControl(
+            playerId,
+            this.roundService.currentRound,
+            currentConflict.boardSpaceId,
           );
-
-          if (garrisonedTroops >= effectiveTakeOverTroopCosts) {
-            this.audioManager.playSound('location-control');
-            if (effectiveTakeOverTroopCosts > 0) {
-              this.payCostForPlayer(playerId, { type: 'loose-troop', amount: effectiveTakeOverTroopCosts });
-            }
-            this.payCostForPlayer(playerLocation.playerId, { type: 'victory-point' }, { source: 'Location-Loss' });
-            this.locationsService.setLocationOwner(currentConflict.boardSpaceId, playerId);
-            this.addRewardToPlayer(playerId, { type: 'victory-point' }, { source: 'Location' });
-            this.loggingService.logPlayerGainedLocationControl(
-              playerId,
-              this.roundService.currentRound,
-              currentConflict.boardSpaceId,
-            );
-          }
         }
       }
     } else if (rewardType === 'location-control-choice') {
-      this.audioManager.playSound('location-control');
       this.playerRewardChoicesService.addPlayerRewardChoice(playerId, {
         type: 'location-control-choice',
+        amount: rewardAmount,
+      });
+    } else if (rewardType === 'shield-choice') {
+      this.playerRewardChoicesService.addPlayerRewardChoice(playerId, {
+        type: 'shield-choice',
         amount: rewardAmount,
       });
     } else if (rewardType === 'signet-ring') {
@@ -441,6 +433,8 @@ export class EffectsService {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { deployableDreadnoughts: rewardAmount });
     } else if (rewardType === 'dreadnought-retreat') {
       this.turnInfoService.updatePlayerTurnInfo(playerId, { retreatableDreadnoughts: rewardAmount });
+    } else if (rewardType === 'dreadnought-trash') {
+      this.combatManager.destroyPlayerShipsFromCombatOrGarrison(playerId, rewardAmount);
     } else if (rewardType === 'card-return-to-hand') {
       this.playerRewardChoicesService.addPlayerRewardChoice(playerId, {
         type: 'card-return-to-hand',
@@ -501,6 +495,8 @@ export class EffectsService {
       this.combatManager.removePlayerShipsFromGarrison(playerId, costAmount);
     } else if (costType === 'dreadnought-retreat') {
       this.combatManager.retreatPlayerShipsFromCombat(playerId, costAmount);
+    } else if (costType === 'dreadnought-trash') {
+      this.combatManager.destroyPlayerShipsFromCombatOrGarrison(playerId, costAmount);
     } else if (costType === 'card-discard') {
       for (let i = 0; i < costAmount; i++) {
         this.playerRewardChoicesService.addPlayerRewardChoice(playerId, {

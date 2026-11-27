@@ -63,6 +63,7 @@ export const EFFECT_TYPE_PATHS: Record<EffectType, string> = {
   research: 'assets/images/reward-markers/marker_research.png',
   specimen: 'assets/images/reward-markers/marker_specimen.png',
   beetle: 'assets/images/reward-markers/marker_beetle.png',
+  'dreadnought-trash': 'assets/images/reward-markers/marker_ship_destroy.png',
   'dreadnought-retreat': 'assets/images/reward-markers/marker_ship_retreat.png',
   'leader-heal': 'assets/images/reward-markers/marker_hp.png',
   'leader-wound': 'assets/images/reward-markers/marker_hp_loss.png',
@@ -104,4 +105,5 @@ export const EFFECT_TYPE_PATHS: Record<EffectType, string> = {
   sandworm: 'assets/images/reward-markers/marker_sandworm.png',
   contract: 'assets/images/reward-markers/marker_contract.png',
   leadermarker: 'assets/images/reward-markers/marker_troop.png',
+  'shield-choice': 'assets/images/reward-markers/marker_shield_choice.png',
 };

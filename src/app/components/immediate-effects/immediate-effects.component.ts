@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ActiveFactionType, activeFactionTypes, DuneLocation, EffectType } from 'src/app/models';
 import { IntrigueDeckCard } from 'src/app/models/intrigue';
+import { AudioManager } from 'src/app/services/audio-manager.service';
 import { BoardSpacesService } from 'src/app/services/board-spaces.service';
 import { CardsService, ImperiumDeckCard } from 'src/app/services/cards.service';
 import { ConflictDeckCard, ConflictsService } from 'src/app/services/conflicts.service';
@@ -59,6 +60,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     'location-control-choice',
     'card-return-to-hand',
     'agent-lift',
+    'shield-choice',
   ];
 
   immediateEffectDialogOpen = false;
@@ -84,6 +86,7 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     private playerAgentsService: PlayerAgentsService,
     private conflictsService: ConflictsService,
     private playersService: PlayersService,
+    private audioManager: AudioManager,
   ) {}
 
   ngOnInit(): void {
@@ -147,6 +150,9 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
             break;
           case 'location-control-choice':
             this.showLocationControlDialog(currentEffect);
+            break;
+          case 'shield-choice':
+            this.showLocationShieldDialog(currentEffect);
             break;
           case 'agent-lift':
             this.showAgentLiftDialog(currentEffect);
@@ -532,6 +538,38 @@ export class ImmediateEffectsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((location: DuneLocation) => {
       this.gameManager.changeLocationOwner(location.actionField.title.en, currentEffect.playerId);
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
+    });
+  }
+
+  private showLocationShieldDialog(currentEffect: ImmediateEffect): void {
+    this.immediateEffectDialogOpen = true;
+
+    const playerLocations = this.locationsService.getPlayerLocations(currentEffect.playerId).filter((x) => !x.isShielded);
+
+    if (playerLocations.length < 1) {
+      this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
+      return;
+    }
+
+    const selectableLocations = this.locationsService.locations.filter((location) =>
+      playerLocations.some((pl) => pl.locationId === location.actionField.title.en),
+    );
+
+    const leaderName = this.leadersService.getPlayerLeaderName(currentEffect.playerId);
+    const dialogRef = this.dialog.open(BoardSpaceSelectorDialogComponent, {
+      data: {
+        title: `${this.t.translateLS(leaderName!)}: ${this.t.translate('commonEffectLocationChoice')}`,
+        playerId: currentEffect.playerId,
+        locations: selectableLocations,
+        mode: 'select',
+        colorScheme: 'positive',
+      } as BoardSpaceSelectorData,
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((location: DuneLocation) => {
+      this.audioManager.playSound('shield');
+      this.locationsService.setLocationIsShielded(location.actionField.title.en);
       this.closeDialogAndRemoveImmediateEffect(currentEffect.id);
     });
   }

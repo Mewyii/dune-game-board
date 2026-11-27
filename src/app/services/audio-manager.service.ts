@@ -34,7 +34,8 @@ export type SoundType =
   | 'leader-lock-in'
   | 'trash-card'
   | 'card-reveal'
-  | 'card-buy';
+  | 'card-buy'
+  | 'shield';
 
 export interface Sound {
   url: string;
@@ -80,6 +81,7 @@ export class AudioManager {
     'trash-card': { url: 'assets/audio/sounds/trash-card.mp3', volume: 0.1 },
     'card-reveal': { url: 'assets/audio/sounds/card-reveal.mp3', volume: 0.25 },
     'card-buy': { url: 'assets/audio/sounds/card-buy.mp3', volume: 0.4 },
+    shield: { url: 'assets/audio/sounds/card-buy.mp3', volume: 0.3 },
   };
 
   constructor() {}

@@ -489,17 +489,17 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
             break;
           }
 
-          const locationHasAgentOnIt = gameState.agentsOnFields.some((x) => x.fieldId === location);
+          const locationHasAgentOnIt = gameState.agentsOnFields.some((x) => x.fieldId === location.locationId);
           if (!locationHasAgentOnIt) {
             const playerHasAvailableShips =
               gameState.playerCombatUnits.shipsInCombat > 0 || gameState.playerCombatUnits.shipsInGarrison > 0;
             if (!playerHasAvailableShips || Math.random() > 0.5) {
               game.addPlayerGameModifiers(player.id, {
-                fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location, currentRoundOnly: true }],
+                fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location.locationId, currentRoundOnly: true }],
               });
               for (const enemyPlayer of gameState.enemyPlayers) {
                 game.addPlayerGameModifiers(enemyPlayer.id, {
-                  fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location, currentRoundOnly: true }],
+                  fieldBlock: [{ id: 'barrage-rockets-field-block', fieldId: location.locationId, currentRoundOnly: true }],
                 });
               }
               game.payCostForPlayer(player.id, { type: 'tech-tile-flip' }, { gameElement });
@@ -593,7 +593,7 @@ export const techTilesGameAdjustments: TechTileGameAdjustments[] = [
           return;
         }
         const locationThreat = gameState.enemyAgentsOnFields.find((x) =>
-          gameState.playerLocations.some((fieldId) => fieldId === x.fieldId),
+          gameState.playerLocations.some((pl) => pl.locationId === x.fieldId),
         );
         if (locationThreat && Math.random() > 0.33) {
           const enemyAgents = gameState.enemyAgentsOnFields.filter((x) => x.fieldId === locationThreat.fieldId);

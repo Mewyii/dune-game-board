@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep, shuffle } from 'lodash';
+import { cloneDeep, min, shuffle } from 'lodash';
 import { BehaviorSubject, combineLatest, map, Subscription } from 'rxjs';
 import { hasCustomAgentEffect, hasCustomRevealEffect } from '../helpers/cards';
 import { isActiveFactionType } from '../helpers/faction-types';
@@ -350,64 +350,70 @@ export class GameManager {
       let playerCombatScores = this.combatManager.getPlayerCombatScores().filter((x) => x.score > 0);
       playerCombatScores.sort((a, b) => b.score - a.score);
 
+      const playerScoreGroups = new Map<number, number[]>();
+      for (const [index, playerScore] of playerCombatScores.entries()) {
+        const otherPlayersWithHigherScore = playerCombatScores.filter(
+          (x) => x.playerId !== playerScore.playerId && x.score > playerScore.score,
+        );
+        const otherPlayersWithSameScore = playerCombatScores.filter(
+          (x) => x.playerId !== playerScore.playerId && x.score === playerScore.score,
+        );
+
+        const scoreGroup = otherPlayersWithHigherScore.length + otherPlayersWithSameScore.length;
+
+        const group = playerScoreGroups.get(scoreGroup);
+        if (group) {
+          group.push(playerScore.playerId);
+        } else {
+          playerScoreGroups.set(scoreGroup, [playerScore.playerId]);
+        }
+      }
+
       const conflictRewards = conflict.rewards;
 
-      let previousWasTie = false;
-      let isFirstCycle = true;
-
-      for (const conflictReward of conflictRewards) {
-        const firstPlayer = playerCombatScores[0];
-        if (!firstPlayer || firstPlayer.score < 1) {
-          break;
-        }
-
-        const playersWithSameScore = playerCombatScores.filter((x) => x.score === firstPlayer.score);
-        const isTie = playersWithSameScore.length > 1;
-
-        if (previousWasTie) {
-          for (const playerScore of playersWithSameScore) {
-            const player = this.playersService.getPlayer(playerScore.playerId);
-            if (player) {
-              for (const reward of conflictReward) {
-                this.effectsService.addRewardToPlayer(player.id, reward, { source: 'Combat' });
-              }
-
-              this.resolveRewardChoices();
-
-              playerCombatScores = playerCombatScores.filter((x) => x.playerId !== playerScore.playerId);
-            }
-          }
-
-          previousWasTie = false;
-        } else if (!isTie) {
-          const player = this.playersService.getPlayer(firstPlayer.playerId);
-
-          if (player) {
+      for (const [index, playerScoreGroup] of playerScoreGroups.entries()) {
+        const conflictReward = conflictRewards[index];
+        if (conflictReward) {
+          for (const playerId of playerScoreGroup) {
             for (const reward of conflictReward) {
-              this.effectsService.addRewardToPlayer(player.id, reward, { source: 'Combat' });
+              this.effectsService.addRewardToPlayer(playerId, reward, { source: 'Combat' });
             }
 
             this.resolveRewardChoices();
-
-            if (isFirstCycle) {
-              const otherPlayersScoresCombined = playerCombatScores.slice(1).reduce((sum, x) => sum + x.score, 0);
-
-              if (firstPlayer.score > otherPlayersScoresCombined) {
-                const returnedTroops = Math.floor(
-                  (firstPlayer.score - otherPlayersScoresCombined) / this.settingsService.getTroopStrength(),
-                );
-                this.combatManager.addPlayerTroopsToGarrison(player.id, returnedTroops);
-              }
-
-              this.loggingService.logPlayerWonCombat(player.id, this.roundService.currentRound);
-            }
           }
+          if (index === 0 && playerScoreGroup.length === 1) {
+            const playerId = playerScoreGroup[0];
 
-          playerCombatScores = playerCombatScores.filter((x) => x.playerId !== firstPlayer.playerId);
-        } else {
-          previousWasTie = true;
+            const firstPlayerScore = playerCombatScores.find((x) => x.playerId === playerId)?.score ?? 0;
+            const otherPlayersScoresCombined = playerCombatScores.slice(1).reduce((sum, x) => sum + x.score, 0);
+
+            if (firstPlayerScore > otherPlayersScoresCombined) {
+              const returnedTroops = Math.floor(
+                (firstPlayerScore - otherPlayersScoresCombined) / this.settingsService.getTroopStrength(),
+              );
+              this.combatManager.addPlayerTroopsToGarrison(playerId, returnedTroops);
+              this.loggingService.logPlayerRetreatedTroopsFromCombat(playerId, returnedTroops);
+            }
+
+            const winnerDreadnoughtsInCombat = this.combatManager.getPlayerCombatUnits(playerId)?.shipsInCombat ?? 0;
+            const playerLocations = this.locationsService.getPlayerLocations(playerId).length;
+            const maxShieldableLocations = min([winnerDreadnoughtsInCombat, playerLocations]);
+            for (let i = 0; i < maxShieldableLocations; i++) {
+              this.playerRewardChoicesService.addPlayerConversionChoice(playerId, {
+                type: 'helper-trade',
+                effectCosts: { type: 'reward', effectRewards: [{ type: 'dreadnought-trash' }] },
+                effectConversionRewards: {
+                  type: 'reward',
+                  effectRewards: [{ type: 'victory-point' }, { type: 'shield-choice' }],
+                },
+              });
+
+              this.resolveRewardChoices();
+            }
+
+            this.loggingService.logPlayerWonCombat(playerId, this.roundService.currentRound);
+          }
         }
-        isFirstCycle = false;
       }
     }
 
@@ -881,8 +887,12 @@ export class GameManager {
 
       if (playerLocation && takeOverFromEnemy) {
         const location = this.boardSpacesService.getBoardSpace(locationId);
+        const troopTakeOverCosts = playerLocation.isShielded
+          ? this.settingsService.getOwnedLocationDefendingTroops()
+          : this.settingsService.getShieldedLocationDefendingTroops();
+
         const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
-          this.settingsService.getLocationTakeoverTroopCosts(),
+          troopTakeOverCosts,
           location,
           this.gameModifiersService.getPlayerGameModifier(playerId, 'locationTakeoverTroopCosts'),
         );
@@ -917,7 +927,6 @@ export class GameManager {
       }
 
       this.audioManager.playSound('location-control');
-
       this.locationsService.setLocationOwner(locationId, playerId);
       this.effectsService.addRewardToPlayer(player.id, { type: 'victory-point' }, { source: 'Location' });
       this.loggingService.logPlayerGainedLocationControl(playerId, this.roundService.currentRound, locationId);
@@ -1036,11 +1045,6 @@ export class GameManager {
       return;
     }
 
-    const conflictChoice = this.playerRewardChoicesService.getPlayerRewardChoices(playerId)?.conflictChoice;
-    if (conflictChoice) {
-      this.playerRewardChoicesService.removePlayerConflictChoice(playerId, conflictChoice.id);
-    }
-
     this.conflictsService.setCurrentConflict(conflict.id);
     const boardSpace = conflict.boardSpaceId ? this.boardSpacesService.getBoardSpace(conflict.boardSpaceId) : undefined;
     const boardSpaceName = boardSpace && boardSpace.title ? this.t.translateLS(boardSpace.title) : undefined;
@@ -1050,6 +1054,21 @@ export class GameManager {
       this.roundService.currentRound,
       boardSpaceName,
     );
+
+    if (boardSpace) {
+      const ownedLocation = this.locationsService.getPlayerLocation(boardSpace.title.en);
+      if (ownedLocation && playerId !== ownedLocation.playerId) {
+        const defendingTroops = ownedLocation.isShielded
+          ? this.settingsService.getShieldedLocationDefendingTroops()
+          : this.settingsService.getOwnedLocationDefendingTroops();
+        this.combatManager.createPlayerTroopsIntoCombat(ownedLocation.playerId, defendingTroops);
+      }
+    }
+
+    const conflictChoice = this.playerRewardChoicesService.getPlayerRewardChoices(playerId)?.conflictChoice;
+    if (conflictChoice) {
+      this.playerRewardChoicesService.removePlayerConflictChoice(playerId, conflictChoice.id);
+    }
   }
 
   private resolveImperiumCardEffects(card: ImperiumDeckCard, player: Player, timing: EffectTimingType) {
@@ -1426,6 +1445,15 @@ export class GameManager {
             this.changeLocationOwner(desiredLocation.actionField.title.en, player.id);
           }
         }
+      } else if (choiceType === 'shield-choice') {
+        for (let i = 0; i < choiceAmount; i++) {
+          const updatedGameState = this.getGameState(player);
+          const locationId = this.aiBoardSpacesService.getLocationToShield(player, updatedGameState);
+          if (locationId) {
+            this.audioManager.playSound('shield');
+            this.locationsService.setLocationIsShielded(locationId);
+          }
+        }
       } else if (choiceType === 'faction-influence-up-choice') {
         for (let i = 0; i < choiceAmount; i++) {
           const factionType = this.aiManager.getFactionInfluenceIncreaseChoice(player);
@@ -1546,20 +1574,8 @@ export class GameManager {
         }
       }
       if (pickedConflict) {
-        this.conflictsService.setCurrentConflict(pickedConflict.id);
-        const boardSpace = pickedConflict.boardSpaceId
-          ? this.boardSpacesService.getBoardSpace(pickedConflict.boardSpaceId)
-          : undefined;
-        const boardSpaceName = boardSpace && boardSpace.title ? this.t.translateLS(boardSpace.title) : undefined;
-        this.loggingService.logPlayerPickedConflict(
-          player.id,
-          this.t.translateLS(pickableConflicts[0].name),
-          this.roundService.currentRound,
-          boardSpaceName,
-        );
+        this.pickCurrentConflict(player.id, pickedConflict);
       }
-
-      this.playerRewardChoicesService.removePlayerConflictChoice(player.id, playerRewardChoices.conflictChoice.id);
     }
 
     this.aiResolveRewardChoices(player, depth + 1);

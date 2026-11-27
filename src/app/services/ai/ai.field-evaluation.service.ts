@@ -129,7 +129,7 @@ export class AIFieldEvaluationService {
       }
       const isLocation = gameState.locations.some((x) => x.actionField.title.en === boardSpaceId);
       if (isLocation) {
-        const playerOwnsLocation = gameState.playerLocations.some((x) => x === boardSpaceId);
+        const playerOwnsLocation = gameState.playerLocations.some((pl) => pl.locationId === boardSpaceId);
         if (!gameState.conflict) {
           if (playerOwnsLocation) {
             boardSpaceEvaluation *= 0.9;

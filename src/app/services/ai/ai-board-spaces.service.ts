@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { sum } from 'lodash';
 import { getModifiedLocationTakeoverTroopCosts } from 'src/app/helpers/game-modifiers';
 import { DuneLocation } from 'src/app/models';
 import { GameState } from 'src/app/models/ai';
@@ -35,25 +36,30 @@ export class AIBoardSpacesService {
 
     const freeControllableLocations = locationsWithPlayerAgents.filter(
       (x) =>
-        !playerLocations.some((y) => x.actionField.title.en === y) &&
+        !playerLocations.some((y) => x.actionField.title.en === y.locationId) &&
         !enemyLocations.some((y) => x.actionField.title.en === y.locationId),
     );
 
-    const locationTakeoverTroopCosts = this.settingsService.getLocationTakeoverTroopCosts();
+    const defendingTroopsDefault = this.settingsService.getOwnedLocationDefendingTroops();
+    const defendingTroopsShielded = this.settingsService.getShieldedLocationDefendingTroops();
 
-    const enemyControllableLocations = locationsWithPlayerAgents
-      .filter((x) => enemyLocations.some((y) => x.actionField.title.en === y.locationId))
-      .map((x) => {
-        const location = this.boardSpacesService.getBoardSpace(x.actionField.title.en);
-        return {
-          ...x,
+    const enemyControllableLocations: (DuneLocation & { effectiveTakeOverTroopCosts: number })[] = [];
+    for (const locationWithPlayerAgent of locationsWithPlayerAgents) {
+      const enemyLocation = enemyLocations.find((y) => locationWithPlayerAgent.actionField.title.en === y.locationId);
+      if (enemyLocation) {
+        const location = this.boardSpacesService.getBoardSpace(locationWithPlayerAgent.actionField.title.en);
+        const troopTakeOverCosts = enemyLocation.isShielded ? defendingTroopsShielded : defendingTroopsDefault;
+
+        enemyControllableLocations.push({
+          ...locationWithPlayerAgent,
           effectiveTakeOverTroopCosts: getModifiedLocationTakeoverTroopCosts(
-            locationTakeoverTroopCosts,
+            troopTakeOverCosts,
             location,
             gameState.playerGameModifiers?.locationTakeoverTroopCosts,
           ),
-        };
-      });
+        });
+      }
+    }
 
     const playerTroopAmount = gameState.playerCombatUnits.troopsInGarrison;
     const playerCanConquerLocations = enemyControllableLocations.some(
@@ -87,6 +93,33 @@ export class AIBoardSpacesService {
       return desiredLocation;
     }
     return undefined;
+  }
+
+  getLocationToShield(player: Player, gameState: GameState) {
+    const playerLocations = gameState.playerLocations;
+    if (playerLocations.length < 1 || playerLocations.every((x) => x.isShielded)) {
+      return undefined;
+    }
+
+    let bestLocationId: string | undefined;
+    // Always protect locations with lowest cost because they are most vulnerable
+    let lowestLocationCosts = 0;
+    for (const location of playerLocations) {
+      const boardSpace = this.boardSpacesService.getBoardSpace(location.locationId);
+      if (boardSpace) {
+        if (bestLocationId) {
+          const locationCosts = sum(boardSpace.costs?.map((x) => x.amount ?? 1));
+          if (locationCosts < lowestLocationCosts) {
+            lowestLocationCosts = locationCosts;
+            bestLocationId = location.locationId;
+          }
+        } else {
+          lowestLocationCosts = sum(boardSpace.costs?.map((x) => x.amount ?? 1));
+          bestLocationId = location.locationId;
+        }
+      }
+    }
+    return bestLocationId;
   }
 
   getFieldDecision(playerId: number, fieldId: string): string {

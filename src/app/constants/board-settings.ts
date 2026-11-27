@@ -47,7 +47,8 @@ export interface AI {
 
 export interface AIRewardEffectGameInterface {
   settings: {
-    locationTakeoverTroopCosts: number;
+    ownedLocationDefendingTroops: number;
+    shieldedLocationDefendingTroops: number;
     maxPlayerIntrigueCount: number | undefined;
     maxPlayerDreadnoughtCount: number;
     getBoardSpace: (id: string) => ActionField | undefined;
@@ -106,7 +107,8 @@ export interface GameContent {
   startingResources: EffectReward[];
   customCards?: CustomCard[];
   recruitmentCardAmount: number;
-  locationTakeoverTroopCosts?: number;
+  ownedLocationDefendingTroops?: number;
+  shieldedLocationDefendingTroops?: number;
   combatMaxDeployableUnits: number;
   factionInfluenceMaxScore: number;
   factionInfluenceAllianceTreshold: number;

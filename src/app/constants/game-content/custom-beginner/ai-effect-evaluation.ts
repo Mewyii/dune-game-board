@@ -503,7 +503,7 @@ export function getRewardEffectEvaluationForTurnState(
       if (conflictBoardSpaceId) {
         const enemyLocation = gameState.enemyLocations.find((x) => x.locationId === conflictBoardSpaceId);
         const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
-          game.settings.locationTakeoverTroopCosts,
+          game.settings.ownedLocationDefendingTroops,
           game.settings.getBoardSpace(conflictBoardSpaceId),
           gameState.playerGameModifiers?.locationTakeoverTroopCosts,
         );
@@ -528,7 +528,7 @@ export function getRewardEffectEvaluationForTurnState(
           gameState.enemyLocations.some((y) => x.fieldId === y.locationId) &&
           gameState.playerCombatUnits.troopsInGarrison >=
             getModifiedLocationTakeoverTroopCosts(
-              game.settings.locationTakeoverTroopCosts,
+              game.settings.ownedLocationDefendingTroops,
               game.settings.getBoardSpace(x.fieldId),
               gameState.playerGameModifiers?.locationTakeoverTroopCosts,
             ),

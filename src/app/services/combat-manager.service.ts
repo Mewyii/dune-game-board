@@ -115,6 +115,17 @@ export class CombatManager {
     }
   }
 
+  destroyPlayerShipsFromCombatOrGarrison(playerId: number, shipAmount: number) {
+    const combatUnits = this.getPlayerCombatUnits(playerId);
+    if (combatUnits) {
+      if (combatUnits.shipsInCombat - shipAmount >= 0) {
+        this.destroyPlayerShipsInCombat(playerId, combatUnits.shipsInCombat - shipAmount);
+      } else if (combatUnits.shipsInGarrison - shipAmount >= 0) {
+        this.setPlayerShipsInGarrison(playerId, combatUnits.shipsInGarrison - shipAmount);
+      }
+    }
+  }
+
   setPlayerShipsInGarrison(playerId: number, ships: number) {
     const playerCombatUnits = this.playerCombatUnits;
     const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
@@ -208,6 +219,21 @@ export class CombatManager {
       this.setPlayerTroopsInCombat(playerId, troopAmount);
     }
     this.loggingService.logPlayerAddedTroopsToCombat(playerId, troopAmount);
+  }
+
+  createPlayerTroopsIntoCombat(playerId: number, troopAmount: number) {
+    const playerCombatUnits = this.playerCombatUnits;
+    const playerCombatUnitsIndex = playerCombatUnits.findIndex((x) => x.playerId === playerId);
+    if (playerCombatUnitsIndex > -1) {
+      const combatScore = playerCombatUnits[playerCombatUnitsIndex];
+
+      playerCombatUnits[playerCombatUnitsIndex] = {
+        ...combatScore,
+        troopsInCombat: combatScore.troopsInCombat - troopAmount,
+      };
+    }
+
+    this.playerCombatUnitsSubject.next(playerCombatUnits);
   }
 
   retreatPlayerTroopsFromCombat(playerId: number, troopAmount: number) {

@@ -61,10 +61,13 @@ export class AIEffectEvaluationService {
         gameState.playerAgentsOnFields.some((agent) => agent.fieldId === location.locationId),
       );
       if (!hasAgentsOnFreeLocations && agentsOnEnemyLocations.length > 0) {
+        const defendingTroopsDefault = this.settingsService.getOwnedLocationDefendingTroops();
+        const defendingTroopsShielded = this.settingsService.getShieldedLocationDefendingTroops();
+
         const effectiveTakeOverTroopCosts = min(
           agentsOnEnemyLocations.map((x) =>
             getModifiedLocationTakeoverTroopCosts(
-              this.settingsService.getLocationTakeoverTroopCosts(),
+              x.isShielded ? defendingTroopsShielded : defendingTroopsDefault,
               this.boardSpacesService.getBoardSpace(x.locationId),
               gameState.playerGameModifiers?.locationTakeoverTroopCosts,
             ),
@@ -659,7 +662,8 @@ export class AIEffectEvaluationService {
     return {
       settings: {
         maxPlayerIntrigueCount: this.settingsService.getMaxPlayerIntrigueCount(),
-        locationTakeoverTroopCosts: this.settingsService.getLocationTakeoverTroopCosts(),
+        ownedLocationDefendingTroops: this.settingsService.getOwnedLocationDefendingTroops(),
+        shieldedLocationDefendingTroops: this.settingsService.getShieldedLocationDefendingTroops(),
         maxPlayerDreadnoughtCount: this.settingsService.getMaxPlayerDreadnoughtCount(),
         getBoardSpace: (id) => this.boardSpacesService.getBoardSpace(id),
       },

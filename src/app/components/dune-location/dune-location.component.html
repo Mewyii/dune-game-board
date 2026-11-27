@@ -9,13 +9,18 @@
       <div
         [class]="'location-owner-indicator' + (owner ? ' owned' : '')"
         [class.owned]="owner"
+        [class.shielded]="isShielded"
         [class.active]="!readonly && isActiveForPlayerCount"
         [style.color]="owner ? owner.color : location.color"
         (click)="onOwnerIndicatorClicked()"
       >
         <dune-sand-surface shape="banner"></dune-sand-surface>
         @if (owner) {
-          <span class="location-owner-name font-medieval">{{ leaderInitials.toUpperCase() }}</span>
+          @if (isShielded) {
+            <div class="defend-marker-container">
+              <img class="defend-marker" [src]="'assets/images/reward-markers/marker_shield.png'" />
+            </div>
+          }
         }
       </div>
       <div class="location-owner-reward-area">

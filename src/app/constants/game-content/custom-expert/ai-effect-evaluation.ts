@@ -298,8 +298,12 @@ export function getRewardEffectEvaluationForTurnState(
       const combatField = targetBoardSpace?.rewards.some((x) => x.type === 'combat');
       const maxDreadnoughts = game.settings.maxPlayerDreadnoughtCount;
 
-      return getPlayerdreadnoughtCount(gameState.playerCombatUnits) < maxDreadnoughts
-        ? (combatField ? 1.25 : 1.0) * value + 0.1 * gameState.playerCombatUnits.troopsInGarrison
+      const playerDreadnoughtCount = getPlayerdreadnoughtCount(gameState.playerCombatUnits);
+
+      return playerDreadnoughtCount < maxDreadnoughts
+        ? (combatField ? 1.25 : 1.0) * value +
+            0.1 * gameState.playerCombatUnits.troopsInGarrison -
+            1 * playerDreadnoughtCount
         : 0;
     case 'card-draw':
       if (player.turnState === 'reveal') {
@@ -515,7 +519,9 @@ export function getRewardEffectEvaluationForTurnState(
       if (conflictBoardSpaceId) {
         const enemyLocation = gameState.enemyLocations.find((x) => x.locationId === conflictBoardSpaceId);
         const effectiveTakeOverTroopCosts = getModifiedLocationTakeoverTroopCosts(
-          game.settings.locationTakeoverTroopCosts,
+          enemyLocation?.isShielded
+            ? game.settings.shieldedLocationDefendingTroops
+            : game.settings.ownedLocationDefendingTroops,
           game.settings.getBoardSpace(conflictBoardSpaceId),
           gameState.playerGameModifiers?.locationTakeoverTroopCosts,
         );
@@ -523,7 +529,7 @@ export function getRewardEffectEvaluationForTurnState(
         if (enemyLocation && gameState.playerCombatUnits.troopsInGarrison < effectiveTakeOverTroopCosts) {
           canTakeOverLocation = false;
         }
-        if (gameState.playerLocations.some((x) => x === conflictBoardSpaceId)) {
+        if (gameState.playerLocations.some((pl) => pl.locationId === conflictBoardSpaceId)) {
           needDefendlocation = true;
         }
       }
@@ -538,16 +544,22 @@ export function getRewardEffectEvaluationForTurnState(
       const controllableFreeLocations = playerAgentsOnFields.filter((x) =>
         gameState.freeLocations.some((y) => x.fieldId === y),
       );
-      const controllableEnemyLocations = playerAgentsOnFields.filter(
-        (x) =>
-          gameState.enemyLocations.some((y) => x.fieldId === y.locationId) &&
-          gameState.playerCombatUnits.troopsInGarrison >=
-            getModifiedLocationTakeoverTroopCosts(
-              game.settings.locationTakeoverTroopCosts,
-              game.settings.getBoardSpace(x.fieldId),
-              gameState.playerGameModifiers?.locationTakeoverTroopCosts,
-            ),
-      );
+      const controllableEnemyLocations = playerAgentsOnFields.filter((x) => {
+        const enemyLocation = gameState.enemyLocations.find((y) => x.fieldId === y.locationId);
+        if (!enemyLocation) {
+          return false;
+        }
+
+        const effectiveTroopTakeOverCosts = getModifiedLocationTakeoverTroopCosts(
+          enemyLocation.isShielded
+            ? game.settings.shieldedLocationDefendingTroops
+            : game.settings.ownedLocationDefendingTroops,
+          game.settings.getBoardSpace(x.fieldId),
+          gameState.playerGameModifiers?.locationTakeoverTroopCosts,
+        );
+
+        return gameState.playerCombatUnits.troopsInGarrison >= effectiveTroopTakeOverCosts;
+      });
 
       const canOnlyControlConflictLocation = [...controllableFreeLocations, ...controllableEnemyLocations].every(
         (x) => x.fieldId === gameState.conflict?.boardSpaceId,

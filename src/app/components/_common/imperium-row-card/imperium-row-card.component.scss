@@ -37,13 +37,22 @@
 }
 
 .rare .card-header {
-  color: rgb(255 118 31);
+  background-image:
+    linear-gradient(45deg, rgb(255, 202, 169) 5%, rgb(255, 108, 17) 50%, rgb(255, 98, 0) 100%),
+    url(/assets/images/card-backgrounds/heading.png);
+  background-size:
+    100% 100%,
+    cover;
+  background-clip: text, border-box;
+  -webkit-background-clip: text, border-box;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .card-img {
   flex: 1 1;
   background-size: cover;
-  border-top: 2px solid rgba(190, 190, 190, 0.25);
+  border-top: 1px solid rgba(190, 190, 190, 0.25);
   border-bottom: 1px solid rgb(100 100 100 / 66%);
   position: relative;
   background-position: center;
@@ -51,7 +60,7 @@
 }
 
 .rare .card-img {
-  border-top: 2px solid rgba(255 115 30 / 66%);
+  border-top: 1px solid rgba(255, 128, 49, 0.7);
   box-shadow:
     inset 0px -10px 10px -5px rgba(91, 78, 65, 0.4),
     inset 0px 6px 10px -5px rgba(255, 120, 40, 0.75);

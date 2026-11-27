@@ -50,6 +50,7 @@ export class DuneLocationComponent implements OnInit, OnChanges, OnDestroy {
 
   public owner: Player | undefined;
   public leaderInitials = '';
+  public isShielded = false;
 
   public isActiveForPlayerCount = true;
 
@@ -79,15 +80,17 @@ export class DuneLocationComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     const locationOwnerIdSub = this.locationsService
-      .locationOwnerId$(this.location.actionField.title.en)
-      .subscribe((ownerId) => {
-        if (ownerId) {
-          this.owner = this.playersService.getPlayer(ownerId);
+      .locationOwner$(this.location.actionField.title.en)
+      .subscribe((owner) => {
+        if (owner) {
+          this.owner = this.playersService.getPlayer(owner.playerId);
+          this.isShielded = owner.isShielded;
           if (this.owner) {
             this.leaderInitials = this.leaderService.getLeader(this.owner.id)?.house?.en ?? '';
           }
         } else {
           this.owner = undefined;
+          this.isShielded = false;
           this.leaderInitials = '';
         }
       });
